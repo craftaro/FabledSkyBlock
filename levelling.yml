@@ -1,0 +1,14 @@
+# Required:
+#   Material Name
+#   Points Earned
+Materials:
+    WOOD_BUTTON:
+        Points: 1
+    GRANITE:
+        Points: 10
+    GRASS:
+        Points: 5
+    OAK_LOG:
+        Points: 100
+    ALLIUM:
+        Points: 30
