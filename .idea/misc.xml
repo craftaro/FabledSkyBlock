@@ -7,6 +7,11 @@
     <customRepositories />
     <composerUpdateOptions />
   </component>
+  <component name="EntryPointsManager">
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="org.bukkit.event.EventHandler" />
+    </list>
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
