@@ -1,0 +1,21 @@
+stages:
+- build
+
+variables:
+    name: "Skyblock"
+    path: "/builds/Songoda/$name"
+    version: "2.0.5"
+
+build:
+  stage: build
+  image: maven:3.5.3-jdk-8
+  script:
+    - find $path/ -type f -name "*.xml" -print0 | xargs -0 sed -i -e s/maven-version-number/$version/g
+    - mvn clean package
+    - find $path/ -depth -path '*original*' -delete
+    - mv -v $path/target/*.jar $path
+  artifacts:
+    name: $name-$version
+    paths:
+    - "$path/*.jar"
+#    - "$path/Read_this_before_your_first_use.txt"
