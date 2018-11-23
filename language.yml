@@ -658,6 +658,9 @@ Island:
             Signature:
                 Disabled:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to use that feature."
+    World:
+        Nether:
+            Message: "&bSkyBlock &8| &aInfo&8: &eYou have been teleported out of the nether because the nether is disabled."
     WorldBorder:
         Outside:
             Message: "&bSkyBlock &8| &cError&8: &eYou went too far outside the Island WorldBorder."

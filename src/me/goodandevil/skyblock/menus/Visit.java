@@ -90,7 +90,7 @@ public class Visit implements Listener {
 						islandInteger = islandManager.getPlayersAtIsland(islandManager.getIsland(visitIslandList)).size();
 					}
 				} else if (sort == Visit.Sort.Level) {
-					islandInteger = visitIslands.get(visitIslandList).getLevel();
+					islandInteger = visitIslands.get(visitIslandList).getLevel().getLevel();
 				} else if (sort == Visit.Sort.Members) {
 					islandInteger = visitIslands.get(visitIslandList).getMembers();
 				} else if (sort == Visit.Sort.Visits) {
@@ -333,7 +333,7 @@ public class Visit implements Listener {
 		    				
 				    		if ((!island.isRole(Role.Member, player.getUniqueId()) && !island.isRole(Role.Operator, player.getUniqueId()) && !island.isRole(Role.Owner, player.getUniqueId())) && fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
 				    			if (event.getClick() == ClickType.RIGHT) {
-				    				if (playerData.getIsland().equals(island.getOwnerUUID())) {
+				    				if (playerData.getIsland() != null && playerData.getIsland().equals(island.getOwnerUUID())) {
 				    					List<UUID> islandVotes = visit.getVoters();
 				    					
 				    					if (islandVotes.contains(player.getUniqueId())) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -13,18 +14,19 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 public class Level {
 	
 	private final Main plugin;
-	private final Island island;
+	
+	private UUID ownerUUID;
 	
 	private int lastLevel = 0;
 	private int lastPoints = 0;
 	
 	private Map<String, Integer> materials;
 	
-	public Level(Island island, Main plugin) {
-		this.island = island;
+	public Level(UUID ownerUUID, Main plugin) {
 		this.plugin = plugin;
+		this.ownerUUID = ownerUUID;
 		
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml"));
+		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		Map<String, Integer> materials = new HashMap<>();
@@ -38,6 +40,10 @@ public class Level {
 		}
 		
 		this.materials = materials;
+	}
+	
+	public void setOwnerUUID(UUID ownerUUID) {
+		this.ownerUUID = ownerUUID;
 	}
 	
 	public int getPoints() {
@@ -72,7 +78,7 @@ public class Level {
 	}
 	
 	public void setMaterials(Map<String, Integer> materials) {
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml"));
+		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
 		File configFile = config.getFile();
 		FileConfiguration configLoad = config.getFileConfiguration();
 		

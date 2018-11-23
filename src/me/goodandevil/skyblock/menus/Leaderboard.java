@@ -125,7 +125,7 @@ public class Leaderboard implements Listener {
 					}
 				}
 				
-				inv.addItem(inv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]), configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Displayname").replace("%position", "" + (leaderboard.getPosition() + 1)), itemLore, inv.createItemLoreVariable(new String[] { "%position#" + (leaderboard.getPosition() + 1), "%owner#" + playerName, "%level#" + visit.getLevel(), "%votes#" + visit.getVoters().size(), "%members#" + visit.getMembers() }), null, null), itemSlot);
+				inv.addItem(inv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]), configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Displayname").replace("%position", "" + (leaderboard.getPosition() + 1)), itemLore, inv.createItemLoreVariable(new String[] { "%position#" + (leaderboard.getPosition() + 1), "%owner#" + playerName, "%level#" + visit.getLevel().getLevel(), "%votes#" + visit.getVoters().size(), "%members#" + visit.getMembers() }), null, null), itemSlot);
 			}
 			
 			int[] itemSlots = new int[] { 13, 21, 22, 23, 29, 31, 33, 37, 40, 43 };

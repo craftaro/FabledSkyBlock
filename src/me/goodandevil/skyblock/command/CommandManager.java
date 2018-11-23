@@ -245,21 +245,51 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			List<String> commandAliases = new ArrayList<>();
 			
 			if (args.length == 1) {
-				commandAliases.add("admin");
-				
-				for (SubCommand subCommandList : subCommands.get(Type.Default)) {
-					commandAliases.add(subCommandList.getName());
+				if (args[0] == null || args[0].isEmpty()) {
+					commandAliases.add("admin");
+					
+					for (SubCommand subCommandList : subCommands.get(Type.Default)) {
+						commandAliases.add(subCommandList.getName());
+					}
+				} else {
+					if ("admin".contains(args[0].toLowerCase())) {
+						commandAliases.add("admin");
+					}
+					
+					for (SubCommand subCommandList : subCommands.get(Type.Default)) {
+						if (subCommandList.getName().toLowerCase().contains(args[0].toLowerCase())) {
+							commandAliases.add(subCommandList.getName());
+						}
+					}
 				}
 			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("admin")) {
-					for (SubCommand subCommandList : subCommands.get(Type.Admin)) {
-						commandAliases.add(subCommandList.getName());
+					if (args[1] == null || args[1].isEmpty()) {
+						for (SubCommand subCommandList : subCommands.get(Type.Admin)) {
+							commandAliases.add(subCommandList.getName());
+						}
+					} else {
+						for (SubCommand subCommandList : subCommands.get(Type.Admin)) {
+							if (subCommandList.getName().toLowerCase().contains(args[1].toLowerCase())) {
+								commandAliases.add(subCommandList.getName());
+							}
+						}
 					}
 				}
 			} else if (args.length == 3) {
 				if (args[0].equalsIgnoreCase("admin") && args[1].equalsIgnoreCase("structure")) {
-					commandAliases.add("tool");
-					commandAliases.add("save");
+					if (args[2] == null || args[2].isEmpty()) {
+						commandAliases.add("tool");
+						commandAliases.add("save");	
+					} else {
+						if ("tool".contains(args[2].toLowerCase())) {
+							commandAliases.add("tool");
+						}
+						
+						if ("save".contains(args[2].toLowerCase())) {
+							commandAliases.add("save");
+						}
+					}
 				}
 			}
 			

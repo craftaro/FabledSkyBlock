@@ -146,12 +146,12 @@ public class Island {
 			}.runTask(plugin);
 		}
 		
-		level = new Level(this, plugin);
+		level = new Level(getOwnerUUID(), plugin);
 		
 		VisitManager visitManager = plugin.getVisitManager();
 		
 		if (!visitManager.hasIsland(getOwnerUUID())) {
-			visitManager.createIsland(getOwnerUUID(), new org.bukkit.Location[] { getLocation(Location.World.Normal, Location.Environment.Island), getLocation(Location.World.Nether, Location.Environment.Island) }, size, getRole(Role.Member).size() + getRole(Role.Operator).size() + 1, level.getLevel(), getMessage(Message.Signature), isOpen());
+			visitManager.createIsland(getOwnerUUID(), new org.bukkit.Location[] { getLocation(Location.World.Normal, Location.Environment.Island), getLocation(Location.World.Nether, Location.Environment.Island) }, size, getRole(Role.Member).size() + getRole(Role.Operator).size() + 1, level, getMessage(Message.Signature), isOpen());
 		}
 		
 		BanManager banManager = plugin.getBanManager();

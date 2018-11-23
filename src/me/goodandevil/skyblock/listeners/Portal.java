@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 
 import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -35,18 +36,19 @@ public class Portal implements Listener {
 		
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
+		FileManager fileManager = plugin.getFileManager();
 		
 		if (player.getWorld().getName().equals(plugin.getWorldManager().getWorld(Location.World.Normal).getName())) {
 			for (UUID islandList : islandManager.getIslands().keySet()) {
 				Island island = islandManager.getIslands().get(islandList);
 				
 				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(Location.World.Normal, Location.Environment.Island), island.getRadius())) {
-					if (islandManager.hasPermission(player, "Portal")) {
+					if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.World.Nether.Enable") && islandManager.hasPermission(player, "Portal")) {
 						player.teleport(island.getLocation(Location.World.Nether, Location.Environment.Main));
 						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&', fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 					
@@ -58,12 +60,12 @@ public class Portal implements Listener {
 				Island island = islandManager.getIslands().get(islandList);
 				
 				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(Location.World.Nether, Location.Environment.Island), island.getRadius())) {
-					if (islandManager.hasPermission(player, "Portal")) {
+					if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.World.Nether.Enable") && islandManager.hasPermission(player, "Portal")) {
 						player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
 						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						player.teleport(island.getLocation(Location.World.Nether, Location.Environment.Main));
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&', fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 					

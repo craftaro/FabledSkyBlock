@@ -19,6 +19,7 @@ import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
@@ -73,7 +74,7 @@ public class VisitManager {
 						size = configLoad.getInt("Size");
 					}
 					
-					createIsland(islandOwnerUUID, new Location[] { fileManager.getLocation(config, "Location.Normal.Island", true), fileManager.getLocation(config, "Location.Nether.Island", true) }, size, configLoad.getStringList("Members").size() + configLoad.getStringList("Operators").size() + 1, configLoad.getInt("Levelling.Points") / division, islandSignature, configLoad.getBoolean("Visitor.Open"));
+					createIsland(islandOwnerUUID, new Location[] { fileManager.getLocation(config, "Location.Normal.Island", true), fileManager.getLocation(config, "Location.Nether.Island", true) }, size, configLoad.getStringList("Members").size() + configLoad.getStringList("Operators").size() + 1, new Level(islandOwnerUUID, plugin), islandSignature, configLoad.getBoolean("Visitor.Open"));
 				}
 			}
 		}
@@ -81,6 +82,8 @@ public class VisitManager {
 	
 	public void transfer(UUID uuid, UUID islandOwnerUUID) {
 		Visit visit = getIsland(islandOwnerUUID);
+		visit.setOwnerUUID(uuid);
+		visit.getLevel().setOwnerUUID(uuid);
 		visit.save();
 		
 		File oldVisitDataFile = new File(new File(plugin.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml");
@@ -146,7 +149,7 @@ public class VisitManager {
 		return visitIslands;
 	}
 	
-	public void createIsland(UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, int islandLevel, List<String> islandSignature, boolean open) {
+	public void createIsland(UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, Level islandLevel, List<String> islandSignature, boolean open) {
 		visitStorage.put(islandOwnerUUID, new Visit(plugin, islandOwnerUUID, islandLocations, islandSize, islandMembers, islandLevel, islandSignature, open));
 	}
 	

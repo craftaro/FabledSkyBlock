@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.Level;
 
 public class Visit {
 
@@ -22,13 +23,14 @@ public class Visit {
 	
 	private int islandSize;
 	private int islandMembers;
-	private int islandLevel;
+	
+	private final Level islandLevel;
 	
 	private List<String> islandSignature;
 	
 	private boolean open;
 	
-	protected Visit(Main plugin, UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, int islandLevel, List<String> islandSignature, boolean open) {
+	protected Visit(Main plugin, UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, Level islandLevel, List<String> islandSignature, boolean open) {
 		this.plugin = plugin;
 		this.islandOwnerUUID = islandOwnerUUID;
 		this.islandLocations = islandLocations;
@@ -73,12 +75,8 @@ public class Visit {
 		this.islandSize = islandSize;
 	}
 	
-	public int getLevel() {
+	public Level getLevel() {
 		return islandLevel;
-	}
-	
-	public void setLevel(int islandLevel) {
-		this.islandLevel = islandLevel;
 	}
 	
 	public boolean isVisitor(UUID uuid) {

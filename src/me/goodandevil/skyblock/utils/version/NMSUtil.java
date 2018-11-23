@@ -17,6 +17,11 @@ public class NMSUtil {
 	    return Integer.valueOf(name.substring(0, name.length() - 4));
 	}
 	
+	public static int getVersionReleaseNumber() {
+		String NMSVersion = getVersion();
+		return Integer.valueOf(NMSVersion.substring(NMSVersion.length() - 2).replace(".", ""));
+	}
+	
     public static Class<?> getNMSClass(String className) {
         try {
             String fullName = "net.minecraft.server." + getVersion() + className;

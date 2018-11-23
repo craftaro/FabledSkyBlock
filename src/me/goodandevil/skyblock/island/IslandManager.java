@@ -39,6 +39,7 @@ import me.goodandevil.skyblock.structure.Structure;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
+import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
@@ -185,12 +186,14 @@ public class IslandManager {
 			}
 		}.runTask(plugin);
 		
-		Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-			@Override
-			public void run() {
-				plugin.getBiomeManager().setBiome(null, island, Biome.valueOf(fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase()));
-			}
-		}, 20L);
+		if (NMSUtil.getVersionNumber() < 13) {
+			Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+				@Override
+				public void run() {
+					plugin.getBiomeManager().setBiome(null, island, Biome.valueOf(fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase()));
+				}
+			}, 20L);	
+		}
 	}
 	
 	public void giveIslandOwnership(UUID uuid) {
@@ -209,6 +212,7 @@ public class IslandManager {
 		
 		if (containsIsland(islandOwnerUUID)) {
 			Island island = getIsland(islandOwnerUUID);
+			island.getLevel().setOwnerUUID(uuid);
 			island.setOwnerUUID(uuid);
 			
 			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));

@@ -401,7 +401,12 @@ public final class BlockUtil {
         		Object block = NMSUtil.getNMSClass("Blocks").getField(material.name()).get(null);
         		Object IBlockData = block.getClass().getMethod("getBlockData").invoke(block);
         		worldHandle.getClass().getMethod("setTypeAndData", blockPosition.getClass(), IBlockDataClass, int.class).invoke(worldHandle, blockPosition, IBlockData, 2);
-        		chunk.getClass().getMethod("setType", blockPosition.getClass(), IBlockDataClass, boolean.class).invoke(chunk, blockPosition, IBlockData, true);
+        		
+        		if (NMSUtil.getVersionReleaseNumber() > 1) {
+            		chunk.getClass().getMethod("setType", blockPosition.getClass(), IBlockDataClass, boolean.class).invoke(chunk, blockPosition, IBlockData, true);
+        		} else {
+            		chunk.getClass().getMethod("a", blockPosition.getClass(), IBlockDataClass, boolean.class).invoke(chunk, blockPosition, IBlockData, true);
+        		}        		
         	} else {
         		Object IBlockData = NMSUtil.getNMSClass("Block").getMethod("getByCombinedId", int.class).invoke(null, material.getId() + (data << 12));
         		worldHandle.getClass().getMethod("setTypeAndData", blockPosition.getClass(), IBlockDataClass, int.class).invoke(worldHandle, blockPosition, IBlockData, 3);

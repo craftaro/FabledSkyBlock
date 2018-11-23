@@ -155,7 +155,6 @@ public class LevellingManager {
 		    	    	level.setLastPoints(level.getPoints());
 		    	    	level.setLastLevel(level.getLevel());
 			    	    level.setMaterials(materials);
-			    	    island.getVisit().setLevel(level.getLevel());
 			    	    
 			    	    if (player != null) {
 			    	    	me.goodandevil.skyblock.menus.Levelling.getInstance().open(player);

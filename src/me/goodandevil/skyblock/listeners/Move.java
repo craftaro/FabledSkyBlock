@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -38,16 +39,48 @@ public class Move implements Listener {
 		Location to = event.getTo();
 
 		if (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()) {
-			if (player.getWorld().getName().equals(plugin.getWorldManager().getWorld(me.goodandevil.skyblock.island.Location.World.Normal).getName()) || player.getWorld().getName().equals(plugin.getWorldManager().getWorld(me.goodandevil.skyblock.island.Location.World.Nether).getName())) {
+			String netherWorldName = plugin.getWorldManager().getWorld(me.goodandevil.skyblock.island.Location.World.Nether).getName();
+			
+			if (player.getWorld().getName().equals(plugin.getWorldManager().getWorld(me.goodandevil.skyblock.island.Location.World.Normal).getName()) || player.getWorld().getName().equals(netherWorldName)) {
 				PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+				IslandManager islandManager = plugin.getIslandManager();
 				SoundManager soundManager = plugin.getSoundManager();
+				FileManager fileManager = plugin.getFileManager();
+				
+				if (player.getWorld().getName().equals(netherWorldName)) {
+					if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.World.Nether.Enable")) {
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&', fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.World.Nether.Message")));
+						
+						if (playerDataManager.hasPlayerData(player)) {
+							PlayerData playerData = playerDataManager.getPlayerData(player);
+							
+							if (playerData.getIsland() != null) {
+								Island island = islandManager.getIsland(playerData.getIsland());
+								
+								if (island != null) {
+									if (island.getVisit().isVisitor(player.getUniqueId())) {
+										player.teleport(island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal, me.goodandevil.skyblock.island.Location.Environment.Visitor));
+									} else {
+										player.teleport(island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal, me.goodandevil.skyblock.island.Location.Environment.Main));
+									}
+									
+									soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+									
+									return;
+								}
+							}
+						}
+						
+						LocationUtil.teleportPlayerToSpawn(player);
+						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+					}
+				}
 				
 				if (playerDataManager.hasPlayerData(player)) {
 					PlayerData playerData = playerDataManager.getPlayerData(player);
 					UUID islandOwnerUUID = playerData.getIsland();
 					
 					if (islandOwnerUUID != null) {
-						IslandManager islandManager = plugin.getIslandManager();
 						Island island = islandManager.getIsland(islandOwnerUUID);
 						
 						if (island != null) {
@@ -60,7 +93,7 @@ public class Move implements Listener {
 							}
 							
 							if (world != null) {
-								Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+								Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
 								FileConfiguration configLoad = config.getFileConfiguration();
 								
 								if (configLoad.getBoolean("Island.World." + world.name() + ".Liquid.Enable")) {
