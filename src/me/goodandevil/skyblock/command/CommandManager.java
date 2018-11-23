@@ -119,11 +119,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		this.subCommands.put(CommandManager.Type.Default, subCommands);
 		
 		subCommands = new ArrayList<>();
-		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.LevelCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Level.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SetSpawnCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSpawn.Info.Message"))));
-		subCommands.add(new StructureCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.CreateCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Create.Info.Message"))));
 		subCommands.add(new GeneratorCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Generator.Info.Message"))));
+		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.LevelCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Level.Info.Message"))));
+		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SettingsCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Settings.Info.Message"))));
+		subCommands.add(new StructureCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Info.Message"))));
 		subCommands.add(new DeleteCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Delete.Info.Message"))));
 		subCommands.add(new OwnerCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Owner.Info.Message"))));
 		subCommands.add(new ReloadCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Reload.Info.Message"))));

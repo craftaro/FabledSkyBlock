@@ -149,6 +149,7 @@ public class Main extends JavaPlugin {
 		
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Levelling(), this);
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Creator(), this);
+		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Settings(), this);
 		pluginManager.registerEvents(new Generator(), this);
 	}
 	

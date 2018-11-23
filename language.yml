@@ -549,6 +549,11 @@ Command:
                     Message: "&f&oChange Island level materials and points."
                 Permission:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+            Settings:
+                Info:
+                    Message: "&f&oChange the default settings for when an Island is created."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
             Structure:
                 Info:
                     Message: "&f&oCreate structures for Islands."
@@ -2056,3 +2061,205 @@ Menu:
                     - ""
                     - "&eLeft-Click to change points!"
                     - "&eRight-Click to remove material!"
+        Settings:
+            Categories:
+                Title: "&8Settings Editor - Categories"
+                Item:
+                    Exit:
+                        Displayname: "&cClick to Exit"
+                    Visitor:
+                        Displayname: "&aVisitor Settings"
+                        Lore:
+                        - "&7Edit and decide what you want"
+                        - "&7the default Visitor permissions"
+                        - "&7to be when an Island is created."
+                        - ""
+                        - "&eClick to Edit Settings!"
+                    Member:
+                        Displayname: "&aMember Settings"
+                        Lore:
+                        - "&7Edit and decide what you want"
+                        - "&7the default Member permissions"
+                        - "&7to be when an Island is created."
+                        - ""
+                        - "&eClick to Edit Settings!"
+                    Operator:
+                        Displayname: "&aOperator Settings"
+                        Lore:
+                        - "&7Edit and decide what you want"
+                        - "&7the default Operator permissions"
+                        - "&7to be when an Island is created."
+                        - ""
+                        - "&eClick to Edit Settings!"
+                    Owner:
+                        Displayname: "&aIsland Settings"
+                        Lore:
+                        - "&7Edit and decide what you want"
+                        - "&7the default Island permissions"
+                        - "&7to be when an Island is created."
+                        - ""
+                        - "&eClick to Edit Settings!"
+            Visitor:
+                Title: "&8Settings Editor - Visitor"
+                Item:
+                    Return:
+                        Displayname: "&cClick to Return"
+            Member:
+                Title: "&8Settings Editor - Member"
+                Item:
+                    Return:
+                        Displayname: "&cClick to Return"
+            Operator:
+                Title: "&8Settings Editor - Operator"
+                Item:
+                    Return:
+                        Displayname: "&cClick to Return"
+                    Setting:
+                        Status:
+                            Enabled:
+                                Lore:
+                                - "&7Status&8: &atrue"
+                            Disabled:
+                                Lore:
+                                - "&7Status&8: &cfalse"
+                        Invite:
+                            Displayname: "&aSend Invites"
+                        Kick:
+                            Displayname: "&aKick Members & Visitors"
+                        Ban:
+                            Displayname: "&aBan Visitors"
+                        Unban:
+                            Displayname: "&aUnban Visitors"
+                        Visitor:
+                            Displayname: "&aEdit Visitor Settings"
+                        Member:
+                            Displayname: "&aEdit Member Settings"
+                        Island:
+                            Displayname: "&aEdit Island Settings"
+                        MainSpawn:
+                            Displayname: "&aSet Island Main Spawn"
+                        VisitorSpawn:
+                            Displayname: "&aSet Island Visitor Spawn"
+                        Biome:
+                            Displayname: "&aSet Biome"
+                        Weather:
+                            Displayname: "&aSet Weather"
+            Owner:
+                Title: "&8Settings Editor - Island"
+                Item:
+                    Return:
+                        Displayname: "&cClick to Return"
+                    Setting:
+                        Status:
+                            Enabled:
+                                Lore:
+                                - "&7Status&8: &atrue"
+                            Disabled:
+                                Lore:
+                                - "&7Status&8: &cfalse"
+                        NaturalMobSpawning:
+                            Displayname: "&aNatural Mob Spawning"
+                        MobGriefing:
+                            Displayname: "&aMob Griefing"
+                        PvP:
+                            Displayname: "&aPvP"
+                        Explosions:
+                            Displayname: "&aExplosions"
+                        FireSpread:
+                            Displayname: "&aFire Spread"
+                        LeafDecay:
+                            Displayname: "&aLeaf Decay"
+                        KeepItemsOnDeath:
+                            Displayname: "&aKeep Items on Death"
+            Default:
+                Item:
+                    Setting:
+                        Status:
+                            Enabled:
+                                Lore:
+                                - "&7Status&8: &atrue"
+                            Disabled:
+                                Lore:
+                                - "&7Status&8: &cfalse"
+                        Destroy:
+                            Displayname: "&aDestroy Blocks"
+                        Place:
+                            Displayname: "&aPlace Blocks"
+                        Anvil:
+                            Displayname: "&aAnvil Use"
+                        ArmorStand:
+                            Displayname: "&aArmorStand Use"
+                        Beacon:
+                            Displayname: "&aBeacon Use"
+                        Bed:
+                            Displayname: "&aBed Use"
+                        AnimalBreeding:
+                            Displayname: "&aAnimal Breeding"
+                        Brewing:
+                            Displayname: "&aBrewing Stand Use"
+                        Bucket:
+                            Displayname: "&aBucket Use"
+                        WaterCollection:
+                            Displayname: "&aWater Collection"
+                        Storage:
+                            Displayname: "&aAccess Storage"
+                        Workbench:
+                            Displayname: "&aWorkbench Use"
+                        Crop:
+                            Displayname: "&aCrop Trampling"
+                        Door:
+                            Displayname: "&aDoor Use"
+                        Gate:
+                            Displayname: "&aGate Use"
+                        Projectile:
+                            Displayname: "&aProjectile Launch"
+                        Enchant:
+                            Displayname: "&aEnchantment Table Use"
+                        Fire:
+                            Displayname: "&aFire Extinguish"
+                        Furnace:
+                            Displayname: "&aFurnace Use"
+                        HorseInventory:
+                            Displayname: "&aAccess Horse Inventory"
+                        MobRiding:
+                            Displayname: "&aMob Riding"
+                        MobHurting:
+                            Displayname: "&aMob Hurting"
+                        MobTaming:
+                            Displayname: "&aMob Taming"
+                        Leash:
+                            Displayname: "&aLeash Use"
+                        LeverButton:
+                            Displayname: "&aLever/Button Use"
+                        Milking:
+                            Displayname: "&aMilking"
+                        Jukebox:
+                            Displayname: "&aJukebox Use"
+                        PressurePlate:
+                            Displayname: "&aPressure Plate Activate"
+                        Redstone:
+                            Displayname: "&aRedstone Use"
+                        Shearing:
+                            Displayname: "&aMob Shearing"
+                        Trading:
+                            Displayname: "&aVillager Trading"
+                        ItemDrop:
+                            Displayname: "&aItem Drop"
+                        ItemPickup:
+                            Displayname: "&aItem Pickup"
+                        Fishing:
+                            Displayname: "&aFishing"
+                        DropperDispenser:
+                            Displayname: "&aDropper/Dispenser Use"
+                        SpawnEgg:
+                            Displayname: "&aSpawn Eggs"
+                        Cake:
+                            Displayname: "&aCake Consumption"
+                        DragonEggUse:
+                            Displayname: "&aDragon Egg Use"
+                        MinecartBoat:
+                            Displayname: "&aMinecart/Boat Use"
+                        Portal:
+                            Displayname: "&aPortal Use"
+                        Hopper:
+                            Displayname: "&aHopper Use"
