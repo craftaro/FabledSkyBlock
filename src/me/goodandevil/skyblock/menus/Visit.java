@@ -220,7 +220,7 @@ public class Visit implements Listener {
 							}
 						}
 						
-						inv.addItem(inv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]), configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName), itemLore, inv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel(), "%members#" + visit.getMembers(), "%votes#" + visit.getVoters().size(), "%visits#" + visit.getVisitors().size(), "%players#" + playersAtIsland, "%player_capacity#" + playerCapacity, "%action#" + voteAction }), null, null), inventorySlot);
+						inv.addItem(inv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]), configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName), itemLore, inv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%votes#" + visit.getVoters().size(), "%visits#" + visit.getVisitors().size(), "%players#" + playersAtIsland, "%player_capacity#" + playerCapacity, "%action#" + voteAction }), null, null), inventorySlot);
 					} else {
 						if (signatureEnabled) {
 							for (String itemLoreList : configLoad.getStringList("Menu.Visit.Item.Island.Vote.Disabled.Signature.Enabled.Lore")) {
@@ -242,7 +242,7 @@ public class Visit implements Listener {
 							itemLore.addAll(configLoad.getStringList("Menu.Visit.Item.Island.Vote.Disabled.Signature.Disabled.Lore"));
 						}
 						
-						inv.addItem(inv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]), configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName), itemLore, inv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel(), "%members#" + visit.getMembers(), "%visits#" + visit.getVisitors().size(), "%players#" + playersAtIsland, "%player_capacity#" + playerCapacity }), null, null), inventorySlot);
+						inv.addItem(inv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]), configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName), itemLore, inv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%visits#" + visit.getVisitors().size(), "%players#" + playersAtIsland, "%player_capacity#" + playerCapacity }), null, null), inventorySlot);
 					}
 				}
 			}
@@ -340,8 +340,11 @@ public class Visit implements Listener {
 						    				for (Location.World worldList : Location.World.values()) {
 							    				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 						    						visit.removeVoter(player.getUniqueId());
-							    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Removed.Message").replace("%player", targetPlayerName)));
+							    					
+						    						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Removed.Message").replace("%player", targetPlayerName)));
 							    					soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
+							    					
+							    					open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
 							    					
 							    					return;
 							    				}
@@ -353,8 +356,11 @@ public class Visit implements Listener {
 						    				for (Location.World worldList : Location.World.values()) {
 							    				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 						    						visit.addVoter(player.getUniqueId());
-							    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Added.Message").replace("%player", targetPlayerName)));
+							    					
+						    						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Added.Message").replace("%player", targetPlayerName)));
 							    					soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+							    					
+							    					open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
 							    					
 							    					return;
 							    				}

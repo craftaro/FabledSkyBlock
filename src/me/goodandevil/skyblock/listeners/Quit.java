@@ -40,7 +40,10 @@ public class Quit implements Listener {
 		IslandManager islandManager = plugin.getIslandManager();
 		
 		PlayerData playerData = playerDataManager.getPlayerData(player);
-		playerData.setLastOnline(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+		
+		try {
+			playerData.setLastOnline(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+		} catch (Exception e) {}
 		
 		if (islandManager.hasIsland(player)) {
 			Island island = islandManager.getIsland(playerData.getOwner());
