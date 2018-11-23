@@ -14,6 +14,7 @@ import me.goodandevil.skyblock.confirmation.ConfirmationTask;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.listeners.Block;
 import me.goodandevil.skyblock.listeners.Bucket;
@@ -34,6 +35,7 @@ import me.goodandevil.skyblock.menus.Bans;
 import me.goodandevil.skyblock.menus.Biome;
 import me.goodandevil.skyblock.menus.ControlPanel;
 import me.goodandevil.skyblock.menus.Creator;
+import me.goodandevil.skyblock.menus.Leaderboard;
 import me.goodandevil.skyblock.menus.Levelling;
 import me.goodandevil.skyblock.menus.Members;
 import me.goodandevil.skyblock.menus.Ownership;
@@ -75,6 +77,7 @@ public class Main extends JavaPlugin {
 	private SoundManager soundManager;
 	private GeneratorManager generatorManager;
 	private PlaceholderManager placeholderManager;
+	private LeaderboardManager leaderboardManager;
 	
 	@Override
 	public void onEnable() {
@@ -105,6 +108,8 @@ public class Main extends JavaPlugin {
 		
 		placeholderManager = new PlaceholderManager(this);
 		placeholderManager.registerPlaceholders();
+		
+		leaderboardManager = new LeaderboardManager(this);
 		
 		new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
 		new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -140,6 +145,7 @@ public class Main extends JavaPlugin {
 		pluginManager.registerEvents(new ControlPanel(), this);
 		pluginManager.registerEvents(new Creator(), this);
 		pluginManager.registerEvents(new Structure(), this);
+		pluginManager.registerEvents(new Leaderboard(), this);
 		
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Levelling(), this);
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Creator(), this);
@@ -239,6 +245,10 @@ public class Main extends JavaPlugin {
 	
 	public PlaceholderManager getPlaceholderManager() {
 		return placeholderManager;
+	}
+	
+	public LeaderboardManager getLeaderboardManager() {
+		return leaderboardManager;
 	}
 	
     @Override

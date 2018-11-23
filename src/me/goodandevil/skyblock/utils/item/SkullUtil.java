@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
+import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 
 public final class SkullUtil {
@@ -67,7 +68,7 @@ public final class SkullUtil {
 		if (NMSUtil.getVersionNumber() > 12) {
 			is = new ItemStack(Material.valueOf("PLAYER_HEAD"));
 		} else {
-			is = new ItemStack(Material.valueOf("SKULL_ITEM"), 3);
+			is = Materials.LEGACY_SKULL_ITEM.getPostItem();
 		}
 		
 		return is;

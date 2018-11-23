@@ -178,6 +178,15 @@ public class Interact implements Listener {
 						
 						return;
 					}
+				} else if (event.getClickedBlock().getType() == Material.DRAGON_EGG) {
+					if (!islandManager.hasPermission(player, "DragonEggUse")) {
+						event.setCancelled(true);
+						
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						
+						return;
+					}	
 				} else if (event.getClickedBlock().getType() == Material.HOPPER) {
 					if (!islandManager.hasPermission(player, "Hopper")) {
 						event.setCancelled(true);

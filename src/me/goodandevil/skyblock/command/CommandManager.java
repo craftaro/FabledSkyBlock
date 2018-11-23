@@ -33,6 +33,7 @@ import me.goodandevil.skyblock.command.commands.DenyCommand;
 import me.goodandevil.skyblock.command.commands.InviteCommand;
 import me.goodandevil.skyblock.command.commands.KickAllCommand;
 import me.goodandevil.skyblock.command.commands.KickCommand;
+import me.goodandevil.skyblock.command.commands.LeaderboardCommand;
 import me.goodandevil.skyblock.command.commands.LeaveCommand;
 import me.goodandevil.skyblock.command.commands.LevelCommand;
 import me.goodandevil.skyblock.command.commands.MembersCommand;
@@ -83,6 +84,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		List<SubCommand> subCommands = new ArrayList<>();
 		subCommands.add(new VisitCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Visit.Info.Message"))));
 		subCommands.add(new ControlPanelCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.ControlPanel.Info.Message"))));
+		subCommands.add(new LeaderboardCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Leaderboard.Info.Message"))));
 		subCommands.add(new CreateCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Create.Info.Message"))));
 		subCommands.add(new DeleteCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Delete.Info.Message"))));
 		subCommands.add(new TeleportCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Info.Message"))));
@@ -277,10 +279,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		
 		int pageSize = 7;
 		
-		if (page == -1) {
-			pageSize = 1000;
-		}
-		
 		int nextEndIndex = subCommands.get(type).size() - page * pageSize, index = page * pageSize - pageSize, endIndex = index >= subCommands.get(type).size() ? subCommands.get(type).size() - 1 : index + pageSize;
 		boolean showAlises = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.Aliases.Enable");
 		
@@ -307,27 +305,50 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					suffix = ChatColor.translateAlternateColorCodes('&', sections[1]);
 				}
 				
-				for (; index < endIndex; index++) {
-					if (subCommands.get(type).size() > index) {
-						SubCommand subCommandFromIndex = subCommands.get(type).get(index);
+				if (page == -1) {
+					for (int i = 0; i < subCommands.get(type).size(); i++) {
+						SubCommand subCommandFromIndex = subCommands.get(type).get(i);
 						String commandAliases = "";
 						
 						if (showAlises) {
-							for (int i = 0; i < subCommandFromIndex.getAliases().length; i++) {
-								if (i == 0) {
+							for (int i1 = 0; i1 < subCommandFromIndex.getAliases().length; i1++) {
+								if (i1 == 0) {
 									commandAliases = "/";
 								}
 								
-								if (i == subCommandFromIndex.getAliases().length) {
-									commandAliases = commandAliases + subCommandFromIndex.getAliases()[i];
+								if (i1 == subCommandFromIndex.getAliases().length-1) {
+									commandAliases = commandAliases + subCommandFromIndex.getAliases()[i1];
 								} else {
-									commandAliases = commandAliases + subCommandFromIndex.getAliases()[i] + "/";
+									commandAliases = commandAliases + subCommandFromIndex.getAliases()[i1] + "/";
 								}
 							}
 						}
 						
 						player.spigot().sendMessage(new ChatComponent(prefix.replace("%info", subCommandFromIndex.getInfo()) + "/island " + subCommandText + subCommandFromIndex.getName() + commandAliases + suffix.replace("%info", subCommandFromIndex.getInfo()), false, null, null, new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(subCommandFromIndex.getInfo()).create())).getTextComponent());
 					}
+				} else {
+					for (; index < endIndex; index++) {
+						if (subCommands.get(type).size() > index) {
+							SubCommand subCommandFromIndex = subCommands.get(type).get(index);
+							String commandAliases = "";
+							
+							if (showAlises) {
+								for (int i = 0; i < subCommandFromIndex.getAliases().length; i++) {
+									if (i == 0) {
+										commandAliases = "/";
+									}
+									
+									if (i == subCommandFromIndex.getAliases().length) {
+										commandAliases = commandAliases + subCommandFromIndex.getAliases()[i];
+									} else {
+										commandAliases = commandAliases + subCommandFromIndex.getAliases()[i] + "/";
+									}
+								}
+							}
+							
+							player.spigot().sendMessage(new ChatComponent(prefix.replace("%info", subCommandFromIndex.getInfo()) + "/island " + subCommandText + subCommandFromIndex.getName() + commandAliases + suffix.replace("%info", subCommandFromIndex.getInfo()), false, null, null, new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(subCommandFromIndex.getInfo()).create())).getTextComponent());
+						}
+					}	
 				}
 			} else {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', helpLines));

@@ -337,13 +337,31 @@ public class Visit implements Listener {
 				    					List<UUID> islandVotes = visit.getVoters();
 				    					
 				    					if (islandVotes.contains(player.getUniqueId())) {
-				    						visit.removeVoter(player.getUniqueId());
-					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Removed.Message").replace("%player", targetPlayerName)));
-					    					soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
+						    				for (Location.World worldList : Location.World.values()) {
+							    				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+						    						visit.removeVoter(player.getUniqueId());
+							    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Removed.Message").replace("%player", targetPlayerName)));
+							    					soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
+							    					
+							    					return;
+							    				}
+						    				}
+				    						
+					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Location.Remove.Message")));
+					    					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				    					} else {
-				    						visit.addVoter(player.getUniqueId());
-					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Added.Message").replace("%player", targetPlayerName)));
-					    					soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+						    				for (Location.World worldList : Location.World.values()) {
+							    				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+						    						visit.addVoter(player.getUniqueId());
+							    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Added.Message").replace("%player", targetPlayerName)));
+							    					soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+							    					
+							    					return;
+							    				}
+						    				}
+						    				
+					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Location.Add.Message")));
+					    					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				    					}
 				    					
 				    	    			open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());

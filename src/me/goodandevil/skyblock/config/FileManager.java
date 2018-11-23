@@ -51,7 +51,7 @@ public class FileManager {
 			File configFile = configFiles.get(configFileList);
 	        
 	        if (configFile.exists()) {
-	        	if (configFileList.equals("config.yml") || configFileList.equals("language.yml")) {
+	        	if (configFileList.equals("config.yml") || configFileList.equals("language.yml") || configFileList.equals("settings.yml")) {
 					FileChecker fileChecker = new FileChecker(plugin, configFileList);
 					fileChecker.loadSections();
 					fileChecker.compareFiles();

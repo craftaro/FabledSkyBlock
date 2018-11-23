@@ -129,6 +129,7 @@ public class Settings implements Listener {
     			inv.addItemStack(createItem(island, role, "DropperDispenser", Material.DISPENSER), 46);
     			inv.addItemStack(createItem(island, role, "SpawnEgg", Material.EGG), 47);
     			inv.addItemStack(createItem(island, role, "Cake", Material.CAKE), 48);
+    			inv.addItemStack(createItem(island, role, "DragonEggUse", Material.DRAGON_EGG), 49);
     			inv.addItemStack(createItem(island, role, "MinecartBoat", Material.MINECART), 50);
     			inv.addItemStack(createItem(island, role, "Portal", Material.ENDER_PEARL), 51);
     			inv.addItemStack(createItem(island, role, "Hopper", Material.HOPPER), 52);

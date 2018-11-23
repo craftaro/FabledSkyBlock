@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -183,6 +184,13 @@ public class IslandManager {
 				player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
 			}
 		}.runTask(plugin);
+		
+		Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+			@Override
+			public void run() {
+				plugin.getBiomeManager().setBiome(null, island, Biome.valueOf(fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase()));
+			}
+		}, 20L);
 	}
 	
 	public void giveIslandOwnership(UUID uuid) {

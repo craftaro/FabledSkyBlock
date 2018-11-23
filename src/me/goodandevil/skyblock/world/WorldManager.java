@@ -39,13 +39,25 @@ public class WorldManager {
 		if (normalWorld == null) {
 			Bukkit.getServer().getConsoleSender().sendMessage("SkyBlock | Info: Generating VoidWorld '" + normalWorldName + "'.");
 			normalWorld = WorldCreator.name(normalWorldName).type(WorldType.FLAT).environment(World.Environment.NORMAL).generator(new VoidGenerator()).createWorld();
-			registerMultiverse(normalWorldName, World.Environment.NORMAL);
+			
+			Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
+				@Override
+				public void run() {
+					registerMultiverse(normalWorldName, World.Environment.NORMAL);
+				}
+			});
 		}
 		
 		if (netherWorld == null) {
 			Bukkit.getServer().getConsoleSender().sendMessage("SkyBlock | Info: Generating VoidWorld '" + netherWorldName + "'.");
 			netherWorld = WorldCreator.name(netherWorldName).type(WorldType.FLAT).environment(World.Environment.NETHER).generator(new VoidGenerator()).createWorld();
-			registerMultiverse(netherWorldName, World.Environment.NETHER);
+			
+			Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
+				@Override
+				public void run() {
+					registerMultiverse(netherWorldName, World.Environment.NETHER);
+				}
+			});
 		}
 	}
 	

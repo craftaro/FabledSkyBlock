@@ -142,8 +142,8 @@ public class GeneratorManager {
 			for (int index = 0; index < generator.getGeneratorMaterials().size(); index++) {
 				GeneratorMaterial generatorMaterial = generator.getGeneratorMaterials().get(index);
 				
-				for (int i = 0; i < generatorMaterial.getChance(); i++ ) {
-					chances.put(i, index);
+				for (int i = 0; i < generatorMaterial.getChance(); i++) {
+					chances.put(chances.size() + 1, index);
 				}
 			}
 			

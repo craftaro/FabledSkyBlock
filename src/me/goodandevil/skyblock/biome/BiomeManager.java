@@ -57,8 +57,12 @@ public class BiomeManager {
 	    		Location location = island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal, me.goodandevil.skyblock.island.Location.Environment.Island);
 	    		
 	    		for (Location locationList : LocationUtil.getLocations(new Location(location.getWorld(), location.getBlockX() - island.getRadius(), 0, location.getBlockZ() - island.getRadius()), new Location(location.getWorld(), location.getBlockX() + island.getRadius(), 256, location.getBlockZ() + island.getRadius()))) {
-	            	try {
+	    			try {
     	            	Block block = locationList.getBlock();
+    	            	
+    	            	if (!block.getChunk().isLoaded()) {
+    	            		block.getChunk().load(true);
+    	            	}
     	            	
     	            	if (block != null) {
     	            		block.setBiome(biome);

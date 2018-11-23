@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.Main;
-import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.item.InventoryUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -35,10 +34,8 @@ public class ControlPanel implements Listener {
     public void open(Player player) {
     	Main plugin = Main.getInstance();
     	
-    	FileManager fileManager = plugin.getFileManager();
-    	
-    	Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-		FileConfiguration configLoad = languageConfig.getFileConfiguration();
+    	Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		InventoryUtil inv = new InventoryUtil(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.ControlPanel.Title")), null, 1);
 		inv.addItem(inv.createItem(Materials.OAK_DOOR.parseItem(), configLoad.getString("Menu.ControlPanel.Item.Teleport.Displayname"), configLoad.getStringList("Menu.ControlPanel.Item.Teleport.Lore"), null, null, null), 0);

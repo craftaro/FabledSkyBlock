@@ -78,10 +78,12 @@ public class Island {
 			islandLocations.add(new Location(Location.World.Normal, Location.Environment.Visitor, fileManager.getLocation(config, "Location.Normal.Spawn.Visitor", true)));
 			islandLocations.add(new Location(Location.World.Nether, Location.Environment.Visitor, fileManager.getLocation(config, "Location.Nether.Spawn.Visitor", true)));
 			
+			Config settingsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "settings.yml"));
+			
 			for (Settings.Role roleList : Settings.Role.values()) {
 				HashMap<String, Settings> roleSettings = new HashMap<>();
 				
-				for (String settingList : configLoad.getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
+				for (String settingList : settingsConfig.getFileConfiguration().getConfigurationSection(WordUtils.capitalize(roleList.name().toLowerCase())).getKeys(false)) {
 					roleSettings.put(settingList, new Settings(configLoad.getBoolean("Settings." + roleList.name() + "." + settingList)));
 				}
 				
@@ -142,8 +144,6 @@ public class Island {
 					islandManager.setSpawnProtection(islandNetherLocation);
 				}
 			}.runTask(plugin);
-			
-			//plugin.getBiomeManager().setBiome(null, islandNormalLocation, Biome.valueOf(mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase()));
 		}
 		
 		level = new Level(this, plugin);
@@ -441,6 +441,10 @@ public class Island {
 			FileConfiguration configLoad = config.getFileConfiguration();
 			configLoad.set("Visitor." + message.name() + ".Message", islandMessage);
 			configLoad.set("Visitor." + message.name() + ".Author", author);
+			
+			if (message == Message.Signature) {
+				getVisit().setSignature(islandMessage);
+			}
 		}
 	}
 	

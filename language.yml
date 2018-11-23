@@ -1,0 +1,2055 @@
+Command:
+    Island:
+        Argument:
+            Unrecognised:
+                Message: "&bSkyBlock &8| &cError&8: &eThat arugment was not recognised."
+        Help:
+            Lines:
+            - "&bSkyBlock &aEarth &7- &e%type Commands&8:"
+            - "&c&o[&f&o!&c&o] &7&oHover over commands for info."
+            - "&8&l* &e%commands &7- &f&o%info"
+            Word:
+                Next: "&a&lNext Page"
+                Previous: "&a&lPrevious Page"
+                Pipe: "&8|"
+            Integer:
+                Message: "&bSkyBlock &8| &cError&8: &ePlease provide a numerical value."
+            Page:
+                Message: "&bSkyBlock &8| &cError&8: &eThere are not that many pages."
+        ControlPanel:
+            Info:
+                Message: "&f&oOpens the Island Control Panel menu."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+        Leaderboard:
+            Info:
+                Message: "&f&oOpens the Leaderboard menu of the top 10 Islands."
+        Create:
+            Info:
+                Message: "&f&oOpens the Island Creator menu."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are already an Island owner."
+        Delete:
+            Info:
+                Message: "&f&oDeletes your Island."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to delete your Island."
+            Confirmation:
+                Pending:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou currently have a pending confirmation. Please try again in a few seconds!"
+                Confirm:
+                    Word:
+                        Confirm: "confirm"
+                        Tutorial: "&7Click to &f&oconfirm &r&7Island deletion!"
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to delete your Island. You have &c%time &eseconds to confirm."
+        Teleport:
+            Info:
+                Message: "&f&oTeleport to your Island."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island teleport [<player>]"
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to teleport to other players Islands."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Teleported:
+                Yourself:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have been teleported to your Island."
+                Other:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have been teleport to &a%player's &eIsland."
+            Island:
+                None:
+                    Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                Closed:
+                    Message: "&bSkyBlock &8| &cError&8: &eThat players Island is not open to Visitors."
+        SetSpawn:
+            Info:
+                Message: "&f&oSet your Visitor and Main spawn point."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island setspawn <Main|Visitor>"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Role:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not the correct role to set the %spawn spawn point for your Island."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to set the %spawn spawn point for your Island."
+            Island:
+                Message: "&bSkyBlock &8| &cError&8: &eYou must be at your Island to set the %spawn spawn point."
+            Spawn:
+                Message: "&bSkyBlock &8| &cError&8: &eThat is not a correct spawn type."
+            Protection:
+                Block:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must be standing on top of a block for spawn protection."
+                Ground:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must be standing on the ground for spawn protection."
+                Liquid:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must not be standing in a liquid source for spawn protection."
+                Portal:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must not be standing in a portal for spawn protection."
+                Centre:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must be standing close to the centre of the block for spawn protection."
+            Set:
+                Message: "&bSkyBlock &8| &aInfo&8: &eThe %spawn spawn point for your Island has been set to your location."
+        Invite:
+            Info:
+                Message: "&f&oInvite a Player to join your Island."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island invite <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to invite players to your Island."
+            Capacity:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot invite any more players to your Island because your Island has reached the member capacity."
+            Offline:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player could not be found."
+            Yourself:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot invite yourself."
+            Member:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is already a member of the Island."
+            Already:
+                Other:
+                    Message: "&bSkyBlock &8| &cError&8: &eAnother Island has invited this player to join them."
+                Own:
+                    Message: "&bSkyBlock &8| &cError&8: &eAn invite has already been sent to that player."
+            Invited:
+                Word:
+                    Second: "second(s)"
+                    Minute: "minute(s)"
+                    Cancel: "cancel"
+                    Accept: "accept"
+                    Deny: "deny"
+                    Resend: "resend"
+                    Tutorial: "&7Click to &f&o%action &r&7invite!"
+                Sender:
+                    Sent:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have invited the player &d%player &eto join your Island. They have &c%time &eto respond."
+                    Expired:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player's &edidn't respond to your invite in time."
+                    Disconnected:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player's &edisconnected and didn't respond to your invite."
+                Target:
+                    Received:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have been invited to join &d%player's &eIsland. You have &c%time &eto respond."
+                    Expired:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou didn't respond to &c%player's &einvite in time."
+        Accept:
+            Info:
+                Message: "&f&oAccept an Island invitation."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island accept <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou must leave your Island to join another."
+            Invite:
+                Message: "&bSkyBlock &8| &cError&8: &eYou have not received an invite."
+            Invited:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player hasn't invited you to their Island."
+            Capacity:
+                Broadcast:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYour recent invite from &d%player &ehas automatically been cancelled because the Island has reached the member capacity."
+            Accepted:
+                Target:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eThe player &d%player &eaccepted your invite."
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou accepted the player &d%player's &einvite."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eThe player &6%player &ejoined your Island!"
+        Deny:
+            Info:
+                Message: "&f&oDeny an Island invitation."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island deny <player>"
+            Invited:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player hasn't invited you to their Island."
+            Denied:
+                Target:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player &ehas denied your invite."
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have denied the player &c%player's &einvite."
+        Cancel:
+            Info:
+                Message: "&f&oCancel a Player invitation."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island cancel <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to cancel invites to your Island."
+            Offline:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player could not be found."
+            Member:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is a member of the Island."
+            Invited:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player hasn't been invited to your Island."
+            Cancelled:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have cancelled the player &c%player's &einvite."
+        Leave:
+            Info:
+                Message: "&f&oLeave another Player's Island."
+            Member:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not a member of an Island."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot leave your own Island."
+            Left:
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have left the Island."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player &ehas left your Island."
+        Promote:
+            Info:
+                Message: "&f&oPromotes a Member to Operator."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island promote <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to promote Island members."
+            Member:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is not a member of your Island."
+            Operator:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is already an Operator."
+            Promoted:
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have promoted the player &d%player &eto an &dOperator&e."
+                Target:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have been promoted to an &dOperator&e."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eThe player &d%player &ehas been promoted to an &dOperator&e."
+        Demote:
+            Info:
+                Message: "&f&oDemotes an Operator to Member."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island demote <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to demote Island members."
+            Member:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is not a member of your Island."
+            Role:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is already a Member."
+            Demoted:
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have demoted the player &d%player &eto a &dMember&e."
+                Target:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have been demoted to a &dMember&e."
+        Kick:
+            Info:
+                Message: "&f&oRemove a Member or Visitor from your Island."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island kick <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Visit:
+                    Open:
+                        Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to kick Island members or visitors."
+                    Closed:
+                        Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to kick Island members."
+            Occupant:
+                Visit:
+                    Open:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a member or visitor of your Island."
+                    Closed:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a member of your Island."
+            Yourself:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot kick yourself from the Island."
+            Role:
+                Operator:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot kick a member the Island the same role as you."
+                Owner:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot kick the owner from their own Island."
+            Kicked:
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have kicked the player &c%player &efrom the Island."
+                Target:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have been kicked from the Island."
+        Ban:
+            Info:
+                Message: "&f&oBan a player from your Island."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island ban <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Disabled:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot perform this command because Island banning has been disabled."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to ban Island members."
+            Found:
+                Message: "&bSkyBlock &8| &cError&8: &eA player by that name was not found."
+            Yourself:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot ban yourself from the Island."
+            Member:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot ban that player from the Island because they are a Member of it."
+            Already:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is already banned from the Island."
+            Banned:
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have banned the player &c%player &efrom the Island."
+                Target:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have been banned from the Island."
+        Unban:
+            Info:
+                Message: "&f&oUnban a Player from your Island."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island unban <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Disabled:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot perform this command because Island banning has been disabled."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to unban Island members."
+            Found:
+                Message: "&bSkyBlock &8| &cError&8: &eA player by that name was not found."
+            Yourself:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not banned from the Island because you are a Member of it."
+            Member:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is not banned from the Island because they are a Member of it."
+            Banned:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player has not been banned from the Island."
+            Unbanned:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have unbanned the player &c%player &efrom the Island."
+        Bans:
+            Info:
+                Message: "&f&oOpens the Island Bans menu."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to view your Island bans."
+            Bans:
+                Message: "&bSkyBlock &8| &cError&8: &eThere are no player bans for your Island."
+        Biome:
+            Info:
+                Message: "&f&oOpens the Island Biome menu."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to change your Island's biome."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+        Weather:
+            Info:
+                Message: "&f&oOpens the Island Weather menu."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to change your Island's weather."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+        Rollback:
+            Info:
+                Message: "&f&oOpens the Island Rollback menu."
+            Role:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not the correct role to access the Island Rollback menu."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+        Level:
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island level [<player>]"
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to get the level of other players Islands."
+            Info:
+                Message: "&f&oOpens the Island Level menu."
+            Processing:
+                Message: "&bSkyBlock &8| &aInfo&8: &7&oProcessing Island level request... Please wait!"
+            Loading:
+                Message: "&bSkyBlock &8| &aInfo&8: &7&oLoading Island Materials... Please wait!"
+            Owner:
+                Yourself:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+                Other:
+                    Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+            Level:
+                Message: "&bSkyBlock &8| &aInfo&8: &eThe player &d%player's &eIsland level is &6%level&e."
+            Materials:
+                Message: "&bSkyBlock &8| &cError&8: &eThere are no significant materials on your Island."
+            Cooldown:
+                Word:
+                    Hour: "hour(s)"
+                    Minute: "minute(s)"
+                    Second: "second(s)"
+                Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore processing an Island level request."
+        Settings:
+            Info:
+                Message: "&f&oOpen the Island Settings menu."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Role:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not the correct role to access the Island Settings."
+            Permission:
+                Default:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to change or access your Island's settings."
+                Access:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to access this setting."
+                Change:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to change this setting."
+        Members:
+            Info:
+                Message: "&f&oOpen the Island Members menu."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+        Ownership:
+            Info:
+                Message: "&f&oOpen the Island Ownership menu."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island ownership / (<player> / <password>)"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Member:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is not a member of your Island."
+            Yourself:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot assign ownership to yourself. You are already the owner."
+            Confirmation:
+                Pending:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou currently have a pending confirmation. Please try again in a few seconds!"
+                Confirm:
+                    Word:
+                        Confirm: "confirm"
+                        Tutorial: "&7Click to &f&oconfirm &r&7ownership assignment!"
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to assign ownership of the Island to the player &d%player&e. You have &c%time &eseconds to confirm."
+            Password:
+                Unset:
+                    Message: "&bSkyBlock &8| &cError&8: &eThe owner of the Island has not set a password."
+                Incorrect:
+                    Message: "&bSkyBlock &8| &cError&8: &eThe password you have entered is incorrect."
+            Assigned:
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have assigned yourself ownership of the Island."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eThe ownership of the Island has been assigned to the player &a%player&e!"
+        Confirmation:
+            Info:
+                Message: "&f&oConfirmation for permanent operations."
+            Pending:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have a pending confirmation."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot confirm your pending confirmation because you are not an Island owner."
+            Specified:
+                Message: "&bSkyBlock &8| &cError&8: &eA reason for confirmation hasn't been specified. This wasn't suppose to happen."
+            Role:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot confirm your pending confirmation because you are no longer the Island owner."
+            Ownership:
+                Member:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot confirm your pending confirmation because the player you assigned ownership to is no longer a Member of the Island."
+                Assigned:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have been assigned ownership of the Island."
+            Deletion:
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou are no longer an Island owner."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eThe Island owner has disbanded the Island."
+            Confirmed:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have confirmed your pending confirmation."
+        Chat:
+            Info:
+                Message: "&f&oCommunicate privately with Island Members."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Team:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot toggle Island chat because your Island is not a team."
+            Offline:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot toggle Island chat because no members are online."
+            Toggled:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have toggled the Island chat. Chat messages will only be visible to Island members."
+            Untoggled:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have untoggled the Island chat. Chat messages will now be visible for all players."
+        Visitors:
+            Info:
+                Message: "&f&oOpens the Island Visitors menu."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Closed:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot open the Visitors menu because your Island is closed."
+            Visitors:
+                Message: "&bSkyBlock &8| &cError&8: &eThere are no Visitors at your Island."
+        KickAll:
+            Info:
+                Message: "&f&oKick all Visitors from your Island."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Role:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not the correct role to kick visitors."
+            Closed:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot kick visitors because your Island is closed."
+            Visitors:
+                Message: "&bSkyBlock &8| &cError&8: &eThere are no visitors at your Island."
+            Kicked:
+                Target:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have been kicked from the Island."
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have kicked &c%visitors &evisitors from your Island."
+        Current:
+            Info:
+                Message: "&f&oDisplay the current Island you are at."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island current <player>"
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to see what Island other players are at."
+            Offline:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is not connected to the server."
+            Island:
+                Owner:
+                    Yourself:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou are at &d%player's &eIsland."
+                    Other:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eThe player &a%target &eis at &d%owner's &eIsland."
+                None:
+                    Yourself:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou are not at an Island."
+                    Other:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eThat player is not at an Island."
+        Visit:
+            Info:
+                Message: "&f&oOpens a menu of public Islands to Visit."
+        Open:
+            Info:
+                Message: "&f&oOpens your Island to Visitors."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to open the Island."
+            Already:
+                Message: "&bSkyBlock &8| &cError&8: &eYour Island is already open."
+            Opened:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYour Island has been opened."
+        Close:
+            Info:
+                Message: "&f&oCloses your Island to Visitors."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to close the Island."
+            Already:
+                Message: "&bSkyBlock &8| &cError&8: &eYour Island is already closed."
+            Closed:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYour Island has been closed."
+        Public:
+            Info:
+                Message: "&f&oMake your Island private or public."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to make the Island public or private."
+            Public:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYour Island is now &aPublic&e."
+            Private:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYour Island is now &cPrivate&e."
+        Admin:
+            Create:
+                Info:
+                    Message: "&f&oManage Structures for the Island Creator menu."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+            Generator:
+                Info:
+                    Message: "&f&oManager generators for coddlestone generators."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Disabled:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot peform that command because the generator has been disabled."
+            Level:
+                Info:
+                    Message: "&f&oChange Island level materials and points."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+            Structure:
+                Info:
+                    Message: "&f&oCreate structures for Islands."
+                Tool:
+                    Info:
+                        Message: "&f&oGives the player the Structure tool item."
+                    Permission:
+                        Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                    Inventory:
+                        Message: "&bSkyBlock &8| &cError&8: &eYou already have the Structure tool in your Inventory."
+                    Equiped:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have been given the Structure tool."
+                Save:
+                    Info:
+                        Message: "&f&oSaves a selected Structure."
+                    Permission:
+                        Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                    Invalid:
+                        Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin structure save <name>"
+                    Position:
+                        Message: "&bSkyBlock &8| &cError&8: &ePlease use the structure tool to select two positions of an area."
+                    Complete:
+                        Message: "&bSkyBlock &8| &cError&8: &ePlease complete the area selection by using the structure tool and selecting two positions of an area."
+                    Selection:
+                        World:
+                            Message: "&bSkyBlock &8| &cError&8: &eBoth selected positions have to be in the same World."
+                    Player:
+                        World:
+                            Message: "&bSkyBlock &8| &cError&8: &eYou must be in the same World as the selected positions."
+                        Area:
+                            Message: "&bSkyBlock &8| &cError&8: &eYou must be inside the selected area."
+                    Saved:
+                        Successful:
+                            Message: "&bSkyBlock &8| &aInfo&8: &eThe structure with the name '&d%name&e' has been saved!"
+                        Failed:
+                            Message: "&bSkyBlock &8| &cError&8: &eAn error occured when trying to save the Structure."
+            SetSpawn:
+                Info:
+                    Message: "&f&oSets the spawn point to your location."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                World:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot set the spawn point in an Island world."
+                Set:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eThe spawn point has been set to your location."
+            Delete:
+                Info:
+                    Message: "&f&oDelete a players Island permanently."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin delete <player_name>"
+                Owner:
+                    Message: "&bSkyBlock &8| &cError&8: &eThat player is not an Island owner."
+                Deleted:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have deleted the player &c%player's &eIsland."
+            Owner:
+                Info:
+                    Message: "&f&oGet the owner of a player's Island."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin owner <player_name>"
+                Island:
+                    None:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Member:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eThe player &d%player's Island owner is &d%player&e."
+                    Owner:
+                        Message: "&bSkyBlock &8| &aInfo&8: &eThe player &d%player &eis an Island owner."
+            Reload:
+                Info:
+                    Message: "&f&oReload all loaded files."  
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Reloaded:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eAll loaded files have been reloaded."
+Island:
+    Creator:
+        Selector:
+            Created:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou are now an Island owner."
+            None:
+                Message: "&bSkyBlock &8| &cError&8: &eThere are no Structures available to use."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to use that Structure."
+            File:
+                Message: "&bSkyBlock &8| &cError&8: &eThe File for that Structure does not exist."
+            Cooldown:
+                Word:
+                    Minute: "minute(s)"
+                    Second: "second(s)"
+                Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore creating an Island."
+    Biome:
+        Cooldown:
+            Word:
+                Minute: "minute(s)"
+                Second: "second(s)"
+            Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore changing your Island biome."
+    Settings:
+        Permission:
+            Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to do that on this Island."
+        Visitor:
+            Welcome:
+                Disabled:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to use that feature."
+            Signature:
+                Disabled:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to use that feature."
+    WorldBorder:
+        Outside:
+            Message: "&bSkyBlock &8| &cError&8: &eYou went too far outside the Island WorldBorder."
+        Disappeared:
+            Message: "&bSkyBlock &8| &cError&8: &eThe Island you were on suddenly disappeared."
+    Visit:
+        Already:
+            Message: "&bSkyBlock &8| &cError&8: &eYou are already at that player's Island."
+        Exist:
+            Message: "&bSkyBlock &8| &cError&8: &eThat Island no longer exists."
+        Closed:
+            Menu:
+                Message: "&bSkyBlock &8| &cError&8: &eThat Island is no longer open for visitors."
+            Island:
+                Message: "&bSkyBlock &8| &aInfo&8: &eThe Island you were at is no longer open for visitors."
+            Plugin:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot teleport to the destination location because the Island isn't open for visitors."
+        Banned:
+            Island:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have been banned from the Island you were at."
+            Teleport:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot teleport to the destination location because you are banned from that Island."
+        Teleported:
+            Message: "&bSkyBlock &8| &aInfo&8: &eYou have been teleported to &a%player's &eIsland."
+        Unloaded:
+            Message: "&bSkyBlock &8| &aInfo&8: &eThere are no Members of the Island online. You have been kicked from the Island."
+        Deleted:
+            Message: "&bSkyBlock &8| &aInfo&8: &eThe owner of the Island has deleted their Island. You have been kicked from the Island."
+        Vote:
+            Island:
+                Message: "&bSkyBlock &8| &cError&8: &eYou must be at that Island to vote."
+            Added:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &a&lADDED &efor &a%player's &eIsland."
+            Removed:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &c&lREMOVED &efor &a%player's &eIsland."
+            Location:
+                Add:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must be at the Island to add a vote."
+                Remove:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must be at the Island to remove your vote."
+        Banned:
+            Message: "&bSkyBlock &8| &aInfo&8: &eYou have been banned from the Island."
+    Structure:
+        Tool:
+            Position:
+                Message: "&bSkyBlock &8| &aInfo&8: &ePosition &b%position &ehas been selected!"
+            Material:
+                Message: "&bSkyBlock &8| &cError&8: &eThe defined material in the configuration file for the Structure selection tool could not be found."
+            Item:
+                Displayname: "&bStructure Tool"
+                Lore:
+                - "&7Select two positions of"
+                - "&7an area."
+    Chat:
+        Format:
+            Role:
+                Member: "&a[Member]"
+                Operator: "&b[Operator]"
+                Owner: "&c[Owner]"
+            Message: "&8[&bSkyBlock &8| &dChat&8] %role &e%player&8: &f%message"
+        Untoggled:
+            Message: "&bSkyBlock &8| &aInfo&8: &eThe Island chat has been untoggled because there are no Island members online. Chat messages will now be visible for all players."
+    Admin:
+        Creator:
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to do that."
+            Already:
+                Message: "&bSkyBlock &8| &cError&8: &eA structure by that name already exists."
+            Exist:
+                Message: "&bSkyBlock &8| &cError&8: &eThat structure does not exist."
+            Selected:
+                Message: "&bSkyBlock &8| &cError&8: &eYou have not selected a structure."
+            File:
+                Message: "&bSkyBlock &8| &cError&8: &eThat file does not exist in the structures directory."
+            Characters:
+                Message: "&bSkyBlock &8| &cError&8: &eThe structure name can only contain letters and numbers."
+            Item:
+                Added:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eSelect an item in your inventory."
+                Removed:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have been removed from the item selector."
+                Cancelled:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have cancelled the item selector."
+            Created:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have created a structure with the name '&d%structure&e'."
+            Removed:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have removed the structure with the name '&d%structure&e'."
+        Generator:
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to do that."
+            Disabled:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot do that because generators have been disabled."
+            Already:
+                Message: "&bSkyBlock &8| &cError&8: &eA generator by that name already exists."
+            Exist:
+                Message: "&bSkyBlock &8| &cError&8: &eThat generator does not exist."
+            Selected:
+                Message: "&bSkyBlock &8| &cError&8: &eYou have not selected a generator."
+            Characters:
+                Message: "&bSkyBlock &8| &cError&8: &eThe generator name can only contain letters and numbers."
+            Chance:
+                Numerical:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must enter a numerical value."
+                Over:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot set the chance of the material to that because the overall chance total of the materials for this generator goes over 100."
+            Material:
+                Limit:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou have reached the limit of materials for that generator."
+                Already:
+                    Message: "&bSkyBlock &8| &cError&8: &eThat material type has already been added to that generator."
+                Added:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have added the material '&d%material&e' to the generator '&d%generator&e'."
+            Created:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have created a generator with the name '&d%generator&e'."
+            Removed:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have removed the generator with the name '&d%generator&e'."
+        Levelling:
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to do that."
+            Already:
+                Message: "&bSkyBlock &8| &cError&8: &eThat material type has already been added."
+            Exist:
+                Message: "&bSkyBlock &8| &cError&8: &eThat material type has not been added."
+            Numerical:
+                Message: "&bSkyBlock &8| &cError&8: &ePlease provide a numerical value."
+            Added:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have added the material '&d%material&e'."
+            Removed:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have removed the material '&d%material&e'."
+            Points:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the material '&d%material&e' points to '&6%points&8'."
+            Division:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the points division to '&f%division&e'."
+Placeholder:
+    skyblock_island_level:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_points:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_role:
+        Empty:
+            Message: "&f&oNone"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_owner:
+        Empty:
+            Message: "&f&oNone"
+        Non-empty:
+            Yourself:
+                Message: "&fYou"
+            Other:
+                Message: "&f%placeholder"
+    skyblock_island_biome:
+        Empty:
+            Message: "&f&oNone"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_time:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_weather:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_bans:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_members_total:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_members:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_operators:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_visitors:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+Scoreboard:
+    Tutorial:
+        Displayname: "   &b&lSkyBlock &7(&f%players_online&7/&f%players_max&7)"
+        Displaylines:
+        - ""
+        - "&bIsland&f:"
+        - "&cYou do not own an Island."
+        - " &8- &7/island create"
+        - ""
+        - "&bProfile&f:"
+        - " &8- &7Rank&8: &fDefault"
+        - " &8- &7Balance&8: &f$0"
+        - ""
+        - "&ewww.example.net"
+    Island:
+        Solo:
+            Displayname: "   &b&lSkyBlock &7(&f%players_online&7/&f%players_max&7)"
+            Occupied:
+                Displaylines:
+                - ""
+                - "&bIsland&f:"
+                - " &8- &7Level&8: &f%island_level"
+                - " &8- &7Visitors&8: &f%island_visitors"
+                - ""
+                - "&bProfile&f:"
+                - " &8- &7Rank&8: &fDefault"
+                - " &8- &7Balance&8: &f$0"
+                - ""
+                - "&ewww.example.net"
+            Empty:
+                Displaylines:
+                - ""
+                - "&bIsland&f:"
+                - " &8- &7Level&8: &f%island_level"
+                - ""
+                - "&bProfile&f:"
+                - " &8- &7Rank&8: &fDefault"
+                - " &8- &7Balance&8: &f$0"
+                - ""
+                - "&ewww.example.net"
+        Team:
+            Word:
+                Owner: "Owner"
+                Operator: "Operator"
+                Member: "Member"
+            Displayname: "   &b&lSkyBlock &7(&f%players_online&7/&f%players_max&7)"
+            Occupied:
+                Displaylines:
+                - ""
+                - "&bIsland&f:"
+                - " &8- &7Role&8: &f%island_role"
+                - " &8- &7Members&8: &f%island_members"
+                - " &8- &7Level&8: &f%island_level"
+                - " &8- &7Visitors&8: &f%island_visitors"
+                - ""
+                - "&bProfile&f:"
+                - " &8- &7Rank&8: &fDefault"
+                - " &8- &7Balance&8: &f$0"
+                - ""
+                - "&ewww.example.net"
+            Empty:
+                Displaylines:
+                - ""
+                - "&bIsland&f:"
+                - " &8- &7Role&8: &f%island_role"
+                - " &8- &7Members&8: &f%island_members"
+                - " &8- &7Level&8: &f%island_level"
+                - ""
+                - "&bProfile&f:"
+                - " &8- &7Rank&8: &fDefault"
+                - " &8- &7Balance&8: &f$0"
+                - ""
+                - "&ewww.example.net"
+Menu:
+    Creator:
+        Selector:
+            Title: "&8Island Creator"
+            Item:
+                Island:
+                    Word:
+                        Empty: "&f&oEmpty"
+                    Displayname: "%displayname &aIsland"
+                    Lore:
+                    - "&7Description&8:"
+                    - "%description"
+                    - ""
+                    - "&eClick to create Island!"
+    ControlPanel:
+        Title: "&8Island Control Panel"
+        Item:
+            Teleport:
+                Displayname: "&aIsland Teleport"
+                Lore:
+                - "&7[&f!&7] Teleports you to the main"
+                - "    &7spawn point of your Island."
+                - ""
+                - "&eClick to Teleport to your Island!"
+            Barrier:
+                Displayname: "&cIsland Control Panel"
+            Level:
+                Displayname: "&aIsland Level"
+                Lore:
+                - "&7[&f!&7] Gain Levels by expanding"
+                - "    &7your Island and placing down"
+                - "    &7rare blocks."
+                - ""
+                - "&eClick to calculate Island level!"
+            Settings:
+                Displayname: "&aIsland Settings"
+                Lore:
+                - "&7[&f!&7] Manage your Island settings"
+                - "    &7and decide what permissions you"
+                - "    &7want to give." 
+                - ""
+                - "&eClick to view Island settings!"
+            Members:
+                Displayname: "&aIsland Members"
+                Lore:
+                - "&7[&f!&7] View what players are Members"
+                - "    &7of your Island and see their"
+                - "    &7role and statistics."
+                - ""
+                - "&eClick to view Island members!"
+            Biome:
+                Displayname: "&aIsland Biome"
+                Lore:
+                - "&7[&f!&7] Select multiple biomes for"
+                - "    &7your Island and decide which"
+                - "    &7one best suits it."
+                - ""
+                - "&eClick to change Island biome!"
+            Weather:
+                Displayname: "&aIsland Weather"
+                Lore:
+                - "&7[&f!&7] Change the weather for"
+                - "    &7your Island and change the"
+                - "    &7time."
+                - ""
+                - "&eClick to change Island weather!"
+            Bans:
+                Displayname: "&aIsland Bans"
+                Lore:
+                - "&7[&f!&7] View what players have"
+                - "    &7been banned from entering"
+                - "    &7your Island."
+                - ""
+                - "&eClick to view Island bans!"
+            Visitors:
+                Displayname: "&aIsland Visitors"
+                Lore:
+                - "&7[&f!&7] View what players are"
+                - "    &7visiting your Island and"
+                - "    &7see how long they have"
+                - "    &7been visiting for."
+                - ""
+                - "&eClick to view Island visitors!"
+    Leaderboard:
+        Browse:
+            Title: "&8Select a Leaderboard"
+            Item:
+                Leaderboard:
+                    Displayname: "&aTop Island %leaderboard"
+                    Lore:
+                    - "&7View the top 10 Islands."
+                    - ""
+                    - "&eClick to view leaderboard!"
+                Exit:
+                    Displayname: "&cExit Categories"
+        Leaderboard:
+            Title: "&8Top Island %leaderboard"
+            Item:
+                Exit:
+                    Displayname: "&cExit Leaderboard"
+                Return:
+                    Displayname: "&cReturn to Categories"
+                Island:
+                    Word:
+                        Empty: "&f&oEmpty"
+                    Displayname: "&a&lIsland Top %position"
+                    Level:
+                        Lore:
+                        - "&7Owner&8: &f%owner"
+                        - "&7Level&8: &f%level"
+                        - "&7Members&8: &f%members"
+                        - ""
+                        - "&7Signature&8:"
+                        - "%signature"
+                    Votes:
+                        Lore:
+                        - "&7Owner&8: &f%owner"
+                        - "&7Votes&8: &f%votes"
+                        - ""
+                        - "&7Signature&8:"
+                        - "%signature"
+                Empty:
+                    Displayname: "&a&lIsland Top %position"
+                    Lore:
+                    - "&f&oEmpty"
+    Biome:
+        Title: "&8Select a Biome"
+        Item:
+            Info:
+                Displayname: "&bCurrent Biome"
+                Lore:
+                - "&7Type&8: &e%biome_type"
+            Barrier:
+                Displayname: "&cSelect a Biome >"
+            Biome:
+                Current:
+                    Displayname: "&a&mBiome: &e&m%biome_type"
+                    Lore:
+                    - "&cCurrently Set"
+                Select:
+                    Displayname: "&aBiome: &e%biome_type"
+                    Lore:
+                    - "&7Click to Set!"
+    Weather:
+        Title: "&8Island Weather"
+        Item:
+            Info:
+                Displayname: "&bWeather Information"
+                Synchronised:
+                    Enabled: "&atrue"
+                    Disabled: "&cfalse"
+                Time:
+                    Dawn: "dawn/sunrise"
+                    Day: "day"
+                    Noon: "midday/noon"
+                    Dusk: "dusk/sunset"
+                    Night: "night"
+                    Midnight: "midnight"
+                Lore:
+                - "&7Synchronised&8: %synchronised"
+                - "&7Weather&8: &6%weather"
+                - "&7Time&8: &6%time &o(%time_name)"
+            Barrier:
+                Displayname: "&cIsland Weather Options >"
+            Time:
+                Displayname: "&aTime"
+                Choice:
+                    Dawn: "dawn/sunrise"
+                    Day: "day"
+                    Noon: "midday/noon"
+                    Dusk: "dusk/sunset"
+                    Night: "night"
+                    Midnight: "midnight"
+                Lore:
+                - "&7Choice&8: &b%choice"
+                - ""
+                - "&eClick to change time!"
+            Weather:
+                Displayname: "&aWeather"
+                Choice:
+                    Clear: "clear"
+                    Downfall: "downfall"
+                Lore:
+                - "&7Choice&8: &b%choice"
+                - ""
+                - "&eClick to change weather!"
+            Synchronised:
+                Displayname: "&aSynchronised"
+                Choice:
+                    Enable: "Enable"
+                    Disable: "Disable"
+                Lore:
+                - "&7When enabled, the weather"
+                - "&7and time will operate the"
+                - "&7same weather and time as"
+                - "&7the world. When disabled,"
+                - "&7the weather and time will"
+                - "&7be fixed."
+                - ""
+                - "&eClick to %choice!"
+    Rollback:
+        Title: "&8Island Rollback"
+        Item:   
+            Info:
+                Displayname: "&bRollback Information"
+            Barrier:
+                Displayname: "&cIsland Rollback Options >"
+            Save:
+                Displayname: "&aSave Rollback"
+                Lore:
+                - "&7Save the current Island"
+                - "&7state for both the normal"
+                - "&7and nether world."
+                - ""
+                - "&eClick to save rollback!"
+            Load:
+                Displayname: "&aLoad Rollback"
+                Lore:
+                - "&7Load the saved rollback."
+                - ""
+                - "&c&oWarning: You will not be"
+                - "&c&oable to recover your"
+                - "&c&ocurrent Island state."
+                - ""
+                - "&eClick to load rollback!"
+            Reset:
+                Displayname: "&aReset Island"
+                Lore:
+                - "&7Reset the Island back to"
+                - "&7its beginning state."
+                - ""
+                - "&c&oWarning: You will not be"
+                - "&c&oable to recover your"
+                - "&c&ocurrent Island state."
+                - ""
+                - "&eClick to reset Island!"
+    Levelling:
+        Title: "&8Island Levelling"
+        Item:
+            Exit:
+                Displayname: "&cExit Island Levelling"
+            Previous:
+                Displayname: "&a< Previous Page"
+            Next:
+                Displayname: "&aNext Page >"
+            Barrier:
+                Displayname: "&cIsland Materials Below"
+            Rescan:
+                Displayname: "&aRescan Island Materials"
+                Lore:
+                - "&7Click to rescan your island"
+                - "&7materials to gather overall"
+                - "&7points and your level."
+                - ""
+                - "&cWarning: You must wait a"
+                - "&chour after a rescan to"
+                - "&cperform another one!"
+            Statistics:
+                Displayname: "&3&nIsland Materials Statistics"
+                Lore:
+                - "&bLevel:"
+                - "&e%level"
+                - ""
+                - "&bPoints:"
+                - "&e%level_points"
+            Nothing:
+                Displayname: "&c&oNothing to see here..."
+            Material:
+                Displayname: "&7%material &8(&e+%points Points&8)"
+    Settings:
+        Categories:
+            Title: "&8Settings - Categories"
+            Item:
+                Exit:
+                    Displayname: "&cClick to Exit"
+                Visitor:
+                    Displayname: "&aVisitor Settings"
+                    Lore:
+                    - "&7Edit and decide what permissions"
+                    - "&7your want Visitors to have while"
+                    - "&7they explore your Island."
+                    - ""
+                    - "&eClick to Edit Settings!"
+                Member:
+                    Displayname: "&aMember Settings"
+                    Lore:
+                    - "&7Edit and decide what permissions"
+                    - "&7you want Members to have when"
+                    - "&7playing on your Island."
+                    - ""
+                    - "&eClick to Edit Settings!"
+                Operator:
+                    Displayname: "&aOperator Settings"
+                    Lore:
+                    - "&7Edit and decide what permissions"
+                    - "&7you want Operators to have when"
+                    - "&7operating your Island."
+                    - ""
+                    - "&eClick to Edit Settings!"
+                Owner:
+                    Displayname: "&aIsland Settings"
+                    Lore:
+                    - "&7Edit and decide what permissions"
+                    - "&7are most suitable for your Island."
+                    - ""
+                    - "&eClick to Edit Settings!"
+        Visitor:
+            Title: "&8Visitor Settings"
+            Item:
+                Return:
+                    Displayname: "&cClick to Return"
+                Statistics:
+                    Displayname: "&aIsland Visit Statistics"
+                    Vote:
+                        Enabled:
+                            Open:
+                                Lore:
+                                - "&7Island Visits&8: &e%visits"
+                                - "&7Island Votes&8: &e%votes"
+                                - ""
+                                - "&7Current Visitors&8: &a%visitors"
+                                - ""
+                                - "&eClick to close Island!"
+                            Closed:
+                                Lore:
+                                - "&7Island Visits&8: &e%visitors"
+                                - "&7Island Votes&8: &e%votes"
+                                - ""
+                                - "&aClick to open Island!"
+                        Disabled:
+                            Open:
+                                Lore:
+                                - "&7Island Visits&8: &e%visits"
+                                - ""
+                                - "&7Current Visitors&8: &a%visitors"
+                                - ""
+                                - "&eClick to close Island!"
+                            Closed:
+                                Lore:
+                                - "&7Island Visits&8: &e%visitors"
+                                - ""
+                                - "&eClick to open Island!"
+                Signature:
+                    Displayname: "&bIsland Signature"
+                    Lore:
+                    - "&7Set a custom signature that is"
+                    - "&7show in the Visit Islands menu"
+                    - "&7when your Island is open."
+                    - ""
+                    - "&eClick to open panel!"
+                Welcome:
+                    Displayname: "&bIsland Welcome Message"
+                    Lore:
+                    - "&7Set a custom welcome message"
+                    - "&7to be sent to Visitors when"
+                    - "&7they enter your Island."
+                    - ""
+                    - "&eClick to open panel!"
+            Panel:
+                Signature:
+                    Title: "&8Set a Signature"
+                    Item:
+                        Return:
+                            Displayname: "&cClick to Return"
+                        Message:
+                            Displayname: "&bSignature&f:"
+                            Word:
+                                Empty: "&7&oEmpty"
+                        Line:
+                            Add:
+                                Displayname: "&aAdd a Line"
+                                More:
+                                    Lore:
+                                    - ""
+                                    - "&7Click to add a Line!"
+                                Limit:
+                                    Lore:
+                                    - ""
+                                    - "&cYou have reached the Limit!"
+                                Word:
+                                    Enter: "Enter Text"
+                            Remove:
+                                Displayname: "&cRemove a Line"
+                                Lines:
+                                    Lore:
+                                    - ""
+                                    - "&7Click to remove the bottom Line!"
+                                None:
+                                    Lore:
+                                    - ""
+                                    - "&cThere are no lines to remove!"
+                Welcome:
+                    Title: "&8Set a Welcome Message"
+                    Item:
+                        Return:
+                            Displayname: "&cClick to Return"
+                        Message:
+                            Displayname: "&bWelcome Message&f:"
+                            Word:
+                                Empty: "&7&oEmpty"
+                        Line:
+                            Add:
+                                Displayname: "&aAdd a Line"
+                                More:
+                                    Lore:
+                                    - ""
+                                    - "&7Click to add a Line!"
+                                Limit:
+                                    Lore:
+                                    - ""
+                                    - "&cYou have reached the Limit!"
+                                Word:
+                                    Enter: "Enter Text"
+                            Remove:
+                                Displayname: "&cRemove a Line"
+                                Lines:
+                                    Lore:
+                                    - ""
+                                    - "&7Click to remove the bottom Line!"
+                                None:
+                                    Lore:
+                                    - ""
+                                    - "&cThere are no lines to remove!"
+        Member:
+            Title: "&8Member Settings"
+            Item:
+                Return:
+                    Displayname: "&cClick to Return"
+        Operator:
+            Title: "&8Operator Settings"
+            Item:
+                Return:
+                    Displayname: "&cClick to Return"
+                Setting:
+                    Status:
+                        Enabled:
+                            Lore:
+                            - "&7Status&8: &atrue"
+                        Disabled:
+                            Lore:
+                            - "&7Status&8: &cfalse"
+                    Invite:
+                        Displayname: "&aSend Invites"
+                    Kick:
+                        Displayname: "&aKick Members & Visitors"
+                    Ban:
+                        Displayname: "&aBan Visitors"
+                    Unban:
+                        Displayname: "&aUnban Visitors"
+                    Visitor:
+                        Displayname: "&aEdit Visitor Settings"
+                    Member:
+                        Displayname: "&aEdit Member Settings"
+                    Island:
+                        Displayname: "&aEdit Island Settings"
+                    MainSpawn:
+                        Displayname: "&aSet Island Main Spawn"
+                    VisitorSpawn:
+                        Displayname: "&aSet Island Visitor Spawn"
+                    Biome:
+                        Displayname: "&aSet Biome"
+                    Weather:
+                        Displayname: "&aSet Weather"
+        Owner:
+            Title: "&8Island Settings"
+            Item:
+                Return:
+                    Displayname: "&cClick to Return"
+                Setting:
+                    Status:
+                        Enabled:
+                            Lore:
+                            - "&7Status&8: &atrue"
+                        Disabled:
+                            Lore:
+                            - "&7Status&8: &cfalse"
+                    NaturalMobSpawning:
+                        Displayname: "&aNatural Mob Spawning"
+                    MobGriefing:
+                        Displayname: "&aMob Griefing"
+                    PvP:
+                        Displayname: "&aPvP"
+                    Explosions:
+                        Displayname: "&aExplosions"
+                    FireSpread:
+                        Displayname: "&aFire Spread"
+                    LeafDecay:
+                        Displayname: "&aLeaf Decay"
+                    KeepItemsOnDeath:
+                        Displayname: "&aKeep Items on Death"
+        Default:
+            Item:
+                Setting:
+                    Status:
+                        Enabled:
+                            Lore:
+                            - "&7Status&8: &atrue"
+                        Disabled:
+                            Lore:
+                            - "&7Status&8: &cfalse"
+                    Destroy:
+                        Displayname: "&aDestroy Blocks"
+                    Place:
+                        Displayname: "&aPlace Blocks"
+                    Anvil:
+                        Displayname: "&aAnvil Use"
+                    ArmorStand:
+                        Displayname: "&aArmorStand Use"
+                    Beacon:
+                        Displayname: "&aBeacon Use"
+                    Bed:
+                        Displayname: "&aBed Use"
+                    AnimalBreeding:
+                        Displayname: "&aAnimal Breeding"
+                    Brewing:
+                        Displayname: "&aBrewing Stand Use"
+                    Bucket:
+                        Displayname: "&aBucket Use"
+                    WaterCollection:
+                        Displayname: "&aWater Collection"
+                    Storage:
+                        Displayname: "&aAccess Storage"
+                    Workbench:
+                        Displayname: "&aWorkbench Use"
+                    Crop:
+                        Displayname: "&aCrop Trampling"
+                    Door:
+                        Displayname: "&aDoor Use"
+                    Gate:
+                        Displayname: "&aGate Use"
+                    Projectile:
+                        Displayname: "&aProjectile Launch"
+                    Enchant:
+                        Displayname: "&aEnchantment Table Use"
+                    Fire:
+                        Displayname: "&aFire Extinguish"
+                    Furnace:
+                        Displayname: "&aFurnace Use"
+                    HorseInventory:
+                        Displayname: "&aAccess Horse Inventory"
+                    MobRiding:
+                        Displayname: "&aMob Riding"
+                    MobHurting:
+                        Displayname: "&aMob Hurting"
+                    MobTaming:
+                        Displayname: "&aMob Taming"
+                    Leash:
+                        Displayname: "&aLeash Use"
+                    LeverButton:
+                        Displayname: "&aLever/Button Use"
+                    Milking:
+                        Displayname: "&aMilking"
+                    Jukebox:
+                        Displayname: "&aJukebox Use"
+                    PressurePlate:
+                        Displayname: "&aPressure Plate Activate"
+                    Redstone:
+                        Displayname: "&aRedstone Use"
+                    Shearing:
+                        Displayname: "&aMob Shearing"
+                    Trading:
+                        Displayname: "&aVillager Trading"
+                    ItemDrop:
+                        Displayname: "&aItem Drop"
+                    ItemPickup:
+                        Displayname: "&aItem Pickup"
+                    Fishing:
+                        Displayname: "&aFishing"
+                    DropperDispenser:
+                        Displayname: "&aDropper/Dispenser Use"
+                    SpawnEgg:
+                        Displayname: "&aSpawn Eggs"
+                    Cake:
+                        Displayname: "&aCake Consumption"
+                    DragonEggUse:
+                        Displayname: "&aDragon Egg Use"
+                    MinecartBoat:
+                        Displayname: "&aMinecart/Boat Use"
+                    Portal:
+                        Displayname: "&aPortal Use"
+                    Hopper:
+                        Displayname: "&aHopper Use"
+    Members:
+        Title: "&8Island Members"
+        Item:
+            Exit:
+                Displayname: "&cExit Island Members"
+            Previous:
+                Displayname: "&a< Previous Page"
+            Next:
+                Displayname: "&aNext Page >"
+            Barrier:
+                Displayname: "&cIsland Members Below"
+            Type:
+                Displayname: "&aChange Type"
+                Lore:
+                - "&7Current Type&8: &b%type"
+                - ""
+                - "&bDefault&7: Show all Island"
+                - "&7members."
+                - "&bMembers&7: Show Members only."
+                - "&bOperators&7: Show Operators"
+                - "&7only."
+                - "&bOwner&7: Show the Owner only."
+                - ""
+                - "&eClick to change between all"
+                - "&ethe available type options."
+            Statistics:
+                Displayname: "&3&nIsland Member Statistics"
+                Lore:
+                - "&bIsland Members:"
+                - "&e%island_members/%island_capacity"
+                - ""
+                - "&bMembers:"
+                - "&e%members"
+                - ""
+                - "&bOperators:"
+                - "&e%operators"
+            Sort:
+                Displayname: "&aChange Sort"
+                Lore:
+                - "&7Current Sort&8: &b%sort"
+                - ""
+                - "&bDefault&7: Show Island members"
+                - "&7ordered from highest-lowest"
+                - "&7role."
+                - "&bPlaytime&7: Show Island Members"
+                - "&7ordered from the most time played."
+                - "&bMember Since&7: Show Island Members"
+                - "&7ordered from member since."
+                - "&bLast Online&7: Show Island Members"
+                - "&7ordered from last online."
+                - ""
+                - "&eClick to change between all"
+                - "&ethe available sort options."
+            Nothing:
+                Displayname: "&c&oNothing to see here..."
+            Member:
+                Displayname: "&b%player"
+                Word:
+                    Days: "day(s)"
+                    Hours: "hour(s)"
+                    Minutes: "minute(s)"
+                    Seconds: "second(s)"
+                    Click: "Click"
+                    Left-Click: "Left-Click"
+                    Right-Click: "Right-Click"
+                Role:
+                    Word:
+                        Member: "&aMember"
+                        Operator: "&bOperator"
+                        Owner: "&6Owner"
+                    Lore:
+                    - "&7Role&8:"
+                    - "%role"
+                Playtime:
+                    Lore:
+                    - "&7Playtime&8:"
+                    - "&d%playtime"
+                Since:
+                    Lore:
+                    - "&7Member Since&8:"
+                    - "&a%since"
+                LastOnline:
+                    Lore:
+                    - "&7Last Online&8:"
+                    - "&c%last_online"
+                Action:
+                    Word:
+                        Promote: "promote"
+                        Demote: "demote"
+                        Kick: "kick"
+                    Lore: "&e%click to %action player!"
+    Ownership:
+        Title: "&8Island Ownership"
+        Item:
+            Original:
+                Displayname: "&bOriginal Owner"
+                Lore:
+                - "&7Player&8: &e%player"
+            Barrier:
+                Displayname: "&cIsland Ownership Options >"
+            Assign:
+                Word:
+                    Enter: "Enter a Player"
+                Displayname: "&aAssign Owner"
+                Lore:
+                - "&7Assign ownership to a Member"
+                - "&7of your Island."
+                - ""
+                - "&eClick to enter player name!"
+            Password:
+                Displayname: "&aOwnership Password"
+                Unset:
+                    Lore:
+                    - "&7Set a password that can be"
+                    - "&7used by any Member of your"
+                    - "&7Island to automatically"
+                    - "&7assign them ownership."
+                    - ""
+                    - "&7Password&8:"
+                    - "&c&oUnset"
+                    - ""
+                    - "&eClick to set password!"
+                Visible:
+                    Lore:
+                    - "&7Set a password that can be"
+                    - "&7used by any Member of your"
+                    - "&7Island to automatically"
+                    - "&7assign them ownership."
+                    - ""
+                    - "&7Password&8:"
+                    - "&f&o%password"
+                    - ""
+                    - "&eLeft-Click to set password!"
+                    - "&eMiddle-Click to show password!"
+                    - "&eRight-Click to reset password!"
+                Hidden:
+                    Word:
+                        Enter: "Enter a Password"
+                    Lore:
+                    - "&7Set a password that can be"
+                    - "&7used by any Member of your"
+                    - "&7Island to automatically"
+                    - "&7assign them ownership."
+                    - ""
+                    - "&7Password&8:"
+                    - "&f&oHidden"
+                    - ""
+                    - "&eLeft-Click to set password!"
+                    - "&eMiddle-Click to show password!"
+                    - "&eRight-Click to reset password!"
+    Visit:
+        Title: "&8Island Visit"
+        Item:
+            Exit:
+                Displayname: "&cExit Island Visit"
+            Previous:
+                Displayname: "&a< Previous Page"
+            Next:
+                Displayname: "&aNext Page >"
+            Barrier:
+                Displayname: "&cOpen Islands Below"
+            Type:
+                Displayname: "&aChange Type"
+                Lore:
+                - "&7Current Type&8: &b%type"
+                - ""
+                - "&bDefault&7: Show all open Islands."
+                - "&bSolo&7: Show Solo Islands only."
+                - "&bTeam&7: Show Team Islands only."
+                - ""
+                - "&eClick to change between all"
+                - "&ethe available type options."
+            Statistics:
+                Displayname: "&bIsland Statistics"
+                Lore:
+                - "&7Islands Open&8: &f%islands_open&7/&f%islands"
+            Sort:
+                Displayname: "&aChange Sort"
+                Lore:
+                - "&7Current Sort&8: &b%sort"
+                - ""
+                - "&bDefault&7: Show Islands ordered"
+                - "&7randomly."
+                - "&bPlayers&7: Show Islands ordered"
+                - "&7from most-least players at Island."
+                - "&bLevel&7: Show Islands ordered from"
+                - "&7higest-lowest Island level."
+                - "&bMembers&7: Show Islands ordered"
+                - "&7from most-least Island members."
+                - "&bVisits&7: Show Islands ordered from"
+                - "&7most-least Island visits."
+                - "&bVotes&7: Show Islands ordered from"
+                - "&7most-least Island votes."
+                - ""
+                - "&eClick to change between all"
+                - "&ethe available sort options."
+            Nothing:
+                Displayname: "&c&oNo Islands were found..."
+            Island:
+                Displayname: "&a%player"
+                Vote:
+                    Word:
+                        Empty: "&f&oEmpty"
+                    Enabled:
+                        Signature:
+                            Word:
+                                Add: "add"
+                                Remove: "remove"
+                            Enabled:
+                                Member:
+                                    Lore:
+                                    - "&7Signature&8:"
+                                    - "%signature"
+                                    - ""
+                                    - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7Level&8: &b%level"
+                                    - "&7Members&8: &e%members"
+                                    - "&7Visits&8: &e%visits"
+                                    - "&7Votes&8: &6%votes"
+                                    - ""
+                                    - "&eClick to visit Island!"
+                                Visitor:
+                                    Lore:
+                                    - "&7Signature&8:"
+                                    - "%signature"
+                                    - ""
+                                    - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7Level&8: &b%level"
+                                    - "&7Members&8: &e%members"
+                                    - "&7Visits&8: &e%visits"
+                                    - "&7Votes&8: &6%votes"
+                                    - ""
+                                    - "&eLeft-Click to visit Island!"
+                                    - "&eRight-Click to %action vote!"
+                            Disabled:
+                                Member:
+                                    Lore:
+                                    - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7Level&8: &b%level"
+                                    - "&7Members&8: &e%members"
+                                    - "&7Visits&8: &e%visits"
+                                    - "&7Votes&8: &6%votes"
+                                    - ""
+                                    - "&eClick to visit Island!"
+                                Visitor:
+                                    Lore:
+                                    - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7Level&8: &b%level"
+                                    - "&7Members&8: &e%members"
+                                    - "&7Visits&8: &e%visits"
+                                    - "&7Votes&8: &6%votes"
+                                    - ""
+                                    - "&eLeft-Click to visit Island!"
+                                    - "&eRight-Click to %action vote!"
+                    Disabled:
+                        Signature:
+                            Enabled:
+                                Lore:
+                                - "&7Signature&8:"
+                                - "%signature"
+                                - ""
+                                - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                - ""
+                                - "&7Level&8: &b%level"
+                                - "&7Members&8: &e%members"
+                                - "&7Visits&8: &e%visits"
+                                - ""
+                                - "&eClick to visit Island!"
+                            Disabled:
+                                Lore:
+                                - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                - ""
+                                - "&7Level&8: &b%level"
+                                - "&7Members&8: &e%members"
+                                - "&7Visits&8: &e%visits"
+                                - ""
+                                - "&eClick to visit Island!"
+    Visitors:
+        Title: "&8Island Visitors"
+        Item:
+            Exit:
+                Displayname: "&cExit Island Visitors"
+            Previous:
+                Displayname: "&a< Previous Page"
+            Next:
+                Displayname: "&aNext Page >"
+            Barrier:
+                Displayname: "&cIsland Visitors Below"
+            Statistics:
+                Displayname: "&bIsland Visitors"
+                Lore:
+                - "&7Visitors&8: &f%visitors"
+            Nothing:
+                Displayname: "&cThere are no Visitors at your Island."
+            Visitor:
+                Displayname: "&a%player"
+                Word:
+                    Days: "day(s)"
+                    Hours: "hour(s)"
+                    Minutes: "minute(s)"
+                    Seconds: "second(s)"
+                Kick:
+                    Permission:
+                        Ban:
+                            Permission:
+                                Lore:
+                                - "&7Visit Time&8:"
+                                - "&d%time"
+                                - ""
+                                - "&eLeft-Click to Kick player!"
+                                - "&eRight-Click to Ban player!"
+                            NoPermission:
+                                Lore:
+                                - "&7Visit Time&8:"
+                                - "&d%time"
+                                - ""
+                                - "&eClick to Kick player!"
+                    NoPermission:
+                        Ban:
+                            Permission:
+                                Lore:
+                                - "&7Visit Time&8:"
+                                - "&d%time"
+                                - ""
+                                - "&eClick to Ban player!"
+                            NoPermission:
+                                Lore:
+                                - "&7Visit Time&8:"
+                                - "&d%time"
+    Bans:
+        Title: "&8Island Ban"
+        Item:
+            Exit:
+                Displayname: "&cExit Island Bans"
+            Previous:
+                Displayname: "&a< Previous Page"
+            Next:
+                Displayname: "&aNext Page >"
+            Barrier:
+                Displayname: "&cIsland Bans Below"
+            Statistics:
+                Displayname: "&bIsland Bans"
+                Lore:
+                - "&7Bans&8: &f%bans"
+            Nothing:
+                Displayname: "&cThere are no Bans at your Island."
+            Ban:
+                Displayname: "&a%player"
+                Lore:
+                - ""
+                - "&eClick to Unban player!"
+    Admin:
+        Creator:
+            Title: "&8Structure Editor"
+            Browse:
+                Item:
+                    Exit:
+                        Displayname: "&cExit Creator Editor"
+                    Previous:
+                        Displayname: "&a< Previous Page"
+                    Next:
+                        Displayname: "&aNext Page >"
+                    Barrier:
+                        Displayname: "&cStructures Below"
+                    Nothing:
+                        Displayname: "&c&oNothing to see here..."
+                    Information:
+                        Word:
+                            Enter: "Enter Name"
+                        Displayname: "&bInformation"
+                        Lore:
+                        - "&7Structures&8: &f%structures"
+                        - ""
+                        - "&eClick to create a Structure!"
+                    Structure:
+                        Displayname: "&a%structure"
+                        Lore:
+                        - "&eLeft-Click to view options!"
+                        - "&eRight-Click to remove structure!"
+            Options:
+                Item:
+                    Return:
+                        Displayname: "&cReturn to browse"
+                    Word:
+                        Unset: "&f&oUnset"
+                    Displayname:
+                        Word:
+                            Enter: "Enter Displayname"
+                        Displayname: "&aDisplayname"
+                        Lore:
+                        - "&7Displayname&8:"
+                        - "&f&o%displayname"
+                        - ""
+                        - "&eClick to set displayname!"
+                    Description:
+                        Word:
+                            Enter: "Enter Line"
+                        Displayname: "&aDescription"
+                        Unset:
+                            Lore:
+                            - "&7Description&8:"
+                            - "%description"
+                            - ""
+                            - "&eClick to add line!"
+                        Set:
+                            Lore:
+                            - "&7Description&8:"
+                            - "%description"
+                            - ""
+                            - "&eLeft-Click to add line!"
+                            - "&eRight-click to remove line!"
+                    Permission:
+                        Displayname: "&aPermission"
+                        Enable:
+                            Lore:
+                            - "&7Permission&8:"
+                            - "&f&o%permission"
+                            - ""
+                            - "&eClick to enable!"
+                        Disable:
+                            Lore:
+                            - "&7Permission&8:"
+                            - "&f&o%permission"
+                            - ""
+                            - "&eClick to disable!"
+                    File:
+                        Word:
+                            Enter: "Enter file name"
+                        Displayname: "&aStructure File"
+                        Lore:
+                        - "&7File&8:"
+                        - "&f&o%file"
+                        - ""
+                        - "&eClick to set file!"
+                    Item:
+                        Displayname: "&aItem"
+                        Lore:
+                        - "&7Material&8:"
+                        - "&f&o%material"
+                        - ""
+                        - "&7When clicked, select"
+                        - "&7an item in your"
+                        - "&7inventory or click"
+                        - "&7this item again to"
+                        - "&7cancel."
+                        - ""
+                        - "&eClick to set item!"
+        Generator:
+            Title: "&8Generator Editor"
+            Browse:
+                Item:
+                    Exit:
+                        Displayname: "&cExit Generator Editor"
+                    Previous:
+                        Displayname: "&a< Previous Page"
+                    Next:
+                        Displayname: "&aNext Page >"
+                    Barrier:
+                        Displayname: "&cGenerators Below"
+                    Nothing:
+                        Displayname: "&c&oNothing to see here..."
+                    Information:
+                        Word:
+                            Enter: "Enter Name"
+                        Displayname: "&bInformation"
+                        Lore:
+                        - "&7Generators&8: &f%generators"
+                        - ""
+                        - "&eClick to create a Generator!"
+                    Generator:
+                        Displayname: "&a%generator"
+                        Lore:
+                        - "&eLeft-Click to manager generator!"
+                        - "&eRight-Click to remove generator!"
+            Generator:
+                Item:
+                    Return:
+                        Displayname: "&cReturn to browse"
+                    Barrier:
+                        Displayname: "&cMaterials Below"
+                    Information:
+                        Displayname: "&bInformation"
+                        Permission:
+                            Enable:
+                                Lore:
+                                - "&7Name&8: &f%name"
+                                - "&7Permission&8:"
+                                - "&f&o%permission"
+                                - ""
+                                - "&eClick to enable permission!"
+                            Disable:
+                                Lore:
+                                - "&7Name&8: &f%name"
+                                - "&7Permission&8:"
+                                - "&f&o%permission"
+                                - ""
+                                - "&eClick to disable permission!"
+                    Nothing:
+                        Displayname: "&c&oNothing to see here..."
+                    Material:
+                        Word:
+                            Enter: "Enter Chance"
+                        Displayname: "&a%material"
+                        Lore:
+                        - "&7Chance&8: &f%chance"
+                        - ""
+                        - "&eLeft-Click to set chance!"
+                        - "&eRight-Click to remove material!"
+        Levelling:
+            Title: "&8Levelling Editior"
+            Item:
+                Exit:
+                    Displayname: "&cExit Levelling Editor"
+                Previous:
+                    Displayname: "&a< Previous Page"
+                Next:
+                    Displayname: "&aNext Page >"
+                Barrier:
+                    Displayname: "&cLevelling Materials Below"
+                Nothing:
+                    Displayname: "&c&oNothing to see here..."
+                Information:
+                    Word:
+                        Enter: "Enter Division"
+                    Displayname: "&bInformation"
+                    Lore:
+                    - "&7Materials&8: &f%materials"
+                    - "&7Division&8: &f%division"
+                    - ""
+                    - "&eClick to set Division!"
+                Material:
+                    Word:
+                        Enter: "Enter Points"
+                    Displayname: "&a%material"
+                    Lore:
+                    - "&7Points&8: &6%points"
+                    - ""
+                    - "&eLeft-Click to change points!"
+                    - "&eRight-Click to remove material!"
