@@ -328,7 +328,7 @@ public class Members implements Listener {
 				if (islandManager.hasIsland(player)) {
 					island = islandManager.getIsland(playerData.getOwner());
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Members.Owner.Message")));
+					plugin.getMessageManager().sendMessage(player, config.getFileConfiguration().getString("Command.Island.Members.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					player.closeInventory();
 					

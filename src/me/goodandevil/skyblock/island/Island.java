@@ -17,7 +17,6 @@ import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.ban.Ban;
@@ -136,14 +135,16 @@ public class Island {
 			playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 			playerData.save();
 			
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					islandNormalLocation.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().setType(Material.STONE);
-					islandManager.setSpawnProtection(islandNormalLocation);
-					islandManager.setSpawnProtection(islandNetherLocation);
-				}
-			}.runTask(plugin);
+			if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+				Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
+					@Override
+					public void run() {
+						islandNormalLocation.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().setType(Material.STONE);
+						islandManager.setSpawnProtection(islandNormalLocation);
+						islandManager.setSpawnProtection(islandNetherLocation);
+					}
+				});
+			}
 		}
 		
 		level = new Level(getOwnerUUID(), plugin);
@@ -178,8 +179,8 @@ public class Island {
 		return size;
 	}
 	
-	public int getRadius() {
-		return size / 2;
+	public double getRadius() {
+		return (size / 2) + 0.5;
 	}
 	
 	public boolean hasPassword() {

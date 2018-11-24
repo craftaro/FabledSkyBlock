@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -14,6 +13,7 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
@@ -31,6 +31,7 @@ public class OwnerCommand extends SubCommand {
 	@Override
 	public void onCommand(Player player, String[] args) {
 		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
 		
@@ -55,10 +56,10 @@ public class OwnerCommand extends SubCommand {
 				}
 				
 				if (islandOwnerUUID == null) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Owner.Island.None.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Owner.Island.None.Message"));
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				} else if (islandOwnerUUID.equals(targetPlayerUUID)) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Owner.Island.Owner.Message").replace("%player", targetPlayerName)));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Owner.Island.Owner.Message").replace("%player", targetPlayerName));
 					soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 				} else {
 					targetPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
@@ -69,15 +70,15 @@ public class OwnerCommand extends SubCommand {
 						islandOwnerName = targetPlayer.getName();
 					}
 					
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Owner.Island.Member.Message").replace("%player", targetPlayerName).replace("%owner", islandOwnerName)));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Owner.Island.Member.Message").replace("%player", targetPlayerName).replace("%owner", islandOwnerName));
 					soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Owner.Invalid.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Owner.Invalid.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Owner.Permission.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Owner.Permission.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

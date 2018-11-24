@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -161,6 +162,7 @@ public class Creator implements Listener {
 			Main plugin = Main.getInstance();
 			
 			StructureManager structureManager = plugin.getStructureManager();
+			MessageManager messageManager = plugin.getMessageManager();
 			SoundManager soundManager = plugin.getSoundManager();
 			FileManager fileManager = plugin.getFileManager();
 			
@@ -173,7 +175,7 @@ public class Creator implements Listener {
 				PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 				
 				if (!(player.hasPermission("skyblock.admin.create") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Permission.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Permission.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					
 					return;
@@ -202,18 +204,18 @@ public class Creator implements Listener {
 					AnvilGUI gui = new AnvilGUI(player, event1 -> {
 					    if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
 							if (!(player.hasPermission("skyblock.admin.creator") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Permission.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Permission.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else if (structureManager.containsStructure(event1.getName())) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Already.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Already.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else if (!event1.getName().replace(" ", "").matches("^[a-zA-Z0-9]+$")) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Characters.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Characters.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else {
 								structureManager.addStructure(event1.getName(), Materials.GRASS_BLOCK, null, null, false, new ArrayList<>());
 									
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Created.Message").replace("%structure", event1.getName())));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Created.Message").replace("%structure", event1.getName()));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 									
 								Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -265,7 +267,7 @@ public class Creator implements Listener {
 		    		if (playerData.getViewer() == null) {
 		    			open(player);
 		    			
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Selected.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    		} else {
 		    			String name = ((Creator.Viewer) playerData.getViewer()).getName();
@@ -276,7 +278,7 @@ public class Creator implements Listener {
 							AnvilGUI gui = new AnvilGUI(player, event1 -> {
 							    if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
 									if (!(player.hasPermission("skyblock.admin.creator") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Permission.Message")));
+										messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else if (playerData.getViewer() == null) {
 										Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -286,7 +288,7 @@ public class Creator implements Listener {
 											}
 										}, 3L);
 							    		
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Selected.Message")));
+										messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Selected.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else if (!structureManager.containsStructure(name)) {
 										Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -296,7 +298,7 @@ public class Creator implements Listener {
 											}
 										}, 3L);
 							    		
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+										messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else {
 										Structure structure = structureManager.getStructure(name);
@@ -347,7 +349,7 @@ public class Creator implements Listener {
 		    				playerData.setViewer(null);
 		    				open(player);
 		    				
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    			}
 		    		}
@@ -357,7 +359,7 @@ public class Creator implements Listener {
 		    		if (playerData.getViewer() == null) {
 		    			open(player);
 		    			
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Selected.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    		} else {
 		    			String name = ((Creator.Viewer) playerData.getViewer()).getName();
@@ -399,7 +401,7 @@ public class Creator implements Listener {
 							AnvilGUI gui = new AnvilGUI(player, event1 -> {
 							    if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
 									if (!(player.hasPermission("skyblock.admin.creator") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Permission.Message")));
+										messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else if (playerData.getViewer() == null) {
 										Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -409,7 +411,7 @@ public class Creator implements Listener {
 											}
 										}, 3L);
 							    		
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Selected.Message")));
+										messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Selected.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else if (!structureManager.containsStructure(name)) {
 										Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -419,7 +421,7 @@ public class Creator implements Listener {
 											}
 										}, 3L);
 							    		
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+										messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else {
 										structure.addLine(event1.getName());
@@ -469,7 +471,7 @@ public class Creator implements Listener {
 		    				playerData.setViewer(null);
 		    				open(player);
 		    				
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    			}
 		    		}
@@ -479,7 +481,7 @@ public class Creator implements Listener {
 		    		if (playerData.getViewer() == null) {
 		    			open(player);
 		    			
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Selected.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    		} else {
 		    			String name = ((Creator.Viewer) playerData.getViewer()).getName();
@@ -515,7 +517,7 @@ public class Creator implements Listener {
 		    				playerData.setViewer(null);
 		    				open(player);
 		    				
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    			}
 		    		}
@@ -525,7 +527,7 @@ public class Creator implements Listener {
 		    		if (playerData.getViewer() == null) {
 		    			open(player);
 		    			
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Selected.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    		} else {
 		    			String name = ((Creator.Viewer) playerData.getViewer()).getName();
@@ -536,7 +538,7 @@ public class Creator implements Listener {
 							AnvilGUI gui = new AnvilGUI(player, event1 -> {
 							    if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
 									if (!(player.hasPermission("skyblock.admin.creator") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Permission.Message")));
+										messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else if (playerData.getViewer() == null) {
 										Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -546,7 +548,7 @@ public class Creator implements Listener {
 											}
 										}, 3L);
 							    		
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Selected.Message")));
+										messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Selected.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else if (!structureManager.containsStructure(name)) {
 										Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -556,7 +558,7 @@ public class Creator implements Listener {
 											}
 										}, 3L);
 							    		
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+										messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else {
 										if (fileManager.isFileExist(new File(plugin.getDataFolder().toString() + "/structures", event1.getName()))) {
@@ -588,7 +590,7 @@ public class Creator implements Listener {
 												}
 											});
 										} else {
-											player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.File.Message")));
+											messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.File.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 										}
 										
@@ -619,7 +621,7 @@ public class Creator implements Listener {
 		    				playerData.setViewer(null);
 		    				open(player);
 		    				
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    			}
 		    		}
@@ -629,7 +631,7 @@ public class Creator implements Listener {
 		    		if (playerData.getViewer() == null) {
 		    			open(player);
 		    			
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Selected.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    		} else {
 		    			Creator.Viewer viewer = (Viewer) playerData.getViewer();
@@ -637,18 +639,18 @@ public class Creator implements Listener {
 		    			
 		    			if (viewer.isItem()) {
 		    				viewer.setItem(false);
-		    				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Item.Cancelled.Message")));
+		    				messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Item.Cancelled.Message"));
 							soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 		    			} else {
 			    			if (structureManager.containsStructure(name)) {
 			    				viewer.setItem(true);
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Item.Added.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Item.Added.Message"));
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 			    			} else {
 			    				playerData.setViewer(null);
 			    				open(player);
 			    				
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			    			}
 		    			}
@@ -694,13 +696,13 @@ public class Creator implements Listener {
 	    					viewer.setItem(false);
 	    					open(player);
 	    					
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Item.Removed.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Item.Removed.Message"));
 			    			soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 	    				} else {
 		    				playerData.setViewer(null);
 		    				open(player);
 		    				
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 	    				}
 	    				
@@ -719,7 +721,7 @@ public class Creator implements Listener {
 								structureManager.removeStructure(structureList);
 								open(player);
 								
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Removed.Message").replace("%structure", structureList.getName())));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Removed.Message").replace("%structure", structureList.getName()));
 								soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 								
 								Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -743,7 +745,7 @@ public class Creator implements Listener {
 						}
 					}
 					
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Exist.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					
 					open(player);
@@ -770,7 +772,7 @@ public class Creator implements Listener {
 				if (viewer != null) {
 					if (viewer.isItem()) {
 						viewer.setItem(false);
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Creator.Item.Removed.Message")));
+						plugin.getMessageManager().sendMessage(player, configLoad.getString("Island.Admin.Creator.Item.Removed.Message"));
 						plugin.getSoundManager().playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 					}
 				}

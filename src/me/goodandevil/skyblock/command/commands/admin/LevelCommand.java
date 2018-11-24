@@ -2,7 +2,6 @@ package me.goodandevil.skyblock.command.commands.admin;
 
 import java.io.File;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -37,7 +36,7 @@ public class LevelCommand extends SubCommand {
 			Levelling.getInstance().open(player);
 			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Level.Permission.Message")));
+			plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Admin.Level.Permission.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

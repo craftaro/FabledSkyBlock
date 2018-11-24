@@ -20,6 +20,7 @@ import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.levelling.LevellingManager;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.AnvilGUI;
@@ -100,6 +101,7 @@ public class Levelling implements Listener {
 			Main plugin = Main.getInstance();
 			
 			LevellingManager levellingManager = plugin.getLevellingManager();
+			MessageManager messageManager = plugin.getMessageManager();
 			SoundManager soundManager = plugin.getSoundManager();
 			FileManager fileManager = plugin.getFileManager();
 			
@@ -110,7 +112,7 @@ public class Levelling implements Listener {
 				PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 				
 				if (!(player.hasPermission("skyblock.admin.level") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Permission.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Permission.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					
 					return;
@@ -134,12 +136,12 @@ public class Levelling implements Listener {
 					AnvilGUI gui = new AnvilGUI(player, event1 -> {
 					    if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
 							if (!(player.hasPermission("skyblock.admin.level") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Permission.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Permission.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else if (event1.getName().matches("[0-9]+")) {
 								int pointDivision = Integer.valueOf(event1.getName());
 								
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Division.Message").replace("%division", NumberUtil.formatNumber(pointDivision))));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Division.Message").replace("%division", NumberUtil.formatNumber(pointDivision)));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 								
 								Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -165,7 +167,7 @@ public class Levelling implements Listener {
 									}
 								}, 3L);
 							} else {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Numerical.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Numerical.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							}
 							
@@ -222,14 +224,14 @@ public class Levelling implements Listener {
 								AnvilGUI gui = new AnvilGUI(player, event1 -> {
 								    if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
 										if (!(player.hasPermission("skyblock.admin.level") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-											player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Permission.Message")));
+											messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Permission.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 										} else if (levellingManager.containsMaterials(materials)) {
 											if (event1.getName().matches("[0-9]+")) {
 												int materialPoints = Integer.valueOf(event1.getName());
 												materialList.setPoints(materialPoints);
 												
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Points.Message").replace("%material", materials.name()).replace("%points", NumberUtil.formatNumber(materialPoints))));
+												messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Points.Message").replace("%material", materials.name()).replace("%points", NumberUtil.formatNumber(materialPoints)));
 												soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 												
 												Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -255,11 +257,11 @@ public class Levelling implements Listener {
 													}
 												});
 											} else {
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Numerical.Message")));
+												messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Numerical.Message"));
 												soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 											}
 										} else {
-											player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Exist.Message")));
+											messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Exist.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 										}
 										
@@ -282,7 +284,7 @@ public class Levelling implements Listener {
 								levellingManager.removeMaterial(materialList);
 								open(player);
 								
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Removed.Message").replace("%material", materials.name())));
+								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Removed.Message").replace("%material", materials.name()));
 								soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 								
 								Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -318,7 +320,7 @@ public class Levelling implements Listener {
 				}
 				
 				if (levellingManager.containsMaterials(materials)) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Already.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Already.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					
 					return;
@@ -327,7 +329,7 @@ public class Levelling implements Listener {
 				levellingManager.addMaterial(materials, 0);
 				open(player);
 				
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Levelling.Added.Message").replace("%material", materials.name())));
+				messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Added.Message").replace("%material", materials.name()));
 				soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 				
 				Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {

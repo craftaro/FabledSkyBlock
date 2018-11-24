@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -19,6 +18,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -37,6 +37,7 @@ public class KickAllCommand extends SubCommand {
 	@Override
 	public void onCommand(Player player, String[] args) {
 		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		
@@ -52,7 +53,7 @@ public class KickAllCommand extends SubCommand {
 					List<UUID> islandVisitors = island.getVisitors();
 					
 					if (islandVisitors.size() == 0) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.KickAll.Visitors.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Visitors.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						for (UUID islandVisitorList : islandVisitors) {
@@ -64,24 +65,24 @@ public class KickAllCommand extends SubCommand {
 							if (!islandKickEvent.isCancelled()) {
 								LocationUtil.teleportPlayerToSpawn(targetPlayer);
 								
-								targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.KickAll.Kicked.Target.Message").replace("%player", player.getName())));
+								messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.KickAll.Kicked.Target.Message").replace("%player", player.getName()));
 								soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 							}
 						}
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.KickAll.Kicked.Sender.Message").replace("%visitors", "" + islandVisitors.size())));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Kicked.Sender.Message").replace("%visitors", "" + islandVisitors.size()));
 						soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.KickAll.Closed.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Closed.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.KickAll.Role.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Role.Message"));
 				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.KickAll.Owner.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

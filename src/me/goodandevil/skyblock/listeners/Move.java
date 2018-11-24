@@ -3,7 +3,6 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.UUID;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -17,6 +16,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -43,13 +43,14 @@ public class Move implements Listener {
 			
 			if (player.getWorld().getName().equals(plugin.getWorldManager().getWorld(me.goodandevil.skyblock.island.Location.World.Normal).getName()) || player.getWorld().getName().equals(netherWorldName)) {
 				PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+				MessageManager messageManager = plugin.getMessageManager();
 				IslandManager islandManager = plugin.getIslandManager();
 				SoundManager soundManager = plugin.getSoundManager();
 				FileManager fileManager = plugin.getFileManager();
 				
 				if (player.getWorld().getName().equals(netherWorldName)) {
 					if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.World.Nether.Enable")) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.World.Nether.Message")));
+						messageManager.sendMessage(player, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.World.Nether.Message"));
 						
 						if (playerDataManager.hasPlayerData(player)) {
 							PlayerData playerData = playerDataManager.getPlayerData(player);
@@ -128,7 +129,7 @@ public class Move implements Listener {
 										player.teleport(island.getLocation(me.goodandevil.skyblock.island.Location.World.Nether, me.goodandevil.skyblock.island.Location.Environment.Main));
 									}
 									
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Outside.Message")));
+									messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Outside.Message"));
 									soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 								}
 							}
@@ -139,7 +140,7 @@ public class Move implements Listener {
 					
 					LocationUtil.teleportPlayerToSpawn(player);
 					
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message")));
+					messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
 					soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 				}
 			}	

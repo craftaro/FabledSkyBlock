@@ -19,6 +19,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -38,6 +39,7 @@ public class DeleteCommand extends SubCommand {
 	@Override
 	public void onCommand(Player player, String[] args) {
 		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -99,18 +101,18 @@ public class DeleteCommand extends SubCommand {
 					plugin.getVisitManager().deleteIsland(player.getUniqueId());
 					plugin.getBanManager().deleteIsland(player.getUniqueId());
 				
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Delete.Deleted.Message").replace("%player", targetPlayerName)));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Deleted.Message").replace("%player", targetPlayerName));
 					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Delete.Owner.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Delete.Invalid.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Invalid.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Delete.Permission.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Permission.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

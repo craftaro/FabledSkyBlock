@@ -23,6 +23,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
@@ -126,6 +127,7 @@ public class PlayerDataManager {
 	}
 	
 	public void storeIsland(Player player) {
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		WorldManager worldManager = plugin.getWorldManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -208,7 +210,7 @@ public class PlayerDataManager {
 			    		}
 						
 						if (banManager.hasIsland(visitIslandList) && fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && banManager.getIsland(visitIslandList).isBanned(player.getUniqueId())) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Teleport.Island.Message").replace("%player", targetPlayerName)));
+							messageManager.sendMessage(player, configLoad.getString("Island.Visit.Teleport.Island.Message").replace("%player", targetPlayerName));
 						} else {
 							if (visit.isOpen()) {
 								PlayerData playerData = getPlayerData(player);
@@ -218,7 +220,7 @@ public class PlayerDataManager {
 								
 								return;
 							} else {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", targetPlayerName)));
+								messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", targetPlayerName));
 							}
 						}
 						

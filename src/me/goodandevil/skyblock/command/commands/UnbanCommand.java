@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -18,6 +17,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -36,6 +36,7 @@ public class UnbanCommand extends SubCommand {
 	@Override
 	public void onCommand(Player player, String[] args) {
 		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -66,19 +67,19 @@ public class UnbanCommand extends SubCommand {
 						}
 						
 						if (targetPlayerUUID == null) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Found.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Found.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (targetPlayerUUID.equals(player.getUniqueId())) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Yourself.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Yourself.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (island.isRole(Role.Member, targetPlayerUUID) || island.isRole(Role.Operator, targetPlayerUUID) || island.isRole(Role.Owner, targetPlayerUUID)) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Member.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Member.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (!island.getBan().isBanned(targetPlayerUUID)) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Banned.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Banned.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else {						
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Unbanned.Message").replace("%player", targetPlayerName)));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Unbanned.Message").replace("%player", targetPlayerName));
 							soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 							
 							Ban ban = island.getBan();
@@ -86,19 +87,19 @@ public class UnbanCommand extends SubCommand {
 							ban.save();
 						}
 					} else {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Permission.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}	
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Disabled.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Disabled.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Owner.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Owner.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}	
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Invalid.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Invalid.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

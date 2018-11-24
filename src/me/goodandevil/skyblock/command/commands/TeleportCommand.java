@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -14,6 +13,7 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -33,6 +33,7 @@ public class TeleportCommand extends SubCommand {
 	@Override
 	public void onCommand(Player player, String[] args) {
 		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		VisitManager visitManager = plugin.getVisitManager();
@@ -56,7 +57,7 @@ public class TeleportCommand extends SubCommand {
 				}
 				
 				if (islandOwnerUUID == null) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Island.None.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					
 					return;
@@ -64,43 +65,43 @@ public class TeleportCommand extends SubCommand {
 					if (visitManager.hasIsland(islandOwnerUUID)) {
 		    			me.goodandevil.skyblock.visit.Visit visit = visitManager.getIsland(islandOwnerUUID);
 		    			
-		    			if (visit.isOpen()) {
+		    			if (player.hasPermission("skyblock.bypass") || player.hasPermission("skyblock.bypass.*") || player.hasPermission("skyblock.*") || visit.isOpen()) {
 		    				if (!islandManager.containsIsland(islandOwnerUUID)) {
 		    					islandManager.loadIsland(islandOwnerUUID);
 		    				}
 		    				
 		    				islandManager.visitIsland(player, islandManager.getIsland(islandOwnerUUID));
 		    				
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Teleported.Other.Message").replace("%player", targetPlayerName)));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Other.Message").replace("%player", targetPlayerName));
 							soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 		    			} else {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Island.Closed.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.Closed.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    			}
 		    			
 		    			return;
 		    		}
 					
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Island.None.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					
 					return;
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Permission.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Permission.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				
 				return;
 			}
 		} else if (args.length != 0) {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Invalid.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Invalid.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			
 			return;
 		}
 		
 		if (islandManager.hasIsland(player)) {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Teleported.Yourself.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Yourself.Message"));
 			soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 			
 			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
@@ -112,7 +113,7 @@ public class TeleportCommand extends SubCommand {
 				}
 			});
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Owner.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

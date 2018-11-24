@@ -22,6 +22,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -113,6 +114,7 @@ public class Bans implements Listener {
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
 			Main plugin = Main.getInstance();
 			
+			MessageManager messageManager = plugin.getMessageManager();
 			SoundManager soundManager = plugin.getSoundManager();
 			FileManager fileManager = plugin.getFileManager();
 			
@@ -131,14 +133,14 @@ public class Bans implements Listener {
 					island = islandManager.getIsland(playerData.getOwner());
 					
 					if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Bans.Disabled.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Bans.Disabled.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 						
 						return;
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Bans.Owner.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Bans.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					player.closeInventory();
 					
@@ -174,7 +176,7 @@ public class Bans implements Listener {
 								}
 							}.runTaskLater(plugin, 3L);
 		    			} else {
-		    				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Bans.Permission.Message")));
+		    				messageManager.sendMessage(player, configLoad.getString("Command.Island.Bans.Permission.Message"));
 		    				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		    			}
 		    		}

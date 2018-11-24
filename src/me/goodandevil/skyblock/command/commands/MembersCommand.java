@@ -2,7 +2,6 @@ package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.Main;
@@ -35,7 +34,7 @@ public class MembersCommand extends SubCommand {
 			Members.getInstance().open(player, (Members.Type) playerData.getType(), (Members.Sort) playerData.getSort());
 			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Settings.Owner.Message")));
+			plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

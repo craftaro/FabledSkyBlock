@@ -3,7 +3,6 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.UUID;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +12,7 @@ import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -34,6 +34,7 @@ public class Portal implements Listener {
 		
 		Player player = (Player) event.getEntity();
 		
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -48,7 +49,7 @@ public class Portal implements Listener {
 						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 					
@@ -65,7 +66,7 @@ public class Portal implements Listener {
 						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						player.teleport(island.getLocation(Location.World.Nether, Location.Environment.Main));
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 					

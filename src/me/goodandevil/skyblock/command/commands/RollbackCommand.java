@@ -2,7 +2,6 @@ package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -14,6 +13,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.menus.Rollback;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
@@ -28,6 +28,7 @@ public class RollbackCommand extends SubCommand {
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		
@@ -41,11 +42,11 @@ public class RollbackCommand extends SubCommand {
 				Rollback.getInstance().open(player);
 				soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Rollback.Role.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Rollback.Role.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Rollback.Owner.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Rollback.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

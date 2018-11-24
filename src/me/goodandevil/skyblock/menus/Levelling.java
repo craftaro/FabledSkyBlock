@@ -23,6 +23,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.levelling.LevellingManager;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -120,17 +121,18 @@ public class Levelling implements Listener {
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
 			Main plugin = Main.getInstance();
 			
+			MessageManager messageManager = plugin.getMessageManager();
+			IslandManager islandManager = plugin.getIslandManager();
+			SoundManager soundManager = plugin.getSoundManager();
+			
 			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Title")))) {
 				event.setCancelled(true);
 				
-				IslandManager islandManager = plugin.getIslandManager();
-				SoundManager soundManager = plugin.getSoundManager();
-				
 				if (!islandManager.hasIsland(player)) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Level.Owner.Message")));
+					messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Level.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					player.closeInventory();
 					
@@ -155,11 +157,11 @@ public class Levelling implements Listener {
 						long[] durationTime = NumberUtil.getDuration(levelling.getTime());
 						
 						if (levelling.getTime() >= 3600) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Message").replace("%time", durationTime[1] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Minute") + " " + durationTime[2] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Minute") + " " + durationTime[3] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Second"))));
+							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Message").replace("%time", durationTime[1] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Minute") + " " + durationTime[2] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Minute") + " " + durationTime[3] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Second")));
 						} else if (levelling.getTime() >= 60) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Message").replace("%time", durationTime[2] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Minute") + " " + durationTime[3] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Second"))));							
+							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Message").replace("%time", durationTime[2] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Minute") + " " + durationTime[3] + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Second")));							
 						} else {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Message").replace("%time", levelling.getTime() + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Second"))));
+							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Message").replace("%time", levelling.getTime() + " " + config.getFileConfiguration().getString("Command.Island.Level.Cooldown.Word.Second")));
 						}
 						
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
@@ -171,7 +173,7 @@ public class Levelling implements Listener {
 		    		
 		    		new BukkitRunnable() {
 						public void run() {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Level.Processing.Message")));
+							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Level.Processing.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 							
 							levellingManager.createLevelling(island.getOwnerUUID());

@@ -10,7 +10,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -20,6 +19,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Level;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
@@ -52,7 +52,7 @@ public class VisitManager {
 			
 			if (configFile.exists()) {
 				for (File fileList : configFile.listFiles()) {
-					Config config = new FileManager.Config(fileList);
+					Config config = new FileManager.Config(fileManager, fileList);
 					FileConfiguration configLoad = config.getFileConfiguration();
 					
 					UUID islandOwnerUUID = UUID.fromString(fileList.getName().replaceFirst("[.][^.]+$", ""));
@@ -99,6 +99,7 @@ public class VisitManager {
 	}
 	
 	public void removeVisitors(Island island, VisitManager.Removal removal) {
+		MessageManager messageManager = plugin.getMessageManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
 		
@@ -110,7 +111,7 @@ public class VisitManager {
 			
 			LocationUtil.teleportPlayerToSpawn(targetPlayer);
 			
-			targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit." + removal.name() + ".Message")));
+			messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit." + removal.name() + ".Message"));
 			soundManager.playSound(targetPlayer, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

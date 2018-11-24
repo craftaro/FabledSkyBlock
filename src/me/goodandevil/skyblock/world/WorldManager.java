@@ -1,6 +1,7 @@
 package me.goodandevil.skyblock.world;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -37,7 +38,7 @@ public class WorldManager {
 		netherWorld = Bukkit.getServer().getWorld(netherWorldName);
 		
 		if (normalWorld == null) {
-			Bukkit.getServer().getConsoleSender().sendMessage("SkyBlock | Info: Generating VoidWorld '" + normalWorldName + "'.");
+			Bukkit.getServer().getLogger().log(Level.INFO, "SkyBlock | Info: Generating VoidWorld '" + normalWorldName + "'.");
 			normalWorld = WorldCreator.name(normalWorldName).type(WorldType.FLAT).environment(World.Environment.NORMAL).generator(new VoidGenerator()).createWorld();
 			
 			Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
@@ -49,7 +50,7 @@ public class WorldManager {
 		}
 		
 		if (netherWorld == null) {
-			Bukkit.getServer().getConsoleSender().sendMessage("SkyBlock | Info: Generating VoidWorld '" + netherWorldName + "'.");
+			Bukkit.getServer().getLogger().log(Level.INFO, "SkyBlock | Info: Generating VoidWorld '" + netherWorldName + "'.");
 			netherWorld = WorldCreator.name(netherWorldName).type(WorldType.FLAT).environment(World.Environment.NETHER).generator(new VoidGenerator()).createWorld();
 			
 			Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {

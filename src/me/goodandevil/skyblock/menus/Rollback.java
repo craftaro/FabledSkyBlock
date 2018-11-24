@@ -22,6 +22,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -109,27 +110,28 @@ public class Rollback implements Listener {
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
 			Main plugin = Main.getInstance();
 			
+			MessageManager messageManager = plugin.getMessageManager();
+			IslandManager islandManager = plugin.getIslandManager();
+			SoundManager soundManager = plugin.getSoundManager();
+			
 			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Rollback.Title")))) {
 				event.setCancelled(true);
 				
-				IslandManager islandManager = plugin.getIslandManager();
-				SoundManager soundManager = plugin.getSoundManager();
-				
 				if (islandManager.hasIsland(player)) {
 					island = islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
 					
 					if (!island.isRole(Role.Owner, player.getUniqueId())) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Rollback.Role.Message")));
+						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Rollback.Role.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 						
 						return;
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Rollback.Owner.Message")));
+					messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Rollback.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					player.closeInventory();
 					

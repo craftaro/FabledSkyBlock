@@ -16,17 +16,17 @@ public class CreationTask extends BukkitRunnable {
  	
 	@Override
 	public void run() {
-		/*CreationManager creationManager = plugin.getCreationManager();
+		CreationManager creationManager = plugin.getCreationManager();
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			if (creationManager.hasPlayer(all)) {
 				Creation creation = creationManager.getPlayer(all);
 				creation.setTime(creation.getTime() - 1);
 				
-				if (creation.getTime() == 0) {
+				if (creation.getTime() <= 0) {
 					creationManager.removePlayer(all);
 				}
 			}
-		}*/
+		}
 	}
 }

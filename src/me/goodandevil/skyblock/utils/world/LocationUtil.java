@@ -40,13 +40,13 @@ public final class LocationUtil {
     	return false;
     }
     
-	public static boolean isLocationAtLocationRadius(Location location1, Location location2, int radius) {
+	public static boolean isLocationAtLocationRadius(Location location1, Location location2, double radius) {
 		if (location1 == null || location2 == null || !location1.getWorld().getName().equals(location2.getWorld().getName())) {
 			return false;
 		}
 		
-		int x = Math.abs(location1.getBlockX() - location2.getBlockX());
-		int z = Math.abs(location1.getBlockZ() - location2.getBlockZ());
+		double x = Math.abs(location1.getX() - location2.getX());
+		double z = Math.abs(location1.getZ() - location2.getZ());
 		
 		return x < radius && z < radius;
 	}

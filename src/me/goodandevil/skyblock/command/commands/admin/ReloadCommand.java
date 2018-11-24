@@ -3,7 +3,6 @@ package me.goodandevil.skyblock.command.commands.admin;
 import java.io.File;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -13,6 +12,7 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
@@ -27,6 +27,7 @@ public class ReloadCommand extends SubCommand {
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
+		MessageManager messageManager = plugin.getMessageManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
 		
@@ -50,10 +51,10 @@ public class ReloadCommand extends SubCommand {
 				plugin.getScoreboardManager().resendScoreboard();
 			}
 			
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Reload.Permission.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Reload.Permission.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

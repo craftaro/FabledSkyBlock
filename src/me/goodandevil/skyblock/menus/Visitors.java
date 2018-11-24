@@ -166,7 +166,7 @@ public class Visitors implements Listener {
 				if (islandManager.hasIsland(player)) {
 					island = islandManager.getIsland(playerData.getOwner());
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Visitors.Owner.Message")));
+					plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Visitors.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					player.closeInventory();
 					

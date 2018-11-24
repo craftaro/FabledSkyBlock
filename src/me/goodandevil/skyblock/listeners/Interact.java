@@ -3,7 +3,6 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.Set;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -19,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
@@ -38,6 +38,7 @@ public class Interact implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		
@@ -47,7 +48,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Anvil")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -56,7 +57,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Beacon")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -65,7 +66,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Bed")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -74,7 +75,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Brewing")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -83,7 +84,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Storage")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -92,7 +93,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Workbench")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -101,7 +102,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Door")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -110,7 +111,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Enchant")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -119,7 +120,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Furnace")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -128,7 +129,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "LeverButton")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -137,7 +138,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Jukebox")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -146,7 +147,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Redstone")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -155,7 +156,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Gate")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -164,7 +165,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "DropperDispenser")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -173,7 +174,7 @@ public class Interact implements Listener {
 					if (player.getFoodLevel() < 20 && !islandManager.hasPermission(player, "Cake")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -182,7 +183,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "DragonEggUse")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -191,7 +192,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Hopper")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -203,7 +204,7 @@ public class Interact implements Listener {
 						if (!islandManager.hasPermission(player, "Bucket")) {
 							event.setCancelled(true);
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+							messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						}
 					} else if (event.getItem().getType() == Material.GLASS_BOTTLE) {
@@ -211,7 +212,7 @@ public class Interact implements Listener {
 							if (!islandManager.hasPermission(player, "WaterCollection")) {
 								event.setCancelled(true);
 								
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+								messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 								soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							}
 			    		}
@@ -219,7 +220,7 @@ public class Interact implements Listener {
 						if (!islandManager.hasPermission(player, "SpawnEgg")) {
 							event.setCancelled(true);
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+							messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						}
 					}
@@ -236,7 +237,7 @@ public class Interact implements Listener {
 							
 							plugin.getPlayerDataManager().getPlayerData(player).getArea().setPosition(2, event.getClickedBlock().getLocation());
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message").replace("%position", "2")));
+							messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message").replace("%position", "2"));
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 						}
 					}
@@ -248,7 +249,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Fire")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 				}	
@@ -264,7 +265,7 @@ public class Interact implements Listener {
 							
 							plugin.getPlayerDataManager().getPlayerData(player).getArea().setPosition(1, event.getClickedBlock().getLocation());
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message").replace("%position", "1")));
+							messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message").replace("%position", "1"));
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);	
 						}
 					}
@@ -276,7 +277,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Crop")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 		    	} else if (event.getClickedBlock().getType() == Materials.STONE_PRESSURE_PLATE.parseMaterial() || event.getClickedBlock().getType() == Materials.OAK_PRESSURE_PLATE.parseMaterial() || event.getClickedBlock().getType() == Materials.SPRUCE_PRESSURE_PLATE.parseMaterial() || event.getClickedBlock().getType() == Materials.BIRCH_PRESSURE_PLATE.parseMaterial() || event.getClickedBlock().getType() == Materials.JUNGLE_PRESSURE_PLATE.parseMaterial() || event.getClickedBlock().getType() == Materials.ACACIA_PRESSURE_PLATE.parseMaterial() || event.getClickedBlock().getType() == Materials.DARK_OAK_PRESSURE_PLATE.parseMaterial()) {
@@ -289,7 +290,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Redstone")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 		    	}
@@ -302,6 +303,7 @@ public class Interact implements Listener {
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
 		
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		
@@ -311,7 +313,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Leash")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					
 						return;
@@ -327,7 +329,7 @@ public class Interact implements Listener {
 						if (!islandManager.hasPermission(player, "HorseInventory")) {
 							event.setCancelled(true);
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+							messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
@@ -336,7 +338,7 @@ public class Interact implements Listener {
 						if (!islandManager.hasPermission(player, "MobRiding")) {
 							event.setCancelled(true);
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+							messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
@@ -346,7 +348,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "MobRiding")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -357,7 +359,7 @@ public class Interact implements Listener {
 					if (!islandManager.hasPermission(player, "Milking")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
@@ -367,7 +369,7 @@ public class Interact implements Listener {
 				if (!islandManager.hasPermission(player, "Trading")) {
 					event.setCancelled(true);
 					
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+					messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					
 					return;
@@ -376,7 +378,7 @@ public class Interact implements Listener {
 				if (!islandManager.hasPermission(player, "MinecartBoat")) {
 					event.setCancelled(true);
 					
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+					messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					
 					return;
@@ -418,7 +420,7 @@ public class Interact implements Listener {
 			if (!islandManager.hasPermission(player, "AnimalBreeding")) {
 				event.setCancelled(true);
 				
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+				messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 		}
@@ -434,7 +436,7 @@ public class Interact implements Listener {
 				if (!islandManager.hasPermission(player, "ArmorStand")) {
 					event.setCancelled(true);
 					
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+					plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 					plugin.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
 			}

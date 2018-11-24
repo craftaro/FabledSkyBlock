@@ -21,6 +21,7 @@ import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
@@ -43,6 +44,7 @@ public class KickCommand extends SubCommand {
 	public void onCommand(Player player, String[] args) {
 		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
 		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -75,13 +77,13 @@ public class KickCommand extends SubCommand {
 					}
 					
 					if (targetPlayerUUID.equals(player.getUniqueId())) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Yourself.Message")));
+						messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Yourself.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else if (islandOperators.contains(player.getUniqueId()) && islandOperators.contains(targetPlayerUUID)) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Role.Operator.Message")));
+						messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Role.Operator.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else if (island.getOwnerUUID().equals(targetPlayerUUID)) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Role.Owner.Message")));
+						messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Role.Owner.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else if (isOpen && islandVisitors.contains(targetPlayerUUID) && targetPlayer != null) {
 						IslandKickEvent islandKickEvent = new IslandKickEvent(island, Role.Visitor, targetPlayerUUID, player);
@@ -90,10 +92,10 @@ public class KickCommand extends SubCommand {
 						if (!islandKickEvent.isCancelled()) {
 							LocationUtil.teleportPlayerToSpawn(targetPlayer);
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Sender.Message").replace("%player", targetPlayerName)));
+							messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Sender.Message").replace("%player", targetPlayerName));
 							soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 							
-							targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Target.Message").replace("%player", player.getName())));
+							messageManager.sendMessage(targetPlayer, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Target.Message").replace("%player", player.getName()));
 							soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 						}
 					} else if (islandMembers.contains(targetPlayerUUID) || islandOperators.contains(targetPlayerUUID)) {
@@ -107,7 +109,7 @@ public class KickCommand extends SubCommand {
 						Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
 						
 						if (!islandKickEvent.isCancelled()) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Sender.Message").replace("%player", targetPlayerName)));
+							messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Sender.Message").replace("%player", targetPlayerName));
 							soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 							
 							if (targetPlayer == null) {
@@ -124,7 +126,7 @@ public class KickCommand extends SubCommand {
 									e.printStackTrace();
 								}
 							} else {
-								targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Target.Message").replace("%player", player.getName())));
+								messageManager.sendMessage(targetPlayer, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Target.Message").replace("%player", player.getName()));
 								soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 								
 								for (Location.World worldList : Location.World.values()) {
@@ -169,7 +171,7 @@ public class KickCommand extends SubCommand {
 										
 										if (targetPlayerData.isChat()) {
 											targetPlayerData.setChat(false);
-											targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message")));	
+											messageManager.sendMessage(targetPlayer, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
 										}
 									}
 								}
@@ -193,28 +195,28 @@ public class KickCommand extends SubCommand {
 						}
 					} else {
 						if (isOpen) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Occupant.Visit.Open.Message")));
+							messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Occupant.Visit.Open.Message"));
 						} else {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Occupant.Visit.Closed.Message")));	
+							messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Occupant.Visit.Closed.Message"));	
 						}
 						
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
 					if (isOpen) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Permission.Visit.Open.Message")));
+						messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Permission.Visit.Open.Message"));
 					} else {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Permission.Visit.Closed.Message")));
+						messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Permission.Visit.Closed.Message"));
 					}
 					
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Owner.Message")));
+				messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Owner.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}	
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Kick.Invalid.Message")));
+			messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Invalid.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

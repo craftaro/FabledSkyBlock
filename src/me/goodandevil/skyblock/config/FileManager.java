@@ -1,10 +1,17 @@
 package me.goodandevil.skyblock.config;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -52,7 +59,7 @@ public class FileManager {
 	        
 	        if (configFile.exists()) {
 	        	if (configFileList.equals("config.yml") || configFileList.equals("language.yml") || configFileList.equals("settings.yml")) {
-					FileChecker fileChecker = new FileChecker(plugin, configFileList);
+					FileChecker fileChecker = new FileChecker(plugin, this, configFileList);
 					fileChecker.loadSections();
 					fileChecker.compareFiles();
 					fileChecker.saveChanges();
@@ -142,7 +149,7 @@ public class FileManager {
 			return loadedConfigs.get(configPath.getPath());
 		}
 		
-		Config config = new Config(configPath);
+		Config config = new Config(this, configPath);
 		loadedConfigs.put(configPath.getPath(), config);
 		
 		return config;
@@ -156,14 +163,79 @@ public class FileManager {
 		return loadedConfigs.containsKey(configPath.getPath());
 	}
 	
+    public InputStream getConfigContent(File configFile) {
+        if(!configFile.exists()) {
+            return null;
+        }
+ 
+        try {
+            String addLine, currentLine, pluginName = plugin.getDescription().getName();
+            int commentNum = 0;
+            
+            StringBuilder whole = new StringBuilder("");
+            BufferedReader reader = new BufferedReader(new FileReader(configFile));
+ 
+            while((currentLine = reader.readLine()) != null) {
+                if(currentLine.contains("#")) {
+                    addLine = currentLine.replace("[!]", "IMPORTANT").replace(":", "-").replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
+                    whole.append(addLine + "\n");
+                    commentNum++;
+                } else {
+                    whole.append(currentLine + "\n");
+                }
+            }
+ 
+            String config = whole.toString();
+            InputStream configStream = new ByteArrayInputStream(config.getBytes(Charset.forName("UTF-8")));
+            reader.close();
+            
+            return configStream;
+        } catch (IOException e) {
+            e.printStackTrace();
+            
+            return null;
+        }
+    }
+    
+    private String prepareConfigString(String configString) {
+        String[] lines = configString.split("\n");
+        StringBuilder config = new StringBuilder("");
+        
+        for(String line : lines) {
+            if(line.contains(plugin.getDescription().getName() + "_COMMENT")) {
+                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "").replace(plugin.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "") + "\n");
+            } else {
+                config.append(line + "\n");
+            }
+        }
+ 
+        return config.toString();
+    }
+	
+	public void saveConfig(String configString, File configFile) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
+            writer.write(prepareConfigString(configString));
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+	
 	public static class Config {
 		
 		private File configFile;
 		private FileConfiguration configLoad;
 		
-		public Config(java.io.File configPath) {
+		public Config(FileManager fileManager, java.io.File configPath) {
 			configFile = configPath;
-			configLoad = YamlConfiguration.loadConfiguration(configFile);
+			
+			if (configPath.getName().equals("config.yml")) {
+				configLoad = YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
+			} else {
+				configLoad = YamlConfiguration.loadConfiguration(configPath);
+			}
 		}
 		
 		public File getFile() {

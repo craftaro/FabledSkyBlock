@@ -234,6 +234,29 @@ Command:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have demoted the player &d%player &eto a &dMember&e."
                 Target:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have been demoted to a &dMember&e."
+        Vote:
+            Info:
+                Message: "Add/Remove a vote for a players Island."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island vote <player>"
+            Disabled:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot vote for that Island because voting is disabled."
+            Island:
+                None:
+                    Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                Unloaded:
+                    Message: "&bSkyBlock &8| &cError&8: &eThere are no members of that Island online."
+                Closed:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot vote for that Island because it is closed."
+                Member:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot vote for that Island because you are a member of it."
+                Location:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must be at that players Island to vote."
+            Vote:
+                Added:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &a&lADDED &efor &a%player's &eIsland."
+                Removed:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &c&lREMOVED &efor &a%player's &eIsland."
         Kick:
             Info:
                 Message: "&f&oRemove a Member or Visitor from your Island."
@@ -532,6 +555,9 @@ Command:
             Private:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYour Island is now &cPrivate&e."
         Admin:
+            Help:
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
             Create:
                 Info:
                     Message: "&f&oManage Structures for the Island Creator menu."
@@ -701,11 +727,6 @@ Island:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &a&lADDED &efor &a%player's &eIsland."
             Removed:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &c&lREMOVED &efor &a%player's &eIsland."
-            Location:
-                Add:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou must be at the Island to add a vote."
-                Remove:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou must be at the Island to remove your vote."
         Banned:
             Message: "&bSkyBlock &8| &aInfo&8: &eYou have been banned from the Island."
     Structure:

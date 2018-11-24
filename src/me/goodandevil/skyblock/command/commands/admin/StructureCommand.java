@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
@@ -35,6 +36,7 @@ public class StructureCommand extends SubCommand {
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
+		MessageManager messageManager = plugin.getMessageManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		
 		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
@@ -61,7 +63,7 @@ public class StructureCommand extends SubCommand {
 					player.spigot().sendMessage(new ChatComponent(prefix.replace("%info", ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Tool.Info.Message"))) + "/island admin structure tool" + suffix.replace("%info", ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Tool.Info.Message"))), false, null, null, new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Tool.Info.Message"))).create())).getTextComponent());
 					player.spigot().sendMessage(new ChatComponent(prefix.replace("%info", ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Info.Message"))) + "/island admin structure save" + suffix.replace("%info", ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Info.Message"))), false, null, null, new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Info.Message"))).create())).getTextComponent());
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', helpLines));
+					messageManager.sendMessage(player, helpLines);
 				}
 			}
 			
@@ -77,7 +79,7 @@ public class StructureCommand extends SubCommand {
 						for (ItemStack itemList : player.getInventory().getContents()) {
 							if (itemList != null) {
 								if ((itemList.getType() == is.getType()) && (itemList.hasItemMeta()) && (itemList.getItemMeta().getDisplayName().equals(is.getItemMeta().getDisplayName()))) {
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Tool.Inventory.Message")));
+									messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Tool.Inventory.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									
 									return;
@@ -86,16 +88,16 @@ public class StructureCommand extends SubCommand {
 						}
 						
 						player.getInventory().addItem(is);
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Tool.Equiped.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Tool.Equiped.Message"));
 						soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
 					} catch (Exception e) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Structure.Tool.Material.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Island.Structure.Tool.Material.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						
 						Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: The defined material in the configuration file for the Structure selection tool could not be found.");
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Tool.Permission.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Tool.Permission.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 				
@@ -109,46 +111,46 @@ public class StructureCommand extends SubCommand {
 						Location position2Location = playerData.getArea().getPosition(2);
 						
 						if (position1Location == null && position2Location == null) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Position.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Position.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if ((position1Location == null && position2Location != null) || (position1Location != null && position2Location == null)) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Complete.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Complete.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (!position1Location.getWorld().getName().equals(position2Location.getWorld().getName())) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Selection.World.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Selection.World.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (!player.getWorld().getName().equals(position1Location.getWorld().getName())) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Player.World.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Player.World.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (!LocationUtil.isInsideArea(player.getLocation(), position1Location, position2Location)) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Player.Area.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Player.Area.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else {
 	                        try {
 	                            File configFile = new File(plugin.getDataFolder().toString() + "/structures/" + args[1] + ".structure");
 	                            StructureUtil.saveStructure(configFile, player.getLocation(), StructureUtil.getFixedLocations(position1Location, position2Location));
 								
-	                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Saved.Successful.Message").replace("%name", args[1])));
+	                            messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Saved.Successful.Message").replace("%name", args[1]));
 								soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 	                        } catch(Exception e) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Saved.Failed.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Saved.Failed.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 	                            e.printStackTrace();
 	                        }
 						}
 					} else {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Save.Invalid.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Invalid.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Tool.Save.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Tool.Save.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 				
 				return;
 			}
 			
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Argument.Unrecognised.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
 			soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

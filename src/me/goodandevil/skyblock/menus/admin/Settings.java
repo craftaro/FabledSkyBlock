@@ -198,7 +198,7 @@ public class Settings implements Listener {
 				event.setCancelled(true);
 				
 				if (!(player.hasPermission("skyblock.admin.settings") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Settings.Permission.Message")));
+					plugin.getMessageManager().sendMessage(player, configLoad.getString("Island.Admin.Settings.Permission.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					
 					return;

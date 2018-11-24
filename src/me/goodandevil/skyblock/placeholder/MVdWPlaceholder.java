@@ -32,6 +32,13 @@ public class MVdWPlaceholder {
 		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
+		PlaceholderAPI.registerPlaceholder(plugin, "skyblock_islands", new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
+				return "" + plugin.getVisitManager().getIslands().size();
+			}
+		});
+		
 		PlaceholderAPI.registerPlaceholder(plugin, "skyblock_island_level", new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {

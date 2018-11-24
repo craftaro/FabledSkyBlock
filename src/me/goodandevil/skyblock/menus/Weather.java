@@ -21,6 +21,7 @@ import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.item.InventoryUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -104,6 +105,10 @@ public class Weather implements Listener {
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
 			Main plugin = Main.getInstance();
+			
+			MessageManager messageManager = plugin.getMessageManager();
+			IslandManager islandManager = plugin.getIslandManager();
+			SoundManager soundManager = plugin.getSoundManager();
 			FileManager fileManager = plugin.getFileManager();
 			
 			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
@@ -112,23 +117,20 @@ public class Weather implements Listener {
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Weather.Title")))) {
 				event.setCancelled(true);
 				
-				IslandManager islandManager = plugin.getIslandManager();
-				SoundManager soundManager = plugin.getSoundManager();
-				
 				Island island = null;
 				
 				if (islandManager.hasIsland(player)) {
 					island = islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
 					
 					if (!((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Settings.Role.Operator, "Biome").getStatus()) || island.isRole(Role.Owner, player.getUniqueId()))) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Weather.Permission.Message")));
+						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Weather.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 						
 						return;
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Weather.Owner.Message")));
+					messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Weather.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					player.closeInventory();
 					

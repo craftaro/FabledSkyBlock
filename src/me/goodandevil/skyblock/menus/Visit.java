@@ -27,6 +27,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -260,6 +261,7 @@ public class Visit implements Listener {
 			Main plugin = Main.getInstance();
 			
 			PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+			MessageManager messageManager = plugin.getMessageManager();
 			SoundManager soundManager = plugin.getSoundManager();
 			FileManager fileManager = plugin.getFileManager();
 			
@@ -337,45 +339,25 @@ public class Visit implements Listener {
 				    					List<UUID> islandVotes = visit.getVoters();
 				    					
 				    					if (islandVotes.contains(player.getUniqueId())) {
-						    				for (Location.World worldList : Location.World.values()) {
-							    				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-						    						visit.removeVoter(player.getUniqueId());
-							    					
-						    						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Removed.Message").replace("%player", targetPlayerName)));
-							    					soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
-							    					
-							    					open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
-							    					
-							    					return;
-							    				}
-						    				}
-				    						
-					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Location.Remove.Message")));
-					    					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				    						visit.removeVoter(player.getUniqueId());
+					    					
+				    						messageManager.sendMessage(player, configLoad.getString("Island.Visit.Vote.Removed.Message").replace("%player", targetPlayerName));
+					    					soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
 				    					} else {
-						    				for (Location.World worldList : Location.World.values()) {
-							    				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-						    						visit.addVoter(player.getUniqueId());
-							    					
-						    						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Added.Message").replace("%player", targetPlayerName)));
-							    					soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
-							    					
-							    					open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
-							    					
-							    					return;
-							    				}
-						    				}
-						    				
-					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Location.Add.Message")));
-					    					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				    						visit.addVoter(player.getUniqueId());
+					    					
+				    						messageManager.sendMessage(player, configLoad.getString("Island.Visit.Vote.Added.Message").replace("%player", targetPlayerName));
+					    					soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 				    					}
 				    					
 				    	    			open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
 				    	    			soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 				    				} else {
-				    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Vote.Island.Message")));
+				    					messageManager.sendMessage(player, configLoad.getString("Island.Visit.Vote.Island.Message"));
 				    					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				    				}
+				    				
+				    				islandManager.unloadIsland(targetPlayerUUID);
 				    				
 				    				return;
 				    			} else if (event.getClick() != ClickType.LEFT) {
@@ -385,7 +367,7 @@ public class Visit implements Listener {
 
 		    				for (Location.World worldList : Location.World.values()) {
 			    				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-			    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Already.Message").replace("%player", targetPlayerName)));
+			    					messageManager.sendMessage(player, configLoad.getString("Island.Visit.Already.Message").replace("%player", targetPlayerName));
 			    					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			    					
 			    					return;
@@ -394,10 +376,10 @@ public class Visit implements Listener {
 		    				
 		    				islandManager.visitIsland(player, island);
 		    				
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Teleported.Message").replace("%player", targetPlayerName)));
+							messageManager.sendMessage(player, configLoad.getString("Island.Visit.Teleported.Message").replace("%player", targetPlayerName));
 							soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 		    			} else {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Closed.Menu.Message").replace("%player", targetPlayerName)));
+							messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Menu.Message").replace("%player", targetPlayerName));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
 		    			}
@@ -405,7 +387,7 @@ public class Visit implements Listener {
 		    			return;
 		    		}
 		    		
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Exist.Message").replace("%player", targetPlayerName)));
+					messageManager.sendMessage(player, configLoad.getString("Island.Visit.Exist.Message").replace("%player", targetPlayerName));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
 		    	}

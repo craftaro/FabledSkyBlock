@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,6 +48,7 @@ import me.goodandevil.skyblock.command.commands.TeleportCommand;
 import me.goodandevil.skyblock.command.commands.UnbanCommand;
 import me.goodandevil.skyblock.command.commands.VisitCommand;
 import me.goodandevil.skyblock.command.commands.VisitorsCommand;
+import me.goodandevil.skyblock.command.commands.VoteCommand;
 import me.goodandevil.skyblock.command.commands.WeatherCommand;
 import me.goodandevil.skyblock.command.commands.admin.GeneratorCommand;
 import me.goodandevil.skyblock.command.commands.admin.ReloadCommand;
@@ -54,7 +56,7 @@ import me.goodandevil.skyblock.command.commands.admin.StructureCommand;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.menus.ControlPanel;
-import me.goodandevil.skyblock.menus.Creator;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -83,6 +85,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		
 		List<SubCommand> subCommands = new ArrayList<>();
 		subCommands.add(new VisitCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Visit.Info.Message"))));
+		subCommands.add(new VoteCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Vote.Info.Message"))));
 		subCommands.add(new ControlPanelCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.ControlPanel.Info.Message"))));
 		subCommands.add(new LeaderboardCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Leaderboard.Info.Message"))));
 		subCommands.add(new CreateCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Create.Info.Message"))));
@@ -145,6 +148,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
+					MessageManager messageManager = plugin.getMessageManager();
 					SoundManager soundManager = plugin.getSoundManager();
 					FileManager fileManager = plugin.getFileManager();
 					
@@ -154,11 +158,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					if (args.length == 0) {
 						if (plugin.getIslandManager().hasIsland(player)) {
 							ControlPanel.getInstance().open(player);
+							soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 						} else {
-							Creator.getInstance().open(player);
+							Bukkit.getServer().dispatchCommand(player, "island create");
 						}
-						
-						soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 						
 						return;
 					}
@@ -175,7 +178,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 								if (args[1].matches("[0-9]+")) {
 									page = Integer.valueOf(args[1]);
 								} else {
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Help.Integer.Message")));
+									messageManager.sendMessage(player, configLoad.getString("Command.Island.Help.Integer.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									
 									return;
@@ -188,24 +191,29 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 						return;
 					} else if (args[0].equalsIgnoreCase("admin")) {
 						if (args.length == 1 || (args.length >= 2 && args[1].equalsIgnoreCase("help"))) {
-							int page = -1;
-							
-							if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
-								page = 1;
+							if (player.hasPermission("skyblock.admin") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+								int page = -1;
 								
-								if (args.length == 3) {
-									if (args[2].matches("[0-9]+")) {
-										page = Integer.valueOf(args[2]);
-									} else {
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Help.Integer.Message")));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-										
-										return;
+								if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
+									page = 1;
+									
+									if (args.length == 3) {
+										if (args[2].matches("[0-9]+")) {
+											page = Integer.valueOf(args[2]);
+										} else {
+											messageManager.sendMessage(player, configLoad.getString("Command.Island.Help.Integer.Message"));
+											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+											
+											return;
+										}
 									}
 								}
+								
+								sendHelpCommands(player, CommandManager.Type.Admin, page);
+							} else {
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Help.Permission.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							}
-							
-							sendHelpCommands(player, CommandManager.Type.Admin, page);
 
 							return;
 						}
@@ -216,7 +224,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					}
 					
 					if (subCommand == null) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Argument.Unrecognised.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						ArrayList<String> arguments = new ArrayList<>();
@@ -253,8 +261,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 						commandAliases.add(subCommandList.getName());
 					}
 				} else {
-					if ("admin".contains(args[0].toLowerCase())) {
-						commandAliases.add("admin");
+					if (sender.hasPermission("skyblock.admin") || sender.hasPermission("skyblock.admin.*") || sender.hasPermission("skyblock.*")) {
+						if ("admin".contains(args[0].toLowerCase())) {
+							commandAliases.add("admin");
+						}
 					}
 					
 					for (SubCommand subCommandList : subCommands.get(Type.Default)) {
@@ -264,31 +274,35 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					}
 				}
 			} else if (args.length == 2) {
-				if (args[0].equalsIgnoreCase("admin")) {
-					if (args[1] == null || args[1].isEmpty()) {
-						for (SubCommand subCommandList : subCommands.get(Type.Admin)) {
-							commandAliases.add(subCommandList.getName());
-						}
-					} else {
-						for (SubCommand subCommandList : subCommands.get(Type.Admin)) {
-							if (subCommandList.getName().toLowerCase().contains(args[1].toLowerCase())) {
+				if (sender.hasPermission("skyblock.admin") || sender.hasPermission("skyblock.admin.*") || sender.hasPermission("skyblock.*")) {
+					if (args[0].equalsIgnoreCase("admin")) {
+						if (args[1] == null || args[1].isEmpty()) {
+							for (SubCommand subCommandList : subCommands.get(Type.Admin)) {
 								commandAliases.add(subCommandList.getName());
+							}
+						} else {
+							for (SubCommand subCommandList : subCommands.get(Type.Admin)) {
+								if (subCommandList.getName().toLowerCase().contains(args[1].toLowerCase())) {
+									commandAliases.add(subCommandList.getName());
+								}
 							}
 						}
 					}
 				}
 			} else if (args.length == 3) {
-				if (args[0].equalsIgnoreCase("admin") && args[1].equalsIgnoreCase("structure")) {
-					if (args[2] == null || args[2].isEmpty()) {
-						commandAliases.add("tool");
-						commandAliases.add("save");	
-					} else {
-						if ("tool".contains(args[2].toLowerCase())) {
+				if (sender.hasPermission("skyblock.admin") || sender.hasPermission("skyblock.admin.*") || sender.hasPermission("skyblock.*")) {
+					if (args[0].equalsIgnoreCase("admin") && args[1].equalsIgnoreCase("structure")) {
+						if (args[2] == null || args[2].isEmpty()) {
 							commandAliases.add("tool");
-						}
-						
-						if ("save".contains(args[2].toLowerCase())) {
-							commandAliases.add("save");
+							commandAliases.add("save");	
+						} else {
+							if ("tool".contains(args[2].toLowerCase())) {
+								commandAliases.add("tool");
+							}
+							
+							if ("save".contains(args[2].toLowerCase())) {
+								commandAliases.add("save");
+							}
 						}
 					}
 				}
@@ -382,7 +396,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					}	
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', helpLines));
+				plugin.getMessageManager().sendMessage(player, helpLines);
 			}
 		}
 		

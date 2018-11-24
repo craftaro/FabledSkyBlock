@@ -13,13 +13,19 @@ Island:
     # [!] If you go over 1000, the size of the Island will be 100.
     Size: 100
     Creation:
+        # Rather than opening the 'Island Creator' menu. Create an island
+        # as soon as a player performs the '/island' or '/island create'
+        # command.
+        # [!] The first created structure will be selected.
+        Menu:
+            Enable: true
         Cooldown:
             # When enabled cooldown will start when a player creates an Island.
             Creation:
-                Enable: true
+                Enable: false
             # When enabled cooldown will start when a player deletes their Island.
             Deletion:
-                Enable: true
+                Enable: false
             Time: 300
     World:
         # [!] The Island height is 72 blocks.

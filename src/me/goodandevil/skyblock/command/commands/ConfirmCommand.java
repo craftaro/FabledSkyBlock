@@ -19,6 +19,7 @@ import me.goodandevil.skyblock.confirmation.Confirmation;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
@@ -39,6 +40,7 @@ public class ConfirmCommand extends SubCommand {
 	@Override
 	public void onCommand(Player player, String[] args) {
 		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -59,7 +61,7 @@ public class ConfirmCommand extends SubCommand {
 							UUID targetPlayerUUID = playerData.getOwnership();
 							
 							if (island.isRole(Role.Member, targetPlayerUUID) || island.isRole(Role.Operator, targetPlayerUUID)) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Confirmed.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Confirmed.Message"));
 								
 								String targetPlayerName;
 								Player targetPlayer = Bukkit.getServer().getPlayer(targetPlayerUUID);
@@ -68,7 +70,7 @@ public class ConfirmCommand extends SubCommand {
 									targetPlayerName = new OfflinePlayer(targetPlayerUUID).getName();
 								} else {
 									targetPlayerName = targetPlayer.getName();
-									targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Ownership.Assigned.Message")));
+									messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.Confirmation.Ownership.Assigned.Message"));
 									soundManager.playSound(targetPlayer, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
 								}
 								
@@ -84,14 +86,14 @@ public class ConfirmCommand extends SubCommand {
 								
 								islandManager.giveIslandOwnership(targetPlayerUUID);
 							} else {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Ownership.Member.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Ownership.Member.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							}
 						} else if (confirmation == Confirmation.Deletion) {
 							playerData.setConfirmation(null);
 							playerData.setConfirmationTime(0);
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Confirmed.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Confirmed.Message"));
 							
 							boolean hasSpawnPoint = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") != null;
 							
@@ -128,23 +130,23 @@ public class ConfirmCommand extends SubCommand {
 							plugin.getVisitManager().deleteIsland(player.getUniqueId());
 							plugin.getBanManager().deleteIsland(player.getUniqueId());
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Deletion.Sender.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Deletion.Sender.Message"));
 							soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 						}
 					} else {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Role.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Role.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Specified.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Specified.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Owner.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Owner.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Pending.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Pending.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

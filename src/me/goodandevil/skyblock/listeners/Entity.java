@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -24,6 +23,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
@@ -38,6 +38,7 @@ public class Entity implements Listener {
 	
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		MessageManager messageManager = plugin.getMessageManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		
 		if (event.getDamager() instanceof Player) {
@@ -64,7 +65,7 @@ public class Entity implements Listener {
 					if (!plugin.getIslandManager().hasPermission(player, "MobHurting")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);	
 						
 						return;
@@ -81,7 +82,7 @@ public class Entity implements Listener {
 					if (!plugin.getIslandManager().hasPermission(player, "Destroy")) {
 						event.setCancelled(true);
 						
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+						messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 				}
@@ -95,7 +96,7 @@ public class Entity implements Listener {
 						if (!plugin.getIslandManager().hasPermission(player, "Destroy")) {
 							event.setCancelled(true);
 							
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+							messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						}
 					}
@@ -112,7 +113,7 @@ public class Entity implements Listener {
 			if (!plugin.getIslandManager().hasPermission(player, "Shearing")) {
 				event.setCancelled(true);
 				
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+				plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 				plugin.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 		}
@@ -127,7 +128,7 @@ public class Entity implements Listener {
 				if (!plugin.getIslandManager().hasPermission(player, "MobTaming")) {
 					event.setCancelled(true);
 					
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message")));
+					plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 					plugin.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
 			}

@@ -12,7 +12,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -148,7 +147,7 @@ public class LevellingManager {
 	    			}
 	    			
 		    	    if (materials.size() == 0) {
-		    	    	player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Materials.Message")));
+		    	    	plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Materials.Message"));
 		    	    	plugin.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		    	    } else {
 		    	    	me.goodandevil.skyblock.island.Level level = island.getLevel();

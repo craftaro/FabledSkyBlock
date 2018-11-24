@@ -11,6 +11,7 @@ import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.confirmation.ConfirmationTask;
+import me.goodandevil.skyblock.creation.CreationManager;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -41,11 +42,11 @@ import me.goodandevil.skyblock.menus.Members;
 import me.goodandevil.skyblock.menus.Ownership;
 import me.goodandevil.skyblock.menus.Rollback;
 import me.goodandevil.skyblock.menus.Settings;
-import me.goodandevil.skyblock.menus.Structure;
 import me.goodandevil.skyblock.menus.Visit;
 import me.goodandevil.skyblock.menus.Visitors;
 import me.goodandevil.skyblock.menus.Weather;
 import me.goodandevil.skyblock.menus.admin.Generator;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.placeholder.PlaceholderManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.playtime.PlaytimeTask;
@@ -66,7 +67,7 @@ public class Main extends JavaPlugin {
 	private VisitManager visitManager;
 	private BanManager banManager;
 	private IslandManager islandManager;
-	//private CreationManager creationManager;
+	private CreationManager creationManager;
 	private PlayerDataManager playerDataManager;
 	private ScoreboardManager scoreboardManager;
 	private InviteManager inviteManager;
@@ -78,6 +79,7 @@ public class Main extends JavaPlugin {
 	private GeneratorManager generatorManager;
 	private PlaceholderManager placeholderManager;
 	private LeaderboardManager leaderboardManager;
+	private MessageManager messageManager;
 	
 	@Override
 	public void onEnable() {
@@ -88,7 +90,7 @@ public class Main extends JavaPlugin {
 		visitManager = new VisitManager(this);
 		banManager = new BanManager(this);
 		islandManager = new IslandManager(this);
-		//creationManager = new CreationManager(this);
+		creationManager = new CreationManager(this);
 		playerDataManager = new PlayerDataManager(this);
 		
 		if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable")) {
@@ -110,6 +112,7 @@ public class Main extends JavaPlugin {
 		placeholderManager.registerPlaceholders();
 		
 		leaderboardManager = new LeaderboardManager(this);
+		messageManager = new MessageManager(this);
 		
 		new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
 		new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -144,7 +147,6 @@ public class Main extends JavaPlugin {
 		pluginManager.registerEvents(new Bans(), this);
 		pluginManager.registerEvents(new ControlPanel(), this);
 		pluginManager.registerEvents(new Creator(), this);
-		pluginManager.registerEvents(new Structure(), this);
 		pluginManager.registerEvents(new Leaderboard(), this);
 		
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Levelling(), this);
@@ -173,6 +175,10 @@ public class Main extends JavaPlugin {
 		
 		if (this.biomeManager != null) {
 			this.biomeManager.onDisable();
+		}
+		
+		if (this.creationManager != null) {
+			this.creationManager.onDisable();
 		}
 		
 		if (this.playerDataManager != null) {
@@ -204,9 +210,9 @@ public class Main extends JavaPlugin {
 		return islandManager;
 	}
 	
-	/*public CreationManager getCreationManager() {
+	public CreationManager getCreationManager() {
 		return creationManager;
-	}*/
+	}
 	
 	public PlayerDataManager getPlayerDataManager() {
 		return playerDataManager;
@@ -250,6 +256,10 @@ public class Main extends JavaPlugin {
 	
 	public LeaderboardManager getLeaderboardManager() {
 		return leaderboardManager;
+	}
+	
+	public MessageManager getMessageManager() {
+		return messageManager;
 	}
 	
     @Override

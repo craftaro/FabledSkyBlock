@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -15,6 +14,7 @@ import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -38,6 +38,7 @@ public class BanCommand extends SubCommand {
 	@Override
 	public void onCommand(Player player, String[] args) {
 		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -68,19 +69,19 @@ public class BanCommand extends SubCommand {
 						}
 						
 						if (targetPlayerUUID == null) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Found.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Found.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (targetPlayerUUID.equals(player.getUniqueId())) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Yourself.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Yourself.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (island.isRole(Role.Member, targetPlayerUUID) || island.isRole(Role.Operator, targetPlayerUUID) || island.isRole(Role.Owner, targetPlayerUUID)) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Member.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Member.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (island.getBan().isBanned(targetPlayerUUID)) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Already.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Already.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else {						
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Banned.Sender.Message").replace("%player", targetPlayerName)));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Banned.Sender.Message").replace("%player", targetPlayerName));
 							soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 							
 							Ban ban = island.getBan();
@@ -88,7 +89,7 @@ public class BanCommand extends SubCommand {
 							ban.save();
 							
 							if (targetPlayer != null) {
-								targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Banned.Target.Message").replace("%player", player.getName())));
+								messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.Ban.Banned.Target.Message").replace("%player", player.getName()));
 								soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 								
 								for (Location.World worldList : Location.World.values()) {
@@ -101,19 +102,19 @@ public class BanCommand extends SubCommand {
 							}
 						}
 					} else {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Permission.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Disabled.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Disabled.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Owner.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Owner.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}	
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Invalid.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Invalid.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

@@ -14,6 +14,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
@@ -35,6 +36,7 @@ public class DeleteCommand extends SubCommand {
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -47,7 +49,7 @@ public class DeleteCommand extends SubCommand {
 		if (islandManager.hasIsland(player)) {
 			if (islandManager.getIsland(playerData.getOwner()).isRole(Role.Owner, player.getUniqueId())) {
 				if (playerData.getConfirmationTime() > 0) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Delete.Confirmation.Pending.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Confirmation.Pending.Message"));
 					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 				} else {
 					int confirmationTime = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Confirmation.Timeout");
@@ -59,11 +61,11 @@ public class DeleteCommand extends SubCommand {
 					soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Delete.Permission.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Permission.Message"));
 				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Delete.Owner.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Owner.Message"));
 			soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

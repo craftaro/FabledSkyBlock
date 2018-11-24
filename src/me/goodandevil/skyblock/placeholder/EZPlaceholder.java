@@ -41,6 +41,10 @@ public class EZPlaceholder extends PlaceholderExpansion {
     }
     
     public String onPlaceholderRequest(Player player, String identifier) {
+    	if (identifier.equalsIgnoreCase("islands")) {
+    		return "" + plugin.getVisitManager().getIslands().size();
+    	}
+    	
     	if(player == null){
     		return "";
         }

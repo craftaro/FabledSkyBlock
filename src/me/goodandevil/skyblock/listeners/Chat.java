@@ -35,32 +35,34 @@ public class Chat implements Listener {
 		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		
-		PlayerData playerData = playerDataManager.getPlayerData(player);
-		
-		if (playerData.isChat()) {
-			event.setCancelled(true);
+		if (playerDataManager.hasPlayerData(player)) {
+			PlayerData playerData = playerDataManager.getPlayerData(player);
 			
-			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-			FileConfiguration configLoad = config.getFileConfiguration();
-			
-			Island island = plugin.getIslandManager().getIsland(playerData.getOwner());
-			String islandRole = "";
-			
-			if (island.isRole(Role.Member, player.getUniqueId())) {
-				islandRole = configLoad.getString("Island.Chat.Format.Role.Member");
-			} else if (island.isRole(Role.Operator, player.getUniqueId())) {
-				islandRole = configLoad.getString("Island.Chat.Format.Role.Operator");
-			} else if (island.isRole(Role.Owner, player.getUniqueId())) {
-				islandRole = configLoad.getString("Island.Chat.Format.Role.Owner");
-			}
-			
-			IslandChatEvent islandChatEvent = new IslandChatEvent(player, island, event.getMessage(), configLoad.getString("Island.Chat.Format.Message"));
-			Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
-			
-			if (!islandChatEvent.isCancelled()) {
-				for (UUID islandMembersOnlineList : islandManager.getMembersOnline(island)) {
-					Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
-					targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())).replace("%message", islandChatEvent.getMessage()));
+			if (playerData.isChat()) {
+				event.setCancelled(true);
+				
+				Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+				FileConfiguration configLoad = config.getFileConfiguration();
+				
+				Island island = plugin.getIslandManager().getIsland(playerData.getOwner());
+				String islandRole = "";
+				
+				if (island.isRole(Role.Member, player.getUniqueId())) {
+					islandRole = configLoad.getString("Island.Chat.Format.Role.Member");
+				} else if (island.isRole(Role.Operator, player.getUniqueId())) {
+					islandRole = configLoad.getString("Island.Chat.Format.Role.Operator");
+				} else if (island.isRole(Role.Owner, player.getUniqueId())) {
+					islandRole = configLoad.getString("Island.Chat.Format.Role.Owner");
+				}
+				
+				IslandChatEvent islandChatEvent = new IslandChatEvent(player, island, event.getMessage(), configLoad.getString("Island.Chat.Format.Message"));
+				Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
+				
+				if (!islandChatEvent.isCancelled()) {
+					for (UUID islandMembersOnlineList : islandManager.getMembersOnline(island)) {
+						Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
+						targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())).replace("%message", islandChatEvent.getMessage()));
+					}
 				}
 			}
 		}

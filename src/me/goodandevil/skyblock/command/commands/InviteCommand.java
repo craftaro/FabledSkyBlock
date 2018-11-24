@@ -17,6 +17,7 @@ import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -37,6 +38,7 @@ public class InviteCommand extends SubCommand {
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -52,34 +54,34 @@ public class InviteCommand extends SubCommand {
 					Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
 					
 					if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1) >= mainConfig.getFileConfiguration().getInt("Island.Member.Capacity")) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Capacity.Message")));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Capacity.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						String playerName = args[0];
 						
 						if (playerName.equalsIgnoreCase(player.getName())) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Yourself.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Yourself.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else {
 							Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
 							
 							if (targetPlayer == null) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Offline.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Offline.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else if (targetPlayer.getName().equalsIgnoreCase(player.getName())) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Yourself.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Yourself.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else if (island.isRole(Role.Member, targetPlayer.getUniqueId()) || island.isRole(Role.Operator, targetPlayer.getUniqueId()) || island.isRole(Role.Owner, targetPlayer.getUniqueId())) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Member.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Member.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else if (plugin.getInviteManager().hasInvite(targetPlayer.getUniqueId())) {
 								Invite invite = plugin.getInviteManager().getInvite(targetPlayer.getUniqueId());
 								
 								if (invite.getOwnerUUID().equals(island.getOwnerUUID())) {
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Already.Own.Message")));
+									messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Already.Own.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 								} else {
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Already.Other.Message")));
+									messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Already.Other.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 								}
 							} else {
@@ -103,15 +105,15 @@ public class InviteCommand extends SubCommand {
 						}
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Permission.Message")));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Permission.Message"));
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Owner.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Owner.Message"));
 				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Invalid.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Invalid.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

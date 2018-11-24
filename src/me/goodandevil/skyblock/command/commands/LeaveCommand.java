@@ -18,6 +18,7 @@ import me.goodandevil.skyblock.events.IslandLeaveEvent;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
@@ -39,6 +40,7 @@ public class LeaveCommand extends SubCommand {
 	public void onCommand(Player player, String[] args) {
 		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
 		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
@@ -51,7 +53,7 @@ public class LeaveCommand extends SubCommand {
 			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
 			
 			if (island.isRole(Role.Owner, player.getUniqueId())) {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Leave.Owner.Message")));
+				messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Leave.Owner.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			} else {
 				IslandLeaveEvent islandLeaveEvent = new IslandLeaveEvent(player, island);
@@ -90,7 +92,7 @@ public class LeaveCommand extends SubCommand {
 								
 								if (targetPlayerData.isChat()) {
 									targetPlayerData.setChat(false);
-									targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message")));	
+									messageManager.sendMessage(targetPlayer, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
 								}
 							}
 						}
@@ -123,7 +125,7 @@ public class LeaveCommand extends SubCommand {
 						}
 					}
 					
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Leave.Left.Sender.Message")));
+					messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Leave.Left.Sender.Message"));
 					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 5.0F, 5.0F);
 					
 					if (scoreboardManager != null) {
@@ -136,7 +138,7 @@ public class LeaveCommand extends SubCommand {
 				}
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Leave.Member.Message")));
+			messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Leave.Member.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

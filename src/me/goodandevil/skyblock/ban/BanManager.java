@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -14,6 +13,7 @@ import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
@@ -72,6 +72,7 @@ public class BanManager {
 	}
 	
 	public void removeVisitor(Island island) {
+		MessageManager messageManager = plugin.getMessageManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		FileManager fileManager = plugin.getFileManager();
 		
@@ -83,7 +84,7 @@ public class BanManager {
 			
 			LocationUtil.teleportPlayerToSpawn(targetPlayer);
 			
-			targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Visit.Banned.Message")));
+			messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Banned.Message"));
 			soundManager.playSound(targetPlayer, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

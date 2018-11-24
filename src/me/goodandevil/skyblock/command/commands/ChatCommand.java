@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -15,6 +14,7 @@ import me.goodandevil.skyblock.events.IslandChatSwitchEvent;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -35,6 +35,7 @@ public class ChatCommand extends SubCommand {
 	@Override
 	public void onCommand(Player player, String[] args) {
 		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+		MessageManager messageManager = plugin.getMessageManager();
 		IslandManager islandManager = plugin.getIslandManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		
@@ -46,7 +47,7 @@ public class ChatCommand extends SubCommand {
 			Island island = islandManager.getIsland(playerData.getOwner());
 			
 			if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size()) == 0) {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Chat.Team.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Team.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			} else {
 				Map<UUID, PlayerData> playerDataStorage = playerDataManager.getPlayerData();
@@ -58,11 +59,11 @@ public class ChatCommand extends SubCommand {
 						if (targetPlayerData.getOwner().equals(playerData.getOwner())) {
 							if (playerData.isChat()) {
 								Bukkit.getServer().getPluginManager().callEvent(new IslandChatSwitchEvent(player, island, false));
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Chat.Untoggled.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Untoggled.Message"));
 								playerData.setChat(false);
 							} else {
 								Bukkit.getServer().getPluginManager().callEvent(new IslandChatSwitchEvent(player, island, true));
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Chat.Toggled.Message")));
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Toggled.Message"));
 								playerData.setChat(true);
 							}
 							
@@ -73,11 +74,11 @@ public class ChatCommand extends SubCommand {
 					}
 				}
 				
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Chat.Offline.Message")));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Offline.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Chat.Owner.Message")));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

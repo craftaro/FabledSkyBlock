@@ -14,14 +14,20 @@ import me.goodandevil.skyblock.Main;
 
 public class FileChecker {
 	
+	private final Main plugin;
+	private final FileManager fileManager;
+	
 	private Map<File.Type, File> loadedFiles;
 	
-	public FileChecker(Main plugin, String configurationFileName) {
+	public FileChecker(Main plugin, FileManager fileManager, String configurationFileName) {
+		this.plugin = plugin;
+		this.fileManager = fileManager;
+		
 		loadedFiles = new EnumMap<>(File.Type.class);
 		
 		java.io.File configFile = new java.io.File(plugin.getDataFolder(), configurationFileName);
-		loadedFiles.put(File.Type.CREATED, new File(configFile, YamlConfiguration.loadConfiguration(configFile)));
-		loadedFiles.put(File.Type.RESOURCE, new File(null, YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(configurationFileName)))));
+		loadedFiles.put(File.Type.CREATED, new File(fileManager, configFile, YamlConfiguration.loadConfiguration(configFile)));
+		loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(configurationFileName)))));
 	}
 	
 	public void loadSections() {
@@ -45,18 +51,22 @@ public class FileChecker {
 			if (fileType == File.Type.CREATED) {
 				File resourceFile = loadedFiles.get(File.Type.RESOURCE);
 				
-				for (String configKeysList : file.getKeys().keySet()) {
-					if (!resourceFile.getKeys().containsKey(configKeysList)) {
-						configLoad.set(configKeysList, null);
+				for (String configKeyList : file.getKeys().keySet()) {
+					if (!configKeyList.contains(plugin.getDescription().getName() + "_COMMENT")) {
+						if (!resourceFile.getKeys().containsKey(configKeyList)) {
+							configLoad.set(configKeyList, null);
+						}	
 					}
 				}
 			} else if (fileType == File.Type.RESOURCE) {
 				File createdFile = loadedFiles.get(File.Type.CREATED);
 				FileConfiguration createdConfigLoad = createdFile.getFileConfiguration();
 				
-				for (String configKeysList : file.getKeys().keySet()) {
-					if (createdConfigLoad.getString(configKeysList) == null) {
-						createdConfigLoad.set(configKeysList, file.getKeys().get(configKeysList));
+				for (String configKeyList : file.getKeys().keySet()) {
+					if (!configKeyList.contains(plugin.getDescription().getName() + "_COMMENT")) {
+						if (createdConfigLoad.getString(configKeyList) == null) {
+							createdConfigLoad.set(configKeyList, file.getKeys().get(configKeyList));
+						}	
 					}
 				}
 			}
@@ -67,7 +77,11 @@ public class FileChecker {
 		File file = loadedFiles.get(File.Type.CREATED);
 		
 		try {
-			file.getFileConfiguration().save(file.getFile());
+			if (file.getFile().getName().equals("config.yml")) {
+				fileManager.saveConfig(file.getFileConfiguration().saveToString(), file.getFile());
+			} else {
+				file.getFileConfiguration().save(file.getFile());
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -80,10 +94,14 @@ public class FileChecker {
 		
 		private HashMap<String, Object> configKeys;
 		
-		public File(java.io.File configFile, FileConfiguration configLoad) {
+		public File(FileManager fileManager, java.io.File configFile, FileConfiguration configLoad) {
 			this.configFile = configFile;
 			this.configLoad = configLoad;
 			configKeys = new HashMap<>();
+			
+			if (configFile != null) {
+				this.configLoad = YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
+			}
 		}
 		
 		public java.io.File getFile() {

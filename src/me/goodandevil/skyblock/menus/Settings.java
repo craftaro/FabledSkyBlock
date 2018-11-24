@@ -24,6 +24,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Message;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.AnvilGUI;
@@ -271,6 +272,7 @@ public class Settings implements Listener {
 				event.setCancelled(true);
 				
 				PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+				MessageManager messageManager = plugin.getMessageManager();
 				IslandManager islandManager = plugin.getIslandManager();
 				SoundManager soundManager = plugin.getSoundManager();
 				
@@ -280,14 +282,14 @@ public class Settings implements Listener {
 					island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 					
 					if (!(island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId()))) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Role.Message")));
+						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Role.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 						
 						return;
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Owner.Message")));
+					messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					player.closeInventory();
 					
@@ -300,7 +302,7 @@ public class Settings implements Listener {
 			    		player.closeInventory();
 			    	} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Categories.Item.Visitor.Displayname"))))) {
 						if (island.isRole(Role.Operator, player.getUniqueId()) && !island.getSetting(me.goodandevil.skyblock.island.Settings.Role.Operator, "Visitor").getStatus()) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Permission.Access.Message")));
+							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Permission.Access.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
@@ -310,7 +312,7 @@ public class Settings implements Listener {
 			    		soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 			    	} else if ((event.getCurrentItem().getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Categories.Item.Member.Displayname"))))) {
 						if (island.isRole(Role.Operator, player.getUniqueId()) && !island.getSetting(me.goodandevil.skyblock.island.Settings.Role.Operator, "Member").getStatus()) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Permission.Access.Message")));
+							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Permission.Access.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
@@ -320,7 +322,7 @@ public class Settings implements Listener {
 			    		soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 			    	} else if ((event.getCurrentItem().getType() == Material.ITEM_FRAME) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Categories.Item.Operator.Displayname"))))) {
 						if (island.isRole(Role.Operator, player.getUniqueId())) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Permission.Access.Message")));
+							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Permission.Access.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
@@ -330,7 +332,7 @@ public class Settings implements Listener {
 			    		soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 			    	} else if ((event.getCurrentItem().getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Categories.Item.Owner.Displayname"))))) {
 			    		if (island.isRole(Role.Operator, player.getUniqueId()) && !island.getSetting(me.goodandevil.skyblock.island.Settings.Role.Operator, "Island").getStatus()) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Permission.Access.Message")));
+							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Permission.Access.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
@@ -342,14 +344,14 @@ public class Settings implements Listener {
 				} else if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Member.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Operator.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Owner.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")))) {
 			    	if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")))) {
 						if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Settings.Visitor.Signature.Disabled.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Island.Settings.Visitor.Signature.Disabled.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
 						}
 			    	} else if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title")))) {
 						if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable")) {
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Settings.Visitor.Welcome.Disabled.Message")));
+							messageManager.sendMessage(player, configLoad.getString("Island.Settings.Visitor.Welcome.Disabled.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
@@ -396,7 +398,7 @@ public class Settings implements Listener {
 										island1 = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 										
 										if (!(island1.isRole(Role.Operator, player.getUniqueId()) || island1.isRole(Role.Owner, player.getUniqueId()))) {
-											player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Role.Message")));
+											messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Role.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 											player.closeInventory();
 											
@@ -405,7 +407,7 @@ public class Settings implements Listener {
 											
 											return;
 										} else if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable")) {
-											player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Settings.Visitor.Welcome.Disabled.Message")));
+											messageManager.sendMessage(player, configLoad.getString("Island.Settings.Visitor.Welcome.Disabled.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 											
 											event1.setWillClose(true);
@@ -414,7 +416,7 @@ public class Settings implements Listener {
 											return;
 										}
 									} else {
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Owner.Message")));
+										messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 										player.closeInventory();
 										
@@ -484,19 +486,19 @@ public class Settings implements Listener {
 										island1 = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 										
 										if (!(island1.isRole(Role.Operator, player.getUniqueId()) || island1.isRole(Role.Owner, player.getUniqueId()))) {
-											player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Role.Message")));
+											messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Role.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 											player.closeInventory();
 											
 											return;
 										} else if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
-											player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Settings.Visitor.Signature.Disabled.Message")));
+											messageManager.sendMessage(player, configLoad.getString("Island.Settings.Visitor.Signature.Disabled.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 											
 											return;
 										}
 									} else {
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Owner.Message")));
+										messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 										player.closeInventory();
 										
@@ -558,7 +560,7 @@ public class Settings implements Listener {
 							roleName = "Default";
 							
 							if (island.isRole(Role.Operator, player.getUniqueId()) && !island.getSetting(me.goodandevil.skyblock.island.Settings.Role.Operator, "Visitor").getStatus()) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Permission.Change.Message")));
+								messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Permission.Change.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 								
 								return;
@@ -568,7 +570,7 @@ public class Settings implements Listener {
 							roleName = "Default";
 							
 							if (island.isRole(Role.Operator, player.getUniqueId()) && !island.getSetting(me.goodandevil.skyblock.island.Settings.Role.Operator, "Member").getStatus()) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Permission.Change.Message")));
+								messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Permission.Change.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 								
 								return;
@@ -578,7 +580,7 @@ public class Settings implements Listener {
 							roleName = role.name();
 							
 							if (!island.isRole(Role.Owner, player.getUniqueId())) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Permission.Change.Message")));
+								messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Permission.Change.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 								
 								return;
@@ -588,7 +590,7 @@ public class Settings implements Listener {
 							roleName = role.name();
 							
 							if (island.isRole(Role.Operator, player.getUniqueId()) && !island.getSetting(me.goodandevil.skyblock.island.Settings.Role.Operator, "Island").getStatus()) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Settings.Permission.Change.Message")));
+								messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Settings.Permission.Change.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 								
 								return;

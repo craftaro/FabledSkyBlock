@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -30,6 +31,7 @@ public class InviteTask extends BukkitRunnable {
 	
 	@Override
 	public void run() {
+		MessageManager messageManager = plugin.getMessageManager();
 		SoundManager soundManager = plugin.getSoundManager();
 		
 		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
@@ -48,7 +50,7 @@ public class InviteTask extends BukkitRunnable {
 						soundManager.playSound(targetPlayer, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 					
-					all.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Invited.Target.Expired.Message").replace("%player", invite.getSenderName())));
+					messageManager.sendMessage(all, configLoad.getString("Command.Island.Invite.Invited.Target.Expired.Message").replace("%player", invite.getSenderName()));
 					soundManager.playSound(all, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					
 					inviteManager.removeInvite(all.getUniqueId());

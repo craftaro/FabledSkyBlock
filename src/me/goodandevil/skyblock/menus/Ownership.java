@@ -22,6 +22,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -96,15 +97,16 @@ public class Ownership implements Listener {
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
 			Main plugin = Main.getInstance();
 			
+			PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+			MessageManager messageManager = plugin.getMessageManager();
+			IslandManager islandManager = plugin.getIslandManager();
+			SoundManager soundManager = plugin.getSoundManager();
+			
 			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Ownership.Title")))) {
 				event.setCancelled(true);
-				
-				PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-				IslandManager islandManager = plugin.getIslandManager();
-				SoundManager soundManager = plugin.getSoundManager();
 				
 				Island island = null;
 				
@@ -112,14 +114,14 @@ public class Ownership implements Listener {
 					island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 					
 					if (!island.isRole(Role.Owner, player.getUniqueId())) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Ownership.Role.Message")));
+						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Ownership.Role.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 						
 						return;
 					}
 				} else {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Ownership.Owner.Message")));
+					messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Ownership.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					player.closeInventory();
 					
@@ -151,13 +153,13 @@ public class Ownership implements Listener {
 		        					island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 		        					
 		        					if (!island.isRole(Role.Owner, player.getUniqueId())) {
-		        						player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Ownership.Role.Message")));
+		        						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Ownership.Role.Message"));
 		        						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		        						
 		        						return;
 		        					}
 		        				} else {
-		        					player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Ownership.Owner.Message")));
+		        					messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Ownership.Owner.Message"));
 		        					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		        					
 		        					return;
@@ -217,14 +219,14 @@ public class Ownership implements Listener {
 		        					island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 		        					
 		        					if (!island.isRole(Role.Owner, player.getUniqueId())) {
-		        						player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Ownership.Role.Message")));
+		        						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Ownership.Role.Message"));
 		        						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		        						player.closeInventory();
 		        						
 		        						return;
 		        					}
 		        				} else {
-		        					player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Command.Island.Ownership.Owner.Message")));
+		        					messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Ownership.Owner.Message"));
 		        					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		        					player.closeInventory();
 		        					

@@ -328,7 +328,6 @@ public final class BlockUtil {
                 } else if (blockTypeState == BlockStateType.FLOWERPOT) {
                     FlowerPot flowerPot = (FlowerPot) block.getState();
                     String[] flower = blockData.getFlower().split(":");
-                    Bukkit.broadcastMessage(flower[0] + " | " + flower[1]);
                     flowerPot.setContents(new MaterialData(Material.valueOf(flower[0].toUpperCase()), (byte) Integer.parseInt(flower[1])));
                 }
                 
@@ -406,7 +405,7 @@ public final class BlockUtil {
             		chunk.getClass().getMethod("setType", blockPosition.getClass(), IBlockDataClass, boolean.class).invoke(chunk, blockPosition, IBlockData, true);
         		} else {
             		chunk.getClass().getMethod("a", blockPosition.getClass(), IBlockDataClass, boolean.class).invoke(chunk, blockPosition, IBlockData, true);
-        		}        		
+        		}
         	} else {
         		Object IBlockData = NMSUtil.getNMSClass("Block").getMethod("getByCombinedId", int.class).invoke(null, material.getId() + (data << 12));
         		worldHandle.getClass().getMethod("setTypeAndData", blockPosition.getClass(), IBlockDataClass, int.class).invoke(worldHandle, blockPosition, IBlockData, 3);
