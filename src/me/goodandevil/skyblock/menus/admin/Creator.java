@@ -214,7 +214,7 @@ public class Creator implements Listener {
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else {
 								structureManager.addStructure(event1.getName(), Materials.GRASS_BLOCK, null, null, false, new ArrayList<>());
-									
+								
 								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Created.Message").replace("%structure", event1.getName()));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 									
