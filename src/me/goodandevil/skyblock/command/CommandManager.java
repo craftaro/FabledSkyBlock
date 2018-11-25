@@ -160,7 +160,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 							ControlPanel.getInstance().open(player);
 							soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 						} else {
-							Bukkit.getServer().dispatchCommand(player, "island create");
+							Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
+								@Override
+								public void run() {
+									Bukkit.getServer().dispatchCommand(player, "island create");
+								}
+							});
 						}
 						
 						return;

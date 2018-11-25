@@ -86,7 +86,7 @@ public class VoteCommand extends SubCommand {
     				if (island.isRole(Role.Member, player.getUniqueId()) || island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId())) {
     					messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Island.Member.Message"));
     					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-    				} else if (!playerDataManager.hasPlayerData(player)) {
+    				} else if (playerDataManager.hasPlayerData(player)) {
     					PlayerData playerData = playerDataManager.getPlayerData(player);
     					
     					if (playerData.getIsland() != null && playerData.getIsland().equals(island.getOwnerUUID())) {

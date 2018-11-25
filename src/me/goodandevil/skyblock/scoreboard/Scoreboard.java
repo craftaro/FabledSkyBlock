@@ -73,12 +73,12 @@ public class Scoreboard {
 					    
 					    obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 					    
-					    String formatteddisplayName = ChatColor.translateAlternateColorCodes('&', replaceDisplayName(displayName));
+					    String formattedDisplayName = ChatColor.translateAlternateColorCodes('&', replaceDisplayName(displayName));
 					    
-					    if (formatteddisplayName.length() > 32) {
+					    if (formattedDisplayName.length() > 32) {
 					    	obj.setDisplayName(ChatColor.RED + "Too long...");
 					    } else {
-					    	obj.setDisplayName(formatteddisplayName);
+					    	obj.setDisplayName(formattedDisplayName);
 					    }
 
 					    for (int i = 0; i < ChatColor.values().length; i++) {
@@ -99,6 +99,14 @@ public class Scoreboard {
 							public void run() {
 								if (player.isOnline()) {
 									try {
+									    String formattedDisplayName = ChatColor.translateAlternateColorCodes('&', replaceDisplayName(displayName));
+									    
+									    if (formattedDisplayName.length() > 32) {
+									    	obj.setDisplayName(ChatColor.RED + "Too long...");
+									    } else {
+									    	obj.setDisplayName(formattedDisplayName);
+									    }
+										
 										for (String displayLine : displayList) {
 									    	 i1--;
 									    	 

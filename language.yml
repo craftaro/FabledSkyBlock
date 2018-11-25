@@ -236,7 +236,7 @@ Command:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have been demoted to a &dMember&e."
         Vote:
             Info:
-                Message: "Add/Remove a vote for a players Island."
+                Message: "Add/Remove a vote from a players Island."
             Invalid:
                 Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island vote <player>"
             Disabled:
