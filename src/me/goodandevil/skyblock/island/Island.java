@@ -34,6 +34,7 @@ import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.utils.StringUtil;
 import me.goodandevil.skyblock.visit.Visit;
 import me.goodandevil.skyblock.visit.VisitManager;
+import me.goodandevil.skyblock.world.WorldManager;
 
 public class Island {
 
@@ -49,14 +50,15 @@ public class Island {
 	public Island(UUID ownerUUID, org.bukkit.Location islandNormalLocation, org.bukkit.Location islandNetherLocation) {
 		this.plugin = Main.getInstance();
 		
-		FileManager fileManager = plugin.getFileManager();
 		IslandManager islandManager = plugin.getIslandManager();
+		WorldManager worldManager = plugin.getWorldManager();
+		FileManager fileManager = plugin.getFileManager();
 		
 		this.ownerUUID = ownerUUID;
-		this.size = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Size");;
+		this.size = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Size.Minimum");
 		
 		if (this.size > 1000) {
-			this.size = 100;
+			this.size = 50;
 		}
 		
 		islandLocations.add(new Location(Location.World.Normal, Location.Environment.Island, islandNormalLocation));
@@ -72,10 +74,19 @@ public class Island {
 				size = configLoad.getInt("Size");
 			}
 			
-			islandLocations.add(new Location(Location.World.Normal, Location.Environment.Main, fileManager.getLocation(config, "Location.Normal.Spawn.Main", true)));
-			islandLocations.add(new Location(Location.World.Nether, Location.Environment.Main, fileManager.getLocation(config, "Location.Nether.Spawn.Main", true)));
-			islandLocations.add(new Location(Location.World.Normal, Location.Environment.Visitor, fileManager.getLocation(config, "Location.Normal.Spawn.Visitor", true)));
-			islandLocations.add(new Location(Location.World.Nether, Location.Environment.Visitor, fileManager.getLocation(config, "Location.Nether.Spawn.Visitor", true)));
+			for (Location.World worldList : Location.World.values()) {
+				for (Location.Environment environmentList : Location.Environment.values()) {
+					if (environmentList != Location.Environment.Island) {
+						Location spawnLocation = new Location(worldList, environmentList, fileManager.getLocation(config, "Location." + worldList.name() + ".Spawn." + environmentList.name(), true));
+						
+						if (spawnLocation.getLocation().getWorld() == null) {
+							spawnLocation.getLocation().setWorld(worldManager.getWorld(worldList));
+						}
+						
+						islandLocations.add(spawnLocation);
+					}
+				}
+			}
 			
 			Config settingsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "settings.yml"));
 			
@@ -107,7 +118,6 @@ public class Island {
 			configFile = config.getFile();
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
-			configLoad.set("Size", size);
 			configLoad.set("Visitor.Open", mainConfigLoad.getBoolean("Island.Visitor.Open"));
 			configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
 			configLoad.set("Weather.Synchronised", mainConfigLoad.getBoolean("Island.Weather.Default.Synchronised"));
@@ -177,6 +187,15 @@ public class Island {
 	
 	public int getSize() {
 		return size;
+	}
+	
+	public void setSize(int size) {
+		if (size > 1000 || size < 0) {
+			size = 50;
+		}
+		
+		this.size = size;
+		plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml")).getFileConfiguration().set("Size", size);
 	}
 	
 	public double getRadius() {

@@ -46,7 +46,7 @@ public class InviteTask extends BukkitRunnable {
 					Player targetPlayer = Bukkit.getServer().getPlayer(invite.getOwnerUUID());
 					
 					if (targetPlayer != null) {
-						targetPlayer.spigot().sendMessage(new ChatComponent(configLoad.getString("Command.Island.Invite.Invited.Sender.Expired.Message").replace("%player", all.getName()) + "   ", false, null, null, null).addExtra(new ChatComponent(configLoad.getString("Command.Island.Invite.Invited.Word.Resend").toUpperCase(), true, ChatColor.AQUA, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island invite " + all.getName()), new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Invited.Word.Tutorial").replace("%action", configLoad.getString("Command.Island.Invite.Invited.Word.Resend")))).create()))));
+						targetPlayer.spigot().sendMessage(new ChatComponent(messageManager.replaceMessage(targetPlayer, configLoad.getString("Command.Island.Invite.Invited.Sender.Expired.Message").replace("%player", all.getName()) + "   "), false, null, null, null).addExtra(new ChatComponent(configLoad.getString("Command.Island.Invite.Invited.Word.Resend").toUpperCase(), true, ChatColor.AQUA, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island invite " + all.getName()), new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Invited.Word.Tutorial").replace("%action", configLoad.getString("Command.Island.Invite.Invited.Word.Resend")))).create()))));
 						soundManager.playSound(targetPlayer, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 					

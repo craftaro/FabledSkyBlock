@@ -11,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import me.goodandevil.skyblock.Main;
 import me.goodandevil.skyblock.config.FileManager;
@@ -176,12 +175,20 @@ public final class LocationUtil {
 		if (config.getFileConfiguration().getString("Location.Spawn") == null) {
 			Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");
 		} else {
-			new BukkitRunnable() {
+			Location spawnLocation = fileManager.getLocation(config, "Location.Spawn", true);
+			
+			if (spawnLocation.getWorld() == null) {
+				Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: The world for the spawn point is not loaded or no longer exists.");
+				
+				return;
+			}
+			
+			Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
 				@Override
 				public void run() {
 					player.teleport(fileManager.getLocation(config, "Location.Spawn", true));
 				}
-			}.runTask(plugin);
+			});
 		}
     }
 }

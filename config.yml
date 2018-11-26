@@ -9,9 +9,13 @@ Sound:
     # When disabled all sounds will be disabled.
     Enable: true
 Island:
-    # The size of an Island when created.
-    # [!] If you go over 1000, the size of the Island will be 100.
-    Size: 100
+    Size:
+        # [!] Do not go over 1000 for both of these options.
+        # The size of an Island when created.
+        # [!] Do not go over the maximum.
+        Minimum: 100
+        # The maximum size of an Island based on the permission note 'skyblock.size.<size>'.
+        Maximum: 200
     Creation:
         # Rather than opening the 'Island Creator' menu. Create an island
         # as soon as a player performs the '/island' or '/island create'

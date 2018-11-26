@@ -76,7 +76,7 @@ public class BansCommand extends SubCommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[0];
+		return new String[] { "banned" };
 	}
 
 	@Override

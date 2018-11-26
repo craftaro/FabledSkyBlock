@@ -52,6 +52,7 @@ import me.goodandevil.skyblock.command.commands.VoteCommand;
 import me.goodandevil.skyblock.command.commands.WeatherCommand;
 import me.goodandevil.skyblock.command.commands.admin.GeneratorCommand;
 import me.goodandevil.skyblock.command.commands.admin.ReloadCommand;
+import me.goodandevil.skyblock.command.commands.admin.SetSizeCommand;
 import me.goodandevil.skyblock.command.commands.admin.StructureCommand;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
@@ -123,6 +124,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		
 		subCommands = new ArrayList<>();
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SetSpawnCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSpawn.Info.Message"))));
+		subCommands.add(new SetSizeCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSize.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.CreateCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Create.Info.Message"))));
 		subCommands.add(new GeneratorCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Generator.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.LevelCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Level.Info.Message"))));

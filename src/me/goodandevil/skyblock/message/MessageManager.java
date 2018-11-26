@@ -23,4 +23,14 @@ public class MessageManager {
 		
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
 	}
+	
+	public String replaceMessage(Player player, String message) {
+		PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
+		
+		if (placeholderManager.isPlaceholderAPIEnabled()) {
+			message = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message.replace("&", "clr")).replace("clr", "&");
+		}
+		
+		return message;
+	}
 }

@@ -94,7 +94,7 @@ public class OwnerCommand extends SubCommand {
 							playerData.setConfirmation(Confirmation.Ownership);
 							playerData.setConfirmationTime(confirmationTime);
 							
-							player.spigot().sendMessage(new ChatComponent(configLoad.getString("Command.Island.Ownership.Confirmation.Confirm.Message").replace("%player", targetPlayerName).replace("%time", "" + confirmationTime) + "   ", false, null, null, null).addExtra(new ChatComponent(configLoad.getString("Command.Island.Ownership.Confirmation.Confirm.Word.Confirm").toUpperCase(), true, ChatColor.RED, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island confirm"), new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ownership.Confirmation.Confirm.Word.Tutorial"))).create()))));
+							player.spigot().sendMessage(new ChatComponent(messageManager.replaceMessage(player, configLoad.getString("Command.Island.Ownership.Confirmation.Confirm.Message").replace("%player", targetPlayerName).replace("%time", "" + confirmationTime) + "   "), false, null, null, null).addExtra(new ChatComponent(configLoad.getString("Command.Island.Ownership.Confirmation.Confirm.Word.Confirm").toUpperCase(), true, ChatColor.RED, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island confirm"), new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ownership.Confirmation.Confirm.Word.Tutorial"))).create()))));
 							soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 						}
 					}

@@ -625,6 +625,24 @@ Command:
                     Message: "&bSkyBlock &8| &cError&8: &eYou cannot set the spawn point in an Island world."
                 Set:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe spawn point has been set to your location."
+            SetSize:
+                Info:
+                    Message: "&f&oSets the size of a players Island."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player_name> <size>"
+                Numerical:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must enter a numerical value."
+                Size:
+                    Greater:
+                        Message: "&bSkyBlock &8| &cError&8: &eThe size of the Island must be greater than 50."
+                    Less:
+                        Message: "&bSkyBlock &8| &cError&8: &eThe size of the Island must be less than 1000."
+                Island:
+                    Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                Set:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the player &d%player's &eIsland size to &d%size&e."
             Delete:
                 Info:
                     Message: "&f&oDelete a players Island permanently."
@@ -886,7 +904,7 @@ Placeholder:
             Message: "&f%placeholder"
 Scoreboard:
     Tutorial:
-        Displayname: "   &b&lSkyBlock &7(&f%players_online&7/&f%players_max&7)"
+        Displayname: "&b&lSkyBlock"
         Displaylines:
         - ""
         - "&bIsland&f:"
@@ -900,7 +918,7 @@ Scoreboard:
         - "&ewww.example.net"
     Island:
         Solo:
-            Displayname: "   &b&lSkyBlock &7(&f%players_online&7/&f%players_max&7)"
+            Displayname: "&b&lSkyBlock"
             Occupied:
                 Displaylines:
                 - ""
@@ -929,7 +947,7 @@ Scoreboard:
                 Owner: "Owner"
                 Operator: "Operator"
                 Member: "Member"
-            Displayname: "   &b&lSkyBlock &7(&f%players_online&7/&f%players_max&7)"
+            Displayname: "&b&lSkyBlock"
             Occupied:
                 Displaylines:
                 - ""

@@ -45,6 +45,7 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
 import me.goodandevil.skyblock.visit.VisitManager;
+import me.goodandevil.skyblock.world.WorldManager;
 
 public class IslandManager {
 	
@@ -147,6 +148,33 @@ public class IslandManager {
 			e.printStackTrace();
 		}
 		
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			@Override
+			public void run() {
+				Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+				FileConfiguration configLoad = config.getFileConfiguration();
+				
+				int minimumSize = configLoad.getInt("Island.Size.Minimum");
+				int maximumSize = configLoad.getInt("Island.Size.Maximum");
+				
+				if (minimumSize < 0 || minimumSize > 1000) {
+					minimumSize = 50;
+				}
+				
+				if (maximumSize < 0 || maximumSize > 1000) {
+					maximumSize = 100;
+				}
+				
+				for (int i = maximumSize; i > minimumSize; i--) {
+					if (player.hasPermission("skyblock.size." + i) || player.hasPermission("skyblock.*")) {
+						island.setSize(i);
+						
+						break;
+					}
+				}
+			}
+		});
+		
 		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
@@ -175,12 +203,12 @@ public class IslandManager {
 			scoreboard.run();
 		}
 		
-		new BukkitRunnable() {
+		Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
 			@Override
 			public void run() {
 				player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
 			}
-		}.runTask(plugin);
+		});
 		
 		if (NMSUtil.getVersionNumber() < 13) {
 			Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -316,7 +344,9 @@ public class IslandManager {
 	}
 
 	public void loadIsland(UUID uuid) {
+		WorldManager worldManager = plugin.getWorldManager();
 		FileManager fileManager = plugin.getFileManager();
+		
 		UUID islandOwnerUUID = null;
 		
 		if (isIslandExist(uuid)) {
@@ -335,7 +365,16 @@ public class IslandManager {
 			Config config = fileManager.getConfig(new File(configFile, islandOwnerUUID.toString() + ".yml"));
 			
 			org.bukkit.Location islandNormalLocation = fileManager.getLocation(config, "Location.Normal.Island", true);
+			
+			if (islandNormalLocation.getWorld() == null) {
+				islandNormalLocation.setWorld(worldManager.getWorld(Location.World.Normal));
+			}
+			
 			org.bukkit.Location islandNetherLocation = fileManager.getLocation(config, "Location.Nether.Island", true);
+			
+			if (islandNetherLocation.getWorld() == null) {
+				islandNetherLocation.setWorld(worldManager.getWorld(Location.World.Nether));
+			}
 			
 			Island island = new Island(islandOwnerUUID, new org.bukkit.Location(islandNormalLocation.getWorld(), islandNormalLocation.getBlockX(), 72, islandNormalLocation.getBlockZ()), new org.bukkit.Location(islandNetherLocation.getWorld(), islandNetherLocation.getBlockX(), 72, islandNetherLocation.getBlockZ()));
 			islandStorage.put(islandOwnerUUID, island);

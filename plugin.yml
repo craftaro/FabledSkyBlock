@@ -1,6 +1,6 @@
 name: SkyBlock
 main: me.goodandevil.skyblock.Main
-version: 26
+version: 27
 api-version: 1.13
 description: A unique SkyBlock plugin
 author: GoodAndEvil
