@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +16,7 @@ import me.goodandevil.skyblock.events.IslandChatEvent;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 
@@ -33,6 +33,7 @@ public class Chat implements Listener {
 		Player player = event.getPlayer();
 		
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		
 		if (playerDataManager.hasPlayerData(player)) {
@@ -61,7 +62,7 @@ public class Chat implements Listener {
 				if (!islandChatEvent.isCancelled()) {
 					for (UUID islandMembersOnlineList : islandManager.getMembersOnline(island)) {
 						Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
-						targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())).replace("%message", islandChatEvent.getMessage()));
+						targetPlayer.sendMessage(messageManager.replaceMessage(targetPlayer, islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())).replace("%message", islandChatEvent.getMessage()));
 					}
 				}
 			}

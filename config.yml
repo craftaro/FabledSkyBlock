@@ -31,6 +31,12 @@ Island:
             Deletion:
                 Enable: false
             Time: 300
+        # Commands that are executed either by the player or the console on Island creation.
+        # [!] To add commands, create a list and remove the open and closed brackets.
+        #     Use the variable %player to get the players name.
+        Commands:
+            Player: []
+            Console: []
     World:
         # [!] The Island height is 72 blocks.
         #     Delete the Island world when changing the liquid option.

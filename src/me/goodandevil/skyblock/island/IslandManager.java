@@ -206,6 +206,29 @@ public class IslandManager {
 		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 			@Override
 			public void run() {
+				Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+				FileConfiguration configLoad = config.getFileConfiguration();
+				
+				if (configLoad.getString("Island.Creation.Commands.Player") != null) {
+					List<String> commands = configLoad.getStringList("Island.Creation.Commands.Player");
+					
+					if (commands != null) {
+						for (String commandList : commands) {
+							Bukkit.getServer().dispatchCommand(player, commandList.replace("%player", player.getName()));
+						}
+					}
+				}
+				
+				if (configLoad.getString("Island.Creation.Commands.Console") != null) {
+					List<String> commands = configLoad.getStringList("Island.Creation.Commands.Console");
+					
+					if (commands != null) {
+						for (String commandList : commands) {
+							Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), commandList.replace("%player", player.getName()));
+						}
+					}
+				}
+				
 				player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
 			}
 		});

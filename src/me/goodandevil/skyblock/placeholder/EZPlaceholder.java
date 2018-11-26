@@ -57,7 +57,11 @@ public class EZPlaceholder extends PlaceholderExpansion {
     	if (islandManager.hasIsland(player)) {
     		Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
     		
-    		if (identifier.equalsIgnoreCase("island_level")) {
+    		if (identifier.equalsIgnoreCase("island_size")) {
+    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_size.Non-empty.Message").replace("%placeholder", "" + island.getSize()));
+    		} else if (identifier.equalsIgnoreCase("island_radius")) {
+    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_radius.Non-empty.Message").replace("%placeholder", "" + island.getRadius()));
+    		} else if (identifier.equalsIgnoreCase("island_level")) {
     			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_level.Non-empty.Message").replace("%placeholder", "" + island.getLevel().getLevel()));
     		} else if (identifier.equalsIgnoreCase("island_points")) {
     			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_points.Non-empty.Message").replace("%placeholder", "" + island.getLevel().getPoints()));
@@ -101,7 +105,11 @@ public class EZPlaceholder extends PlaceholderExpansion {
     		return null;
     	}
     	
-		if (identifier.equalsIgnoreCase("island_level")) {
+    	if (identifier.equalsIgnoreCase("island_size")) {
+			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_size.Empty.Message"));
+    	} else if (identifier.equalsIgnoreCase("island_radius")) {
+			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_radius.Empty.Message"));
+    	} else if (identifier.equalsIgnoreCase("island_level")) {
 			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_level.Empty.Message"));
 		} else if (identifier.equalsIgnoreCase("island_points")) {
 			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_points.Empty.Message"));

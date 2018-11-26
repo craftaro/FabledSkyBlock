@@ -38,6 +38,40 @@ public class MVdWPlaceholder {
 				return "" + skyblock.getVisitManager().getIslands().size();
 			}
 		});
+
+		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_size", new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
+				Player player = event.getPlayer();
+				
+				if (player == null) {
+					return null;
+				}
+				
+				if (islandManager.hasIsland(player)) {
+		    		return "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getSize();
+				}
+		    	
+				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_size.Empty.Message"));
+			}
+		});
+		
+		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_radius", new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
+				Player player = event.getPlayer();
+				
+				if (player == null) {
+					return null;
+				}
+				
+				if (islandManager.hasIsland(player)) {
+		    		return "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getRadius();
+				}
+		    	
+				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_radius.Empty.Message"));
+			}
+		});
 		
 		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_level", new PlaceholderReplacer() {
 			@Override

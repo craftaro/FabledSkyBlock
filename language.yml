@@ -839,6 +839,16 @@ Island:
             Division:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the points division to '&f%division&e'."
 Placeholder:
+    skyblock_island_size:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_radius:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
     skyblock_island_level:
         Empty:
             Message: "&c0"
@@ -925,6 +935,7 @@ Scoreboard:
                 - "&bIsland&f:"
                 - " &8- &7Level&8: &f%island_level"
                 - " &8- &7Visitors&8: &f%island_visitors"
+                - " &8- &7Size&8: &f%island_size&7x&f%island_size"
                 - ""
                 - "&bProfile&f:"
                 - " &8- &7Rank&8: &fDefault"
@@ -936,6 +947,7 @@ Scoreboard:
                 - ""
                 - "&bIsland&f:"
                 - " &8- &7Level&8: &f%island_level"
+                - " &8- &7Size&8: &f%island_size&7x&f%island_size"
                 - ""
                 - "&bProfile&f:"
                 - " &8- &7Rank&8: &fDefault"
@@ -956,6 +968,7 @@ Scoreboard:
                 - " &8- &7Members&8: &f%island_members"
                 - " &8- &7Level&8: &f%island_level"
                 - " &8- &7Visitors&8: &f%island_visitors"
+                - " &8- &7Size&8: &f%island_size&7x&f%island_size"
                 - ""
                 - "&bProfile&f:"
                 - " &8- &7Rank&8: &fDefault"
@@ -969,6 +982,7 @@ Scoreboard:
                 - " &8- &7Role&8: &f%island_role"
                 - " &8- &7Members&8: &f%island_members"
                 - " &8- &7Level&8: &f%island_level"
+                - " &8- &7Size&8: &f%island_size&7x&f%island_size"
                 - ""
                 - "&bProfile&f:"
                 - " &8- &7Rank&8: &fDefault"

@@ -173,7 +173,7 @@ public class Scoreboard {
 			Level level = island.getLevel();
 			
 			if (island.getRole(Role.Member).size() == 0 && island.getRole(Role.Operator).size() == 0) {
-				displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumber(level.getLevel())).replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null").replace("%island_visitors", "" + island.getVisitors().size());
+				displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumber(level.getLevel())).replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null").replace("%island_visitors", "" + island.getVisitors().size()).replace("%island_size", "" + island.getSize()).replace("%island_radius", "" + island.getRadius());
 			} else {
 				int islandMembers = 1 + island.getRole(Role.Member).size() + island.getRole(Role.Operator).size();
 				String islandRole = "";
@@ -186,10 +186,10 @@ public class Scoreboard {
 					islandRole = displayVariables.get("%member");
 				}
 				
-				displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumber(level.getLevel())).replace("%island_members", "" + islandMembers).replace("%island_role", islandRole).replace("%island_visitors", "" + island.getVisitors().size());
+				displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumber(level.getLevel())).replace("%island_members", "" + islandMembers).replace("%island_role", islandRole).replace("%island_visitors", "" + island.getVisitors().size()).replace("%island_size", "" + island.getSize()).replace("%island_radius", "" + island.getRadius());
 			}
 		} else {
-			displayLine = displayLine.replace("%island_level", ChatColor.RED + "0").replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null");
+			displayLine = displayLine.replace("%island_level", ChatColor.RED + "0").replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null").replace("%island_size", ChatColor.RED + "0").replace("%island_radius", ChatColor.RED + "0");
 		}
 		
 		PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
