@@ -2,19 +2,19 @@ package me.goodandevil.skyblock.placeholder;
 
 import org.bukkit.plugin.PluginManager;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 
 public class PlaceholderManager {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
 	private boolean PlaceholderAPI = false;
 	private boolean MVdWPlaceholderAPI = false;
 	
-	public PlaceholderManager(Main plugin) {
-		this.plugin = plugin;
+	public PlaceholderManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
-		PluginManager pluginManager = plugin.getServer().getPluginManager();
+		PluginManager pluginManager = skyblock.getServer().getPluginManager();
 		
 		if (pluginManager.getPlugin("PlaceholderAPI") != null) {
 			PlaceholderAPI = true;
@@ -27,11 +27,11 @@ public class PlaceholderManager {
 	
 	public void registerPlaceholders() {
 		if (PlaceholderAPI) {
-			new EZPlaceholder(plugin).register();
+			new EZPlaceholder(skyblock).register();
 		}
 		
 		if (MVdWPlaceholderAPI) {
-			new MVdWPlaceholder(plugin).register();
+			new MVdWPlaceholder(skyblock).register();
 		}
 	}
 	

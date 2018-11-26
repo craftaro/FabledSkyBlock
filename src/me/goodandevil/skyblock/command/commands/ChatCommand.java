@@ -19,27 +19,27 @@ import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 
 public class ChatCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public ChatCommand(Main plugin) {
-		this.plugin = plugin;
+	public ChatCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		SoundManager soundManager = plugin.getSoundManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
 		
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (islandManager.hasIsland(player)) {

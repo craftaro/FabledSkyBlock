@@ -6,7 +6,7 @@ import java.util.Map;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -18,20 +18,20 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class ReloadCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public ReloadCommand(Main plugin) {
-		this.plugin = plugin;
+	public ReloadCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		MessageManager messageManager = plugin.getMessageManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (player.hasPermission("skyblock.admin.reload") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
@@ -42,13 +42,13 @@ public class ReloadCommand extends SubCommand {
 				Config configFileConfig = configs.get(configFileName);
 				String configFilePath = configFileName.replace(configFileConfig.getFile().getName(), "");
 				
-				if (configFilePath.equals(plugin.getDataFolder().toString() + "\\") || configFilePath.equals(plugin.getDataFolder().toString() + "/") ) {
+				if (configFilePath.equals(skyblock.getDataFolder().toString() + "\\") || configFilePath.equals(skyblock.getDataFolder().toString() + "/") ) {
 					configFileConfig.loadFile();
 				}
 			}
 			
-			if (plugin.getScoreboardManager() != null) {
-				plugin.getScoreboardManager().resendScoreboard();
+			if (skyblock.getScoreboardManager() != null) {
+				skyblock.getScoreboardManager().resendScoreboard();
 			}
 			
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));

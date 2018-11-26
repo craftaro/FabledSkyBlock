@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -29,22 +29,22 @@ import me.goodandevil.skyblock.utils.world.WorldBorder;
 
 public class SetSizeCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public SetSizeCommand(Main plugin) {
-		this.plugin = plugin;
+	public SetSizeCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (player.hasPermission("skyblock.admin.setsize") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
@@ -79,7 +79,7 @@ public class SetSizeCommand extends SubCommand {
 	    					Island island = islandManager.getIsland(islandOwnerUUID);
 	    					island.setSize(size);
 	    					
-							if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+							if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
 		    					for (Player all : Bukkit.getOnlinePlayers()) {
 		    						if (island.isRole(Role.Member, all.getUniqueId()) || island.isRole(Role.Operator, all.getUniqueId()) || island.isRole(Role.Owner, all.getUniqueId()) || island.getVisit().isVisitor(all.getUniqueId())) {
 										WorldBorder.send(all, island.getSize() + 2.5, island.getLocation(Location.World.Normal, Location.Environment.Island));
@@ -87,7 +87,7 @@ public class SetSizeCommand extends SubCommand {
 		    					}
 							}
 	    				} else {
-	    					File configFile = new File(plugin.getDataFolder().toString() + "/island-data", islandOwnerUUID.toString() + ".yml");
+	    					File configFile = new File(skyblock.getDataFolder().toString() + "/island-data", islandOwnerUUID.toString() + ".yml");
 	    					FileConfiguration islandConfigLoad = YamlConfiguration.loadConfiguration(configFile);
 	    					islandConfigLoad.set("Size", size);
 	    					

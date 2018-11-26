@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -40,11 +40,11 @@ public class Weather implements Listener {
     }
     
     public void open(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	Island island = plugin.getIslandManager().getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+    	Island island = skyblock.getIslandManager().getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
     	
-		Config languageConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config languageConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
 		
 		int islandTime = island.getTime();
@@ -104,14 +104,14 @@ public class Weather implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			MessageManager messageManager = plugin.getMessageManager();
-			IslandManager islandManager = plugin.getIslandManager();
-			SoundManager soundManager = plugin.getSoundManager();
-			FileManager fileManager = plugin.getFileManager();
+			MessageManager messageManager = skyblock.getMessageManager();
+			IslandManager islandManager = skyblock.getIslandManager();
+			SoundManager soundManager = skyblock.getSoundManager();
+			FileManager fileManager = skyblock.getFileManager();
 			
-			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Weather.Title")))) {
@@ -120,7 +120,7 @@ public class Weather implements Listener {
 				Island island = null;
 				
 				if (islandManager.hasIsland(player)) {
-					island = islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+					island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 					
 					if (!((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Settings.Role.Operator, "Biome").getStatus()) || island.isRole(Role.Owner, player.getUniqueId()))) {
 						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Weather.Permission.Message"));
@@ -160,7 +160,7 @@ public class Weather implements Listener {
 		    		
 		    		if (!island.isWeatherSynchronised()) {
 		    			for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
-		    				all.setPlayerTime(island.getTime(), fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+		    				all.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
 		    			}
 		    		}
 		    		
@@ -189,7 +189,7 @@ public class Weather implements Listener {
 		    			WeatherType islandWeather = island.getWeather();
 		    			
 		    			for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
-		    				all.setPlayerTime(islandTime, fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+		    				all.setPlayerTime(islandTime, fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
 		    				all.setPlayerWeather(islandWeather);
 		    			}
 		    		} else {

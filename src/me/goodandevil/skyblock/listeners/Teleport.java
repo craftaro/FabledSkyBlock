@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.events.IslandEnterEvent;
@@ -30,27 +30,27 @@ import me.goodandevil.skyblock.visit.Visit;
 
 public class Teleport implements Listener {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
- 	public Teleport(Main plugin) {
-		this.plugin = plugin;
+ 	public Teleport(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
     	Player player = event.getPlayer();
     	
-    	MessageManager messageManager = plugin.getMessageManager();
-    	IslandManager islandManager = plugin.getIslandManager();
-    	SoundManager soundManager = plugin.getSoundManager();
-    	FileManager fileManager = plugin.getFileManager();
+    	MessageManager messageManager = skyblock.getMessageManager();
+    	IslandManager islandManager = skyblock.getIslandManager();
+    	SoundManager soundManager = skyblock.getSoundManager();
+    	FileManager fileManager = skyblock.getFileManager();
     	
-    	Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+    	Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
     	FileConfiguration configLoad = config.getFileConfiguration();
     	
     	islandManager.loadPlayer(player);
     	
-    	if (player.getWorld().getName().equals(plugin.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(plugin.getWorldManager().getWorld(Location.World.Nether).getName())) {
+    	if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
     		if(event.getCause() == TeleportCause.ENDER_PEARL || event.getCause() == TeleportCause.NETHER_PORTAL) {
 				if (!islandManager.hasPermission(player, "Portal")) {
 					event.setCancelled(true);
@@ -63,7 +63,7 @@ public class Teleport implements Listener {
     		}
     	}
     	
-    	PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+    	PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
     	
 		if (playerDataManager.hasPlayerData(player)) {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
@@ -84,7 +84,7 @@ public class Teleport implements Listener {
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									
 									return;
-								} else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
+								} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
 									event.setCancelled(true);
 									
 									messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Teleport.Message"));
@@ -104,7 +104,7 @@ public class Teleport implements Listener {
 						
 						if (worldList == Location.World.Normal) {
 							if (!island.isWeatherSynchronised()) {
-			    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+			    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
 			    				player.setPlayerWeather(island.getWeather());
 							}
 						}

@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.item.InventoryUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -32,9 +32,9 @@ public class ControlPanel implements Listener {
     }
     
     public void open(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+    	Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		InventoryUtil inv = new InventoryUtil(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.ControlPanel.Title")), null, 1);
@@ -57,9 +57,9 @@ public class ControlPanel implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.ControlPanel.Title")))) {
@@ -69,7 +69,7 @@ public class ControlPanel implements Listener {
 		    		player.closeInventory();
 		    		Bukkit.getServer().dispatchCommand(player, "island teleport");
 		    	} else if ((event.getCurrentItem().getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"))))) {
-		    		plugin.getSoundManager().playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+		    		skyblock.getSoundManager().playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
 		    	} else if ((event.getCurrentItem().getType() == Materials.EXPERIENCE_BOTTLE.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.ControlPanel.Item.Level.Displayname"))))) {
 		    		player.closeInventory();
 		    		Bukkit.getServer().dispatchCommand(player, "island level");

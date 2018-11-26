@@ -17,7 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -40,9 +40,9 @@ public class Rollback implements Listener {
     }
     
     public void open(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-		Config languageConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config languageConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
 		
 		Inventory inv = Bukkit.createInventory(null, InventoryType.HOPPER, ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Rollback.Title")));
@@ -108,20 +108,20 @@ public class Rollback implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			MessageManager messageManager = plugin.getMessageManager();
-			IslandManager islandManager = plugin.getIslandManager();
-			SoundManager soundManager = plugin.getSoundManager();
+			MessageManager messageManager = skyblock.getMessageManager();
+			IslandManager islandManager = skyblock.getIslandManager();
+			SoundManager soundManager = skyblock.getSoundManager();
 			
-			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Rollback.Title")))) {
 				event.setCancelled(true);
 				
 				if (islandManager.hasIsland(player)) {
-					island = islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+					island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 					
 					if (!island.isRole(Role.Owner, player.getUniqueId())) {
 						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Rollback.Role.Message"));
@@ -149,13 +149,13 @@ public class Rollback implements Listener {
 				    			Location islandLocation = island.getLocation(worldList, Location.Environment.Island);
 				    			
 				    			try {
-									Schematic.getInstance().save(new File(new File(plugin.getDataFolder().toString() + "/rollback-data/" + island.getOwnerUUID().toString()), worldList.name() + ".schematic"), new Location(islandLocation.getWorld(), islandLocation.getBlockX() + 85, islandLocation.getBlockY(), islandLocation.getBlockZ() + 85), new Location(islandLocation.getWorld(), islandLocation.getBlockX() - 85, islandLocation.getBlockY(), islandLocation.getBlockZ() - 85));
+									Schematic.getInstance().save(new File(new File(skyblock.getDataFolder().toString() + "/rollback-data/" + island.getOwnerUUID().toString()), worldList.name() + ".schematic"), new Location(islandLocation.getWorld(), islandLocation.getBlockX() + 85, islandLocation.getBlockY(), islandLocation.getBlockZ() + 85), new Location(islandLocation.getWorld(), islandLocation.getBlockX() - 85, islandLocation.getBlockY(), islandLocation.getBlockZ() - 85));
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
 				    		}
 		    			}
-		    		}.runTaskAsynchronously(plugin);*/
+		    		}.runTaskAsynchronously(skyblock);*/
 		    		
 		    		soundManager.playSound(player, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
 		    	} else if ((event.getCurrentItem().getType() == Material.ENCHANTED_BOOK) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Rollback.Item.Load.Displayname"))))) {
@@ -165,13 +165,13 @@ public class Rollback implements Listener {
 				    			Location islandLocation = island.getLocation(worldList, Location.Environment.Island);
 				    			
 					    		try {
-									Schematic.getInstance().paste(new File(new File(plugin.getDataFolder().toString() + "/rollback-data/" + island.getOwnerUUID().toString()), "Normal.schematic"), new Location(islandLocation.getWorld(), islandLocation.getBlockX() - 85, 0, islandLocation.getBlockZ() - 85), true);
+									Schematic.getInstance().paste(new File(new File(skyblock.getDataFolder().toString() + "/rollback-data/" + island.getOwnerUUID().toString()), "Normal.schematic"), new Location(islandLocation.getWorld(), islandLocation.getBlockX() - 85, 0, islandLocation.getBlockZ() - 85), true);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
 				    		}
 		    			}
-		    		}.runTaskAsynchronously(plugin);*/
+		    		}.runTaskAsynchronously(skyblock);*/
 		    		
 		    		soundManager.playSound(player, Sounds.PISTON_EXTEND.bukkitSound(), 1.0F, 1.0F);
 		    	}

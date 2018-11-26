@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -45,13 +45,13 @@ public class Biome implements Listener {
     }
 	
     public void open(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-		Island island = plugin.getIslandManager().getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+		Island island = skyblock.getIslandManager().getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 		String islandBiomeName = island.getBiomeName();
 		int NMSVersion = NMSUtil.getVersionNumber();
 		
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		InventoryUtil inv = new InventoryUtil(configLoad.getString("Menu.Biome.Title"), null, 1);
@@ -121,23 +121,23 @@ public class Biome implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Biome.Title")))) {
 				event.setCancelled(true);
 				
-				MessageManager messageManager = plugin.getMessageManager();
-				IslandManager islandManager = plugin.getIslandManager();
-				BiomeManager biomeManager = plugin.getBiomeManager();
-				SoundManager soundManager = plugin.getSoundManager();
+				MessageManager messageManager = skyblock.getMessageManager();
+				IslandManager islandManager = skyblock.getIslandManager();
+				BiomeManager biomeManager = skyblock.getBiomeManager();
+				SoundManager soundManager = skyblock.getSoundManager();
 				
 				Island island = null;
 				
 				if (islandManager.hasIsland(player)) {
-					island = islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+					island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 					
 					if (!((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Settings.Role.Operator, "Biome").getStatus()) || island.isRole(Role.Owner, player.getUniqueId()))) {
 						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Biome.Permission.Message"));
@@ -195,7 +195,7 @@ public class Biome implements Listener {
 		    				selectedBiomeType = Biomes.ROOFED_FOREST.bukkitBiome();
 		    			}
 		    			
-		    			biomeManager.createPlayer(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Biome.Cooldown"));
+		    			biomeManager.createPlayer(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Biome.Cooldown"));
 			    		biomeManager.setBiome(player, island, selectedBiomeType);
 			    		
 			    		island.setBiome(selectedBiomeType);
@@ -218,13 +218,13 @@ public class Biome implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
 		
-		Main plugin = Main.getInstance();
+		SkyBlock skyblock = SkyBlock.getInstance();
 		
-		Config languageConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config languageConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
 		
 		if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Biome.Title")))) {
-			plugin.getSoundManager().playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+			skyblock.getSoundManager().playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 }

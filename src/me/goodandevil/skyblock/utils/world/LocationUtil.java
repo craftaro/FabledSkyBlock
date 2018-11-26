@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.math.VectorUtil;
@@ -166,11 +166,11 @@ public final class LocationUtil {
     }
     
     public static void teleportPlayerToSpawn(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	FileManager fileManager = plugin.getFileManager();
+    	FileManager fileManager = skyblock.getFileManager();
     	
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
 		
 		if (config.getFileConfiguration().getString("Location.Spawn") == null) {
 			Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");
@@ -183,7 +183,7 @@ public final class LocationUtil {
 				return;
 			}
 			
-			Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
+			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 				@Override
 				public void run() {
 					player.teleport(fileManager.getLocation(config, "Location.Spawn", true));

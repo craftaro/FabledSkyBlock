@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -39,13 +39,13 @@ public class Settings implements Listener {
     }
     
     public void open(Player player, Settings.Type menuType, me.goodandevil.skyblock.island.Settings.Role role) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	Island island = plugin.getIslandManager().getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+    	Island island = skyblock.getIslandManager().getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
     	InventoryUtil inv = null;
     	
-		Config mainConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-    	Config languageConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config mainConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+    	Config languageConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
     	
     	if (menuType == Settings.Type.Categories) {
@@ -143,11 +143,11 @@ public class Settings implements Listener {
     }
     
     private ItemStack createItem(Island island, me.goodandevil.skyblock.island.Settings.Role role, String setting, Material material) {
-		Main plugin = Main.getInstance();
+		SkyBlock skyblock = SkyBlock.getInstance();
     	
-		FileManager fileManager = plugin.getFileManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-    	Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+    	Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
     	
 		List<String> itemLore = new ArrayList<>();
@@ -163,7 +163,7 @@ public class Settings implements Listener {
 		
 		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings." + roleName + ".Item.Setting." + setting + ".Displayname")));
 		
-		if (fileManager.getConfig(new File(plugin.getDataFolder(), "settings.yml")).getFileConfiguration().getBoolean(role.name() + "." + setting)) {
+		if (fileManager.getConfig(new File(skyblock.getDataFolder(), "settings.yml")).getFileConfiguration().getBoolean(role.name() + "." + setting)) {
 			for (String itemLoreList : configLoad.getStringList("Menu.Admin.Settings." + roleName + ".Item.Setting.Status.Enabled.Lore")) {
 				itemLore.add(ChatColor.translateAlternateColorCodes('&', itemLoreList));
 			}
@@ -186,19 +186,19 @@ public class Settings implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			SoundManager soundManager = plugin.getSoundManager();
-			FileManager fileManager = plugin.getFileManager();
+			SoundManager soundManager = skyblock.getSoundManager();
+			FileManager fileManager = skyblock.getFileManager();
 			
-			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings.Categories.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings.Visitor.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings.Member.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings.Operator.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings.Owner.Title")))) {
 				event.setCancelled(true);
 				
 				if (!(player.hasPermission("skyblock.admin.settings") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
-					plugin.getMessageManager().sendMessage(player, configLoad.getString("Island.Admin.Settings.Permission.Message"));
+					skyblock.getMessageManager().sendMessage(player, configLoad.getString("Island.Admin.Settings.Permission.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					
 					return;
@@ -247,7 +247,7 @@ public class Settings implements Listener {
 							rolePermissionName = role.name();
 						}
 			    		
-						FileConfiguration settingsConfigLoad = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "settings.yml")).getFileConfiguration();
+						FileConfiguration settingsConfigLoad = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "settings.yml")).getFileConfiguration();
 						
 						for (String settingList : settingsConfigLoad.getConfigurationSection(roleName).getKeys(false)) {
 							if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings." + rolePermissionName + ".Item.Setting." + settingList + ".Displayname")))) {
@@ -257,11 +257,11 @@ public class Settings implements Listener {
 									settingsConfigLoad.set(roleName + "." + settingList, true);
 								}
 								
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 									@Override
 									public void run() {
 										try {
-											Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "settings.yml"));
+											Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
 											config.getFileConfiguration().save(config.getFile());
 										} catch (IOException e) {
 											e.printStackTrace();

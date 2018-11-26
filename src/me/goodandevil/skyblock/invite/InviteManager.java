@@ -6,14 +6,14 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 
 public class InviteManager {
 
 	private Map<UUID, Invite> inviteStorage = new HashMap<>();
 	
-	public InviteManager(Main plugin) {
-		new InviteTask(this, plugin).runTaskTimerAsynchronously(plugin, 0L, 20L);
+	public InviteManager(SkyBlock skyblock) {
+		new InviteTask(this, skyblock).runTaskTimerAsynchronously(skyblock, 0L, 20L);
 	}
 	
 	public Invite createInvite(Player player, Player sender, UUID owner, int time) {

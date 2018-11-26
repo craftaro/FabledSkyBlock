@@ -7,19 +7,19 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 
 public class SoundManager {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
-	public SoundManager(Main plugin) {
-		this.plugin = plugin;
+	public SoundManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	public void playSound(Player player, Sound sound, float volume, float pitch) {
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (configLoad.getBoolean("Sound.Enable")) {
@@ -28,7 +28,7 @@ public class SoundManager {
 	}
 	
 	public void playSound(Location location, Sound sound, float volume, float pitch) {
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (configLoad.getBoolean("Sound.Enable")) {

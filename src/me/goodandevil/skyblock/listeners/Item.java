@@ -6,24 +6,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.island.Location;
 
 @SuppressWarnings("deprecation")
 public class Item implements Listener {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
- 	public Item(Main plugin) {
-		this.plugin = plugin;
+ 	public Item(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@EventHandler
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 		
-		if (player.getWorld().getName().equals(plugin.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(plugin.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!plugin.getIslandManager().hasPermission(player, "ItemDrop")) {
+		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+			if (!skyblock.getIslandManager().hasPermission(player, "ItemDrop")) {
 				event.setCancelled(true);
 			}
 		}
@@ -33,8 +33,8 @@ public class Item implements Listener {
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 		Player player = event.getPlayer();
 		
-		if (player.getWorld().getName().equals(plugin.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(plugin.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!plugin.getIslandManager().hasPermission(player, "ItemPickup")) {
+		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+			if (!skyblock.getIslandManager().hasPermission(player, "ItemPickup")) {
 				event.setCancelled(true);
 			}
 		}

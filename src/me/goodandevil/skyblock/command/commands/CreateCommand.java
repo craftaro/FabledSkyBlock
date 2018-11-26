@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -25,50 +25,50 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class CreateCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public CreateCommand(Main plugin) {
-		this.plugin = plugin;
+	public CreateCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		CreationManager creationManager = plugin.getCreationManager();
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		CreationManager creationManager = skyblock.getCreationManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
-		Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 			@Override
 			public void run() {
 				if (islandManager.hasIsland(player)) {
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				} else {
-					Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+					Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 					
 					if (mainConfig.getFileConfiguration().getBoolean("Island.Creation.Menu.Enable")) {
 						Creator.getInstance().open(player);
 						soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 					} else {
-						List<Structure> structures = plugin.getStructureManager().getStructures();
+						List<Structure> structures = skyblock.getStructureManager().getStructures();
 						
 						if (structures.size() == 0) {
 							messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.None.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
-						} else if (!fileManager.isFileExist(new File(new File(plugin.getDataFolder().toString() + "/structures"), structures.get(0).getFile()))) {
+						} else if (!fileManager.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"), structures.get(0).getFile()))) {
 							messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.File.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
-						} else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable") && creationManager.hasPlayer(player)) {
+						} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable") && creationManager.hasPlayer(player)) {
 							Creation creation = creationManager.getPlayer(player);
 							
 							if (creation.getTime() < 60) {

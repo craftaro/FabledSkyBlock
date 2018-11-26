@@ -11,7 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -22,9 +22,9 @@ public class VoidGenerator extends ChunkGenerator {
 	public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biome) {
 		ChunkData chunkData = createChunkData(world);
 		
-		Main plugin = Main.getInstance();
+		SkyBlock skyblock = SkyBlock.getInstance();
 		
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		for (Location.World worldList : Location.World.values()) {

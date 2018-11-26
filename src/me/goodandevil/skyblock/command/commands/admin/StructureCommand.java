@@ -21,25 +21,25 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 
 public class StructureCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public StructureCommand(Main plugin) {
-		this.plugin = plugin;
+	public StructureCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		MessageManager messageManager = plugin.getMessageManager();
-		SoundManager soundManager = plugin.getSoundManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		SoundManager soundManager = skyblock.getSoundManager();
 		
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (args.length == 0 || (args.length > 0 && args[0].equalsIgnoreCase("help"))) {
@@ -105,7 +105,7 @@ public class StructureCommand extends SubCommand {
 			} else if (args[0].equalsIgnoreCase("save")) {
 				if (player.hasPermission("skyblock.admin.structure.save") || player.hasPermission("skyblock.admin.structure.*") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
 					if (args.length == 2) {
-						PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+						PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 						
 						Location position1Location = playerData.getArea().getPosition(1);
 						Location position2Location = playerData.getArea().getPosition(2);
@@ -127,7 +127,7 @@ public class StructureCommand extends SubCommand {
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else {
 	                        try {
-	                            File configFile = new File(plugin.getDataFolder().toString() + "/structures/" + args[1] + ".structure");
+	                            File configFile = new File(skyblock.getDataFolder().toString() + "/structures/" + args[1] + ".structure");
 	                            StructureUtil.saveStructure(configFile, player.getLocation(), StructureUtil.getFixedLocations(position1Location, position2Location));
 								
 	                            messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Saved.Successful.Message").replace("%name", args[1]));

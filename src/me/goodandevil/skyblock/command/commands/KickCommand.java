@@ -10,7 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -33,25 +33,25 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class KickCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public KickCommand(Main plugin) {
-		this.plugin = plugin;
+	public KickCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
 		PlayerData playerData = playerDataManager.getPlayerData(player);
 		
-		Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		
 		if (args.length == 1) {
 			if (islandManager.hasIsland(player)) {
@@ -113,7 +113,7 @@ public class KickCommand extends SubCommand {
 							soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 							
 							if (targetPlayer == null) {
-								Config config = fileManager.getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), targetPlayerUUID.toString() + ".yml"));
+								Config config = fileManager.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), targetPlayerUUID.toString() + ".yml"));
 								FileConfiguration configLoad = config.getFileConfiguration();
 								
 								configLoad.set("Statistics.Island.Playtime", null);
@@ -171,7 +171,7 @@ public class KickCommand extends SubCommand {
 										
 										if (targetPlayerData.isChat()) {
 											targetPlayerData.setChat(false);
-											messageManager.sendMessage(targetPlayer, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
+											messageManager.sendMessage(targetPlayer, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
 										}
 									}
 								}

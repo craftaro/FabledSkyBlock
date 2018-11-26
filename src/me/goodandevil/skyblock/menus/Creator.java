@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.creation.Creation;
@@ -39,14 +39,14 @@ public class Creator implements Listener {
     }
     
     public void open(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
     	
 		List<Structure> availableStructures = new ArrayList<>();
 		
-		for (Structure structureList : plugin.getStructureManager().getStructures()) {
+		for (Structure structureList : skyblock.getStructureManager().getStructures()) {
 			if (structureList.getDisplayname() == null || structureList.getDisplayname().isEmpty() || structureList.getFile() == null || structureList.getFile().isEmpty()) {
 				continue;
 			}
@@ -63,8 +63,8 @@ public class Creator implements Listener {
 		int inventoryRows = 0;
 		
 		if (availableStructures.size() == 0) {
-			plugin.getMessageManager().sendMessage(player, configLoad.getString("Island.Creator.Selector.None.Message"));
-			plugin.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			skyblock.getMessageManager().sendMessage(player, configLoad.getString("Island.Creator.Selector.None.Message"));
+			skyblock.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			
 			return;
 		} else if (availableStructures.size() <= 9) {
@@ -113,20 +113,20 @@ public class Creator implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			MessageManager messageManager = plugin.getMessageManager();
-			IslandManager islandManager = plugin.getIslandManager();
-			SoundManager soundManager = plugin.getSoundManager();
-			FileManager fileManager = plugin.getFileManager();
+			MessageManager messageManager = skyblock.getMessageManager();
+			IslandManager islandManager = skyblock.getIslandManager();
+			SoundManager soundManager = skyblock.getSoundManager();
+			FileManager fileManager = skyblock.getFileManager();
 			
-			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Title")))) {
 				event.setCancelled(true);
 				
-				CreationManager creationManager = plugin.getCreationManager();
+				CreationManager creationManager = skyblock.getCreationManager();
 				
 				if (islandManager.hasIsland(player)) {
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
@@ -135,7 +135,7 @@ public class Creator implements Listener {
 					return;
 				}
 				
-				for (Structure structureList : plugin.getStructureManager().getStructures()) {
+				for (Structure structureList : skyblock.getStructureManager().getStructures()) {
 					if ((event.getCurrentItem().getType() == structureList.getMaterials().parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Item.Island.Displayname").replace("%displayname", structureList.getDisplayname()))))) {
 						if (structureList.isPermission() && structureList.getPermission() != null && !structureList.getPermission().isEmpty()) {
 							if (!player.hasPermission(structureList.getPermission()) && !player.hasPermission("skyblock.island.*") && !player.hasPermission("skyblock.*")) {
@@ -148,12 +148,12 @@ public class Creator implements Listener {
 							}
 						}
 						
-						if (!fileManager.isFileExist(new File(new File(plugin.getDataFolder().toString() + "/structures"), structureList.getFile()))) {
+						if (!fileManager.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"), structureList.getFile()))) {
 							messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.File.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
-						} else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable") && creationManager.hasPlayer(player)) {
+						} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable") && creationManager.hasPlayer(player)) {
 							Creation creation = creationManager.getPlayer(player);
 							
 							if (creation.getTime() < 60) {

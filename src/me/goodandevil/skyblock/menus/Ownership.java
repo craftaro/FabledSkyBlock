@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -46,11 +46,11 @@ public class Ownership implements Listener {
     }
     
     public void open(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+    	PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
     	
-    	Island island = plugin.getIslandManager().getIsland(playerDataManager.getPlayerData(player).getOwner());
+    	Island island = skyblock.getIslandManager().getIsland(playerDataManager.getPlayerData(player).getOwner());
     	
     	UUID originalOwnerUUID = island.getOriginalOwnerUUID();
     	
@@ -68,7 +68,7 @@ public class Ownership implements Listener {
     		playerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
     	}
     	
-		Config languageConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config languageConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
 		
 		InventoryUtil inv = new InventoryUtil(configLoad.getString("Menu.Ownership.Title"), InventoryType.HOPPER, 0);
@@ -95,14 +95,14 @@ public class Ownership implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-			MessageManager messageManager = plugin.getMessageManager();
-			IslandManager islandManager = plugin.getIslandManager();
-			SoundManager soundManager = plugin.getSoundManager();
+			PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+			MessageManager messageManager = skyblock.getMessageManager();
+			IslandManager islandManager = skyblock.getIslandManager();
+			SoundManager soundManager = skyblock.getSoundManager();
 			
-			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Ownership.Title")))) {
@@ -128,7 +128,7 @@ public class Ownership implements Listener {
 					return;
 				}
 				
-				PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+				PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 				
 				if (playerData.getType() == null) {
 					playerData.setType(Ownership.Visibility.Hidden);
@@ -240,7 +240,7 @@ public class Ownership implements Listener {
 					    				open(player);
 					    				soundManager.playSound(player, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
 					    			}
-					    		}.runTaskLater(plugin, 3L);
+					    		}.runTaskLater(skyblock, 3L);
 					    		
 			                    event.setWillClose(true);
 			                    event.setWillDestroy(true);

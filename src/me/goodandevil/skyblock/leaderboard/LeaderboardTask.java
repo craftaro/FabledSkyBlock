@@ -2,19 +2,19 @@ package me.goodandevil.skyblock.leaderboard;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 
 public class LeaderboardTask extends BukkitRunnable {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
-	public LeaderboardTask(Main plugin) {
-		this.plugin = plugin;
+	public LeaderboardTask(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void run() {
-		LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
+		LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
 		leaderboardManager.clearLeaderboard();
 		leaderboardManager.resetLeaderboard();
 	}

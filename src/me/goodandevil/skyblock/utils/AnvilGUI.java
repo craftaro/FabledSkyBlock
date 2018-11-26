@@ -18,7 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 
 public class AnvilGUI {
@@ -106,7 +106,7 @@ public class AnvilGUI {
             }
         };
 
-        Bukkit.getPluginManager().registerEvents(listener, Main.getInstance());
+        Bukkit.getPluginManager().registerEvents(listener, SkyBlock.getInstance());
     }
 
     public Player getPlayer() {

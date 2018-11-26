@@ -18,7 +18,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -29,13 +29,13 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class BiomeManager {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private Map<UUID, me.goodandevil.skyblock.biome.Biome> playerBiomeStorage = new HashMap<>();
 
-	public BiomeManager(Main plugin) {
-		this.plugin = plugin;
+	public BiomeManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
-		new BiomeTask(plugin).runTaskTimerAsynchronously(plugin, 0L, 20L);
+		new BiomeTask(skyblock).runTaskTimerAsynchronously(skyblock, 0L, 20L);
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			loadPlayer(all);
@@ -84,8 +84,8 @@ public class BiomeManager {
 	    		}
 	    	    
 	    	    if (player != null) {
-	    	    	PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-	    	    	IslandManager islandManager = plugin.getIslandManager();
+	    	    	PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+	    	    	IslandManager islandManager = skyblock.getIslandManager();
 	    	    	
 	    	    	if (playerDataManager.hasPlayerData(player)) {
 	    	    		PlayerData playerData = playerDataManager.getPlayerData(player);
@@ -97,14 +97,14 @@ public class BiomeManager {
 	    	    	}
 	    	    }
 	    	}
-	    }.runTaskAsynchronously(plugin);
+	    }.runTaskAsynchronously(skyblock);
 	}
 	
 	public void updateBiome(Island island, List<Chunk> chunks) {
 		Class<?> packetPlayOutMapChunkClass = NMSUtil.getNMSClass("PacketPlayOutMapChunk");
 		Class<?> chunkClass = NMSUtil.getNMSClass("Chunk");
 		
-    	for (Player all : plugin.getIslandManager().getPlayersAtIsland(island, me.goodandevil.skyblock.island.Location.World.Normal)) {
+    	for (Player all : skyblock.getIslandManager().getPlayersAtIsland(island, me.goodandevil.skyblock.island.Location.World.Normal)) {
     	    for (Chunk chunkList : chunks) {
     			try {
     				if (NMSUtil.getVersionNumber() < 10) {
@@ -121,7 +121,7 @@ public class BiomeManager {
 	}
 	
 	public void createPlayer(Player player, int time) {
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
 		File configFile = config.getFile();
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
@@ -138,7 +138,7 @@ public class BiomeManager {
 	}
 	
 	public void loadPlayer(Player player) {
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (configLoad.getString("Island.Biome.Cooldown") != null) {
@@ -149,7 +149,7 @@ public class BiomeManager {
 	
 	public void removePlayer(Player player) {
 		if (hasPlayer(player)) {
-			Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
 			File configFile = config.getFile();
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
@@ -169,7 +169,7 @@ public class BiomeManager {
 		if (hasPlayer(player)) {
 			me.goodandevil.skyblock.biome.Biome biome = getPlayer(player);
 			
-			Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
 			File configFile = config.getFile();
 			FileConfiguration configLoad = config.getFileConfiguration();
 			

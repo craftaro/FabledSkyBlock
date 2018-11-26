@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -20,11 +20,11 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class BanManager {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private Map<UUID, Ban> banStorage = new HashMap<>();
 	
-	public BanManager(Main plugin) {
-		this.plugin = plugin;
+	public BanManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
 		loadIslands();
 	}
@@ -39,10 +39,10 @@ public class BanManager {
 	}
 	
 	public void loadIslands() {
-		FileManager fileManager = plugin.getFileManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Unload")) {
-			File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
+		if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Unload")) {
+			File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 			
 			if (configFile.exists()) {
 				for (File fileList : configFile.listFiles()) {
@@ -54,13 +54,13 @@ public class BanManager {
 	}
 	
 	public void transfer(UUID uuid, UUID islandOwnerUUID) {
-		FileManager fileManager = plugin.getFileManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
 		Ban ban = getIsland(islandOwnerUUID);
 		ban.save();
 		
-		File oldBanDataFile = new File(new File(plugin.getDataFolder().toString() + "/ban-data"), islandOwnerUUID.toString() + ".yml");
-		File newBanDataFile = new File(new File(plugin.getDataFolder().toString() + "/ban-data"), uuid.toString() + ".yml");
+		File oldBanDataFile = new File(new File(skyblock.getDataFolder().toString() + "/ban-data"), islandOwnerUUID.toString() + ".yml");
+		File newBanDataFile = new File(new File(skyblock.getDataFolder().toString() + "/ban-data"), uuid.toString() + ".yml");
 		
 		fileManager.unloadConfig(oldBanDataFile);
 		fileManager.unloadConfig(newBanDataFile);
@@ -72,11 +72,11 @@ public class BanManager {
 	}
 	
 	public void removeVisitor(Island island) {
-		MessageManager messageManager = plugin.getMessageManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		for (UUID visitorList : island.getVisitors()) {
@@ -121,14 +121,14 @@ public class BanManager {
 	
 	public void unloadIsland(UUID islandOwnerUUID) {
 		if (hasIsland(islandOwnerUUID)) {
-			plugin.getFileManager().unloadConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"), islandOwnerUUID.toString() + ".yml"));
+			skyblock.getFileManager().unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"), islandOwnerUUID.toString() + ".yml"));
 			banStorage.remove(islandOwnerUUID);
 		}
 	}
 	
 	public void deleteIsland(UUID islandOwnerUUID) {
 		if (hasIsland(islandOwnerUUID)) {
-			plugin.getFileManager().deleteConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"), islandOwnerUUID.toString() + ".yml"));
+			skyblock.getFileManager().deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"), islandOwnerUUID.toString() + ".yml"));
 			banStorage.remove(islandOwnerUUID);
 		}
 	}

@@ -14,7 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -26,11 +26,11 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class VisitManager {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private HashMap<UUID, Visit> visitStorage = new HashMap<>();
 	
-	public VisitManager(Main plugin) {
-		this.plugin = plugin;
+	public VisitManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
 		loadIslands();
 	}
@@ -45,10 +45,10 @@ public class VisitManager {
 	}
 	
 	public void loadIslands() {
-		FileManager fileManager = plugin.getFileManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Unload")) {
-			File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
+		if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Unload")) {
+			File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 			
 			if (configFile.exists()) {
 				for (File fileList : configFile.listFiles()) {
@@ -62,7 +62,7 @@ public class VisitManager {
 						islandSignature = configLoad.getStringList("Visitor.Signature.Message");
 					}
 					
-					int division = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
+					int division = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
 					
 					if (division == 0) {
 						division = 1;
@@ -74,7 +74,7 @@ public class VisitManager {
 						size = configLoad.getInt("Size");
 					}
 					
-					createIsland(islandOwnerUUID, new Location[] { fileManager.getLocation(config, "Location.Normal.Island", true), fileManager.getLocation(config, "Location.Nether.Island", true) }, size, configLoad.getStringList("Members").size() + configLoad.getStringList("Operators").size() + 1, new Level(islandOwnerUUID, plugin), islandSignature, configLoad.getBoolean("Visitor.Open"));
+					createIsland(islandOwnerUUID, new Location[] { fileManager.getLocation(config, "Location.Normal.Island", true), fileManager.getLocation(config, "Location.Nether.Island", true) }, size, configLoad.getStringList("Members").size() + configLoad.getStringList("Operators").size() + 1, new Level(islandOwnerUUID, skyblock), islandSignature, configLoad.getBoolean("Visitor.Open"));
 				}
 			}
 		}
@@ -86,11 +86,11 @@ public class VisitManager {
 		visit.getLevel().setOwnerUUID(uuid);
 		visit.save();
 		
-		File oldVisitDataFile = new File(new File(plugin.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml");
-		File newVisitDataFile = new File(new File(plugin.getDataFolder().toString() + "/visit-data"), uuid.toString() + ".yml");
+		File oldVisitDataFile = new File(new File(skyblock.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml");
+		File newVisitDataFile = new File(new File(skyblock.getDataFolder().toString() + "/visit-data"), uuid.toString() + ".yml");
 		
-		plugin.getFileManager().unloadConfig(oldVisitDataFile);
-		plugin.getFileManager().unloadConfig(newVisitDataFile);
+		skyblock.getFileManager().unloadConfig(oldVisitDataFile);
+		skyblock.getFileManager().unloadConfig(newVisitDataFile);
 		
 		oldVisitDataFile.renameTo(newVisitDataFile);
 		
@@ -99,11 +99,11 @@ public class VisitManager {
 	}
 	
 	public void removeVisitors(Island island, VisitManager.Removal removal) {
-		MessageManager messageManager = plugin.getMessageManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		for (UUID visitorList : island.getVisitors()) {
@@ -151,7 +151,7 @@ public class VisitManager {
 	}
 	
 	public void createIsland(UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, Level islandLevel, List<String> islandSignature, boolean open) {
-		visitStorage.put(islandOwnerUUID, new Visit(plugin, islandOwnerUUID, islandLocations, islandSize, islandMembers, islandLevel, islandSignature, open));
+		visitStorage.put(islandOwnerUUID, new Visit(skyblock, islandOwnerUUID, islandLocations, islandSize, islandMembers, islandLevel, islandSignature, open));
 	}
 	
 	public void addIsland(UUID islandOwnerUUID, Visit visit) {
@@ -166,14 +166,14 @@ public class VisitManager {
 	
 	public void unloadIsland(UUID islandOwnerUUID) {
 		if (hasIsland(islandOwnerUUID)) {
-			plugin.getFileManager().unloadConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
+			skyblock.getFileManager().unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
 			visitStorage.remove(islandOwnerUUID);
 		}
 	}
 	
 	public void deleteIsland(UUID islandOwnerUUID) {
 		if (hasIsland(islandOwnerUUID)) {
-			plugin.getFileManager().deleteConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
+			skyblock.getFileManager().deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
 			visitStorage.remove(islandOwnerUUID);
 		}
 	}

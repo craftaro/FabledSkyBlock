@@ -5,7 +5,7 @@ import java.io.File;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -18,20 +18,20 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class CreateCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public CreateCommand(Main plugin) {
-		this.plugin = plugin;
+	public CreateCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (player.hasPermission("skyblock.admin.create") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
@@ -42,7 +42,7 @@ public class CreateCommand extends SubCommand {
 			Creator.getInstance().open(player);
 			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Admin.Create.Permission.Message"));
+			skyblock.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Admin.Create.Permission.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

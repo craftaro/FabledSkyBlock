@@ -20,7 +20,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -54,12 +54,12 @@ public class Visit implements Listener {
     }
 	
 	public void open(Player player, Visit.Type type, Visit.Sort sort) {
-		Main plugin = Main.getInstance();
+		SkyBlock skyblock = SkyBlock.getInstance();
 		
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		VisitManager visitManager = plugin.getVisitManager();
-		FileManager fileManager = plugin.getFileManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		VisitManager visitManager = skyblock.getVisitManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
 		Map<UUID, me.goodandevil.skyblock.visit.Visit> displayedIslands = new HashMap<>();
 		Map<UUID, me.goodandevil.skyblock.visit.Visit> visitIslands = visitManager.getOpenIslands();
@@ -121,7 +121,7 @@ public class Visit implements Listener {
 		
 		int playerMenuPage = playerDataManager.getPlayerData(player).getPage(), nextEndIndex = displayedIslands.size() - playerMenuPage * 36, totalIslands = visitManager.getIslands().size();
 		
-		Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
 		
 		InventoryUtil inv = new InventoryUtil(configLoad.getString("Menu.Visit.Title"), null, 6);
@@ -142,7 +142,7 @@ public class Visit implements Listener {
 		if (displayedIslands.size() == 0) {
 			inv.addItem(inv.createItem(new ItemStack(Material.BARRIER), configLoad.getString("Menu.Visit.Item.Nothing.Displayname"), null, null, null, null), 31);
 		} else {
-			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 			
 			int index = playerMenuPage * 36 - 36, endIndex = index >= displayedIslands.size() ? displayedIslands.size() - 1 : index + 36, inventorySlot = 17, playerCapacity = config.getFileConfiguration().getInt("Island.Visitor.Capacity");
 			
@@ -258,14 +258,14 @@ public class Visit implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-			MessageManager messageManager = plugin.getMessageManager();
-			SoundManager soundManager = plugin.getSoundManager();
-			FileManager fileManager = plugin.getFileManager();
+			PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+			MessageManager messageManager = skyblock.getMessageManager();
+			SoundManager soundManager = skyblock.getSoundManager();
+			FileManager fileManager = skyblock.getFileManager();
 			
-			Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = languageConfig.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Visit.Title")))) {
@@ -309,8 +309,8 @@ public class Visit implements Listener {
 		    	} else if ((event.getCurrentItem().getType() == Material.BARRIER) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Visit.Item.Nothing.Displayname"))))) {
 		    		soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    	} else if ((event.getCurrentItem().getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
-		    		VisitManager visitManager = plugin.getVisitManager();
-		    		IslandManager islandManager = plugin.getIslandManager();
+		    		VisitManager visitManager = skyblock.getVisitManager();
+		    		IslandManager islandManager = skyblock.getIslandManager();
 		    		
 		    		String targetPlayerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
 		    		UUID targetPlayerUUID;
@@ -333,7 +333,7 @@ public class Visit implements Listener {
 		    				
 		    				Island island = islandManager.getIsland(targetPlayerUUID);
 		    				
-				    		if ((!island.isRole(Role.Member, player.getUniqueId()) && !island.isRole(Role.Operator, player.getUniqueId()) && !island.isRole(Role.Owner, player.getUniqueId())) && fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+				    		if ((!island.isRole(Role.Member, player.getUniqueId()) && !island.isRole(Role.Operator, player.getUniqueId()) && !island.isRole(Role.Owner, player.getUniqueId())) && fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
 				    			if (event.getClick() == ClickType.RIGHT) {
 				    				if (playerData.getIsland() != null && playerData.getIsland().equals(island.getOwnerUUID())) {
 				    					List<UUID> islandVotes = visit.getVoters();

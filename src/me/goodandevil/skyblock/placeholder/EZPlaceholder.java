@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -18,10 +18,10 @@ import me.goodandevil.skyblock.island.Role;
 
 public class EZPlaceholder extends PlaceholderExpansion {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
-	public EZPlaceholder(Main plugin) {
-		this.plugin = plugin;
+	public EZPlaceholder(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	public String getIdentifier() {
@@ -33,29 +33,29 @@ public class EZPlaceholder extends PlaceholderExpansion {
     }
         
     public String getAuthor() {
-    	return plugin.getDescription().getAuthors().get(0);
+    	return skyblock.getDescription().getAuthors().get(0);
     }
     
     public String getVersion() {
-    	return plugin.getDescription().getVersion();
+    	return skyblock.getDescription().getVersion();
     }
     
     public String onPlaceholderRequest(Player player, String identifier) {
     	if (identifier.equalsIgnoreCase("islands")) {
-    		return "" + plugin.getVisitManager().getIslands().size();
+    		return "" + skyblock.getVisitManager().getIslands().size();
     	}
     	
     	if(player == null){
     		return "";
         }
     	
-    	IslandManager islandManager = plugin.getIslandManager();
+    	IslandManager islandManager = skyblock.getIslandManager();
     	
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
     	
     	if (islandManager.hasIsland(player)) {
-    		Island island = islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+    		Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
     		
     		if (identifier.equalsIgnoreCase("island_level")) {
     			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_level.Non-empty.Message").replace("%placeholder", "" + island.getLevel().getLevel()));

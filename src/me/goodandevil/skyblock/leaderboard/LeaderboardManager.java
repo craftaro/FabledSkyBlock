@@ -6,26 +6,26 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.visit.Visit;
 import me.goodandevil.skyblock.visit.VisitManager;
 
 public class LeaderboardManager {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
 	private List<Leaderboard> leaderboardStorage = new ArrayList<>();
 	
-	public LeaderboardManager(Main plugin) {
-		this.plugin = plugin;
+	public LeaderboardManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
-		new LeaderboardTask(plugin).runTaskTimerAsynchronously(plugin, 0L, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
+		new LeaderboardTask(skyblock).runTaskTimerAsynchronously(skyblock, 0L, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
 		
 		resetLeaderboard();
 	}
 	
 	public void resetLeaderboard() {
-		VisitManager visitManager = plugin.getVisitManager();
+		VisitManager visitManager = skyblock.getVisitManager();
 		
 		List<LeaderboardPlayer> islandLevels = new ArrayList<>();
 		List<LeaderboardPlayer> islandVotes = new ArrayList<>();

@@ -8,12 +8,12 @@ import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 
 public class Level {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
 	private UUID ownerUUID;
 	
@@ -22,11 +22,11 @@ public class Level {
 	
 	private Map<String, Integer> materials;
 	
-	public Level(UUID ownerUUID, Main plugin) {
-		this.plugin = plugin;
+	public Level(UUID ownerUUID, SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		this.ownerUUID = ownerUUID;
 		
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		Map<String, Integer> materials = new HashMap<>();
@@ -47,7 +47,7 @@ public class Level {
 	}
 	
 	public int getPoints() {
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		int pointsEarned = 0;
@@ -68,7 +68,7 @@ public class Level {
 	}
 	
 	public int getLevel() {
-		int division = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
+		int division = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
 		
 		if (division == 0) {
 			division = 1;
@@ -78,7 +78,7 @@ public class Level {
 	}
 	
 	public void setMaterials(Map<String, Integer> materials) {
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
 		File configFile = config.getFile();
 		FileConfiguration configLoad = config.getFileConfiguration();
 		

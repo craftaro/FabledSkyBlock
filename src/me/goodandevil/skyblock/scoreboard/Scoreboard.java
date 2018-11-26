@@ -15,7 +15,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Level;
@@ -51,7 +51,7 @@ public class Scoreboard {
 	}
 	
 	public void run() {
-		Main plugin = Main.getInstance();
+		SkyBlock skyblock = SkyBlock.getInstance();
 		
 		new BukkitRunnable() {
 			@Override
@@ -146,13 +146,13 @@ public class Scoreboard {
 									cancel();
 								}
 							}
-						}.runTaskTimerAsynchronously(plugin, 0L, 20L);
+						}.runTaskTimerAsynchronously(skyblock, 0L, 20L);
 						
 					    player.setScoreboard(scoreboard);
 					}
-				}.runTaskAsynchronously(plugin);
+				}.runTaskAsynchronously(skyblock);
 			}
-		}.runTask(plugin);
+		}.runTask(skyblock);
 	}
 	
 	private String replaceDisplayName(String displayName) {
@@ -162,10 +162,10 @@ public class Scoreboard {
 	}
 	
 	private String replaceDisplayLine(String displayLine) {
-		Main plugin = Main.getInstance();
+		SkyBlock skyblock = SkyBlock.getInstance();
 		
-		PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
-		IslandManager islandManager = plugin.getIslandManager();
+		PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+		IslandManager islandManager = skyblock.getIslandManager();
 		displayLine = displayLine.replace("%players_online", "" + Bukkit.getServer().getOnlinePlayers().size()).replace("%players_max", "" + Bukkit.getServer().getMaxPlayers());
 		
 		if (islandManager.hasIsland(player)) {
@@ -192,7 +192,7 @@ public class Scoreboard {
 			displayLine = displayLine.replace("%island_level", ChatColor.RED + "0").replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null");
 		}
 		
-		PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
+		PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
 		
 		if (placeholderManager.isPlaceholderAPIEnabled()) {
 			displayLine = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, displayLine.replace("&", "clr")).replace("clr", "&");

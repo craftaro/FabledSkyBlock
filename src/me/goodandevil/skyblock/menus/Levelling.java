@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -46,19 +46,19 @@ public class Levelling implements Listener {
     }
 	
     public void open(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	FileManager fileManager = plugin.getFileManager();
-    	PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+    	FileManager fileManager = skyblock.getFileManager();
+    	PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
     	
-    	Island island = plugin.getIslandManager().getIsland(playerData.getOwner());
+    	Island island = skyblock.getIslandManager().getIsland(playerData.getOwner());
     	Level level = island.getLevel();
     	
 		Map<String, Integer> islandMaterials = level.getMaterials();
 		
 		int playerMenuPage = playerData.getPage(), nextEndIndex = islandMaterials.size() - playerMenuPage * 36;
     	
-		Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
 		
 		InventoryUtil inv = new InventoryUtil(configLoad.getString("Menu.Levelling.Title"), null, 6);
@@ -80,7 +80,7 @@ public class Levelling implements Listener {
 		} else {
 			int index = playerMenuPage * 36 - 36, endIndex = index >= islandMaterials.size() ? islandMaterials.size() - 1 : index + 36, inventorySlot = 17;
 			
-			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
 			
 			for (; index < endIndex; index++) {
 				if (islandMaterials.size() > index) {
@@ -119,13 +119,13 @@ public class Levelling implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			MessageManager messageManager = plugin.getMessageManager();
-			IslandManager islandManager = plugin.getIslandManager();
-			SoundManager soundManager = plugin.getSoundManager();
+			MessageManager messageManager = skyblock.getMessageManager();
+			IslandManager islandManager = skyblock.getIslandManager();
+			SoundManager soundManager = skyblock.getSoundManager();
 			
-			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Title")))) {
@@ -149,8 +149,8 @@ public class Levelling implements Listener {
 		    	} else if ((event.getCurrentItem().getType() == Material.BARRIER) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Nothing.Displayname"))))) {
 		    		soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		    	} else if ((event.getCurrentItem().getType() == Materials.FIREWORK_STAR.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"))))) {
-		    		LevellingManager levellingManager = plugin.getLevellingManager();
-		    		Island island = islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+		    		LevellingManager levellingManager = skyblock.getLevellingManager();
+		    		Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 		    		
 		    		if (levellingManager.hasLevelling(island.getOwnerUUID())) {
 						me.goodandevil.skyblock.levelling.Levelling levelling = levellingManager.getLevelling(island.getOwnerUUID());
@@ -180,9 +180,9 @@ public class Levelling implements Listener {
 							levellingManager.loadLevelling(island.getOwnerUUID());
 							levellingManager.calculatePoints(player, island);
 						}
-					}.runTaskAsynchronously(plugin);
+					}.runTaskAsynchronously(skyblock);
 		    	} else if ((event.getCurrentItem().getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
-		    		PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+		    		PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 		    		
 		    		if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Previous.Displayname")))) {
 		    			playerData.setPage(playerData.getPage() - 1);
@@ -206,13 +206,13 @@ public class Levelling implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
 		
-		Main plugin = Main.getInstance();
+		SkyBlock skyblock = SkyBlock.getInstance();
 		
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Title")))) {
-			plugin.getSoundManager().playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+			skyblock.getSoundManager().playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 }

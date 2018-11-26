@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.version.Materials;
 
@@ -14,8 +14,8 @@ public class StructureManager {
 
 	private List<Structure> structureStorage = new ArrayList<>();
 	
-	public StructureManager(Main plugin) {
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "structures.yml"));
+	public StructureManager(SkyBlock skyblock) {
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (configLoad.getString("Structures") != null) {

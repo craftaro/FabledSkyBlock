@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -30,24 +30,24 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class ConfirmCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public ConfirmCommand(Main plugin) {
-		this.plugin = plugin;
+	public ConfirmCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+		PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (playerData.getConfirmationTime() > 0) {
@@ -95,7 +95,7 @@ public class ConfirmCommand extends SubCommand {
 							
 							messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Confirmed.Message"));
 							
-							boolean hasSpawnPoint = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") != null;
+							boolean hasSpawnPoint = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") != null;
 							
 							for (Player all : Bukkit.getOnlinePlayers()) {
 								if (island.isRole(Role.Member, all.getUniqueId()) || island.isRole(Role.Operator, all.getUniqueId()) || island.isRole(Role.Owner, all.getUniqueId())) {
@@ -127,8 +127,8 @@ public class ConfirmCommand extends SubCommand {
 							}
 							
 							islandManager.deleteIsland(island);
-							plugin.getVisitManager().deleteIsland(player.getUniqueId());
-							plugin.getBanManager().deleteIsland(player.getUniqueId());
+							skyblock.getVisitManager().deleteIsland(player.getUniqueId());
+							skyblock.getBanManager().deleteIsland(player.getUniqueId());
 							
 							messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Deletion.Sender.Message"));
 							soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);

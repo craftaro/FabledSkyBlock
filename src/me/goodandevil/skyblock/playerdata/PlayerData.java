@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
 import me.goodandevil.skyblock.generator.GeneratorLocation;
@@ -205,6 +205,8 @@ public class PlayerData {
 	}
 	
 	private Config getConfig() {
-		return Main.getInstance().getFileManager().getConfig(new File(new File(Main.getInstance().getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+		SkyBlock skyblock = SkyBlock.getInstance();
+		
+		return skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
 	}
 }

@@ -16,7 +16,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.commands.AcceptCommand;
 import me.goodandevil.skyblock.command.commands.BanCommand;
 import me.goodandevil.skyblock.command.commands.BansCommand;
@@ -68,71 +68,71 @@ import net.md_5.bungee.api.chat.HoverEvent;
 
 public class CommandManager implements CommandExecutor, TabCompleter {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private HashMap<CommandManager.Type, List<SubCommand>> subCommands = new HashMap<>();
 	
-	public CommandManager(Main plugin) {
-		this.plugin = plugin;
+	public CommandManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
-		plugin.getCommand("island").setExecutor(this);
-		plugin.getCommand("island").setTabCompleter(this);
+		skyblock.getCommand("island").setExecutor(this);
+		skyblock.getCommand("island").setTabCompleter(this);
 		
 		registerSubCommands();
 	}
 	
 	public void registerSubCommands() {
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		List<SubCommand> subCommands = new ArrayList<>();
-		subCommands.add(new VisitCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Visit.Info.Message"))));
-		subCommands.add(new VoteCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Vote.Info.Message"))));
-		subCommands.add(new ControlPanelCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.ControlPanel.Info.Message"))));
-		subCommands.add(new LeaderboardCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Leaderboard.Info.Message"))));
-		subCommands.add(new CreateCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Create.Info.Message"))));
-		subCommands.add(new DeleteCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Delete.Info.Message"))));
-		subCommands.add(new TeleportCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Info.Message"))));
-		subCommands.add(new SetSpawnCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.SetSpawn.Info.Message"))));
-		subCommands.add(new AcceptCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Accept.Info.Message"))));
-		subCommands.add(new DenyCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Deny.Info.Message"))));
-		subCommands.add(new CancelCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Cancel.Info.Message"))));
-		subCommands.add(new LeaveCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Leave.Info.Message"))));
-		subCommands.add(new PromoteCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Promote.Info.Message"))));
-		subCommands.add(new DemoteCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Demote.Info.Message"))));
-		subCommands.add(new KickCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Kick.Info.Message"))));
-		subCommands.add(new KickAllCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.KickAll.Info.Message"))));
-		subCommands.add(new BanCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Info.Message"))));
-		subCommands.add(new BansCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Bans.Info.Message"))));
-		subCommands.add(new UnbanCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Info.Message"))));
-		subCommands.add(new BiomeCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Biome.Info.Message"))));
-		subCommands.add(new WeatherCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Weather.Info.Message"))));
-		//subCommands.add(new RollbackCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Rollback.Info.Message"))));
-		subCommands.add(new LevelCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Level.Info.Message"))));
-		subCommands.add(new SettingsCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Settings.Info.Message"))));
-		subCommands.add(new MembersCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Members.Info.Message"))));
-		subCommands.add(new OwnerCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ownership.Info.Message"))));
-		subCommands.add(new ConfirmCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Info.Message"))));
-		subCommands.add(new InviteCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Info.Message"))));
-		subCommands.add(new ChatCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Chat.Info.Message"))));
-		subCommands.add(new VisitorsCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Visitors.Info.Message"))));
-		subCommands.add(new CurrentCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Current.Info.Message"))));
-		subCommands.add(new PublicCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Public.Info.Message"))));
-		subCommands.add(new OpenCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Open.Info.Message"))));
-		subCommands.add(new CloseCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Close.Info.Message"))));
+		subCommands.add(new VisitCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Visit.Info.Message"))));
+		subCommands.add(new VoteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Vote.Info.Message"))));
+		subCommands.add(new ControlPanelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.ControlPanel.Info.Message"))));
+		subCommands.add(new LeaderboardCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Leaderboard.Info.Message"))));
+		subCommands.add(new CreateCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Create.Info.Message"))));
+		subCommands.add(new DeleteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Delete.Info.Message"))));
+		subCommands.add(new TeleportCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Teleport.Info.Message"))));
+		subCommands.add(new SetSpawnCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.SetSpawn.Info.Message"))));
+		subCommands.add(new AcceptCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Accept.Info.Message"))));
+		subCommands.add(new DenyCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Deny.Info.Message"))));
+		subCommands.add(new CancelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Cancel.Info.Message"))));
+		subCommands.add(new LeaveCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Leave.Info.Message"))));
+		subCommands.add(new PromoteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Promote.Info.Message"))));
+		subCommands.add(new DemoteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Demote.Info.Message"))));
+		subCommands.add(new KickCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Kick.Info.Message"))));
+		subCommands.add(new KickAllCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.KickAll.Info.Message"))));
+		subCommands.add(new BanCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ban.Info.Message"))));
+		subCommands.add(new BansCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Bans.Info.Message"))));
+		subCommands.add(new UnbanCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Unban.Info.Message"))));
+		subCommands.add(new BiomeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Biome.Info.Message"))));
+		subCommands.add(new WeatherCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Weather.Info.Message"))));
+		//subCommands.add(new RollbackCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Rollback.Info.Message"))));
+		subCommands.add(new LevelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Level.Info.Message"))));
+		subCommands.add(new SettingsCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Settings.Info.Message"))));
+		subCommands.add(new MembersCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Members.Info.Message"))));
+		subCommands.add(new OwnerCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ownership.Info.Message"))));
+		subCommands.add(new ConfirmCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Info.Message"))));
+		subCommands.add(new InviteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Invite.Info.Message"))));
+		subCommands.add(new ChatCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Chat.Info.Message"))));
+		subCommands.add(new VisitorsCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Visitors.Info.Message"))));
+		subCommands.add(new CurrentCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Current.Info.Message"))));
+		subCommands.add(new PublicCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Public.Info.Message"))));
+		subCommands.add(new OpenCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Open.Info.Message"))));
+		subCommands.add(new CloseCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Close.Info.Message"))));
 		
 		this.subCommands.put(CommandManager.Type.Default, subCommands);
 		
 		subCommands = new ArrayList<>();
-		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SetSpawnCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSpawn.Info.Message"))));
-		subCommands.add(new SetSizeCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSize.Info.Message"))));
-		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.CreateCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Create.Info.Message"))));
-		subCommands.add(new GeneratorCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Generator.Info.Message"))));
-		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.LevelCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Level.Info.Message"))));
-		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SettingsCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Settings.Info.Message"))));
-		subCommands.add(new StructureCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Info.Message"))));
-		subCommands.add(new DeleteCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Delete.Info.Message"))));
-		subCommands.add(new OwnerCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Owner.Info.Message"))));
-		subCommands.add(new ReloadCommand(plugin).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Reload.Info.Message"))));
+		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SetSpawnCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSpawn.Info.Message"))));
+		subCommands.add(new SetSizeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSize.Info.Message"))));
+		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.CreateCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Create.Info.Message"))));
+		subCommands.add(new GeneratorCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Generator.Info.Message"))));
+		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.LevelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Level.Info.Message"))));
+		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SettingsCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Settings.Info.Message"))));
+		subCommands.add(new StructureCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Info.Message"))));
+		subCommands.add(new DeleteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Delete.Info.Message"))));
+		subCommands.add(new OwnerCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Owner.Info.Message"))));
+		subCommands.add(new ReloadCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Reload.Info.Message"))));
 		
 		this.subCommands.put(CommandManager.Type.Admin, subCommands);
 	}
@@ -150,19 +150,19 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					MessageManager messageManager = plugin.getMessageManager();
-					SoundManager soundManager = plugin.getSoundManager();
-					FileManager fileManager = plugin.getFileManager();
+					MessageManager messageManager = skyblock.getMessageManager();
+					SoundManager soundManager = skyblock.getSoundManager();
+					FileManager fileManager = skyblock.getFileManager();
 					
-					Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+					Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 					FileConfiguration configLoad = config.getFileConfiguration();
 					
 					if (args.length == 0) {
-						if (plugin.getIslandManager().hasIsland(player)) {
+						if (skyblock.getIslandManager().hasIsland(player)) {
 							ControlPanel.getInstance().open(player);
 							soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 						} else {
-							Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
+							Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 								@Override
 								public void run() {
 									Bukkit.getServer().dispatchCommand(player, "island create");
@@ -178,7 +178,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					if (args[0].equalsIgnoreCase("help")) {
 						int page = -1;
 						
-						if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
+						if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
 							page = 1;
 							
 							if (args.length == 2) {
@@ -201,7 +201,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 							if (player.hasPermission("skyblock.admin") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
 								int page = -1;
 								
-								if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
+								if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
 									page = 1;
 									
 									if (args.length == 3) {
@@ -245,7 +245,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 						subCommand.onCommand(player, arguments.toArray(new String[0]));
 					}
 				}
-			}.runTaskAsynchronously(plugin);
+			}.runTaskAsynchronously(skyblock);
 		}
 		
 		return true;
@@ -324,15 +324,15 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	}
 	
 	public void sendHelpCommands(Player player, CommandManager.Type type, int page) {
-		FileManager fileManager = plugin.getFileManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		int pageSize = 7;
 		
 		int nextEndIndex = subCommands.get(type).size() - page * pageSize, index = page * pageSize - pageSize, endIndex = index >= subCommands.get(type).size() ? subCommands.get(type).size() - 1 : index + pageSize;
-		boolean showAlises = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.Aliases.Enable");
+		boolean showAlises = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.Aliases.Enable");
 		
 		String subCommandText = "";
 		
@@ -403,7 +403,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					}	
 				}
 			} else {
-				plugin.getMessageManager().sendMessage(player, helpLines);
+				skyblock.getMessageManager().sendMessage(player, helpLines);
 			}
 		}
 		
@@ -421,7 +421,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			}	
 		}
 		
-		plugin.getSoundManager().playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+		skyblock.getSoundManager().playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 	}
 	
 	public SubCommand getSubCommand(CommandManager.Type type, String arg) {

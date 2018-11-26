@@ -12,7 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
@@ -34,29 +34,29 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class AcceptCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public AcceptCommand(Main plugin) {
-		this.plugin = plugin;
+	public AcceptCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
 		PlayerData playerData = playerDataManager.getPlayerData(player);
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (args.length == 1) {
-			InviteManager inviteManager = plugin.getInviteManager();
+			InviteManager inviteManager = skyblock.getInviteManager();
 			
 			if (inviteManager.hasInvite(player.getUniqueId())) {
 				Invite invite = inviteManager.getInvite(player.getUniqueId());
@@ -106,7 +106,7 @@ public class AcceptCommand extends SubCommand {
 							island.setRole(Role.Member, player.getUniqueId());
 							island.save();
 							
-							if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1) >= fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Member.Capacity")) {
+							if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1) >= fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Member.Capacity")) {
 								Map<UUID, Invite> invites = inviteManager.getInvites();
 								
 								for (UUID inviteList : invites.keySet()) {
@@ -125,7 +125,7 @@ public class AcceptCommand extends SubCommand {
 								}
 							}
 							
-							plugin.getVisitManager().getIsland(invite.getOwnerUUID()).removeVoter(player.getUniqueId());
+							skyblock.getVisitManager().getIsland(invite.getOwnerUUID()).removeVoter(player.getUniqueId());
 							
 							for (Player all : Bukkit.getOnlinePlayers()) {
 								if (!all.getUniqueId().equals(player.getUniqueId())) {

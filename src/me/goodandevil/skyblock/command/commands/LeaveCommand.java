@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -29,25 +29,25 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class LeaveCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public LeaveCommand(Main plugin) {
-		this.plugin = plugin;
+	public LeaveCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
 		PlayerData playerData = playerDataManager.getPlayerData(player);
 		
-		Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		
 		if (islandManager.hasIsland(player)) {
 			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
@@ -92,7 +92,7 @@ public class LeaveCommand extends SubCommand {
 								
 								if (targetPlayerData.isChat()) {
 									targetPlayerData.setChat(false);
-									messageManager.sendMessage(targetPlayer, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
+									messageManager.sendMessage(targetPlayer, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
 								}
 							}
 						}

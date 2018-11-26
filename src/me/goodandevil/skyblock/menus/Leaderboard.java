@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -39,12 +39,12 @@ public class Leaderboard implements Listener {
     }
     
     public void open(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-    	FileManager fileManager = plugin.getFileManager();
+    	PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+    	FileManager fileManager = skyblock.getFileManager();
     	
-    	Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+    	Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		Viewer viewer = (Viewer) playerDataManager.getPlayerData(player).getViewer();
@@ -59,13 +59,13 @@ public class Leaderboard implements Listener {
 		} else {
 			inv = new InventoryUtil(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Leaderboard.Leaderboard.Title").replace("%leaderboard", viewer.getType().name())), null, 6);
 			
-			if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+			if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
 				inv.addItem(inv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname"), null, null, null, null), 0, 8);
 			} else {
 				inv.addItem(inv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Exit.Displayname"), null, null, null, null), 0, 8);				
 			}
 			
-			List<me.goodandevil.skyblock.leaderboard.Leaderboard> leaderboardIslands = plugin.getLeaderboardManager().getLeaderboard(me.goodandevil.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
+			List<me.goodandevil.skyblock.leaderboard.Leaderboard> leaderboardIslands = skyblock.getLeaderboardManager().getLeaderboard(me.goodandevil.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
 			
 			for (int i = 0; i < leaderboardIslands.size(); i++) {
 				me.goodandevil.skyblock.leaderboard.Leaderboard leaderboard = leaderboardIslands.get(i);
@@ -146,13 +146,13 @@ public class Leaderboard implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-			SoundManager soundManager = plugin.getSoundManager();
-			FileManager fileManager = plugin.getFileManager();
+			PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+			SoundManager soundManager = skyblock.getSoundManager();
+			FileManager fileManager = skyblock.getFileManager();
 			
-			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Leaderboard." + Viewer.Type.Browse.name() + ".Title")))) {
@@ -178,7 +178,7 @@ public class Leaderboard implements Listener {
 						soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 					} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname")))) {
-						if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+						if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
 							playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.Browse));
 							open(player);
 							soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);

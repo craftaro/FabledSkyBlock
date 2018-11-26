@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -29,22 +29,22 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class DeleteCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public DeleteCommand(Main plugin) {
-		this.plugin = plugin;
+	public DeleteCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (player.hasPermission("skyblock.admin.delete") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
@@ -65,7 +65,7 @@ public class DeleteCommand extends SubCommand {
 				if (islandManager.isIslandExist(targetPlayerUUID)) {
 					islandManager.loadIsland(targetPlayerUUID);
 					
-					boolean hasSpawnPoint = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") != null;
+					boolean hasSpawnPoint = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") != null;
 					Island island = islandManager.getIsland(targetPlayerUUID);
 					
 					for (Player all : Bukkit.getOnlinePlayers()) {
@@ -98,8 +98,8 @@ public class DeleteCommand extends SubCommand {
 					}
 					
 					islandManager.deleteIsland(island);
-					plugin.getVisitManager().deleteIsland(player.getUniqueId());
-					plugin.getBanManager().deleteIsland(player.getUniqueId());
+					skyblock.getVisitManager().deleteIsland(player.getUniqueId());
+					skyblock.getBanManager().deleteIsland(player.getUniqueId());
 				
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Deleted.Message").replace("%player", targetPlayerName));
 					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);

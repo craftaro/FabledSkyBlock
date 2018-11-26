@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -23,10 +23,10 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Respawn implements Listener {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
- 	public Respawn(Main plugin) {
-		this.plugin = plugin;
+ 	public Respawn(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@EventHandler
@@ -34,12 +34,12 @@ public class Respawn implements Listener {
 		Player player = event.getPlayer();
 		
 		for (me.goodandevil.skyblock.island.Location.World worldList : me.goodandevil.skyblock.island.Location.World.values()) {
-			if (player.getWorld().getName().equals(plugin.getWorldManager().getWorld(worldList).getName())) {
-				FileManager fileManager = plugin.getFileManager();
-				Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
+				FileManager fileManager = skyblock.getFileManager();
+				Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 				FileConfiguration configLoad = config.getFileConfiguration();
 				
-				IslandManager islandManager = plugin.getIslandManager();
+				IslandManager islandManager = skyblock.getIslandManager();
 				
 				if (configLoad.getBoolean("Island.Death.Respawn.Island")) {
 					for (UUID islandList : islandManager.getIslands().keySet()) {
@@ -62,7 +62,7 @@ public class Respawn implements Listener {
 					}
 				}
 				
-				config = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
+				config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
 	        	
 				if (config.getFileConfiguration().getString("Location.Spawn") == null) {
 					Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");

@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -46,13 +46,13 @@ public class Settings implements Listener {
     }
     
     public void open(Player player, Settings.Type menuType, me.goodandevil.skyblock.island.Settings.Role role, Settings.Panel panel) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	Island island = plugin.getIslandManager().getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+    	Island island = skyblock.getIslandManager().getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
     	InventoryUtil inv = null;
     	
-		Config mainConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-    	Config languageConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config mainConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+    	Config languageConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
     	
     	if (menuType == Settings.Type.Categories) {
@@ -67,7 +67,7 @@ public class Settings implements Listener {
     			inv = new InventoryUtil(configLoad.getString("Menu.Settings." + role.name() + ".Title"), null, 6);
     			
     			if (role == me.goodandevil.skyblock.island.Settings.Role.Visitor) {
-    				Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+    				Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
     				Visit visit = island.getVisit();
     				
     				if (config.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
@@ -222,9 +222,9 @@ public class Settings implements Listener {
     }
     
     private ItemStack createItem(Island island, me.goodandevil.skyblock.island.Settings.Role role, String setting, Material material) {
-		Main plugin = Main.getInstance();
+		SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+    	Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
     	
 		List<String> itemLore = new ArrayList<>();
@@ -263,18 +263,18 @@ public class Settings implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Categories.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Member.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Operator.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Owner.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")))) {
 				event.setCancelled(true);
 				
-				PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-				MessageManager messageManager = plugin.getMessageManager();
-				IslandManager islandManager = plugin.getIslandManager();
-				SoundManager soundManager = plugin.getSoundManager();
+				PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+				MessageManager messageManager = skyblock.getMessageManager();
+				IslandManager islandManager = skyblock.getIslandManager();
+				SoundManager soundManager = skyblock.getSoundManager();
 				
 				Island island;
 				
@@ -343,14 +343,14 @@ public class Settings implements Listener {
 			    	}
 				} else if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Member.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Operator.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Owner.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")))) {
 			    	if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")))) {
-						if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
+						if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
 							messageManager.sendMessage(player, configLoad.getString("Island.Settings.Visitor.Signature.Disabled.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							
 							return;
 						}
 			    	} else if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title")))) {
-						if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable")) {
+						if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable")) {
 							messageManager.sendMessage(player, configLoad.getString("Island.Settings.Visitor.Welcome.Disabled.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							
@@ -385,7 +385,7 @@ public class Settings implements Listener {
 					} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname"))) || is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Displayname"))))) {
 						soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
 					} else if ((event.getCurrentItem().getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname")))) && (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title"))))) {
-			    		if (island.getMessage(Message.Welcome).size() >= plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Visitor.Welcome.Lines")) {
+			    		if (island.getMessage(Message.Welcome).size() >= skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Visitor.Welcome.Lines")) {
 			    			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			    		} else {
 			    			soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -406,7 +406,7 @@ public class Settings implements Listener {
 									        event1.setWillDestroy(true);
 											
 											return;
-										} else if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable")) {
+										} else if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable")) {
 											messageManager.sendMessage(player, configLoad.getString("Island.Settings.Visitor.Welcome.Disabled.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 											
@@ -426,7 +426,7 @@ public class Settings implements Listener {
 										return;
 									}
 									
-									Config config1 = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+									Config config1 = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 									FileConfiguration configLoad1 = config1.getFileConfiguration();
 									
 									if (island1.getMessage(Message.Welcome).size() > configLoad1.getInt("Island.Visitor.Welcome.Lines") || event1.getName().length() > configLoad1.getInt("Island.Visitor.Welcome.Length")) {
@@ -443,7 +443,7 @@ public class Settings implements Listener {
 										public void run() {
 											open(player, Settings.Type.Panel, null, Settings.Panel.Welcome);
 										}
-									}.runTaskLater(plugin, 3L);
+									}.runTaskLater(skyblock, 3L);
 									
 							        event1.setWillClose(true);
 							        event1.setWillDestroy(true);
@@ -473,7 +473,7 @@ public class Settings implements Listener {
 							open(player, Settings.Type.Panel, null, Settings.Panel.Welcome);
 						}
 					} else if ((event.getCurrentItem().getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Displayname")))) && (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title"))))) {
-			    		if (island.getMessage(Message.Signature).size() >= plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Visitor.Signature.Lines")) {
+			    		if (island.getMessage(Message.Signature).size() >= skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Visitor.Signature.Lines")) {
 			    			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			    		} else {
 			    			soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -491,7 +491,7 @@ public class Settings implements Listener {
 											player.closeInventory();
 											
 											return;
-										} else if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
+										} else if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
 											messageManager.sendMessage(player, configLoad.getString("Island.Settings.Visitor.Signature.Disabled.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 											
@@ -505,7 +505,7 @@ public class Settings implements Listener {
 										return;
 									}
 							    	
-									Config config1 = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+									Config config1 = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 									FileConfiguration configLoad1 = config1.getFileConfiguration();
 									
 									if (island1.getMessage(Message.Signature).size() > configLoad1.getInt("Island.Visitor.Signature.Lines") || event1.getName().length() > configLoad1.getInt("Island.Visitor.Signature.Length")) {
@@ -522,7 +522,7 @@ public class Settings implements Listener {
 										public void run() {
 											open(player, Settings.Type.Panel, null, Settings.Panel.Signature);
 										}
-									}.runTaskLater(plugin, 3L);
+									}.runTaskLater(skyblock, 3L);
 									
 							        event1.setWillClose(true);
 							        event1.setWillDestroy(true);
@@ -625,21 +625,21 @@ public class Settings implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
 		
-		Main plugin = Main.getInstance();
+		SkyBlock skyblock = SkyBlock.getInstance();
 		
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Visitor.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Member.Title")))) {
-			IslandManager islandManager = plugin.getIslandManager();
+			IslandManager islandManager = skyblock.getIslandManager();
 			
 			if (islandManager.hasIsland(player)) {
 				new BukkitRunnable() {
 					@Override
 					public void run() {
-						islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner()).save();
+						islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).save();
 					}
-				}.runTaskAsynchronously(plugin);
+				}.runTaskAsynchronously(skyblock);
 			}
 		}
 	}

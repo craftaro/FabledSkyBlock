@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -26,23 +26,23 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class SetSpawnCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
 	private String info;
 	private me.goodandevil.skyblock.island.Location.Environment locationEnvironment;
 	
-	public SetSpawnCommand(Main plugin) {
-		this.plugin = plugin;
+	public SetSpawnCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
-		SoundManager soundManager = plugin.getSoundManager();
-		FileManager fileManager = plugin.getFileManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
 		
-		Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (args.length == 1) {
@@ -58,7 +58,7 @@ public class SetSpawnCommand extends SubCommand {
 					return;
 				}
 				
-				me.goodandevil.skyblock.island.Island island = islandManager.getIsland(plugin.getPlayerDataManager().getPlayerData(player).getOwner());
+				me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 				
 				if (island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId())) {
 					if ((island.isRole(Role.Operator, player.getUniqueId()) && (island.getSetting(Settings.Role.Operator, locationEnvironment.name() + "Spawn").getStatus())) || island.isRole(Role.Owner, player.getUniqueId())) {
@@ -66,7 +66,7 @@ public class SetSpawnCommand extends SubCommand {
 							if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, me.goodandevil.skyblock.island.Location.Environment.Island), island.getRadius())) {
 								Location location = player.getLocation();
 								
-								if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+								if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
 									if (location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR || location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial()) {
 										messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Protection.Block.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -102,7 +102,7 @@ public class SetSpawnCommand extends SubCommand {
 													islandManager.removeSpawnProtection(island.getLocation(worldList, locationEnvironment));
 													islandManager.setSpawnProtection(location);
 												}
-											}.runTask(plugin);
+											}.runTask(skyblock);
 										} else {
 											messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Protection.Centre.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);

@@ -4,19 +4,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 
 public class BiomeTask extends BukkitRunnable {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
- 	protected BiomeTask(Main plugin) {
-		this.plugin = plugin;
+ 	protected BiomeTask(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
  	
 	@Override
 	public void run() {
-		BiomeManager biomeManager = plugin.getBiomeManager();
+		BiomeManager biomeManager = skyblock.getBiomeManager();
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			if (biomeManager.hasPlayer(all)) {

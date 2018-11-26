@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -29,20 +29,20 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class LevellingManager {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
 	private List<Material> materialStorage = new ArrayList<>();
 	private Map<UUID, Levelling> islandLevellingStorage = new HashMap<>();
 	
-	public LevellingManager(Main plugin) {
-		this.plugin = plugin;
+	public LevellingManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
-		new LevellingTask(this, plugin).runTaskTimerAsynchronously(plugin, 0L, 20L);
+		new LevellingTask(this, skyblock).runTaskTimerAsynchronously(skyblock, 0L, 20L);
 		
 		registerMaterials();
 		
-		IslandManager islandManager = plugin.getIslandManager();
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			if (islandManager.hasIsland(all)) {
@@ -56,7 +56,7 @@ public class LevellingManager {
 	}
 	
 	public void onDisable() {
-		IslandManager islandManager = plugin.getIslandManager();
+		IslandManager islandManager = skyblock.getIslandManager();
 		
 		for (UUID islandList : islandManager.getIslands().keySet()) {
 			Island island = islandManager.getIslands().get(islandList);
@@ -69,7 +69,7 @@ public class LevellingManager {
 	}
 	
 	public void calculatePoints(Player player, Island island) {
-		Chunk chunk = new Chunk(plugin, island);
+		Chunk chunk = new Chunk(skyblock, island);
 		chunk.prepare();
 		
 		int NMSVersion = NMSUtil.getVersionNumber();
@@ -147,8 +147,8 @@ public class LevellingManager {
 	    			}
 	    			
 		    	    if (materials.size() == 0) {
-		    	    	plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Materials.Message"));
-		    	    	plugin.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+		    	    	skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Materials.Message"));
+		    	    	skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		    	    } else {
 		    	    	me.goodandevil.skyblock.island.Level level = island.getLevel();
 		    	    	level.setLastPoints(level.getPoints());
@@ -161,11 +161,11 @@ public class LevellingManager {
 		    	    }
 				}
 			}
-		}.runTaskTimerAsynchronously(plugin, 0L, 1L);
+		}.runTaskTimerAsynchronously(skyblock, 0L, 1L);
 	}
 	
 	public void registerMaterials() {
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (configLoad.getString("Materials") != null) {
@@ -206,11 +206,11 @@ public class LevellingManager {
 	}
 	
 	public void createLevelling(UUID playerUUID) {
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
 		File configFile = config.getFile();
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
-		configLoad.set("Levelling.Cooldown", plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Cooldown"));
+		configLoad.set("Levelling.Cooldown", skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Cooldown"));
 	
 		try {
 			configLoad.save(configFile);
@@ -220,7 +220,7 @@ public class LevellingManager {
 	}
 	
 	public void removeLevelling(UUID playerUUID) {
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
 		File configFile = config.getFile();
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
@@ -235,7 +235,7 @@ public class LevellingManager {
 	
 	public void saveLevelling(UUID playerUUID) {
 		if (hasLevelling(playerUUID)) {
-			Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
 			File configFile = config.getFile();
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
@@ -251,7 +251,7 @@ public class LevellingManager {
 	
 	public void loadLevelling(UUID playerUUID) {
 		if (!hasLevelling(playerUUID)) {
-			Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (configLoad.getString("Levelling.Cooldown") != null) {

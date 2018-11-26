@@ -10,24 +10,24 @@ import java.util.Set;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 
 public class FileChecker {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private final FileManager fileManager;
 	
 	private Map<File.Type, File> loadedFiles;
 	
-	public FileChecker(Main plugin, FileManager fileManager, String configurationFileName) {
-		this.plugin = plugin;
+	public FileChecker(SkyBlock skyblock, FileManager fileManager, String configurationFileName) {
+		this.skyblock = skyblock;
 		this.fileManager = fileManager;
 		
 		loadedFiles = new EnumMap<>(File.Type.class);
 		
-		java.io.File configFile = new java.io.File(plugin.getDataFolder(), configurationFileName);
+		java.io.File configFile = new java.io.File(skyblock.getDataFolder(), configurationFileName);
 		loadedFiles.put(File.Type.CREATED, new File(fileManager, configFile, YamlConfiguration.loadConfiguration(configFile)));
-		loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(configurationFileName)))));
+		loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(skyblock.getResource(configurationFileName)))));
 	}
 	
 	public void loadSections() {
@@ -52,7 +52,7 @@ public class FileChecker {
 				File resourceFile = loadedFiles.get(File.Type.RESOURCE);
 				
 				for (String configKeyList : file.getKeys().keySet()) {
-					if (!configKeyList.contains(plugin.getDescription().getName() + "_COMMENT")) {
+					if (!configKeyList.contains(skyblock.getDescription().getName() + "_COMMENT")) {
 						if (!resourceFile.getKeys().containsKey(configKeyList)) {
 							configLoad.set(configKeyList, null);
 						}	
@@ -63,7 +63,7 @@ public class FileChecker {
 				FileConfiguration createdConfigLoad = createdFile.getFileConfiguration();
 				
 				for (String configKeyList : file.getKeys().keySet()) {
-					if (!configKeyList.contains(plugin.getDescription().getName() + "_COMMENT")) {
+					if (!configKeyList.contains(skyblock.getDescription().getName() + "_COMMENT")) {
 						if (createdConfigLoad.getString(configKeyList) == null) {
 							createdConfigLoad.set(configKeyList, file.getKeys().get(configKeyList));
 						}	

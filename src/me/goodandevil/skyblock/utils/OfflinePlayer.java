@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 
 public class OfflinePlayer {
     
@@ -28,7 +28,7 @@ public class OfflinePlayer {
     	this.name = offlinePlayer.getName();
     	this.uuid = offlinePlayer.getUniqueId();
     	
-		FileConfiguration configLoad = YamlConfiguration.loadConfiguration(new File(new File(Main.getInstance().getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+		FileConfiguration configLoad = YamlConfiguration.loadConfiguration(new File(new File(SkyBlock.getInstance().getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
 		texture = new String[] { configLoad.getString("Texture.Signature") , configLoad.getString("Texture.Value") };
 		playtime = configLoad.getInt("Statistics.Island.Playtime");
 		memberSince = configLoad.getString("Statistics.Island.Join");
@@ -45,7 +45,7 @@ public class OfflinePlayer {
     	this.name = offlinePlayer.getName();
     	this.uuid = offlinePlayer.getUniqueId();
 		
-		FileConfiguration configLoad = YamlConfiguration.loadConfiguration(new File(new File(Main.getInstance().getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+		FileConfiguration configLoad = YamlConfiguration.loadConfiguration(new File(new File(SkyBlock.getInstance().getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
 		texture = new String[] { configLoad.getString("Texture.Signature") , configLoad.getString("Texture.Value") };
 		playtime = configLoad.getInt("Statistics.Island.Playtime");
 		memberSince = configLoad.getString("Statistics.Island.Join");

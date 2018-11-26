@@ -4,22 +4,22 @@ import java.util.UUID;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.island.IslandManager;
 
 public class LevellingTask extends BukkitRunnable {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private final LevellingManager levellingManager;
 	
- 	protected LevellingTask(LevellingManager levellingManager, Main plugin) {
+ 	protected LevellingTask(LevellingManager levellingManager, SkyBlock skyblock) {
 		this.levellingManager = levellingManager;
-		this.plugin = plugin;
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void run() {
-		IslandManager islandManager = plugin.getIslandManager();
+		IslandManager islandManager = skyblock.getIslandManager();
 		
 		for (UUID islandList : islandManager.getIslands().keySet()) {
 			if (levellingManager.hasLevelling(islandList)) {

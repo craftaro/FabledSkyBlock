@@ -4,19 +4,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 
 public class CreationTask extends BukkitRunnable {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
- 	protected CreationTask(Main plugin) {
-		this.plugin = plugin;
+ 	protected CreationTask(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
  	
 	@Override
 	public void run() {
-		CreationManager creationManager = plugin.getCreationManager();
+		CreationManager creationManager = skyblock.getCreationManager();
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			if (creationManager.hasPlayer(all)) {

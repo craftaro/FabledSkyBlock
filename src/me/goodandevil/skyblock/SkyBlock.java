@@ -58,9 +58,9 @@ import me.goodandevil.skyblock.visit.VisitTask;
 import me.goodandevil.skyblock.world.WorldManager;
 import me.goodandevil.skyblock.world.generator.VoidGenerator;
 
-public class Main extends JavaPlugin {
+public class SkyBlock extends JavaPlugin {
 
-	private static Main instance;
+	private static SkyBlock instance;
 	
 	private FileManager fileManager;
 	private WorldManager worldManager;
@@ -186,7 +186,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
-	public static Main getInstance() {
+	public static SkyBlock getInstance() {
 		return instance;
 	}
 	

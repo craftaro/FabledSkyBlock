@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
@@ -20,10 +20,10 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Death implements Listener {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
- 	public Death(Main plugin) {
-		this.plugin = plugin;
+ 	public Death(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@EventHandler
@@ -31,11 +31,11 @@ public class Death implements Listener {
 		Player player = event.getEntity();
 		
 		for (Location.World worldList : Location.World.values()) {
-			if (player.getWorld().getName().equals(plugin.getWorldManager().getWorld(worldList).getName())) {
-				Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
+				Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 				FileConfiguration configLoad = config.getFileConfiguration();
 				
-				IslandManager islandManager = plugin.getIslandManager();
+				IslandManager islandManager = skyblock.getIslandManager();
 				
 				boolean keepInventory = false;
 				
@@ -59,7 +59,7 @@ public class Death implements Listener {
 				}
 				
 				if (configLoad.getBoolean("Island.Death.AutoRespawn")) {
-					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+					Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, new Runnable() {
 				        public void run() {
 				        	player.spigot().respawn();
 				        	player.setFallDistance(0.0F);

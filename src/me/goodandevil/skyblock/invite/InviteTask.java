@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -21,20 +21,20 @@ import net.md_5.bungee.api.chat.HoverEvent;
 
 public class InviteTask extends BukkitRunnable {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private final InviteManager inviteManager;
 	
- 	protected InviteTask(InviteManager inviteManager, Main plugin) {
+ 	protected InviteTask(InviteManager inviteManager, SkyBlock skyblock) {
 		this.inviteManager = inviteManager;
-		this.plugin = plugin;
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void run() {
-		MessageManager messageManager = plugin.getMessageManager();
-		SoundManager soundManager = plugin.getSoundManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		SoundManager soundManager = skyblock.getSoundManager();
 		
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {

@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -27,21 +27,21 @@ import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 
 public class Join implements Listener {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
- 	public Join(Main plugin) {
-		this.plugin = plugin;
+ 	public Join(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
  	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		
-		IslandManager islandManager = plugin.getIslandManager();
+		IslandManager islandManager = skyblock.getIslandManager();
 		islandManager.loadIsland(player.getUniqueId());
 		islandManager.loadPlayer(player);
 		
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		playerDataManager.loadPlayerData(player);
 		
 		if (playerDataManager.hasPlayerData(player)) {
@@ -67,20 +67,20 @@ public class Join implements Listener {
 		
 		playerDataManager.storeIsland(player);
 		
-		plugin.getBiomeManager().loadPlayer(player);
-		plugin.getCreationManager().loadPlayer(player);
+		skyblock.getBiomeManager().loadPlayer(player);
+		skyblock.getCreationManager().loadPlayer(player);
 		
-		ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-		FileManager fileManager = plugin.getFileManager();
+		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		FileManager fileManager = skyblock.getFileManager();
 
 		if (scoreboardManager != null) {
-			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			Scoreboard scoreboard = new Scoreboard(player);
 			
 			if (islandManager.hasIsland(player)) {
 				Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 				
-				plugin.getLevellingManager().loadLevelling(island.getOwnerUUID());
+				skyblock.getLevellingManager().loadLevelling(island.getOwnerUUID());
 				
 				if (island.getRole(Role.Member).size() == 0 && island.getRole(Role.Operator).size() == 0) {
 					scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));

@@ -17,7 +17,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
@@ -25,13 +25,13 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class GeneratorManager {
 	
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private List<Generator> generatorStorage = new ArrayList<>();
 	
-	public GeneratorManager(Main plugin) {
-		this.plugin = plugin;
+	public GeneratorManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "generators.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (configLoad.getString("Generators") != null) {
@@ -93,7 +93,7 @@ public class GeneratorManager {
 	public void generateBlock(Player player, Block block) {
 		block.setType(Material.AIR);
 		
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+		Bukkit.getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 			@Override
 			public void run() {
 				for (int i = generatorStorage.size() - 1; i >= 0; i--) {
@@ -108,9 +108,9 @@ public class GeneratorManager {
 					Materials materials = getRandomMaterials(generator);
 					
 					if (materials != null) {
-						Bukkit.getScheduler().runTask(plugin, new Runnable() {
+						Bukkit.getScheduler().runTask(skyblock, new Runnable() {
 							public void run() {
-								plugin.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(), 1.0F, 10.0F);
+								skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(), 1.0F, 10.0F);
 								
 								if (NMSUtil.getVersionNumber() > 12) {
 									block.setType(materials.parseMaterial());

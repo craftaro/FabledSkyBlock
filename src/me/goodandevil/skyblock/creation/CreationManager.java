@@ -10,18 +10,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 
 public class CreationManager {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private Map<UUID, Creation> playerCreationStorage = new HashMap<>();
 	
-	public CreationManager(Main plugin) {
-		this.plugin = plugin;
+	public CreationManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
-		new CreationTask(plugin).runTaskTimerAsynchronously(plugin, 0L, 20L);
+		new CreationTask(skyblock).runTaskTimerAsynchronously(skyblock, 0L, 20L);
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			loadPlayer(all);
@@ -46,7 +46,7 @@ public class CreationManager {
 	}
 	
 	private void savePlayer(UUID uuid, int time) {
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
 		File configFile = config.getFile();
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
@@ -60,7 +60,7 @@ public class CreationManager {
 	}
 	
 	public void loadPlayer(Player player) {
-		Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (configLoad.getString("Island.Creation.Cooldown") != null) {
@@ -71,7 +71,7 @@ public class CreationManager {
 	
 	public void removePlayer(Player player) {
 		if (hasPlayer(player)) {
-			Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
 			File configFile = config.getFile();
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
@@ -91,7 +91,7 @@ public class CreationManager {
 		if (hasPlayer(player)) {
 			Creation creation = getPlayer(player);
 			
-			Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+			Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
 			File configFile = config.getFile();
 			FileConfiguration configLoad = config.getFileConfiguration();
 			

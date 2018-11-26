@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.GeneratorManager;
@@ -45,14 +45,14 @@ public class Generator implements Listener {
     }
 	
     public void open(Player player) {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	GeneratorManager generatorManager = plugin.getGeneratorManager();
-    	FileManager fileManager = plugin.getFileManager();
+    	GeneratorManager generatorManager = skyblock.getGeneratorManager();
+    	FileManager fileManager = skyblock.getFileManager();
     	
-    	PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+    	PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
     	
-    	Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+    	Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
     	InventoryUtil inv = new InventoryUtil(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Generator.Title")), null, 6);
@@ -131,20 +131,20 @@ public class Generator implements Listener {
 		ItemStack is = event.getCurrentItem();
 
 		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			Main plugin = Main.getInstance();
+			SkyBlock skyblock = SkyBlock.getInstance();
 			
-			GeneratorManager generatorManager = plugin.getGeneratorManager();
-			MessageManager messageManager = plugin.getMessageManager();
-			SoundManager soundManager = plugin.getSoundManager();
-			FileManager fileManager = plugin.getFileManager();
+			GeneratorManager generatorManager = skyblock.getGeneratorManager();
+			MessageManager messageManager = skyblock.getMessageManager();
+			SoundManager soundManager = skyblock.getSoundManager();
+			FileManager fileManager = skyblock.getFileManager();
 			
-			Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Generator.Title")))) {
 				event.setCancelled(true);
 				
-				PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+				PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 				
 				if (!(player.hasPermission("skyblock.admin.generator") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*"))) {
 					messageManager.sendMessage(player, configLoad.getString("Island.Admin.Generator.Permission.Message"));
@@ -199,17 +199,17 @@ public class Generator implements Listener {
 								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Generator.Created.Message").replace("%generator", event1.getName()));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 									
-								Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
 									@Override
 									public void run() {
 										open(player);
 									}
 								}, 3L);
 								
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 									@Override
 									public void run() {
-										Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "generators.yml"));
+										Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
 										FileConfiguration configLoad = config.getFileConfiguration();
 											
 										configLoad.set("Generators." + event1.getName() + ".Name", event1.getName());
@@ -261,10 +261,10 @@ public class Generator implements Listener {
 		    				open(player);
 		    				soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 		    				
-							Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+							Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 								@Override
 								public void run() {
-									Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "generators.yml"));
+									Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
 									FileConfiguration configLoad = config.getFileConfiguration();
 										
 									configLoad.set("Generators." + generator.getName() + ".Permission", generator.isPermission());
@@ -354,17 +354,17 @@ public class Generator implements Listener {
                 										generatorMaterialList.setChance(Integer.valueOf(event1.getName()));
                 										soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
                 											
-                										Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+                										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
                 											@Override
                 											public void run() {
                 												open(player);
                 											}
                 										}, 3L);
                 										
-                										Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+                										Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
                 											@Override
                 											public void run() {
-                												Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "generators.yml"));
+                												Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
                 												FileConfiguration configLoad = config.getFileConfiguration();
                 												
                 												configLoad.set("Generators." + generator.getName() + ".Materials." + generatorMaterialList.getMaterials().name() + ".Chance", materialChance);
@@ -397,10 +397,10 @@ public class Generator implements Listener {
             						} else if (event.getClick() == ClickType.RIGHT) {
             							generator.getGeneratorMaterials().remove(generatorMaterialList);
             							
-            							Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+            							Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
             								@Override
             								public void run() {
-            									Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "generators.yml"));
+            									Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
             									FileConfiguration configLoad = config.getFileConfiguration();
             									
             									configLoad.set("Generators." + generator.getName() + ".Materials." + generatorMaterialList.getMaterials().name(), null);
@@ -450,10 +450,10 @@ public class Generator implements Listener {
     						messageManager.sendMessage(player, configLoad.getString("Island.Admin.Generator.Material.Added.Message").replace("%material", materials.name()).replace("%generator", generator.getName()));
     						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
     						
-    						Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+    						Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
     							@Override
     							public void run() {
-    								Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "generators.yml"));
+    								Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
     								FileConfiguration configLoad = config.getFileConfiguration();
     								
     								configLoad.set("Generators." + generator.getName() + ".Materials." + materials.name() + ".Chance", 0);
@@ -493,10 +493,10 @@ public class Generator implements Listener {
 								messageManager.sendMessage(player, configLoad.getString("Island.Admin.Generator.Removed.Message").replace("%generator", generatorList.getName()));
 								soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 								
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 									@Override
 									public void run() {
-										Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "generators.yml"));
+										Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
 										FileConfiguration configLoad = config.getFileConfiguration();
 										
 										configLoad.set("Generators." + generatorList.getName(), null);

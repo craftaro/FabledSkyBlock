@@ -3,7 +3,7 @@ package me.goodandevil.skyblock.utils.structure;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.GZipUtil;
@@ -146,14 +146,14 @@ public final class StructureUtil {
     }
 
     public static ItemStack getTool() throws Exception {
-    	Main plugin = Main.getInstance();
+    	SkyBlock skyblock = SkyBlock.getInstance();
     	
-    	FileManager fileManager = plugin.getFileManager();
+    	FileManager fileManager = skyblock.getFileManager();
     	
-    	Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+    	Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
     	FileConfiguration configLoad = config.getFileConfiguration();
     	
-    	ItemStack is = new ItemStack(Material.valueOf(fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Admin.Structure.Selector")));
+    	ItemStack is = new ItemStack(Material.valueOf(fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Admin.Structure.Selector")));
     	ItemMeta im = is.getItemMeta();
     	im.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Structure.Tool.Item.Displayname")));
     	

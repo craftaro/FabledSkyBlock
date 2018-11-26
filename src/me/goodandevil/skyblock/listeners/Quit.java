@@ -12,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.creation.CreationManager;
 import me.goodandevil.skyblock.invite.Invite;
@@ -27,19 +27,19 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class Quit implements Listener {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	
- 	public Quit(Main plugin) {
-		this.plugin = plugin;
+ 	public Quit(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		
-		PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-		MessageManager messageManager = plugin.getMessageManager();
-		IslandManager islandManager = plugin.getIslandManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
 		
 		PlayerData playerData = playerDataManager.getPlayerData(player);
 		
@@ -53,7 +53,7 @@ public class Quit implements Listener {
 			List<UUID> islandMembersOnline = islandManager.getMembersOnline(island);
 			
 			if (islandMembersOnline.size() == 1) {
-				LevellingManager levellingManager = plugin.getLevellingManager();
+				LevellingManager levellingManager = skyblock.getLevellingManager();
 				levellingManager.saveLevelling(island.getOwnerUUID());
 				levellingManager.unloadLevelling(island.getOwnerUUID());
 			} else if (islandMembersOnline.size() == 2) {
@@ -64,7 +64,7 @@ public class Quit implements Listener {
 						
 						if (targetPlayerData.isChat()) {
 							targetPlayerData.setChat(false);
-							messageManager.sendMessage(targetPlayer, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
+							messageManager.sendMessage(targetPlayer, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
 						}
 					}
 				}
@@ -82,25 +82,25 @@ public class Quit implements Listener {
 			islandManager.unloadIsland(islandOwnerUUID);
 		}
 		
-		InviteManager inviteManager = plugin.getInviteManager();
+		InviteManager inviteManager = skyblock.getInviteManager();
 		
 		if (inviteManager.hasInvite(player.getUniqueId())) {
 			Invite invite = inviteManager.getInvite(player.getUniqueId());
 			Player targetPlayer = Bukkit.getServer().getPlayer(invite.getOwnerUUID());
 			
 			if (targetPlayer != null) {
-				messageManager.sendMessage(targetPlayer, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Invite.Invited.Sender.Disconnected.Message").replace("%player", player.getName()));
-				plugin.getSoundManager().playSound(targetPlayer, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+				messageManager.sendMessage(targetPlayer, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Invite.Invited.Sender.Disconnected.Message").replace("%player", player.getName()));
+				skyblock.getSoundManager().playSound(targetPlayer, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 			
 			inviteManager.removeInvite(player.getUniqueId());	
 		}
 		
-		BiomeManager biomeManager = plugin.getBiomeManager();
+		BiomeManager biomeManager = skyblock.getBiomeManager();
 		biomeManager.savePlayer(player);
 		biomeManager.unloadPlayer(player);
 		
-		CreationManager creationManager = plugin.getCreationManager();
+		CreationManager creationManager = skyblock.getCreationManager();
 		creationManager.savePlayer(player);
 		creationManager.unloadPlayer(player);
 	}

@@ -5,7 +5,7 @@ import java.io.File;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -16,25 +16,25 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class ControlPanelCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public ControlPanelCommand(Main plugin) {
-		this.plugin = plugin;
+	public ControlPanelCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		SoundManager soundManager = plugin.getSoundManager();
+		SoundManager soundManager = skyblock.getSoundManager();
 		
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
-		if (plugin.getIslandManager().hasIsland(player)) {
+		if (skyblock.getIslandManager().hasIsland(player)) {
 			ControlPanel.getInstance().open(player);
 			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.ControlPanel.Owner.Message"));
+			skyblock.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.ControlPanel.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

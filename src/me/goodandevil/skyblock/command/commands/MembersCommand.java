@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
@@ -15,26 +15,26 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class MembersCommand extends SubCommand {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private String info;
 	
-	public MembersCommand(Main plugin) {
-		this.plugin = plugin;
+	public MembersCommand(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		SoundManager soundManager = plugin.getSoundManager();
+		SoundManager soundManager = skyblock.getSoundManager();
 		
-		if (plugin.getIslandManager().hasIsland(player)) {
-			PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+		if (skyblock.getIslandManager().hasIsland(player)) {
+			PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 			playerData.setType(Members.Type.Default);
 			playerData.setSort(Members.Sort.Default);
 			
 			Members.getInstance().open(player, (Members.Type) playerData.getType(), (Members.Sort) playerData.getSort());
 			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
+			skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

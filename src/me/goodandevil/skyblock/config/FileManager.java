@@ -18,7 +18,7 @@ import java.util.logging.Level;
 
 import com.google.common.io.ByteStreams;
 
-import me.goodandevil.skyblock.Main;
+import me.goodandevil.skyblock.SkyBlock;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -27,39 +27,39 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class FileManager {
 
-	private final Main plugin;
+	private final SkyBlock skyblock;
 	private Map<String, Config> loadedConfigs = new HashMap<>();
 	
-	public FileManager(Main plugin) {
-		this.plugin = plugin;
+	public FileManager(SkyBlock skyblock) {
+		this.skyblock = skyblock;
 		
 		loadConfigs();
 	}
 	
 	public void loadConfigs() {
-		if (!plugin.getDataFolder().exists()) {
-			plugin.getDataFolder().mkdir();
+		if (!skyblock.getDataFolder().exists()) {
+			skyblock.getDataFolder().mkdir();
 		}
 		
-		if (!new File(plugin.getDataFolder().toString() + "/structures").exists()) {
-			new File(plugin.getDataFolder().toString() + "/structures").mkdir();
+		if (!new File(skyblock.getDataFolder().toString() + "/structures").exists()) {
+			new File(skyblock.getDataFolder().toString() + "/structures").mkdir();
 		}
 		
 		Map<String, File> configFiles = new HashMap<>();
-		configFiles.put("levelling.yml", new File(plugin.getDataFolder(), "levelling.yml"));
-		configFiles.put("config.yml", new File(plugin.getDataFolder(), "config.yml"));
-		configFiles.put("language.yml", new File(plugin.getDataFolder(), "language.yml"));
-		configFiles.put("settings.yml", new File(plugin.getDataFolder(), "settings.yml"));
-		configFiles.put("generators.yml", new File(plugin.getDataFolder(), "generators.yml"));
-		configFiles.put("structures.yml", new File(plugin.getDataFolder(), "structures.yml"));
-		configFiles.put("structures/default.structure", new File(plugin.getDataFolder().toString() + "/structures", "default.structure"));
+		configFiles.put("levelling.yml", new File(skyblock.getDataFolder(), "levelling.yml"));
+		configFiles.put("config.yml", new File(skyblock.getDataFolder(), "config.yml"));
+		configFiles.put("language.yml", new File(skyblock.getDataFolder(), "language.yml"));
+		configFiles.put("settings.yml", new File(skyblock.getDataFolder(), "settings.yml"));
+		configFiles.put("generators.yml", new File(skyblock.getDataFolder(), "generators.yml"));
+		configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
+		configFiles.put("structures/default.structure", new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
 		
 		for (String configFileList : configFiles.keySet()) {
 			File configFile = configFiles.get(configFileList);
 	        
 	        if (configFile.exists()) {
 	        	if (configFileList.equals("config.yml") || configFileList.equals("language.yml") || configFileList.equals("settings.yml")) {
-					FileChecker fileChecker = new FileChecker(plugin, this, configFileList);
+					FileChecker fileChecker = new FileChecker(skyblock, this, configFileList);
 					fileChecker.loadSections();
 					fileChecker.compareFiles();
 					fileChecker.saveChanges();
@@ -67,7 +67,7 @@ public class FileManager {
 	        } else {
 	            try {
 	                configFile.createNewFile();
-	                try (InputStream is = plugin.getResource(configFileList);
+	                try (InputStream is = skyblock.getResource(configFileList);
 	                OutputStream os = new FileOutputStream(configFile)) {
 	                    ByteStreams.copy(is, os);
 	                }
@@ -98,7 +98,7 @@ public class FileManager {
 			ex.printStackTrace();
 		}
 		
-		plugin.getConfig();
+		skyblock.getConfig();
 	}
 
 	public Location getLocation(Config config, String path, boolean direction) {
@@ -169,7 +169,7 @@ public class FileManager {
         }
  
         try {
-            String addLine, currentLine, pluginName = plugin.getDescription().getName();
+            String addLine, currentLine, pluginName = skyblock.getDescription().getName();
             int commentNum = 0;
             
             StringBuilder whole = new StringBuilder("");
@@ -202,8 +202,8 @@ public class FileManager {
         StringBuilder config = new StringBuilder("");
         
         for(String line : lines) {
-            if(line.contains(plugin.getDescription().getName() + "_COMMENT")) {
-                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "").replace(plugin.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "") + "\n");
+            if(line.contains(skyblock.getDescription().getName() + "_COMMENT")) {
+                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "").replace(skyblock.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "") + "\n");
             } else if (line.contains(":")) {
                 config.append(line + "\n");
             }
