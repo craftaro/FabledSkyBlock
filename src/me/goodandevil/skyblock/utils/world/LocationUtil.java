@@ -89,7 +89,7 @@ public final class LocationUtil {
     }
     
     public static Location getHighestBlock(Location location) {
-        for(int y = 256; y > 0; y--){
+        for(int y = location.getWorld().getMaxHeight(); y > 0; y--){
         	location.setY(y);
         	
             Block block = location.getBlock();
@@ -106,7 +106,7 @@ public final class LocationUtil {
         int maxY = 0;
         boolean followY = false;
         
-        for(int y = 0; y < 256; y++){
+        for(int y = 0; y < location.getWorld().getMaxHeight(); y++){
             Location loc = new Location(location.getWorld(), location.getBlockX(), y, location.getBlockZ());
             Block block = loc.getBlock().getRelative(BlockFace.UP);
             

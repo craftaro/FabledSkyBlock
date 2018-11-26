@@ -15,6 +15,7 @@ import me.goodandevil.skyblock.utils.world.block.BlockUtil;
 import me.goodandevil.skyblock.utils.world.entity.EntityData;
 import me.goodandevil.skyblock.utils.world.entity.EntityUtil;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -121,25 +122,35 @@ public final class StructureUtil {
         List<BlockData> blockData = (List<BlockData>) new Gson().fromJson(storage.getBlocks(), new TypeToken<List<BlockData>>(){}.getType());
         
         for (BlockData blockDataList : blockData) {
-        	try {
-        		org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(), blockDataList.getY(), blockDataList.getZ()), type);
-        		org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.valueOf(originLocationPositions[0])), location.getY() - Integer.valueOf(originLocationPositions[1]), location.getZ() + Math.abs(Integer.valueOf(originLocationPositions[2])));
-                blockLocation.add(blockRotationLocation);
-                BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);	
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
+        	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+		        	try {
+		        		org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(), blockDataList.getY(), blockDataList.getZ()), type);
+		        		org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])), location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
+		                blockLocation.add(blockRotationLocation);
+		                BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);
+		        	} catch (Exception e) {
+		        		e.printStackTrace();
+		        	}
+				}
+        	});
         }
         
         for (EntityData entityDataList : (List<EntityData>) new Gson().fromJson(storage.getEntities(), new TypeToken<List<EntityData>>(){}.getType())) {
-        	try {
-        		org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(), entityDataList.getY(), entityDataList.getZ()), type);
-        		org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.valueOf(originLocationPositions[0])), location.getY() - Integer.valueOf(originLocationPositions[1]), location.getZ() + Math.abs(Integer.valueOf(originLocationPositions[2])));
-                blockLocation.add(blockRotationLocation);
-	            EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
-        	} catch (Exception e) {
-        		e.printStackTrace();
-	    	}
+        	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+		        	try {
+		        		org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(), entityDataList.getY(), entityDataList.getZ()), type);
+		        		org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])), location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
+		                blockLocation.add(blockRotationLocation);
+			            EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
+		        	} catch (Exception e) {
+		        		e.printStackTrace();
+			    	}	
+				}
+        	});
         }
         
         return new Float[] { yaw, pitch };

@@ -211,10 +211,14 @@ public final class BlockUtil {
         			material = Materials.requestMaterials(blockData.getMaterial(), block.getData()).getPostMaterial();
         		}
         	} else {
-        		if (blockData.getVersion() > 12) {
-        			material = Materials.fromString(blockData.getMaterial()).parseMaterial();
-        		} else {
-        			material = Material.valueOf(blockData.getMaterial());
+        		try {
+            		if (blockData.getVersion() > 12) {
+            			material = Materials.fromString(blockData.getMaterial()).parseMaterial();
+            		} else {
+            			material = Material.valueOf(blockData.getMaterial());
+            		}
+        		} catch (Exception e) {
+        			material = Material.STONE;
         		}
         	}
         	

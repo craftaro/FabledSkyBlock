@@ -49,7 +49,7 @@ public class Chunk {
 				Location islandLocation = island.getLocation(worldList, me.goodandevil.skyblock.island.Location.Environment.Island);
 				
 				Location minLocation = new Location(islandLocation.getWorld(), islandLocation.getBlockX() - island.getRadius(), 0, islandLocation.getBlockZ() - island.getRadius());
-				Location maxLocation = new Location(islandLocation.getWorld(), islandLocation.getBlockX() + island.getRadius(), 256, islandLocation.getBlockZ() + island.getRadius());
+				Location maxLocation = new Location(islandLocation.getWorld(), islandLocation.getBlockX() + island.getRadius(), islandLocation.getWorld().getMaxHeight(), islandLocation.getBlockZ() + island.getRadius());
 				
 			    int MinX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
 			    int MinZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());

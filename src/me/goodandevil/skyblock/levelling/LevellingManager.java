@@ -22,10 +22,12 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import me.goodandevil.skyblock.world.WorldManager;
 
 public class LevellingManager {
 	
@@ -69,6 +71,8 @@ public class LevellingManager {
 	}
 	
 	public void calculatePoints(Player player, Island island) {
+		WorldManager worldManager = skyblock.getWorldManager();
+		
 		Chunk chunk = new Chunk(skyblock, island);
 		chunk.prepare();
 		
@@ -88,10 +92,20 @@ public class LevellingManager {
 		    		Method getBlockTypeDataMethod = null;
 		    		Method getMaterialMethod = null;
 		    		
+		    		int worldMaxHeight = 0;
+		    		
+		    		for (Location.World worldList : Location.World.values()) {
+		    			org.bukkit.World world = worldManager.getWorld(worldList);
+		    			
+		    			if (worldMaxHeight == 0 || worldMaxHeight > world.getMaxHeight()) {
+		    				worldMaxHeight = world.getMaxHeight();
+		    			}
+		    		}
+		    		
 	    			for (ChunkSnapshot chunkSnapshotList : chunk.getChunkSnapshots()) {
 	    				for (int x = 0; x < 16; x++) {
 	    					for (int z = 0; z < 16; z++) {
-	    						for (int y = 0; y < 256; y++) {
+	    						for (int y = 0; y < worldMaxHeight; y++) {
 									try {
 										org.bukkit.Material blockMaterial = org.bukkit.Material.AIR;
 										int blockData = 0;
