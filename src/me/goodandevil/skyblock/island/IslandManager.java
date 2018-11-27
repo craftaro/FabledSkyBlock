@@ -531,7 +531,12 @@ public class IslandManager {
 				}	
 			}
 			
-			player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Visitor));
+			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Visitor));
+				}
+			});
 			
 			List<String> islandWelcomeMessage = island.getMessage(Message.Welcome);
 			

@@ -6,12 +6,8 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -24,10 +20,12 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.structure.Structure;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.item.InventoryUtil;
+import me.goodandevil.skyblock.utils.item.nInventoryUtil;
+import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
+import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
-public class Creator implements Listener {
+public class Creator {
 
     private static Creator instance;
 
@@ -42,7 +40,13 @@ public class Creator implements Listener {
     public void open(Player player) {
     	SkyBlock skyblock = SkyBlock.getInstance();
     	
-		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+		CreationManager creationManager = skyblock.getCreationManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
+    	
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
     	
 		List<Structure> availableStructures = new ArrayList<>();
@@ -82,7 +86,77 @@ public class Creator implements Listener {
 			inventoryRows = 6;
 		}
 		
-    	InventoryUtil inv = new InventoryUtil(configLoad.getString("Menu.Creator.Selector.Title"), null, inventoryRows);
+    	nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (islandManager.hasIsland(player)) {
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+					
+					return;
+				}
+				
+				Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
+					@Override
+					public void run() {
+						ItemStack is = event.getItem();
+						
+						for (Structure structureList : skyblock.getStructureManager().getStructures()) {
+							if ((is.getType() == structureList.getMaterials().parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Item.Island.Displayname").replace("%displayname", structureList.getDisplayname()))))) {
+								if (structureList.isPermission() && structureList.getPermission() != null && !structureList.getPermission().isEmpty()) {
+									if (!player.hasPermission(structureList.getPermission()) && !player.hasPermission("skyblock.island.*") && !player.hasPermission("skyblock.*")) {
+										messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Permission.Message"));
+										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+										
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+											@Override
+											public void run() {
+												open(player);
+											}
+										}, 1L);
+										
+										return;
+									}
+								}
+								
+								if (!fileManager.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"), structureList.getFile()))) {
+									messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.File.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+									
+									event.setWillClose(false);
+									event.setWillDestroy(false);
+									
+									return;
+								} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable") && creationManager.hasPlayer(player)) {
+									Creation creation = creationManager.getPlayer(player);
+									
+									if (creation.getTime() < 60) {
+										messageManager.sendMessage(player, config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Message").replace("%time", creation.getTime() + " " + config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Word.Second")));
+									} else {
+										long[] durationTime = NumberUtil.getDuration(creation.getTime());
+										messageManager.sendMessage(player, config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Message").replace("%time", durationTime[2] + " " + config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Word.Minute") + " " + durationTime[3] + " " + config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Word.Second")));
+									}
+									
+									soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+									
+									event.setWillClose(false);
+									event.setWillDestroy(false);
+									
+									return;
+								}
+								
+								islandManager.createIsland(player, structureList);
+								
+								messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
+								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+								
+								return;
+							}
+						}
+					}
+				});
+			}
+    	});
     	
     	for (int i = 0; i < availableStructures.size(); i++) {
     		Structure structure = availableStructures.get(i);
@@ -102,94 +176,11 @@ public class Creator implements Listener {
     			}
     		}
     		
-    		inv.addItem(inv.createItem(structure.getMaterials().parseItem(), ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Item.Island.Displayname").replace("%displayname", structure.getDisplayname())), itemLore, null, null, null), i);
+    		nInv.addItem(nInv.createItem(structure.getMaterials().parseItem(), ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Item.Island.Displayname").replace("%displayname", structure.getDisplayname())), itemLore, null, null, null), i);
     	}
     	
-    	player.openInventory(inv.getInventory());
+    	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Title")));
+		nInv.setRows(inventoryRows);
+		nInv.open();
     }
-    
-	@EventHandler
-	public void onInventoryClick(InventoryClickEvent event) {
-		Player player = (Player) event.getWhoClicked();
-		ItemStack is = event.getCurrentItem();
-
-		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			SkyBlock skyblock = SkyBlock.getInstance();
-			
-			MessageManager messageManager = skyblock.getMessageManager();
-			IslandManager islandManager = skyblock.getIslandManager();
-			SoundManager soundManager = skyblock.getSoundManager();
-			FileManager fileManager = skyblock.getFileManager();
-			
-			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-			FileConfiguration configLoad = config.getFileConfiguration();
-			
-			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Title")))) {
-				event.setCancelled(true);
-				
-				CreationManager creationManager = skyblock.getCreationManager();
-				
-				if (islandManager.hasIsland(player)) {
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
-					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-					
-					return;
-				}
-				
-				Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-					@Override
-					public void run() {
-						for (Structure structureList : skyblock.getStructureManager().getStructures()) {
-							if ((event.getCurrentItem().getType() == structureList.getMaterials().parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Item.Island.Displayname").replace("%displayname", structureList.getDisplayname()))))) {
-								if (structureList.isPermission() && structureList.getPermission() != null && !structureList.getPermission().isEmpty()) {
-									if (!player.hasPermission(structureList.getPermission()) && !player.hasPermission("skyblock.island.*") && !player.hasPermission("skyblock.*")) {
-										messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Permission.Message"));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-										
-										Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										});
-										
-										return;
-									}
-								}
-								
-								if (!fileManager.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"), structureList.getFile()))) {
-									messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.File.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-									
-									return;
-								} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable") && creationManager.hasPlayer(player)) {
-									Creation creation = creationManager.getPlayer(player);
-									
-									if (creation.getTime() < 60) {
-										messageManager.sendMessage(player, config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Message").replace("%time", creation.getTime() + " " + config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Word.Second")));
-									} else {
-										long[] durationTime = NumberUtil.getDuration(creation.getTime());
-										messageManager.sendMessage(player, config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Message").replace("%time", durationTime[2] + " " + config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Word.Minute") + " " + durationTime[3] + " " + config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Word.Second")));
-									}
-									
-									soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-									
-									return;
-								}
-								
-								islandManager.createIsland(player, structureList);
-								
-								messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
-								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
-								
-								player.closeInventory();
-								
-								return;
-							}
-						}
-					}
-				});
-			}
-		}
-	}
 }

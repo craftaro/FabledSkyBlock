@@ -24,13 +24,13 @@ import me.goodandevil.skyblock.utils.version.NMSUtil;
 public class AnvilGUI {
 	
     private Player player;
-    @SuppressWarnings("unused")
-	private AnvilClickEventHandler handler;
-    private static Class<?> BlockPosition;
-    private static Class<?> PacketPlayOutOpenWindow;
-    private static Class<?> ContainerAnvil;
-    private static Class<?> ChatMessage;
-    private static Class<?> EntityHuman;
+    
+    private Class<?> BlockPosition;
+    private Class<?> PacketPlayOutOpenWindow;
+    private Class<?> ContainerAnvil;
+    private Class<?> ChatMessage;
+    private Class<?> EntityHuman;
+    
     private Map<AnvilSlot, ItemStack> items = new HashMap<>();
     private Inventory inv;
     private Listener listener;
@@ -46,8 +46,7 @@ public class AnvilGUI {
     public AnvilGUI(final Player player, final AnvilClickEventHandler handler) {
         loadClasses();
         this.player = player;
-        this.handler = handler;
-
+        
         this.listener = new Listener() {
             @EventHandler
             public void onInventoryClick(InventoryClickEvent event) {
@@ -174,7 +173,6 @@ public class AnvilGUI {
 
     public void destroy() {
         player = null;
-        handler = null;
         items = null;
 
         HandlerList.unregisterAll(listener);

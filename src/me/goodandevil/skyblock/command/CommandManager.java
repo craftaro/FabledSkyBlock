@@ -31,6 +31,7 @@ import me.goodandevil.skyblock.command.commands.CurrentCommand;
 import me.goodandevil.skyblock.command.commands.DeleteCommand;
 import me.goodandevil.skyblock.command.commands.DemoteCommand;
 import me.goodandevil.skyblock.command.commands.DenyCommand;
+import me.goodandevil.skyblock.command.commands.InformationCommand;
 import me.goodandevil.skyblock.command.commands.InviteCommand;
 import me.goodandevil.skyblock.command.commands.KickAllCommand;
 import me.goodandevil.skyblock.command.commands.KickCommand;
@@ -109,6 +110,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		//subCommands.add(new RollbackCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Rollback.Info.Message"))));
 		subCommands.add(new LevelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Level.Info.Message"))));
 		subCommands.add(new SettingsCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Settings.Info.Message"))));
+		subCommands.add(new InformationCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Information.Info.Message"))));
 		subCommands.add(new MembersCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Members.Info.Message"))));
 		subCommands.add(new OwnerCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ownership.Info.Message"))));
 		subCommands.add(new ConfirmCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Info.Message"))));

@@ -99,7 +99,7 @@ public class FileChecker {
 			this.configLoad = configLoad;
 			configKeys = new HashMap<>();
 			
-			if (configFile != null) {
+			if (configFile != null && configFile.getName().equals("config.yml")) {
 				this.configLoad = YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
 			}
 		}

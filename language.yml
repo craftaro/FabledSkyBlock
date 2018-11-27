@@ -403,6 +403,17 @@ Command:
                     Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to access this setting."
                 Change:
                     Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to change this setting."
+        Information:
+            Info:
+                Message: "&f&oOpens the Island Information menu."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island information [<player>]"
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to teleport to other players Islands."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Island:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
         Members:
             Info:
                 Message: "&f&oOpen the Island Members menu."
@@ -697,6 +708,13 @@ Island:
                 Minute: "minute(s)"
                 Second: "second(s)"
             Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore changing your Island biome."
+    Information:
+        Island:
+            Message: "&bSkyBlock &8| &cError&8: &eThe player you selected no longer has an Island."
+        Visitors:
+            Message: "&bSkyBlock &8| &cError&8: &eThere are no visitors at the selected Island."
+        Closed:
+            Message: "&bSkyBlock &8| &cError&8: &eThe selected Island is closed to visitors."
     Settings:
         Permission:
             Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to do that on this Island."
@@ -1571,6 +1589,133 @@ Menu:
                         Displayname: "&aPortal Use"
                     Hopper:
                         Displayname: "&aHopper Use"
+    Information:
+        Categories:
+            Title: "&8Island Information"
+            Item:
+                Exit:
+                    Displayname: "&cExit Island Information"
+                Members:
+                    Displayname: "&aMembers"
+                    Lore:
+                    - "&7View the members of the"
+                    - "&7Island and find their"
+                    - "&7role."
+                    - ""
+                    - "&eClick to view members!"
+                Visitors:
+                    Displayname: "&aVisitors"
+                    Lore:
+                    - "&7View the players that are"
+                    - "&7currently visiting the"
+                    - "&7Island."
+                    - ""
+                    - "&eClick to view visitors!"
+                Information:
+                    Displayname: "&aInformation"
+                    Vote:
+                        Word:
+                            Empty: "&f&oEmpty"
+                        Enabled:
+                            Signature:
+                                Word:
+                                    Add: "add"
+                                    Remove: "remove"
+                                Enabled:
+                                    Lore:
+                                    - "&7Owner&8: &f%owner"
+                                    - ""
+                                    - "&7Signature&8:"
+                                    - "%signature"
+                                    - ""
+                                    - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7Level&8: &b%level"
+                                    - "&7Members&8: &e%members"
+                                    - "&7Visits&8: &e%visits"
+                                    - "&7Votes&8: &6%votes"
+                                Disabled:
+                                    Lore:
+                                    - "&7Owner&8: &f%owner"
+                                    - ""
+                                    - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7Level&8: &b%level"
+                                    - "&7Members&8: &e%members"
+                                    - "&7Visits&8: &e%visits"
+                                    - "&7Votes&8: &6%votes"
+                        Disabled:
+                            Signature:
+                                Enabled:
+                                    Lore:
+                                    - "&7Owner&8: &f%owner"
+                                    - ""
+                                    - "&7Signature&8:"
+                                    - "%signature"
+                                    - ""
+                                    - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7Level&8: &b%level"
+                                    - "&7Members&8: &e%members"
+                                    - "&7Visits&8: &e%visits"
+                                Disabled:
+                                    Lore:
+                                    - "&7Owner&8: &f%owner"
+                                    - ""
+                                    - "&7Players At Island&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7Level&8: &b%level"
+                                    - "&7Members&8: &e%members"
+                                    - "&7Visits&8: &e%visits"
+        Members:
+            Title: "&8Island Information - Members"
+            Item:
+                Return:
+                    Displayname: "&cReturn to Island Information"
+                Previous:
+                    Displayname: "&a< Previous Page"
+                Next:
+                    Displayname: "&aNext Page >"
+                Barrier:
+                    Displayname: "&cIsland Members Below"    
+                Statistics:
+                    Displayname: "&3&nStatistics"
+                    Lore:
+                    - "&bIsland Members:"
+                    - "&e%island_members/%island_capacity"
+                    - ""
+                    - "&bMembers:"
+                    - "&e%members"
+                    - ""
+                    - "&bOperators:"
+                    - "&e%operators"
+                Member:
+                    Word:
+                        Member: "&aMember"
+                        Operator: "&bOperator"
+                        Owner: "&6Owner"
+                    Displayname: "&b%player"
+                    Lore:
+                    - "&7Role&8:"
+                    - "%role"
+        Visitors:
+            Title: "&8Island Information - Visitors"
+            Item:
+                Return:
+                    Displayname: "&cReturn to Island Information"
+                Previous:
+                    Displayname: "&a< Previous Page"
+                Next:
+                    Displayname: "&aNext Page >"
+                Barrier:
+                    Displayname: "&cIsland Visitors Below"    
+                Statistics:
+                    Displayname: "&3&nStatistics"
+                    Lore:
+                    - "&bIsland Visitors:"
+                    - "&e%island_visitors"
+                Visitor:
+                    Displayname: "&b%player"
     Members:
         Title: "&8Island Members"
         Item:

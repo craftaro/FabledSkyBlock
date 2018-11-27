@@ -57,32 +57,30 @@ public class BiomeManager {
 	    		Location location = island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal, me.goodandevil.skyblock.island.Location.Environment.Island);
 	    		
 	    		for (Location locationList : LocationUtil.getLocations(new Location(location.getWorld(), location.getBlockX() - island.getRadius(), 0, location.getBlockZ() - island.getRadius()), new Location(location.getWorld(), location.getBlockX() + island.getRadius(), location.getWorld().getMaxHeight(), location.getBlockZ() + island.getRadius()))) {
-	    			try {
-    	            	Block block = locationList.getBlock();
-    	            	
-    	            	if (!block.getChunk().isLoaded()) {
-    	            		block.getChunk().load(true);
-    	            	}
-    	            	
-    	            	if (block != null) {
-    	            		block.setBiome(biome);
-    	            		
-    	            		boolean containsChunk = false;
-    	            		
-    	            		for (Chunk chunkList : chunks) {
-    	            			if (chunkList.getX() == block.getChunk().getX() && chunkList.getZ() == block.getChunk().getZ()) {
-    	            				containsChunk = true;
-    	            				break;
-    	            			}
-    	            		}
-    	            		
-    	            		if (!containsChunk) {
-    	            			chunks.add(block.getChunk());
-    	            		}
-    	            	}
-	            	} catch (Exception e) {}
+	            	Block block = locationList.getBlock();
+	            	boolean containsChunk = false;
+            		
+            		for (Chunk chunkList : chunks) {
+            			if (chunkList.getX() == block.getChunk().getX() && chunkList.getZ() == block.getChunk().getZ()) {
+            				containsChunk = true;
+            				break;
+            			}
+            		}
+            		
+            		if (!containsChunk) {
+            			chunks.add(block.getChunk());
+            		}
 	    		}
-	    	    
+	    		
+	    		for (Chunk chunkList : chunks) {
+		    		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(skyblock, new Runnable() {
+						@Override
+						public void run() {
+							location.getWorld().setBiome(chunkList.getX(), chunkList.getZ(), biome);
+						}
+		    		});
+	    		}
+	    		
 	    	    if (player != null) {
 	    	    	PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 	    	    	IslandManager islandManager = skyblock.getIslandManager();

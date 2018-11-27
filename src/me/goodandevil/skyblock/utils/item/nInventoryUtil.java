@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -28,17 +28,17 @@ import me.goodandevil.skyblock.SkyBlock;
 public class nInventoryUtil {
 
 	private Player player;
-	private Inventory inv;
 	private Listener listener;
 	
-	public nInventoryUtil(Player player, String inventoryTitle, InventoryType inventoryType, int inventoryRows, final ClickEventHandler handler) {
+	private Inventory inv;
+	
+	private String title;
+	private int size = 9;
+	private InventoryType type;
+	private Map<Integer, ItemStack> items = new HashMap<>();
+	
+	public nInventoryUtil(Player player, final ClickEventHandler handler) {
 		this.player = player;
-		
-		if (inventoryType == null) {
-			inv = Bukkit.getServer().createInventory(null, inventoryRows * 9, ChatColor.translateAlternateColorCodes('&', inventoryTitle));
-		} else {
-			inv = Bukkit.getServer().createInventory(null, inventoryType, ChatColor.translateAlternateColorCodes('&', inventoryTitle));
-		}
 		
         this.listener = new Listener() {
             @EventHandler
@@ -47,13 +47,19 @@ public class nInventoryUtil {
                 	return;
                 }
                 
-                if (event.getInventory().equals(inv)) {
+                if (inv != null && event.getInventory().equals(inv)) {
                 	if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
                 		return;
                 	}
                 	
-                    ClickEvent clickEvent = new ClickEvent(event.getAction(), event.getSlot(), event.getCurrentItem());
+                	event.setCancelled(true);
+                	
+                    ClickEvent clickEvent = new ClickEvent(event.getClick(), event.getSlot(), event.getCurrentItem());
                     handler.onClick(clickEvent);
+                    
+                    if (!clickEvent.getCancelled()) {
+                    	event.setCancelled(false);
+                    }
                     
                     if (clickEvent.getWillClose()) {
                         event.getWhoClicked().closeInventory();
@@ -73,7 +79,7 @@ public class nInventoryUtil {
                 
                 Inventory inv = event.getInventory();
                 
-                if (inv.equals(inv)) {
+                if (inv.equals(nInventoryUtil.this.inv)) {
                     inv.clear();
                     destroy();
                 }
@@ -90,16 +96,20 @@ public class nInventoryUtil {
         Bukkit.getPluginManager().registerEvents(listener, SkyBlock.getInstance());
 	}
 	
-	public void addItem(Item item, int... inventorySlots) {
-		for (int inventorySlot : inventorySlots) {
-			inv.setItem(inventorySlot, item.prepareItem());
+	public void addItem(Item item, int... slots) {
+		for (int slotList : slots) {
+			items.put(slotList, item.prepareItem());
 		}
 	}
 	
-	public void addItemStack(ItemStack is, int... inventorySlots) {
-		for (int inventorySlot : inventorySlots) {
-			inv.setItem(inventorySlot, is);
+	public void addItemStack(ItemStack is, int... slots) {
+		for (int slotList : slots) {
+			items.put(slotList, is);
 		}
+	}
+	
+	public Map<Integer, ItemStack> getItems() {
+		return items;
 	}
 	
 	public Item createItem(ItemStack is, String itemDisplayname, List<String> itemLore, Map<String, String> itemLoreVariables, Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
@@ -126,7 +136,55 @@ public class nInventoryUtil {
 	}
 	
 	public void open() {
+		createInventory();
 		player.openInventory(inv);
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public void setType(InventoryType type) {
+		this.type = type;
+	}
+	
+	public void setRows(int rows) {
+		if (rows > 6 || rows < 0) {
+			size = 9;
+			
+			return;
+		}
+		
+		this.size = rows * 9;
+	}
+	
+	public void setSize(int size) {
+		this.size = size;
+	}
+	
+	public void createInventory() {
+		if (type == null) {
+			if (title == null) {
+				inv = Bukkit.createInventory(null, size);
+			} else {
+				inv = Bukkit.createInventory(null, size, title);
+			}
+		} else {
+			if (title == null) {
+				inv = Bukkit.createInventory(null, type);
+			} else {
+				inv = Bukkit.createInventory(null, type, title);
+			}
+		}
+		
+		for (int i = 0; i < items.size(); i++) {
+			int slot = (int) items.keySet().toArray()[i];
+			inv.setItem(slot, items.get(slot));
+		}
+	}
+	
+	public void setInventory(Inventory inv) {
+		this.inv = inv;
 	}
 	
 	public Inventory getInventory() {
@@ -201,7 +259,11 @@ public class nInventoryUtil {
     public void destroy() {
     	HandlerList.unregisterAll(listener);
     	
+    	title = null;
+    	type = null;
         inv = null;
+        items.clear();
+        
         listener = null;
     }
 	
@@ -211,28 +273,29 @@ public class nInventoryUtil {
 	
     public class ClickEvent {
     	
-    	private InventoryAction action;
+    	private ClickType click;
     	private int slot;
     	private ItemStack is;
     	
         private boolean close = true;
         private boolean destroy = true;
+        private boolean cancelled = true;
 
-        public ClickEvent(InventoryAction inventoryAction, int slot, ItemStack is) {
-        	this.action = inventoryAction;
+        public ClickEvent(ClickType click, int slot, ItemStack is) {
+        	this.click = click;
         	this.slot = slot;
         	this.is = is;
         }
         
-        public InventoryAction getAction() {
-        	return action;
+        public ClickType getClick() {
+        	return click;
         }
         
         public int getSlot() {
         	return slot;
         }
         
-        public ItemStack getItemStack() {
+        public ItemStack getItem() {
         	return is;
         }
         
@@ -250,6 +313,14 @@ public class nInventoryUtil {
 
         public void setWillDestroy(boolean destroy) {
             this.destroy = destroy;
+        }
+        
+        public boolean getCancelled() {
+        	return cancelled;
+        }
+        
+        public void setCancelled(boolean cancelled) {
+        	this.cancelled = cancelled;
         }
     }
 }
