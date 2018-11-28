@@ -23,14 +23,15 @@ Island:
         # [!] The first created structure will be selected.
         Menu:
             Enable: true
+        # [!] You are adviced to keep these options both enabled to prevent any issues.
         Cooldown:
             # When enabled cooldown will start when a player creates an Island.
             Creation:
-                Enable: false
+                Enable: true
             # When enabled cooldown will start when a player deletes their Island.
             Deletion:
-                Enable: false
-            Time: 300
+                Enable: true
+            Time: 60
         # Commands that are executed either by the player or the console on Island creation.
         # [!] To add commands, create a list and remove the open and closed brackets.
         #     Use the variable %player to get the players name.

@@ -63,7 +63,7 @@ public class VoteCommand extends SubCommand {
 				islandOwnerUUID = targetPlayerOffline.getOwner();
 				targetPlayerName = targetPlayerOffline.getName();
 			} else {
-				islandOwnerUUID = playerDataManager.getPlayerData(player).getOwner();
+				islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
 				targetPlayerName = targetPlayer.getName();
 			}
 			

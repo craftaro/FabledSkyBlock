@@ -30,6 +30,7 @@ public class PlayerData {
 	private Object sort;
 	
 	private Area area;
+	
 	private boolean chat;
 	
 	private Object viewer;
@@ -45,6 +46,7 @@ public class PlayerData {
 		playTime = getConfig().getFileConfiguration().getInt("Statistics.Island.Playtime");
 		
 		area = new Area();
+		
 		chat = false;
 	}
 	
@@ -175,7 +177,7 @@ public class PlayerData {
 	public void setChat(boolean chat) {
 		this.chat = chat;
 	}
-
+	
 	public Object getViewer() {
 		return viewer;
 	}

@@ -325,15 +325,24 @@ public class IslandManager {
 	}
 
 	public void deleteIsland(Island island) {
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		FileManager fileManager = skyblock.getFileManager();
+		
 		skyblock.getVisitManager().removeVisitors(island, VisitManager.Removal.Deleted);
 		
+		FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
+		
 		for (Player all : Bukkit.getOnlinePlayers()) {
-			if (island.isRole(Role.Member, all.getUniqueId()) || island.isRole(Role.Operator, all.getUniqueId()) || island.isRole(Role.Owner, all.getUniqueId())) {
-				PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(all);
+			if ((island.isRole(Role.Member, all.getUniqueId()) || island.isRole(Role.Operator, all.getUniqueId()) || island.isRole(Role.Owner, all.getUniqueId())) && playerDataManager.hasPlayerData(all)) {
+				PlayerData playerData = playerDataManager.getPlayerData(all);
 				playerData.setOwner(null);
 				playerData.setMemberSince(null);
 				playerData.setChat(false);
 				playerData.save();
+				
+				if (configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable")) {
+					skyblock.getCreationManager().createPlayer(all, configLoad.getInt("Island.Creation.Cooldown.Time"));
+				}
 			}
 			
 			InviteManager inviteManager = skyblock.getInviteManager();
@@ -347,19 +356,7 @@ public class IslandManager {
 			}
 		}
 		
-		FileManager fileManager = skyblock.getFileManager();
 		fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml"));
-		
-		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-		FileConfiguration configLoad = config.getFileConfiguration();
-		
-		Player player = Bukkit.getServer().getPlayer(island.getOwnerUUID());
-		
-		if (player != null) {
-			if (configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable")) {
-				skyblock.getCreationManager().createPlayer(player, configLoad.getInt("Island.Creation.Cooldown.Time"));
-			}	
-		}
 		
 		Bukkit.getServer().getPluginManager().callEvent(new IslandDeleteEvent(island));
 		

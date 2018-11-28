@@ -192,6 +192,10 @@ public class Entity implements Listener {
 		if (event.getSpawnReason() == SpawnReason.CUSTOM || event.getSpawnReason() == SpawnReason.NATURAL) {
 			LivingEntity livingEntity = event.getEntity();
 			
+			if (event.getEntity() instanceof ArmorStand) {
+				return;
+			}
+			
 			if (livingEntity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || livingEntity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 				if (!livingEntity.hasMetadata("SkyBlock")) {
 					IslandManager islandManager = skyblock.getIslandManager();
