@@ -3,7 +3,6 @@ package me.goodandevil.skyblock.biome;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,17 +12,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.playerdata.PlayerData;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 
@@ -48,54 +42,22 @@ public class BiomeManager {
 		}
 	}
 	
-	public void setBiome(Player player, Island island, Biome biome) {
-	    new BukkitRunnable() {
-	    	@Override
+	public void setBiome(Island island, Biome biome) {
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
+			@Override
 			public void run() {
-	    		List<Chunk> chunks = new ArrayList<>();
-	    		
 	    		Location location = island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal, me.goodandevil.skyblock.island.Location.Environment.Island);
 	    		
-	    		for (Location locationList : LocationUtil.getLocations(new Location(location.getWorld(), location.getBlockX() - island.getRadius(), 0, location.getBlockZ() - island.getRadius()), new Location(location.getWorld(), location.getBlockX() + island.getRadius(), location.getWorld().getMaxHeight(), location.getBlockZ() + island.getRadius()))) {
-	            	Block block = locationList.getBlock();
-	            	boolean containsChunk = false;
-            		
-            		for (Chunk chunkList : chunks) {
-            			if (chunkList.getX() == block.getChunk().getX() && chunkList.getZ() == block.getChunk().getZ()) {
-            				containsChunk = true;
-            				break;
-            			}
-            		}
-            		
-            		if (!containsChunk) {
-            			chunks.add(block.getChunk());
-            		}
-	    		}
-	    		
-	    		for (Chunk chunkList : chunks) {
-		    		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(skyblock, new Runnable() {
+	    		for (Location locationList : LocationUtil.getLocations(new Location(location.getWorld(), location.getBlockX() - island.getRadius(), 0, location.getBlockZ() - island.getRadius()), new Location(location.getWorld(), location.getBlockX() + island.getRadius(), 0, location.getBlockZ() + island.getRadius()))) {
+	    			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(skyblock, new Runnable() {
 						@Override
 						public void run() {
-							location.getWorld().setBiome(chunkList.getX(), chunkList.getZ(), biome);
+							location.getWorld().setBiome(locationList.getBlockX(), locationList.getBlockZ(), biome);
 						}
-		    		});
+	    			});
 	    		}
-	    		
-	    	    if (player != null) {
-	    	    	PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-	    	    	IslandManager islandManager = skyblock.getIslandManager();
-	    	    	
-	    	    	if (playerDataManager.hasPlayerData(player)) {
-	    	    		PlayerData playerData = playerDataManager.getPlayerData(player);
-	    	    		
-	    	    		if (playerData.getOwner() != null) {
-	    	    	    	Island island = islandManager.getIsland(playerData.getOwner());
-	    	    	    	updateBiome(island, chunks);
-	    	    		}
-	    	    	}
-	    	    }
-	    	}
-	    }.runTaskAsynchronously(skyblock);
+			}
+		});
 	}
 	
 	public void updateBiome(Island island, List<Chunk> chunks) {

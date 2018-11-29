@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +30,7 @@ import me.goodandevil.skyblock.events.IslandPasswordChangeEvent;
 import me.goodandevil.skyblock.events.IslandRoleChangeEvent;
 import me.goodandevil.skyblock.events.IslandWeatherChangeEvent;
 import me.goodandevil.skyblock.playerdata.PlayerData;
+import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.StringUtil;
 import me.goodandevil.skyblock.visit.Visit;
 import me.goodandevil.skyblock.visit.VisitManager;
@@ -41,7 +41,7 @@ public class Island {
 	private final SkyBlock skyblock;
 	
 	private List<Location> islandLocations = new ArrayList<>();
-	private Map<Settings.Role, Map<String, Settings>> islandSettings = new EnumMap<>(Settings.Role.class);
+	private Map<Setting.Role, List<Setting>> islandSettings = new HashMap<>();
 	
 	private UUID ownerUUID;
 	private Level level;
@@ -67,11 +67,17 @@ public class Island {
 		File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 		Config config = fileManager.getConfig(new File(configFile, ownerUUID + ".yml"));
 		
+		Config defaultSettingsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
+		
 		if (fileManager.isFileExist(new File(configFile, ownerUUID + ".yml"))) {
 			FileConfiguration configLoad = config.getFileConfiguration();
 			
 			if (configLoad.getString("Size") != null) {
 				size = configLoad.getInt("Size");
+			}
+			
+			if (configLoad.getString("Settings") != null) {
+				configLoad.set("Settings", null);
 			}
 			
 			for (Location.World worldList : Location.World.values()) {
@@ -88,16 +94,24 @@ public class Island {
 				}
 			}
 			
-			Config settingsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
+			Config islandSettingsConfig = null;
 			
-			for (Settings.Role roleList : Settings.Role.values()) {
-				HashMap<String, Settings> roleSettings = new HashMap<>();
+			if (fileManager.isFileExist(new File(skyblock.getDataFolder().toString() + "/setting-data", getOwnerUUID().toString() + ".yml"))) {
+				islandSettingsConfig = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/setting-data", getOwnerUUID().toString() + ".yml"));
+			}
+			
+			for (Setting.Role roleList : Setting.Role.values()) {
+				List<Setting> settings = new ArrayList<>();
 				
-				for (String settingList : settingsConfig.getFileConfiguration().getConfigurationSection(WordUtils.capitalize(roleList.name().toLowerCase())).getKeys(false)) {
-					roleSettings.put(settingList, new Settings(configLoad.getBoolean("Settings." + roleList.name() + "." + settingList)));
+				for (String settingList : defaultSettingsConfig.getFileConfiguration().getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
+					if (islandSettingsConfig == null) {
+						settings.add(new Setting(settingList, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + settingList)));
+					} else {
+						settings.add(new Setting(settingList, islandSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + settingList)));
+					}
 				}
 				
-				islandSettings.put(roleList, roleSettings);
+				islandSettings.put(roleList, settings);
 			}
 		} else {
 			islandLocations.add(new Location(Location.World.Normal, Location.Environment.Main, islandNormalLocation.clone().add(0.5D, 0.0D, 0.5D)));
@@ -125,16 +139,14 @@ public class Island {
 			configLoad.set("Weather.Weather", mainConfigLoad.getString("Island.Weather.Default.Weather").toUpperCase());
 			configLoad.set("Ownership.Original", ownerUUID.toString());
 			
-			Config settingsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
-			
-			for (Settings.Role roleList : Settings.Role.values()) {
-				HashMap<String, Settings> roleSettings = new HashMap<>();
+			for (Setting.Role roleList : Setting.Role.values()) {
+				List<Setting> settings = new ArrayList<>();
 				
-				for (String settingList : settingsConfig.getFileConfiguration().getConfigurationSection(WordUtils.capitalize(roleList.name().toLowerCase())).getKeys(false)) {
-					roleSettings.put(settingList, new Settings(settingsConfig.getFileConfiguration().getBoolean(WordUtils.capitalize(roleList.name().toLowerCase()) + "." + settingList)));
+				for (String settingList : defaultSettingsConfig.getFileConfiguration().getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
+					settings.add(new Setting(settingList, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + settingList)));
 				}
 				
-				islandSettings.put(roleList, roleSettings);
+				islandSettings.put(roleList, settings);
 			}
 			
 			save();
@@ -374,19 +386,35 @@ public class Island {
 		return getRole(role).contains(uuid);
 	}
 	
-	public Settings getSetting(Settings.Role role, String setting) {
+	public void setUpgrade(Upgrade.Type type, boolean status) {
+		skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml")).getFileConfiguration().set("Upgrade." + type.name(), status);
+	}
+	
+	public boolean hasUpgrade(Upgrade.Type type) {
+		if (skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml")).getFileConfiguration().getString("Upgrade." + type.name()) == null) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean isUpgrade(Upgrade.Type type) {
+		return skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml")).getFileConfiguration().getBoolean("Upgrade." + type.name());
+	}
+	
+	public Setting getSetting(Setting.Role role, String setting) {
 		if (islandSettings.containsKey(role)) {
-			Map<String, Settings> roleSettings = islandSettings.get(role);
-			
-			if (roleSettings.containsKey(setting)) {
-				return roleSettings.get(setting);
+			for (Setting settingList : islandSettings.get(role)) {
+				if (settingList.getName().equalsIgnoreCase(setting)) {
+					return settingList;
+				}
 			}
 		}
 		
 		return null;
 	}
 	
-	public Map<String, Settings> getSettings(Settings.Role role) {
+	public List<Setting> getSettings(Setting.Role role) {
 		if (islandSettings.containsKey(role)) {
 			return islandSettings.get(role);
 		}
@@ -481,22 +509,27 @@ public class Island {
 	}
 	
 	public void save() {
-		Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
-		File configFile = config.getFile();
+		FileManager fileManager = skyblock.getFileManager();
+		
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/island-data", ownerUUID.toString() + ".yml"));
+		
+		try {
+			config.getFileConfiguration().save(config.getFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		config = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/setting-data", ownerUUID.toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
-		for (Settings.Role roleList : Settings.Role.values()) {
-			if (islandSettings.containsKey(roleList)) {
-				Map<String, Settings> roleSettings = islandSettings.get(roleList);
-				
-				for (String roleSettingList : roleSettings.keySet()) {
-					configLoad.set("Settings." + roleList.name() + "." + roleSettingList, roleSettings.get(roleSettingList).getStatus());
-				}
+		for (Setting.Role roleList : islandSettings.keySet()) {
+			for (Setting settingList : islandSettings.get(roleList)) {
+				configLoad.set("Settings." + roleList + "." + settingList.getName(), settingList.getStatus());
 			}
 		}
 		
 		try {
-			configLoad.save(configFile);
+			config.getFileConfiguration().save(config.getFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

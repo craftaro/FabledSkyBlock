@@ -1,6 +1,7 @@
 package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -12,19 +13,22 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 
@@ -53,7 +57,7 @@ public class Entity implements Listener {
 						
 						for (Location.World worldList : Location.World.values()) {
 							if (LocationUtil.isLocationAtLocationRadius(event.getEntity().getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-								if (!island.getSetting(Settings.Role.Owner, "PvP").getStatus()) {
+								if (!island.getSetting(Setting.Role.Owner, "PvP").getStatus()) {
 									event.setCancelled(true);
 								}
 								
@@ -148,7 +152,7 @@ public class Entity implements Listener {
 					
 					for (Location.World worldList : Location.World.values()) {
 						if (LocationUtil.isLocationAtLocationRadius(entity.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-							if (!island.getSetting(Settings.Role.Owner, "MobGriefing").getStatus()) {
+							if (!island.getSetting(Setting.Role.Owner, "MobGriefing").getStatus()) {
 								event.setCancelled(true);
 							}
 							
@@ -174,7 +178,7 @@ public class Entity implements Listener {
 				
 				for (Location.World worldList : Location.World.values()) {
 					if (LocationUtil.isLocationAtLocationRadius(entity.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-						if (!island.getSetting(Settings.Role.Owner, "Explosions").getStatus()) {
+						if (!island.getSetting(Setting.Role.Owner, "Explosions").getStatus()) {
 							event.setCancelled(true);
 						}
 						
@@ -184,6 +188,42 @@ public class Entity implements Listener {
 			}
 			
 			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onEntityDeath(EntityDeathEvent event) {
+		if (event.getEntity() instanceof Player) {
+			return;
+		}
+		
+		LivingEntity livingEntity = event.getEntity();
+		
+		if (livingEntity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || livingEntity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+			if (!livingEntity.hasMetadata("SkyBlock")) {
+				IslandManager islandManager = skyblock.getIslandManager();
+				
+				for (UUID islandList : islandManager.getIslands().keySet()) {
+					Island island = islandManager.getIslands().get(islandList);
+					
+					for (Location.World worldList : Location.World.values()) {
+						if (LocationUtil.isLocationAtLocationRadius(livingEntity.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+							List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
+					    	
+					    	if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Drops)) {
+								List<ItemStack> entityDrops = event.getDrops();
+								
+								if (entityDrops != null) {
+									for (int i = 0; i < entityDrops.size(); i++) {
+										ItemStack is = entityDrops.get(i);
+										is.setAmount(is.getAmount() * 2);
+									}
+								}
+					    	}
+						}
+					}
+				}
+			}
 		}
 	}
 	
@@ -205,7 +245,7 @@ public class Entity implements Listener {
 						
 						for (Location.World worldList : Location.World.values()) {
 							if (LocationUtil.isLocationAtLocationRadius(livingEntity.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-								if (!island.getSetting(Settings.Role.Owner, "NaturalMobSpawning").getStatus()) {
+								if (!island.getSetting(Setting.Role.Owner, "NaturalMobSpawning").getStatus()) {
 									livingEntity.remove();
 								}
 								

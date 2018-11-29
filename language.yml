@@ -21,6 +21,13 @@ Command:
                 Message: "&f&oOpens the Island Control Panel menu."
             Owner:
                 Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+        Upgrade:
+            Info:
+                Message: "&f&oOpens the Island Upgrade menu."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Disabled:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot do that because Island Upgrades have been disabled."
         Leaderboard:
             Info:
                 Message: "&f&oOpens the Leaderboard menu of the top 10 Islands."
@@ -574,6 +581,13 @@ Command:
                     Message: "&f&oManage Structures for the Island Creator menu."
                 Permission:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+            Upgrade:
+                Info:
+                    Message: "&f&oManager Upgrades for the Island Upgrade menu."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Disabled:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot peform that command because upgrades have been disabled."
             Generator:
                 Info:
                     Message: "&f&oManager generators for coddlestone generators."
@@ -702,6 +716,19 @@ Island:
                     Minute: "minute(s)"
                     Second: "second(s)"
                 Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore creating an Island."
+    Upgrade:
+        Disabled:
+            Message: "&bSkyBlock &8| &cError&8: &eYou cannot do that because Island Upgrades have been disabled."
+        Owner:
+            Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+        Exist:
+            Message: "&bSkyBlock &8| &cError&8: &eThat upgrade does not exist."
+        Money:
+            Message: "&bSkyBlock &8| &cError&8: &eYou don't have enough money for that upgrade."
+        Bought:
+            Message: "&bSkyBlock &8| &aInfo&8: &eYou have bought the upgrade '%upgrade&e'."
+        Claimed:
+            Message: "&bSkyBlock &8| &cError&8: &eYou have already claimed that upgrade."
     Biome:
         Cooldown:
             Word:
@@ -810,6 +837,20 @@ Island:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYou have created a structure with the name '&d%structure&e'."
             Removed:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYou have removed the structure with the name '&d%structure&e'."
+        Upgrade:
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to do that."
+            Numerical:
+                Message: "&bSkyBlock &8| &cError&8: &eYou must enter a numerical value."
+            Tier:
+                Exist:
+                    Message: "&bSkyBlock &8| &cError&8: &eA tier for that upgrade already exists."
+                Limit:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou have reached the limit of tiers for this upgrade."
+                Selected:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot do that because the selected tier has been removed."
+                Size:
+                    Message: "&bSkyBlock &8| &cError&8: &eThe size of the tier must be less than 1000."
         Generator:
             Permission:
                 Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to do that."
@@ -1090,6 +1131,257 @@ Menu:
                 - "    &7been visiting for."
                 - ""
                 - "&eClick to view Island visitors!"
+    Upgrade:
+        Title: "&8Island Upgrade"
+        Item:
+            Word:
+                Enable: "Enable"
+                Disable: "Disable"
+            Speed:
+                Displayname: "&bSpeed Boost"
+                Claimable:
+                    Lore:
+                    - "&7Gives speed 2 to players at"
+                    - "&7your Island."
+                    - ""
+                    - "&7Speed&8: &fII"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &6&lCLAIMABLE"
+                    - ""
+                    - "&eClick to unlock this upgrade!"
+                Unclaimable:
+                    Lore:
+                    - "&7Gives speed 2 to players at"
+                    - "&7your Island."
+                    - ""
+                    - "&7Speed&8: &fII"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &c&lLOCKED"
+                    - ""
+                    - "&cYou don't have enough money!"
+                Claimed:
+                    Lore:
+                    - "&7Gives speed 2 to players at"
+                    - "&7your Island."
+                    - ""
+                    - "&7Speed&8: &fII"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &a&lCLAIMED"
+                    - ""
+                    - "&eClick to %status upgrade!"
+            Jump:
+                Displayname: "&bJump Boost"
+                Claimable:
+                    Lore:
+                    - "&7Gives jump boost 2 to players"
+                    - "&7at your Island."
+                    - ""
+                    - "&7Jump Boost&8: &fII"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &6&lCLAIMABLE"
+                    - ""
+                    - "&eClick to unlock this upgrade!"
+                Unclaimable:
+                    Lore:
+                    - "&7Gives jump boost 2 to players"
+                    - "&7at your Island."
+                    - ""
+                    - "&7Jump Boost&8: &fII"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &c&lLOCKED"
+                    - ""
+                    - "&cYou don't have enough money!"
+                Claimed:
+                    Lore:
+                    - "&7Gives jump boost 2 to players"
+                    - "&7at your Island."
+                    - ""
+                    - "&7Jump Boost&8: &fII"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &a&lCLAIMED"
+                    - ""
+                    - "&eClick to %status upgrade!"
+            Crop:
+                Displayname: "&bCrop Growth"
+                Claimable:
+                    Lore:
+                    - "&7Increases crop growth two times"
+                    - "&7the speed at your Island."
+                    - ""
+                    - "&7Growth&8: &f2x"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &6&lCLAIMABLE"
+                    - ""
+                    - "&eClick to unlock this upgrade!"
+                Unclaimable:
+                    Lore:
+                    - "&7Increases crop growth two times"
+                    - "&7the speed at your Island."
+                    - ""
+                    - "&7Growth&8: &f2x"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &c&lLOCKED"
+                    - ""
+                    - "&cYou don't have enough money!"
+                Claimed:
+                    Lore:
+                    - "&7Increases crop growth two times"
+                    - "&7the speed at your Island."
+                    - ""
+                    - "&7Growth&8: &f2x"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &a&lCLAIMED"
+                    - ""
+                    - "&eClick to %status upgrade!"
+            Fly:
+                Displayname: "&bFlight"
+                Claimable:
+                    Lore:
+                    - "&7Ability for players to fly at"
+                    - "&7your Island."
+                    - ""
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &6&lCLAIMABLE"
+                    - ""
+                    - "&eClick to unlock this upgrade!"
+                Unclaimable:
+                    Lore:
+                    - "&7Ability for players to fly at"
+                    - "&7your Island."
+                    - ""
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &c&lLOCKED"
+                    - ""
+                    - "&cYou don't have enough money!"
+                Claimed:
+                    Lore:
+                    - "&7Ability for players to fly at"
+                    - "&7your Island."
+                    - ""
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &a&lCLAIMED"
+                    - ""
+                    - "&eClick to %status upgrade!"
+            Drops:
+                Displayname: "&bLoot Drops"
+                Claimable:
+                    Lore:
+                    - "&7Increases loot drops two times"
+                    - "&7the speed at your Island."
+                    - ""
+                    - "&7Drops&8: &f2x"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &6&lCLAIMABLE"
+                    - ""
+                    - "&eClick to unlock this upgrade!"
+                Unclaimable:
+                    Lore:
+                    - "&7Increases loot drops two times"
+                    - "&7the speed at your Island."
+                    - ""
+                    - "&7Drops&8: &f2x"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &c&lLOCKED"
+                    - ""
+                    - "&cYou don't have enough money!"
+                Claimed:
+                    Lore:
+                    - "&7Increases loot drops two times"
+                    - "&7the speed at your Island."
+                    - ""
+                    - "&7Drops&8: &f2x"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &a&lCLAIMED"
+                    - ""
+                    - "&eClick to %status upgrade!"
+            Size:
+                Displayname: "&bBorder Size [Tier #%tier]"
+                Claimable:
+                    Lore:
+                    - "&7Increases the border size"
+                    - "&7of your Island."
+                    - ""
+                    - "&7Border&8: &f%sizex%size"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &6&lCLAIMABLE"
+                    - ""
+                    - "&eClick to unlock this upgrade!"
+                Unclaimable:
+                    Lore:
+                    - "&7Increases the border size"
+                    - "&7of your Island."
+                    - ""
+                    - "&7Border&8: &f%sizex%size"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &c&lLOCKED"
+                    - ""
+                    - "&cYou don't have enough money!"
+                Claimed:
+                    Lore:
+                    - "&7Increases the border size of"
+                    - "&7your Island."
+                    - ""
+                    - "&7Border&8: &f%sizex%size"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &a&lCLAIMED"
+                    - ""
+                    - "&cYou have unlocked ths upgrade!"
+            Spawner:
+                Displayname: "&bSpawer Boost"
+                Claimable:
+                    Lore:
+                    - "&7Increases spawner spawn speed"
+                    - "&7two times the speed at your"
+                    - "&7Island."
+                    - ""
+                    - "&7Speed&8: &f2x"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &6&lCLAIMABLE"
+                    - ""
+                    - "&eClick to unlock this upgrade!"
+                Unclaimable:
+                    Lore:
+                    - "&7Increases spawner spawn speed"
+                    - "&7two times the speed at your"
+                    - "&7Island."
+                    - ""
+                    - "&7Speed&8: &f2x"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &c&lLOCKED"
+                    - ""
+                    - "&cYou don't have enough money!"
+                Claimed:
+                    Lore:
+                    - "&7Increases spawner spawn speed"
+                    - "&7two times the speed at your"
+                    - "&7Island."
+                    - ""
+                    - "&7Speed&8: &f2x"
+                    - "&7Cost&8: &f$%cost"
+                    - ""
+                    - "&7Status&8: &a&lCLAIMED"
+                    - ""
+                    - "&eClick to %status upgrade!"
     Leaderboard:
         Browse:
             Title: "&8Select a Leaderboard"
@@ -2167,6 +2459,115 @@ Menu:
                         - "&7cancel."
                         - ""
                         - "&eClick to set item!"
+        Upgrade:
+            Upgrades:
+                Title: "&8Upgrade Editor"
+                Item:
+                    Word:
+                        Enable: "Enable"
+                        Disable: "Disable"
+                        Enter: "Enter cost"
+                    Exit:
+                        Displayname: "&cExit Upgrade Editor"
+                    Speed:
+                        Displayname: "&aSpeed Boost"
+                        Lore:
+                        - "&7Gives players speed 2 while"
+                        - "&7on the Island."
+                        - ""
+                        - "&7Cost&8: &f$%cost"
+                        - ""
+                        - "&eLeft-Click to %status!"
+                        - "&eRight-Clcik to set cost!"
+                    Crop:
+                        Displayname: "&aCrop Growth"
+                        Lore:
+                        - "&7Increases an Island crop"
+                        - "&7growth two times the speed."
+                        - ""
+                        - "&7Cost&8: &f$%cost"
+                        - ""
+                        - "&eLeft-Click to %status!"
+                        - "&eRight-Clcik to set cost!"
+                    Jump:
+                        Displayname: "&aJump Boost"
+                        Lore:
+                        - "&7Gives players jump boost 2"
+                        - "&7while on the Island."
+                        - ""
+                        - "&7Cost&8: &f$%cost"
+                        - ""
+                        - "&eLeft-Click to %status!"
+                        - "&eRight-Clcik to set cost!"
+                    Fly:
+                        Displayname: "&aFlight"
+                        Lore:
+                        - "&7Ability to fly while on"
+                        - "&7the Island."
+                        - ""
+                        - "&7Cost&8: &f$%cost"
+                        - ""
+                        - "&eLeft-Click to %status!"
+                        - "&eRight-Clcik to set cost!"
+                    Drops:
+                        Displayname: "&aLoot Drops"
+                        Lore:
+                        - "&7Increases mob loot drops"
+                        - "&7two times on the Island."
+                        - ""
+                        - "&7Cost&8: &f$%cost"
+                        - ""
+                        - "&eLeft-Click to %status!"
+                        - "&eRight-Clcik to set cost!"
+                    Size:
+                        Displayname: "&aBorder Size"
+                        Lore:
+                        - "&7Increases the size of"
+                        - "&7the Island border."
+                        - ""
+                        - "&7Tiers&8: &f%tiers"
+                        - ""
+                        - "&eClick to manage tiers!"
+                    Spawner:
+                        Displayname: "&aSpawner Boost"
+                        Lore:
+                        - "&7Increases spawner spawn"
+                        - "&7speed two times on the"
+                        - "&7Island."
+                        - ""
+                        - "&7Cost&8: &f$%cost"
+                        - ""
+                        - "&eLeft-Click to %status!"
+                        - "&eRight-Clcik to set cost!"
+            Size:
+                Title: "&8Upgrade Editor - Size"
+                Item:
+                    Word:
+                        Size:
+                            Enter: "Enter Size"
+                        Cost:
+                            Enter: "Enter Cost"
+                    Return:
+                        Displayname: "&cReturn to Upgrade Editor"
+                    Barrier:
+                        Displayname: "&cSize Tiers"
+                    Information:
+                        Displayname: "&aInformation"
+                        Lore:
+                        - "&7Create tiers and decide their"
+                        - "&7cost and what upgrade Islands"
+                        - "&7receive from them."
+                        - ""
+                        - "&eClick to create a tier!"
+                    Tier:
+                        Displayname: "&bTier #%tier"
+                        Lore:
+                        - "&7Size&8: &f%size"
+                        - "&7Cost&8: &f$%cost"
+                        - ""
+                        - "&eLeft-Click to set size!"
+                        - "&eMiddle-Click to remove!"
+                        - "&eRight-Click to set cost!"
         Generator:
             Title: "&8Generator Editor"
             Browse:

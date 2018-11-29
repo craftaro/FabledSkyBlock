@@ -15,7 +15,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Death implements Listener {
@@ -43,7 +43,7 @@ public class Death implements Listener {
 					Island island = islandManager.getIslands().get(islandList);
 					
 					if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-						if (island.getSetting(Settings.Role.Owner, "KeepItemsOnDeath").getStatus()) {
+						if (island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
 							keepInventory = true;
 						}
 						

@@ -12,6 +12,7 @@ import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.confirmation.ConfirmationTask;
 import me.goodandevil.skyblock.creation.CreationManager;
+import me.goodandevil.skyblock.economy.EconomyManager;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -31,6 +32,7 @@ import me.goodandevil.skyblock.listeners.Portal;
 import me.goodandevil.skyblock.listeners.Projectile;
 import me.goodandevil.skyblock.listeners.Quit;
 import me.goodandevil.skyblock.listeners.Respawn;
+import me.goodandevil.skyblock.listeners.Spawner;
 import me.goodandevil.skyblock.listeners.Teleport;
 import me.goodandevil.skyblock.menus.Rollback;
 import me.goodandevil.skyblock.menus.admin.Generator;
@@ -41,6 +43,7 @@ import me.goodandevil.skyblock.playtime.PlaytimeTask;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.structure.StructureManager;
+import me.goodandevil.skyblock.upgrade.UpgradeManager;
 import me.goodandevil.skyblock.visit.VisitManager;
 import me.goodandevil.skyblock.visit.VisitTask;
 import me.goodandevil.skyblock.world.WorldManager;
@@ -55,6 +58,7 @@ public class SkyBlock extends JavaPlugin {
 	private VisitManager visitManager;
 	private BanManager banManager;
 	private IslandManager islandManager;
+	private UpgradeManager upgradeManager;
 	private CreationManager creationManager;
 	private PlayerDataManager playerDataManager;
 	private ScoreboardManager scoreboardManager;
@@ -68,16 +72,22 @@ public class SkyBlock extends JavaPlugin {
 	private PlaceholderManager placeholderManager;
 	private LeaderboardManager leaderboardManager;
 	private MessageManager messageManager;
+	private EconomyManager economyManager;
 	
 	@Override
 	public void onEnable() {
 		instance = this;
+		
+		if (!isEnable()) {
+			return;
+		}
 		
 		fileManager = new FileManager(this);
 		worldManager = new WorldManager(this);
 		visitManager = new VisitManager(this);
 		banManager = new BanManager(this);
 		islandManager = new IslandManager(this);
+		upgradeManager = new UpgradeManager(this);
 		creationManager = new CreationManager(this);
 		playerDataManager = new PlayerDataManager(this);
 		
@@ -101,6 +111,7 @@ public class SkyBlock extends JavaPlugin {
 		
 		leaderboardManager = new LeaderboardManager(this);
 		messageManager = new MessageManager(this);
+		economyManager = new EconomyManager();
 		
 		new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
 		new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -122,6 +133,7 @@ public class SkyBlock extends JavaPlugin {
 		pluginManager.registerEvents(new Death(this), this);
 		pluginManager.registerEvents(new Respawn(this), this);
 		pluginManager.registerEvents(new Chat(this), this);
+		pluginManager.registerEvents(new Spawner(this), this);
 		
 		pluginManager.registerEvents(new Rollback(), this);
 		
@@ -186,6 +198,10 @@ public class SkyBlock extends JavaPlugin {
 		return islandManager;
 	}
 	
+	public UpgradeManager getUpgradeManager() {
+		return upgradeManager;
+	}
+	
 	public CreationManager getCreationManager() {
 		return creationManager;
 	}
@@ -236,6 +252,14 @@ public class SkyBlock extends JavaPlugin {
 	
 	public MessageManager getMessageManager() {
 		return messageManager;
+	}
+	
+	public EconomyManager getEconomyManager() {
+		return economyManager;
+	}
+	
+	public boolean isEnable() {
+		return false;
 	}
 	
     @Override

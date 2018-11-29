@@ -181,6 +181,12 @@ public class Creator {
     	
     	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Title")));
 		nInv.setRows(inventoryRows);
-		nInv.open();
+		
+    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+			@Override
+			public void run() {
+				nInv.open();
+			}
+    	});
     }
 }

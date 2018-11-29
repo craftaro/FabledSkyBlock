@@ -50,6 +50,7 @@ public class FileManager {
 		configFiles.put("config.yml", new File(skyblock.getDataFolder(), "config.yml"));
 		configFiles.put("language.yml", new File(skyblock.getDataFolder(), "language.yml"));
 		configFiles.put("settings.yml", new File(skyblock.getDataFolder(), "settings.yml"));
+		configFiles.put("upgrades.yml", new File(skyblock.getDataFolder(), "upgrades.yml"));
 		configFiles.put("generators.yml", new File(skyblock.getDataFolder(), "generators.yml"));
 		configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
 		configFiles.put("structures/default.structure", new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
@@ -97,8 +98,6 @@ public class FileManager {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		
-		skyblock.getConfig();
 	}
 
 	public Location getLocation(Config config, String path, boolean direction) {

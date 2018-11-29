@@ -85,7 +85,13 @@ public class Leaderboard {
 	    		
 	    		nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Leaderboard." + viewer.getType().name() + ".Title")));
 	    		nInv.setType(InventoryType.HOPPER);
-	    		nInv.open();
+	    		
+		    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+					@Override
+					public void run() {
+						nInv.open();
+					}
+		    	});
 	    	} else {
 		    	nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 					@Override
@@ -202,7 +208,13 @@ public class Leaderboard {
 	    		
 	    		nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Leaderboard.Leaderboard.Title").replace("%leaderboard", viewer.getType().name())));
 	    		nInv.setRows(6);
-	    		nInv.open();
+	    		
+		    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+					@Override
+					public void run() {
+						nInv.open();
+					}
+		    	});
 	    	}
     	}
     }

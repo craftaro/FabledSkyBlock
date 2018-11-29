@@ -17,7 +17,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -61,7 +61,7 @@ public class SetSpawnCommand extends SubCommand {
 				me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 				
 				if (island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId())) {
-					if ((island.isRole(Role.Operator, player.getUniqueId()) && (island.getSetting(Settings.Role.Operator, locationEnvironment.name() + "Spawn").getStatus())) || island.isRole(Role.Owner, player.getUniqueId())) {
+					if ((island.isRole(Role.Operator, player.getUniqueId()) && (island.getSetting(Setting.Role.Operator, locationEnvironment.name() + "Spawn").getStatus())) || island.isRole(Role.Owner, player.getUniqueId())) {
 						for (me.goodandevil.skyblock.island.Location.World worldList : me.goodandevil.skyblock.island.Location.World.values()) {
 							if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, me.goodandevil.skyblock.island.Location.Environment.Island), island.getRadius())) {
 								Location location = player.getLocation();

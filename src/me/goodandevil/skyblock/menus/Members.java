@@ -24,7 +24,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -190,7 +190,7 @@ public class Members {
 				    						
 						    				return;
 				    					}
-				    				} else if (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Settings.Role.Operator, "Kick").getStatus()) {
+				    				} else if (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Kick").getStatus()) {
 				    					Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
 
 			    						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
@@ -304,7 +304,7 @@ public class Members {
     		if (island.isRole(Role.Owner, player.getUniqueId())) {
     			operatorActions = new boolean[] { true, true };
     		} else if (island.isRole(Role.Operator, player.getUniqueId())) {
-    			if (island.getSetting(Settings.Role.Operator, "Kick").getStatus()) {
+    			if (island.getSetting(Setting.Role.Operator, "Kick").getStatus()) {
     				operatorActions = new boolean[] { false, true };
     			}
     		}
@@ -451,7 +451,13 @@ public class Members {
 	    	
 	    	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Members.Title")));
 	    	nInv.setRows(6);
-	    	nInv.open();
+	    	
+	    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					nInv.open();
+				}
+	    	});
     	}
     }
     

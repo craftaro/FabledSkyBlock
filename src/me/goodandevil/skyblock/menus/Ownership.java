@@ -280,7 +280,13 @@ public class Ownership {
         	
         	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Ownership.Title")));
         	nInv.setType(InventoryType.HOPPER);
-        	nInv.open();
+	    	
+        	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					nInv.open();
+				}
+	    	});
     	}
     }
     

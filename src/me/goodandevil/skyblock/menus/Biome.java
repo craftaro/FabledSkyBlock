@@ -18,7 +18,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -65,7 +65,7 @@ public class Biome {
 					if (playerDataManager.hasPlayerData(player) && islandManager.hasIsland(player)) {
 						island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 						
-						if (!((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Settings.Role.Operator, "Biome").getStatus()) || island.isRole(Role.Owner, player.getUniqueId()))) {
+						if (!((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Biome").getStatus()) || island.isRole(Role.Owner, player.getUniqueId()))) {
 							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Biome.Permission.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							player.closeInventory();
@@ -136,7 +136,7 @@ public class Biome {
 			    			}
 			    			
 			    			biomeManager.createPlayer(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Biome.Cooldown"));
-				    		biomeManager.setBiome(player, island, selectedBiomeType);
+				    		biomeManager.setBiome(island, selectedBiomeType);
 				    		
 				    		island.setBiome(selectedBiomeType);
 				    		island.save();
@@ -222,7 +222,13 @@ public class Biome {
 			
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Biome.Title")));
 			nInv.setRows(1);
-			nInv.open();
+			
+	    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					nInv.open();
+				}
+	    	});
 		}
     }
 }

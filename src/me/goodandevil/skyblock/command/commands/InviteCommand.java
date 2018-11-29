@@ -16,7 +16,7 @@ import me.goodandevil.skyblock.events.IslandInviteEvent;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
@@ -50,7 +50,7 @@ public class InviteCommand extends SubCommand {
 			if (islandManager.hasIsland(player)) {
 				me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 				
-				if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Settings.Role.Operator, "Invite").getStatus())) {
+				if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Invite").getStatus())) {
 					Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 					
 					if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1) >= mainConfig.getFileConfiguration().getInt("Island.Member.Capacity")) {

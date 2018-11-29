@@ -38,8 +38,13 @@ public class Join implements Listener {
 		Player player = event.getPlayer();
 		
 		IslandManager islandManager = skyblock.getIslandManager();
-		islandManager.loadIsland(player.getUniqueId());
-		islandManager.loadPlayer(player);
+		
+		try {
+			islandManager.loadIsland(player.getUniqueId());
+			islandManager.loadPlayer(player);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		playerDataManager.loadPlayerData(player);

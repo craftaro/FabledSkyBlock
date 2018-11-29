@@ -20,7 +20,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -112,7 +112,7 @@ public class Visitors {
 									}
 				    			}, 1L);
 				    		} else {
-				    			boolean isOperator = island.isRole(Role.Operator, player.getUniqueId()), isOwner = island.isRole(Role.Owner, player.getUniqueId()), canKick = island.getSetting(Settings.Role.Operator, "Kick").getStatus(), canBan = island.getSetting(Settings.Role.Operator, "Ban").getStatus(), banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning");
+				    			boolean isOperator = island.isRole(Role.Operator, player.getUniqueId()), isOwner = island.isRole(Role.Owner, player.getUniqueId()), canKick = island.getSetting(Setting.Role.Operator, "Kick").getStatus(), canBan = island.getSetting(Setting.Role.Operator, "Ban").getStatus(), banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning");
 				    			String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
 				    			
 								if ((isOperator && canKick) || isOwner) {
@@ -190,7 +190,7 @@ public class Visitors {
     		if (islandVisitors.size() == 0) {
     			nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER), configLoad.getString("Menu.Visitors.Item.Nothing.Displayname"), null, null, null, null), 31);
     		} else {
-    			boolean isOperator = island.isRole(Role.Operator, player.getUniqueId()), isOwner = island.isRole(Role.Owner, player.getUniqueId()), canKick = island.getSetting(Settings.Role.Operator, "Kick").getStatus(), canBan = island.getSetting(Settings.Role.Operator, "Ban").getStatus(), banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning");
+    			boolean isOperator = island.isRole(Role.Operator, player.getUniqueId()), isOwner = island.isRole(Role.Owner, player.getUniqueId()), canKick = island.getSetting(Setting.Role.Operator, "Kick").getStatus(), canBan = island.getSetting(Setting.Role.Operator, "Ban").getStatus(), banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning");
     			int index = playerMenuPage * 36 - 36, endIndex = index >= islandVisitors.size() ? islandVisitors.size() - 1 : index + 36, inventorySlot = 17;
     			
     			for (; index < endIndex; index++) {
@@ -238,7 +238,13 @@ public class Visitors {
 	    	
 	    	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Visitors.Title")));
 	    	nInv.setRows(6);
-	    	nInv.open();
+	    	
+	    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					nInv.open();
+				}
+	    	});
     	}
     }
 }

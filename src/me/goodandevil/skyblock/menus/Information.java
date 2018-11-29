@@ -202,7 +202,13 @@ public class Information {
     		    	
     		    	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Categories.Title")));
     		    	nInv.setType(InventoryType.HOPPER);
-    		    	nInv.open();
+    		    	
+    		    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+    					@Override
+    					public void run() {
+    						nInv.open();
+    					}
+    		    	});
     			} else if (viewer.getType() == Information.Viewer.Type.Members) {
     		    	nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
     					@Override
@@ -322,7 +328,13 @@ public class Information {
     	    		
     		    	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Members.Title")));
     		    	nInv.setRows(6);
-    		    	nInv.open();
+    		    	
+    		    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+    					@Override
+    					public void run() {
+    						nInv.open();
+    					}
+    		    	});
     			} else if (viewer.getType() == Information.Viewer.Type.Visitors) {
     		    	nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
     					@Override
@@ -429,7 +441,13 @@ public class Information {
     	    		
     		    	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Visitors.Title")));
     		    	nInv.setRows(6);
-    		    	nInv.open();
+    		    	
+    		    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+    					@Override
+    					public void run() {
+    						nInv.open();
+    					}
+    		    	});
     			}
     			
     			islandManager.unloadIsland(viewer.getOwner());

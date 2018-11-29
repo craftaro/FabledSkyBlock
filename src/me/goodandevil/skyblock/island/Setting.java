@@ -1,11 +1,17 @@
 package me.goodandevil.skyblock.island;
 
-public class Settings {
-	
+public class Setting {
+
+	private String name;
 	private boolean status;
 	
-	public Settings(boolean status) {
+	public Setting(String name, boolean status) {
+		this.name = name;
 		this.status = status;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public void setStatus(boolean status) {

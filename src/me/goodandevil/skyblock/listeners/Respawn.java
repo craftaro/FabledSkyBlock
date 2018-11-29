@@ -57,6 +57,8 @@ public class Respawn implements Listener {
 							Bukkit.getServer().getPluginManager().callEvent(new PlayerTeleportEvent(player, playerLocation, islandLocation));
 							event.setRespawnLocation(islandLocation);
 							
+							islandManager.giveUpgrades(player, island);
+							
 							return;
 						}
 					}

@@ -47,6 +47,7 @@ import me.goodandevil.skyblock.command.commands.SetSpawnCommand;
 import me.goodandevil.skyblock.command.commands.SettingsCommand;
 import me.goodandevil.skyblock.command.commands.TeleportCommand;
 import me.goodandevil.skyblock.command.commands.UnbanCommand;
+import me.goodandevil.skyblock.command.commands.UpgradeCommand;
 import me.goodandevil.skyblock.command.commands.VisitCommand;
 import me.goodandevil.skyblock.command.commands.VisitorsCommand;
 import me.goodandevil.skyblock.command.commands.VoteCommand;
@@ -89,6 +90,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		subCommands.add(new VisitCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Visit.Info.Message"))));
 		subCommands.add(new VoteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Vote.Info.Message"))));
 		subCommands.add(new ControlPanelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.ControlPanel.Info.Message"))));
+		subCommands.add(new UpgradeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Upgrade.Info.Message"))));
 		subCommands.add(new LeaderboardCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Leaderboard.Info.Message"))));
 		subCommands.add(new CreateCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Create.Info.Message"))));
 		subCommands.add(new DeleteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Delete.Info.Message"))));
@@ -128,6 +130,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SetSpawnCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSpawn.Info.Message"))));
 		subCommands.add(new SetSizeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSize.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.CreateCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Create.Info.Message"))));
+		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.UpgradeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Upgrade.Info.Message"))));
 		subCommands.add(new GeneratorCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Generator.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.LevelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Level.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SettingsCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Settings.Info.Message"))));

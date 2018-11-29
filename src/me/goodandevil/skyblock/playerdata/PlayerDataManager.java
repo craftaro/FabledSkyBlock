@@ -148,6 +148,8 @@ public class PlayerDataManager {
 							}
 						}
 						
+						islandManager.giveUpgrades(player, island);
+						
 						ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 						
 						if (scoreboardManager != null) {
@@ -217,6 +219,12 @@ public class PlayerDataManager {
 								playerData.setIsland(visitIslandList);
 								
 								islandManager.loadIsland(visitIslandList);
+								
+								Island island = islandManager.getIsland(visitIslandList);
+								
+								if (island != null) {
+									islandManager.giveUpgrades(player, island);
+								}
 								
 								return;
 							} else {

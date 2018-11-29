@@ -416,7 +416,13 @@ public class Visit {
     	
     	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Visit.Title")));
     	nInv.setRows(6);
-    	nInv.open();
+    	
+    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+			@Override
+			public void run() {
+				nInv.open();
+			}
+    	});
 	}
 	
 	public enum Type {

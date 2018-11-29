@@ -10,57 +10,47 @@ import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.menus.Upgrade;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
-public class CloseCommand extends SubCommand {
+public class UpgradeCommand extends SubCommand {
 
 	private final SkyBlock skyblock;
 	private String info;
 	
-	public CloseCommand(SkyBlock skyblock) {
+	public UpgradeCommand(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
 		MessageManager messageManager = skyblock.getMessageManager();
-		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
-		if (islandManager.hasIsland(player)) {
-			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
-			
-			if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Visitor").getStatus())) {
-				if (island.isOpen()) {
-					islandManager.closeIsland(island);
-					
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Close.Closed.Message"));
-					soundManager.playSound(player, Sounds.DOOR_CLOSE.bukkitSound(), 1.0F, 1.0F);
-				} else {
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Close.Already.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-				}
-			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Close.Permission.Message"));
-				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+		if (skyblock.getIslandManager().hasIsland(player)) {
+			if (!skyblock.getEconomyManager().isEconomy()) {
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Upgrade.Disabled.Message"));
+				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				
+				return;
 			}
+			
+			Upgrade.getInstance().open(player);
+			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Close.Owner.Message"));
+			skyblock.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Upgrade.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 
 	@Override
 	public String getName() {
-		return "close";
+		return "upgrade";
 	}
 
 	@Override

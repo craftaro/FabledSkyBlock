@@ -4,7 +4,7 @@ version: 31
 api-version: 1.13
 description: A unique SkyBlock plugin
 author: GoodAndEvil
-softdepend: [PlaceholderAPI, MVdWPlaceholderAPI]
+softdepend: [PlaceholderAPI, MVdWPlaceholderAPI, Vault]
 loadbefore: [Multiverse-Core]
 commands:
     island:

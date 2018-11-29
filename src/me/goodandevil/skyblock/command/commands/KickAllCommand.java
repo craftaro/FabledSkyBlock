@@ -17,7 +17,7 @@ import me.goodandevil.skyblock.events.IslandKickEvent;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -48,7 +48,7 @@ public class KickAllCommand extends SubCommand {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
 			Island island = islandManager.getIsland(playerData.getOwner());
 			
-			if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Settings.Role.Operator, "Kick").getStatus())) {
+			if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Kick").getStatus())) {
 				if (island.isOpen()) {
 					List<UUID> islandVisitors = island.getVisitors();
 					

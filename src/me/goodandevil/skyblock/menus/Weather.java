@@ -17,7 +17,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -60,7 +60,7 @@ public class Weather {
 						if (islandManager.hasIsland(player)) {
 							island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 							
-							if (!((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Settings.Role.Operator, "Biome").getStatus()) || island.isRole(Role.Owner, player.getUniqueId()))) {
+							if (!((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Biome").getStatus()) || island.isRole(Role.Owner, player.getUniqueId()))) {
 								messageManager.sendMessage(player, configLoad.getString("Command.Island.Weather.Permission.Message"));
 								soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 								player.closeInventory();
@@ -223,7 +223,13 @@ public class Weather {
 	    	
 	    	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Weather.Title")));
 	    	nInv.setType(InventoryType.HOPPER);
-	    	nInv.open();
+	    	
+	    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					nInv.open();
+				}
+	    	});
     	}
     }
 }

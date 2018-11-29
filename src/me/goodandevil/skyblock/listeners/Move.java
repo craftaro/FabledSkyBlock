@@ -15,7 +15,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Settings;
+import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -99,7 +99,7 @@ public class Move implements Listener {
 								
 								if (configLoad.getBoolean("Island.World." + world.name() + ".Liquid.Enable")) {
 									if (to.getY() <= configLoad.getInt("Island.World." + world.name() + ".Liquid.Height")) {
-										if (island.getSetting(Settings.Role.Owner, "KeepItemsOnDeath").getStatus()) {
+										if (island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
 											player.setFallDistance(0.0F);
 											player.teleport(island.getLocation(world, me.goodandevil.skyblock.island.Location.Environment.Main));
 											soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
@@ -111,7 +111,7 @@ public class Move implements Listener {
 								
 								if (configLoad.getBoolean("Island.Void.Teleport.Enable")) {
 									if (to.getY() <= configLoad.getInt("Island.Void.Teleport.Offset")) {
-										if (island.getSetting(Settings.Role.Owner, "KeepItemsOnDeath").getStatus()) {
+										if (island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
 											player.setFallDistance(0.0F);
 											player.teleport(island.getLocation(world, me.goodandevil.skyblock.island.Location.Environment.Main));
 											soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);

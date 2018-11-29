@@ -8,6 +8,23 @@ public final class NumberUtil {
     	return String.format("%,d", number);
     }
     
+    public static String formatNumber(double number) {
+		String withoutDecimal = String.valueOf(number), withDecimal = "";
+		
+		if (withoutDecimal.contains(".")) {
+			withDecimal = "." + withoutDecimal.split("\\.")[1];
+			withoutDecimal = withoutDecimal.replace(withDecimal, "");
+		}
+		
+		if (withDecimal.equals(".0")) {
+			withDecimal = "";
+		}
+		
+		int itemCostWithoutDecimalValue = Integer.valueOf(withoutDecimal); 
+    	
+    	return formatNumber(itemCostWithoutDecimalValue) + withDecimal;
+    }
+    
     public static long[] getDuration(int time) {
         long seconds = time % 60;
         long minutes = time % 3600 / 60;

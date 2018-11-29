@@ -118,6 +118,12 @@ public class ControlPanel {
     	
     	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.ControlPanel.Title")));
     	nInv.setRows(1);
-    	nInv.open();
+
+    	Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+			@Override
+			public void run() {
+				nInv.open();
+			}
+    	});
     }
 }

@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,7 +18,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.IllegalPluginAccessException;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.ban.BanManager;
@@ -37,6 +39,8 @@ import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.structure.Structure;
+import me.goodandevil.skyblock.upgrade.Upgrade;
+import me.goodandevil.skyblock.upgrade.UpgradeManager;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -237,7 +241,7 @@ public class IslandManager {
 			Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
 				@Override
 				public void run() {
-					skyblock.getBiomeManager().setBiome(null, island, Biome.valueOf(fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase()));
+					skyblock.getBiomeManager().setBiome(island, Biome.valueOf(fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase()));
 				}
 			}, 20L);	
 		}
@@ -268,6 +272,13 @@ public class IslandManager {
 			if (configLoad.getBoolean("Island.Ownership.Password.Reset")) {
 				island.setPassword(null);
 			}
+			
+			File oldSettingDataFile = new File(new File(skyblock.getDataFolder().toString() + "/setting-data"), islandOwnerUUID.toString() + ".yml");
+			File newSettingDataFile = new File(new File(skyblock.getDataFolder().toString() + "/setting-data"), uuid.toString() + ".yml");
+			
+			fileManager.unloadConfig(oldSettingDataFile);
+			fileManager.unloadConfig(newSettingDataFile);
+			oldSettingDataFile.renameTo(newSettingDataFile);
 			
 			File oldIslandDataFile = new File(new File(skyblock.getDataFolder().toString() + "/island-data"), islandOwnerUUID.toString() + ".yml");
 			File newIslandDataFile = new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml");
@@ -356,6 +367,7 @@ public class IslandManager {
 			}
 		}
 		
+		fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/setting-data"), island.getOwnerUUID().toString() + ".yml"));
 		fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml"));
 		
 		Bukkit.getServer().getPluginManager().callEvent(new IslandDeleteEvent(island));
@@ -479,7 +491,9 @@ public class IslandManager {
 				}
 			}
 			
+			fileManager.unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/setting-data"), islandOwnerUUID + ".yml"));
 			fileManager.unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), islandOwnerUUID + ".yml"));
+			
 			islandStorage.remove(islandOwnerUUID);
 			
 			Bukkit.getServer().getPluginManager().callEvent(new IslandUnloadEvent(island));
@@ -625,7 +639,7 @@ public class IslandManager {
 			for (Location.World worldList : Location.World.values()) {
 				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 					if (island.isRole(Role.Member, player.getUniqueId())) {
-						if (!island.getSetting(Settings.Role.Member, setting).getStatus()) {
+						if (!island.getSetting(Setting.Role.Member, setting).getStatus()) {
 							return false;
 						}
 					}
@@ -642,7 +656,7 @@ public class IslandManager {
 				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 					if (player.hasPermission("skyblock.bypass." + setting.toLowerCase()) || player.hasPermission("skyblock.bypass.*") || player.hasPermission("skyblock.*")) {
 						return true;
-					} else if (!island.getSetting(Settings.Role.Visitor, setting).getStatus()) {
+					} else if (!island.getSetting(Setting.Role.Visitor, setting).getStatus()) {
 						return false;
 					}
 					
@@ -704,7 +718,7 @@ public class IslandManager {
 	}
 	
 	public void loadPlayer(Player player) {
-		new BukkitRunnable() {
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 			@Override
 			public void run() {
 				if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())) {
@@ -742,9 +756,59 @@ public class IslandManager {
 						if (configLoad.getBoolean("Island.WorldBorder.Enable")) {
 							WorldBorder.send(player, island.getSize() + 2.5, island.getLocation(Location.World.Normal, Location.Environment.Island));
 						}
+						
+						giveUpgrades(player, island);
 					}
 				}
 			}
-		}.runTaskAsynchronously(skyblock);
+		});
+	}
+	
+	public void giveUpgrades(Player player, Island island) {
+		UpgradeManager upgradeManager = skyblock.getUpgradeManager();
+		
+		List<Upgrade> upgrades = upgradeManager.getUpgrades(Upgrade.Type.Speed);
+    	
+    	if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Speed)) {
+    		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
+				}
+    		});
+    	}
+    	
+    	upgrades = upgradeManager.getUpgrades(Upgrade.Type.Jump);
+    	
+    	if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Jump)) {
+    		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
+				}
+    		});
+    	}
+    	
+    	upgrades = upgradeManager.getUpgrades(Upgrade.Type.Fly);
+    	
+    	if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Fly)) {
+    		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					player.setAllowFlight(true);
+					player.setFlying(true);
+				}
+    		});
+    	}
+	}
+	
+	public void removeUpgrades(Player player) {
+		player.removePotionEffect(PotionEffectType.SPEED);
+		player.removePotionEffect(PotionEffectType.JUMP);
+		
+		if (player.getGameMode() != GameMode.CREATIVE) {
+			player.setFlying(false);
+			player.setAllowFlight(false);
+		}
 	}
 }

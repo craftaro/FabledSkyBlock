@@ -191,7 +191,7 @@ public class nInventoryUtil {
 		return inv;
 	}
 	
-	private class Item {
+	public class Item {
 		
 		private ItemStack is;
 		private String itemDisplayname;
