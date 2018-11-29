@@ -2,7 +2,7 @@
     <groupId>com.songoda</groupId>
     <artifactId>Skyblock</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>20</version>
+    <version>32</version>
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
@@ -39,6 +39,11 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>net.milkbowl</groupId>
+            <artifactId>vault</artifactId>
             <version>LATEST</version>
         </dependency>
         <dependency>
