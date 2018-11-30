@@ -539,6 +539,8 @@ Command:
         Visit:
             Info:
                 Message: "&f&oOpens a menu of public Islands to Visit."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island visit [<player>]"
         Open:
             Info:
                 Message: "&f&oOpens your Island to Visitors."

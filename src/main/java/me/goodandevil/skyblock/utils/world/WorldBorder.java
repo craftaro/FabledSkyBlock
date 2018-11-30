@@ -18,16 +18,16 @@ public final class WorldBorder {
 		try {
 			packetPlayOutWorldBorder = NMSUtil.getNMSClass("PacketPlayOutWorldBorder");
 			
-			if (NMSUtil.getVersionNumber() < 9) {
-				packetPlayOutWorldBorderEnumClass = packetPlayOutWorldBorder.getDeclaredClasses()[1];
-			} else {
+			if (NMSUtil.getVersionNumber() > 10) {
 				packetPlayOutWorldBorderEnumClass = packetPlayOutWorldBorder.getDeclaredClasses()[0];
+			} else {
+				packetPlayOutWorldBorderEnumClass = packetPlayOutWorldBorder.getDeclaredClasses()[1];
 			}
 			
 			worldBorderClass = NMSUtil.getNMSClass("WorldBorder");
 			craftWorldClass = NMSUtil.getCraftClass("CraftWorld");
 
-			packetPlayOutWorldBorderConstructor = packetPlayOutWorldBorder.getConstructor(worldBorderClass,packetPlayOutWorldBorderEnumClass);
+			packetPlayOutWorldBorderConstructor = packetPlayOutWorldBorder.getConstructor(worldBorderClass, packetPlayOutWorldBorderEnumClass);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

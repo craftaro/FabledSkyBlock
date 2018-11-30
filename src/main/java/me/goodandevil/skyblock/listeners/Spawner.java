@@ -51,11 +51,20 @@ public class Spawner implements Listener {
 								spawner.setMaxSpawnDelay(400);
 							} else {
 					    		try {
-									Field TileEntityMobSpawnerField = spawner.getClass().getDeclaredField("spawner");
-									TileEntityMobSpawnerField.setAccessible(true);
-									Object TileEntityMobSpawner = TileEntityMobSpawnerField.get(spawner);
-									Object MobSpawner = TileEntityMobSpawner.getClass().getMethod("getSpawner").invoke(TileEntityMobSpawner);
-									
+					    			Object MobSpawner = null;
+					    			
+					    			try {
+										Field TileEntityMobSpawnerField = spawner.getClass().getDeclaredField("spawner");
+										TileEntityMobSpawnerField.setAccessible(true);
+										Object TileEntityMobSpawner = TileEntityMobSpawnerField.get(spawner);
+										MobSpawner = TileEntityMobSpawner.getClass().getMethod("getSpawner").invoke(TileEntityMobSpawner);
+					    			} catch (NoSuchFieldException e) {
+						    			Field snapshotField = spawner.getClass().getSuperclass().getDeclaredField("snapshot");
+						    			snapshotField.setAccessible(true);
+						    			Object snapshot = snapshotField.get(spawner);
+						    			MobSpawner = snapshot.getClass().getMethod("getSpawner").invoke(snapshot);
+					    			}
+					    			
 									int spawnDelay = (int) MobSpawner.getClass().getSuperclass().getField("spawnDelay").get(MobSpawner);
 									
 									if (spawnDelay == 20) {

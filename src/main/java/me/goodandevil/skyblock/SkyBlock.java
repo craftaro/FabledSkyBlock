@@ -52,7 +52,7 @@ import me.goodandevil.skyblock.world.generator.VoidGenerator;
 public class SkyBlock extends JavaPlugin {
 
 	private static SkyBlock instance;
-	
+
 	private FileManager fileManager;
 	private WorldManager worldManager;
 	private VisitManager visitManager;
@@ -73,15 +73,11 @@ public class SkyBlock extends JavaPlugin {
 	private LeaderboardManager leaderboardManager;
 	private MessageManager messageManager;
 	private EconomyManager economyManager;
-	
+
 	@Override
 	public void onEnable() {
 		instance = this;
-		
-		if (!isEnable()) {
-			return;
-		}
-		
+
 		fileManager = new FileManager(this);
 		worldManager = new WorldManager(this);
 		visitManager = new VisitManager(this);
@@ -90,33 +86,33 @@ public class SkyBlock extends JavaPlugin {
 		upgradeManager = new UpgradeManager(this);
 		creationManager = new CreationManager(this);
 		playerDataManager = new PlayerDataManager(this);
-		
+
 		if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable")) {
 			scoreboardManager = new ScoreboardManager(this);
 		}
-		
+
 		inviteManager = new InviteManager(this);
 		biomeManager = new BiomeManager(this);
 		levellingManager = new LevellingManager(this);
 		commandManager = new CommandManager(this);
 		structureManager = new StructureManager(this);
 		soundManager = new SoundManager(this);
-		
+
 		if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Generator.Enable")) {
 			generatorManager = new GeneratorManager(this);
 		}
-		
+
 		placeholderManager = new PlaceholderManager(this);
 		placeholderManager.registerPlaceholders();
-		
+
 		leaderboardManager = new LeaderboardManager(this);
 		messageManager = new MessageManager(this);
 		economyManager = new EconomyManager();
-		
+
 		new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
 		new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
 		new ConfirmationTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
-		
+
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new Join(this), this);
 		pluginManager.registerEvents(new Quit(this), this);
@@ -134,136 +130,132 @@ public class SkyBlock extends JavaPlugin {
 		pluginManager.registerEvents(new Respawn(this), this);
 		pluginManager.registerEvents(new Chat(this), this);
 		pluginManager.registerEvents(new Spawner(this), this);
-		
+
 		pluginManager.registerEvents(new Rollback(), this);
-		
+
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Levelling(), this);
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Creator(), this);
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Settings(), this);
 		pluginManager.registerEvents(new Generator(), this);
 	}
-	
+
 	@Override
 	public void onDisable() {
 		if (this.levellingManager != null) {
 			this.levellingManager.onDisable();
 		}
-		
+
 		if (this.islandManager != null) {
 			this.islandManager.onDisable();
 		}
-		
+
 		if (this.visitManager != null) {
 			this.visitManager.onDisable();
 		}
-		
+
 		if (this.banManager != null) {
 			this.banManager.onDisable();
 		}
-		
+
 		if (this.biomeManager != null) {
 			this.biomeManager.onDisable();
 		}
-		
+
 		if (this.creationManager != null) {
 			this.creationManager.onDisable();
 		}
-		
+
 		if (this.playerDataManager != null) {
 			this.playerDataManager.onDisable();
 		}
 	}
-	
+
 	public static SkyBlock getInstance() {
 		return instance;
 	}
-	
+
 	public FileManager getFileManager() {
 		return fileManager;
 	}
-	
+
 	public WorldManager getWorldManager() {
 		return worldManager;
 	}
-	
+
 	public VisitManager getVisitManager() {
 		return visitManager;
 	}
-	
+
 	public BanManager getBanManager() {
 		return banManager;
 	}
-	
+
 	public IslandManager getIslandManager() {
 		return islandManager;
 	}
-	
+
 	public UpgradeManager getUpgradeManager() {
 		return upgradeManager;
 	}
-	
+
 	public CreationManager getCreationManager() {
 		return creationManager;
 	}
-	
+
 	public PlayerDataManager getPlayerDataManager() {
 		return playerDataManager;
 	}
-	
+
 	public ScoreboardManager getScoreboardManager() {
 		return scoreboardManager;
 	}
-	
+
 	public InviteManager getInviteManager() {
 		return inviteManager;
 	}
-	
+
 	public BiomeManager getBiomeManager() {
 		return biomeManager;
 	}
-	
+
 	public LevellingManager getLevellingManager() {
 		return levellingManager;
 	}
-	
+
 	public CommandManager getCommandManager() {
 		return commandManager;
 	}
-	
+
 	public StructureManager getStructureManager() {
 		return structureManager;
 	}
-	
+
 	public SoundManager getSoundManager() {
 		return soundManager;
 	}
-	
+
 	public GeneratorManager getGeneratorManager() {
 		return generatorManager;
 	}
-	
+
 	public PlaceholderManager getPlaceholderManager() {
 		return placeholderManager;
 	}
-	
+
 	public LeaderboardManager getLeaderboardManager() {
 		return leaderboardManager;
 	}
-	
+
 	public MessageManager getMessageManager() {
 		return messageManager;
 	}
-	
+
 	public EconomyManager getEconomyManager() {
 		return economyManager;
 	}
-	
-	public boolean isEnable() {
-		return false;
+
+	@Override
+	public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+		return new VoidGenerator();
 	}
-	
-    @Override
-    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-    	return new VoidGenerator();
-    }
 }

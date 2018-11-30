@@ -146,7 +146,7 @@ public class Upgrade {
 										    	
 												if (playerDataManager.hasPlayerData(player) && playerDataManager.getPlayerData(player) != null) {
 													if (!(event1.getName().matches("[0-9]+") || event1.getName().matches("([0-9]*)\\.([0-9]{2}$)"))) {
-														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Numerical.Message")));
+														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Numerical.Message"));
 														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 														
 														event1.setWillClose(false);
@@ -299,7 +299,7 @@ public class Upgrade {
             					List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size);
             					
             					if (upgrades != null && upgrades.size() >= 5) {
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Tier.Limit.Message")));
+									messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Tier.Limit.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									
 									event.setWillClose(false);
@@ -314,7 +314,7 @@ public class Upgrade {
     										    if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
     												if (playerDataManager.hasPlayerData(player) && playerDataManager.getPlayerData(player) != null) {
     													if (!event1.getName().matches("[0-9]+")) {
-    														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Numerical.Message")));
+    														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Numerical.Message"));
     														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
     														
     														event1.setWillClose(false);
@@ -325,7 +325,7 @@ public class Upgrade {
     						            					List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size);
     						            					
     						            					if (upgrades != null && upgrades.size() >= 5) {
-    															player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Tier.Limit.Message")));
+    															messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Tier.Limit.Message"));
     															soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
     															
     															Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
@@ -342,7 +342,7 @@ public class Upgrade {
     													int size = Integer.valueOf(event1.getName());
     													
     													if (size > 1000) {
-    														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Tier.Size.Message")));
+    														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Tier.Size.Message"));
     														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
     														
     														event.setWillClose(false);
@@ -350,7 +350,7 @@ public class Upgrade {
     														
     														return;
     													} else if (upgradeManager.hasUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size, size)) {
-    														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Tier.Exist.Message")));
+    														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Tier.Exist.Message"));
     														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
     														
     														event1.setWillClose(false);
@@ -417,7 +417,7 @@ public class Upgrade {
         										    	
         												if (playerDataManager.hasPlayerData(player) && playerDataManager.getPlayerData(player) != null) {
         													if (!event1.getName().matches("[0-9]+")) {
-        														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Numerical.Message")));
+        														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Numerical.Message"));
         														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         														
         														event1.setWillClose(false);
@@ -425,7 +425,7 @@ public class Upgrade {
         														
         														return;
         													} else if (upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size).get(tier) == null) {
-        														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Tier.Selected.Message")));
+        														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Tier.Selected.Message"));
         														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         														
     															Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
@@ -441,7 +441,7 @@ public class Upgrade {
         													int size = Integer.valueOf(event1.getName());
         													
         													if (size > 1000) {
-        														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Tier.Size.Message")));
+        														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Tier.Size.Message"));
         														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         														
         														event.setWillClose(false);
@@ -449,7 +449,7 @@ public class Upgrade {
         														
         														return;
         													} else if (upgradeManager.hasUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size, size)) {
-        														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Tier.Exist.Message")));
+        														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Tier.Exist.Message"));
         														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         														
         														event.setWillClose(false);
@@ -509,7 +509,7 @@ public class Upgrade {
         										    	
         												if (playerDataManager.hasPlayerData(player) && playerDataManager.getPlayerData(player) != null) {
         													if (!(event1.getName().matches("[0-9]+") || event1.getName().matches("([0-9]*)\\.([0-9]{2}$)"))) {
-        														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Numerical.Message")));
+        														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Numerical.Message"));
         														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         														
         														event1.setWillClose(false);
@@ -517,7 +517,7 @@ public class Upgrade {
         														
         														return;
         													} else if (upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size).get(tier) == null) {
-        														player.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Admin.Upgrade.Tier.Selected.Message")));
+        														messageManager.sendMessage(player, configLoad.getString("Island.Admin.Upgrade.Tier.Selected.Message"));
         														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         														
     															Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
