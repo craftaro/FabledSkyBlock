@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -147,7 +148,24 @@ public final class BlockUtil {
             blockData.setStateType(BlockStateType.JUKEBOX.toString());
         } else if (blockState instanceof Sign) {
             Sign sign = (Sign) blockState;
-            blockData.setSignLines(sign.getLines());
+            
+            String[] signLines = sign.getLines();
+            
+            if (signLines != null) {
+            	List<String> correctedSignLines = new ArrayList<>();
+            	
+            	for (String signLineList : signLines) {
+            		for (ChatColor chatColorList : ChatColor.values()) {
+            			signLineList = signLineList.replace(chatColorList + "", "&" + chatColorList.toString().substring(chatColorList.toString().length() -1));
+            		}
+            		
+            		correctedSignLines.add(signLineList);
+            	}
+            	
+            	signLines = correctedSignLines.toArray(new String[correctedSignLines.size()]);
+            }
+            
+            blockData.setSignLines(signLines);
             blockData.setStateType(BlockStateType.SIGN.toString());
         } else if (blockState instanceof Skull) {
             Skull skull = (Skull) blockState;
@@ -306,7 +324,7 @@ public final class BlockUtil {
             Sign sign = (Sign) block.getState();
             
             for (int i = 0; i < blockData.getSignLines().length; i++) {
-            	sign.setLine(i, blockData.getSignLines()[i]);
+            	sign.setLine(i, ChatColor.translateAlternateColorCodes('&', blockData.getSignLines()[i]));
             }
             
             sign.update();

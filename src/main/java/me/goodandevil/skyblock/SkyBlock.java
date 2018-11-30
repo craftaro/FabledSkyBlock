@@ -14,6 +14,7 @@ import me.goodandevil.skyblock.confirmation.ConfirmationTask;
 import me.goodandevil.skyblock.creation.CreationManager;
 import me.goodandevil.skyblock.economy.EconomyManager;
 import me.goodandevil.skyblock.generator.GeneratorManager;
+import me.goodandevil.skyblock.hologram.HologramManager;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
@@ -69,10 +70,11 @@ public class SkyBlock extends JavaPlugin {
 	private StructureManager structureManager;
 	private SoundManager soundManager;
 	private GeneratorManager generatorManager;
-	private PlaceholderManager placeholderManager;
 	private LeaderboardManager leaderboardManager;
+	private PlaceholderManager placeholderManager;
 	private MessageManager messageManager;
 	private EconomyManager economyManager;
+	private HologramManager hologramManager;
 
 	@Override
 	public void onEnable() {
@@ -102,12 +104,14 @@ public class SkyBlock extends JavaPlugin {
 			generatorManager = new GeneratorManager(this);
 		}
 
+		leaderboardManager = new LeaderboardManager(this);
+		
 		placeholderManager = new PlaceholderManager(this);
 		placeholderManager.registerPlaceholders();
-
-		leaderboardManager = new LeaderboardManager(this);
+		
 		messageManager = new MessageManager(this);
 		economyManager = new EconomyManager();
+		hologramManager = new HologramManager(this);
 
 		new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
 		new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -167,6 +171,10 @@ public class SkyBlock extends JavaPlugin {
 
 		if (this.playerDataManager != null) {
 			this.playerDataManager.onDisable();
+		}
+		
+		if (this.hologramManager != null) {
+			this.hologramManager.onDisable();
 		}
 	}
 
@@ -238,12 +246,12 @@ public class SkyBlock extends JavaPlugin {
 		return generatorManager;
 	}
 
-	public PlaceholderManager getPlaceholderManager() {
-		return placeholderManager;
-	}
-
 	public LeaderboardManager getLeaderboardManager() {
 		return leaderboardManager;
+	}
+	
+	public PlaceholderManager getPlaceholderManager() {
+		return placeholderManager;
 	}
 
 	public MessageManager getMessageManager() {
@@ -252,6 +260,10 @@ public class SkyBlock extends JavaPlugin {
 
 	public EconomyManager getEconomyManager() {
 		return economyManager;
+	}
+	
+	public HologramManager getHologramManager() {
+		return hologramManager;
 	}
 
 	@Override

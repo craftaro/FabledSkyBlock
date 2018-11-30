@@ -652,6 +652,26 @@ Command:
                     Message: "&bSkyBlock &8| &cError&8: &eYou cannot set the spawn point in an Island world."
                 Set:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe spawn point has been set to your location."
+            SetHologram:
+                Info:
+                    Message: "&f&oSets the location of a hologram."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin sethologram <Level|Votes>"
+                Set:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eThe '&b%type&e' hologram has been set to your location."
+            RemoveHologram:
+                Info:
+                    Message: "&f&oRemoves an existing hologram."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin removehologram <Level|Votes>"
+                Set:
+                    Message: "&bSkyBlock &8| &cError&8: &eA location for that hologram has not been set."
+                Removed:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have removed the '&b%type&e' hologram."
             SetSize:
                 Info:
                     Message: "&f&oSets the size of a players Island."
@@ -900,6 +920,16 @@ Island:
             Division:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the points division to '&f%division&e'."
 Placeholder:
+    skyblock_leaderboard_level:
+        Empty:
+            Message: "&f&oUnclaimed"
+        Non-empty:
+            Message: "&f[%position] %player [%level]"
+    skyblock_leaderboard_votes:
+        Empty:
+            Message: "&f&oUnclaimed"
+        Non-empty:
+            Message: "&f[%position] %player [%votes]"
     skyblock_island_size:
         Empty:
             Message: "&c0"
@@ -973,6 +1003,18 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+Hologram:
+    Leaderboard:
+        Level:
+            Header: "&b&lSkyBlock &8&l| &e&lTop 10 Level"
+            Claimed: "&8* &f&o[%position] &a%player &7- &6%level"
+            Unclaimed: "&8* &f&o[%position] &7&oUnclaimed Position"
+            Footer: "&ewww.example.net"
+        Votes:
+            Header: "&b&lSkyBlock &8&l| &e&lTop 10 Votes"
+            Claimed: "&8* &f&o[%position] &a%player &7- &6%votes"
+            Unclaimed: "&8* &f&o[%position] &7&oUnclaimed Position"
+            Footer: "&ewww.example.net"
 Scoreboard:
     Tutorial:
         Displayname: "&b&lSkyBlock"

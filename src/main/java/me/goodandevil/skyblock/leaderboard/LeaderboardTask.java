@@ -17,5 +17,7 @@ public class LeaderboardTask extends BukkitRunnable {
 		LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
 		leaderboardManager.clearLeaderboard();
 		leaderboardManager.resetLeaderboard();
+		
+		skyblock.getHologramManager().resetHologram();
 	}
 }

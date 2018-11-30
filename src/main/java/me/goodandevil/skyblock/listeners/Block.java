@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,6 +23,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.material.Crops;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -47,6 +49,11 @@ public class Block implements Listener {
  	public Block(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
+ 	
+ 	@EventHandler
+ 	public void onSignChange(SignChangeEvent event) {
+ 		event.setLine(0, ChatColor.RED + "test");
+ 	}
 	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {

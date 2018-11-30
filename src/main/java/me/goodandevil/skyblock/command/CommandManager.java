@@ -54,6 +54,8 @@ import me.goodandevil.skyblock.command.commands.VoteCommand;
 import me.goodandevil.skyblock.command.commands.WeatherCommand;
 import me.goodandevil.skyblock.command.commands.admin.GeneratorCommand;
 import me.goodandevil.skyblock.command.commands.admin.ReloadCommand;
+import me.goodandevil.skyblock.command.commands.admin.RemoveHologramCommand;
+import me.goodandevil.skyblock.command.commands.admin.SetHologramCommand;
 import me.goodandevil.skyblock.command.commands.admin.SetSizeCommand;
 import me.goodandevil.skyblock.command.commands.admin.StructureCommand;
 import me.goodandevil.skyblock.config.FileManager;
@@ -128,6 +130,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		
 		subCommands = new ArrayList<>();
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SetSpawnCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSpawn.Info.Message"))));
+		subCommands.add(new SetHologramCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetHologram.Info.Message"))));
+		subCommands.add(new RemoveHologramCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.RemoveHologram.Info.Message"))));
 		subCommands.add(new SetSizeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.SetSize.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.CreateCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Create.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.UpgradeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Upgrade.Info.Message"))));

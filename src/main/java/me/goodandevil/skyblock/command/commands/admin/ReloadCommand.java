@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.command.commands.admin;
 import java.io.File;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -12,6 +13,9 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.hologram.Hologram;
+import me.goodandevil.skyblock.hologram.HologramManager;
+import me.goodandevil.skyblock.hologram.HologramType;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -27,6 +31,7 @@ public class ReloadCommand extends SubCommand {
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
+		HologramManager hologramManager = skyblock.getHologramManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
@@ -50,6 +55,21 @@ public class ReloadCommand extends SubCommand {
 			if (skyblock.getScoreboardManager() != null) {
 				skyblock.getScoreboardManager().resendScoreboard();
 			}
+			
+			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					for (HologramType hologramTypeList : HologramType.values()) {
+						Hologram hologram = hologramManager.getHologram(hologramTypeList);
+						
+						if (hologram != null) {
+							hologramManager.removeHologram(hologram);
+						}
+						
+						hologramManager.spawnHologram(hologramTypeList);
+					}
+				}
+			});
 			
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
