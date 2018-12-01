@@ -31,6 +31,10 @@ Command:
         Leaderboard:
             Info:
                 Message: "&f&oOpens the Leaderboard menu of the top 10 Islands."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island leaderboard [<Level|Votes>]"
+            Disabled:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot view that leaderboard because that leaderboard is disabled."
         Create:
             Info:
                 Message: "&f&oOpens the Island Creator menu."
@@ -592,7 +596,7 @@ Command:
                     Message: "&bSkyBlock &8| &cError&8: &eYou cannot peform that command because upgrades have been disabled."
             Generator:
                 Info:
-                    Message: "&f&oManager generators for coddlestone generators."
+                    Message: "&f&oManager generators for cobblestone generators."
                 Permission:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Disabled:

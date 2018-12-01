@@ -89,11 +89,11 @@ public class BanCommand extends SubCommand {
 							ban.save();
 							
 							if (targetPlayer != null) {
-								messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.Ban.Banned.Target.Message").replace("%player", player.getName()));
-								soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
-								
 								for (Location.World worldList : Location.World.values()) {
 									if (LocationUtil.isLocationAtLocationRadius(targetPlayer.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+										messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.Ban.Banned.Target.Message").replace("%player", player.getName()));
+										soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+										
 										LocationUtil.teleportPlayerToSpawn(targetPlayer);
 										
 										break;

@@ -2,14 +2,19 @@ package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
+import me.goodandevil.skyblock.config.FileManager;
+import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.menus.Leaderboard;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
+import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class LeaderboardCommand extends SubCommand {
@@ -24,16 +29,47 @@ public class LeaderboardCommand extends SubCommand {
 	@Override
 	public void onCommand(Player player, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
+		
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (playerDataManager.hasPlayerData(player)) {
-			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
-				playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Browse));
+			if (args.length == 0) {
+				if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+					playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Browse));
+				} else {
+					playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Level));
+				}
+			} else if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("level")) {
+					playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Level));
+				} else if (args[0].equalsIgnoreCase("votes")) {
+					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+						playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Votes));
+					} else {
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Disabled.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						
+						return;
+					}
+				} else {
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Invalid.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					
+					return;
+				}
 			} else {
-				playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Level));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Invalid.Message"));
+				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				
+				return;
 			}
 			
 			Leaderboard.getInstance().open(player);
-			skyblock.getSoundManager().playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 
