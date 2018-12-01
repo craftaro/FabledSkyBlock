@@ -14,7 +14,6 @@ public enum BlockStateType {
     SHULKERBOX,
     CREATURESPAWNER,
     ENDGATEWAY,
-    FLOWERPOT,
     FURNACE,
     JUKEBOX,
     SIGN,

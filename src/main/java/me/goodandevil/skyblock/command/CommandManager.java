@@ -139,7 +139,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.LevelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Level.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.SettingsCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Settings.Info.Message"))));
 		subCommands.add(new StructureCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Structure.Info.Message"))));
-		subCommands.add(new DeleteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Delete.Info.Message"))));
+		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.DeleteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Delete.Info.Message"))));
 		subCommands.add(new OwnerCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Owner.Info.Message"))));
 		subCommands.add(new ReloadCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Reload.Info.Message"))));
 		

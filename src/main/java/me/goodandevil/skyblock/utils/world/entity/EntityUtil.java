@@ -12,6 +12,7 @@ import org.bukkit.TreeSpecies;
 import org.bukkit.entity.*;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
@@ -32,11 +33,27 @@ public final class EntityUtil {
         if (entity instanceof ArmorStand) {
             ArmorStand armorStand = (ArmorStand) entity;
             entityData.setArms(armorStand.hasArms());
-            entityData.setHand(ItemStackUtil.serializeItemStack(armorStand.getItemInHand()));
-            entityData.setHelmet(ItemStackUtil.serializeItemStack(armorStand.getHelmet()));
-            entityData.setChestplate(ItemStackUtil.serializeItemStack(armorStand.getChestplate()));
-            entityData.setLeggings(ItemStackUtil.serializeItemStack(armorStand.getLeggings()));
-            entityData.setBoots(ItemStackUtil.serializeItemStack(armorStand.getBoots()));
+            
+            if (armorStand.getItemInHand() != null) {
+            	entityData.setHand(ItemStackUtil.serializeItemStack(armorStand.getItemInHand()));
+            }
+            
+            if (armorStand.getHelmet() != null) {
+            	entityData.setHelmet(ItemStackUtil.serializeItemStack(armorStand.getHelmet()));
+            }
+            
+            if (armorStand.getChestplate() != null) {
+            	entityData.setChestplate(ItemStackUtil.serializeItemStack(armorStand.getChestplate()));
+            }
+            
+            if (armorStand.getLeggings() != null) {
+            	entityData.setLeggings(ItemStackUtil.serializeItemStack(armorStand.getLeggings()));
+            }
+            
+            if (armorStand.getBoots() != null) {
+            	entityData.setBoots(ItemStackUtil.serializeItemStack(armorStand.getBoots()));
+            }
+            
             entityData.setBasePlate(armorStand.hasBasePlate());
             entityData.setVisible(armorStand.isVisible());
             entityData.setSmall(armorStand.isSmall());
@@ -55,22 +72,50 @@ public final class EntityUtil {
         
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
+            EntityEquipment entityEquipment = livingEntity.getEquipment();
             
             if (NMSVersion > 8) {
             	entityData.setAI(livingEntity.hasAI());
-            	entityData.setHand(ItemStackUtil.serializeItemStack(livingEntity.getEquipment().getItemInMainHand()));
-                entityData.setOffHand(ItemStackUtil.serializeItemStack(livingEntity.getEquipment().getItemInOffHand()));
-                entityData.setHelmet(ItemStackUtil.serializeItemStack(livingEntity.getEquipment().getHelmet()));
-                entityData.setChestplate(ItemStackUtil.serializeItemStack(livingEntity.getEquipment().getChestplate()));
-                entityData.setLeggings(ItemStackUtil.serializeItemStack(livingEntity.getEquipment().getLeggings()));
-                entityData.setBoots(ItemStackUtil.serializeItemStack(livingEntity.getEquipment().getBoots()));
-                entityData.setHandChance(livingEntity.getEquipment().getItemInMainHandDropChance());
-                entityData.setOffHandChange(livingEntity.getEquipment().getItemInOffHandDropChance());
-                entityData.setHelmetChance(livingEntity.getEquipment().getHelmetDropChance());
-                entityData.setChestplateChance(livingEntity.getEquipment().getChestplateDropChance());
-                entityData.setLeggingsChance(livingEntity.getEquipment().getLeggingsDropChance());
-                entityData.setBootsChance(livingEntity.getEquipment().getBootsDropChance());
+            	
+            	if (entityEquipment.getItemInMainHand() != null) {
+                	entityData.setHand(ItemStackUtil.serializeItemStack(entityEquipment.getItemInMainHand()));
+            	}
+            	
+            	entityData.setHandChance(entityEquipment.getItemInMainHandDropChance());
+            	
+            	if (entityEquipment.getItemInOffHand() != null) {
+                    entityData.setOffHand(ItemStackUtil.serializeItemStack(entityEquipment.getItemInOffHand()));
+            	}
+            	
+                entityData.setOffHandChange(entityEquipment.getItemInOffHandDropChance());
+            } else {
+            	if (entityEquipment.getItemInHand() != null) {
+                	entityData.setHand(ItemStackUtil.serializeItemStack(entityEquipment.getItemInHand()));
+            	}
+            	
+            	entityData.setHandChance(entityEquipment.getItemInHandDropChance());
             }
+            
+            if (entityEquipment.getHelmet() != null) {
+            	entityData.setHelmet(ItemStackUtil.serializeItemStack(entityEquipment.getHelmet()));
+            }
+            
+            if (entityEquipment.getChestplate() != null) {
+            	entityData.setChestplate(ItemStackUtil.serializeItemStack(entityEquipment.getChestplate()));
+            }
+            
+            if (entityEquipment.getLeggings() != null) {
+            	entityData.setLeggings(ItemStackUtil.serializeItemStack(entityEquipment.getLeggings()));
+            }
+            
+            if (entityEquipment.getBoots() != null) {
+            	entityData.setBoots(ItemStackUtil.serializeItemStack(entityEquipment.getBoots()));
+            }
+            
+            entityData.setHelmetChance(entityEquipment.getHelmetDropChance());
+            entityData.setChestplateChance(entityEquipment.getChestplateDropChance());
+            entityData.setLeggingsChance(entityEquipment.getLeggingsDropChance());
+            entityData.setBootsChance(entityEquipment.getBootsDropChance());
             
             if (entity instanceof Bat) {
             	entityData.setAwake(((Bat) entityData).isAwake());
@@ -216,11 +261,27 @@ public final class EntityUtil {
         if (entity instanceof ArmorStand) {
             ArmorStand armorStand = (ArmorStand) entity;
             armorStand.setArms(entityData.hasArms());
-            armorStand.setItemInHand(ItemStackUtil.deserializeItemStack(entityData.getHand()));
-            armorStand.setHelmet(ItemStackUtil.deserializeItemStack(entityData.getHelmet()));
-            armorStand.setChestplate(ItemStackUtil.deserializeItemStack(entityData.getChestplate()));
-            armorStand.setLeggings(ItemStackUtil.deserializeItemStack(entityData.getLeggings()));
-            armorStand.setBoots(ItemStackUtil.deserializeItemStack(entityData.getBoots()));
+            
+            if (entityData.getHand() != null && !entityData.getHand().isEmpty()) {
+            	armorStand.setItemInHand(ItemStackUtil.deserializeItemStack(entityData.getHand()));
+            }
+            
+            if (entityData.getHelmet() != null && !entityData.getHelmet().isEmpty()) {
+            	armorStand.setHelmet(ItemStackUtil.deserializeItemStack(entityData.getHelmet()));
+            }
+            
+            if (entityData.getChestplate() != null && !entityData.getChestplate().isEmpty()) {
+            	armorStand.setChestplate(ItemStackUtil.deserializeItemStack(entityData.getChestplate()));
+            }
+            
+            if (entityData.getLeggings() != null && !entityData.getLeggings().isEmpty()) {
+            	armorStand.setLeggings(ItemStackUtil.deserializeItemStack(entityData.getLeggings()));
+            }
+            
+            if (entityData.getBoots() != null && !entityData.getBoots().isEmpty()) {
+                armorStand.setBoots(ItemStackUtil.deserializeItemStack(entityData.getBoots()));
+            }
+            
             armorStand.setBasePlate(entityData.hasBasePlate());
             armorStand.setVisible(entityData.isVisible());
             armorStand.setSmall(entityData.isSmall());
@@ -249,22 +310,49 @@ public final class EntityUtil {
         
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
+            EntityEquipment entityEquipment = livingEntity.getEquipment();
             
             if (NMSVersion > 8) {
                 livingEntity.setAI(entityData.hasAI());
-                livingEntity.getEquipment().setItemInMainHand(ItemStackUtil.deserializeItemStack(entityData.getHand()));
-                livingEntity.getEquipment().setItemInOffHand(ItemStackUtil.deserializeItemStack(entityData.getOffHand()));
-                livingEntity.getEquipment().setHelmet(ItemStackUtil.deserializeItemStack(entityData.getHelmet()));
-                livingEntity.getEquipment().setChestplate(ItemStackUtil.deserializeItemStack(entityData.getChestplate()));
-                livingEntity.getEquipment().setLeggings(ItemStackUtil.deserializeItemStack(entityData.getLeggings()));
-                livingEntity.getEquipment().setBoots(ItemStackUtil.deserializeItemStack(entityData.getBoots()));
-                livingEntity.getEquipment().setItemInMainHandDropChance(entityData.getHandChance());
-                livingEntity.getEquipment().setItemInOffHandDropChance(entityData.getOffHandChance());
-                livingEntity.getEquipment().setHelmetDropChance(entityData.getHelmetChance());
-                livingEntity.getEquipment().setChestplateDropChance(entityData.getChestplateChance());
-                livingEntity.getEquipment().setLeggingsDropChance(entityData.getLeggingsChance());
-                livingEntity.getEquipment().setBootsDropChance(entityData.getBootsChance());
+                
+                if (entityData.getHand() != null && !entityData.getHand().isEmpty()) {
+                	entityEquipment.setItemInMainHand(ItemStackUtil.deserializeItemStack(entityData.getHand()));
+                }
+                
+                if (entityData.getOffHand() != null && !entityData.getOffHand().isEmpty()) {
+                	entityEquipment.setItemInOffHand(ItemStackUtil.deserializeItemStack(entityData.getOffHand()));
+                }
+                
+                entityEquipment.setItemInMainHandDropChance(entityData.getHandChance());
+                entityEquipment.setItemInOffHandDropChance(entityData.getOffHandChance());
+            } else {
+                if (entityData.getHand() != null && !entityData.getHand().isEmpty()) {
+                	entityEquipment.setItemInHand(ItemStackUtil.deserializeItemStack(entityData.getHand()));
+                }
+                
+                entityEquipment.setItemInHandDropChance(entityData.getHandChance());
             }
+            
+            if (entityData.getHelmet() != null && !entityData.getHelmet().isEmpty()) {
+            	entityEquipment.setHelmet(ItemStackUtil.deserializeItemStack(entityData.getHelmet()));
+            }
+            
+            if (entityData.getChestplate() != null && !entityData.getChestplate().isEmpty()) {
+            	entityEquipment.setChestplate(ItemStackUtil.deserializeItemStack(entityData.getChestplate()));
+            }
+            
+            if (entityData.getLeggings() != null && !entityData.getLeggings().isEmpty()) {
+            	entityEquipment.setLeggings(ItemStackUtil.deserializeItemStack(entityData.getLeggings()));
+            }
+            
+            if (entityData.getBoots() != null && !entityData.getBoots().isEmpty()) {
+            	entityEquipment.setBoots(ItemStackUtil.deserializeItemStack(entityData.getBoots()));
+            }
+            
+            entityEquipment.setHelmetDropChance(entityData.getHelmetChance());
+            entityEquipment.setChestplateDropChance(entityData.getChestplateChance());
+            entityEquipment.setLeggingsDropChance(entityData.getLeggingsChance());
+            entityEquipment.setBootsDropChance(entityData.getBootsChance());
             
             if (entity instanceof Bat) {
                 ((Bat) entity).setAwake(entityData.isAwake());
@@ -320,7 +408,6 @@ public final class EntityUtil {
             	}
             	
             	villager.getInventory().setContents(items.toArray(new ItemStack[0]));
-            	
             	villager.setRiches(entityData.getRiches());
             }
             

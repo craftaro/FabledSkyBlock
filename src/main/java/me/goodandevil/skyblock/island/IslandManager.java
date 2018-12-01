@@ -692,13 +692,14 @@ public class IslandManager {
 	
 	public List<UUID> getPlayersAtIsland(Island island) {
 		List<UUID> playersAtIsland = new ArrayList<>();
-		Map<UUID, PlayerData> playerData = skyblock.getPlayerDataManager().getPlayerData();
 		
-		for (UUID playerDataList : playerData.keySet()) {
-			UUID islandOwnerUUID = playerData.get(playerDataList).getIsland();
-			
-			if (islandOwnerUUID != null && island.getOwnerUUID().equals(islandOwnerUUID)) {
-				playersAtIsland.add(playerDataList);
+		if (island != null) {
+			for (Player all : Bukkit.getOnlinePlayers()) {
+				for (Location.World worldList : Location.World.values()) {
+					if (LocationUtil.isLocationAtLocationRadius(all.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+						playersAtIsland.add(all.getUniqueId());
+					}
+				}
 			}
 		}
 		

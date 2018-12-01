@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
@@ -20,6 +22,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 
@@ -31,6 +34,7 @@ public class Move implements Listener {
 		this.skyblock = skyblock;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
@@ -111,11 +115,27 @@ public class Move implements Listener {
 								
 								if (configLoad.getBoolean("Island.Void.Teleport.Enable")) {
 									if (to.getY() <= configLoad.getInt("Island.Void.Teleport.Offset")) {
-										if (island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
-											player.setFallDistance(0.0F);
-											player.teleport(island.getLocation(world, me.goodandevil.skyblock.island.Location.Environment.Main));
-											soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+										if (!island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
+											player.getInventory().clear();
+											player.setLevel(0);
+											player.setExp(0.0F);
+											
+											if (NMSUtil.getVersionNumber() > 8) {
+												player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+											} else {
+												player.setHealth(player.getMaxHealth());
+											}
+											
+											player.setFoodLevel(20);
+											
+											for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+												player.removePotionEffect(potionEffect.getType());
+											}
 										}
+										
+										player.setFallDistance(0.0F);
+										player.teleport(island.getLocation(world, me.goodandevil.skyblock.island.Location.Environment.Main));
+										soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 									}
 								}
 							} else {

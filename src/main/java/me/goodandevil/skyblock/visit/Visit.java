@@ -19,6 +19,8 @@ public class Visit {
 	
 	private UUID islandOwnerUUID;
 	
+	private String islandOwnerName;
+	
 	private Location[] islandLocations;
 	
 	private int islandSize;
@@ -33,6 +35,7 @@ public class Visit {
 	protected Visit(SkyBlock skyblock, UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, Level islandLevel, List<String> islandSignature, boolean open) {
 		this.skyblock = skyblock;
 		this.islandOwnerUUID = islandOwnerUUID;
+		//this.islandOwnerName = new OfflinePlayer(islandOwnerUUID).getNames()[0].getName();
 		this.islandLocations = islandLocations;
 		this.islandSize = islandSize;
 		this.islandMembers = islandMembers;
@@ -47,6 +50,14 @@ public class Visit {
 	
 	public void setOwnerUUID(UUID islandOwnerUUID) {
 		this.islandOwnerUUID = islandOwnerUUID;
+	}
+	
+	public String getOwnerName() {
+		return islandOwnerName;
+	}
+	
+	public void setOwnerName(String islandOwnerName) {
+		this.islandOwnerName = islandOwnerName;
 	}
 	
 	public Location getLocation(me.goodandevil.skyblock.island.Location.World world) {

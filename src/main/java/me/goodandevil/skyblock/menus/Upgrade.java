@@ -512,10 +512,16 @@ public class Upgrade {
         	if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
         		me.goodandevil.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
             	
-            	if (NMSVersion > 12) {
-                	PotionMeta pm = (PotionMeta) potion.getItemMeta();
-                	pm.setBasePotionData(new PotionData(PotionType.SPEED));
-                	potion.setItemMeta(pm);
+            	if (NMSVersion > 8) {
+            		PotionMeta pm = (PotionMeta) potion.getItemMeta();
+            		
+            		if (NMSVersion > 9) {
+                    	pm.setBasePotionData(new PotionData(PotionType.SPEED));
+            		} else {
+            			pm.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1, 0), true);
+            		}
+            		
+            		potion.setItemMeta(pm);
             	} else {
             		potion = new ItemStack(Material.POTION, 1, (short) 8194);
             	}
@@ -536,10 +542,17 @@ public class Upgrade {
         	if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
         		me.goodandevil.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
             	
-            	if (NMSVersion > 12) {
-                	PotionMeta pm = (PotionMeta) potion.getItemMeta();
-                	pm.setBasePotionData(new PotionData(PotionType.JUMP));
-                	potion.setItemMeta(pm);
+            	if (NMSVersion > 8) {
+            		potion = new ItemStack(Material.POTION);
+            		PotionMeta pm = (PotionMeta) potion.getItemMeta();
+            		
+            		if (NMSVersion > 9) {
+                    	pm.setBasePotionData(new PotionData(PotionType.JUMP));
+            		} else {
+            			pm.addCustomEffect(new PotionEffect(PotionEffectType.JUMP, 1, 0), true);
+            		}
+            		
+            		potion.setItemMeta(pm);
             	} else {
             		potion = new ItemStack(Material.POTION, 1, (short) 8203);
             	}

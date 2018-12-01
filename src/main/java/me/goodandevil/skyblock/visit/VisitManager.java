@@ -52,29 +52,44 @@ public class VisitManager {
 			
 			if (configFile.exists()) {
 				for (File fileList : configFile.listFiles()) {
-					Config config = new FileManager.Config(fileManager, fileList);
-					FileConfiguration configLoad = config.getFileConfiguration();
-					
-					UUID islandOwnerUUID = UUID.fromString(fileList.getName().replaceFirst("[.][^.]+$", ""));
-					List<String> islandSignature = new ArrayList<>();
-					
-					if (configLoad.getString("Visitor.Signature.Message") != null) {
-						islandSignature = configLoad.getStringList("Visitor.Signature.Message");
+					if (fileList != null && fileList.getName().contains(".yml") && fileList.getName().length() > 35) {
+						try {
+							Config config = new FileManager.Config(fileManager, fileList);
+							FileConfiguration configLoad = config.getFileConfiguration();
+							
+							UUID islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
+							
+							if (islandOwnerUUID == null) {
+								islandOwnerUUID = UUID.fromString(fileList.getName().replaceFirst("[.][^.]+$", ""));
+							
+								if (islandOwnerUUID == null) {
+									continue;
+								}
+							}
+							
+							List<String> islandSignature = new ArrayList<>();
+							
+							if (configLoad.getString("Visitor.Signature.Message") != null) {
+								islandSignature = configLoad.getStringList("Visitor.Signature.Message");
+							}
+							
+							int division = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
+							
+							if (division == 0) {
+								division = 1;
+							}
+							
+							int size = 100;
+							
+							if (configLoad.getString("Size") != null) {
+								size = configLoad.getInt("Size");
+							}
+							
+							createIsland(islandOwnerUUID, new Location[] { fileManager.getLocation(config, "Location.Normal.Island", true), fileManager.getLocation(config, "Location.Nether.Island", true) }, size, configLoad.getStringList("Members").size() + configLoad.getStringList("Operators").size() + 1, new Level(islandOwnerUUID, skyblock), islandSignature, configLoad.getBoolean("Visitor.Open"));	
+						} catch (Exception e) {
+							e.printStackTrace();
+						}	
 					}
-					
-					int division = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
-					
-					if (division == 0) {
-						division = 1;
-					}
-					
-					int size = 100;
-					
-					if (configLoad.getString("Size") != null) {
-						size = configLoad.getInt("Size");
-					}
-					
-					createIsland(islandOwnerUUID, new Location[] { fileManager.getLocation(config, "Location.Normal.Island", true), fileManager.getLocation(config, "Location.Nether.Island", true) }, size, configLoad.getStringList("Members").size() + configLoad.getStringList("Operators").size() + 1, new Level(islandOwnerUUID, skyblock), islandSignature, configLoad.getBoolean("Visitor.Open"));
 				}
 			}
 		}
