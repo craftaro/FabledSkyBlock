@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -17,6 +18,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.PlaceholderManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 
@@ -28,16 +30,34 @@ public class Chat implements Listener {
 		this.skyblock = skyblock;
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 		
+		PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		
 		if (playerDataManager.hasPlayerData(player)) {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
+			Island island = null;
+			
+			if (playerData.getOwner() != null) {
+				island = skyblock.getIslandManager().getIsland(playerData.getOwner());
+			}
+			
+			String messageFormat = event.getFormat();
+			
+			for (String placeholderList : placeholderManager.getPlaceholders()) {
+				String placeholder = "{" + placeholderList + "}";
+				
+				if (messageFormat.contains(placeholder)) {
+					messageFormat = messageFormat.replace(placeholder, placeholderManager.getPlaceholder(player, placeholderList));
+				}
+			}
+			
+			event.setFormat(messageFormat);
 			
 			if (playerData.isChat()) {
 				event.setCancelled(true);
@@ -45,7 +65,6 @@ public class Chat implements Listener {
 				Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 				FileConfiguration configLoad = config.getFileConfiguration();
 				
-				Island island = skyblock.getIslandManager().getIsland(playerData.getOwner());
 				String islandRole = "";
 				
 				if (island.isRole(Role.Member, player.getUniqueId())) {

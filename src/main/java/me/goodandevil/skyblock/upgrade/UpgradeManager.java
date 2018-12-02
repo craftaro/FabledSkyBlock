@@ -127,10 +127,12 @@ public class UpgradeManager {
 	}
 	
 	public boolean hasUpgrade(Upgrade.Type type, int value) {
-		for (Upgrade upgradeList : upgradeStorage.get(type)) {
-			if (upgradeList.getValue() == value) {
-				return true;
-			}
+		if (upgradeStorage.containsKey(type)) {
+			for (Upgrade upgradeList : upgradeStorage.get(type)) {
+				if (upgradeList.getValue() == value) {
+					return true;
+				}
+			}	
 		}
 		
 		return false;

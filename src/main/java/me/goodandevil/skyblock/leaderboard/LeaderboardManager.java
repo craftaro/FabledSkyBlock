@@ -78,6 +78,18 @@ public class LeaderboardManager {
 		return leaderboardIslands;
 	}
 	
+	public Leaderboard getLeaderboardFromPosition(Leaderboard.Type type, int position) {
+		for (Leaderboard leaderboardPlayerList : leaderboardStorage) {
+			if (leaderboardPlayerList.getType() == type) {
+				if (leaderboardPlayerList.getPosition() == position) {
+					return leaderboardPlayerList;
+				}	
+			}
+		}
+		
+		return null;
+	}
+	
 	public List<Leaderboard> getLeaderboards() {
 		return leaderboardStorage;
 	}

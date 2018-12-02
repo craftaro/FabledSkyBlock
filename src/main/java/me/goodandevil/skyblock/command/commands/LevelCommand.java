@@ -67,7 +67,7 @@ public class LevelCommand extends SubCommand {
 					if (visitManager.hasIsland(islandOwnerUUID)) {
 		    			me.goodandevil.skyblock.visit.Visit visit = visitManager.getIsland(islandOwnerUUID);
 		    			
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Level.Message").replace("%player", targetPlayerName).replace("%level", "" + visit.getLevel()));
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Level.Message").replace("%player", targetPlayerName).replace("%level", "" + NumberUtil.formatNumber(visit.getLevel().getLevel())));
 						soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 		    			
 		    			return;

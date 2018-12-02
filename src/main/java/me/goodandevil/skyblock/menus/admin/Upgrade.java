@@ -96,7 +96,6 @@ public class Upgrade {
         					upgrade = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops).get(0);
         					viewer.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops);
         				} else if ((is.getType() == Material.BEACON) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Size.Displayname"))))) {
-        					upgrade = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size).get(0);
         					viewer.setType(Upgrade.Viewer.Type.Size);
         					viewer.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size);
         					

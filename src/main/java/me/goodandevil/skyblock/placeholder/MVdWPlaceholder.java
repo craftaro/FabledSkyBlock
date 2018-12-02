@@ -2,7 +2,6 @@ package me.goodandevil.skyblock.placeholder;
 
 import java.io.File;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,10 +14,7 @@ import be.maximvdw.placeholderapi.PlaceholderReplacer;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Level;
-import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.leaderboard.Leaderboard;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -34,8 +30,8 @@ public class MVdWPlaceholder {
 	}
 	
 	public void register() {
+		PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
 		LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
-		IslandManager islandManager = skyblock.getIslandManager();
 		
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
@@ -112,11 +108,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-		    		return "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getSize();
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_size.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -129,11 +121,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-		    		return "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getRadius();
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_radius.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -146,11 +134,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-		    		return "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getLevel().getLevel();
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_level.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -163,11 +147,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_points.Non-empty.Message").replace("%placeholder", "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getLevel().getPoints()));
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_points.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -180,17 +160,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-		    		Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
-					
-	    			for (Role roleList : Role.values()) {
-	    				if (island.isRole(roleList, player.getUniqueId())) {
-	    	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_role.Non-empty.Message").replace("%placeholder", roleList.name()));
-	    				}
-	    			}
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_role.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -203,22 +173,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-	    			UUID islandOwnerUUID = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getOwnerUUID();
-	    			Player targetPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
-	    			
-	    			if (targetPlayer == null) {
-	        			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_owner.Non-empty.Other.Message").replace("%placeholder", Bukkit.getServer().getOfflinePlayer(islandOwnerUUID).getName()));
-	    			} else {
-	    				if (targetPlayer.getName().equals(player.getName())) {
-		        			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_owner.Non-empty.Yourself.Message").replace("%placeholder", targetPlayer.getName()));
-	    				} else {
-		        			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_owner.Non-empty.Other.Message").replace("%placeholder", targetPlayer.getName()));
-	    				}
-	    			}
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_owner.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -231,11 +186,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_biome.Non-empty.Message").replace("%placeholder", islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getBiomeName()));
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_biome.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -248,11 +199,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_time.Non-empty.Message").replace("%placeholder", "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getTime()));
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_time.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -265,11 +212,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_weather.Non-empty.Message").replace("%placeholder", islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getWeatherName()));
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_weather.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -282,11 +225,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_bans.Non-empty.Message").replace("%placeholder", "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getBan().getBans().size()));
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_bans.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -299,12 +238,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-		    		Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
-	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_members_total.Non-empty.Message").replace("%placeholder", "" + (island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1)));
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_members_total.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -317,11 +251,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_members.Non-empty.Message").replace("%placeholder", "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getRole(Role.Member).size()));
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_members.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -334,11 +264,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_operators.Non-empty.Message").replace("%placeholder", "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getRole(Role.Operator).size()));
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_operators.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 		
@@ -351,11 +277,7 @@ public class MVdWPlaceholder {
 					return null;
 				}
 				
-				if (islandManager.hasIsland(player)) {
-	    			return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_visitors.Non-empty.Message").replace("%placeholder", "" + islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner()).getVisitors().size()));
-				}
-		    	
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_visitors.Empty.Message"));
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 			}
 		});
 	}

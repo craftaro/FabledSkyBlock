@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -74,20 +75,23 @@ public class HologramManager {
 		FileConfiguration languageConfigLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
 		
 		if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + type) != null) {
-			List<Leaderboard> leaderboardPlayers = new ArrayList<>();
 			List<String> hologramLines = new ArrayList<>();
+			Leaderboard.Type leaderboardType = null;
 			
 			if (type == HologramType.Level) {
-				leaderboardPlayers.addAll(leaderboardManager.getLeaderboard(Leaderboard.Type.Level));
+				leaderboardType = Leaderboard.Type.Level;
 			} else if (type == HologramType.Votes) {
-				leaderboardPlayers.addAll(leaderboardManager.getLeaderboard(Leaderboard.Type.Votes));
+				leaderboardType = Leaderboard.Type.Votes;
 			}
 			
 			hologramLines.add(messageManager.replaceMessage(null, languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Header")));
 			
 			for (int i = 0; i < 10; i++) {
-				if (i < leaderboardPlayers.size()) {
-					Leaderboard leaderboard = leaderboardPlayers.get(i);
+				Leaderboard leaderboard = leaderboardManager.getLeaderboardFromPosition(leaderboardType, i);
+				
+				if (leaderboard == null) {
+					hologramLines.add(messageManager.replaceMessage(null, languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Unclaimed").replace("%position", "" + (i+1))));
+				} else {
 					Visit visit = leaderboard.getVisit();
 					
 					Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
@@ -101,12 +105,10 @@ public class HologramManager {
 					
 					if (type == HologramType.Level) {
 						Level level = visit.getLevel();
-						hologramLines.add(messageManager.replaceMessage(null, languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed").replace("%position", "" + (i+1)).replace("%player", islandOwnerName).replace("%level", NumberUtil.formatNumber(level.getLevel())).replace("%points", NumberUtil.formatNumber(level.getPoints()))));
+						hologramLines.add(ChatColor.translateAlternateColorCodes('&', languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed").replace("%position", "" + (i+1)).replace("%player", islandOwnerName).replace("%level", NumberUtil.formatNumber(level.getLevel())).replace("%points", NumberUtil.formatNumber(level.getPoints()))));
 					} else if (type == HologramType.Votes) {
-						hologramLines.add(messageManager.replaceMessage(null, languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed").replace("%position", "" + (i+1)).replace("%player", islandOwnerName).replace("%votes", "" + NumberUtil.formatNumber(visit.getVoters().size()))));
+						hologramLines.add(ChatColor.translateAlternateColorCodes('&', languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed").replace("%position", "" + (i+1)).replace("%player", islandOwnerName).replace("%votes", "" + NumberUtil.formatNumber(visit.getVoters().size()))));
 					}
-				} else {
-					hologramLines.add(messageManager.replaceMessage(null, languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Unclaimed").replace("%position", "" + (i+1))));
 				}
 			}
 			
@@ -220,19 +222,21 @@ public class HologramManager {
 					continue;
 				}
 				
-				List<Leaderboard> leaderboardPlayers = new ArrayList<>();
+				Leaderboard.Type leaderboardType = null;
 				
 				if (hologramTypeList == HologramType.Level) {
-					leaderboardPlayers.addAll(leaderboardManager.getLeaderboard(Leaderboard.Type.Level));
+					leaderboardType = Leaderboard.Type.Level;
 				} else if (hologramTypeList == HologramType.Votes) {
-					leaderboardPlayers.addAll(leaderboardManager.getLeaderboard(Leaderboard.Type.Votes));
+					leaderboardType = Leaderboard.Type.Votes;
 				}
 				
 				for (int i = 0; i < 10; i++) {
+					Leaderboard leaderboard = leaderboardManager.getLeaderboardFromPosition(leaderboardType, i);
 					int hologramLine = 10 - i;
 					
-					if (i < leaderboardPlayers.size()) {
-						Leaderboard leaderboard = leaderboardPlayers.get(i);
+					if (leaderboard == null) {
+						hologram.setLine(hologramLine, messageManager.replaceMessage(null, configLoad.getString("Hologram.Leaderboard." + hologramTypeList.name() + ".Unclaimed").replace("%position", "" + (i+1))));
+					} else {
 						Visit visit = leaderboard.getVisit();
 						
 						Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
@@ -246,12 +250,10 @@ public class HologramManager {
 						
 						if (hologramTypeList == HologramType.Level) {
 							Level level = visit.getLevel();
-							hologram.setLine(hologramLine, messageManager.replaceMessage(null, configLoad.getString("Hologram.Leaderboard." + hologramTypeList.name() + ".Claimed").replace("%position", "" + (i+1)).replace("%player", islandOwnerName).replace("%level", NumberUtil.formatNumber(level.getLevel())).replace("%points", NumberUtil.formatNumber(level.getPoints()))));
+							hologram.setLine(hologramLine, ChatColor.translateAlternateColorCodes('&', configLoad.getString("Hologram.Leaderboard." + hologramTypeList.name() + ".Claimed").replace("%position", "" + (i+1)).replace("%player", islandOwnerName).replace("%level", NumberUtil.formatNumber(level.getLevel())).replace("%points", NumberUtil.formatNumber(level.getPoints()))));
 						} else if (hologramTypeList == HologramType.Votes) {
-							hologram.setLine(hologramLine, messageManager.replaceMessage(null, configLoad.getString("Hologram.Leaderboard." + hologramTypeList.name() + ".Claimed").replace("%position", "" + (i+1)).replace("%player", islandOwnerName).replace("%votes", "" + NumberUtil.formatNumber(visit.getVoters().size()))));
+							hologram.setLine(hologramLine, ChatColor.translateAlternateColorCodes('&', configLoad.getString("Hologram.Leaderboard." + hologramTypeList.name() + ".Claimed").replace("%position", "" + (i+1)).replace("%player", islandOwnerName).replace("%votes", "" + NumberUtil.formatNumber(visit.getVoters().size()))));
 						}
-					} else {
-						hologram.setLine(hologramLine, messageManager.replaceMessage(null, configLoad.getString("Hologram.Leaderboard." + hologramTypeList.name() + ".Unclaimed").replace("%position", "" + (i+1))));
 					}
 				}
 			}
