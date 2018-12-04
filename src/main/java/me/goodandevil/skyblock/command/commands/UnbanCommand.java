@@ -52,10 +52,10 @@ public class UnbanCommand extends SubCommand {
 					me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
 					
 					if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Unban").getStatus())) {
+						Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+						
 						UUID targetPlayerUUID = null;
 						String targetPlayerName = null;
-						
-						Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 						
 						if (targetPlayer == null) {
 							OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);

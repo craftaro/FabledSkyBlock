@@ -41,7 +41,7 @@ public class Move implements Listener {
 		
 		Location from = event.getFrom();
 		Location to = event.getTo();
-
+		
 		if (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()) {
 			String netherWorldName = skyblock.getWorldManager().getWorld(me.goodandevil.skyblock.island.Location.World.Nether).getName();
 			
@@ -105,6 +105,7 @@ public class Move implements Listener {
 									if (to.getY() <= configLoad.getInt("Island.World." + world.name() + ".Liquid.Height")) {
 										if (island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
 											player.setFallDistance(0.0F);
+											
 											player.teleport(island.getLocation(world, me.goodandevil.skyblock.island.Location.Environment.Main));
 											soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 										}
@@ -134,6 +135,7 @@ public class Move implements Listener {
 										}
 										
 										player.setFallDistance(0.0F);
+										
 										player.teleport(island.getLocation(world, me.goodandevil.skyblock.island.Location.Environment.Main));
 										soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 									}

@@ -296,15 +296,15 @@ public class Settings {
 	    				
 	    				if (config.getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
 	    					if (visit.isOpen()) {
-	    						nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Open.Lore"), nInv.createItemLoreVariable(new String[] { "%visits#" + visit.getVisitors().size(), "%votes#" + visit.getVoters().size(), "%visitors#" + island.getVisitors().size() }), null, null), 4);
+	    						nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Open.Lore"), nInv.createItemLoreVariable(new String[] { "%visits#" + visit.getVisitors().size(), "%votes#" + visit.getVoters().size(), "%visitors#" + islandManager.getVisitorsAtIsland(island).size() }), null, null), 4);
 	    					} else {
-	    						nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Closed.Lore"), nInv.createItemLoreVariable(new String[] { "%visits#" + visit.getVisitors().size(), "%votes#" + visit.getVoters().size(), "%visitors#" + island.getVisitors().size() }), null, null), 4);
+	    						nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Closed.Lore"), nInv.createItemLoreVariable(new String[] { "%visits#" + visit.getVisitors().size(), "%votes#" + visit.getVoters().size(), "%visitors#" + islandManager.getVisitorsAtIsland(island).size() }), null, null), 4);
 	    					}
 	    				} else {
 	    					if (visit.isOpen()) {
-	    						nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Open.Lore"), nInv.createItemLoreVariable(new String[] { "%visits#" + visit.getVisitors().size(), "%visitors#" + island.getVisitors().size() }), null, null), 4);
+	    						nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Open.Lore"), nInv.createItemLoreVariable(new String[] { "%visits#" + visit.getVisitors().size(), "%visitors#" + islandManager.getVisitorsAtIsland(island).size() }), null, null), 4);
 	    					} else {
-	    						nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Closed.Lore"), nInv.createItemLoreVariable(new String[] { "%visits#" + visit.getVisitors().size(), "%visitors#" + island.getVisitors().size() }), null, null), 4);
+	    						nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Closed.Lore"), nInv.createItemLoreVariable(new String[] { "%visits#" + visit.getVisitors().size(), "%visitors#" + islandManager.getVisitorsAtIsland(island).size() }), null, null), 4);
 	    					}
 	    				}
 	    				
@@ -368,25 +368,24 @@ public class Settings {
 	    				nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseMaterial()), 16);
 	    				nInv.addItemStack(createItem(island, role, "MainSpawn", Material.EMERALD), 20);
 	    				nInv.addItemStack(createItem(island, role, "VisitorSpawn", Material.NETHER_STAR), 21);
-	    				nInv.addItemStack(createItem(island, role, "Biome", Material.MAP), 23);
-	        			nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseMaterial()), 24);
-	    			
-		    			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings." + role.name() + ".Title")));
-		    			nInv.setRows(3);
+	    				nInv.addItemStack(createItem(island, role, "Biome", Material.MAP), 22);
+	        			nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseMaterial()), 23);
+	        			nInv.addItemStack(createItem(island, role, "CoopPlayers", Material.BOOK), 24);
 	    			} else {
-	    				nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseMaterial()), 9);
-	    				nInv.addItemStack(createItem(island, role, "Kick", Material.IRON_DOOR), 10);
-	    				nInv.addItemStack(createItem(island, role, "Visitor", Material.SIGN), 11);
-	    				nInv.addItemStack(createItem(island, role, "Member", Material.PAINTING), 12);
-	    				nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseMaterial()), 13);
-	    				nInv.addItemStack(createItem(island, role, "MainSpawn", Material.EMERALD), 14);
-	    				nInv.addItemStack(createItem(island, role, "VisitorSpawn", Material.NETHER_STAR), 15);
-	    				nInv.addItemStack(createItem(island, role, "Biome", Material.MAP), 16);
-	    				nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseMaterial()), 17);
-	    			
-	        			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings." + role.name() + ".Title")));
-	        			nInv.setRows(2);
+	    				nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseMaterial()), 10);
+	    				nInv.addItemStack(createItem(island, role, "Kick", Material.IRON_DOOR), 11);
+	    				nInv.addItemStack(createItem(island, role, "Visitor", Material.SIGN), 12);
+	    				nInv.addItemStack(createItem(island, role, "Member", Material.PAINTING), 13);
+	    				nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseMaterial()), 14);
+	    				nInv.addItemStack(createItem(island, role, "MainSpawn", Material.EMERALD), 15);
+	    				nInv.addItemStack(createItem(island, role, "VisitorSpawn", Material.NETHER_STAR), 16);
+	    				nInv.addItemStack(createItem(island, role, "Biome", Material.MAP), 21);
+	    				nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseMaterial()), 22);
+	    				nInv.addItemStack(createItem(island, role, "CoopPlayers", Material.BOOK), 23);
 	    			}
+	    			
+        			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings." + role.name() + ".Title")));
+        			nInv.setRows(3);
 	    		} else if (role == me.goodandevil.skyblock.island.Setting.Role.Owner) {
 	    			nInv.addItemStack(createItem(island, role, "NaturalMobSpawning", Materials.PIG_SPAWN_EGG.parseMaterial()), 10);
 	    			nInv.addItemStack(createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseMaterial()), 11);

@@ -90,7 +90,7 @@ public class Join implements Listener {
 				if (island.getRole(Role.Member).size() == 0 && island.getRole(Role.Operator).size() == 0) {
 					scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
 					
-					if (island.getVisitors().size() == 0) {
+					if (islandManager.getVisitorsAtIsland(island).size() == 0) {
 						scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
 					} else {
 						scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
@@ -98,7 +98,7 @@ public class Join implements Listener {
 				} else {
 					scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Team.Displayname")));
 					
-					if (island.getVisitors().size() == 0) {
+					if (islandManager.getVisitorsAtIsland(island).size() == 0) {
 						scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
 					} else {
 						scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));

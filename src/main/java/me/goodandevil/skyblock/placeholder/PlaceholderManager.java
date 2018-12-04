@@ -172,7 +172,7 @@ public class PlaceholderManager {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_visitors.Empty.Message"));
 			} else {
-				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_visitors.Non-empty.Message").replace("%placeholder", "" + island.getVisitors().size()));
+				return ChatColor.translateAlternateColorCodes('&', configLoad.getString("Placeholder.skyblock_island_visitors.Non-empty.Message").replace("%placeholder", "" + islandManager.getVisitorsAtIsland(island).size()));
 			}
 		}
 		

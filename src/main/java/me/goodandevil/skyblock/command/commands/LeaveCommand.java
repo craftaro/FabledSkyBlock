@@ -98,7 +98,8 @@ public class LeaveCommand extends SubCommand {
 						}
 					}
 					
-					islandManager.unloadIsland(player.getUniqueId());
+					// TODO Check if player has been teleported
+					islandManager.unloadIsland(island, null);
 					
 					for (Player all : Bukkit.getOnlinePlayers()) {
 						if (!all.getUniqueId().equals(player.getUniqueId())) {
@@ -112,7 +113,7 @@ public class LeaveCommand extends SubCommand {
 										scoreboard.cancel();
 										scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
 
-										if (island.getVisitors().size() == 0) {
+										if (islandManager.getVisitorsAtIsland(island).size() == 0) {
 											scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
 										} else {
 											scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));

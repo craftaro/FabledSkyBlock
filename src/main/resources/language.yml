@@ -289,6 +289,8 @@ Command:
                         Message: "&bSkyBlock &8| &cError&8: &eThat player is not a member of your Island."
             Yourself:
                 Message: "&bSkyBlock &8| &cError&8: &eYou cannot kick yourself from the Island."
+            Cooped:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot kick a cooped player."
             Role:
                 Operator:
                     Message: "&bSkyBlock &8| &cError&8: &eYou cannot kick a member the Island the same role as you."
@@ -425,6 +427,30 @@ Command:
                 Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
             Island:
                 Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+        Coop:
+            Info:
+                Message: "&f&oOpen the Island Coop menu or add/remove coop players."
+            Permisison:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to do that."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island coop [<player>]"
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Found:
+                Message: "&bSkyBlock &8| &cError&8: &eA player by that name was not found."
+            Yourself:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot coop yourself because you're a Member of the Island."
+            Member:
+                Message: "&bSkyBlock &8| &cError&8: &eThat player cannot be cooped because they are a Member of the Island."
+            Banned:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot coop a banned player."
+            Added:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have cooped the player &d%player&e."
+            Removed:
+                Sender:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have removed the coop player &d%player&e."
+                Target:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou are no longer a coop member of that Island."
         Members:
             Info:
                 Message: "&f&oOpen the Island Members menu."
@@ -838,6 +864,12 @@ Island:
             Message: "&8[&bSkyBlock &8| &dChat&8] %role &e%player&8: &f%message"
         Untoggled:
             Message: "&bSkyBlock &8| &aInfo&8: &eThe Island chat has been untoggled because there are no Island members online. Chat messages will now be visible for all players."
+    Coop:
+        Removed:
+            Owner:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have been removed from the island because the owner went offline."
+            Operator:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have been removed from the island because the owner and no operators of the island are online."
     Admin:
         Creator:
             Permission:
@@ -1810,6 +1842,8 @@ Menu:
                         Displayname: "&aSet Biome"
                     Weather:
                         Displayname: "&aSet Weather"
+                    CoopPlayers:
+                        Displayname: "&aCoop Players"
         Owner:
             Title: "&8Island Settings"
             Item:
@@ -2056,6 +2090,36 @@ Menu:
                     - "&e%island_visitors"
                 Visitor:
                     Displayname: "&b%player"
+    Coop:
+        Title: "&8Island Coop"
+        Item:
+            Word:
+                Enter: "Enter player"
+            Exit:
+                Displayname: "&cExit Island Coop"
+            Previous:
+                Displayname: "&a< Previous Page"
+            Next:
+                Displayname: "&aNext Page >"
+            Barrier:
+                Displayname: "&cCooped Players Below"
+            Information:
+                Displayname: "&bInformation"
+                Lore:
+                - "&7Allow certain players to"
+                - "&7enter your Island while"
+                - "&7an operator or owner is"
+                - "&7online even if the island"
+                - "&7island closed to visitors."
+                - ""
+                - "&eClick to coop a player!"
+            Nothing:
+                Displayname: "&cThere are no cooped players."
+            Coop:
+                Displayname: "&a%player"
+                Lore:
+                - ""
+                - "&eClick to remove player!"
     Members:
         Title: "&8Island Members"
         Item:
@@ -2392,6 +2456,8 @@ Menu:
     Bans:
         Title: "&8Island Ban"
         Item:
+            Word:
+                Enter: "Enter player"
             Exit:
                 Displayname: "&cExit Island Bans"
             Previous:
@@ -2400,10 +2466,14 @@ Menu:
                 Displayname: "&aNext Page >"
             Barrier:
                 Displayname: "&cIsland Bans Below"
-            Statistics:
-                Displayname: "&bIsland Bans"
+            Information:
+                Displayname: "&bInformation"
                 Lore:
-                - "&7Bans&8: &f%bans"
+                - "&7Prevent certain players"
+                - "&7from entering your Island"
+                - "&7by banning them."
+                - ""
+                - "&eClick to ban a player!"
             Nothing:
                 Displayname: "&cThere are no Bans at your Island."
             Ban:
@@ -2791,6 +2861,8 @@ Menu:
                             Displayname: "&aSet Biome"
                         Weather:
                             Displayname: "&aSet Weather"
+                        CoopPlayers:
+                            Displayname: "&aCoop Players"
             Owner:
                 Title: "&8Settings Editor - Island"
                 Item:

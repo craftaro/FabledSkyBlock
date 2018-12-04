@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
@@ -22,6 +23,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.utils.AnvilGUI;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
@@ -91,14 +93,36 @@ public class Bans {
 				    	} else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Bans.Item.Exit.Displayname"))))) {
 				    		soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
 				    		player.closeInventory();
-				    	} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Bans.Item.Statistics.Displayname"))))) {
-				    		soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
-				    	
-				    		event.setWillClose(false);
-				    		event.setWillDestroy(false);
+				    	} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Bans.Item.Information.Displayname"))))) {
+				    		soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+			    			
+							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									AnvilGUI gui = new AnvilGUI(player, event1 -> {
+									    if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+									    	Bukkit.getServer().dispatchCommand(player, "island ban " + event1.getName());
+									    	
+									        event1.setWillClose(true);
+									        event1.setWillDestroy(true);
+									    } else {
+									        event1.setWillClose(false);
+									        event1.setWillDestroy(false);
+									    }
+									});
+						    		
+						            ItemStack is = new ItemStack(Material.NAME_TAG);
+						            ItemMeta im = is.getItemMeta();
+						            im.setDisplayName(configLoad.getString("Menu.Bans.Item.Word.Enter"));
+						            is.setItemMeta(im);
+						            
+						            gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+						            gui.open();
+								}
+							}, 1L);
 				    	} else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Bans.Item.Nothing.Displayname"))))) {
 				    		soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-				    	
+				    		
 				    		event.setWillClose(false);
 				    		event.setWillDestroy(false);
 				    	} else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
@@ -149,7 +173,7 @@ public class Bans {
 	    	List<UUID> islandBans = island.getBan().getBans();
 	    	
 	    	nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Bans.Item.Exit.Displayname"), null, null, null, null), 0, 8);
-	    	nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Bans.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Bans.Item.Statistics.Lore"), nInv.createItemLoreVariable(new String[] { "%bans#" + islandBans.size() }), null, null), 4);
+	    	nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Bans.Item.Information.Displayname"), configLoad.getStringList("Menu.Bans.Item.Information.Lore"), nInv.createItemLoreVariable(new String[] { "%bans#" + islandBans.size() }), null, null), 4);
 	    	nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(), configLoad.getString("Menu.Bans.Item.Barrier.Displayname"), null, null, null, null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 			
 			int playerMenuPage = playerData.getPage(), nextEndIndex = islandBans.size() - playerMenuPage * 36;

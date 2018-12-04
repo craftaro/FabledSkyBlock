@@ -16,7 +16,6 @@ import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -37,16 +36,15 @@ public class BanCommand extends SubCommand {
 	
 	@Override
 	public void onCommand(Player player, String[] args) {
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
 		
-		PlayerData playerData = playerDataManager.getPlayerData(player);
-		
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
+		
+		PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 		
 		if (args.length == 1) {
 			if (islandManager.hasIsland(player)) {
@@ -54,10 +52,10 @@ public class BanCommand extends SubCommand {
 					me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
 					
 					if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Ban").getStatus())) {
+						Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+						
 						UUID targetPlayerUUID = null;
 						String targetPlayerName = null;
-						
-						Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 						
 						if (targetPlayer == null) {
 							OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
@@ -83,6 +81,10 @@ public class BanCommand extends SubCommand {
 						} else {						
 							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Banned.Sender.Message").replace("%player", targetPlayerName));
 							soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+							
+							if (island.isCoopPlayer(targetPlayerUUID)) {
+								island.removeCoopPlayer(targetPlayerUUID);
+							}
 							
 							Ban ban = island.getBan();
 							ban.addBan(targetPlayerUUID);

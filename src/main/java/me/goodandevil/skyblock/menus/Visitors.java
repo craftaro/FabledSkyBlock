@@ -160,8 +160,8 @@ public class Visitors {
         	PlayerData playerData = playerDataManager.getPlayerData(player);
         	Island island = skyblock.getIslandManager().getIsland(playerData.getOwner());
         	
+    		List<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
     		Map<Integer, UUID> sortedIslandVisitors = new TreeMap<>();
-    		List<UUID> islandVisitors = island.getVisitors();
     		
     		nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Visitors.Item.Exit.Displayname"), null, null, null, null), 0, 8);
     		nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Visitors.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Visitors.Item.Statistics.Lore"), nInv.createItemLoreVariable(new String[] { "%visitors#" + islandVisitors.size() }), null, null), 4);

@@ -42,7 +42,7 @@ public class VisitorsCommand extends SubCommand {
 			if (!island.isOpen()) {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Visitors.Closed.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-			} else if (island.getVisitors().size() == 0) {
+			} else if (islandManager.getVisitorsAtIsland(island).size() == 0) {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Visitors.Visitors.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			} else {

@@ -131,6 +131,10 @@ public class PlayerDataManager {
 		IslandManager islandManager = skyblock.getIslandManager();
 		WorldManager worldManager = skyblock.getWorldManager();
 		FileManager fileManager = skyblock.getFileManager();
+		BanManager banManager = skyblock.getBanManager();
+		
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (hasPlayerData(player) && (player.getWorld().getName().equals(worldManager.getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(worldManager.getWorld(Location.World.Nether).getName()))) {
 			for (UUID islandList : islandManager.getIslands().keySet()) {
@@ -138,52 +142,88 @@ public class PlayerDataManager {
 				
 				for (Location.World worldList : Location.World.values()) {
 					if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-						PlayerData playerData = getPlayerData(player);
-						playerData.setIsland(island.getOwnerUUID());
+			    		Player targetPlayer = Bukkit.getServer().getPlayer(islandList);
+			    		String targetPlayerName;
+			    		
+			    		if (targetPlayer == null) {
+			    			targetPlayerName = new OfflinePlayer(islandList).getName();
+			    		} else {
+			    			targetPlayerName = targetPlayer.getName();
+			    		}
 						
-						if (worldList == Location.World.Normal) {
-							if (!island.isWeatherSynchronised()) {
-			    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
-			    				player.setPlayerWeather(island.getWeather());
-							}
-						}
-						
-						islandManager.giveUpgrades(player, island);
-						
-						ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
-						
-						if (scoreboardManager != null) {
-							if (!island.isRole(Role.Member, player.getUniqueId()) && !island.isRole(Role.Operator, player.getUniqueId()) && !island.isRole(Role.Owner, player.getUniqueId())) {
-								Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-								FileConfiguration configLoad = config.getFileConfiguration();
+						if (banManager.hasIsland(islandList) && fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && banManager.getIsland(islandList).isBanned(player.getUniqueId())) {
+							messageManager.sendMessage(player, configLoad.getString("Island.Visit.Teleport.Island.Message").replace("%player", targetPlayerName));
+						} else {
+							if (island.isRole(Role.Member, player.getUniqueId()) || island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId())) {
+								PlayerData playerData = getPlayerData(player);
+								playerData.setIsland(island.getOwnerUUID());
 								
-								for (Player all : Bukkit.getOnlinePlayers()) {
-									PlayerData targetPlayerData = getPlayerData(all);
-									
-									if (targetPlayerData.getOwner() != null && targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
-										Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-										scoreboard.cancel();
-										
-										if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1) == 1) {
-											scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Solo.Displayname")));
-											scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
-										} else {
-											scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
-											scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-											
-											Map<String, String> displayVariables = new HashMap<>();
-											displayVariables.put("%owner", configLoad.getString("Scoreboard.Island.Team.Word.Owner"));
-											displayVariables.put("%operator", configLoad.getString("Scoreboard.Island.Team.Word.Operator"));
-											displayVariables.put("%member", configLoad.getString("Scoreboard.Island.Team.Word.Member"));
-											
-											scoreboard.setDisplayVariables(displayVariables);
-										}
-										
-										scoreboard.run();
+								if (worldList == Location.World.Normal) {
+									if (!island.isWeatherSynchronised()) {
+					    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+					    				player.setPlayerWeather(island.getWeather());
 									}
 								}
+								
+								islandManager.giveUpgrades(player, island);
+								
+								return;
+							} else if (island.isOpen() || island.isCoopPlayer(player.getUniqueId())) {
+								if (!island.isOpen() && island.isCoopPlayer(player.getUniqueId())) {
+									if (islandManager.removeCoopPlayers(island, null)) {
+										return;
+									}
+								}
+								
+								PlayerData playerData = getPlayerData(player);
+								playerData.setIsland(island.getOwnerUUID());
+								
+								if (worldList == Location.World.Normal) {
+									if (!island.isWeatherSynchronised()) {
+					    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+					    				player.setPlayerWeather(island.getWeather());
+									}
+								}
+								
+								islandManager.giveUpgrades(player, island);
+								
+								ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+								
+								if (scoreboardManager != null) {
+									for (Player all : Bukkit.getOnlinePlayers()) {
+										PlayerData targetPlayerData = getPlayerData(all);
+										
+										if (targetPlayerData.getOwner() != null && targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
+											Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
+											scoreboard.cancel();
+											
+											if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1) == 1) {
+												scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Solo.Displayname")));
+												scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
+											} else {
+												scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
+												scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
+												
+												Map<String, String> displayVariables = new HashMap<>();
+												displayVariables.put("%owner", configLoad.getString("Scoreboard.Island.Team.Word.Owner"));
+												displayVariables.put("%operator", configLoad.getString("Scoreboard.Island.Team.Word.Operator"));
+												displayVariables.put("%member", configLoad.getString("Scoreboard.Island.Team.Word.Member"));
+												
+												scoreboard.setDisplayVariables(displayVariables);
+											}
+											
+											scoreboard.run();
+										}
+									}
+								}
+								
+								return;
+							} else {
+								messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", targetPlayerName));
 							}
 						}
+						
+						LocationUtil.teleportPlayerToSpawn(player);
 						
 						return;
 					}
@@ -197,11 +237,6 @@ public class PlayerDataManager {
 				
 				for (Location.World worldList : Location.World.values()) {
 					if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), visit.getLocation(worldList), visit.getRadius())) {
-						BanManager banManager = skyblock.getBanManager();
-						
-						Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-						FileConfiguration configLoad = config.getFileConfiguration();
-						
 			    		Player targetPlayer = Bukkit.getServer().getPlayer(visitIslandList);
 			    		String targetPlayerName;
 			    		
@@ -214,26 +249,43 @@ public class PlayerDataManager {
 						if (banManager.hasIsland(visitIslandList) && fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && banManager.getIsland(visitIslandList).isBanned(player.getUniqueId())) {
 							messageManager.sendMessage(player, configLoad.getString("Island.Visit.Teleport.Island.Message").replace("%player", targetPlayerName));
 						} else {
-							if (visit.isOpen()) {
-								PlayerData playerData = getPlayerData(player);
-								playerData.setIsland(visitIslandList);
-								
-								islandManager.loadIsland(visitIslandList);
-								
-								Island island = islandManager.getIsland(visitIslandList);
-								
-								if (island != null) {
-									islandManager.giveUpgrades(player, island);
+							islandManager.loadIsland(visitIslandList);
+							Island island = islandManager.getIsland(visitIslandList);
+							
+							if (island != null) {
+								if (island.isOpen() || island.isCoopPlayer(player.getUniqueId())) {
+									if (!island.isOpen() && island.isCoopPlayer(player.getUniqueId())) {
+										if (islandManager.removeCoopPlayers(island, null)) {
+											islandManager.unloadIsland(island, visitIslandList);
+											
+											return;
+										}
+									}
+									
+									PlayerData playerData = getPlayerData(player);
+									playerData.setIsland(visitIslandList);
+									
+									if (island != null) {
+										if (worldList == Location.World.Normal) {
+											if (!island.isWeatherSynchronised()) {
+							    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+							    				player.setPlayerWeather(island.getWeather());
+											}
+										}
+										
+										islandManager.giveUpgrades(player, island);
+									}
+									
+									return;
+								} else {
+									islandManager.unloadIsland(island, visitIslandList);
+									messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", targetPlayerName));
 								}
-								
-								return;
-							} else {
-								messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", targetPlayerName));
 							}
 						}
 						
 			    		LocationUtil.teleportPlayerToSpawn(player);
-						
+			    		
 						return;
 					}
 				}

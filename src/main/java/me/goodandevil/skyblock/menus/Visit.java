@@ -154,8 +154,15 @@ public class Visit {
 				    		
 				    		if (visitManager.hasIsland(targetPlayerUUID)) {
 				    			me.goodandevil.skyblock.visit.Visit visit = visitManager.getIsland(targetPlayerUUID);
+				    			boolean isCoopPlayer = false;
 				    			
-				    			if (visit.isOpen()) {
+			    				if (islandManager.containsIsland(targetPlayerUUID)) {
+			    					if (islandManager.getIsland(targetPlayerUUID).isCoopPlayer(player.getUniqueId())) {
+			    						isCoopPlayer = true;
+			    					}
+			    				}
+				    			
+				    			if (isCoopPlayer || player.hasPermission("skyblock.bypass") || player.hasPermission("skyblock.bypass.*") || player.hasPermission("skyblock.*") || visit.isOpen()) {
 				    				if (!islandManager.containsIsland(targetPlayerUUID)) {
 				    					islandManager.loadIsland(targetPlayerUUID);
 				    				}
@@ -195,7 +202,7 @@ public class Visit {
 									    		event.setWillDestroy(false);
 						    				}
 						    				
-						    				islandManager.unloadIsland(targetPlayerUUID);
+						    				islandManager.unloadIsland(island, null);
 						    				
 						    				return;
 						    			} else if (event.getClick() != ClickType.LEFT) {
@@ -252,6 +259,8 @@ public class Visit {
 		Map<UUID, me.goodandevil.skyblock.visit.Visit> openIslands = visitManager.getOpenIslands();
 		List<me.goodandevil.skyblock.visit.Visit> visitIslands = new ArrayList<>();
 		
+		boolean keepBannedIslands = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visit.Menu.Bans");
+		
 		for (int i = 0; i < openIslands.size(); i++) {
 			UUID islandOwnerUUID = (UUID) openIslands.keySet().toArray()[i];
 			me.goodandevil.skyblock.visit.Visit visit = openIslands.get(islandOwnerUUID);
@@ -264,6 +273,10 @@ public class Visit {
 				if (visit.getMembers() == 1) {
 					continue;
 				}
+			}
+			
+			if (!keepBannedIslands && visit.getBan().isBanned(player.getUniqueId())) {
+				continue;
 			}
 			
 			visitIslands.add(visit);

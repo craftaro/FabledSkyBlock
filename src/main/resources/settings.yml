@@ -95,6 +95,7 @@ Settings:
         VisitorSpawn: true
         Biome: true
         Weather: true
+        CoopPlayers: true
     Owner:
         NaturalMobSpawning: true
         MobGriefing: false

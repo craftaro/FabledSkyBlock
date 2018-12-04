@@ -102,7 +102,7 @@ public class EZPlaceholder extends PlaceholderExpansion {
     		return "";
         }
     	
-    	return placeholderManager.getPlaceholder(player, identifier);
+    	return placeholderManager.getPlaceholder(player, "skyblock_" + identifier);
     }
 }
 

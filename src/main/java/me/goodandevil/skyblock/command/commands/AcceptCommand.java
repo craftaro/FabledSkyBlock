@@ -85,7 +85,7 @@ public class AcceptCommand extends SubCommand {
 						
 						if (islandJoinEvent.isCancelled()) {
 							if (unloadIsland) {
-								islandManager.unloadIsland(invite.getOwnerUUID());
+								islandManager.unloadIsland(island, null);
 							}
 						} else {
 							Player targetPlayer = Bukkit.getServer().getPlayer(invite.getSenderUUID());
@@ -142,7 +142,7 @@ public class AcceptCommand extends SubCommand {
 													scoreboard.cancel();
 													scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
 													
-													if (island.getVisitors().size() == 0) {
+													if (islandManager.getVisitorsAtIsland(island).size() == 0) {
 														scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
 													} else {
 														scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
@@ -167,7 +167,7 @@ public class AcceptCommand extends SubCommand {
 								scoreboard.cancel();
 								scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
 								
-								if (island.getVisitors().size() == 0) {
+								if (islandManager.getVisitorsAtIsland(island).size() == 0) {
 									scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
 								} else {
 									scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));

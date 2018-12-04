@@ -108,7 +108,7 @@ public class VoteCommand extends SubCommand {
 	    					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 	    				}
     					
-    					islandManager.unloadIsland(islandOwnerUUID);
+    					islandManager.unloadIsland(island, null);
     				}
     			} else {
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Island.Closed.Message"));

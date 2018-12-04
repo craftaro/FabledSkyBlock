@@ -78,13 +78,13 @@ public class Teleport implements Listener {
 					if (LocationUtil.isLocationAtLocationRadius(event.getTo(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 						if (!island.getOwnerUUID().equals(playerData.getOwner())) {
 							if (!(player.hasPermission("skyblock.bypass") && player.hasPermission("skyblock.bypass.*") && player.hasPermission("skyblock.*"))) {
-								if (!island.isOpen()) {
+								if (!island.isOpen() && !island.isCoopPlayer(player.getUniqueId())) {
 									event.setCancelled(true);
 									
 									messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Plugin.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									
-									return;
+									return;	
 								} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
 									event.setCancelled(true);
 									
@@ -92,7 +92,7 @@ public class Teleport implements Listener {
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									
 									return;
-								}	
+								}
 							}
 						}
 						
@@ -113,7 +113,7 @@ public class Teleport implements Listener {
 						playerData.setIsland(island.getOwnerUUID());
 						
 						if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID) && (playerData.getOwner() == null || !playerData.getOwner().equals(islandOwnerUUID))) {
-							islandManager.unloadIsland(islandOwnerUUID);
+							islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
 						}
 						
 						Visit visit = island.getVisit();
@@ -142,7 +142,7 @@ public class Teleport implements Listener {
 			playerData.setIsland(null);
 			
 			if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID) && (playerData.getOwner() == null || !playerData.getOwner().equals(islandOwnerUUID))) {
-				islandManager.unloadIsland(islandOwnerUUID);
+				islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
 			}
 		}
     }

@@ -50,7 +50,7 @@ public class KickAllCommand extends SubCommand {
 			
 			if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Kick").getStatus())) {
 				if (island.isOpen()) {
-					List<UUID> islandVisitors = island.getVisitors();
+					List<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
 					
 					if (islandVisitors.size() == 0) {
 						messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Visitors.Message"));

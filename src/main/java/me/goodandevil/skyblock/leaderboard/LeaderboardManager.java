@@ -57,7 +57,7 @@ public class LeaderboardManager {
 			}
 			
 			if (islandVotes.size() != 0 && i <= islandVotes.size()-1) {
-				leaderboardStorage.add(new Leaderboard(Leaderboard.Type.Votes, visitManager.getIsland((UUID) islandLevels.get(i).getUUID()), i));
+				leaderboardStorage.add(new Leaderboard(Leaderboard.Type.Votes, visitManager.getIsland((UUID) islandVotes.get(i).getUUID()), i));
 			}
 		}
 	}

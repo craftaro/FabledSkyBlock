@@ -65,7 +65,7 @@ public class KickCommand extends SubCommand {
 					
 					Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 					
-					List<UUID> islandMembers = island.getRole(Role.Member), islandOperators = island.getRole(Role.Operator), islandVisitors = island.getVisitors();
+					List<UUID> islandMembers = island.getRole(Role.Member), islandOperators = island.getRole(Role.Operator), islandVisitors = islandManager.getVisitorsAtIsland(island);
 					
 					if (targetPlayer == null) {
 						OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
@@ -86,17 +86,22 @@ public class KickCommand extends SubCommand {
 						messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Role.Owner.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else if (isOpen && islandVisitors.contains(targetPlayerUUID) && targetPlayer != null) {
-						IslandKickEvent islandKickEvent = new IslandKickEvent(island, Role.Visitor, targetPlayerUUID, player);
-						Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
-						
-						if (!islandKickEvent.isCancelled()) {
-							LocationUtil.teleportPlayerToSpawn(targetPlayer);
+						if (island.isCoopPlayer(targetPlayerUUID)) {
+							messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Cooped.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						} else {
+							IslandKickEvent islandKickEvent = new IslandKickEvent(island, Role.Visitor, targetPlayerUUID, player);
+							Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
 							
-							messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Sender.Message").replace("%player", targetPlayerName));
-							soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
-							
-							messageManager.sendMessage(targetPlayer, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Target.Message").replace("%player", player.getName()));
-							soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+							if (!islandKickEvent.isCancelled()) {
+								LocationUtil.teleportPlayerToSpawn(targetPlayer);
+								
+								messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Sender.Message").replace("%player", targetPlayerName));
+								soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+								
+								messageManager.sendMessage(targetPlayer, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Target.Message").replace("%player", player.getName()));
+								soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+							}
 						}
 					} else if (islandMembers.contains(targetPlayerUUID) || islandOperators.contains(targetPlayerUUID)) {
 						Role islandRole = Role.Member;
@@ -183,7 +188,7 @@ public class KickCommand extends SubCommand {
 									scoreboard.cancel();
 									scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
 									
-									if (island.getVisitors().size() == 0) {
+									if (islandManager.getVisitorsAtIsland(island).size() == 0) {
 										scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
 									} else {
 										scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));

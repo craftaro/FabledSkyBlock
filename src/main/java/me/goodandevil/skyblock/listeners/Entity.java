@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -143,6 +144,10 @@ public class Entity implements Listener {
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
 		org.bukkit.entity.Entity entity = event.getEntity();
 		
+		if (entity instanceof FallingBlock) {
+			return;
+		}
+		
 		if (!(entity instanceof Player)) {
 			if (entity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || entity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 				IslandManager islandManager = skyblock.getIslandManager();
@@ -232,7 +237,7 @@ public class Entity implements Listener {
 		if (event.getSpawnReason() == SpawnReason.CUSTOM || event.getSpawnReason() == SpawnReason.NATURAL) {
 			LivingEntity livingEntity = event.getEntity();
 			
-			if (event.getEntity() instanceof ArmorStand) {
+			if (event.getEntity() instanceof ArmorStand || event.getEntity() instanceof FallingBlock) {
 				return;
 			}
 			

@@ -79,7 +79,7 @@ public class BanManager {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
-		for (UUID visitorList : island.getVisitors()) {
+		for (UUID visitorList : skyblock.getIslandManager().getVisitorsAtIsland(island)) {
 			Player targetPlayer = Bukkit.getServer().getPlayer(visitorList);
 			
 			LocationUtil.teleportPlayerToSpawn(targetPlayer);

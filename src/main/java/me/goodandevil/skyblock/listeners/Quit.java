@@ -69,9 +69,9 @@ public class Quit implements Listener {
 					}
 				}
 			}
+			
+			islandManager.unloadIsland(island, player.getUniqueId());
 		}
-		
-		islandManager.unloadIsland(player.getUniqueId());
 		
 		playerDataManager.savePlayerData(player);
 		playerDataManager.unloadPlayerData(player);
@@ -79,7 +79,15 @@ public class Quit implements Listener {
 		UUID islandOwnerUUID = playerData.getIsland();
 		
 		if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID)) {
-			islandManager.unloadIsland(islandOwnerUUID);
+			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Coop.Unload")) {
+				Island island = islandManager.getIsland(islandOwnerUUID);
+				
+				if (island.isCoopPlayer(islandOwnerUUID)) {
+					island.removeCoopPlayer(islandOwnerUUID);
+				}
+			}
+			
+			islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
 		}
 		
 		InviteManager inviteManager = skyblock.getInviteManager();

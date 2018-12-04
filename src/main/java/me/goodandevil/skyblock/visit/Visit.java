@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.ban.Ban;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Level;
 
@@ -169,6 +170,10 @@ public class Visit {
 	
 	public void setOpen(boolean open) {
 		this.open = open;
+	}
+	
+	public Ban getBan() {
+		return skyblock.getBanManager().getIsland(getOwnerUUID());
 	}
 	
 	public void save() {

@@ -26,6 +26,7 @@ import me.goodandevil.skyblock.command.commands.ChatCommand;
 import me.goodandevil.skyblock.command.commands.CloseCommand;
 import me.goodandevil.skyblock.command.commands.ConfirmCommand;
 import me.goodandevil.skyblock.command.commands.ControlPanelCommand;
+import me.goodandevil.skyblock.command.commands.CoopCommand;
 import me.goodandevil.skyblock.command.commands.CreateCommand;
 import me.goodandevil.skyblock.command.commands.CurrentCommand;
 import me.goodandevil.skyblock.command.commands.DeleteCommand;
@@ -115,6 +116,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		subCommands.add(new LevelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Level.Info.Message"))));
 		subCommands.add(new SettingsCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Settings.Info.Message"))));
 		subCommands.add(new InformationCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Information.Info.Message"))));
+		subCommands.add(new CoopCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Coop.Info.Message"))));
 		subCommands.add(new MembersCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Members.Info.Message"))));
 		subCommands.add(new OwnerCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ownership.Info.Message"))));
 		subCommands.add(new ConfirmCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Info.Message"))));

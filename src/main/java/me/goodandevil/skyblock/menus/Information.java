@@ -76,7 +76,7 @@ public class Information {
     			
     			if (viewer.getType() == Information.Viewer.Type.Visitors) {
     				if (island.isOpen()) {
-    	    			if (island.getVisitors().size() == 0) {
+    	    			if (islandManager.getVisitorsAtIsland(island).size() == 0) {
     						messageManager.sendMessage(player, configLoad.getString("Island.Information.Visitors.Message"));
     						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
     	    				
@@ -396,7 +396,7 @@ public class Information {
     		    	});
     		    	
     				List<UUID> displayedVisitors = new ArrayList<>();
-    				displayedVisitors.addAll(island.getVisitors());
+    				displayedVisitors.addAll(islandManager.getVisitorsAtIsland(island));
     		    	
     		    	nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Information.Visitors.Item.Return.Displayname"), null, null, null, null), 0, 8);
     		    	nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Information.Visitors.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Information.Visitors.Item.Statistics.Lore"), nInv.createItemLoreVariable(new String[] { "%island_visitors#" + displayedVisitors.size() }), null, null), 4);
@@ -450,7 +450,7 @@ public class Information {
     		    	});
     			}
     			
-    			islandManager.unloadIsland(viewer.getOwner());
+    			islandManager.unloadIsland(island, null);
     		}
     	}
     }
