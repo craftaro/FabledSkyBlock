@@ -3,7 +3,7 @@ Settings:
         Destroy: false
         Place: false
         Anvil: false
-        ArmorStand: false
+        ArmorStandUse: false
         Beacon: false
         Bed: false
         AnimalBreeding: false
@@ -41,11 +41,12 @@ Settings:
         MinecartBoat: false
         Portal: false
         Hopper: false
+        ArmorStandPlacement: false
     Member:
         Destroy: true
         Place: true
         Anvil: true
-        ArmorStand: true
+        ArmorStandUse: true
         Beacon: true
         Bed: true
         AnimalBreeding: true
@@ -83,6 +84,7 @@ Settings:
         DragonEggUse: true
         Portal: true
         Hopper: true
+        ArmorStandPlacement: true
     Operator:
         Invite: true
         Kick: true
@@ -91,11 +93,55 @@ Settings:
         Visitor: true
         Member: true
         Island: false
+        Coop: true
+        CoopPlayers: true
         MainSpawn: false
         VisitorSpawn: true
         Biome: true
         Weather: true
-        CoopPlayers: true
+    Coop:
+        Destroy: true
+        Place: true
+        Anvil: true
+        ArmorStandUse: true
+        Beacon: true
+        Bed: true
+        AnimalBreeding: true
+        Brewing: true
+        Bucket: true
+        WaterCollection: true
+        Storage: true
+        Workbench: true
+        Crop: true
+        Door: true
+        Gate: true
+        Projectile: true
+        Enchant: true
+        Fire: true
+        Furnace: true
+        HorseInventory: true
+        MobRiding: true
+        MobHurting: true
+        MobTaming: true
+        Leash: true
+        LeverButton: true
+        Milking: true
+        Jukebox: true
+        PressurePlate: true
+        Redstone: true
+        Shearing: true
+        Trading: true
+        ItemDrop: true
+        ItemPickup: true
+        Fishing: true
+        DropperDispenser: true
+        SpawnEgg: true
+        MinecartBoat: true
+        Cake: true
+        DragonEggUse: true
+        Portal: true
+        Hopper: true
+        ArmorStandPlacement: true
     Owner:
         NaturalMobSpawning: true
         MobGriefing: false

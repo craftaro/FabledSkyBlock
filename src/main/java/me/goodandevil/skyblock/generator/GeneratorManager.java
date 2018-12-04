@@ -147,10 +147,12 @@ public class GeneratorManager {
 				}
 			}
 			
-			return generator.getGeneratorMaterials().get(chances.get(new Random().nextInt(chances.size()))).getMaterials();
+			if (chances.size() != 0) {
+				return generator.getGeneratorMaterials().get(chances.get(new Random().nextInt(chances.size()))).getMaterials();				
+			}
 		}
 		
-		return null;
+		return Materials.COBBLESTONE;
 	}
 	
 	public void addGenerator(String name, List<GeneratorMaterial> generatorMaterials, boolean permission) {

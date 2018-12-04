@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -39,7 +40,7 @@ public class OwnerCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -132,7 +133,12 @@ public class OwnerCommand extends SubCommand {
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
-
+	
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
+	}
+	
 	@Override
 	public String getName() {
 		return "owner";

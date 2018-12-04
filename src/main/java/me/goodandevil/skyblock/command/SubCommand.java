@@ -1,10 +1,12 @@
 package me.goodandevil.skyblock.command;
 
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public abstract class SubCommand {
 	
-	public abstract void onCommand(Player player, String[] args);
+	public abstract void onCommandByPlayer(Player player, String[] args);
+	public abstract void onCommandByConsole(ConsoleCommandSender sender, String[] args);
 	
 	public abstract String getName();
 	public abstract String getInfo();

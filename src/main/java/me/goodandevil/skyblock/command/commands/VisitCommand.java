@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.command.commands;
 import java.io.File;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -25,7 +26,7 @@ public class VisitCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
 		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		
@@ -49,6 +50,11 @@ public class VisitCommand extends SubCommand {
 		}
 	}
 
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
+	}
+	
 	@Override
 	public String getName() {
 		return "visit";

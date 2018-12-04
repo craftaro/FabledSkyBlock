@@ -85,6 +85,9 @@ Island:
         # Time until Island invite expires
         Time: 300
     Coop:
+        # Allow players to visit islands as long as the owner or operator is online even
+        # if the island is closed.
+        Enable: true
         # If enabled, cooped players will not be saved when they disconnect from the server.
         Unload: false
     Visit:

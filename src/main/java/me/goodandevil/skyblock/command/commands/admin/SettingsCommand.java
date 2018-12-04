@@ -2,6 +2,7 @@ package me.goodandevil.skyblock.command.commands.admin;
 
 import java.io.File;
 
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -25,7 +26,7 @@ public class SettingsCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
 		
@@ -39,6 +40,11 @@ public class SettingsCommand extends SubCommand {
 			skyblock.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Admin.Settings.Permission.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
+	}
+	
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
 	}
 
 	@Override

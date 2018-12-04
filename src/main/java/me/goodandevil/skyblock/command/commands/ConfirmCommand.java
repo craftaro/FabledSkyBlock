@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -41,7 +42,7 @@ public class ConfirmCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 		MessageManager messageManager = skyblock.getMessageManager();
@@ -160,7 +161,12 @@ public class ConfirmCommand extends SubCommand {
 			}
 		}
 	}
-
+	
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
+	}
+	
 	@Override
 	public String getName() {
 		return "confirm";

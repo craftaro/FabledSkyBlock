@@ -138,6 +138,13 @@ public class IslandManager {
 		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 		FileManager fileManager = skyblock.getFileManager();
 		
+		if (fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
+			skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.Message"));
+			skyblock.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			
+			return;
+		}
+		
 		Island island = new Island(player.getUniqueId(), prepareNextAvailableLocation(Location.World.Normal), prepareNextAvailableLocation(Location.World.Nether));
 		islandStorage.put(player.getUniqueId(), island);
 		
@@ -685,6 +692,10 @@ public class IslandManager {
 				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 					if (player.hasPermission("skyblock.bypass." + setting.toLowerCase()) || player.hasPermission("skyblock.bypass.*") || player.hasPermission("skyblock.*")) {
 						return true;
+					} else if (island.isCoopPlayer(player.getUniqueId())) {
+						if (!island.getSetting(Setting.Role.Coop, setting).getStatus()) {
+							return false;
+						}
 					} else if (!island.getSetting(Setting.Role.Visitor, setting).getStatus()) {
 						return false;
 					}

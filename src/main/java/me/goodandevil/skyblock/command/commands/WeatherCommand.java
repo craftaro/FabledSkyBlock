@@ -2,6 +2,7 @@ package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
 
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -9,7 +10,6 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
-import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Role;
 import me.goodandevil.skyblock.island.Setting;
@@ -28,13 +28,12 @@ public class WeatherCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		
-		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-		FileConfiguration configLoad = config.getFileConfiguration();
+		FileConfiguration configLoad = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
 		
 		if (islandManager.hasIsland(player)) {
 			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
@@ -50,6 +49,11 @@ public class WeatherCommand extends SubCommand {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Weather.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
+	}
+	
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
 	}
 
 	@Override

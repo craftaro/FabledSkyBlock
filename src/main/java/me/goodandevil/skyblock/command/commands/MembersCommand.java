@@ -2,6 +2,7 @@ package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
 
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -23,7 +24,7 @@ public class MembersCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
 		SoundManager soundManager = skyblock.getSoundManager();
 		
 		if (skyblock.getIslandManager().hasIsland(player)) {
@@ -37,6 +38,11 @@ public class MembersCommand extends SubCommand {
 			skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
+	}
+	
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
 	}
 
 	@Override

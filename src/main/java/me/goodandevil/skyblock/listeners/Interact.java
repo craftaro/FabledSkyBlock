@@ -206,6 +206,8 @@ public class Interact implements Listener {
 							
 							messageManager.sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+							
+							player.updateInventory();
 						}
 					} else if (event.getItem().getType() == Material.GLASS_BOTTLE) {
 			    		if (event.getClickedBlock().getType() == Material.WATER || event.getClickedBlock().getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || event.getClickedBlock().getType() == Material.CAULDRON) {
@@ -214,6 +216,8 @@ public class Interact implements Listener {
 								
 								messageManager.sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 								soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+							
+								player.updateInventory();
 							}
 			    		}
 					} else if (event.getItem().getType() == Materials.BAT_SPAWN_EGG.parseMaterial()) {
@@ -222,6 +226,17 @@ public class Interact implements Listener {
 							
 							messageManager.sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+							
+							player.updateInventory();
+						}
+					} else if (event.getItem().getType() == Material.ARMOR_STAND) {
+						if (!islandManager.hasPermission(player, "ArmorStandPlacement")) {
+							event.setCancelled(true);
+							
+							messageManager.sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
+							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						
+							player.updateInventory();
 						}
 					}
 				}

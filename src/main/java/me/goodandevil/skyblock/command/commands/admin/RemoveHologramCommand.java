@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -31,7 +33,16 @@ public class RemoveHologramCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
+		onCommand(player, args);
+	}
+	
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		onCommand(sender, args);
+	}
+	
+	public void onCommand(CommandSender sender, String[] args) {
 		HologramManager hologramManager = skyblock.getHologramManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -40,7 +51,13 @@ public class RemoveHologramCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
-		if (player.hasPermission("skyblock.admin.removehologram") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+		Player player = null;
+		
+		if (sender instanceof Player) {
+			player = (Player) sender;
+		}
+		
+		if (player == null || player.hasPermission("skyblock.admin.removehologram") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
 			if (args.length == 1) {
 				HologramType hologramType = null;
 				
@@ -55,8 +72,8 @@ public class RemoveHologramCommand extends SubCommand {
 					FileConfiguration locationsConfigLoad = locationsConfig.getFileConfiguration();
 					
 					if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + hologramType.name()) == null) {
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.RemoveHologram.Set.Message"));
-						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Set.Message"));
+						soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						locationsConfigLoad.set("Location.Hologram.Leaderboard." + hologramType.name(), null);
 						
@@ -78,19 +95,19 @@ public class RemoveHologramCommand extends SubCommand {
 							}
 						});
 						
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message").replace("%type", hologramType.name()));
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message").replace("%type", hologramType.name()));
+						soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 					}
 					
 					return;
 				}
 			}
 			
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.RemoveHologram.Invalid.Message"));
-			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Invalid.Message"));
+			soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.RemoveHologram.Permission.Message"));
-			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Permission.Message"));
+			soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 

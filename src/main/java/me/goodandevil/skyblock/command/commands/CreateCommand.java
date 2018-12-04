@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.command.commands;
 import java.io.File;
 import java.util.List;
 
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -32,7 +33,7 @@ public class CreateCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
 		CreationManager creationManager = skyblock.getCreationManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
@@ -85,6 +86,11 @@ public class CreateCommand extends SubCommand {
 				soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 			}
 		}
+	}
+	
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
 	}
 
 	@Override

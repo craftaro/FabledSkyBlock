@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -37,7 +39,16 @@ public class SetSizeCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
+		onCommand(player, args);
+	}
+	
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		onCommand(sender, args);
+	}
+	
+	public void onCommand(CommandSender sender, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
@@ -47,7 +58,13 @@ public class SetSizeCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
-		if (player.hasPermission("skyblock.admin.setsize") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+		Player player = null;
+		
+		if (sender instanceof Player) {
+			player = (Player) sender;
+		}
+		
+		if (player == null || player.hasPermission("skyblock.admin.setsize") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
 			if (args.length == 2) {
 				if (args[1].matches("[0-9]+")) {
 					Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
@@ -59,21 +76,21 @@ public class SetSizeCommand extends SubCommand {
 						islandOwnerUUID = targetPlayerOffline.getOwner();
 						targetPlayerName = targetPlayerOffline.getName();
 					} else {
-						islandOwnerUUID = playerDataManager.getPlayerData(player).getOwner();
+						islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
 						targetPlayerName = targetPlayer.getName();
 					}
 					
 					int size = Integer.valueOf(args[1]);
 					
 					if (islandOwnerUUID == null) {
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSize.Island.Message"));
-						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Island.Message"));
+						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else if (size < 50) {
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSize.Size.Greater.Message"));
-						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Size.Greater.Message"));
+						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else if (size > 1000) {
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSize.Size.Less.Message"));
-						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Size.Less.Message"));
+						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else {
 	    				if (islandManager.containsIsland(islandOwnerUUID)) {
 	    					Island island = islandManager.getIsland(islandOwnerUUID);
@@ -98,20 +115,20 @@ public class SetSizeCommand extends SubCommand {
 							}
 	    				}
 	    				
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSize.Set.Message").replace("%player", targetPlayerName).replace("%size", NumberUtil.formatNumber(size)));
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Set.Message").replace("%player", targetPlayerName).replace("%size", NumberUtil.formatNumber(size)));
+						soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSize.Numerical.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Numerical.Message"));
+					soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSize.Invalid.Message"));
-				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Invalid.Message"));
+				soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSize.Permission.Message"));
-			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Permission.Message"));
+			soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 

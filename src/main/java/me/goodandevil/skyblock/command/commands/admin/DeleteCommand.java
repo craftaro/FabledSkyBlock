@@ -1,4 +1,4 @@
-package me.goodandevil.skyblock.command.commands.admin;
+ package me.goodandevil.skyblock.command.commands.admin;
 
 import java.io.File;
 import java.util.UUID;
@@ -6,6 +6,8 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -37,7 +39,16 @@ public class DeleteCommand extends SubCommand {
 	}
 	
 	@Override
-	public void onCommand(Player player, String[] args) {
+	public void onCommandByPlayer(Player player, String[] args) {
+		onCommand(player, args);
+	}
+	
+	@Override
+	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
+		onCommand(sender, args);
+	}
+	
+	public void onCommand(CommandSender sender, String[] args) {
 		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
@@ -47,7 +58,13 @@ public class DeleteCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
-		if (player.hasPermission("skyblock.admin.delete") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+		Player player = null;
+		
+		if (sender instanceof Player) {
+			player = (Player) sender;
+		}
+		
+		if (player == null || player.hasPermission("skyblock.admin.delete") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
 			if (args.length == 1) {
 				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 				UUID targetPlayerUUID;
@@ -98,18 +115,18 @@ public class DeleteCommand extends SubCommand {
 					}
 					
 					islandManager.deleteIsland(island);
-					skyblock.getVisitManager().deleteIsland(player.getUniqueId());
-					skyblock.getBanManager().deleteIsland(player.getUniqueId());
+					skyblock.getVisitManager().deleteIsland(targetPlayerUUID);
+					skyblock.getBanManager().deleteIsland(targetPlayerUUID);
 				
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Deleted.Message").replace("%player", targetPlayerName));
-					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+					messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Delete.Deleted.Message").replace("%player", targetPlayerName));
+					soundManager.playSound(sender, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 				} else {
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Owner.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Delete.Owner.Message"));
+					soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Invalid.Message"));
-				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Delete.Invalid.Message"));
+				soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Permission.Message"));

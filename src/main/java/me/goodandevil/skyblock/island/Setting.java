@@ -24,6 +24,7 @@ public class Setting {
 	
 	public enum Role {
 		
+		Coop,
 		Visitor,
 		Member,
 		Operator,

@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -51,11 +52,12 @@ public class Settings {
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
+		FileManager fileManager = skyblock.getFileManager();
     	
 		if (playerDataManager.hasPlayerData(player)) {
-	    	Island island = skyblock.getIslandManager().getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+	    	Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 	    	
-			Config mainConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 			FileConfiguration configLoad = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
 	    	
 	    	if (menuType == Settings.Type.Categories) {
@@ -85,6 +87,32 @@ public class Settings {
 							
 					    	if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))))) {
 					    		soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+					    	} else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Categories.Item.Coop.Displayname"))))) {
+					    		if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+									messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Disabled.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+									
+									return;
+								}
+					    		
+					    		if (island.isRole(Role.Operator, player.getUniqueId()) && !island.getSetting(me.goodandevil.skyblock.island.Setting.Role.Operator, "Coop").getStatus()) {
+									messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
+									soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+									
+									event.setWillClose(false);
+									event.setWillDestroy(false);
+									
+									return;
+								}
+								
+					    		soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+					    	
+					    		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+									@Override
+									public void run() {
+										open(player, Settings.Type.Role, me.goodandevil.skyblock.island.Setting.Role.Coop, null);
+									}
+					    		}, 1L);
 					    	} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Categories.Item.Visitor.Displayname"))))) {
 								if (island.isRole(Role.Operator, player.getUniqueId()) && !island.getSetting(me.goodandevil.skyblock.island.Setting.Role.Operator, "Visitor").getStatus()) {
 									messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
@@ -166,12 +194,19 @@ public class Settings {
 					}
 		    	});
 		    	
-		    	nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"), null, null, null, null), 0, 8);
-	    		nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN), configLoad.getString("Menu.Settings.Categories.Item.Visitor.Displayname"), configLoad.getStringList("Menu.Settings.Categories.Item.Visitor.Lore"), null, null, null), 2);
+		    	nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN), configLoad.getString("Menu.Settings.Categories.Item.Visitor.Displayname"), configLoad.getStringList("Menu.Settings.Categories.Item.Visitor.Lore"), null, null, null), 2);
 	    		nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Settings.Categories.Item.Member.Displayname"), configLoad.getStringList("Menu.Settings.Categories.Item.Member.Lore"), null, null, null), 3);
 	    		nInv.addItem(nInv.createItem(new ItemStack(Material.ITEM_FRAME), configLoad.getString("Menu.Settings.Categories.Item.Operator.Displayname"), configLoad.getStringList("Menu.Settings.Categories.Item.Operator.Lore"), null, null, null), 4);
-	    		nInv.addItem(nInv.createItem(Materials.OAK_SAPLING.parseItem(), configLoad.getString("Menu.Settings.Categories.Item.Owner.Displayname"), configLoad.getStringList("Menu.Settings.Categories.Item.Owner.Lore"), null, null, null), 6);
-	    		
+		    	
+				if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+					nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"), null, null, null, null), 0);
+		    		nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG), configLoad.getString("Menu.Settings.Categories.Item.Coop.Displayname"), configLoad.getStringList("Menu.Settings.Categories.Item.Coop.Lore"), null, null, null), 6);
+		    		nInv.addItem(nInv.createItem(Materials.OAK_SAPLING.parseItem(), configLoad.getString("Menu.Settings.Categories.Item.Owner.Displayname"), configLoad.getStringList("Menu.Settings.Categories.Item.Owner.Lore"), null, null, null), 7);
+				} else {
+					nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"), null, null, null, null), 0, 9);
+		    		nInv.addItem(nInv.createItem(Materials.OAK_SAPLING.parseItem(), configLoad.getString("Menu.Settings.Categories.Item.Owner.Displayname"), configLoad.getStringList("Menu.Settings.Categories.Item.Owner.Lore"), null, null, null), 6);
+				}
+		    		    		
 		    	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings.Categories.Title")));
 		    	nInv.setRows(1);
 		    	
@@ -192,10 +227,22 @@ public class Settings {
 								island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 								
 								if (!(island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId()))) {
-									messageManager.sendMessage(player, configLoad.getString("Command.Island.Setting.Role.Message"));
+									messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Role.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									
 									return;
+								} else if (island.isRole(Role.Operator, player.getUniqueId()) && !island.getSetting(me.goodandevil.skyblock.island.Setting.Role.Operator, role.name()).getStatus()) {
+									messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+									
+									return;
+								} else if (role == me.goodandevil.skyblock.island.Setting.Role.Coop) {
+						    		if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+										messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Disabled.Message"));
+										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+										
+										return;
+									}
 								}
 							} else {
 								messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Owner.Message"));
@@ -285,7 +332,7 @@ public class Settings {
 					}
 		    	});
 	    		
-	    		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member) {
+	    		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member || role == me.goodandevil.skyblock.island.Setting.Role.Coop) {
 	    			if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor) {
 	    				Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 	    				Visit visit = island.getVisit();
@@ -313,87 +360,121 @@ public class Settings {
 	    				}
 	    			}
 	    			
-	    			nInv.addItemStack(createItem(island, role, "Destroy", Material.DIAMOND_PICKAXE), 9);
-	    			nInv.addItemStack(createItem(island, role, "Place", Material.GRASS), 10);
-	    			nInv.addItemStack(createItem(island, role, "Anvil", Material.ANVIL), 11);
-	    			nInv.addItemStack(createItem(island, role, "ArmorStand", Material.ARMOR_STAND), 12);
-	    			nInv.addItemStack(createItem(island, role, "Beacon", Material.BEACON), 13);
-	    			nInv.addItemStack(createItem(island, role, "Bed", Materials.WHITE_BED.parseMaterial()), 14);
-	    			nInv.addItemStack(createItem(island, role, "AnimalBreeding", Material.WHEAT), 15);
-	    			nInv.addItemStack(createItem(island, role, "Brewing", Materials.LEGACY_BREWING_STAND.getPostMaterial()), 16);
-	    			nInv.addItemStack(createItem(island, role, "Bucket", Material.BUCKET), 17);
-	    			nInv.addItemStack(createItem(island, role, "WaterCollection", Material.POTION), 18);
-	    			nInv.addItemStack(createItem(island, role, "Storage", Material.CHEST), 19);
-	    			nInv.addItemStack(createItem(island, role, "Workbench", Materials.CRAFTING_TABLE.parseMaterial()), 20);
-	    			nInv.addItemStack(createItem(island, role, "Crop", Materials.WHEAT_SEEDS.parseMaterial()), 21);
-	    			nInv.addItemStack(createItem(island, role, "Door", Materials.OAK_DOOR.parseMaterial()), 22);
-	    			nInv.addItemStack(createItem(island, role, "Gate", Materials.OAK_FENCE_GATE.parseMaterial()), 23);
-	    			nInv.addItemStack(createItem(island, role, "Projectile", Material.ARROW), 24);
-	    			nInv.addItemStack(createItem(island, role, "Enchant", Materials.ENCHANTING_TABLE.parseMaterial()), 25);
-	    			nInv.addItemStack(createItem(island, role, "Fire", Material.FLINT_AND_STEEL), 26);
-	    			nInv.addItemStack(createItem(island, role, "Furnace", Material.FURNACE), 27);
-	    			nInv.addItemStack(createItem(island, role, "HorseInventory", Materials.CHEST_MINECART.parseMaterial()), 28);
-	    			nInv.addItemStack(createItem(island, role, "MobRiding", Material.SADDLE), 29);
-	    			nInv.addItemStack(createItem(island, role, "MobHurting", Materials.WOODEN_SWORD.parseMaterial()), 30);
-	    			nInv.addItemStack(createItem(island, role, "MobTaming", Materials.POPPY.parseMaterial()), 31);
-	    			nInv.addItemStack(createItem(island, role, "Leash", Materials.LEAD.parseMaterial()), 32);
-	    			nInv.addItemStack(createItem(island, role, "LeverButton", Material.LEVER), 33);
-	    			nInv.addItemStack(createItem(island, role, "Milking", Material.MILK_BUCKET), 34);
-	    			nInv.addItemStack(createItem(island, role, "Jukebox", Material.JUKEBOX), 35);
-	    			nInv.addItemStack(createItem(island, role, "PressurePlate", Materials.OAK_PRESSURE_PLATE.parseMaterial()), 37);
-	    			nInv.addItemStack(createItem(island, role, "Redstone", Material.REDSTONE), 38);
-	    			nInv.addItemStack(createItem(island, role, "Shearing", Material.SHEARS), 39);
-	    			nInv.addItemStack(createItem(island, role, "Trading", Material.EMERALD), 40);
-	    			nInv.addItemStack(createItem(island, role, "ItemDrop", Material.PUMPKIN_SEEDS), 41);
-	    			nInv.addItemStack(createItem(island, role, "ItemPickup", Material.MELON_SEEDS), 42);
-	    			nInv.addItemStack(createItem(island, role, "Fishing", Material.FISHING_ROD), 43);
-	    			nInv.addItemStack(createItem(island, role, "DropperDispenser", Material.DISPENSER), 46);
-	    			nInv.addItemStack(createItem(island, role, "SpawnEgg", Material.EGG), 47);
-	    			nInv.addItemStack(createItem(island, role, "Cake", Material.CAKE), 48);
-	    			nInv.addItemStack(createItem(island, role, "DragonEggUse", Material.DRAGON_EGG), 49);
-	    			nInv.addItemStack(createItem(island, role, "MinecartBoat", Material.MINECART), 50);
-	    			nInv.addItemStack(createItem(island, role, "Portal", Material.ENDER_PEARL), 51);
-	    			nInv.addItemStack(createItem(island, role, "Hopper", Material.HOPPER), 52);
+	    			nInv.addItemStack(createItem(island, role, "Destroy", new ItemStack(Material.DIAMOND_PICKAXE)), 9);
+	    			nInv.addItemStack(createItem(island, role, "Place", new ItemStack(Material.GRASS)), 10);
+	    			nInv.addItemStack(createItem(island, role, "Anvil", new ItemStack(Material.ANVIL)), 11);
+	    			nInv.addItemStack(createItem(island, role, "ArmorStandUse", new ItemStack(Material.ARMOR_STAND)), 12);
+	    			nInv.addItemStack(createItem(island, role, "Beacon", new ItemStack(Material.BEACON)), 13);
+	    			nInv.addItemStack(createItem(island, role, "Bed", Materials.WHITE_BED.parseItem()), 14);
+	    			nInv.addItemStack(createItem(island, role, "AnimalBreeding", new ItemStack(Material.WHEAT)), 15);
+	    			nInv.addItemStack(createItem(island, role, "Brewing", new ItemStack(Materials.LEGACY_BREWING_STAND.getPostMaterial())), 16);
+	    			nInv.addItemStack(createItem(island, role, "Bucket", new ItemStack(Material.BUCKET)), 17);
+	    			nInv.addItemStack(createItem(island, role, "WaterCollection", new ItemStack(Material.POTION)), 18);
+	    			nInv.addItemStack(createItem(island, role, "Storage", new ItemStack(Material.CHEST)), 19);
+	    			nInv.addItemStack(createItem(island, role, "Workbench", Materials.CRAFTING_TABLE.parseItem()), 20);
+	    			nInv.addItemStack(createItem(island, role, "Crop", Materials.WHEAT_SEEDS.parseItem()), 21);
+	    			nInv.addItemStack(createItem(island, role, "Door", Materials.OAK_DOOR.parseItem()), 22);
+	    			nInv.addItemStack(createItem(island, role, "Gate", Materials.OAK_FENCE_GATE.parseItem()), 23);
+	    			nInv.addItemStack(createItem(island, role, "Projectile", new ItemStack(Material.ARROW)), 24);
+	    			nInv.addItemStack(createItem(island, role, "Enchant", Materials.ENCHANTING_TABLE.parseItem()), 25);
+	    			nInv.addItemStack(createItem(island, role, "Fire", new ItemStack(Material.FLINT_AND_STEEL)), 26);
+	    			nInv.addItemStack(createItem(island, role, "Furnace", new ItemStack(Material.FURNACE)), 27);
+	    			nInv.addItemStack(createItem(island, role, "HorseInventory", Materials.CHEST_MINECART.parseItem()), 28);
+	    			nInv.addItemStack(createItem(island, role, "MobRiding", new ItemStack(Material.SADDLE)), 29);
+	    			nInv.addItemStack(createItem(island, role, "MobHurting", Materials.WOODEN_SWORD.parseItem()), 30);
+	    			nInv.addItemStack(createItem(island, role, "MobTaming", Materials.POPPY.parseItem()), 31);
+	    			nInv.addItemStack(createItem(island, role, "Leash", Materials.LEAD.parseItem()), 32);
+	    			nInv.addItemStack(createItem(island, role, "LeverButton", new ItemStack(Material.LEVER)), 33);
+	    			nInv.addItemStack(createItem(island, role, "Milking", new ItemStack(Material.MILK_BUCKET)), 34);
+	    			nInv.addItemStack(createItem(island, role, "Jukebox", new ItemStack(Material.JUKEBOX)), 35);
+	    			nInv.addItemStack(createItem(island, role, "PressurePlate", Materials.OAK_PRESSURE_PLATE.parseItem()), 36);
+	    			nInv.addItemStack(createItem(island, role, "Redstone", new ItemStack(Material.REDSTONE)), 37);
+	    			nInv.addItemStack(createItem(island, role, "Shearing", new ItemStack(Material.SHEARS)), 38);
+	    			nInv.addItemStack(createItem(island, role, "Trading", new ItemStack(Material.EMERALD)), 39);
+	    			nInv.addItemStack(createItem(island, role, "ItemDrop", new ItemStack(Material.PUMPKIN_SEEDS)), 40);
+	    			nInv.addItemStack(createItem(island, role, "ItemPickup", new ItemStack(Material.MELON_SEEDS)), 41);
+	    			nInv.addItemStack(createItem(island, role, "Fishing", new ItemStack(Material.FISHING_ROD)), 42);
+	    			nInv.addItemStack(createItem(island, role, "DropperDispenser", new ItemStack(Material.DISPENSER)), 43);
+	    			nInv.addItemStack(createItem(island, role, "SpawnEgg", new ItemStack(Material.EGG)), 44);
+	    			nInv.addItemStack(createItem(island, role, "Cake", new ItemStack(Material.CAKE)), 46);
+	    			nInv.addItemStack(createItem(island, role, "DragonEggUse", new ItemStack(Material.DRAGON_EGG)), 47);
+	    			nInv.addItemStack(createItem(island, role, "MinecartBoat", new ItemStack(Material.MINECART)), 48);
+	    			nInv.addItemStack(createItem(island, role, "Portal", new ItemStack(Material.ENDER_PEARL)), 50);
+	    			nInv.addItemStack(createItem(island, role, "Hopper", new ItemStack(Material.HOPPER)), 51);
+	    			nInv.addItemStack(createItem(island, role, "ArmorStandPlacement", new ItemStack(Material.ARMOR_STAND)), 52);
 	    			
 	    			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings." + role.name() + ".Title")));
 	    			nInv.setRows(6);
 	    		} else if (role == me.goodandevil.skyblock.island.Setting.Role.Operator) {
 	    			if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
-	    				nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseMaterial()), 10);
-	    				nInv.addItemStack(createItem(island, role, "Kick", Material.IRON_DOOR), 11);
-	    				nInv.addItemStack(createItem(island, role, "Ban", Material.IRON_AXE), 12);
-	    				nInv.addItemStack(createItem(island, role, "Unban", Material.NAME_TAG), 13);
-	    				nInv.addItemStack(createItem(island, role, "Visitor", Material.SIGN), 14);
-	    				nInv.addItemStack(createItem(island, role, "Member", Material.PAINTING), 15);
-	    				nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseMaterial()), 16);
-	    				nInv.addItemStack(createItem(island, role, "MainSpawn", Material.EMERALD), 20);
-	    				nInv.addItemStack(createItem(island, role, "VisitorSpawn", Material.NETHER_STAR), 21);
-	    				nInv.addItemStack(createItem(island, role, "Biome", Material.MAP), 22);
-	        			nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseMaterial()), 23);
-	        			nInv.addItemStack(createItem(island, role, "CoopPlayers", Material.BOOK), 24);
+	    				if (mainConfig.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+		    				nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
+		    				nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
+		    				nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)), 11);
+		    				nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()), 12);
+		    				nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)), 13);
+		    				nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)), 14);
+		    				nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()), 15);
+		    				nInv.addItemStack(createItem(island, role, "Coop", new ItemStack(Material.NAME_TAG)), 16);
+		    				nInv.addItemStack(createItem(island, role, "CoopPlayers", new ItemStack(Material.BOOK)), 17);
+		    				nInv.addItemStack(createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
+		    				nInv.addItemStack(createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)), 21);
+		    				nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
+		        			nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+	    				} else {
+		    				nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
+		    				nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
+		    				nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)), 12);
+		    				nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()), 13);
+		    				nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)), 14);
+		    				nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)), 15);
+		    				nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()), 16);
+		    				nInv.addItemStack(createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
+		    				nInv.addItemStack(createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)), 21);
+		    				nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
+		        			nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+	    				}
+	    				
+	    				nInv.setRows(3);
 	    			} else {
-	    				nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseMaterial()), 10);
-	    				nInv.addItemStack(createItem(island, role, "Kick", Material.IRON_DOOR), 11);
-	    				nInv.addItemStack(createItem(island, role, "Visitor", Material.SIGN), 12);
-	    				nInv.addItemStack(createItem(island, role, "Member", Material.PAINTING), 13);
-	    				nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseMaterial()), 14);
-	    				nInv.addItemStack(createItem(island, role, "MainSpawn", Material.EMERALD), 15);
-	    				nInv.addItemStack(createItem(island, role, "VisitorSpawn", Material.NETHER_STAR), 16);
-	    				nInv.addItemStack(createItem(island, role, "Biome", Material.MAP), 21);
-	    				nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseMaterial()), 22);
-	    				nInv.addItemStack(createItem(island, role, "CoopPlayers", Material.BOOK), 23);
+	    				if (mainConfig.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+		    				nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
+		    				nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
+		    				nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)), 12);
+		    				nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)), 13);
+		    				nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()), 14);
+		    				nInv.addItemStack(createItem(island, role, "Coop", new ItemStack(Material.NAME_TAG)), 15);
+		    				nInv.addItemStack(createItem(island, role, "CoopPlayers", new ItemStack(Material.BOOK)), 16);
+		    				nInv.addItemStack(createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
+		    				nInv.addItemStack(createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)), 21);
+		    				nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
+		    				nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+		    				
+	    					nInv.setRows(3);
+	    				} else {
+		    				nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
+		    				nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
+		    				nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)), 11);
+		    				nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)), 12);
+		    				nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()), 13);
+		    				nInv.addItemStack(createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 14);
+		    				nInv.addItemStack(createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)), 15);
+		    				nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 16);
+		    				nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 17);
+		    				
+		    				nInv.setRows(2);
+	    				}
 	    			}
 	    			
         			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings." + role.name() + ".Title")));
-        			nInv.setRows(3);
 	    		} else if (role == me.goodandevil.skyblock.island.Setting.Role.Owner) {
-	    			nInv.addItemStack(createItem(island, role, "NaturalMobSpawning", Materials.PIG_SPAWN_EGG.parseMaterial()), 10);
-	    			nInv.addItemStack(createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseMaterial()), 11);
-	    			nInv.addItemStack(createItem(island, role, "PvP", Material.DIAMOND_SWORD), 12);
-	    			nInv.addItemStack(createItem(island, role, "Explosions", Materials.GUNPOWDER.parseMaterial()), 13);
-	    			nInv.addItemStack(createItem(island, role, "FireSpread", Material.FLINT_AND_STEEL), 14);
-	    			nInv.addItemStack(createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseMaterial()), 15);
-	    			nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath", Material.ITEM_FRAME), 16);
+	    			nInv.addItemStack(createItem(island, role, "NaturalMobSpawning", Materials.PIG_SPAWN_EGG.parseItem()), 10);
+	    			nInv.addItemStack(createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
+	    			nInv.addItemStack(createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
+	    			nInv.addItemStack(createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 13);
+	    			nInv.addItemStack(createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)), 14);
+	    			nInv.addItemStack(createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
+	    			nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath", new ItemStack(Material.ITEM_FRAME)), 16);
 	    			
 	    			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Settings." + role.name() + ".Title")));
 	    			nInv.setRows(2);
@@ -813,7 +894,7 @@ public class Settings {
 		}
     }
     
-    private ItemStack createItem(Island island, me.goodandevil.skyblock.island.Setting.Role role, String setting, Material material) {
+    private ItemStack createItem(Island island, me.goodandevil.skyblock.island.Setting.Role role, String setting, ItemStack is) {
 		SkyBlock skyblock = SkyBlock.getInstance();
     	
     	Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
@@ -821,12 +902,11 @@ public class Settings {
     	
 		List<String> itemLore = new ArrayList<>();
 		
-    	ItemStack is = new ItemStack(material);
 		ItemMeta im = is.getItemMeta();
 		
 		String roleName = role.name();
 		
-		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member) {
+		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member || role == me.goodandevil.skyblock.island.Setting.Role.Coop) {
 			roleName = "Default";
 		}
 		
@@ -850,7 +930,7 @@ public class Settings {
     }
     
 	private String getRoleName(me.goodandevil.skyblock.island.Setting.Role role) {
-		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member) {
+		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member || role == me.goodandevil.skyblock.island.Setting.Role.Coop) {
 			return "Default";
 		}
 		
@@ -858,7 +938,7 @@ public class Settings {
 	}
 	
 	private boolean hasPermission(Island island, Player player, me.goodandevil.skyblock.island.Setting.Role role) {
-		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member || role == me.goodandevil.skyblock.island.Setting.Role.Owner) {
+		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member || role == me.goodandevil.skyblock.island.Setting.Role.Coop || role == me.goodandevil.skyblock.island.Setting.Role.Owner) {
 			String roleName = role.name();
 			
 			if (role == me.goodandevil.skyblock.island.Setting.Role.Owner) {

@@ -205,7 +205,7 @@ public class Block implements Listener {
 					PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 					GeneratorManager generatorManager = skyblock.getGeneratorManager();
 					
-					if (generatorManager != null) {
+					if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
 						org.bukkit.Location location = event.getBlock().getLocation();
 						
 						for (Player all : Bukkit.getOnlinePlayers()) {
@@ -243,7 +243,7 @@ public class Block implements Listener {
 					PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 					GeneratorManager generatorManager = skyblock.getGeneratorManager();
 					
-					if (generatorManager != null) {
+					if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
 						org.bukkit.Location location = event.getBlock().getLocation();
 						
 						for (Player all : Bukkit.getOnlinePlayers()) {

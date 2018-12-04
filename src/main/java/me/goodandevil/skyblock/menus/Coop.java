@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -50,9 +51,10 @@ public class Coop {
     	MessageManager messageManager = skyblock.getMessageManager();
     	IslandManager islandManager = skyblock.getIslandManager();
     	SoundManager soundManager = skyblock.getSoundManager();
+    	FileManager fileManager = skyblock.getFileManager();
     	
     	if (playerDataManager.hasPlayerData(player)) {
-    		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+    		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
     		FileConfiguration configLoad = config.getFileConfiguration();
     		
 	    	nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
@@ -64,6 +66,13 @@ public class Coop {
 						
 						if (islandManager.hasIsland(player)) {
 							island = islandManager.getIsland(playerData.getOwner());
+							
+							if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Disabled.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+								
+								return;
+							}
 						} else {
 							messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Owner.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);

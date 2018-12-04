@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -150,13 +151,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
-			return true;
-		}
-		
-		Player player = (Player) sender;
-		
 		if (command.getName().equalsIgnoreCase("island")) {
 			new BukkitRunnable() {
 				@Override
@@ -168,17 +162,27 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 					FileConfiguration configLoad = config.getFileConfiguration();
 					
+					Player player = null;
+					
+					if (sender instanceof Player) {
+						player = (Player) sender;
+					}
+					
 					if (args.length == 0) {
-						if (skyblock.getIslandManager().hasIsland(player)) {
-							ControlPanel.getInstance().open(player);
-							soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+						if (player == null) {
+							sendConsoleHelpCommands(sender);
 						} else {
-							Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									Bukkit.getServer().dispatchCommand(player, "island create");
-								}
-							});
+							if (skyblock.getIslandManager().hasIsland(player)) {
+								ControlPanel.getInstance().open(player);
+								soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+							} else {
+								Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+									@Override
+									public void run() {
+										Bukkit.getServer().dispatchCommand(sender, "island create");
+									}
+								});
+							}
 						}
 						
 						return;
@@ -187,47 +191,55 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					SubCommand subCommand;
 					
 					if (args[0].equalsIgnoreCase("help")) {
-						int page = -1;
-						
-						if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
-							page = 1;
+						if (player == null) {
+							sendConsoleHelpCommands(sender);
+						} else {
+							int page = -1;
 							
-							if (args.length == 2) {
-								if (args[1].matches("[0-9]+")) {
-									page = Integer.valueOf(args[1]);
-								} else {
-									messageManager.sendMessage(player, configLoad.getString("Command.Island.Help.Integer.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-									
-									return;
+							if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
+								page = 1;
+								
+								if (args.length == 2) {
+									if (args[1].matches("[0-9]+")) {
+										page = Integer.valueOf(args[1]);
+									} else {
+										messageManager.sendMessage(player, configLoad.getString("Command.Island.Help.Integer.Message"));
+										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+										
+										return;
+									}
 								}
 							}
+							
+							sendPlayerHelpCommands(player, CommandManager.Type.Default, page);
 						}
-						
-						sendHelpCommands(player, CommandManager.Type.Default, page);
 						
 						return;
 					} else if (args[0].equalsIgnoreCase("admin")) {
 						if (args.length == 1 || (args.length >= 2 && args[1].equalsIgnoreCase("help"))) {
-							if (player.hasPermission("skyblock.admin") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
-								int page = -1;
-								
-								if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
-									page = 1;
+							if (player == null || player.hasPermission("skyblock.admin") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+								if (player == null) {
+									sendConsoleHelpCommands(sender);
+								} else {
+									int page = -1;
 									
-									if (args.length == 3) {
-										if (args[2].matches("[0-9]+")) {
-											page = Integer.valueOf(args[2]);
-										} else {
-											messageManager.sendMessage(player, configLoad.getString("Command.Island.Help.Integer.Message"));
-											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-											
-											return;
+									if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Command.Help.List")) {
+										page = 1;
+										
+										if (args.length == 3) {
+											if (args[2].matches("[0-9]+")) {
+												page = Integer.valueOf(args[2]);
+											} else {
+												messageManager.sendMessage(player, configLoad.getString("Command.Island.Help.Integer.Message"));
+												soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+												
+												return;
+											}
 										}
 									}
+									
+									sendPlayerHelpCommands(player, CommandManager.Type.Admin, page);
 								}
-								
-								sendHelpCommands(player, CommandManager.Type.Admin, page);
 							} else {
 								messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Help.Permission.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -242,8 +254,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					}
 					
 					if (subCommand == null) {
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
-						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
+						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						ArrayList<String> arguments = new ArrayList<>();
 						arguments.addAll(Arrays.asList(args));
@@ -253,7 +265,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 							arguments.remove(args[1]);
 						}
 						
-						subCommand.onCommand(player, arguments.toArray(new String[0]));
+						if (sender instanceof Player) {
+							subCommand.onCommandByPlayer(player, arguments.toArray(new String[0]));
+						} else if (sender instanceof ConsoleCommandSender) {
+							subCommand.onCommandByConsole((ConsoleCommandSender)sender, arguments.toArray(new String[0]));
+						}
 					}
 				}
 			}.runTaskAsynchronously(skyblock);
@@ -334,7 +350,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		return null;
 	}
 	
-	public void sendHelpCommands(Player player, CommandManager.Type type, int page) {
+	public void sendPlayerHelpCommands(Player player, CommandManager.Type type, int page) {
 		FileManager fileManager = skyblock.getFileManager();
 		
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
@@ -433,6 +449,17 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 		
 		skyblock.getSoundManager().playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+	}
+	
+	public void sendConsoleHelpCommands(CommandSender sender) {
+		sender.sendMessage("SkyBlock - Console Commands");
+		
+		String[] commands = { "delete", "owner", "reload", "removehologram", "setsize" };
+		
+		for (String commandList : commands) {
+			SubCommand subCommand = getSubCommand(CommandManager.Type.Admin, commandList);
+			sender.sendMessage("* /island admin " + subCommand.getName() + " - " + subCommand.getInfo());
+		}
 	}
 	
 	public SubCommand getSubCommand(CommandManager.Type type, String arg) {
