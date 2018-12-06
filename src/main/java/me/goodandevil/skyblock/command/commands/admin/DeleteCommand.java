@@ -157,6 +157,11 @@ public class DeleteCommand extends SubCommand {
 	}
 	
 	@Override
+	public String[] getArguments() {
+		return new String[0];
+	}
+	
+	@Override
 	public Type getType() {
 		return CommandManager.Type.Admin;
 	}

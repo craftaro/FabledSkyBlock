@@ -80,10 +80,10 @@ public class CreateCommand extends SubCommand {
 					return;
 				}
 				
-				islandManager.createIsland(player, structures.get(0));
-				
-				messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
-				soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+				if (islandManager.createIsland(player, structures.get(0))) {
+					messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+				}
 			}
 		}
 	}
@@ -114,7 +114,12 @@ public class CreateCommand extends SubCommand {
 	public String[] getAliases() {
 		return new String[] { "new" };
 	}
-
+	
+	@Override
+	public String[] getArguments() {
+		return new String[0];
+	}
+	
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Default;

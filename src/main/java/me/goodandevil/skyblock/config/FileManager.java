@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +62,14 @@ public class FileManager {
 	        
 	        if (configFile.exists()) {
 	        	if (configFileList.equals("config.yml") || configFileList.equals("language.yml") || configFileList.equals("settings.yml")) {
-					FileChecker fileChecker = new FileChecker(skyblock, this, configFileList);
+					FileChecker fileChecker;
+					
+					if (configFileList.equals("config.yml")) {
+						fileChecker = new FileChecker(skyblock, this, configFileList, true);
+					} else {
+						fileChecker = new FileChecker(skyblock, this, configFileList, false);
+					}
+					
 					fileChecker.loadSections();
 					fileChecker.compareFiles();
 					fileChecker.saveChanges();
@@ -162,19 +171,15 @@ public class FileManager {
 		return loadedConfigs.containsKey(configPath.getPath());
 	}
 	
-    public InputStream getConfigContent(File configFile) {
-        if(!configFile.exists()) {
-            return null;
-        }
- 
+    public InputStream getConfigContent(Reader reader) {
         try {
             String addLine, currentLine, pluginName = skyblock.getDescription().getName();
             int commentNum = 0;
             
             StringBuilder whole = new StringBuilder("");
-            BufferedReader reader = new BufferedReader(new FileReader(configFile));
+            BufferedReader bufferedReader = new BufferedReader(reader);
  
-            while((currentLine = reader.readLine()) != null) {
+            while((currentLine = bufferedReader.readLine()) != null) {
                 if(currentLine.contains("#")) {
                     addLine = currentLine.replace("[!]", "IMPORTANT").replace(":", "-").replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
                     whole.append(addLine + "\n");
@@ -186,7 +191,7 @@ public class FileManager {
  
             String config = whole.toString();
             InputStream configStream = new ByteArrayInputStream(config.getBytes(Charset.forName("UTF-8")));
-            reader.close();
+            bufferedReader.close();
             
             return configStream;
         } catch (IOException e) {
@@ -194,6 +199,20 @@ public class FileManager {
             
             return null;
         }
+    }
+    
+    public InputStream getConfigContent(File configFile) {
+        if(!configFile.exists()) {
+            return null;
+        }
+ 
+        try {
+			return getConfigContent(new FileReader(configFile));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+        
+        return null;
     }
     
     private String prepareConfigString(String configString) {

@@ -45,7 +45,7 @@ public class InformationCommand extends SubCommand {
 			UUID islandOwnerUUID = null;
 			
 			if (args.length == 1) {
-				if (player.hasPermission("skyblock.teleport") || player.hasPermission("skyblock.*")) {
+				if (player.hasPermission("skyblock.information") || player.hasPermission("skyblock.*")) {
 					Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 					
 					if (targetPlayer == null) {
@@ -119,7 +119,12 @@ public class InformationCommand extends SubCommand {
 	public String[] getAliases() {
 		return new String[] { "info" };
 	}
-
+	
+	@Override
+	public String[] getArguments() {
+		return new String[0];
+	}
+	
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Default;

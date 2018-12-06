@@ -134,7 +134,7 @@ public class IslandManager {
 		return null;
 	}
 	
-	public void createIsland(Player player, Structure structure) {
+	public boolean createIsland(Player player, Structure structure) {
 		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 		FileManager fileManager = skyblock.getFileManager();
 		
@@ -142,7 +142,7 @@ public class IslandManager {
 			skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.Message"));
 			skyblock.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			
-			return;
+			return false;
 		}
 		
 		Island island = new Island(player.getUniqueId(), prepareNextAvailableLocation(Location.World.Normal), prepareNextAvailableLocation(Location.World.Nether));
@@ -256,6 +256,8 @@ public class IslandManager {
 				}
 			}, 20L);	
 		}
+		
+		return true;
 	}
 	
 	public void giveIslandOwnership(UUID uuid) {
@@ -708,6 +710,24 @@ public class IslandManager {
 		return true;
 	}
 	
+	public boolean hasSetting(org.bukkit.Location location, Setting.Role role, String setting) {
+		for (UUID islandList : getIslands().keySet()) {
+			Island island = getIslands().get(islandList);
+			
+			for (Location.World worldList : Location.World.values()) {
+				if (LocationUtil.isLocationAtLocationRadius(location, island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+					if (island.getSetting(role, setting).getStatus()) {
+						return true;
+					}
+					
+					return false;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public void setSpawnProtection(org.bukkit.Location location) {
 		location.getBlock().setType(Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial());
 		location.clone().add(0.0D, 1.0D, 0.0D).getBlock().setType(Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial());
@@ -909,5 +929,25 @@ public class IslandManager {
 		}
 		
 		return true;
+	}
+	
+	public int getIslandSafeLevel(Island island) {
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+		FileConfiguration configLoad = config.getFileConfiguration();
+		
+		int safeLevel = 0;
+		
+		Map<String, Boolean> settings = new HashMap<>();
+		settings.put("KeepItemsOnDeath", false);
+		settings.put("PvP", true);
+		settings.put("Damage", true);
+		
+		for (String settingList : settings.keySet()) {
+			if (configLoad.getBoolean("Island.Settings." + settingList + ".Enable") && island.getSetting(Setting.Role.Owner, settingList).getStatus() == settings.get(settingList)) {
+				safeLevel++;
+			}
+		}
+		
+		return safeLevel;
 	}
 }

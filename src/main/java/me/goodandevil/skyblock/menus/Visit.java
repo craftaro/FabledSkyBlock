@@ -370,6 +370,14 @@ public class Visit {
 					
 					List<String> itemLore = new ArrayList<>();
 					
+					String safety = "";
+					
+					if (visit.getSafeLevel() > 0) {
+						safety = configLoad.getString("Menu.Visit.Item.Island.Vote.Word.Unsafe");
+					} else {
+						safety = configLoad.getString("Menu.Visit.Item.Island.Vote.Word.Safe");
+					}
+					
 					if (voteEnabled) {
 						String voteAction = "";
 						
@@ -411,7 +419,7 @@ public class Visit {
 							}
 						}
 						
-						nInv.addItem(nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]), configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName), itemLore, nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%votes#" + visit.getVoters().size(), "%visits#" + visit.getVisitors().size(), "%players#" + islandManager.getPlayersAtIsland(island).size(), "%player_capacity#" + playerCapacity, "%action#" + voteAction }), null, null), inventorySlot);
+						nInv.addItem(nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]), configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName), itemLore, nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%votes#" + visit.getVoters().size(), "%visits#" + visit.getVisitors().size(), "%players#" + islandManager.getPlayersAtIsland(island).size(), "%player_capacity#" + playerCapacity, "%action#" + voteAction, "%safety#" + safety }), null, null), inventorySlot);
 					} else {
 						if (signatureEnabled) {
 							for (String itemLoreList : configLoad.getStringList("Menu.Visit.Item.Island.Vote.Disabled.Signature.Enabled.Lore")) {
@@ -433,7 +441,7 @@ public class Visit {
 							itemLore.addAll(configLoad.getStringList("Menu.Visit.Item.Island.Vote.Disabled.Signature.Disabled.Lore"));
 						}
 						
-						nInv.addItem(nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]), configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName), itemLore, nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%visits#" + visit.getVisitors().size(), "%players#" + islandManager.getPlayersAtIsland(island).size(), "%player_capacity#" + playerCapacity }), null, null), inventorySlot);
+						nInv.addItem(nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]), configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName), itemLore, nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%visits#" + visit.getVisitors().size(), "%players#" + islandManager.getPlayersAtIsland(island).size(), "%player_capacity#" + playerCapacity, "%safety#" + safety }), null, null), inventorySlot);
 					}
 				}
 			}

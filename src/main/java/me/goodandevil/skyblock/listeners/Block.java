@@ -278,23 +278,9 @@ public class Block implements Listener {
 		org.bukkit.block.Block block = event.getBlock();
 		
 		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			IslandManager islandManager = skyblock.getIslandManager();
-			
-			for (UUID islandList : islandManager.getIslands().keySet()) {
-				Island island = islandManager.getIslands().get(islandList);
-				
-				for (Location.World worldList : Location.World.values()) {
-					if (LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-						if (!island.getSetting(Setting.Role.Owner, "FireSpread").getStatus()) {
-							event.setCancelled(true);
-						}
-						
-						return;
-					}
-				}
+			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), Setting.Role.Owner, "FireSpread")) {
+				event.setCancelled(false);
 			}
-			
-			event.setCancelled(true);
 		}
 	}
 	
@@ -303,23 +289,9 @@ public class Block implements Listener {
 		org.bukkit.block.Block block = event.getBlock();
 		
 		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			IslandManager islandManager = skyblock.getIslandManager();
-			
-			for (UUID islandList : islandManager.getIslands().keySet()) {
-				Island island = islandManager.getIslands().get(islandList);
-				
-				for (Location.World worldList : Location.World.values()) {
-					if (LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-						if (!island.getSetting(Setting.Role.Owner, "FireSpread").getStatus()) {
-							event.setCancelled(true);
-						}
-						
-						return;
-					}
-				}
+			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), Setting.Role.Owner, "FireSpread")) {
+				event.setCancelled(false);
 			}
-			
-			event.setCancelled(true);
 		}
 	}
 	
@@ -377,23 +349,9 @@ public class Block implements Listener {
 		org.bukkit.block.Block block = event.getBlock();
 		
 		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			IslandManager islandManager = skyblock.getIslandManager();
-			
-			for (UUID islandList : islandManager.getIslands().keySet()) {
-				Island island = islandManager.getIslands().get(islandList);
-				
-				for (Location.World worldList : Location.World.values()) {
-					if (LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-						if (!island.getSetting(Setting.Role.Owner, "LeafDecay").getStatus()) {
-							event.setCancelled(true);
-						}
-						
-						return;
-					}
-				}
+			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), Setting.Role.Owner, "LeafDecay")) {
+				event.setCancelled(false);
 			}
-			
-			event.setCancelled(true);
 		}
 	}
 }

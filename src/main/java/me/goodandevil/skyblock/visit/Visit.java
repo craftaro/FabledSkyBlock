@@ -26,6 +26,7 @@ public class Visit {
 	
 	private int islandSize;
 	private int islandMembers;
+	private int safeLevel;
 	
 	private final Level islandLevel;
 	
@@ -33,13 +34,14 @@ public class Visit {
 	
 	private boolean open;
 	
-	protected Visit(SkyBlock skyblock, UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, Level islandLevel, List<String> islandSignature, boolean open) {
+	protected Visit(SkyBlock skyblock, UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, int safeLevel, Level islandLevel, List<String> islandSignature, boolean open) {
 		this.skyblock = skyblock;
 		this.islandOwnerUUID = islandOwnerUUID;
 		//this.islandOwnerName = new OfflinePlayer(islandOwnerUUID).getNames()[0].getName();
 		this.islandLocations = islandLocations;
 		this.islandSize = islandSize;
 		this.islandMembers = islandMembers;
+		this.safeLevel = safeLevel;
 		this.islandLevel = islandLevel;
 		this.islandSignature = islandSignature;
 		this.open = open;
@@ -77,6 +79,14 @@ public class Visit {
 	
 	public void setMembers(int islandMembers) {
 		this.islandMembers = islandMembers;
+	}
+	
+	public int getSafeLevel() {
+		return safeLevel;
+	}
+	
+	public void setSafeLevel(int safeLevel) {
+		this.safeLevel = safeLevel;
 	}
 	
 	public int getRadius() {

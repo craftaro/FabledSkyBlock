@@ -78,12 +78,17 @@ public class SettingsCommand extends SubCommand {
 		
 		return this;
 	}
-
+	
 	@Override
 	public String[] getAliases() {
 		return new String[] { "permissions", "perms", "p" };
 	}
-
+	
+	@Override
+	public String[] getArguments() {
+		return new String[0];
+	}
+	
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Default;

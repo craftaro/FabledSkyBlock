@@ -56,33 +56,83 @@ public class GeneratorManager {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public boolean isGenerator(Block block) {
 		if (block.getRelative(BlockFace.UP).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial() && block.getRelative(BlockFace.UP).getType() != Materials.WATER.parseMaterial()) {
 			Block flowBlock = null;
 			
-			if ((block.getRelative(BlockFace.NORTH).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial() && block.getRelative(BlockFace.NORTH).getType() != Materials.WATER.parseMaterial()) && (block.getRelative(BlockFace.EAST).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(BlockFace.EAST).getType() == Materials.WATER.parseMaterial()) && (block.getRelative(BlockFace.SOUTH).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial() && block.getRelative(BlockFace.SOUTH).getType() != Materials.WATER.parseMaterial()) && (block.getRelative(BlockFace.WEST).getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getRelative(BlockFace.WEST).getType() == Materials.LAVA.parseMaterial()) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.EAST).getType() == Material.AIR || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.EAST).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial())) {
+			if ((block.getRelative(BlockFace.EAST).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(BlockFace.EAST).getType() == Materials.WATER.parseMaterial()) && (block.getRelative(BlockFace.WEST).getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getRelative(BlockFace.WEST).getType() == Materials.LAVA.parseMaterial()) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.EAST).getType() == Material.AIR || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.EAST).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial())) {
+				if (!isFlowingTowardsBlock(block, BlockFace.NORTH, BlockFace.SOUTH)) {
+					return false;
+				} else if (!isFlowingTowardsBlock(block, BlockFace.SOUTH, BlockFace.NORTH)) {
+					return false;
+				}
+				
 				flowBlock = block.getRelative(BlockFace.EAST);
-			} else if ((block.getRelative(BlockFace.NORTH).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial() && block.getRelative(BlockFace.NORTH).getType() != Materials.WATER.parseMaterial()) && (block.getRelative(BlockFace.EAST).getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getRelative(BlockFace.EAST).getType() == Materials.LAVA.parseMaterial()) && (block.getRelative(BlockFace.SOUTH).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial() && block.getRelative(BlockFace.SOUTH).getType() != Materials.WATER.parseMaterial()) && (block.getRelative(BlockFace.WEST).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(BlockFace.WEST).getType() == Materials.WATER.parseMaterial()) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.WEST).getType() == Material.AIR || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.WEST).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial())) {
+			} else if ((block.getRelative(BlockFace.EAST).getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getRelative(BlockFace.EAST).getType() == Materials.LAVA.parseMaterial()) && (block.getRelative(BlockFace.WEST).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(BlockFace.WEST).getType() == Materials.WATER.parseMaterial()) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.WEST).getType() == Material.AIR || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.WEST).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial())) {
+				if (!isFlowingTowardsBlock(block, BlockFace.NORTH, BlockFace.SOUTH)) {
+					return false;
+				} else if (!isFlowingTowardsBlock(block, BlockFace.SOUTH, BlockFace.NORTH)) {
+					return false;
+				}
+				
 				flowBlock = block.getRelative(BlockFace.WEST);
-			} else if (((block.getRelative(BlockFace.NORTH).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(BlockFace.NORTH).getType() == Materials.WATER.parseMaterial()) && block.getRelative(BlockFace.EAST).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial() && block.getRelative(BlockFace.EAST).getType() != Materials.WATER.parseMaterial()) && (block.getRelative(BlockFace.SOUTH).getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getRelative(BlockFace.SOUTH).getType() == Materials.LAVA.parseMaterial()) && (block.getRelative(BlockFace.WEST).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial() && block.getRelative(BlockFace.WEST).getType() != Materials.WATER.parseMaterial()) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.NORTH).getType() == Material.AIR || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.NORTH).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial())) {
+			} else if (((block.getRelative(BlockFace.NORTH).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(BlockFace.NORTH).getType() == Materials.WATER.parseMaterial())) && (block.getRelative(BlockFace.SOUTH).getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getRelative(BlockFace.SOUTH).getType() == Materials.LAVA.parseMaterial()) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.NORTH).getType() == Material.AIR || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.NORTH).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial())) {
+				if (!isFlowingTowardsBlock(block, BlockFace.WEST, BlockFace.EAST)) {
+					return false;
+				} else if (!isFlowingTowardsBlock(block, BlockFace.EAST, BlockFace.WEST)) {
+					return false;
+				}
+				
 				flowBlock = block.getRelative(BlockFace.NORTH);
-			} else if (((block.getRelative(BlockFace.NORTH).getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getRelative(BlockFace.NORTH).getType() == Materials.LAVA.parseMaterial()) && block.getRelative(BlockFace.EAST).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial() && block.getRelative(BlockFace.EAST).getType() != Materials.WATER.parseMaterial()) && (block.getRelative(BlockFace.SOUTH).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(BlockFace.SOUTH).getType() == Materials.WATER.parseMaterial()) && (block.getRelative(BlockFace.WEST).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial() && block.getRelative(BlockFace.WEST).getType() != Materials.WATER.parseMaterial()) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.SOUTH).getType() == Material.AIR || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.SOUTH).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial())) {
+			} else if (((block.getRelative(BlockFace.NORTH).getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getRelative(BlockFace.NORTH).getType() == Materials.LAVA.parseMaterial())) && (block.getRelative(BlockFace.SOUTH).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(BlockFace.SOUTH).getType() == Materials.WATER.parseMaterial()) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.SOUTH).getType() == Material.AIR || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(BlockFace.SOUTH).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial())) {
+				if (!isFlowingTowardsBlock(block, BlockFace.WEST, BlockFace.EAST)) {
+					return false;
+				} else if (!isFlowingTowardsBlock(block, BlockFace.EAST, BlockFace.WEST)) {
+					return false;
+				}
+				
 				flowBlock = block.getRelative(BlockFace.SOUTH);
 			}
 			
 			if (flowBlock != null) {
-				if (NMSUtil.getVersionNumber() > 12) {
-					if (flowBlock.getState().getBlockData() instanceof Levelled) {
-						if (((Levelled) flowBlock.getState().getBlockData()).getLevel() != 0) {
-							return true;
-						}
+				return isFlowingBlock(flowBlock);
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean isFlowingTowardsBlock(Block block, BlockFace blockFace1, BlockFace blockFace2) {
+		if (block.getRelative(blockFace1).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(blockFace1).getType() == Materials.WATER.parseMaterial()) {
+			if (isFlowingBlock(block.getRelative(blockFace1)) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(blockFace1).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(blockFace1).getType() == Materials.WATER.parseMaterial())) {
+				if (block.getRelative(blockFace2).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getRelative(blockFace2).getType() == Materials.WATER.parseMaterial()) {
+					if (isFlowingBlock(block.getRelative(blockFace2)) && (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(blockFace2).getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getRelative(blockFace2).getType() == Materials.WATER.parseMaterial())) {
+						return true;
+					} else {
+						return false;
 					}
 				} else {
-					if (flowBlock.getData() != 0) {
-						return true;
-					}
+					return true;
 				}
+			} else {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	@SuppressWarnings("deprecation")
+	private boolean isFlowingBlock(Block block) {
+		if (NMSUtil.getVersionNumber() > 12) {
+			if (block.getState().getBlockData() instanceof Levelled) {
+				if (((Levelled) block.getState().getBlockData()).getLevel() != 0) {
+					return true;
+				}
+			}
+		} else {
+			if (block.getData() != 0) {
+				return true;
 			}
 		}
 		
@@ -148,7 +198,11 @@ public class GeneratorManager {
 			}
 			
 			if (chances.size() != 0) {
-				return generator.getGeneratorMaterials().get(chances.get(new Random().nextInt(chances.size()))).getMaterials();				
+				int rndNum = new Random().nextInt(chances.size());
+				
+				if (rndNum != 0) {
+					return generator.getGeneratorMaterials().get(chances.get(rndNum)).getMaterials();
+				}	
 			}
 		}
 		

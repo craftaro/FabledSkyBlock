@@ -85,7 +85,7 @@ public class VisitManager {
 								size = configLoad.getInt("Size");
 							}
 							
-							createIsland(islandOwnerUUID, new Location[] { fileManager.getLocation(config, "Location.Normal.Island", true), fileManager.getLocation(config, "Location.Nether.Island", true) }, size, configLoad.getStringList("Members").size() + configLoad.getStringList("Operators").size() + 1, new Level(islandOwnerUUID, skyblock), islandSignature, configLoad.getBoolean("Visitor.Open"));	
+							createIsland(islandOwnerUUID, new Location[] { fileManager.getLocation(config, "Location.Normal.Island", true), fileManager.getLocation(config, "Location.Nether.Island", true) }, size, configLoad.getStringList("Members").size() + configLoad.getStringList("Operators").size() + 1, getIslandSafeLevel(islandOwnerUUID), new Level(islandOwnerUUID, skyblock), islandSignature, configLoad.getBoolean("Visitor.Open"));	
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
@@ -131,6 +131,31 @@ public class VisitManager {
 		}
 	}
 	
+	public int getIslandSafeLevel(UUID islandOwnerUUID) {
+		FileManager fileManager = skyblock.getFileManager();
+		
+		Config settingDataConfig = new FileManager.Config(fileManager, new File(skyblock.getDataFolder().toString() + "/setting-data", islandOwnerUUID.toString() + ".yml"));
+		FileConfiguration settingDataConfigLoad = settingDataConfig.getFileConfiguration();
+		
+		Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+		FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();
+		
+		int safeLevel = 0;
+		
+		Map<String, Boolean> settings = new HashMap<>();
+		settings.put("KeepItemsOnDeath", false);
+		settings.put("PvP", true);
+		settings.put("Damage", true);
+		
+		for (String settingList : settings.keySet()) {
+			if (mainConfigLoad.getBoolean("Island.Settings." + settingList + ".Enable") && settingDataConfigLoad.getString("Settings.Owner." + settingList) != null && settingDataConfigLoad.getBoolean("Settings.Owner." + settingList) == settings.get(settingList)) {
+				safeLevel++;
+			}
+		}
+		
+		return safeLevel;
+	}
+	
 	public boolean hasIsland(UUID islandOwnerUUID) {
 		return visitStorage.containsKey(islandOwnerUUID);
 	}
@@ -165,8 +190,8 @@ public class VisitManager {
 		return visitIslands;
 	}
 	
-	public void createIsland(UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, Level islandLevel, List<String> islandSignature, boolean open) {
-		visitStorage.put(islandOwnerUUID, new Visit(skyblock, islandOwnerUUID, islandLocations, islandSize, islandMembers, islandLevel, islandSignature, open));
+	public void createIsland(UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers, int safeLevel, Level islandLevel, List<String> islandSignature, boolean open) {
+		visitStorage.put(islandOwnerUUID, new Visit(skyblock, islandOwnerUUID, islandLocations, islandSize, islandMembers, safeLevel, islandLevel, islandSignature, open));
 	}
 	
 	public void addIsland(UUID islandOwnerUUID, Visit visit) {

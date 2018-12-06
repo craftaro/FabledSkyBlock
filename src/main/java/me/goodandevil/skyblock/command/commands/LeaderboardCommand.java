@@ -100,7 +100,12 @@ public class LeaderboardCommand extends SubCommand {
 	public String[] getAliases() {
 		return new String[] { "lb", "top" };
 	}
-
+	
+	@Override
+	public String[] getArguments() {
+		return new String[] { "level", "votes" };
+	}
+	
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Default;

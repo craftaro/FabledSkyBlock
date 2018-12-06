@@ -160,7 +160,12 @@ public class LevelCommand extends SubCommand {
 	public String[] getAliases() {
 		return new String[] { "levelling" , "points" };
 	}
-
+	
+	@Override
+	public String[] getArguments() {
+		return new String[0];
+	}
+	
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Default;

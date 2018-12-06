@@ -189,6 +189,20 @@ Island:
             # [!] If Enabled Players will respawn at the Island they died at. If Disabled
             #     Players will respawn at the Spawn location.
             Island: true
+    Settings:
+        # When disabled, players will not lose their items when they die at an island and
+        # the setting will be removed from the Island Settings menu.
+        KeepItemsOnDeath:
+            Enable: true
+        # When disabled, players will not take any damage from entities when at an island
+        # and the setting will be removed from the Island Settings menu.
+        PvP:
+            Enable: true
+        # When disabled, players will not take any damage when at an island and the setting
+        # will be removed from the Island Settings menu. This setting discludes entity and
+        # void damage.
+        Damage:
+            Enable: true
     Admin:
         Structure:
             # Item Material used to select positions for a structure.

@@ -10,8 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
@@ -154,6 +152,14 @@ public class Information {
     				Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
     				List<String> itemLore = new ArrayList<>();
     				
+    				String safety = "";
+					
+					if (visit.getSafeLevel() > 0) {
+						safety = configLoad.getString("Menu.Information.Categories.Item.Information.Vote.Word.Unsafe");
+					} else {
+						safety = configLoad.getString("Menu.Information.Categories.Item.Information.Vote.Word.Safe");
+					}
+    				
 					if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
 							for (String itemLoreList : configLoad.getStringList("Menu.Information.Categories.Item.Information.Vote.Enabled.Signature.Enabled.Lore")) {
@@ -175,7 +181,7 @@ public class Information {
 							itemLore.addAll(configLoad.getStringList("Menu.Information.Categories.Item.Information.Vote.Enabled.Signature.Disabled.Lore"));
 						}
 						
-						nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(), configLoad.getString("Menu.Information.Categories.Item.Information.Displayname"), itemLore, nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%votes#" + visit.getVoters().size(), "%visits#" + visit.getVisitors().size(), "%players#" + islandManager.getPlayersAtIsland(island).size(), "%player_capacity#" + mainConfig.getFileConfiguration().getInt("Island.Visitor.Capacity"), "%owner#" + islandOwnerName }), null, null), 2);
+						nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(), configLoad.getString("Menu.Information.Categories.Item.Information.Displayname"), itemLore, nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%votes#" + visit.getVoters().size(), "%visits#" + visit.getVisitors().size(), "%players#" + islandManager.getPlayersAtIsland(island).size(), "%player_capacity#" + mainConfig.getFileConfiguration().getInt("Island.Visitor.Capacity"), "%owner#" + islandOwnerName, "%safety#" + safety }), null, null), 2);
 					} else {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
 							for (String itemLoreList : configLoad.getStringList("Menu.Information.Categories.Item.Information.Vote.Disabled.Signature.Enabled.Lore")) {
@@ -197,7 +203,7 @@ public class Information {
 							itemLore.addAll(configLoad.getStringList("Menu.Information.Categories.Item.Information.Vote.Disabled.Signature.Disabled.Lore"));
 						}
 						
-						nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(), configLoad.getString("Menu.Information.Categories.Item.Information.Displayname"), itemLore, nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%visits#" + visit.getVisitors().size(), "%players#" + islandManager.getPlayersAtIsland(island).size(), "%player_capacity#" + mainConfig.getFileConfiguration().getInt("Island.Visitor.Capacity"), "%owner#" + islandOwnerName }), null, null), 2);
+						nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(), configLoad.getString("Menu.Information.Categories.Item.Information.Displayname"), itemLore, nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(), "%members#" + visit.getMembers(), "%visits#" + visit.getVisitors().size(), "%players#" + islandManager.getPlayersAtIsland(island).size(), "%player_capacity#" + mainConfig.getFileConfiguration().getInt("Island.Visitor.Capacity"), "%owner#" + islandOwnerName, "%safety#" + safety }), null, null), 2);
 					}
     		    	
     		    	nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Categories.Title")));
@@ -453,57 +459,6 @@ public class Information {
     			islandManager.unloadIsland(island, null);
     		}
     	}
-    }
-    
-    @EventHandler
-	public void onInventoryClick(InventoryClickEvent event) {
-		Player player = (Player) event.getWhoClicked();
-		ItemStack is = event.getCurrentItem();
-
-		if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			SkyBlock skyblock = SkyBlock.getInstance();
-			
-			PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-			SoundManager soundManager = skyblock.getSoundManager();
-			
-			Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-			FileConfiguration configLoad = config.getFileConfiguration();
-			
-			if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Categories.Title"))) || event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Members.Title")))) {
-				event.setCancelled(true);
-				
-				PlayerData playerData;
-				
-				if (playerDataManager.hasPlayerData(player)) {
-					playerData = playerDataManager.getPlayerData(player);
-					
-					if (playerData.getViewer() == null) {
-						return;
-					}
-				} else {
-					return;
-				}
-				
-				if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Categories.Title")))) {
-					if ((event.getCurrentItem().getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Categories.Item.Exit.Displayname"))))) {
-			    		soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
-			    		player.closeInventory();
-					} else if ((event.getCurrentItem().getType() == Materials.ITEM_FRAME.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Categories.Item.Members.Displayname"))))) {
-						playerData.setViewer(new Information.Viewer(((Information.Viewer) playerData.getViewer()).getOwner(), Information.Viewer.Type.Members));
-						open(player);
-						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-					} else if ((event.getCurrentItem().getType() == Materials.LEGACY_EMPTY_MAP.getPostMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Categories.Item.Information.Displayname"))))) {
-						soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
-					} else if ((event.getCurrentItem().getType() == Materials.ITEM_FRAME.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Categories.Item.Visitors.Displayname"))))) {
-						playerData.setViewer(new Information.Viewer(((Information.Viewer) playerData.getViewer()).getOwner(), Information.Viewer.Type.Visitors));
-						open(player);
-						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-					}
-				} else if (event.getInventory().getName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Information.Members.Title")))) {
-					
-				}
-			}
-		}
     }
 	
     public static class Viewer {

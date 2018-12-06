@@ -1,7 +1,6 @@
 package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,11 +11,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
-import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Setting;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Death implements Listener {
 	
@@ -35,20 +31,14 @@ public class Death implements Listener {
 				Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 				FileConfiguration configLoad = config.getFileConfiguration();
 				
-				IslandManager islandManager = skyblock.getIslandManager();
-				
 				boolean keepInventory = false;
 				
-				for (UUID islandList : islandManager.getIslands().keySet()) {
-					Island island = islandManager.getIslands().get(islandList);
-					
-					if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-						if (island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
-							keepInventory = true;
-						}
-						
-						break;
+				if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
+					if (skyblock.getIslandManager().hasSetting(player.getLocation(), Setting.Role.Owner, "KeepItemsOnDeath")) {
+						keepInventory = true;
 					}
+				} else {
+					keepInventory = true;
 				}
 				
 				if (keepInventory) {

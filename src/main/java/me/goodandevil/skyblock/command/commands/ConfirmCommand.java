@@ -188,7 +188,12 @@ public class ConfirmCommand extends SubCommand {
 	public String[] getAliases() {
 		return new String[] { "confirmation" };
 	}
-
+	
+	@Override
+	public String[] getArguments() {
+		return new String[0];
+	}
+	
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Default;

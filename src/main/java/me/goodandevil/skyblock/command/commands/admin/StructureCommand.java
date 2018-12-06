@@ -177,12 +177,17 @@ public class StructureCommand extends SubCommand {
 		
 		return this;
 	}
-
+	
 	@Override
 	public String[] getAliases() {
 		return new String[0];
 	}
-
+	
+	@Override
+	public String[] getArguments() {
+		return new String[] { "tool", "save" };
+	}
+	
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Admin;

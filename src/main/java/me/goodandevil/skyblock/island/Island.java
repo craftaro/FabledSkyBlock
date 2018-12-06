@@ -190,7 +190,7 @@ public class Island {
 		VisitManager visitManager = skyblock.getVisitManager();
 		
 		if (!visitManager.hasIsland(getOwnerUUID())) {
-			visitManager.createIsland(getOwnerUUID(), new org.bukkit.Location[] { getLocation(Location.World.Normal, Location.Environment.Island), getLocation(Location.World.Nether, Location.Environment.Island) }, size, getRole(Role.Member).size() + getRole(Role.Operator).size() + 1, level, getMessage(Message.Signature), isOpen());
+			visitManager.createIsland(getOwnerUUID(), new org.bukkit.Location[] { getLocation(Location.World.Normal, Location.Environment.Island), getLocation(Location.World.Nether, Location.Environment.Island) }, size, getRole(Role.Member).size() + getRole(Role.Operator).size() + 1, visitManager.getIslandSafeLevel(ownerUUID), level, getMessage(Message.Signature), isOpen());
 		}
 		
 		BanManager banManager = skyblock.getBanManager();

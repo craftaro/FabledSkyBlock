@@ -2,7 +2,7 @@ Command:
     Island:
         Argument:
             Unrecognised:
-                Message: "&bSkyBlock &8| &cError&8: &eThat arugment was not recognised."
+                Message: "&bSkyBlock &8| &cError&8: &eThat argument was not recognised."
         Help:
             Lines:
             - "&bSkyBlock &7- &e%type Commands&8:"
@@ -137,9 +137,9 @@ Command:
                     Sent:
                         Message: "&bSkyBlock &8| &aInfo&8: &eYou have invited the player &d%player &eto join your Island. They have &c%time &eto respond."
                     Expired:
-                        Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player's &edidn't respond to your invite in time."
+                        Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player &edidn't respond to your invite in time."
                     Disconnected:
-                        Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player's &edisconnected and didn't respond to your invite."
+                        Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player &edisconnected and didn't respond to your invite."
                 Target:
                     Received:
                         Message: "&bSkyBlock &8| &aInfo&8: &eYou have been invited to join &d%player's &eIsland. You have &c%time &eto respond."
@@ -422,7 +422,7 @@ Command:
             Invalid:
                 Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island information [<player>]"
             Permission:
-                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to teleport to other players Islands."
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to view information on other players islands."
             Owner:
                 Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
             Island:
@@ -1890,6 +1890,8 @@ Menu:
                         Displayname: "&aLeaf Decay"
                     KeepItemsOnDeath:
                         Displayname: "&aKeep Items on Death"
+                    Damage:
+                        Displayname: "&aDamage"
         Default:
             Item:
                 Setting:
@@ -1984,6 +1986,8 @@ Menu:
                         Displayname: "&aHopper Use"
                     ArmorStandPlacement:
                         Displayname: "&aArmorStand Placement"
+                    ExperienceOrbPickup:
+                        Displayname: "&aExperience Orb Pickup"
     Information:
         Categories:
             Title: "&8Island Information"
@@ -2011,6 +2015,8 @@ Menu:
                     Vote:
                         Word:
                             Empty: "&f&oEmpty"
+                            Safe: "&a[Safe]"
+                            Unsafe: "&c[Unsafe]"
                         Enabled:
                             Signature:
                                 Word:
@@ -2029,6 +2035,8 @@ Menu:
                                     - "&7Members&8: &e%members"
                                     - "&7Visits&8: &e%visits"
                                     - "&7Votes&8: &6%votes"
+                                    - ""
+                                    - "&7Safety&8: %safety"
                                 Disabled:
                                     Lore:
                                     - "&7Owner&8: &f%owner"
@@ -2039,6 +2047,8 @@ Menu:
                                     - "&7Members&8: &e%members"
                                     - "&7Visits&8: &e%visits"
                                     - "&7Votes&8: &6%votes"
+                                    - ""
+                                    - "&7Safety&8: %safety"
                         Disabled:
                             Signature:
                                 Enabled:
@@ -2053,6 +2063,8 @@ Menu:
                                     - "&7Level&8: &b%level"
                                     - "&7Members&8: &e%members"
                                     - "&7Visits&8: &e%visits"
+                                    - ""
+                                    - "&7Safety&8: %safety"
                                 Disabled:
                                     Lore:
                                     - "&7Owner&8: &f%owner"
@@ -2062,6 +2074,8 @@ Menu:
                                     - "&7Level&8: &b%level"
                                     - "&7Members&8: &e%members"
                                     - "&7Visits&8: &e%visits"
+                                    - ""
+                                    - "&7Safety&8: %safety"
         Members:
             Title: "&8Island Information - Members"
             Item:
@@ -2344,6 +2358,8 @@ Menu:
                 Vote:
                     Word:
                         Empty: "&f&oEmpty"
+                        Safe: "&a[Safe]"
+                        Unsafe: "&c[Unsafe]"
                     Enabled:
                         Signature:
                             Word:
@@ -2362,6 +2378,8 @@ Menu:
                                     - "&7Visits&8: &e%visits"
                                     - "&7Votes&8: &6%votes"
                                     - ""
+                                    - "&7Safety&8: %safety"
+                                    - ""
                                     - "&eClick to visit Island!"
                                 Visitor:
                                     Lore:
@@ -2375,6 +2393,8 @@ Menu:
                                     - "&7Visits&8: &e%visits"
                                     - "&7Votes&8: &6%votes"
                                     - ""
+                                    - "&7Safety&8: %safety"
+                                    - ""
                                     - "&eLeft-Click to visit Island!"
                                     - "&eRight-Click to %action vote!"
                             Disabled:
@@ -2387,6 +2407,8 @@ Menu:
                                     - "&7Visits&8: &e%visits"
                                     - "&7Votes&8: &6%votes"
                                     - ""
+                                    - "&7Safety&8: %safety"
+                                    - ""
                                     - "&eClick to visit Island!"
                                 Visitor:
                                     Lore:
@@ -2396,6 +2418,8 @@ Menu:
                                     - "&7Members&8: &e%members"
                                     - "&7Visits&8: &e%visits"
                                     - "&7Votes&8: &6%votes"
+                                    - ""
+                                    - "&7Safety&8: %safety"
                                     - ""
                                     - "&eLeft-Click to visit Island!"
                                     - "&eRight-Click to %action vote!"
@@ -2412,6 +2436,8 @@ Menu:
                                 - "&7Members&8: &e%members"
                                 - "&7Visits&8: &e%visits"
                                 - ""
+                                - "&7Safety&8: %safety"
+                                - ""
                                 - "&eClick to visit Island!"
                             Disabled:
                                 Lore:
@@ -2420,6 +2446,8 @@ Menu:
                                 - "&7Level&8: &b%level"
                                 - "&7Members&8: &e%members"
                                 - "&7Visits&8: &e%visits"
+                                - ""
+                                - "&7Safety&8: %safety"
                                 - ""
                                 - "&eClick to visit Island!"
     Visitors:
@@ -2829,6 +2857,14 @@ Menu:
                         - "&7to be when an Island is created."
                         - ""
                         - "&eClick to Edit Settings!"
+                    Coop:
+                        Displayname: "&aCoop Settings"
+                        Lore:
+                        - "&7Edit and decide what you want"
+                        - "&7the default Coop permissions"
+                        - "&7to be when an Island is created."
+                        - ""
+                        - "&eClick to Edit Settings!"
                     Owner:
                         Displayname: "&aIsland Settings"
                         Lore:
@@ -2844,6 +2880,11 @@ Menu:
                         Displayname: "&cClick to Return"
             Member:
                 Title: "&8Settings Editor - Member"
+                Item:
+                    Return:
+                        Displayname: "&cClick to Return"
+            Coop:
+                Title: "&8Settings Editor - Coop"
                 Item:
                     Return:
                         Displayname: "&cClick to Return"
@@ -2872,6 +2913,10 @@ Menu:
                             Displayname: "&aEdit Visitor Settings"
                         Member:
                             Displayname: "&aEdit Member Settings"
+                        Coop:
+                            Displayname: "&aEdit Coop Settings"
+                        CoopPlayers:
+                            Displayname: "&aCoop Players"
                         Island:
                             Displayname: "&aEdit Island Settings"
                         MainSpawn:
@@ -2911,6 +2956,8 @@ Menu:
                             Displayname: "&aLeaf Decay"
                         KeepItemsOnDeath:
                             Displayname: "&aKeep Items on Death"
+                        Damage:
+                            Displayname: "&aDamage"
             Default:
                 Item:
                     Setting:
@@ -2927,7 +2974,7 @@ Menu:
                             Displayname: "&aPlace Blocks"
                         Anvil:
                             Displayname: "&aAnvil Use"
-                        ArmorStand:
+                        ArmorStandUse:
                             Displayname: "&aArmorStand Use"
                         Beacon:
                             Displayname: "&aBeacon Use"
@@ -3003,3 +3050,7 @@ Menu:
                             Displayname: "&aPortal Use"
                         Hopper:
                             Displayname: "&aHopper Use"
+                        ArmorStandPlacement:
+                            Displayname: "&aArmorStand Placement"
+                        ExperienceOrbPickup:
+                            Displayname: "&aExperience Orb Pickup"

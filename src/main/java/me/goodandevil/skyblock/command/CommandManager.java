@@ -323,20 +323,19 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 						}
 					}
 				}
+				
+				List<String> arguments = getArguments(Type.Default, args[0], args[1]);
+				
+				if (arguments.size() != 0) {
+					commandAliases.addAll(arguments);
+				}
 			} else if (args.length == 3) {
 				if (sender.hasPermission("skyblock.admin") || sender.hasPermission("skyblock.admin.*") || sender.hasPermission("skyblock.*")) {
-					if (args[0].equalsIgnoreCase("admin") && args[1].equalsIgnoreCase("structure")) {
-						if (args[2] == null || args[2].isEmpty()) {
-							commandAliases.add("tool");
-							commandAliases.add("save");	
-						} else {
-							if ("tool".contains(args[2].toLowerCase())) {
-								commandAliases.add("tool");
-							}
-							
-							if ("save".contains(args[2].toLowerCase())) {
-								commandAliases.add("save");
-							}
+					if (args[0].equalsIgnoreCase("admin")) {
+						List<String> arguments = getArguments(Type.Admin, args[1], args[2]);
+						
+						if (arguments.size() != 0) {
+							commandAliases.addAll(arguments);
 						}
 					}
 				}
@@ -348,6 +347,30 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 		
 		return null;
+	}
+	
+	public List<String> getArguments(Type type, String arg1, String arg2) {
+		List<String> arguments = new ArrayList<>();
+		
+		for (SubCommand subCommandList : subCommands.get(type)) {
+			if (arg1.equalsIgnoreCase(subCommandList.getName())) {
+				if (arg2 == null || arg2.isEmpty()) {
+					arguments.addAll(Arrays.asList(subCommandList.getArguments()));
+				} else {
+					for (String argumentList : subCommandList.getArguments()) {
+						if (argumentList.contains(arg2.toLowerCase())) {
+							arguments.add(argumentList);
+							
+							break;
+						}
+					}
+				}
+				
+				break;
+			}
+		}
+		
+		return arguments;
 	}
 	
 	public void sendPlayerHelpCommands(Player player, CommandManager.Type type, int page) {

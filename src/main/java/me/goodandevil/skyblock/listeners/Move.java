@@ -101,9 +101,21 @@ public class Move implements Listener {
 								Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 								FileConfiguration configLoad = config.getFileConfiguration();
 								
+								boolean keepItemsOnDeath;
+								
+					 			if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
+					 				if (island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
+					 					keepItemsOnDeath = true;
+					 				} else {
+					 					keepItemsOnDeath = false;
+					 				}
+					 			} else {
+					 				keepItemsOnDeath = true;
+					 			}
+								
 								if (configLoad.getBoolean("Island.World." + world.name() + ".Liquid.Enable")) {
 									if (to.getY() <= configLoad.getInt("Island.World." + world.name() + ".Liquid.Height")) {
-										if (island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
+										if (keepItemsOnDeath) {
 											player.setFallDistance(0.0F);
 											
 											player.teleport(island.getLocation(world, me.goodandevil.skyblock.island.Location.Environment.Main));
@@ -116,7 +128,7 @@ public class Move implements Listener {
 								
 								if (configLoad.getBoolean("Island.Void.Teleport.Enable")) {
 									if (to.getY() <= configLoad.getInt("Island.Void.Teleport.Offset")) {
-										if (!island.getSetting(Setting.Role.Owner, "KeepItemsOnDeath").getStatus()) {
+										if (!keepItemsOnDeath) {
 											player.getInventory().clear();
 											player.setLevel(0);
 											player.setExp(0.0F);

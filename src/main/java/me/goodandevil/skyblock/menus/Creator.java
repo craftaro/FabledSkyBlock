@@ -145,10 +145,10 @@ public class Creator {
 									return;
 								}
 								
-								islandManager.createIsland(player, structureList);
-								
-								messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
-								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+								if (islandManager.createIsland(player, structureList)) {
+									messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
+									soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+								}
 								
 								return;
 							}

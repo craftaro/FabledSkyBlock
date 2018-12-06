@@ -13,6 +13,7 @@ public abstract class SubCommand {
 	public abstract SubCommand setInfo(String info);
 	
 	public abstract String[] getAliases();
+	public abstract String[] getArguments();
 	
 	public abstract CommandManager.Type getType();
 }

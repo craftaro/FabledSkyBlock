@@ -112,6 +112,11 @@ public class SetHologramCommand extends SubCommand {
 	}
 	
 	@Override
+	public String[] getArguments() {
+		return new String[] { "level", "votes" };
+	}
+	
+	@Override
 	public Type getType() {
 		return CommandManager.Type.Admin;
 	}

@@ -14,20 +14,23 @@ import me.goodandevil.skyblock.SkyBlock;
 
 public class FileChecker {
 	
-	private final SkyBlock skyblock;
 	private final FileManager fileManager;
 	
 	private Map<File.Type, File> loadedFiles;
 	
-	public FileChecker(SkyBlock skyblock, FileManager fileManager, String configurationFileName) {
-		this.skyblock = skyblock;
+	public FileChecker(SkyBlock skyblock, FileManager fileManager, String configurationFileName, boolean applyComments) {
 		this.fileManager = fileManager;
 		
 		loadedFiles = new EnumMap<>(File.Type.class);
 		
 		java.io.File configFile = new java.io.File(skyblock.getDataFolder(), configurationFileName);
 		loadedFiles.put(File.Type.CREATED, new File(fileManager, configFile, YamlConfiguration.loadConfiguration(configFile)));
-		loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(skyblock.getResource(configurationFileName)))));
+		
+		if (applyComments) {
+			loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(new InputStreamReader(skyblock.getResource(configurationFileName)))))));
+		} else {
+			loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(skyblock.getResource(configurationFileName)))));
+		}
 	}
 	
 	public void loadSections() {
@@ -52,10 +55,8 @@ public class FileChecker {
 				File resourceFile = loadedFiles.get(File.Type.RESOURCE);
 				
 				for (String configKeyList : file.getKeys().keySet()) {
-					if (!configKeyList.contains(skyblock.getDescription().getName() + "_COMMENT")) {
-						if (!resourceFile.getKeys().containsKey(configKeyList)) {
-							configLoad.set(configKeyList, null);
-						}	
+					if (!resourceFile.getKeys().containsKey(configKeyList)) {
+						configLoad.set(configKeyList, null);
 					}
 				}
 			} else if (fileType == File.Type.RESOURCE) {
@@ -63,10 +64,8 @@ public class FileChecker {
 				FileConfiguration createdConfigLoad = createdFile.getFileConfiguration();
 				
 				for (String configKeyList : file.getKeys().keySet()) {
-					if (!configKeyList.contains(skyblock.getDescription().getName() + "_COMMENT")) {
-						if (createdConfigLoad.getString(configKeyList) == null) {
-							createdConfigLoad.set(configKeyList, file.getKeys().get(configKeyList));
-						}	
+					if (createdConfigLoad.getString(configKeyList) == null) {
+						createdConfigLoad.set(configKeyList, file.getKeys().get(configKeyList));
 					}
 				}
 			}

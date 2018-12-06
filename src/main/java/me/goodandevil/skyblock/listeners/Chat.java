@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -81,7 +82,7 @@ public class Chat implements Listener {
 				if (!islandChatEvent.isCancelled()) {
 					for (UUID islandMembersOnlineList : islandManager.getMembersOnline(island)) {
 						Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
-						targetPlayer.sendMessage(messageManager.replaceMessage(targetPlayer, islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())).replace("%message", islandChatEvent.getMessage()));
+						targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer, islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName()))).replace("%message", islandChatEvent.getMessage()));
 					}
 				}
 			}
