@@ -22,6 +22,8 @@
                 <configuration>
                     <reportOutputDirectory>${basedir}</reportOutputDirectory>
                     <destDir>apidocs</destDir>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <sourcepath>${basedir}/src/main/java/me/goodandevil/skyblock/api</sourcepath>
                 </configuration>
                 <executions>
                     <execution>
