@@ -19,7 +19,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Level;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.placeholder.PlaceholderManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -172,17 +172,17 @@ public class Scoreboard {
 			Island island = islandManager.getIsland(playerData.getOwner());
 			Level level = island.getLevel();
 			
-			if (island.getRole(Role.Member).size() == 0 && island.getRole(Role.Operator).size() == 0) {
+			if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
 				displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumber(level.getLevel())).replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null").replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size()).replace("%island_size", "" + island.getSize()).replace("%island_radius", "" + island.getRadius());
 			} else {
-				int islandMembers = 1 + island.getRole(Role.Member).size() + island.getRole(Role.Operator).size();
+				int islandMembers = 1 + island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size();
 				String islandRole = "";
 				
-				if (island.isRole(Role.Owner, player.getUniqueId())) {
+				if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 					islandRole = displayVariables.get("%owner");
-				} else if (island.isRole(Role.Operator, player.getUniqueId())) {
+				} else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
 					islandRole = displayVariables.get("%operator");
-				} else if (island.isRole(Role.Member, player.getUniqueId())) {
+				} else if (island.hasRole(IslandRole.Member, player.getUniqueId())) {
 					islandRole = displayVariables.get("%member");
 				}
 				

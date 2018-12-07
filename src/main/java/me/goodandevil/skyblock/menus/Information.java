@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.menus;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -276,8 +277,9 @@ public class Information {
     		    	});
     		    	
     				List<UUID> displayedMembers = new ArrayList<>();
-    				List<UUID> islandMembers = island.getRole(Role.Member);
-    				List<UUID> islandOperators = island.getRole(Role.Operator);
+    				
+    				Set<UUID> islandMembers = island.getRole(IslandRole.Member);
+    				Set<UUID> islandOperators = island.getRole(IslandRole.Operator);
     				
     				displayedMembers.add(island.getOwnerUUID());
     				displayedMembers.addAll(islandOperators);

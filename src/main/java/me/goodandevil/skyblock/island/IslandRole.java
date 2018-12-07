@@ -1,7 +1,8 @@
 package me.goodandevil.skyblock.island;
 
-public enum Role {
-
+public enum IslandRole {
+	
+	Coop,
 	Visitor,
 	Member,
 	Operator,

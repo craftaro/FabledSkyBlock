@@ -21,7 +21,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -169,12 +169,10 @@ public class Visit {
 				    				
 				    				Island island = islandManager.getIsland(targetPlayerUUID);
 				    				
-						    		if ((!island.isRole(Role.Member, player.getUniqueId()) && !island.isRole(Role.Operator, player.getUniqueId()) && !island.isRole(Role.Owner, player.getUniqueId())) && fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+						    		if ((!island.hasRole(IslandRole.Member, player.getUniqueId()) && !island.hasRole(IslandRole.Operator, player.getUniqueId()) && !island.hasRole(IslandRole.Owner, player.getUniqueId())) && fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
 						    			if (event.getClick() == ClickType.RIGHT) {
 						    				if (playerData.getIsland() != null && playerData.getIsland().equals(island.getOwnerUUID())) {
-						    					List<UUID> islandVotes = visit.getVoters();
-						    					
-						    					if (islandVotes.contains(player.getUniqueId())) {
+						    					if (visit.getVoters().contains(player.getUniqueId())) {
 						    						visit.removeVoter(player.getUniqueId());
 							    					
 						    						messageManager.sendMessage(player, configLoad.getString("Island.Visit.Vote.Removed.Message").replace("%player", targetPlayerName));
@@ -390,7 +388,7 @@ public class Visit {
 						if (signatureEnabled) {
 							List<String> correctItemLore;
 							
-							if (island != null && (island.isRole(Role.Member, player.getUniqueId()) || island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId()))) {
+							if (island != null && (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
 								correctItemLore = configLoad.getStringList("Menu.Visit.Item.Island.Vote.Enabled.Signature.Enabled.Member.Lore");
 							} else {
 								correctItemLore = configLoad.getStringList("Menu.Visit.Item.Island.Vote.Enabled.Signature.Enabled.Visitor.Lore");
@@ -412,7 +410,7 @@ public class Visit {
 								}
 							}
 						} else {
-							if (island != null && (island.isRole(Role.Member, player.getUniqueId()) || island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId()))) {
+							if (island != null && (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
 								itemLore.addAll(configLoad.getStringList("Menu.Visit.Item.Island.Vote.Enabled.Signature.Disabled.Member.Lore"));
 							} else {
 								itemLore.addAll(configLoad.getStringList("Menu.Visit.Item.Island.Vote.Enabled.Signature.Disabled.Visitor.Lore"));

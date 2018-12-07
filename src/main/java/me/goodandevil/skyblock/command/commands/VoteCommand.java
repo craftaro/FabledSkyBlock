@@ -1,7 +1,6 @@
 package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,7 +16,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -84,16 +83,14 @@ public class VoteCommand extends SubCommand {
     				
     				Island island = islandManager.getIsland(islandOwnerUUID);
     				
-    				if (island.isRole(Role.Member, player.getUniqueId()) || island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId())) {
+    				if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
     					messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Island.Member.Message"));
     					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
     				} else if (playerDataManager.hasPlayerData(player)) {
     					PlayerData playerData = playerDataManager.getPlayerData(player);
     					
     					if (playerData.getIsland() != null && playerData.getIsland().equals(island.getOwnerUUID())) {
-	    					List<UUID> islandVotes = visit.getVoters();
-	    					
-	    					if (islandVotes.contains(player.getUniqueId())) {
+	    					if (visit.getVoters().contains(player.getUniqueId())) {
 	    						visit.removeVoter(player.getUniqueId());
 		    					
 	    						messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Vote.Removed.Message").replace("%player", targetPlayerName));

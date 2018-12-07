@@ -11,8 +11,7 @@ import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.menus.Weather;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -38,7 +37,7 @@ public class WeatherCommand extends SubCommand {
 		if (islandManager.hasIsland(player)) {
 			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 			
-			if ((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Weather").getStatus()) || island.isRole(Role.Owner, player.getUniqueId())) {
+			if ((island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Weather").getStatus()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 				Weather.getInstance().open(player);
 				soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 			} else {

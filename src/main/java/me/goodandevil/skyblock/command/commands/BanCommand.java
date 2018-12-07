@@ -13,8 +13,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -52,7 +51,7 @@ public class BanCommand extends SubCommand {
 				if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
 					me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
 					
-					if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Ban").getStatus())) {
+					if (island.hasRole(IslandRole.Owner, player.getUniqueId()) || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Ban").getStatus())) {
 						Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 						
 						UUID targetPlayerUUID = null;
@@ -73,7 +72,7 @@ public class BanCommand extends SubCommand {
 						} else if (targetPlayerUUID.equals(player.getUniqueId())) {
 							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Yourself.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-						} else if (island.isRole(Role.Member, targetPlayerUUID) || island.isRole(Role.Operator, targetPlayerUUID) || island.isRole(Role.Owner, targetPlayerUUID)) {
+						} else if (island.hasRole(IslandRole.Member, targetPlayerUUID) || island.hasRole(IslandRole.Operator, targetPlayerUUID) || island.hasRole(IslandRole.Owner, targetPlayerUUID)) {
 							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Member.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (island.getBan().isBanned(targetPlayerUUID)) {

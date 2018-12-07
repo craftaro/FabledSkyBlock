@@ -15,8 +15,7 @@ import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.menus.Coop;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
@@ -50,7 +49,7 @@ public class CoopCommand extends SubCommand {
 			if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Coop.Enable")) {
 				me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
 				
-				if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "CoopPlayers").getStatus())) {
+				if (island.hasRole(IslandRole.Owner, player.getUniqueId()) || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "CoopPlayers").getStatus())) {
 					if (args.length == 1) {
 						Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 						
@@ -72,7 +71,7 @@ public class CoopCommand extends SubCommand {
 						} else if (targetPlayerUUID.equals(player.getUniqueId())) {
 							messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Yourself.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-						} else if (island.isRole(Role.Member, targetPlayerUUID) || island.isRole(Role.Operator, targetPlayerUUID) || island.isRole(Role.Owner, targetPlayerUUID)) {
+						} else if (island.hasRole(IslandRole.Member, targetPlayerUUID) || island.hasRole(IslandRole.Operator, targetPlayerUUID) || island.hasRole(IslandRole.Owner, targetPlayerUUID)) {
 							messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Member.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (island.getBan().isBanned(targetPlayerUUID)) {

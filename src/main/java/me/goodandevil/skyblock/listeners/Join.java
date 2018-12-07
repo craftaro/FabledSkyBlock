@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,11 +16,12 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.SkyBlockAPI;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
@@ -87,7 +89,7 @@ public class Join implements Listener {
 				
 				skyblock.getLevellingManager().loadLevelling(island.getOwnerUUID());
 				
-				if (island.getRole(Role.Member).size() == 0 && island.getRole(Role.Operator).size() == 0) {
+				if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
 					scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
 					
 					if (islandManager.getVisitorsAtIsland(island).size() == 0) {
@@ -119,5 +121,7 @@ public class Join implements Listener {
 			scoreboard.run();
 			scoreboardManager.storeScoreboard(player, scoreboard);	
 		}
+		
+		Bukkit.broadcastMessage(SkyBlockAPI.getIsland(player).getOwnerUUID().toString());
 	}
 }

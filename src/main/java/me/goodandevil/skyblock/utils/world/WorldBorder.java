@@ -33,7 +33,7 @@ public final class WorldBorder {
 		}
 	}
 	
-	public static void send(Player player, double size, Location centerLocation) {
+	public static void send(Player player, Color color, double size, Location centerLocation) {
 		try {
 			Object worldBorder = worldBorderClass.getConstructor().newInstance();
 
@@ -54,11 +54,31 @@ public final class WorldBorder {
 			Method setSize = worldBorder.getClass().getMethod("setSize", double.class);
 			setSize.invoke(worldBorder, size);
 			
+			Method setWarningTime = worldBorder.getClass().getMethod("setWarningTime", int.class);
+			setWarningTime.invoke(worldBorder, 0);
+			
+			Method transitionSizeBetween = worldBorder.getClass().getMethod("transitionSizeBetween", double.class, double.class, long.class);
+			transitionSizeBetween.invoke(worldBorder, size, size - 1.0D, 20000000L);
+			
+			if (color == Color.Green) {
+				transitionSizeBetween.invoke(worldBorder, size - 0.2D, size - 0.1D + 0.1D, 20000000L);
+			} else if (color == Color.Red) {
+				transitionSizeBetween.invoke(worldBorder, size, size - 1.0D, 20000000L);
+			}
+			
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			Object packet = packetPlayOutWorldBorderConstructor.newInstance(worldBorder, Enum.valueOf((Class<Enum>) packetPlayOutWorldBorderEnumClass, "INITIALIZE"));
 			NMSUtil.sendPacket(player, packet);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public enum Color {
+		
+		Blue,
+		Green,
+		Red;
+		
 	}
 }

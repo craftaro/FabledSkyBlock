@@ -21,7 +21,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -62,11 +62,11 @@ public class ConfirmCommand extends SubCommand {
 					Confirmation confirmation = playerData.getConfirmation();
 					
 					if (confirmation == Confirmation.Ownership || confirmation == Confirmation.Deletion) {
-						if (island.isRole(Role.Owner, player.getUniqueId())) {
+						if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 							if (confirmation == Confirmation.Ownership) {
 								UUID targetPlayerUUID = playerData.getOwnership();
 								
-								if (island.isRole(Role.Member, targetPlayerUUID) || island.isRole(Role.Operator, targetPlayerUUID)) {
+								if (island.hasRole(IslandRole.Member, targetPlayerUUID) || island.hasRole(IslandRole.Operator, targetPlayerUUID)) {
 									messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Confirmed.Message"));
 									
 									String targetPlayerName;
@@ -81,7 +81,7 @@ public class ConfirmCommand extends SubCommand {
 									}
 									
 									for (Player all : Bukkit.getOnlinePlayers()) {
-										if ((island.isRole(Role.Member, all.getUniqueId()) || island.isRole(Role.Operator, all.getUniqueId()) || island.isRole(Role.Owner, all.getUniqueId()) || island.isRole(Role.Owner, all.getUniqueId())) && (!all.getUniqueId().equals(targetPlayerUUID))) {
+										if ((island.hasRole(IslandRole.Member, all.getUniqueId()) || island.hasRole(IslandRole.Operator, all.getUniqueId()) || island.hasRole(IslandRole.Owner, all.getUniqueId()) || island.hasRole(IslandRole.Owner, all.getUniqueId())) && (!all.getUniqueId().equals(targetPlayerUUID))) {
 											all.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ownership.Assigned.Broadcast.Message").replace("%player", targetPlayerName)));
 											soundManager.playSound(all, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
 										}
@@ -105,7 +105,7 @@ public class ConfirmCommand extends SubCommand {
 								List<UUID> islandMembers = new ArrayList<>();
 								
 								for (Player all : Bukkit.getOnlinePlayers()) {
-									if (island.isRole(Role.Member, all.getUniqueId()) || island.isRole(Role.Operator, all.getUniqueId()) || island.isRole(Role.Owner, all.getUniqueId())) {
+									if (island.hasRole(IslandRole.Member, all.getUniqueId()) || island.hasRole(IslandRole.Operator, all.getUniqueId()) || island.hasRole(IslandRole.Owner, all.getUniqueId())) {
 										if (scoreboardManager != null) {
 											Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
 											scoreboard.cancel();
@@ -126,7 +126,7 @@ public class ConfirmCommand extends SubCommand {
 											}
 										}
 										
-										if (!island.isRole(Role.Owner, all.getUniqueId())) {
+										if (!island.hasRole(IslandRole.Owner, all.getUniqueId())) {
 											all.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Deletion.Broadcast.Message")));
 											soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 										}

@@ -22,6 +22,7 @@ import me.goodandevil.skyblock.command.commands.AcceptCommand;
 import me.goodandevil.skyblock.command.commands.BanCommand;
 import me.goodandevil.skyblock.command.commands.BansCommand;
 import me.goodandevil.skyblock.command.commands.BiomeCommand;
+import me.goodandevil.skyblock.command.commands.BorderCommand;
 import me.goodandevil.skyblock.command.commands.CancelCommand;
 import me.goodandevil.skyblock.command.commands.ChatCommand;
 import me.goodandevil.skyblock.command.commands.CloseCommand;
@@ -95,6 +96,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		subCommands.add(new VoteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Vote.Info.Message"))));
 		subCommands.add(new ControlPanelCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.ControlPanel.Info.Message"))));
 		subCommands.add(new UpgradeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Upgrade.Info.Message"))));
+		subCommands.add(new BorderCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Border.Info.Message"))));
 		subCommands.add(new LeaderboardCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Leaderboard.Info.Message"))));
 		subCommands.add(new CreateCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Create.Info.Message"))));
 		subCommands.add(new DeleteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Delete.Info.Message"))));

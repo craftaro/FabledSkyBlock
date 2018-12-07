@@ -37,7 +37,7 @@ public class Settings {
         return instance;
     }
     
-    public void open(Player player, Settings.Type menuType, me.goodandevil.skyblock.island.Setting.Role role) {
+    public void open(Player player, Settings.Type menuType, me.goodandevil.skyblock.island.IslandRole role) {
     	SkyBlock skyblock = SkyBlock.getInstance();
     	
     	MessageManager messageManager = skyblock.getMessageManager();
@@ -69,7 +69,7 @@ public class Settings {
 			    		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
 							@Override
 							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.Setting.Role.Visitor);
+								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Visitor);
 							}
 			    		}, 1L);
 			    	} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings.Categories.Item.Member.Displayname"))))) {
@@ -78,7 +78,7 @@ public class Settings {
 			    		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
 							@Override
 							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.Setting.Role.Member);
+								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Member);
 							}
 			    		}, 1L);
 			    	} else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings.Categories.Item.Operator.Displayname"))))) {
@@ -87,7 +87,7 @@ public class Settings {
 			    		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
 							@Override
 							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.Setting.Role.Operator);
+								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Operator);
 							}
 			    		}, 1L);
 			    	} else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings.Categories.Item.Coop.Displayname"))))) {
@@ -96,7 +96,7 @@ public class Settings {
 			    		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
 							@Override
 							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.Setting.Role.Coop);
+								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Coop);
 							}
 			    		}, 1L);
 			    	} else if ((is.getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Settings.Categories.Item.Owner.Displayname"))))) {
@@ -105,7 +105,7 @@ public class Settings {
 			    		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
 							@Override
 							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.Setting.Role.Owner);
+								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Owner);
 							}
 			    		}, 1L);
 			    	}
@@ -197,7 +197,7 @@ public class Settings {
 				}
     		});
     		
-    		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member || role == me.goodandevil.skyblock.island.Setting.Role.Coop) {
+    		if (role == me.goodandevil.skyblock.island.IslandRole.Visitor || role == me.goodandevil.skyblock.island.IslandRole.Member || role == me.goodandevil.skyblock.island.IslandRole.Coop) {
     			nInv.addItemStack(createItem(role, "Destroy", new ItemStack(Material.DIAMOND_PICKAXE)), 9);
     			nInv.addItemStack(createItem(role, "Place", new ItemStack(Material.GRASS)), 10);
     			nInv.addItemStack(createItem(role, "Anvil", new ItemStack(Material.ANVIL)), 11);
@@ -243,7 +243,7 @@ public class Settings {
     			nInv.addItemStack(createItem(role, "ExperienceOrbPickup", Materials.EXPERIENCE_BOTTLE.parseItem()), 52);
     			
     			nInv.setRows(6);
-    		} else if (role == me.goodandevil.skyblock.island.Setting.Role.Operator) {
+    		} else if (role == me.goodandevil.skyblock.island.IslandRole.Operator) {
     			if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
     				if (mainConfig.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
 	    				nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
@@ -303,7 +303,7 @@ public class Settings {
 	    				nInv.setRows(2);
     				}
     			}
-    		} else if (role == me.goodandevil.skyblock.island.Setting.Role.Owner) {
+    		} else if (role == me.goodandevil.skyblock.island.IslandRole.Owner) {
     			if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")) {
     				if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
     					if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
@@ -393,7 +393,7 @@ public class Settings {
     	}
     }
     
-    private ItemStack createItem(me.goodandevil.skyblock.island.Setting.Role role, String setting, ItemStack is) {
+    private ItemStack createItem(me.goodandevil.skyblock.island.IslandRole role, String setting, ItemStack is) {
 		SkyBlock skyblock = SkyBlock.getInstance();
     	
 		FileManager fileManager = skyblock.getFileManager();
@@ -407,7 +407,7 @@ public class Settings {
 		
 		String roleName = role.name();
 		
-		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member || role == me.goodandevil.skyblock.island.Setting.Role.Coop) {
+		if (role == me.goodandevil.skyblock.island.IslandRole.Visitor || role == me.goodandevil.skyblock.island.IslandRole.Member || role == me.goodandevil.skyblock.island.IslandRole.Coop) {
 			roleName = "Default";
 		}
 		
@@ -430,8 +430,8 @@ public class Settings {
 		return is;
     }
     
-	private String getRoleName(me.goodandevil.skyblock.island.Setting.Role role) {
-		if (role == me.goodandevil.skyblock.island.Setting.Role.Visitor || role == me.goodandevil.skyblock.island.Setting.Role.Member || role == me.goodandevil.skyblock.island.Setting.Role.Coop) {
+	private String getRoleName(me.goodandevil.skyblock.island.IslandRole role) {
+		if (role == me.goodandevil.skyblock.island.IslandRole.Visitor || role == me.goodandevil.skyblock.island.IslandRole.Member || role == me.goodandevil.skyblock.island.IslandRole.Coop) {
 			return "Default";
 		}
 		

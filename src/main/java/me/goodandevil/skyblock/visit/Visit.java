@@ -3,7 +3,9 @@ package me.goodandevil.skyblock.visit;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -105,8 +107,8 @@ public class Visit {
 		return getVisitors().contains(uuid);
 	}
 	
-	public List<UUID> getVisitors() {
-		List<UUID> islandVisitors = new ArrayList<>();
+	public Set<UUID> getVisitors() {
+		Set<UUID> islandVisitors = new HashSet<>();
 		
 		for (String islandVisitorList : skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml")).getFileConfiguration().getStringList("Visitors")) {
 			islandVisitors.add(UUID.fromString(islandVisitorList));
@@ -127,12 +129,24 @@ public class Visit {
 		configLoad.set("Visitors", islandVisitors);
 	}
 	
+	public void removeVisitor(UUID uuid) {
+		List<String> islandVisitors = new ArrayList<>();
+		FileConfiguration configLoad = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml")).getFileConfiguration();
+		
+		for (String islandVisitorList : configLoad.getStringList("Visitors")) {
+			islandVisitors.add(islandVisitorList);
+		}
+		
+		islandVisitors.remove(uuid.toString());
+		configLoad.set("Visitors", islandVisitors);
+	}
+	
 	public boolean isVoter(UUID uuid) {
 		return getVoters().contains(uuid);
 	}
 	
-	public List<UUID> getVoters() {
-		List<UUID> islandVoters = new ArrayList<>();
+	public Set<UUID> getVoters() {
+		Set<UUID> islandVoters = new HashSet<>();
 		
 		for (String islandVisitorList : skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml")).getFileConfiguration().getStringList("Voters")) {
 			islandVoters.add(UUID.fromString(islandVisitorList));

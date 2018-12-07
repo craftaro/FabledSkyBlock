@@ -16,8 +16,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -60,7 +59,7 @@ public class Weather {
 						if (islandManager.hasIsland(player)) {
 							island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 							
-							if (!((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Biome").getStatus()) || island.isRole(Role.Owner, player.getUniqueId()))) {
+							if (!((island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Biome").getStatus()) || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
 								messageManager.sendMessage(player, configLoad.getString("Command.Island.Weather.Permission.Message"));
 								soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 								player.closeInventory();
@@ -104,7 +103,7 @@ public class Weather {
 				    			island.setTime(0);
 				    		}
 				    		
-				    		if (!island.isWeatherSynchronised()) {
+				    		if (!island.isWeatherSynchronized()) {
 				    			for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
 				    				all.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
 				    			}
@@ -125,7 +124,7 @@ public class Weather {
 				    			island.setWeather(WeatherType.DOWNFALL);
 				    		}
 				    		
-				    		if (!island.isWeatherSynchronised()) {
+				    		if (!island.isWeatherSynchronized()) {
 				    			for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
 				    				all.setPlayerWeather(island.getWeather());
 				    			}
@@ -140,8 +139,8 @@ public class Weather {
 								}
 				    		}, 1L);
 				    	} else if ((is.getType() == Material.TRIPWIRE_HOOK) && (is.hasItemMeta()) && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Weather.Item.Synchronised.Displayname"))))) {
-				    		if (island.isWeatherSynchronised()) {
-				    			island.setWeatherSynchronised(false);
+				    		if (island.isWeatherSynchronized()) {
+				    			island.setWeatherSynchronized(false);
 				    			
 				    			int islandTime = island.getTime();
 				    			WeatherType islandWeather = island.getWeather();
@@ -151,7 +150,7 @@ public class Weather {
 				    				all.setPlayerWeather(islandWeather);
 				    			}
 				    		} else {
-				    			island.setWeatherSynchronised(true);
+				    			island.setWeatherSynchronized(true);
 				    			
 				    			for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
 				    				all.resetPlayerTime();
@@ -177,7 +176,7 @@ public class Weather {
 			String timeName = "", timeChoice = "", weatherSynchronised, weatherChoice, synchronisedChoice;
 	    	int islandTime = island.getTime();
 			
-			if (island.isWeatherSynchronised()) {
+			if (island.isWeatherSynchronized()) {
 				weatherSynchronised = configLoad.getString("Menu.Weather.Item.Info.Synchronised.Enabled");
 			} else {
 				weatherSynchronised = configLoad.getString("Menu.Weather.Item.Info.Synchronised.Disabled");
@@ -209,7 +208,7 @@ public class Weather {
 				weatherChoice = configLoad.getString("Menu.Weather.Item.Weather.Choice.Clear");
 			}
 			
-			if (island.isWeatherSynchronised()) {
+			if (island.isWeatherSynchronized()) {
 				synchronisedChoice = configLoad.getString("Menu.Weather.Item.Synchronised.Choice.Disable");
 			} else {
 				synchronisedChoice = configLoad.getString("Menu.Weather.Item.Synchronised.Choice.Enable");

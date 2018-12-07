@@ -12,7 +12,7 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.menus.Rollback;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -39,7 +39,7 @@ public class RollbackCommand extends SubCommand {
 		if (islandManager.hasIsland(player)) {
 			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 			
-			if (island.isRole(Role.Owner, player.getUniqueId())) {
+			if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 				Rollback.getInstance().open(player);
 				soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 			} else {

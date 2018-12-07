@@ -6,15 +6,15 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 
 public class IslandRoleChangeEvent extends Event {
 
 	private UUID uuid;
 	private Island island;
-	private Role oldRole, newRole;
+	private IslandRole oldRole, newRole;
 	
-	public IslandRoleChangeEvent(UUID uuid, Island island, Role oldRole, Role newRole) {
+	public IslandRoleChangeEvent(UUID uuid, Island island, IslandRole oldRole, IslandRole newRole) {
 		this.uuid = uuid;
 		this.island = island;
 		this.oldRole = oldRole;
@@ -29,11 +29,11 @@ public class IslandRoleChangeEvent extends Event {
 		return uuid;
 	}
 	
-	public Role getOldRole() {
+	public IslandRole getOldRole() {
 		return oldRole;
 	}
 	
-	public Role getNewRole() {
+	public IslandRole getNewRole() {
 		return newRole;
 	}
 	

@@ -30,8 +30,8 @@ import me.goodandevil.skyblock.generator.GeneratorLocation;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
@@ -278,7 +278,7 @@ public class Block implements Listener {
 		org.bukkit.block.Block block = event.getBlock();
 		
 		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), Setting.Role.Owner, "FireSpread")) {
+			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), IslandRole.Owner, "FireSpread")) {
 				event.setCancelled(false);
 			}
 		}
@@ -289,7 +289,7 @@ public class Block implements Listener {
 		org.bukkit.block.Block block = event.getBlock();
 		
 		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), Setting.Role.Owner, "FireSpread")) {
+			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), IslandRole.Owner, "FireSpread")) {
 				event.setCancelled(false);
 			}
 		}
@@ -349,7 +349,7 @@ public class Block implements Listener {
 		org.bukkit.block.Block block = event.getBlock();
 		
 		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), Setting.Role.Owner, "LeafDecay")) {
+			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), IslandRole.Owner, "LeafDecay")) {
 				event.setCancelled(false);
 			}
 		}

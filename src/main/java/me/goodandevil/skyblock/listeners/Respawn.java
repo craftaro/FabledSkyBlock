@@ -18,7 +18,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Respawn implements Listener {
@@ -48,7 +48,7 @@ public class Respawn implements Listener {
 						if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, me.goodandevil.skyblock.island.Location.Environment.Island), island.getRadius())) {
 							Location playerLocation = player.getLocation().clone(), islandLocation;
 							
-							if (island.isRole(Role.Member, player.getUniqueId()) || island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId())) {
+							if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 								islandLocation = island.getLocation(worldList, me.goodandevil.skyblock.island.Location.Environment.Main);
 							} else {
 								islandLocation = island.getLocation(worldList, me.goodandevil.skyblock.island.Location.Environment.Visitor);

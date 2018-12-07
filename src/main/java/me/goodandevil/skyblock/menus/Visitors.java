@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -19,8 +20,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -112,7 +112,7 @@ public class Visitors {
 									}
 				    			}, 1L);
 				    		} else {
-				    			boolean isOperator = island.isRole(Role.Operator, player.getUniqueId()), isOwner = island.isRole(Role.Owner, player.getUniqueId()), canKick = island.getSetting(Setting.Role.Operator, "Kick").getStatus(), canBan = island.getSetting(Setting.Role.Operator, "Ban").getStatus(), banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning");
+				    			boolean isOperator = island.hasRole(IslandRole.Operator, player.getUniqueId()), isOwner = island.hasRole(IslandRole.Owner, player.getUniqueId()), canKick = island.getSetting(IslandRole.Operator, "Kick").getStatus(), canBan = island.getSetting(IslandRole.Operator, "Ban").getStatus(), banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning");
 				    			String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
 				    			
 								if ((isOperator && canKick) || isOwner) {
@@ -160,7 +160,7 @@ public class Visitors {
         	PlayerData playerData = playerDataManager.getPlayerData(player);
         	Island island = skyblock.getIslandManager().getIsland(playerData.getOwner());
         	
-    		List<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
+    		Set<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
     		Map<Integer, UUID> sortedIslandVisitors = new TreeMap<>();
     		
     		nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Visitors.Item.Exit.Displayname"), null, null, null, null), 0, 8);
@@ -190,14 +190,14 @@ public class Visitors {
     		if (islandVisitors.size() == 0) {
     			nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER), configLoad.getString("Menu.Visitors.Item.Nothing.Displayname"), null, null, null, null), 31);
     		} else {
-    			boolean isOperator = island.isRole(Role.Operator, player.getUniqueId()), isOwner = island.isRole(Role.Owner, player.getUniqueId()), canKick = island.getSetting(Setting.Role.Operator, "Kick").getStatus(), canBan = island.getSetting(Setting.Role.Operator, "Ban").getStatus(), banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning");
+    			boolean isOperator = island.hasRole(IslandRole.Operator, player.getUniqueId()), isOwner = island.hasRole(IslandRole.Owner, player.getUniqueId()), canKick = island.getSetting(IslandRole.Operator, "Kick").getStatus(), canBan = island.getSetting(IslandRole.Operator, "Ban").getStatus(), banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning");
     			int index = playerMenuPage * 36 - 36, endIndex = index >= islandVisitors.size() ? islandVisitors.size() - 1 : index + 36, inventorySlot = 17;
     			
     			for (; index < endIndex; index++) {
     				if (islandVisitors.size() > index) {
     					inventorySlot++;
     					
-    					Player targetPlayer = Bukkit.getServer().getPlayer(islandVisitors.get(index));
+    					Player targetPlayer = Bukkit.getServer().getPlayer((UUID)islandVisitors.toArray()[index]);
     					PlayerData targetPlayerData = playerDataManager.getPlayerData(targetPlayer);
     					
     					String[] targetPlayerTexture = targetPlayerData.getTexture();

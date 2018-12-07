@@ -15,7 +15,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 
 public class ScoreboardManager {
@@ -42,7 +42,7 @@ public class ScoreboardManager {
 						if (islandManager.hasIsland(all)) {
 							Island island = islandManager.getIsland(playerDataManager.getPlayerData(all).getOwner());
 							
-							if (island.getRole(Role.Member).size() == 0 && island.getRole(Role.Operator).size() == 0) {
+							if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
 								scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
 								
 								if (islandManager.getVisitorsAtIsland(island).size() == 0) {
@@ -95,7 +95,7 @@ public class ScoreboardManager {
 					if (islandManager.hasIsland(all)) {
 						Island island = islandManager.getIsland(playerDataManager.getPlayerData(all).getOwner());
 						
-						if (island.getRole(Role.Member).size() == 0 && island.getRole(Role.Operator).size() == 0) {
+						if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
 							scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
 							
 							if (islandManager.getVisitorsAtIsland(island).size() == 0) {

@@ -12,7 +12,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.events.IslandChatSwitchEvent;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -45,7 +45,7 @@ public class ChatCommand extends SubCommand {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
 			Island island = islandManager.getIsland(playerData.getOwner());
 			
-			if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size()) == 0) {
+			if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()) == 0) {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Team.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			} else if ((islandManager.getMembersOnline(island).size() - 1) <= 0) {

@@ -1,7 +1,7 @@
 package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,8 +17,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.events.IslandKickEvent;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -49,9 +48,9 @@ public class KickAllCommand extends SubCommand {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
 			Island island = islandManager.getIsland(playerData.getOwner());
 			
-			if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Kick").getStatus())) {
+			if (island.hasRole(IslandRole.Owner, player.getUniqueId()) || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Kick").getStatus())) {
 				if (island.isOpen()) {
-					List<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
+					Set<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
 					
 					if (islandVisitors.size() == 0) {
 						messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Visitors.Message"));
@@ -60,7 +59,7 @@ public class KickAllCommand extends SubCommand {
 						for (UUID islandVisitorList : islandVisitors) {
 							Player targetPlayer = Bukkit.getServer().getPlayer(islandVisitorList);
 							
-							IslandKickEvent islandKickEvent = new IslandKickEvent(island, Role.Visitor, islandVisitorList, player);
+							IslandKickEvent islandKickEvent = new IslandKickEvent(island, IslandRole.Visitor, islandVisitorList, player);
 							Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
 							
 							if (!islandKickEvent.isCancelled()) {

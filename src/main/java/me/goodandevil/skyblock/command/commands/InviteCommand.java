@@ -16,8 +16,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.events.IslandInviteEvent;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
@@ -51,10 +50,10 @@ public class InviteCommand extends SubCommand {
 			if (islandManager.hasIsland(player)) {
 				me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 				
-				if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Invite").getStatus())) {
+				if (island.hasRole(IslandRole.Owner, player.getUniqueId()) || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Invite").getStatus())) {
 					Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 					
-					if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1) >= mainConfig.getFileConfiguration().getInt("Island.Member.Capacity")) {
+					if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1) >= mainConfig.getFileConfiguration().getInt("Island.Member.Capacity")) {
 						messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Capacity.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else {
@@ -72,7 +71,7 @@ public class InviteCommand extends SubCommand {
 							} else if (targetPlayer.getName().equalsIgnoreCase(player.getName())) {
 								messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Yourself.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-							} else if (island.isRole(Role.Member, targetPlayer.getUniqueId()) || island.isRole(Role.Operator, targetPlayer.getUniqueId()) || island.isRole(Role.Owner, targetPlayer.getUniqueId())) {
+							} else if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId()) || island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId()) || island.hasRole(IslandRole.Owner, targetPlayer.getUniqueId())) {
 								messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Member.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else if (skyblock.getInviteManager().hasInvite(targetPlayer.getUniqueId())) {

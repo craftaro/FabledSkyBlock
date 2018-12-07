@@ -14,7 +14,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -48,7 +48,7 @@ public class DeleteCommand extends SubCommand {
 		FileConfiguration configLoad = config.getFileConfiguration();
 		
 		if (islandManager.hasIsland(player)) {
-			if (islandManager.getIsland(playerData.getOwner()).isRole(Role.Owner, player.getUniqueId())) {
+			if (islandManager.getIsland(playerData.getOwner()).hasRole(IslandRole.Owner, player.getUniqueId())) {
 				if (playerData.getConfirmationTime() > 0) {
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Confirmation.Pending.Message"));
 					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);

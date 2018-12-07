@@ -17,7 +17,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -65,7 +65,7 @@ public class Ownership {
     					if (islandManager.hasIsland(player)) {
     						island = islandManager.getIsland(playerData.getOwner());
     						
-    						if (!island.isRole(Role.Owner, player.getUniqueId())) {
+    						if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
     							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Role.Message"));
     							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
     							
@@ -110,7 +110,7 @@ public class Ownership {
 			    			        				if (islandManager.hasIsland(player)) {
 			    			        					island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 			    			        					
-			    			        					if (!island.isRole(Role.Owner, player.getUniqueId())) {
+			    			        					if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 			    			        						messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Role.Message"));
 			    			        						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			    			        						
@@ -202,7 +202,7 @@ public class Ownership {
 			    			        				if (islandManager.hasIsland(player)) {
 			    			        					island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 			    			        					
-			    			        					if (!island.isRole(Role.Owner, player.getUniqueId())) {
+			    			        					if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 			    			        						messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Role.Message"));
 			    			        						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			    			        						

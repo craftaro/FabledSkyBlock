@@ -21,7 +21,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -123,7 +123,7 @@ public class Rollback implements Listener {
 				if (islandManager.hasIsland(player)) {
 					island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 					
-					if (!island.isRole(Role.Owner, player.getUniqueId())) {
+					if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 						messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Rollback.Role.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();

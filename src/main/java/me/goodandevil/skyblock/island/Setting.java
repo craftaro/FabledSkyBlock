@@ -21,14 +21,4 @@ public class Setting {
 	public boolean getStatus() {
 		return status;
 	}
-	
-	public enum Role {
-		
-		Coop,
-		Visitor,
-		Member,
-		Operator,
-		Owner;
-		
-	}
 }

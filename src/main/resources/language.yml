@@ -28,6 +28,15 @@ Command:
                 Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
             Disabled:
                 Message: "&bSkyBlock &8| &cError&8: &eYou cannot do that because Island Upgrades have been disabled."
+        Border:
+            Info:
+                Message: "&f&oOpens the Island Border menu."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to view the Island Border menu."
+            Disabled:
+                Message: "&bSkyBlock &8| &cError&8: &eYou cannot do that because the Island Border has been disabled."
         Leaderboard:
             Info:
                 Message: "&f&oOpens the Leaderboard menu of the top 10 Islands."

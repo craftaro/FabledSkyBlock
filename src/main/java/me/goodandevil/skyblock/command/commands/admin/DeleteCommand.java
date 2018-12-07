@@ -20,7 +20,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
@@ -86,7 +86,7 @@ public class DeleteCommand extends SubCommand {
 					Island island = islandManager.getIsland(targetPlayerUUID);
 					
 					for (Player all : Bukkit.getOnlinePlayers()) {
-						if (island.isRole(Role.Member, all.getUniqueId()) || island.isRole(Role.Operator, all.getUniqueId()) || island.isRole(Role.Owner, all.getUniqueId())) {
+						if (island.hasRole(IslandRole.Member, all.getUniqueId()) || island.hasRole(IslandRole.Operator, all.getUniqueId()) || island.hasRole(IslandRole.Owner, all.getUniqueId())) {
 							if (scoreboardManager != null) {
 								Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
 								scoreboard.cancel();
@@ -107,7 +107,7 @@ public class DeleteCommand extends SubCommand {
 								}
 							}
 							
-							if (!island.isRole(Role.Owner, all.getUniqueId())) {
+							if (!island.hasRole(IslandRole.Owner, all.getUniqueId())) {
 								all.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Deletion.Broadcast.Message")));
 								soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 							}

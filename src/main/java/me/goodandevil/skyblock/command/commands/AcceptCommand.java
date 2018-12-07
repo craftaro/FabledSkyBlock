@@ -24,7 +24,7 @@ import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -104,10 +104,10 @@ public class AcceptCommand extends SubCommand {
 							playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 							playerData.save();
 							
-							island.setRole(Role.Member, player.getUniqueId());
+							island.setRole(IslandRole.Member, player.getUniqueId());
 							island.save();
 							
-							if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1) >= fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Member.Capacity")) {
+							if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1) >= fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Member.Capacity")) {
 								Map<UUID, Invite> invites = inviteManager.getInvites();
 								
 								for (UUID inviteList : invites.keySet()) {
@@ -138,7 +138,7 @@ public class AcceptCommand extends SubCommand {
 											soundManager.playSound(all, Sounds.FIREWORK_BLAST.bukkitSound(), 1.0F, 1.0F);
 											
 											if (scoreboardManager != null) {
-												if (island.getRole(Role.Member).size() == 1 && island.getRole(Role.Operator).size() == 0) {
+												if (island.getRole(IslandRole.Member).size() == 1 && island.getRole(IslandRole.Operator).size() == 0) {
 													Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
 													scoreboard.cancel();
 													scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));

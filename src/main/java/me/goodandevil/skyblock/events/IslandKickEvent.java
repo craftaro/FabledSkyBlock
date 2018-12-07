@@ -7,17 +7,17 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 
 public class IslandKickEvent extends Event {
 	
 	private Player kicker;
 	private UUID kicked;
 	private Island island;
-	private Role role;
+	private IslandRole role;
 	private boolean cancel = false;
 	
-	public IslandKickEvent(Island island, Role role, UUID kicked, Player kicker) {
+	public IslandKickEvent(Island island, IslandRole role, UUID kicked, Player kicker) {
 		this.island = island;
 		this.role = role;
 		this.kicked = kicked;
@@ -32,7 +32,7 @@ public class IslandKickEvent extends Event {
 		return kicker;
 	}
 	
-	public Role getRole() {
+	public IslandRole getRole() {
 		return role;
 	}
 	

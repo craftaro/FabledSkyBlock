@@ -16,7 +16,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.menus.Ownership;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
@@ -55,7 +55,7 @@ public class OwnerCommand extends SubCommand {
 			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
 			
 			if (args.length == 0) {
-				if (island.isRole(Role.Owner, player.getUniqueId())) {
+				if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 					playerData.setType(Ownership.Visibility.Hidden);
 					Ownership.getInstance().open(player);
 					soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
@@ -63,7 +63,7 @@ public class OwnerCommand extends SubCommand {
 					return;
 				}
 			} else if (args.length == 1) {
-				if (island.isRole(Role.Owner, player.getUniqueId())) {
+				if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 					if (playerData.getConfirmationTime() > 0) {
 						messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Confirmation.Pending.Message"));
 						soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
@@ -82,7 +82,7 @@ public class OwnerCommand extends SubCommand {
 							targetPlayerName = targetPlayer.getName();
 						}
 						
-						if (targetPlayerUUID == null || (!island.isRole(Role.Member, targetPlayerUUID) && !island.isRole(Role.Operator, targetPlayerUUID) && !island.isRole(Role.Owner, targetPlayerUUID))) {
+						if (targetPlayerUUID == null || (!island.hasRole(IslandRole.Member, targetPlayerUUID) && !island.hasRole(IslandRole.Operator, targetPlayerUUID) && !island.hasRole(IslandRole.Owner, targetPlayerUUID))) {
 							messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Member.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else if (targetPlayerUUID.equals(player.getUniqueId())) {
@@ -103,7 +103,7 @@ public class OwnerCommand extends SubCommand {
 					if (island.hasPassword()) {
 						if (args[0].equalsIgnoreCase(island.getPassword())) {
 							for (Player all : Bukkit.getOnlinePlayers()) {
-								if ((island.isRole(Role.Member, all.getUniqueId()) || island.isRole(Role.Operator, all.getUniqueId()) || island.isRole(Role.Owner, all.getUniqueId())) && (!all.getUniqueId().equals(player.getUniqueId()))) {
+								if ((island.hasRole(IslandRole.Member, all.getUniqueId()) || island.hasRole(IslandRole.Operator, all.getUniqueId()) || island.hasRole(IslandRole.Owner, all.getUniqueId())) && (!all.getUniqueId().equals(player.getUniqueId()))) {
 									all.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Ownership.Assigned.Broadcast.Message").replace("%player", player.getName())));
 									soundManager.playSound(all, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
 								}

@@ -104,7 +104,7 @@ public class Teleport implements Listener {
 						}
 						
 						if (worldList == Location.World.Normal) {
-							if (!island.isWeatherSynchronised()) {
+							if (!island.isWeatherSynchronized()) {
 			    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
 			    				player.setPlayerWeather(island.getWeather());
 							}

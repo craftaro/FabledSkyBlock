@@ -1,7 +1,7 @@
 package me.goodandevil.skyblock.menus;
 
 import java.io.File;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,8 +17,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -144,7 +143,7 @@ public class Coop {
 									}
 				    			}, 1L);
 				    		} else {
-				    			if ((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "CoopPlayers").getStatus()) || island.isRole(Role.Owner, player.getUniqueId())) {
+				    			if ((island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "CoopPlayers").getStatus()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 					    			String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
 					    			Bukkit.getServer().dispatchCommand(player, "island coop " + playerName);
 					    			
@@ -170,7 +169,7 @@ public class Coop {
         	PlayerData playerData = playerDataManager.getPlayerData(player);
     		Island island = islandManager.getIsland(playerData.getOwner());
         	
-        	List<UUID> coopPlayers = island.getCoopPlayers();
+        	Set<UUID> coopPlayers = island.getCoopPlayers();
         	
     		int playerMenuPage = playerData.getPage(), nextEndIndex = coopPlayers.size() - playerMenuPage * 36;
     		
@@ -195,7 +194,7 @@ public class Coop {
     				if (coopPlayers.size() > index) {
     					inventorySlot++;
 						
-						UUID targetPlayerUUID = coopPlayers.get(index);
+						UUID targetPlayerUUID = (UUID) coopPlayers.toArray()[index];
 						String targetPlayerName;
 						String[] targetPlayerTexture;
 						

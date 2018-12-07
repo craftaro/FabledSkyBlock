@@ -6,6 +6,7 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.goodandevil.skyblock.api.SkyBlockAPI;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.command.CommandManager;
@@ -140,6 +141,8 @@ public class SkyBlock extends JavaPlugin {
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Levelling(), this);
 		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Creator(), this);
 		pluginManager.registerEvents(new Generator(), this);
+		
+		SkyBlockAPI.setImplementation(instance);
 	}
 
 	@Override

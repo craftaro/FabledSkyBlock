@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -23,8 +24,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -161,10 +161,10 @@ public class Members {
 				    				playerUUID = targetPlayer.getUniqueId();
 				    			}
 				    			
-				    			if (!(playerUUID.equals(player.getUniqueId()) || island.isRole(Role.Owner, playerUUID))) {
-				    				if (island.isRole(Role.Owner, player.getUniqueId())) {
+				    			if (!(playerUUID.equals(player.getUniqueId()) || island.hasRole(IslandRole.Owner, playerUUID))) {
+				    				if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 				    					if (event.getClick() == ClickType.LEFT) {
-				    						if (island.isRole(Role.Member, playerUUID)) {
+				    						if (island.hasRole(IslandRole.Member, playerUUID)) {
 				    							Bukkit.getServer().dispatchCommand(player, "island promote " + playerName);
 				    						} else {
 				    							Bukkit.getServer().dispatchCommand(player, "island demote " + playerName);
@@ -190,7 +190,7 @@ public class Members {
 				    						
 						    				return;
 				    					}
-				    				} else if (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Kick").getStatus()) {
+				    				} else if (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Kick").getStatus()) {
 				    					Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
 
 			    						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
@@ -218,8 +218,8 @@ public class Members {
     		Island island = islandManager.getIsland(playerData.getOwner());
     		
     		List<UUID> displayedMembers = new ArrayList<>();
-    		List<UUID> islandMembers = island.getRole(Role.Member);
-    		List<UUID> islandOperators = island.getRole(Role.Operator);
+    		Set<UUID> islandMembers = island.getRole(IslandRole.Member);
+    		Set<UUID> islandOperators = island.getRole(IslandRole.Operator);
     		
     		if (type == Members.Type.Default) {
     			displayedMembers.add(island.getOwnerUUID());
@@ -301,10 +301,10 @@ public class Members {
     		
     		boolean[] operatorActions = new boolean[] { false, false };
     		
-    		if (island.isRole(Role.Owner, player.getUniqueId())) {
+    		if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
     			operatorActions = new boolean[] { true, true };
-    		} else if (island.isRole(Role.Operator, player.getUniqueId())) {
-    			if (island.getSetting(Setting.Role.Operator, "Kick").getStatus()) {
+    		} else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
+    			if (island.getSetting(IslandRole.Operator, "Kick").getStatus()) {
     				operatorActions = new boolean[] { false, true };
     			}
     		}
@@ -423,12 +423,12 @@ public class Members {
     						itemLore.addAll(configLoad.getStringList("Menu.Members.Item.Member.LastOnline.Lore"));
     					}
     					
-    					if (!(playerUUID.equals(player.getUniqueId()) || island.isRole(Role.Owner, playerUUID))) {
+    					if (!(playerUUID.equals(player.getUniqueId()) || island.hasRole(IslandRole.Owner, playerUUID))) {
     						if (operatorActions[0] && operatorActions[1]) {
-    							if (!island.isRole(Role.Owner, playerUUID)) {
+    							if (!island.hasRole(IslandRole.Owner, playerUUID)) {
     								itemLore.add("");
     								
-    								if (island.isRole(Role.Member, playerUUID)) {
+    								if (island.hasRole(IslandRole.Member, playerUUID)) {
     									itemLore.add(configLoad.getString("Menu.Members.Item.Member.Action.Lore").replace("%click", configLoad.getString("Menu.Members.Item.Member.Word.Left-Click")).replace("%action", configLoad.getString("Menu.Members.Item.Member.Action.Word.Promote")));
     								} else {
     									itemLore.add(configLoad.getString("Menu.Members.Item.Member.Action.Lore").replace("%click", configLoad.getString("Menu.Members.Item.Member.Word.Left-Click")).replace("%action", configLoad.getString("Menu.Members.Item.Member.Action.Word.Demote")));
@@ -437,7 +437,7 @@ public class Members {
     								itemLore.add(configLoad.getString("Menu.Members.Item.Member.Action.Lore").replace("%click", configLoad.getString("Menu.Members.Item.Member.Word.Right-Click")).replace("%action", configLoad.getString("Menu.Members.Item.Member.Action.Word.Kick")));
     							}
     						} else if (!operatorActions[0] && operatorActions[1]) {
-    							if (!(playerUUID.equals(player.getUniqueId()) && island.getRole(Role.Operator).contains(playerUUID) && island.isRole(Role.Owner, playerUUID))) {
+    							if (!(playerUUID.equals(player.getUniqueId()) && island.getRole(IslandRole.Operator).contains(playerUUID) && island.hasRole(IslandRole.Owner, playerUUID))) {
     								itemLore.add("");
     								itemLore.add(configLoad.getString("Menu.Members.Item.Member.Action.Lore").replace("%click", configLoad.getString("Menu.Members.Item.Member.Word.Click")).replace("%action", configLoad.getString("Menu.Members.Item.Member.Action.Word.Kick")));
     							}

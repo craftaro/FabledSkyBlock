@@ -15,7 +15,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -43,14 +43,14 @@ public class CancelCommand extends SubCommand {
 			if (islandManager.hasIsland(player)) {
 				me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 				
-				if (island.isRole(Role.Owner, player.getUniqueId()) || island.isRole(Role.Operator, player.getUniqueId())) {
+				if (island.hasRole(IslandRole.Owner, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())) {
 					String playerName = args[0];
 					Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
 					
 					if (targetPlayer == null) {
 						messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Offline.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-					} else if (island.isRole(Role.Member, targetPlayer.getUniqueId()) || island.isRole(Role.Operator, targetPlayer.getUniqueId()) || island.isRole(Role.Owner, targetPlayer.getUniqueId())) {
+					} else if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId()) || island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId()) || island.hasRole(IslandRole.Owner, targetPlayer.getUniqueId())) {
 						messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Member.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else if (inviteManager.hasInvite(targetPlayer.getUniqueId())) {

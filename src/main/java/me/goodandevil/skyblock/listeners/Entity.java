@@ -29,8 +29,8 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
@@ -78,7 +78,7 @@ public class Entity implements Listener {
  	 		}
  			
  			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")) {
- 				if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Settings.PvP.Enable") || !skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), Setting.Role.Owner, "Damage")) {
+ 				if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Settings.PvP.Enable") || !skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), IslandRole.Owner, "Damage")) {
  					event.setCancelled(true);
  				}
 			} else {
@@ -101,7 +101,7 @@ public class Entity implements Listener {
 			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 				if (event.getEntity() instanceof Player) {
 					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")) {
-						if (!skyblock.getIslandManager().hasSetting(player.getLocation(), Setting.Role.Owner, "PvP")) {
+						if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "PvP")) {
 			 				event.setCancelled(true);
 			 			}
 					} else {
@@ -139,7 +139,7 @@ public class Entity implements Listener {
 			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 				if (event.getEntity() instanceof Player) {
 					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")) {
-						if (!skyblock.getIslandManager().hasSetting(player.getLocation(), Setting.Role.Owner, "PvP")) {
+						if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "PvP")) {
 			 				event.setCancelled(true);
 			 			}
 					} else {
@@ -161,7 +161,7 @@ public class Entity implements Listener {
 				Player player = (Player) event.getEntity();
 				
 				if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-					if (!skyblock.getIslandManager().hasSetting(player.getLocation(), Setting.Role.Owner, "Damage")) {
+					if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "Damage")) {
 		 				event.setCancelled(true);
 		 			}
 				} else {
@@ -213,7 +213,7 @@ public class Entity implements Listener {
 		
 		if (!(entity instanceof Player)) {
 			if (entity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || entity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-				if (!skyblock.getIslandManager().hasSetting(entity.getLocation(), Setting.Role.Owner, "MobGriefing")) {
+				if (!skyblock.getIslandManager().hasSetting(entity.getLocation(), IslandRole.Owner, "MobGriefing")) {
 	 				event.setCancelled(true);
 	 			}
 			}
@@ -225,7 +225,7 @@ public class Entity implements Listener {
 		org.bukkit.entity.Entity entity = event.getEntity();
 		
 		if (entity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || entity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), Setting.Role.Owner, "Explosions")) {
+			if (!skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), IslandRole.Owner, "Explosions")) {
  				event.setCancelled(true);
  			}
 		}
@@ -298,7 +298,7 @@ public class Entity implements Listener {
 			
 			if (livingEntity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || livingEntity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 				if (!livingEntity.hasMetadata("SkyBlock")) {
-	 				if (!skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), Setting.Role.Owner, "NaturalMobSpawning")) {
+	 				if (!skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), IslandRole.Owner, "NaturalMobSpawning")) {
 	 					livingEntity.remove();
 	 				}
 				}

@@ -12,8 +12,7 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -39,8 +38,8 @@ public class SettingsCommand extends SubCommand {
 		if (islandManager.hasIsland(player)) {
 			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 			
-			if (island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId())) {
-				if ((island.isRole(Role.Operator, player.getUniqueId()) && (island.getSetting(Setting.Role.Operator, "Visitor").getStatus() || island.getSetting(Setting.Role.Operator, "Member").getStatus())) || island.isRole(Role.Owner, player.getUniqueId())) {
+			if (island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+				if ((island.hasRole(IslandRole.Operator, player.getUniqueId()) && (island.getSetting(IslandRole.Operator, "Visitor").getStatus() || island.getSetting(IslandRole.Operator, "Member").getStatus())) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 					me.goodandevil.skyblock.menus.Settings.getInstance().open(player, me.goodandevil.skyblock.menus.Settings.Type.Categories, null, null);
 					soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 				} else {
@@ -48,7 +47,7 @@ public class SettingsCommand extends SubCommand {
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Setting.Role.Message"));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Role.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {

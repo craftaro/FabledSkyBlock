@@ -17,8 +17,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -65,7 +64,7 @@ public class Biome {
 					if (playerDataManager.hasPlayerData(player) && islandManager.hasIsland(player)) {
 						island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 						
-						if (!((island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Biome").getStatus()) || island.isRole(Role.Owner, player.getUniqueId()))) {
+						if (!((island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Biome").getStatus()) || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
 							messageManager.sendMessage(player, config.getFileConfiguration().getString("Command.Island.Biome.Permission.Message"));
 							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							player.closeInventory();

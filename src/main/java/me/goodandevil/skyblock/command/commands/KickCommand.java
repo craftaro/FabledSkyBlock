@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.command.commands;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -20,8 +21,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.events.IslandKickEvent;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -60,13 +60,13 @@ public class KickCommand extends SubCommand {
 				
 				boolean isOpen = island.isOpen();
 				
-				if (island.isRole(Role.Owner, player.getUniqueId()) || (island.isRole(Role.Operator, player.getUniqueId()) && island.getSetting(Setting.Role.Operator, "Kick").getStatus())) {
+				if (island.hasRole(IslandRole.Owner, player.getUniqueId()) || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Kick").getStatus())) {
 					UUID targetPlayerUUID = null;
 					String targetPlayerName = null;
 					
 					Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 					
-					List<UUID> islandMembers = island.getRole(Role.Member), islandOperators = island.getRole(Role.Operator), islandVisitors = islandManager.getVisitorsAtIsland(island);
+					Set<UUID> islandMembers = island.getRole(IslandRole.Member), islandOperators = island.getRole(IslandRole.Operator), islandVisitors = islandManager.getVisitorsAtIsland(island);
 					
 					if (targetPlayer == null) {
 						OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
@@ -91,7 +91,7 @@ public class KickCommand extends SubCommand {
 							messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Cooped.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else {
-							IslandKickEvent islandKickEvent = new IslandKickEvent(island, Role.Visitor, targetPlayerUUID, player);
+							IslandKickEvent islandKickEvent = new IslandKickEvent(island, IslandRole.Visitor, targetPlayerUUID, player);
 							Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
 							
 							if (!islandKickEvent.isCancelled()) {
@@ -105,10 +105,10 @@ public class KickCommand extends SubCommand {
 							}
 						}
 					} else if (islandMembers.contains(targetPlayerUUID) || islandOperators.contains(targetPlayerUUID)) {
-						Role islandRole = Role.Member;
+						IslandRole islandRole = IslandRole.Member;
 						
 						if (islandOperators.contains(targetPlayerUUID)) {
-							islandRole = Role.Operator;
+							islandRole = IslandRole.Operator;
 						}
 						
 						IslandKickEvent islandKickEvent = new IslandKickEvent(island, islandRole, targetPlayerUUID, player);
@@ -160,9 +160,9 @@ public class KickCommand extends SubCommand {
 							}
 							
 							if (islandMembers.contains(targetPlayerUUID)) {
-								island.removeRole(Role.Member, targetPlayerUUID);
+								island.removeRole(IslandRole.Member, targetPlayerUUID);
 							} else if (islandOperators.contains(targetPlayerUUID)) {
-								island.removeRole(Role.Operator, targetPlayerUUID);
+								island.removeRole(IslandRole.Operator, targetPlayerUUID);
 							}
 							
 							island.save();
@@ -184,7 +184,7 @@ public class KickCommand extends SubCommand {
 							}
 							
 							if (scoreboardManager != null) {
-								if (island.getRole(Role.Member).size() == 0 && island.getRole(Role.Operator).size() == 0) {
+								if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
 									Scoreboard scoreboard = scoreboardManager.getScoreboard(player);
 									scoreboard.cancel();
 									scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
@@ -196,7 +196,7 @@ public class KickCommand extends SubCommand {
 									}
 									
 									scoreboard.run();
-								}	
+								}
 							}
 						}
 					} else {

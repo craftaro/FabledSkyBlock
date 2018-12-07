@@ -22,7 +22,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Role;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
@@ -154,12 +154,12 @@ public class PlayerDataManager {
 						if (banManager.hasIsland(islandList) && fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && banManager.getIsland(islandList).isBanned(player.getUniqueId())) {
 							messageManager.sendMessage(player, configLoad.getString("Island.Visit.Teleport.Island.Message").replace("%player", targetPlayerName));
 						} else {
-							if (island.isRole(Role.Member, player.getUniqueId()) || island.isRole(Role.Operator, player.getUniqueId()) || island.isRole(Role.Owner, player.getUniqueId())) {
+							if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 								PlayerData playerData = getPlayerData(player);
 								playerData.setIsland(island.getOwnerUUID());
 								
 								if (worldList == Location.World.Normal) {
-									if (!island.isWeatherSynchronised()) {
+									if (!island.isWeatherSynchronized()) {
 					    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
 					    				player.setPlayerWeather(island.getWeather());
 									}
@@ -179,7 +179,7 @@ public class PlayerDataManager {
 								playerData.setIsland(island.getOwnerUUID());
 								
 								if (worldList == Location.World.Normal) {
-									if (!island.isWeatherSynchronised()) {
+									if (!island.isWeatherSynchronized()) {
 					    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
 					    				player.setPlayerWeather(island.getWeather());
 									}
@@ -197,7 +197,7 @@ public class PlayerDataManager {
 											Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
 											scoreboard.cancel();
 											
-											if ((island.getRole(Role.Member).size() + island.getRole(Role.Operator).size() + 1) == 1) {
+											if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1) == 1) {
 												scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Solo.Displayname")));
 												scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
 											} else {
@@ -267,7 +267,7 @@ public class PlayerDataManager {
 									
 									if (island != null) {
 										if (worldList == Location.World.Normal) {
-											if (!island.isWeatherSynchronised()) {
+											if (!island.isWeatherSynchronized()) {
 							    				player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
 							    				player.setPlayerWeather(island.getWeather());
 											}
