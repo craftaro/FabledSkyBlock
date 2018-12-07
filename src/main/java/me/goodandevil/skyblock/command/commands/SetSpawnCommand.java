@@ -27,24 +27,24 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 public class SetSpawnCommand extends SubCommand {
 
 	private final SkyBlock skyblock;
-	
+
 	private String info;
 	private me.goodandevil.skyblock.island.Location.Environment locationEnvironment;
-	
+
 	public SetSpawnCommand(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
-	
+
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
-		
+
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
-		
+
 		if (args.length == 1) {
 			if (islandManager.hasIsland(player)) {
 				if (args[0].equalsIgnoreCase("Main")) {
@@ -54,81 +54,118 @@ public class SetSpawnCommand extends SubCommand {
 				} else {
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Spawn.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-					
+
 					return;
 				}
-				
-				me.goodandevil.skyblock.island.Island island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
-				
-				if (island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-					if ((island.hasRole(IslandRole.Operator, player.getUniqueId()) && (island.getSetting(IslandRole.Operator, locationEnvironment.name() + "Spawn").getStatus())) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-						for (me.goodandevil.skyblock.island.Location.World worldList : me.goodandevil.skyblock.island.Location.World.values()) {
-							if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, me.goodandevil.skyblock.island.Location.Environment.Island), island.getRadius())) {
+
+				me.goodandevil.skyblock.island.Island island = islandManager
+						.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+
+				if (island.hasRole(IslandRole.Operator, player.getUniqueId())
+						|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+					if ((island.hasRole(IslandRole.Operator, player.getUniqueId()) && (island
+							.getSetting(IslandRole.Operator, locationEnvironment.name() + "Spawn").getStatus()))
+							|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+						for (me.goodandevil.skyblock.island.Location.World worldList : me.goodandevil.skyblock.island.Location.World
+								.values()) {
+							if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
+									island.getLocation(worldList,
+											me.goodandevil.skyblock.island.Location.Environment.Island),
+									island.getRadius())) {
 								Location location = player.getLocation();
-								
-								if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
-									if (location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR || location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial()) {
-										messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Protection.Block.Message"));
+
+								if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+										.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+									if (location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR
+											|| location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock()
+													.getType() == Materials.LEGACY_PISTON_MOVING_PIECE
+															.getPostMaterial()) {
+										messageManager.sendMessage(player, configLoad
+												.getString("Command.Island.SetSpawn.Protection.Block.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-										
+
 										return;
 									} else if (location.getY() - location.getBlockY() != 0.0D) {
-										messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Protection.Ground.Message"));
+										messageManager.sendMessage(player, configLoad
+												.getString("Command.Island.SetSpawn.Protection.Ground.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-										
+
 										return;
-									} else if (location.getBlock().isLiquid() || location.clone().add(0.0D, 1.0D, 0.0D).getBlock().isLiquid()) {
-										messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Protection.Liquid.Message"));
+									} else if (location.getBlock().isLiquid()
+											|| location.clone().add(0.0D, 1.0D, 0.0D).getBlock().isLiquid()) {
+										messageManager.sendMessage(player, configLoad
+												.getString("Command.Island.SetSpawn.Protection.Liquid.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-										
+
 										return;
-									} else if (location.getBlock().getType() == Materials.NETHER_PORTAL.parseMaterial() || location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType() == Materials.NETHER_PORTAL.parseMaterial()) {
-										messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Protection.Portal.Message"));
+									} else if (location.getBlock().getType() == Materials.NETHER_PORTAL.parseMaterial()
+											|| location.clone().add(0.0D, 1.0D, 0.0D).getBlock()
+													.getType() == Materials.NETHER_PORTAL.parseMaterial()) {
+										messageManager.sendMessage(player, configLoad
+												.getString("Command.Island.SetSpawn.Protection.Portal.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-										
+
 										return;
 									} else {
 										if (LocationUtil.isLocationCentreOfBlock(location)) {
 											new BukkitRunnable() {
 												public void run() {
-													if (location.getBlock().getType() != Material.AIR && location.getBlock().getType() != Materials.MOVING_PISTON.parseMaterial()) {
-														location.getWorld().dropItemNaturally(location, new ItemStack(location.getBlock().getType()));
+													if (location.getBlock().getType() != Material.AIR
+															&& location.getBlock().getType() != Materials.MOVING_PISTON
+																	.parseMaterial()) {
+														location.getWorld().dropItemNaturally(location,
+																new ItemStack(location.getBlock().getType()));
 													}
-													
-													if (location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType() != Material.AIR && location.getBlock().getType() != Materials.MOVING_PISTON.parseMaterial()) {
-														location.getWorld().dropItemNaturally(location.clone().add(0.0D, 1.0D, 0.0D), new ItemStack(location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType()));
+
+													if (location.clone().add(0.0D, 1.0D, 0.0D).getBlock()
+															.getType() != Material.AIR
+															&& location.getBlock().getType() != Materials.MOVING_PISTON
+																	.parseMaterial()) {
+														location.getWorld().dropItemNaturally(
+																location.clone().add(0.0D, 1.0D, 0.0D),
+																new ItemStack(location.clone().add(0.0D, 1.0D, 0.0D)
+																		.getBlock().getType()));
 													}
-													
-													islandManager.removeSpawnProtection(island.getLocation(worldList, locationEnvironment));
+
+													islandManager.removeSpawnProtection(
+															island.getLocation(worldList, locationEnvironment));
 													islandManager.setSpawnProtection(location);
 												}
 											}.runTask(skyblock);
 										} else {
-											messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Protection.Centre.Message"));
+											messageManager.sendMessage(player, configLoad
+													.getString("Command.Island.SetSpawn.Protection.Centre.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-											
+
 											return;
 										}
 									}
 								}
-								
+
 								island.setLocation(worldList, locationEnvironment, location);
-								
-								messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Set.Message").replace("%spawn", locationEnvironment.name().toLowerCase()));
+
+								messageManager.sendMessage(player,
+										configLoad.getString("Command.Island.SetSpawn.Set.Message").replace("%spawn",
+												locationEnvironment.name().toLowerCase()));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
-								
+
 								return;
 							}
 						}
-						
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Island.Message").replace("%spawn", locationEnvironment.name().toLowerCase()));
+
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.SetSpawn.Island.Message").replace("%spawn",
+										locationEnvironment.name().toLowerCase()));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else {
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Permission.Message").replace("%spawn", locationEnvironment.name().toLowerCase()));
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.SetSpawn.Permission.Message").replace("%spawn",
+										locationEnvironment.name().toLowerCase()));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Role.Message").replace("%spawn", locationEnvironment.name().toLowerCase()));
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Role.Message")
+							.replace("%spawn", locationEnvironment.name().toLowerCase()));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
@@ -140,7 +177,7 @@ public class SetSpawnCommand extends SubCommand {
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
-	
+
 	@Override
 	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
 		sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
@@ -159,7 +196,7 @@ public class SetSpawnCommand extends SubCommand {
 	@Override
 	public SubCommand setInfo(String info) {
 		this.info = info;
-		
+
 		return this;
 	}
 
@@ -167,12 +204,12 @@ public class SetSpawnCommand extends SubCommand {
 	public String[] getAliases() {
 		return new String[0];
 	}
-	
+
 	@Override
 	public String[] getArguments() {
 		return new String[] { "main", "visitor" };
 	}
-	
+
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Default;

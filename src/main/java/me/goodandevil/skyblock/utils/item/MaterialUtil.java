@@ -34,7 +34,7 @@ public class MaterialUtil {
 		} else if (material.name().equals("BED_BLOCK")) {
 			material = Materials.RED_BED.getPostMaterial();
 		}
-		
+
 		return material;
 	}
 }

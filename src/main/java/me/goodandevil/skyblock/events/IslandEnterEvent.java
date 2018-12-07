@@ -7,25 +7,25 @@ import org.bukkit.event.HandlerList;
 import me.goodandevil.skyblock.island.Island;
 
 public class IslandEnterEvent extends Event {
-	
+
 	private Player player;
 	private Island island;
-	
+
 	public IslandEnterEvent(Player player, Island island) {
 		this.player = player;
 		this.island = island;
 	}
-	
+
 	public Player getPlayer() {
 		return player;
 	}
-	
+
 	public Island getIsland() {
 		return island;
 	}
-	
-    private static final HandlerList handlers = new HandlerList();
-    
+
+	private static final HandlerList handlers = new HandlerList();
+
 	public HandlerList getHandlers() {
 		return handlers;
 	}

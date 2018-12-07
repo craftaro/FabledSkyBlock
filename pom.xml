@@ -22,7 +22,10 @@
                 <configuration>
                     <reportOutputDirectory>${basedir}</reportOutputDirectory>
                     <destDir>apidocs</destDir>
-                    <docfilessubdirs>true</docfilessubdirs>
+                    <source>39</source>
+        			<show>public</show>
+        			<doctitle>SkyBlock API</doctitle>
+        			<title>SkyBlock API</title>
                     <sourcepath>${basedir}/src/main/java/me/goodandevil/skyblock/api</sourcepath>
                 </configuration>
                 <executions>

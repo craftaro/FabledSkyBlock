@@ -13,27 +13,31 @@ import me.goodandevil.skyblock.island.Location;
 public class Item implements Listener {
 
 	private final SkyBlock skyblock;
-	
- 	public Item(SkyBlock skyblock) {
+
+	public Item(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
-	
+
 	@EventHandler
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
-		
-		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+
+		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
+				|| player.getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 			if (!skyblock.getIslandManager().hasPermission(player, "ItemDrop")) {
 				event.setCancelled(true);
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 		Player player = event.getPlayer();
-		
-		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+
+		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
+				|| player.getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 			if (!skyblock.getIslandManager().hasPermission(player, "ItemPickup")) {
 				event.setCancelled(true);
 			}

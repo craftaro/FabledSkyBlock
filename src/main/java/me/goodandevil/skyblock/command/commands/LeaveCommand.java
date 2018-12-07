@@ -32,11 +32,11 @@ public class LeaveCommand extends SubCommand {
 
 	private final SkyBlock skyblock;
 	private String info;
-	
+
 	public LeaveCommand(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
-	
+
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
@@ -45,102 +45,120 @@ public class LeaveCommand extends SubCommand {
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
-		
+
 		PlayerData playerData = playerDataManager.getPlayerData(player);
-		
+
 		Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-		
+
 		if (islandManager.hasIsland(player)) {
 			me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
-			
+
 			if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-				messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Leave.Owner.Message"));
+				messageManager.sendMessage(player,
+						languageConfig.getFileConfiguration().getString("Command.Island.Leave.Owner.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			} else {
 				IslandLeaveEvent islandLeaveEvent = new IslandLeaveEvent(player, island);
 				Bukkit.getServer().getPluginManager().callEvent(islandLeaveEvent);
-				
+
 				if (!islandLeaveEvent.isCancelled()) {
 					for (Location.World worldList : Location.World.values()) {
-						if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+						if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
+								island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 							LocationUtil.teleportPlayerToSpawn(player);
-							
+
 							break;
 						}
 					}
-					
+
 					if (island.hasRole(IslandRole.Member, player.getUniqueId())) {
 						island.removeRole(IslandRole.Member, player.getUniqueId());
 					} else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
 						island.removeRole(IslandRole.Operator, player.getUniqueId());
 					}
-					
+
 					island.save();
-					
+
 					playerData.setPlaytime(0);
 					playerData.setOwner(null);
 					playerData.setMemberSince(null);
 					playerData.setChat(false);
 					playerData.save();
-					
+
 					List<UUID> islandMembersOnline = islandManager.getMembersOnline(island);
-					
+
 					if (islandMembersOnline.size() == 1) {
 						for (UUID islandMembersOnlineList : islandMembersOnline) {
 							if (!islandMembersOnlineList.equals(player.getUniqueId())) {
 								Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
 								PlayerData targetPlayerData = playerDataManager.getPlayerData(targetPlayer);
-								
+
 								if (targetPlayerData.isChat()) {
 									targetPlayerData.setChat(false);
-									messageManager.sendMessage(targetPlayer, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
+									messageManager.sendMessage(targetPlayer,
+											fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+													.getFileConfiguration().getString("Island.Chat.Untoggled.Message"));
 								}
 							}
 						}
 					}
-					
+
 					// TODO Check if player has been teleported
 					islandManager.unloadIsland(island, null);
-					
+
 					for (Player all : Bukkit.getOnlinePlayers()) {
 						if (!all.getUniqueId().equals(player.getUniqueId())) {
-							if (island.hasRole(IslandRole.Member, all.getUniqueId()) || island.hasRole(IslandRole.Operator, all.getUniqueId()) || island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-								all.sendMessage(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Command.Island.Leave.Left.Broadcast.Message").replace("%player", player.getName())));
+							if (island.hasRole(IslandRole.Member, all.getUniqueId())
+									|| island.hasRole(IslandRole.Operator, all.getUniqueId())
+									|| island.hasRole(IslandRole.Owner, all.getUniqueId())) {
+								all.sendMessage(ChatColor.translateAlternateColorCodes('&',
+										languageConfig.getFileConfiguration()
+												.getString("Command.Island.Leave.Left.Broadcast.Message")
+												.replace("%player", player.getName())));
 								soundManager.playSound(all, Sounds.IRONGOLEM_HIT.bukkitSound(), 5.0F, 5.0F);
-								
+
 								if (scoreboardManager != null) {
-									if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
+									if (island.getRole(IslandRole.Member).size() == 0
+											&& island.getRole(IslandRole.Operator).size() == 0) {
 										Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
 										scoreboard.cancel();
-										scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
+										scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+												languageConfig.getFileConfiguration()
+														.getString("Scoreboard.Island.Solo.Displayname")));
 
 										if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-											scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
+											scoreboard.setDisplayList(languageConfig.getFileConfiguration()
+													.getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
 										} else {
-											scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
+											scoreboard.setDisplayList(languageConfig.getFileConfiguration()
+													.getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
 										}
-										
+
 										scoreboard.run();
-									}	
+									}
 								}
 							}
 						}
 					}
-					
-					messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Leave.Left.Sender.Message"));
+
+					messageManager.sendMessage(player, languageConfig.getFileConfiguration()
+							.getString("Command.Island.Leave.Left.Sender.Message"));
 					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 5.0F, 5.0F);
-					
+
 					if (scoreboardManager != null) {
 						Scoreboard scoreboard = scoreboardManager.getScoreboard(player);
 						scoreboard.cancel();
-						scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-						scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
+						scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+								languageConfig.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
+						scoreboard.setDisplayList(languageConfig.getFileConfiguration()
+								.getStringList("Scoreboard.Tutorial.Displaylines"));
 						scoreboard.run();
 					}
 				}
 			}
 		} else {
-			messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Leave.Member.Message"));
+			messageManager.sendMessage(player,
+					languageConfig.getFileConfiguration().getString("Command.Island.Leave.Member.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
@@ -163,7 +181,7 @@ public class LeaveCommand extends SubCommand {
 	@Override
 	public SubCommand setInfo(String info) {
 		this.info = info;
-		
+
 		return this;
 	}
 
@@ -171,12 +189,12 @@ public class LeaveCommand extends SubCommand {
 	public String[] getAliases() {
 		return new String[0];
 	}
-	
+
 	@Override
 	public String[] getArguments() {
 		return new String[0];
 	}
-	
+
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Default;

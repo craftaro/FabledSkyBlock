@@ -29,48 +29,56 @@ public class KickAllCommand extends SubCommand {
 
 	private final SkyBlock skyblock;
 	private String info;
-	
+
 	public KickAllCommand(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
-	
+
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
-		
+
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
-		
+
 		if (islandManager.hasIsland(player)) {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
 			Island island = islandManager.getIsland(playerData.getOwner());
-			
-			if (island.hasRole(IslandRole.Owner, player.getUniqueId()) || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Kick").getStatus())) {
+
+			if (island.hasRole(IslandRole.Owner, player.getUniqueId())
+					|| (island.hasRole(IslandRole.Operator, player.getUniqueId())
+							&& island.getSetting(IslandRole.Operator, "Kick").getStatus())) {
 				if (island.isOpen()) {
 					Set<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
-					
+
 					if (islandVisitors.size() == 0) {
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Visitors.Message"));
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.KickAll.Visitors.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						for (UUID islandVisitorList : islandVisitors) {
 							Player targetPlayer = Bukkit.getServer().getPlayer(islandVisitorList);
-							
-							IslandKickEvent islandKickEvent = new IslandKickEvent(island, IslandRole.Visitor, islandVisitorList, player);
+
+							IslandKickEvent islandKickEvent = new IslandKickEvent(island, IslandRole.Visitor,
+									islandVisitorList, player);
 							Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
-							
+
 							if (!islandKickEvent.isCancelled()) {
 								LocationUtil.teleportPlayerToSpawn(targetPlayer);
-								
-								messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.KickAll.Kicked.Target.Message").replace("%player", player.getName()));
+
+								messageManager.sendMessage(targetPlayer,
+										configLoad.getString("Command.Island.KickAll.Kicked.Target.Message")
+												.replace("%player", player.getName()));
 								soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 							}
 						}
-						
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Kicked.Sender.Message").replace("%visitors", "" + islandVisitors.size()));
+
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.KickAll.Kicked.Sender.Message")
+										.replace("%visitors", "" + islandVisitors.size()));
 						soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
@@ -86,12 +94,12 @@ public class KickAllCommand extends SubCommand {
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
-	
+
 	@Override
 	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
 		sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
 	}
-	
+
 	@Override
 	public String getName() {
 		return "expel";
@@ -105,7 +113,7 @@ public class KickAllCommand extends SubCommand {
 	@Override
 	public SubCommand setInfo(String info) {
 		this.info = info;
-		
+
 		return this;
 	}
 
@@ -113,12 +121,12 @@ public class KickAllCommand extends SubCommand {
 	public String[] getAliases() {
 		return new String[0];
 	}
-	
+
 	@Override
 	public String[] getArguments() {
 		return new String[0];
 	}
-	
+
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Default;

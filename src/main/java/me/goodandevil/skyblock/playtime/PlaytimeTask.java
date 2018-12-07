@@ -12,12 +12,12 @@ public class PlaytimeTask extends BukkitRunnable {
 
 	private final PlayerDataManager playerDataManager;
 	private final IslandManager islandManager;
-	
+
 	public PlaytimeTask(PlayerDataManager playerDataManager, IslandManager islandManager) {
 		this.playerDataManager = playerDataManager;
 		this.islandManager = islandManager;
 	}
-	
+
 	@Override
 	public void run() {
 		for (Player all : Bukkit.getOnlinePlayers()) {

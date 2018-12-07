@@ -33,44 +33,45 @@ public class SetSizeCommand extends SubCommand {
 
 	private final SkyBlock skyblock;
 	private String info;
-	
+
 	public SetSizeCommand(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
-	
+
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		onCommand(player, args);
 	}
-	
+
 	@Override
 	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
 		onCommand(sender, args);
 	}
-	
+
 	public void onCommand(CommandSender sender, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
-		
+
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
-		
+
 		Player player = null;
-		
+
 		if (sender instanceof Player) {
 			player = (Player) sender;
 		}
-		
-		if (player == null || player.hasPermission("skyblock.admin.setsize") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+
+		if (player == null || player.hasPermission("skyblock.admin.setsize") || player.hasPermission("skyblock.admin.*")
+				|| player.hasPermission("skyblock.*")) {
 			if (args.length == 2) {
 				if (args[1].matches("[0-9]+")) {
 					Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 					UUID islandOwnerUUID;
 					String targetPlayerName;
-					
+
 					if (targetPlayer == null) {
 						OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
 						islandOwnerUUID = targetPlayerOffline.getOwner();
@@ -79,51 +80,65 @@ public class SetSizeCommand extends SubCommand {
 						islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
 						targetPlayerName = targetPlayer.getName();
 					}
-					
+
 					int size = Integer.valueOf(args[1]);
-					
+
 					if (islandOwnerUUID == null) {
-						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Island.Message"));
+						messageManager.sendMessage(sender,
+								configLoad.getString("Command.Island.Admin.SetSize.Island.Message"));
 						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else if (size < 50) {
-						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Size.Greater.Message"));
+						messageManager.sendMessage(sender,
+								configLoad.getString("Command.Island.Admin.SetSize.Size.Greater.Message"));
 						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else if (size > 1000) {
-						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Size.Less.Message"));
+						messageManager.sendMessage(sender,
+								configLoad.getString("Command.Island.Admin.SetSize.Size.Less.Message"));
 						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else {
-	    				if (islandManager.containsIsland(islandOwnerUUID)) {
-	    					Island island = islandManager.getIsland(islandOwnerUUID);
-	    					island.setSize(size);
-	    					
-							if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
-		    					for (Player all : Bukkit.getOnlinePlayers()) {
-		    						if (island.hasRole(IslandRole.Member, all.getUniqueId()) || island.hasRole(IslandRole.Operator, all.getUniqueId()) || island.hasRole(IslandRole.Owner, all.getUniqueId()) || island.getVisit().isVisitor(all.getUniqueId())) {
-										WorldBorder.send(all, null, island.getSize() + 2.5, island.getLocation(Location.World.Normal, Location.Environment.Island));
-		    						}
-		    					}
+						if (islandManager.containsIsland(islandOwnerUUID)) {
+							Island island = islandManager.getIsland(islandOwnerUUID);
+							island.setSize(size);
+
+							if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+									.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+								for (Player all : Bukkit.getOnlinePlayers()) {
+									if (island.hasRole(IslandRole.Member, all.getUniqueId())
+											|| island.hasRole(IslandRole.Operator, all.getUniqueId())
+											|| island.hasRole(IslandRole.Owner, all.getUniqueId())
+											|| island.getVisit().isVisitor(all.getUniqueId())) {
+										WorldBorder.send(all, null, island.getSize() + 2.5,
+												island.getLocation(Location.World.Normal, Location.Environment.Island));
+									}
+								}
 							}
-	    				} else {
-	    					File configFile = new File(skyblock.getDataFolder().toString() + "/island-data", islandOwnerUUID.toString() + ".yml");
-	    					FileConfiguration islandConfigLoad = YamlConfiguration.loadConfiguration(configFile);
-	    					islandConfigLoad.set("Size", size);
-	    					
-	    					try {
+						} else {
+							File configFile = new File(skyblock.getDataFolder().toString() + "/island-data",
+									islandOwnerUUID.toString() + ".yml");
+							FileConfiguration islandConfigLoad = YamlConfiguration.loadConfiguration(configFile);
+							islandConfigLoad.set("Size", size);
+
+							try {
 								islandConfigLoad.save(configFile);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-	    				}
-	    				
-						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Set.Message").replace("%player", targetPlayerName).replace("%size", NumberUtil.formatNumber(size)));
+						}
+
+						messageManager.sendMessage(sender,
+								configLoad.getString("Command.Island.Admin.SetSize.Set.Message")
+										.replace("%player", targetPlayerName)
+										.replace("%size", NumberUtil.formatNumber(size)));
 						soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
-					messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Numerical.Message"));
+					messageManager.sendMessage(sender,
+							configLoad.getString("Command.Island.Admin.SetSize.Numerical.Message"));
 					soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Invalid.Message"));
+				messageManager.sendMessage(sender,
+						configLoad.getString("Command.Island.Admin.SetSize.Invalid.Message"));
 				soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
@@ -145,20 +160,20 @@ public class SetSizeCommand extends SubCommand {
 	@Override
 	public SubCommand setInfo(String info) {
 		this.info = info;
-		
+
 		return this;
 	}
-	
+
 	@Override
 	public String[] getAliases() {
 		return new String[0];
 	}
-	
+
 	@Override
 	public String[] getArguments() {
 		return new String[0];
 	}
-	
+
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Admin;

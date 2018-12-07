@@ -43,131 +43,167 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 public class Block implements Listener {
 
 	private final SkyBlock skyblock;
-	
- 	public Block(SkyBlock skyblock) {
+
+	public Block(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
- 	
+
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
-		
+
 		for (Location.World worldList : Location.World.values()) {
 			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
 				PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 				GeneratorManager generatorManager = skyblock.getGeneratorManager();
 				IslandManager islandManager = skyblock.getIslandManager();
-				
+
 				if (islandManager.hasPermission(player, "Destroy")) {
 					for (UUID islandList : islandManager.getIslands().keySet()) {
 						Island island = islandManager.getIslands().get(islandList);
-						
-						if (LocationUtil.isLocationAtLocationRadius(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+
+						if (LocationUtil.isLocationAtLocationRadius(event.getBlock().getLocation(),
+								island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 							if (generatorManager != null) {
 								if (generatorManager.isGenerator(event.getBlock())) {
 									if (playerDataManager.hasPlayerData(player)) {
 										org.bukkit.block.Block block = event.getBlock();
 										org.bukkit.block.Block liquid = null;
-										
+
 										if (NMSUtil.getVersionNumber() < 13) {
-											BlockFace[] blockFaces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
-											
+											BlockFace[] blockFaces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST,
+													BlockFace.SOUTH, BlockFace.WEST };
+
 											for (BlockFace blockFaceList : blockFaces) {
-												if (event.getBlock().getRelative(blockFaceList).getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || event.getBlock().getRelative(blockFaceList).getType() == Materials.LAVA.parseMaterial()) {
+												if (event.getBlock().getRelative(blockFaceList)
+														.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial()
+														|| event.getBlock().getRelative(blockFaceList)
+																.getType() == Materials.LAVA.parseMaterial()) {
 													liquid = event.getBlock().getRelative(blockFaceList);
 													break;
 												}
 											}
 										}
-										
-										playerDataManager.getPlayerData(player).setGenerator(new GeneratorLocation(worldList, block, liquid));
+
+										playerDataManager.getPlayerData(player)
+												.setGenerator(new GeneratorLocation(worldList, block, liquid));
 									}
 								}
 							}
-							
-							if (LocationUtil.isLocationLocation(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Main)) || LocationUtil.isLocationLocation(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Main).clone().add(0.0D, 1.0D, 0.0D)) || LocationUtil.isLocationLocation(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
-								if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
-									event.setCancelled(true);	
+
+							if (LocationUtil.isLocationLocation(event.getBlock().getLocation(),
+									island.getLocation(worldList, Location.Environment.Main))
+									|| LocationUtil.isLocationLocation(event.getBlock().getLocation(),
+											island.getLocation(worldList, Location.Environment.Main).clone().add(0.0D,
+													1.0D, 0.0D))
+									|| LocationUtil.isLocationLocation(event.getBlock().getLocation(),
+											island.getLocation(worldList, Location.Environment.Main).clone()
+													.subtract(0.0D, 1.0D, 0.0D))) {
+								if (skyblock.getFileManager()
+										.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+										.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+									event.setCancelled(true);
 								}
 							}
-							
+
 							return;
 						}
 					}
-					
+
 					event.setCancelled(true);
 				} else {
 					event.setCancelled(true);
-					
-					skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
+
+					skyblock.getMessageManager().sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
 					skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
-				
+
 				break;
-			}	
+			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
-		
+
 		for (Location.World worldList : Location.World.values()) {
 			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
 				IslandManager islandManager = skyblock.getIslandManager();
-				
+
 				if (islandManager.hasPermission(player, "Place")) {
 					for (UUID islandList : islandManager.getIslands().keySet()) {
 						Island island = islandManager.getIslands().get(islandList);
-						
-						if (LocationUtil.isLocationAtLocationRadius(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-							Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+
+						if (LocationUtil.isLocationAtLocationRadius(event.getBlock().getLocation(),
+								island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+							Config config = skyblock.getFileManager()
+									.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 							FileConfiguration configLoad = config.getFileConfiguration();
-							
+
 							if (configLoad.getBoolean("Island.WorldBorder.Block")) {
-								if (event.getBlock().getType() == Materials.PISTON.parseMaterial() || event.getBlock().getType() == Materials.STICKY_PISTON.parseMaterial()) {
-									if (!LocationUtil.isLocationAtLocationRadius(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Island), 73)) {
+								if (event.getBlock().getType() == Materials.PISTON.parseMaterial()
+										|| event.getBlock().getType() == Materials.STICKY_PISTON.parseMaterial()) {
+									if (!LocationUtil.isLocationAtLocationRadius(event.getBlock().getLocation(),
+											island.getLocation(worldList, Location.Environment.Island), 73)) {
 										event.setCancelled(true);
 									}
 								} else if (event.getBlock().getType() == Material.DISPENSER) {
-									if (!LocationUtil.isLocationAtLocationRadius(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Island), 83)) {
+									if (!LocationUtil.isLocationAtLocationRadius(event.getBlock().getLocation(),
+											island.getLocation(worldList, Location.Environment.Island), 83)) {
 										event.setCancelled(true);
 									}
 								}
 							}
-							
-							if (LocationUtil.isLocationLocation(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Main)) || LocationUtil.isLocationLocation(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Main).clone().add(0.0D, 1.0D, 0.0D)) || LocationUtil.isLocationLocation(event.getBlock().getLocation(), island.getLocation(worldList, Location.Environment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
-								if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
-									event.setCancelled(true);	
+
+							if (LocationUtil.isLocationLocation(event.getBlock().getLocation(),
+									island.getLocation(worldList, Location.Environment.Main))
+									|| LocationUtil.isLocationLocation(event.getBlock().getLocation(),
+											island.getLocation(worldList, Location.Environment.Main).clone().add(0.0D,
+													1.0D, 0.0D))
+									|| LocationUtil.isLocationLocation(event.getBlock().getLocation(),
+											island.getLocation(worldList, Location.Environment.Main).clone()
+													.subtract(0.0D, 1.0D, 0.0D))) {
+								if (skyblock.getFileManager()
+										.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+										.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+									event.setCancelled(true);
 								}
 							}
-							
+
 							return;
 						}
 					}
-					
+
 					event.setCancelled(true);
 				} else {
 					event.setCancelled(true);
-					
-					skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
+
+					skyblock.getMessageManager().sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
 					skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
-				
+
 				break;
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
-		if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Piston.Connected.Extend")) {
+		if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+				.getFileConfiguration().getBoolean("Island.Piston.Connected.Extend")) {
 			for (Location.World worldList : Location.World.values()) {
-				if (event.getBlock().getLocation().getWorld().getName().equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
+				if (event.getBlock().getLocation().getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
 					for (org.bukkit.block.Block blockList : event.getBlocks()) {
-						if (blockList.getType() == Materials.PISTON.parseMaterial() || blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
+						if (blockList.getType() == Materials.PISTON.parseMaterial()
+								|| blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
 							event.setCancelled(true);
-							
+
 							break;
 						}
 					}
@@ -175,16 +211,19 @@ public class Block implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-		if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Piston.Connected.Retract")) {
+		if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+				.getFileConfiguration().getBoolean("Island.Piston.Connected.Retract")) {
 			for (Location.World worldList : Location.World.values()) {
-				if (event.getBlock().getLocation().getWorld().getName().equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
+				if (event.getBlock().getLocation().getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
 					for (org.bukkit.block.Block blockList : event.getBlocks()) {
-						if (blockList.getType() == Materials.PISTON.parseMaterial() || blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
+						if (blockList.getType() == Materials.PISTON.parseMaterial()
+								|| blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
 							event.setCancelled(true);
-							
+
 							break;
 						}
 					}
@@ -192,35 +231,39 @@ public class Block implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockForm(BlockFormEvent event) {
 		for (Location.World worldList : Location.World.values()) {
-			if (event.getBlock().getLocation().getWorld().getName().equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
+			if (event.getBlock().getLocation().getWorld().getName()
+					.equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
 				if (event.getBlock().getType() == Material.ICE || event.getBlock().getType() == Material.SNOW) {
-					if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.IceAndSnow")) {
+					if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+							.getFileConfiguration().getBoolean("Island.Weather.IceAndSnow")) {
 						event.setCancelled(true);
 					}
 				} else {
 					PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 					GeneratorManager generatorManager = skyblock.getGeneratorManager();
-					
+
 					if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
 						org.bukkit.Location location = event.getBlock().getLocation();
-						
+
 						for (Player all : Bukkit.getOnlinePlayers()) {
 							if (playerDataManager.hasPlayerData(all)) {
 								PlayerData playerData = playerDataManager.getPlayerData(all);
-								
+
 								if (playerData.getGenerator() != null) {
 									GeneratorLocation generatorLocation = playerData.getGenerator();
-									
+
 									if (generatorLocation.getWorld() == worldList) {
-										if (location.getBlockX() == generatorLocation.getBlockX() && location.getBlockY() == generatorLocation.getBlockY() && location.getBlockZ() == generatorLocation.getBlockZ()) {
+										if (location.getBlockX() == generatorLocation.getBlockX()
+												&& location.getBlockY() == generatorLocation.getBlockY()
+												&& location.getBlockZ() == generatorLocation.getBlockZ()) {
 											event.setCancelled(true);
 											generatorManager.generateBlock(all, event.getBlock());
 											playerData.setGenerator(null);
-											
+
 											return;
 										}
 									}
@@ -229,36 +272,43 @@ public class Block implements Listener {
 						}
 					}
 				}
-				
+
 				return;
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockFromTo(BlockFromToEvent event) {
 		if (NMSUtil.getVersionNumber() < 13) {
 			for (Location.World worldList : Location.World.values()) {
-				if (event.getBlock().getLocation().getWorld().getName().equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
+				if (event.getBlock().getLocation().getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
 					PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 					GeneratorManager generatorManager = skyblock.getGeneratorManager();
-					
+
 					if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
 						org.bukkit.Location location = event.getBlock().getLocation();
-						
+
 						for (Player all : Bukkit.getOnlinePlayers()) {
 							if (playerDataManager.hasPlayerData(all)) {
 								PlayerData playerData = playerDataManager.getPlayerData(all);
-								
+
 								if (playerData.getGenerator() != null) {
 									GeneratorLocation generatorLocation = playerData.getGenerator();
-									
+
 									if (generatorLocation.getWorld() == worldList) {
-										if (location.getBlockX() == generatorLocation.getLiquidX() && location.getBlockY() == generatorLocation.getLiquidY() && location.getBlockZ() == generatorLocation.getLiquidZ()) {
+										if (location.getBlockX() == generatorLocation.getLiquidX()
+												&& location.getBlockY() == generatorLocation.getLiquidY()
+												&& location.getBlockZ() == generatorLocation.getLiquidZ()) {
 											event.setCancelled(true);
-											generatorManager.generateBlock(all, new org.bukkit.Location(location.getWorld(), generatorLocation.getBlockX(), generatorLocation.getBlockY(), generatorLocation.getBlockZ()).getBlock());
+											generatorManager.generateBlock(all,
+													new org.bukkit.Location(location.getWorld(),
+															generatorLocation.getBlockX(),
+															generatorLocation.getBlockY(),
+															generatorLocation.getBlockZ()).getBlock());
 											playerData.setGenerator(null);
-											
+
 											return;
 										}
 									}
@@ -266,59 +316,70 @@ public class Block implements Listener {
 							}
 						}
 					}
-					
+
 					return;
 				}
-			}	
+			}
 		}
 	}
-	
+
 	@EventHandler
-    public void onBlockBurn(BlockBurnEvent event) {
+	public void onBlockBurn(BlockBurnEvent event) {
 		org.bukkit.block.Block block = event.getBlock();
-		
-		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+
+		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
+				|| block.getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), IslandRole.Owner, "FireSpread")) {
 				event.setCancelled(false);
 			}
 		}
 	}
-	
+
 	@EventHandler
-    public void onBlockSpread(BlockSpreadEvent event) {
+	public void onBlockSpread(BlockSpreadEvent event) {
 		org.bukkit.block.Block block = event.getBlock();
-		
-		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+
+		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
+				|| block.getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), IslandRole.Owner, "FireSpread")) {
 				event.setCancelled(false);
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onBlockGrow(BlockGrowEvent event) {
 		org.bukkit.block.Block block = event.getBlock();
-		
-		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+
+		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
+				|| block.getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 			IslandManager islandManager = skyblock.getIslandManager();
-			
+
 			for (UUID islandList : islandManager.getIslands().keySet()) {
 				Island island = islandManager.getIslands().get(islandList);
-				
+
 				for (Location.World worldList : Location.World.values()) {
-					if (LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+					if (LocationUtil.isLocationAtLocationRadius(block.getLocation(),
+							island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 						List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
-				    	
-				    	if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Crop)) {
+
+						if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
+								&& island.isUpgrade(Upgrade.Type.Crop)) {
 							if (NMSUtil.getVersionNumber() > 12) {
 								try {
 									Object blockData = block.getClass().getMethod("getBlockData").invoke(block);
-									
+
 									if (blockData instanceof org.bukkit.block.data.Ageable) {
 										org.bukkit.block.data.Ageable ageable = (org.bukkit.block.data.Ageable) blockData;
 										ageable.setAge(ageable.getAge() + 1);
-										block.getClass().getMethod("setBlockData", Class.forName("org.bukkit.block.data.BlockData")).invoke(block, ageable);
+										block.getClass()
+												.getMethod("setBlockData",
+														Class.forName("org.bukkit.block.data.BlockData"))
+												.invoke(block, ageable);
 									}
 								} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 										| NoSuchMethodException | SecurityException | ClassNotFoundException e) {
@@ -327,28 +388,31 @@ public class Block implements Listener {
 							} else {
 								if (block.getState().getData() instanceof Crops) {
 									try {
-										block.getClass().getMethod("setData", byte.class).invoke(block, (byte) (block.getData() + 1));
+										block.getClass().getMethod("setData", byte.class).invoke(block,
+												(byte) (block.getData() + 1));
 										block.getState().update();
-									} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-											| NoSuchMethodException | SecurityException e) {
+									} catch (IllegalAccessException | IllegalArgumentException
+											| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 										e.printStackTrace();
-									}	
+									}
 								}
 							}
-				    	}
-				    	
-				    	return;
+						}
+
+						return;
 					}
 				}
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onLeavesDecay(LeavesDecayEvent event) {
 		org.bukkit.block.Block block = event.getBlock();
-		
-		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName()) || block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+
+		if (block.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
+				|| block.getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
 			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), IslandRole.Owner, "LeafDecay")) {
 				event.setCancelled(false);
 			}

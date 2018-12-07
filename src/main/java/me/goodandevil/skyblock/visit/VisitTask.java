@@ -10,19 +10,19 @@ import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 public class VisitTask extends BukkitRunnable {
 
 	private final PlayerDataManager playerDataManager;
-	
+
 	public VisitTask(PlayerDataManager playerManager) {
 		this.playerDataManager = playerManager;
 	}
-	
+
 	@Override
 	public void run() {
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			if (playerDataManager.hasPlayerData(all)) {
 				PlayerData playerData = playerDataManager.getPlayerData(all);
-				
+
 				if (playerData.getIsland() != null) {
-					playerData.setVisitTime(playerData.getVisitTime() + 1);	
+					playerData.setVisitTime(playerData.getVisitTime() + 1);
 				}
 			}
 		}

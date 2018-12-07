@@ -28,30 +28,31 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 public class Quit implements Listener {
 
 	private final SkyBlock skyblock;
-	
- 	public Quit(SkyBlock skyblock) {
+
+	public Quit(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
-	
+
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		
+
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
-		
+
 		PlayerData playerData = playerDataManager.getPlayerData(player);
-		
+
 		try {
 			playerData.setLastOnline(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
-		} catch (Exception e) {}
-		
+		} catch (Exception e) {
+		}
+
 		if (islandManager.hasIsland(player)) {
 			Island island = islandManager.getIsland(playerData.getOwner());
-			
+
 			List<UUID> islandMembersOnline = islandManager.getMembersOnline(island);
-			
+
 			if (islandMembersOnline.size() == 1) {
 				LevellingManager levellingManager = skyblock.getLevellingManager();
 				levellingManager.saveLevelling(island.getOwnerUUID());
@@ -61,53 +62,61 @@ public class Quit implements Listener {
 					if (!islandMembersOnlineList.equals(player.getUniqueId())) {
 						Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
 						PlayerData targetPlayerData = playerDataManager.getPlayerData(targetPlayer);
-						
+
 						if (targetPlayerData.isChat()) {
 							targetPlayerData.setChat(false);
-							messageManager.sendMessage(targetPlayer, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Chat.Untoggled.Message"));	
+							messageManager.sendMessage(targetPlayer,
+									skyblock.getFileManager()
+											.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+											.getFileConfiguration().getString("Island.Chat.Untoggled.Message"));
 						}
 					}
 				}
 			}
-			
+
 			islandManager.unloadIsland(island, player.getUniqueId());
 		}
-		
+
 		playerDataManager.savePlayerData(player);
 		playerDataManager.unloadPlayerData(player);
-		
+
 		UUID islandOwnerUUID = playerData.getIsland();
-		
+
 		if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID)) {
-			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Coop.Unload")) {
+			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+					.getFileConfiguration().getBoolean("Island.Coop.Unload")) {
 				Island island = islandManager.getIsland(islandOwnerUUID);
-				
+
 				if (island.isCoopPlayer(islandOwnerUUID)) {
 					island.removeCoopPlayer(islandOwnerUUID);
 				}
 			}
-			
+
 			islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
 		}
-		
+
 		InviteManager inviteManager = skyblock.getInviteManager();
-		
+
 		if (inviteManager.hasInvite(player.getUniqueId())) {
 			Invite invite = inviteManager.getInvite(player.getUniqueId());
 			Player targetPlayer = Bukkit.getServer().getPlayer(invite.getOwnerUUID());
-			
+
 			if (targetPlayer != null) {
-				messageManager.sendMessage(targetPlayer, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Invite.Invited.Sender.Disconnected.Message").replace("%player", player.getName()));
+				messageManager.sendMessage(targetPlayer,
+						skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+								.getFileConfiguration()
+								.getString("Command.Island.Invite.Invited.Sender.Disconnected.Message")
+								.replace("%player", player.getName()));
 				skyblock.getSoundManager().playSound(targetPlayer, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
-			
-			inviteManager.removeInvite(player.getUniqueId());	
+
+			inviteManager.removeInvite(player.getUniqueId());
 		}
-		
+
 		BiomeManager biomeManager = skyblock.getBiomeManager();
 		biomeManager.savePlayer(player);
 		biomeManager.unloadPlayer(player);
-		
+
 		CreationManager creationManager = skyblock.getCreationManager();
 		creationManager.savePlayer(player);
 		creationManager.unloadPlayer(player);

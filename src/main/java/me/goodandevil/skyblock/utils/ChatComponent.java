@@ -8,36 +8,36 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class ChatComponent {
 
 	private TextComponent textComponent;
-	
+
 	public ChatComponent(String text, boolean bold, ChatColor color, ClickEvent clickEvent, HoverEvent hoverEvent) {
 		textComponent = new TextComponent(ChatColor.translateAlternateColorCodes('&', text));
 		textComponent.setBold(bold);
-		
+
 		if (color != null) {
 			textComponent.setColor(color);
 		}
-		
+
 		if (clickEvent != null) {
 			textComponent.setClickEvent(clickEvent);
 		}
-		
+
 		if (hoverEvent != null) {
-			textComponent.setHoverEvent(hoverEvent);	
+			textComponent.setHoverEvent(hoverEvent);
 		}
 	}
-	
+
 	public TextComponent addExtra(ChatComponent chatComponent) {
 		textComponent.addExtra(chatComponent.getTextComponent());
-		
+
 		return textComponent;
 	}
-	
+
 	public ChatComponent addExtraChatComponent(ChatComponent chatComponent) {
 		textComponent.addExtra(chatComponent.getTextComponent());
-		
+
 		return this;
 	}
-	
+
 	public TextComponent getTextComponent() {
 		return textComponent;
 	}

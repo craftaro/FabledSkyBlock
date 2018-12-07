@@ -25,42 +25,43 @@ public class OwnerCommand extends SubCommand {
 
 	private final SkyBlock skyblock;
 	private String info;
-	
+
 	public OwnerCommand(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 	}
-	
+
 	@Override
-	public void onCommandByPlayer(Player player, String[] args)	{
+	public void onCommandByPlayer(Player player, String[] args) {
 		onCommand(player, args);
 	}
-	
+
 	@Override
 	public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
 		onCommand(sender, args);
 	}
-	
+
 	public void onCommand(CommandSender sender, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
-		
+
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
-		
+
 		Player player = null;
-		
+
 		if (sender instanceof Player) {
 			player = (Player) sender;
 		}
-		
-		if (player == null || player.hasPermission("skyblock.admin.owner") || player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+
+		if (player == null || player.hasPermission("skyblock.admin.owner") || player.hasPermission("skyblock.admin.*")
+				|| player.hasPermission("skyblock.*")) {
 			if (args.length == 1) {
 				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 				UUID targetPlayerUUID, islandOwnerUUID;
 				String targetPlayerName, islandOwnerName;
-				
+
 				if (targetPlayer == null) {
 					OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
 					targetPlayerUUID = targetPlayerOffline.getUniqueId();
@@ -71,23 +72,28 @@ public class OwnerCommand extends SubCommand {
 					islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
 					targetPlayerName = targetPlayer.getName();
 				}
-				
+
 				if (islandOwnerUUID == null) {
-					messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Owner.Island.None.Message"));
+					messageManager.sendMessage(sender,
+							configLoad.getString("Command.Island.Admin.Owner.Island.None.Message"));
 					soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				} else if (islandOwnerUUID.equals(targetPlayerUUID)) {
-					messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Owner.Island.Owner.Message").replace("%player", targetPlayerName));
+					messageManager.sendMessage(sender,
+							configLoad.getString("Command.Island.Admin.Owner.Island.Owner.Message").replace("%player",
+									targetPlayerName));
 					soundManager.playSound(sender, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 				} else {
 					targetPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
-					
+
 					if (targetPlayer == null) {
 						islandOwnerName = new OfflinePlayer(islandOwnerUUID).getName();
 					} else {
 						islandOwnerName = targetPlayer.getName();
 					}
-					
-					messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Owner.Island.Member.Message").replace("%player", targetPlayerName).replace("%owner", islandOwnerName));
+
+					messageManager.sendMessage(sender,
+							configLoad.getString("Command.Island.Admin.Owner.Island.Member.Message")
+									.replace("%player", targetPlayerName).replace("%owner", islandOwnerName));
 					soundManager.playSound(sender, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
@@ -113,20 +119,20 @@ public class OwnerCommand extends SubCommand {
 	@Override
 	public SubCommand setInfo(String info) {
 		this.info = info;
-		
+
 		return this;
 	}
-	
+
 	@Override
 	public String[] getAliases() {
 		return new String[] { "ownership", "leader" };
 	}
-	
+
 	@Override
 	public String[] getArguments() {
 		return new String[0];
 	}
-	
+
 	@Override
 	public Type getType() {
 		return CommandManager.Type.Admin;
