@@ -57,7 +57,7 @@ public class EZPlaceholder extends PlaceholderExpansion {
 			return "" + skyblock.getVisitManager().getIslands().size();
 		} else {
 			for (int i = 0; i < 10; i++) {
-				if (identifier.equalsIgnoreCase("skyblock_leaderboard_votes_" + (i + 1))) {
+				if (identifier.equalsIgnoreCase("leaderboard_votes_" + (i + 1))) {
 					if (i < leaderboardVotesPlayers.size()) {
 						Leaderboard leaderboard = leaderboardVotesPlayers.get(i);
 						Visit visit = leaderboard.getVisit();
@@ -79,7 +79,7 @@ public class EZPlaceholder extends PlaceholderExpansion {
 
 					return ChatColor.translateAlternateColorCodes('&',
 							configLoad.getString("Placeholder.skyblock_leaderboard_votes.Empty.Message"));
-				} else if (identifier.equalsIgnoreCase("skyblock_leaderboard_level_" + (i + 1))) {
+				} else if (identifier.equalsIgnoreCase("leaderboard_level_" + (i + 1))) {
 					if (i < leaderboardLevelPlayers.size()) {
 						Leaderboard leaderboard = leaderboardLevelPlayers.get(i);
 						Visit visit = leaderboard.getVisit();
@@ -93,6 +93,8 @@ public class EZPlaceholder extends PlaceholderExpansion {
 						} else {
 							islandOwnerName = targetPlayer.getName();
 						}
+
+						System.out.println(islandOwnerName + " | " + visit.getOwnerUUID().toString());
 
 						return ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Placeholder.skyblock_leaderboard_level.Non-empty.Message")

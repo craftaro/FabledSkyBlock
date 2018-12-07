@@ -2,7 +2,7 @@
     <groupId>com.songoda</groupId>
     <artifactId>SkyBlock</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>39</version>
+    <version>40</version>
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>

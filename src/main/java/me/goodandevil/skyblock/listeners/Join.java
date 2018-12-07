@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +15,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.api.SkyBlockAPI;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -134,7 +132,5 @@ public class Join implements Listener {
 			scoreboard.run();
 			scoreboardManager.storeScoreboard(player, scoreboard);
 		}
-
-		Bukkit.broadcastMessage(SkyBlockAPI.getIsland(player).getOwnerUUID().toString());
 	}
 }
