@@ -98,7 +98,7 @@ public class BanCommand extends SubCommand {
 							}
 
 							Ban ban = island.getBan();
-							ban.addBan(targetPlayerUUID);
+							ban.addBan(player.getUniqueId(), targetPlayerUUID);
 							ban.save();
 
 							if (targetPlayer != null) {

@@ -7,7 +7,6 @@ import me.goodandevil.skyblock.api.island.IslandUpgrade;
 import me.goodandevil.skyblock.api.island.IslandWorld;
 import me.goodandevil.skyblock.island.Location.Environment;
 import me.goodandevil.skyblock.island.Location.World;
-import me.goodandevil.skyblock.island.Message;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 
 public final class APIUtil {
@@ -23,6 +22,17 @@ public final class APIUtil {
 		return null;
 	}
 
+	public static IslandWorld fromImplementation(World world) {
+		switch (world) {
+		case Nether:
+			return IslandWorld.NETHER;
+		case Normal:
+			return IslandWorld.OVERWORLD;
+		}
+
+		return null;
+	}
+
 	public static Environment toImplementation(IslandEnvironment environment) {
 		switch (environment) {
 		case ISLAND:
@@ -31,6 +41,19 @@ public final class APIUtil {
 			return Environment.Main;
 		case VISITOR:
 			return Environment.Visitor;
+		}
+
+		return null;
+	}
+
+	public static IslandEnvironment fromImplementation(Environment environment) {
+		switch (environment) {
+		case Island:
+			return IslandEnvironment.ISLAND;
+		case Main:
+			return IslandEnvironment.MAIN;
+		case Visitor:
+			return IslandEnvironment.VISITOR;
 		}
 
 		return null;
@@ -91,14 +114,27 @@ public final class APIUtil {
 		return null;
 	}
 
-	public static Message toImplementation(IslandMessage message) {
+	public static me.goodandevil.skyblock.island.IslandMessage toImplementation(IslandMessage message) {
 		switch (message) {
 		case SIGN:
-			return Message.Sign;
+			return me.goodandevil.skyblock.island.IslandMessage.Sign;
 		case SIGNATURE:
-			return Message.Signature;
+			return me.goodandevil.skyblock.island.IslandMessage.Signature;
 		case WELCOME:
-			return Message.Welcome;
+			return me.goodandevil.skyblock.island.IslandMessage.Welcome;
+		}
+
+		return null;
+	}
+
+	public static IslandMessage fromImplementation(me.goodandevil.skyblock.island.IslandMessage message) {
+		switch (message) {
+		case Sign:
+			return IslandMessage.SIGN;
+		case Signature:
+			return IslandMessage.SIGNATURE;
+		case Welcome:
+			return IslandMessage.WELCOME;
 		}
 
 		return null;

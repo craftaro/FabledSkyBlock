@@ -2,7 +2,6 @@ package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -196,7 +195,7 @@ public class KickCommand extends SubCommand {
 
 							island.save();
 
-							List<UUID> islandMembersOnline = islandManager.getMembersOnline(island);
+							Set<UUID> islandMembersOnline = islandManager.getMembersOnline(island);
 
 							if (islandMembersOnline.size() == 1) {
 								for (UUID islandMembersOnlineList : islandMembersOnline) {

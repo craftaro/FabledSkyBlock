@@ -19,7 +19,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Message;
+import me.goodandevil.skyblock.island.IslandMessage;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -847,7 +847,7 @@ public class Settings {
 										.getDisplayName()
 										.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
 												"Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname"))))) {
-									if (island.getMessage(Message.Welcome).size() >= skyblock.getFileManager()
+									if (island.getMessage(IslandMessage.Welcome).size() >= skyblock.getFileManager()
 											.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 											.getFileConfiguration().getInt("Island.Visitor.Welcome.Lines")) {
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -924,7 +924,7 @@ public class Settings {
 																FileConfiguration configLoad1 = config1
 																		.getFileConfiguration();
 
-																if (island1.getMessage(Message.Welcome)
+																if (island1.getMessage(IslandMessage.Welcome)
 																		.size() > configLoad1
 																				.getInt("Island.Visitor.Welcome.Lines")
 																		|| event1.getName().length() > configLoad1
@@ -934,9 +934,9 @@ public class Settings {
 																			1.0F);
 																} else {
 																	List<String> welcomeMessage = island1
-																			.getMessage(Message.Welcome);
+																			.getMessage(IslandMessage.Welcome);
 																	welcomeMessage.add(event1.getName());
-																	island1.setMessage(Message.Welcome,
+																	island1.setMessage(IslandMessage.Welcome,
 																			player.getName(), welcomeMessage);
 																	soundManager.playSound(player,
 																			Sounds.NOTE_PLING.bukkitSound(), 1.0F,
@@ -978,7 +978,7 @@ public class Settings {
 										.getDisplayName()
 										.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
 												"Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Displayname"))))) {
-									List<String> welcomeMessage = island.getMessage(Message.Welcome);
+									List<String> welcomeMessage = island.getMessage(IslandMessage.Welcome);
 
 									if (welcomeMessage.size() == 0) {
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -987,8 +987,8 @@ public class Settings {
 										event.setWillDestroy(false);
 									} else {
 										welcomeMessage.remove(welcomeMessage.size() - 1);
-										island.setMessage(Message.Welcome, island.getMessageAuthor(Message.Welcome),
-												welcomeMessage);
+										island.setMessage(IslandMessage.Welcome,
+												island.getMessageAuthor(IslandMessage.Welcome), welcomeMessage);
 										soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
 
 										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
@@ -1004,7 +1004,7 @@ public class Settings {
 						}
 					});
 
-					List<String> welcomeMessage = island.getMessage(Message.Welcome);
+					List<String> welcomeMessage = island.getMessage(IslandMessage.Welcome);
 
 					if (welcomeMessage.size() == mainConfig.getFileConfiguration()
 							.getInt("Island.Visitor.Welcome.Lines")) {
@@ -1141,7 +1141,7 @@ public class Settings {
 										.getDisplayName()
 										.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
 												"Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Displayname"))))) {
-									if (island.getMessage(Message.Signature).size() >= skyblock.getFileManager()
+									if (island.getMessage(IslandMessage.Signature).size() >= skyblock.getFileManager()
 											.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 											.getFileConfiguration().getInt("Island.Visitor.Signature.Lines")) {
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -1218,7 +1218,7 @@ public class Settings {
 																FileConfiguration configLoad1 = config1
 																		.getFileConfiguration();
 
-																if (island1.getMessage(Message.Signature)
+																if (island1.getMessage(IslandMessage.Signature)
 																		.size() > configLoad1.getInt(
 																				"Island.Visitor.Signature.Lines")
 																		|| event1.getName().length() > configLoad1
@@ -1228,9 +1228,9 @@ public class Settings {
 																			1.0F);
 																} else {
 																	List<String> signatureMessage = island1
-																			.getMessage(Message.Signature);
+																			.getMessage(IslandMessage.Signature);
 																	signatureMessage.add(event1.getName());
-																	island1.setMessage(Message.Signature,
+																	island1.setMessage(IslandMessage.Signature,
 																			player.getName(), signatureMessage);
 																	soundManager.playSound(player,
 																			Sounds.NOTE_PLING.bukkitSound(), 1.0F,
@@ -1272,7 +1272,7 @@ public class Settings {
 										.getDisplayName()
 										.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
 												"Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.Displayname"))))) {
-									List<String> signatureMessage = island.getMessage(Message.Signature);
+									List<String> signatureMessage = island.getMessage(IslandMessage.Signature);
 
 									if (signatureMessage.size() == 0) {
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -1281,8 +1281,8 @@ public class Settings {
 										event.setWillDestroy(false);
 									} else {
 										signatureMessage.remove(signatureMessage.size() - 1);
-										island.setMessage(Message.Signature, island.getMessageAuthor(Message.Signature),
-												signatureMessage);
+										island.setMessage(IslandMessage.Signature,
+												island.getMessageAuthor(IslandMessage.Signature), signatureMessage);
 										soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
 
 										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
@@ -1299,7 +1299,7 @@ public class Settings {
 						}
 					});
 
-					List<String> signatureMessage = island.getMessage(Message.Signature);
+					List<String> signatureMessage = island.getMessage(IslandMessage.Signature);
 
 					if (signatureMessage.size() == mainConfig.getFileConfiguration()
 							.getInt("Island.Visitor.Signature.Lines")) {

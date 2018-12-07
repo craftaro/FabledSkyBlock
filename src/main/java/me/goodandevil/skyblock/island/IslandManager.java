@@ -24,14 +24,14 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.IslandCreateEvent;
+import me.goodandevil.skyblock.api.event.island.IslandDeleteEvent;
+import me.goodandevil.skyblock.api.event.island.IslandLoadEvent;
+import me.goodandevil.skyblock.api.event.island.IslandOwnershipTransferEvent;
+import me.goodandevil.skyblock.api.event.island.IslandUnloadEvent;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandCreateEvent;
-import me.goodandevil.skyblock.events.IslandDeleteEvent;
-import me.goodandevil.skyblock.events.IslandLoadEvent;
-import me.goodandevil.skyblock.events.IslandOwnershipTransferEvent;
-import me.goodandevil.skyblock.events.IslandUnloadEvent;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.Location.World;
@@ -208,7 +208,7 @@ public class IslandManager {
 			skyblock.getCreationManager().createPlayer(player, configLoad.getInt("Island.Creation.Cooldown.Time"));
 		}
 
-		Bukkit.getServer().getPluginManager().callEvent(new IslandCreateEvent(player, island));
+		Bukkit.getServer().getPluginManager().callEvent(new IslandCreateEvent(island.getAPIWrapper(), player));
 
 		for (Location.World worldList : Location.World.values()) {
 			setNextAvailableLocation(worldList, island.getLocation(worldList, Location.Environment.Island));
@@ -352,8 +352,8 @@ public class IslandManager {
 			removeIsland(islandOwnerUUID);
 			islandStorage.put(uuid, island);
 
-			Bukkit.getServer().getPluginManager()
-					.callEvent(new IslandOwnershipTransferEvent(island, islandOwnerUUID, uuid));
+			Bukkit.getServer().getPluginManager().callEvent(new IslandOwnershipTransferEvent(island.getAPIWrapper(),
+					Bukkit.getServer().getOfflinePlayer(uuid)));
 
 			ArrayList<UUID> islandMembers = new ArrayList<>();
 			islandMembers.addAll(island.getRole(IslandRole.Member));
@@ -425,7 +425,7 @@ public class IslandManager {
 		fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
 				island.getOwnerUUID().toString() + ".yml"));
 
-		Bukkit.getServer().getPluginManager().callEvent(new IslandDeleteEvent(island));
+		Bukkit.getServer().getPluginManager().callEvent(new IslandDeleteEvent(island.getAPIWrapper()));
 
 		islandStorage.remove(island.getOwnerUUID());
 	}
@@ -471,7 +471,7 @@ public class IslandManager {
 							islandNetherLocation.getBlockZ()));
 			islandStorage.put(islandOwnerUUID, island);
 
-			Bukkit.getServer().getPluginManager().callEvent(new IslandLoadEvent(island));
+			Bukkit.getServer().getPluginManager().callEvent(new IslandLoadEvent(island.getAPIWrapper()));
 		}
 	}
 
@@ -564,7 +564,7 @@ public class IslandManager {
 
 		islandStorage.remove(island.getOwnerUUID());
 
-		Bukkit.getServer().getPluginManager().callEvent(new IslandUnloadEvent(island));
+		Bukkit.getServer().getPluginManager().callEvent(new IslandUnloadEvent(island.getAPIWrapper()));
 	}
 
 	public Set<UUID> getVisitorsAtIsland(Island island) {
@@ -648,7 +648,7 @@ public class IslandManager {
 				}
 			});
 
-			List<String> islandWelcomeMessage = island.getMessage(Message.Welcome);
+			List<String> islandWelcomeMessage = island.getMessage(IslandMessage.Welcome);
 
 			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 					.getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable")
@@ -810,8 +810,8 @@ public class IslandManager {
 		location.clone().add(0.0D, 1.0D, 0.0D).getBlock().setType(Material.AIR);
 	}
 
-	public List<UUID> getMembersOnline(Island island) {
-		List<UUID> membersOnline = new ArrayList<>();
+	public Set<UUID> getMembersOnline(Island island) {
+		Set<UUID> membersOnline = new HashSet<>();
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			if (island.hasRole(IslandRole.Member, all.getUniqueId())
@@ -824,8 +824,8 @@ public class IslandManager {
 		return membersOnline;
 	}
 
-	public List<UUID> getPlayersAtIsland(Island island) {
-		List<UUID> playersAtIsland = new ArrayList<>();
+	public Set<UUID> getPlayersAtIsland(Island island) {
+		Set<UUID> playersAtIsland = new HashSet<>();
 
 		if (island != null) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
@@ -959,8 +959,8 @@ public class IslandManager {
 		}
 	}
 
-	public List<UUID> getCoopPlayersAtIsland(Island island) {
-		List<UUID> coopPlayersAtIsland = new ArrayList<>();
+	public Set<UUID> getCoopPlayersAtIsland(Island island) {
+		Set<UUID> coopPlayersAtIsland = new HashSet<>();
 
 		if (island != null) {
 			for (Player all : Bukkit.getOnlinePlayers()) {

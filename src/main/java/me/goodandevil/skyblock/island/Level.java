@@ -68,6 +68,27 @@ public class Level {
 		return pointsEarned;
 	}
 
+	public int getMaterialPoints(String material) {
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+		FileConfiguration configLoad = config.getFileConfiguration();
+
+		int pointsEarned = 0;
+
+		if (materials.containsKey(material)) {
+			int materialAmount = materials.get(material);
+
+			if (configLoad.getString("Materials." + materials + ".Points") != null) {
+				int pointsRequired = config.getFileConfiguration().getInt("Materials." + materials + ".Points");
+
+				if (pointsRequired != 0) {
+					pointsEarned = materialAmount * pointsRequired;
+				}
+			}
+		}
+
+		return pointsEarned;
+	}
+
 	public int getLevel() {
 		int division = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 				.getFileConfiguration().getInt("Island.Levelling.Division");
@@ -77,6 +98,23 @@ public class Level {
 		}
 
 		return getPoints() / division;
+	}
+
+	public void setMaterialAmount(String material, int amount) {
+		Config config = skyblock.getFileManager().getConfig(new File(
+				new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
+		File configFile = config.getFile();
+		FileConfiguration configLoad = config.getFileConfiguration();
+
+		configLoad.set("Levelling.Materials." + material + ".Amount", amount);
+
+		try {
+			configLoad.save(configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		this.materials.put(material, amount);
 	}
 
 	public void setMaterials(Map<String, Integer> materials) {

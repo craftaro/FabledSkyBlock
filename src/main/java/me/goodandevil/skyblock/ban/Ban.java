@@ -12,9 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.IslandBanEvent;
+import me.goodandevil.skyblock.api.event.island.IslandUnbanEvent;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandBanEvent;
-import me.goodandevil.skyblock.events.IslandUnbanEvent;
 
 public class Ban {
 
@@ -51,23 +51,28 @@ public class Ban {
 		return islandBans;
 	}
 
-	public void addBan(UUID uuid) {
+	public void addBan(UUID issuer, UUID banned) {
 		SkyBlock skyblock = SkyBlock.getInstance();
 
-		List<String> islandBans = new ArrayList<>();
-		FileConfiguration configLoad = skyblock.getFileManager()
-				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-						islandOwnerUUID.toString() + ".yml"))
-				.getFileConfiguration();
+		IslandBanEvent islandBanEvent = new IslandBanEvent(
+				skyblock.getIslandManager().getIsland(islandOwnerUUID).getAPIWrapper(),
+				Bukkit.getServer().getOfflinePlayer(issuer), Bukkit.getServer().getOfflinePlayer(banned));
+		Bukkit.getServer().getPluginManager().callEvent(islandBanEvent);
 
-		for (String islandBanList : configLoad.getStringList("Bans")) {
-			islandBans.add(islandBanList);
+		if (!islandBanEvent.isCancelled()) {
+			List<String> islandBans = new ArrayList<>();
+			FileConfiguration configLoad = skyblock.getFileManager()
+					.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
+							islandOwnerUUID.toString() + ".yml"))
+					.getFileConfiguration();
+
+			for (String islandBanList : configLoad.getStringList("Bans")) {
+				islandBans.add(islandBanList);
+			}
+
+			islandBans.add(banned.toString());
+			configLoad.set("Bans", islandBans);
 		}
-
-		islandBans.add(uuid.toString());
-		configLoad.set("Bans", islandBans);
-
-		Bukkit.getServer().getPluginManager().callEvent(new IslandBanEvent(uuid, this));
 	}
 
 	public void removeBan(UUID uuid) {
@@ -87,7 +92,9 @@ public class Ban {
 
 		configLoad.set("Bans", islandBans);
 
-		Bukkit.getServer().getPluginManager().callEvent(new IslandUnbanEvent(uuid, this));
+		Bukkit.getServer().getPluginManager()
+				.callEvent(new IslandUnbanEvent(skyblock.getIslandManager().getIsland(islandOwnerUUID).getAPIWrapper(),
+						Bukkit.getServer().getOfflinePlayer(uuid)));
 	}
 
 	public void save() {

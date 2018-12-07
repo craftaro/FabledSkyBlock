@@ -20,17 +20,18 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.IslandBiomeChangeEvent;
+import me.goodandevil.skyblock.api.event.island.IslandLocationChangeEvent;
+import me.goodandevil.skyblock.api.event.island.IslandMessageChangeEvent;
+import me.goodandevil.skyblock.api.event.island.IslandOpenEvent;
+import me.goodandevil.skyblock.api.event.island.IslandPasswordChangeEvent;
+import me.goodandevil.skyblock.api.event.island.IslandRoleChangeEvent;
+import me.goodandevil.skyblock.api.event.island.IslandWeatherChangeEvent;
+import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.ban.Ban;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandBiomeChangeEvent;
-import me.goodandevil.skyblock.events.IslandLocationChangeEvent;
-import me.goodandevil.skyblock.events.IslandMessageChangeEvent;
-import me.goodandevil.skyblock.events.IslandOpenEvent;
-import me.goodandevil.skyblock.events.IslandPasswordChangeEvent;
-import me.goodandevil.skyblock.events.IslandRoleChangeEvent;
-import me.goodandevil.skyblock.events.IslandWeatherChangeEvent;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.StringUtil;
@@ -41,7 +42,7 @@ import me.goodandevil.skyblock.world.WorldManager;
 public class Island {
 
 	private final SkyBlock skyblock;
-	public final me.goodandevil.skyblock.api.island.Island apiWrapper;
+	private final me.goodandevil.skyblock.api.island.Island apiWrapper;
 
 	private Map<IslandRole, List<Setting>> islandSettings = new HashMap<>();
 	private List<Location> islandLocations = new ArrayList<>();
@@ -215,7 +216,7 @@ public class Island {
 					new org.bukkit.Location[] { getLocation(Location.World.Normal, Location.Environment.Island),
 							getLocation(Location.World.Nether, Location.Environment.Island) },
 					size, getRole(IslandRole.Member).size() + getRole(IslandRole.Operator).size() + 1,
-					visitManager.getIslandSafeLevel(uuid), level, getMessage(Message.Signature), isOpen());
+					visitManager.getIslandSafeLevel(uuid), level, getMessage(IslandMessage.Signature), isOpen());
 		}
 
 		BanManager banManager = skyblock.getBanManager();
@@ -277,15 +278,13 @@ public class Island {
 	}
 
 	public void setPassword(String password) {
-		IslandPasswordChangeEvent islandPasswordChangeEvent = new IslandPasswordChangeEvent(this, getPassword(),
-				password);
+		IslandPasswordChangeEvent islandPasswordChangeEvent = new IslandPasswordChangeEvent(getAPIWrapper(), password);
 		Bukkit.getServer().getPluginManager().callEvent(islandPasswordChangeEvent);
 
-		if (!islandPasswordChangeEvent.isCancelled()) {
-			skyblock.getFileManager().getConfig(
-					new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
-					.getFileConfiguration().set("Ownership.Password", password);
-		}
+		skyblock.getFileManager()
+				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
+						uuid.toString() + ".yml"))
+				.getFileConfiguration().set("Ownership.Password", islandPasswordChangeEvent.getPassword());
 	}
 
 	public org.bukkit.Location getLocation(Location.World world, Location.Environment environment) {
@@ -301,8 +300,11 @@ public class Island {
 	public void setLocation(Location.World world, Location.Environment environment, org.bukkit.Location location) {
 		for (Location islandLocationList : islandLocations) {
 			if (islandLocationList.getWorld() == world && islandLocationList.getEnvironment() == environment) {
-				Bukkit.getServer().getPluginManager().callEvent(new IslandLocationChangeEvent(this, islandLocationList,
-						new Location(world, environment, location)));
+				Bukkit.getServer().getPluginManager()
+						.callEvent(new IslandLocationChangeEvent(getAPIWrapper(),
+								new me.goodandevil.skyblock.api.island.IslandLocation(
+										APIUtil.fromImplementation(environment), APIUtil.fromImplementation(world),
+										location)));
 
 				FileManager fileManager = skyblock.getFileManager();
 				fileManager.setLocation(
@@ -329,10 +331,13 @@ public class Island {
 	}
 
 	public void setBiome(Biome biome) {
-		Bukkit.getServer().getPluginManager().callEvent(new IslandBiomeChangeEvent(this, getBiome(), biome));
-		skyblock.getFileManager().getConfig(
-				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
-				.getFileConfiguration().set("Biome.Type", biome.name());
+		IslandBiomeChangeEvent islandBiomeChangeEvent = new IslandBiomeChangeEvent(getAPIWrapper(), biome);
+		Bukkit.getServer().getPluginManager().callEvent(islandBiomeChangeEvent);
+
+		skyblock.getFileManager()
+				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
+						uuid.toString() + ".yml"))
+				.getFileConfiguration().set("Biome.Type", islandBiomeChangeEvent.getBiome().name());
 	}
 
 	public boolean isWeatherSynchronized() {
@@ -342,8 +347,10 @@ public class Island {
 	}
 
 	public void setWeatherSynchronized(boolean sync) {
-		Bukkit.getServer().getPluginManager()
-				.callEvent(new IslandWeatherChangeEvent(this, getWeather(), getTime(), sync));
+		IslandWeatherChangeEvent islandWeatherChangeEvent = new IslandWeatherChangeEvent(getAPIWrapper(), getWeather(),
+				getTime(), sync);
+		Bukkit.getServer().getPluginManager().callEvent(islandWeatherChangeEvent);
+
 		skyblock.getFileManager().getConfig(
 				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
 				.getFileConfiguration().set("Weather.Synchronised", sync);
@@ -360,8 +367,10 @@ public class Island {
 	}
 
 	public void setWeather(WeatherType weatherType) {
-		Bukkit.getServer().getPluginManager()
-				.callEvent(new IslandWeatherChangeEvent(this, weatherType, getTime(), isWeatherSynchronized()));
+		IslandWeatherChangeEvent islandWeatherChangeEvent = new IslandWeatherChangeEvent(getAPIWrapper(), weatherType,
+				getTime(), isWeatherSynchronized());
+		Bukkit.getServer().getPluginManager().callEvent(islandWeatherChangeEvent);
+
 		skyblock.getFileManager().getConfig(
 				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
 				.getFileConfiguration().set("Weather.Weather", weatherType.name());
@@ -374,8 +383,10 @@ public class Island {
 	}
 
 	public void setTime(int time) {
-		Bukkit.getServer().getPluginManager()
-				.callEvent(new IslandWeatherChangeEvent(this, getWeather(), time, isWeatherSynchronized()));
+		IslandWeatherChangeEvent islandWeatherChangeEvent = new IslandWeatherChangeEvent(getAPIWrapper(), getWeather(),
+				time, isWeatherSynchronized());
+		Bukkit.getServer().getPluginManager().callEvent(islandWeatherChangeEvent);
+
 		skyblock.getFileManager().getConfig(
 				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
 				.getFileConfiguration().set("Weather.Time", time);
@@ -422,14 +433,14 @@ public class Island {
 			if (!hasRole(role, uuid)) {
 				if (role == IslandRole.Member) {
 					if (hasRole(IslandRole.Operator, uuid)) {
-						Bukkit.getServer().getPluginManager()
-								.callEvent(new IslandRoleChangeEvent(uuid, this, IslandRole.Operator, role));
+						Bukkit.getServer().getPluginManager().callEvent(new IslandRoleChangeEvent(getAPIWrapper(),
+								Bukkit.getServer().getOfflinePlayer(uuid), APIUtil.fromImplementation(role)));
 						removeRole(IslandRole.Operator, uuid);
 					}
 				} else if (role == IslandRole.Operator) {
 					if (hasRole(IslandRole.Member, uuid)) {
-						Bukkit.getServer().getPluginManager()
-								.callEvent(new IslandRoleChangeEvent(uuid, this, IslandRole.Member, role));
+						Bukkit.getServer().getPluginManager().callEvent(new IslandRoleChangeEvent(getAPIWrapper(),
+								Bukkit.getServer().getOfflinePlayer(uuid), APIUtil.fromImplementation(role)));
 						removeRole(IslandRole.Member, uuid);
 					}
 				}
@@ -544,7 +555,7 @@ public class Island {
 	}
 
 	public void setOpen(boolean open) {
-		IslandOpenEvent islandOpenEvent = new IslandOpenEvent(this, open);
+		IslandOpenEvent islandOpenEvent = new IslandOpenEvent(getAPIWrapper(), open);
 		Bukkit.getServer().getPluginManager().callEvent(islandOpenEvent);
 
 		if (!islandOpenEvent.isCancelled()) {
@@ -561,7 +572,7 @@ public class Island {
 				.getFileConfiguration().getBoolean("Visitor.Open");
 	}
 
-	public List<String> getMessage(Message message) {
+	public List<String> getMessage(IslandMessage message) {
 		List<String> islandMessage = new ArrayList<>();
 
 		Config config = skyblock.getFileManager().getConfig(
@@ -575,7 +586,7 @@ public class Island {
 		return islandMessage;
 	}
 
-	public String getMessageAuthor(Message message) {
+	public String getMessageAuthor(IslandMessage message) {
 		Config config = skyblock.getFileManager().getConfig(
 				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
@@ -587,20 +598,20 @@ public class Island {
 		return "";
 	}
 
-	public void setMessage(Message message, String author, List<String> islandMessage) {
-		IslandMessageChangeEvent islandMessageChangeEvent = new IslandMessageChangeEvent(this, message, islandMessage,
-				author);
+	public void setMessage(IslandMessage message, String author, List<String> lines) {
+		IslandMessageChangeEvent islandMessageChangeEvent = new IslandMessageChangeEvent(getAPIWrapper(),
+				APIUtil.fromImplementation(message), lines, author);
 		Bukkit.getServer().getPluginManager().callEvent(islandMessageChangeEvent);
 
 		if (!islandMessageChangeEvent.isCancelled()) {
 			Config config = skyblock.getFileManager().getConfig(
 					new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
-			configLoad.set("Visitor." + message.name() + ".Message", islandMessage);
-			configLoad.set("Visitor." + message.name() + ".Author", author);
+			configLoad.set("Visitor." + message.name() + ".Message", islandMessageChangeEvent.getLines());
+			configLoad.set("Visitor." + message.name() + ".Author", islandMessageChangeEvent.getAuthor());
 
-			if (message == Message.Signature) {
-				getVisit().setSignature(islandMessage);
+			if (message == IslandMessage.Signature) {
+				getVisit().setSignature(lines);
 			}
 		}
 	}

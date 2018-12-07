@@ -5,7 +5,7 @@ import java.util.List;
 
 import me.goodandevil.skyblock.utils.version.Materials;
 
-public class Structure {
+public class Structure implements me.goodandevil.skyblock.api.structure.Structure {
 
 	private Materials materials;
 

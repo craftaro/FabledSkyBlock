@@ -3,7 +3,7 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -51,7 +51,7 @@ public class Quit implements Listener {
 		if (islandManager.hasIsland(player)) {
 			Island island = islandManager.getIsland(playerData.getOwner());
 
-			List<UUID> islandMembersOnline = islandManager.getMembersOnline(island);
+			Set<UUID> islandMembersOnline = islandManager.getMembersOnline(island);
 
 			if (islandMembersOnline.size() == 1) {
 				LevellingManager levellingManager = skyblock.getLevellingManager();

@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -17,7 +18,6 @@ import me.goodandevil.skyblock.api.level.Level;
 import me.goodandevil.skyblock.api.setting.Setting;
 import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.api.visit.Visit;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
 
 public class Island {
 
@@ -122,14 +122,14 @@ public class Island {
 	/**
 	 * @return true of conditions met, false otherwise
 	 */
-	public boolean isWeatherSynchronized() {
+	public boolean isDayCycleSynchronizedSynchronized() {
 		return this.handle.isWeatherSynchronized();
 	}
 
 	/**
-	 * Set the weather of the Island to be Synchronized with the World time
+	 * Set the Day Cycle of the Island to be Synchronized with the World cycle
 	 */
-	public void setWeatherSynchronzied(boolean sync) {
+	public void setDayCycleSynchronzied(boolean sync) {
 		this.handle.setWeatherSynchronized(sync);
 	}
 

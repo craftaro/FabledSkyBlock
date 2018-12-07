@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.IslandLevelChangeEvent;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -170,16 +171,20 @@ public class LevellingManager {
 					}
 
 					if (materials.size() == 0) {
-						skyblock.getMessageManager()
-								.sendMessage(player, skyblock.getFileManager()
-										.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-										.getFileConfiguration().getString("Command.Island.Level.Materials.Message"));
-						skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						if (player != null) {
+							skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager()
+									.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Command.Island.Level.Materials.Message"));
+							skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						}
 					} else {
 						me.goodandevil.skyblock.island.Level level = island.getLevel();
 						level.setLastCalculatedPoints(level.getPoints());
 						level.setLastCalculatedLevel(level.getLevel());
 						level.setMaterials(materials);
+
+						Bukkit.getServer().getPluginManager().callEvent(
+								new IslandLevelChangeEvent(island.getAPIWrapper(), island.getAPIWrapper().getLevel()));
 
 						if (player != null) {
 							me.goodandevil.skyblock.menus.Levelling.getInstance().open(player);
