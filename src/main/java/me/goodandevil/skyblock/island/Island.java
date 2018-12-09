@@ -70,6 +70,8 @@ public class Island {
 		islandLocations.add(new Location(Location.World.Normal, Location.Environment.Island, islandNormalLocation));
 		islandLocations.add(new Location(Location.World.Nether, Location.Environment.Island, islandNetherLocation));
 
+		level = new Level(getOwnerUUID(), skyblock);
+
 		File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 
 		Config config = fileManager.getConfig(new File(configFile, uuid + ".yml"));
@@ -87,6 +89,10 @@ public class Island {
 
 			if (configLoad.getString("Settings") != null) {
 				configLoad.set("Settings", null);
+			}
+
+			if (configLoad.getString("Levelling.Materials") != null) {
+				configLoad.set("Levelling.Materials", null);
 			}
 
 			if (configLoad.getString("Members") != null) {
@@ -242,8 +248,6 @@ public class Island {
 				}
 			}
 		}
-
-		level = new Level(getOwnerUUID(), skyblock);
 
 		VisitManager visitManager = skyblock.getVisitManager();
 
@@ -713,6 +717,8 @@ public class Island {
 				e.printStackTrace();
 			}
 		}
+
+		getLevel().save();
 	}
 
 	public me.goodandevil.skyblock.api.island.Island getAPIWrapper() {

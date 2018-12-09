@@ -117,25 +117,22 @@ public class LeaveCommand extends SubCommand {
 												.replace("%player", player.getName())));
 								soundManager.playSound(all, Sounds.IRONGOLEM_HIT.bukkitSound(), 5.0F, 5.0F);
 
-								if (scoreboardManager != null) {
-									if (island.getRole(IslandRole.Member).size() == 0
-											&& island.getRole(IslandRole.Operator).size() == 0) {
-										Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-										scoreboard.cancel();
-										scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-												languageConfig.getFileConfiguration()
-														.getString("Scoreboard.Island.Solo.Displayname")));
-
-										if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-											scoreboard.setDisplayList(languageConfig.getFileConfiguration()
-													.getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
-										} else {
+								if (island.getRole(IslandRole.Member).size() == 0
+										&& island.getRole(IslandRole.Operator).size() == 0) {
+									if (scoreboardManager != null) {
+										if (islandManager.getVisitorsAtIsland(island).size() != 0) {
+											Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
+											scoreboard.cancel();
+											scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+													languageConfig.getFileConfiguration()
+															.getString("Scoreboard.Island.Solo.Displayname")));
 											scoreboard.setDisplayList(languageConfig.getFileConfiguration()
 													.getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
+											scoreboard.run();
 										}
-
-										scoreboard.run();
 									}
+
+									break;
 								}
 							}
 						}

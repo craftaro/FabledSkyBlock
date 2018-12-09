@@ -26,8 +26,8 @@ public class Level {
 		this.skyblock = skyblock;
 		this.ownerUUID = ownerUUID;
 
-		Config config = skyblock.getFileManager().getConfig(new File(
-				new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
+		Config config = skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		Map<String, Integer> materials = new HashMap<>();
@@ -101,26 +101,17 @@ public class Level {
 	}
 
 	public void setMaterialAmount(String material, int amount) {
-		Config config = skyblock.getFileManager().getConfig(new File(
-				new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
-		File configFile = config.getFile();
-		FileConfiguration configLoad = config.getFileConfiguration();
-
-		configLoad.set("Levelling.Materials." + material + ".Amount", amount);
-
-		try {
-			configLoad.save(configFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		skyblock.getFileManager()
+				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"),
+						ownerUUID.toString() + ".yml"))
+				.getFileConfiguration().set("Levelling.Materials." + material + ".Amount", amount);
 
 		this.materials.put(material, amount);
 	}
 
 	public void setMaterials(Map<String, Integer> materials) {
-		Config config = skyblock.getFileManager().getConfig(new File(
-				new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"));
-		File configFile = config.getFile();
+		Config config = skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		configLoad.set("Levelling.Materials", null);
@@ -129,13 +120,15 @@ public class Level {
 			configLoad.set("Levelling.Materials." + materialList + ".Amount", materials.get(materialList));
 		}
 
-		try {
-			configLoad.save(configFile);
-		} catch (IOException e) {
-			e.printStackTrace();
+		this.materials = materials;
+	}
+
+	public boolean hasMaterials() {
+		if (materials.size() == 0) {
+			return false;
 		}
 
-		this.materials = materials;
+		return true;
 	}
 
 	public Map<String, Integer> getMaterials() {
@@ -156,5 +149,18 @@ public class Level {
 
 	public int getLastCalculatedLevel() {
 		return lastCalculatedLevel;
+	}
+
+	public void save() {
+		Config config = skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
+		File configFile = config.getFile();
+		FileConfiguration configLoad = config.getFileConfiguration();
+
+		try {
+			configLoad.save(configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

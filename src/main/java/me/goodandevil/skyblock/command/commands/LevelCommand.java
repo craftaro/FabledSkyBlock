@@ -103,10 +103,7 @@ public class LevelCommand extends SubCommand {
 
 			player.closeInventory();
 
-			if (skyblock.getFileManager()
-					.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
-							island.getOwnerUUID().toString() + ".yml"))
-					.getFileConfiguration().getString("Levelling.Materials") == null) {
+			if (!island.getLevel().hasMaterials()) {
 				LevellingManager levellingManager = skyblock.getLevellingManager();
 
 				if (levellingManager.hasLevelling(island.getOwnerUUID())) {

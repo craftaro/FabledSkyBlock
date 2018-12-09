@@ -293,8 +293,12 @@ public class IslandManager {
 
 		if (containsIsland(islandOwnerUUID)) {
 			Island island = getIsland(islandOwnerUUID);
-			island.getLevel().setOwnerUUID(uuid);
 			island.setOwnerUUID(uuid);
+			island.save();
+
+			Level level = island.getLevel();
+			level.save();
+			level.setOwnerUUID(uuid);
 
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
@@ -305,15 +309,24 @@ public class IslandManager {
 
 			File oldCoopDataFile = new File(new File(skyblock.getDataFolder().toString() + "/coop-data"),
 					islandOwnerUUID.toString() + ".yml");
+			fileManager.unloadConfig(oldCoopDataFile);
 
 			if (fileManager.isFileExist(oldCoopDataFile)) {
 				File newCoopDataFile = new File(new File(skyblock.getDataFolder().toString() + "/coop-data"),
 						uuid.toString() + ".yml");
 
-				fileManager.unloadConfig(oldCoopDataFile);
 				fileManager.unloadConfig(newCoopDataFile);
 				oldCoopDataFile.renameTo(newCoopDataFile);
 			}
+
+			File oldLevelDataFile = new File(new File(skyblock.getDataFolder().toString() + "/level-data"),
+					islandOwnerUUID.toString() + ".yml");
+			File newLevelDataFile = new File(new File(skyblock.getDataFolder().toString() + "/level-data"),
+					uuid.toString() + ".yml");
+
+			fileManager.unloadConfig(oldLevelDataFile);
+			fileManager.unloadConfig(newLevelDataFile);
+			oldLevelDataFile.renameTo(newLevelDataFile);
 
 			File oldSettingDataFile = new File(new File(skyblock.getDataFolder().toString() + "/setting-data"),
 					islandOwnerUUID.toString() + ".yml");
@@ -419,6 +432,8 @@ public class IslandManager {
 		}
 
 		fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/coop-data"),
+				island.getOwnerUUID().toString() + ".yml"));
+		fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"),
 				island.getOwnerUUID().toString() + ".yml"));
 		fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/setting-data"),
 				island.getOwnerUUID().toString() + ".yml"));
