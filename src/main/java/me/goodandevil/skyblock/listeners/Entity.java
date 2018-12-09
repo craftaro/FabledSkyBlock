@@ -338,7 +338,8 @@ public class Entity implements Listener {
 		if (event.getSpawnReason() == SpawnReason.NATURAL) {
 			LivingEntity livingEntity = event.getEntity();
 
-			if (event.getEntity() instanceof ArmorStand || event.getEntity() instanceof FallingBlock) {
+			if (event.getEntity() instanceof ArmorStand || event.getEntity() instanceof FallingBlock
+					|| event.getEntity() instanceof org.bukkit.entity.Item) {
 				return;
 			}
 

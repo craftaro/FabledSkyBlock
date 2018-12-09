@@ -14,12 +14,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.player.PlayerIslandJoinEvent;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandJoinEvent;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.Island;
@@ -81,7 +81,8 @@ public class AcceptCommand extends SubCommand {
 							unloadIsland = true;
 						}
 
-						IslandJoinEvent islandJoinEvent = new IslandJoinEvent(player, island);
+						PlayerIslandJoinEvent islandJoinEvent = new PlayerIslandJoinEvent(player,
+								island.getAPIWrapper());
 						Bukkit.getServer().getPluginManager().callEvent(islandJoinEvent);
 
 						if (islandJoinEvent.isCancelled()) {

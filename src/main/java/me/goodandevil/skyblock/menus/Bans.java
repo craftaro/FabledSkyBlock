@@ -98,7 +98,6 @@ public class Bans {
 								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Bans.Item.Exit.Displayname"))))) {
 							soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
-							player.closeInventory();
 						} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
 								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Bans.Item.Information.Displayname"))))) {

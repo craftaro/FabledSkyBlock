@@ -161,7 +161,7 @@ public class TeleportCommand extends SubCommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] { "tp", "spawn", "home", "go" };
+		return new String[] { "tp", "spawn", "home", "go", "warp" };
 	}
 
 	@Override

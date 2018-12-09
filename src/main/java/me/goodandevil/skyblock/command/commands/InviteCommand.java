@@ -8,12 +8,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.IslandInviteEvent;
+import me.goodandevil.skyblock.api.invite.IslandInvitation;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandInviteEvent;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
@@ -252,7 +253,8 @@ public class InviteCommand extends SubCommand {
 										island.getOwnerUUID(), respondTime);
 
 								Bukkit.getServer().getPluginManager()
-										.callEvent(new IslandInviteEvent(targetPlayer, player, island, invite));
+										.callEvent(new IslandInviteEvent(island.getAPIWrapper(),
+												new IslandInvitation(targetPlayer, player, invite.getTime())));
 
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 								soundManager.playSound(targetPlayer, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);

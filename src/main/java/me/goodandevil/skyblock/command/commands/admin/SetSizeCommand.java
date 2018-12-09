@@ -19,15 +19,12 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Location;
-import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.WorldBorder;
 
 public class SetSizeCommand extends SubCommand {
 
@@ -101,16 +98,9 @@ public class SetSizeCommand extends SubCommand {
 							island.setSize(size);
 
 							if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
-								for (Player all : Bukkit.getOnlinePlayers()) {
-									if (island.hasRole(IslandRole.Member, all.getUniqueId())
-											|| island.hasRole(IslandRole.Operator, all.getUniqueId())
-											|| island.hasRole(IslandRole.Owner, all.getUniqueId())
-											|| island.getVisit().isVisitor(all.getUniqueId())) {
-										WorldBorder.send(all, null, island.getSize() + 2.5,
-												island.getLocation(Location.World.Normal, Location.Environment.Island));
-									}
-								}
+									.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")
+									&& island.isBorder()) {
+								islandManager.updateBorder(island);
 							}
 						} else {
 							File configFile = new File(skyblock.getDataFolder().toString() + "/island-data",

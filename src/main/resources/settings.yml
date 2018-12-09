@@ -99,6 +99,7 @@ Settings:
         CoopPlayers: true
         MainSpawn: false
         VisitorSpawn: true
+        Border: true
         Biome: true
         Weather: true
     Coop:

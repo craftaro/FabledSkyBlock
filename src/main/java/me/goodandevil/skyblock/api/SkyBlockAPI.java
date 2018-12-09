@@ -44,6 +44,14 @@ public class SkyBlockAPI {
 	}
 
 	/**
+	 * Updates the Island border for players occupying an Island
+	 */
+	public static void updateBorder(Island island) {
+		Preconditions.checkArgument(island != null, "Cannot update border to null island");
+		implementation.getIslandManager().updateBorder(island.getIsland());
+	}
+
+	/**
 	 * Set the Biome of an Island
 	 */
 	public static void setBiome(Island island, Biome biome) {

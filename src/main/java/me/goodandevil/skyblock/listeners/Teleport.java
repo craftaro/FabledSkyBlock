@@ -12,11 +12,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.player.PlayerIslandEnterEvent;
+import me.goodandevil.skyblock.api.event.player.PlayerIslandExitEvent;
+import me.goodandevil.skyblock.api.event.player.PlayerIslandSwitchEvent;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandEnterEvent;
-import me.goodandevil.skyblock.events.IslandExitEvent;
-import me.goodandevil.skyblock.events.IslandSwitchEvent;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -105,10 +105,10 @@ public class Teleport implements Listener {
 						}
 
 						if (playerData.getIsland() != null && !playerData.getIsland().equals(island.getOwnerUUID())) {
-							Bukkit.getServer().getPluginManager()
-									.callEvent(new IslandExitEvent(player, islandManager.getIsland(islandOwnerUUID)));
-							Bukkit.getServer().getPluginManager().callEvent(
-									new IslandSwitchEvent(player, islandManager.getIsland(islandOwnerUUID), island));
+							Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandExitEvent(player,
+									islandManager.getIsland(islandOwnerUUID).getAPIWrapper()));
+							Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandSwitchEvent(player,
+									islandManager.getIsland(islandOwnerUUID).getAPIWrapper(), island.getAPIWrapper()));
 
 							playerData.setVisitTime(0);
 						}
@@ -132,7 +132,8 @@ public class Teleport implements Listener {
 						Visit visit = island.getVisit();
 
 						if (!visit.isVisitor(player.getUniqueId())) {
-							Bukkit.getServer().getPluginManager().callEvent(new IslandEnterEvent(player, island));
+							Bukkit.getServer().getPluginManager()
+									.callEvent(new PlayerIslandEnterEvent(player, island.getAPIWrapper()));
 
 							visit.addVisitor(player.getUniqueId());
 							visit.save();
@@ -147,8 +148,13 @@ public class Teleport implements Listener {
 			player.resetPlayerWeather();
 
 			if (islandOwnerUUID != null) {
-				Bukkit.getServer().getPluginManager()
-						.callEvent(new IslandExitEvent(player, islandManager.getIsland(islandOwnerUUID)));
+				me.goodandevil.skyblock.api.island.Island island = null;
+
+				if (islandManager.hasIsland(islandOwnerUUID)) {
+					island = islandManager.getIsland(islandOwnerUUID).getAPIWrapper();
+				}
+
+				Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandExitEvent(player, island));
 
 				playerData.setVisitTime(0);
 			}

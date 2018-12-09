@@ -1517,6 +1517,39 @@ Menu:
                     Displayname: "&a&lIsland Top %position"
                     Lore:
                     - "&f&oEmpty"
+    Border:
+        Title: "&8Island Border"
+        Item:
+            Word:
+                Enable: "Enable"
+                Disable: "Disable"
+                Blue: "&bBlue"
+                Green: "&aGreen"
+                Red: "&cRed"
+            Exit:
+                Displayname: "&cExit Island Border"
+            Toggle:
+                Displayname: "&aToggle Border"
+                Lore:
+                - "&7Decide if the border at"
+                - "&7your Island is visible"
+                - "&7to players."
+                - ""
+                - "&eClick to %toggle!"
+            Color:
+                Displayname: "%color Border"
+                Selected:
+                    Lore:
+                    - "&7Sets the color of your"
+                    - "&7Island border to %color."
+                    - ""
+                    - "&e[SELECTED]"
+                Unselected:
+                    Lore:
+                    - "&7Sets the color of your"
+                    - "&7Island border to %color."
+                    - ""
+                    - "&eClick to select!"
     Biome:
         Title: "&8Select a Biome"
         Item:
@@ -1863,6 +1896,8 @@ Menu:
                         Displayname: "&aSet Island Main Spawn"
                     VisitorSpawn:
                         Displayname: "&aSet Island Visitor Spawn"
+                    Border:
+                        Displayname: "&aSet Border"
                     Biome:
                         Displayname: "&aSet Biome"
                     Weather:
@@ -2932,6 +2967,8 @@ Menu:
                             Displayname: "&aSet Island Main Spawn"
                         VisitorSpawn:
                             Displayname: "&aSet Island Visitor Spawn"
+                        Border:
+                            Displayname: "&aSet Border"
                         Biome:
                             Displayname: "&aSet Biome"
                         Weather:

@@ -536,79 +536,207 @@ public class Settings {
 				} else if (role == IslandRole.Operator) {
 					if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
-							nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()),
-									9);
-							nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
-							nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)), 11);
-							nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()), 12);
-							nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)), 13);
-							nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)), 14);
-							nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
-									15);
-							nInv.addItemStack(createItem(island, role, "Coop", new ItemStack(Material.NAME_TAG)), 16);
-							nInv.addItemStack(createItem(island, role, "CoopPlayers", new ItemStack(Material.BOOK)),
-									17);
-							nInv.addItemStack(createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)),
-									20);
-							nInv.addItemStack(
-									createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)), 21);
-							nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
-							nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+							if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+								nInv.addItemStack(
+										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
+								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
+										10);
+								nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)),
+										11);
+								nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()),
+										12);
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+										13);
+								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
+										14);
+								nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
+										15);
+								nInv.addItemStack(createItem(island, role, "Coop", new ItemStack(Material.NAME_TAG)),
+										16);
+								nInv.addItemStack(createItem(island, role, "CoopPlayers", new ItemStack(Material.BOOK)),
+										17);
+								nInv.addItemStack(
+										createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
+								nInv.addItemStack(
+										createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)),
+										21);
+								nInv.addItemStack(createItem(island, role, "Border", new ItemStack(Material.BEACON)),
+										22);
+								nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
+								nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+							} else {
+								nInv.addItemStack(
+										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
+								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
+										10);
+								nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)),
+										11);
+								nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()),
+										12);
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+										13);
+								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
+										14);
+								nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
+										15);
+								nInv.addItemStack(createItem(island, role, "Coop", new ItemStack(Material.NAME_TAG)),
+										16);
+								nInv.addItemStack(createItem(island, role, "CoopPlayers", new ItemStack(Material.BOOK)),
+										17);
+								nInv.addItemStack(
+										createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
+								nInv.addItemStack(
+										createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)),
+										21);
+								nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
+								nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+							}
 						} else {
-							nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()),
-									10);
-							nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
-							nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)), 12);
-							nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()), 13);
-							nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)), 14);
-							nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)), 15);
-							nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
-									16);
-							nInv.addItemStack(createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)),
-									20);
-							nInv.addItemStack(
-									createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)), 21);
-							nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
-							nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+							if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+								nInv.addItemStack(
+										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
+								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
+										11);
+								nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)),
+										12);
+								nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()),
+										13);
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+										14);
+								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
+										15);
+								nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
+										16);
+								nInv.addItemStack(
+										createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
+								nInv.addItemStack(
+										createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)),
+										21);
+								nInv.addItemStack(createItem(island, role, "Border", new ItemStack(Material.BEACON)),
+										22);
+								nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
+								nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+							} else {
+								nInv.addItemStack(
+										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
+								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
+										11);
+								nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)),
+										12);
+								nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()),
+										13);
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+										14);
+								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
+										15);
+								nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
+										16);
+								nInv.addItemStack(
+										createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
+								nInv.addItemStack(
+										createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)),
+										21);
+								nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
+								nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+							}
 						}
 
 						nInv.setRows(3);
 					} else {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
-							nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()),
-									10);
-							nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
-							nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)), 12);
-							nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)), 13);
-							nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
-									14);
-							nInv.addItemStack(createItem(island, role, "Coop", new ItemStack(Material.NAME_TAG)), 15);
-							nInv.addItemStack(createItem(island, role, "CoopPlayers", new ItemStack(Material.BOOK)),
-									16);
-							nInv.addItemStack(createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)),
-									20);
-							nInv.addItemStack(
-									createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)), 21);
-							nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
-							nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+							if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+								nInv.addItemStack(
+										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
+								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
+										11);
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+										12);
+								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
+										13);
+								nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
+										14);
+								nInv.addItemStack(createItem(island, role, "Coop", new ItemStack(Material.NAME_TAG)),
+										15);
+								nInv.addItemStack(createItem(island, role, "CoopPlayers", new ItemStack(Material.BOOK)),
+										16);
+								nInv.addItemStack(
+										createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
+								nInv.addItemStack(
+										createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)),
+										21);
+								nInv.addItemStack(createItem(island, role, "Border", new ItemStack(Material.BEACON)),
+										22);
+								nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
+								nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+							} else {
+								nInv.addItemStack(
+										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
+								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
+										11);
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+										12);
+								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
+										13);
+								nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
+										14);
+								nInv.addItemStack(createItem(island, role, "Coop", new ItemStack(Material.NAME_TAG)),
+										15);
+								nInv.addItemStack(createItem(island, role, "CoopPlayers", new ItemStack(Material.BOOK)),
+										16);
+								nInv.addItemStack(
+										createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
+								nInv.addItemStack(
+										createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)),
+										21);
+								nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 23);
+								nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 24);
+							}
 
 							nInv.setRows(3);
 						} else {
-							nInv.addItemStack(createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()),
-									9);
-							nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
-							nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)), 11);
-							nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)), 12);
-							nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
-									13);
-							nInv.addItemStack(createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)),
-									14);
-							nInv.addItemStack(
-									createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)), 15);
-							nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 16);
-							nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 17);
+							if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+								nInv.addItemStack(
+										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
+								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
+										11);
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+										12);
+								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
+										13);
+								nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
+										14);
+								nInv.addItemStack(
+										createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 15);
+								nInv.addItemStack(
+										createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)),
+										16);
+								nInv.addItemStack(createItem(island, role, "Border", new ItemStack(Material.BEACON)),
+										21);
+								nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 22);
+								nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 23);
 
-							nInv.setRows(2);
+								nInv.setRows(3);
+							} else {
+								nInv.addItemStack(
+										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
+								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
+										10);
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+										11);
+								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
+										12);
+								nInv.addItemStack(createItem(island, role, "Island", Materials.OAK_SAPLING.parseItem()),
+										13);
+								nInv.addItemStack(
+										createItem(island, role, "MainSpawn", new ItemStack(Material.EMERALD)), 14);
+								nInv.addItemStack(
+										createItem(island, role, "VisitorSpawn", new ItemStack(Material.NETHER_STAR)),
+										15);
+								nInv.addItemStack(createItem(island, role, "Biome", new ItemStack(Material.MAP)), 16);
+								nInv.addItemStack(createItem(island, role, "Weather", Materials.CLOCK.parseItem()), 17);
+
+								nInv.setRows(2);
+							}
 						}
 					}
 

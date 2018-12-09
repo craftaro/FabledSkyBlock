@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandChatSwitchEvent;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
@@ -19,6 +18,7 @@ import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.player.PlayerIslandChatSwitchEvent;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 
@@ -53,13 +53,15 @@ public class ChatCommand extends SubCommand {
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			} else {
 				if (playerData.isChat()) {
-					Bukkit.getServer().getPluginManager().callEvent(new IslandChatSwitchEvent(player, island, false));
+					Bukkit.getServer().getPluginManager()
+							.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), false));
 					playerData.setChat(false);
 
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Untoggled.Message"));
 					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 				} else {
-					Bukkit.getServer().getPluginManager().callEvent(new IslandChatSwitchEvent(player, island, true));
+					Bukkit.getServer().getPluginManager()
+							.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), true));
 					playerData.setChat(true);
 
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Toggled.Message"));

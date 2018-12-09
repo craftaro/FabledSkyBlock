@@ -28,8 +28,8 @@ import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.structure.Structure;
 import me.goodandevil.skyblock.structure.StructureManager;
 import me.goodandevil.skyblock.utils.AnvilGUI;
-import me.goodandevil.skyblock.utils.item.InventoryUtil;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
+import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -57,29 +57,26 @@ public class Creator implements Listener {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		InventoryUtil inv;
+		nInventoryUtil nInv = new nInventoryUtil(player, null);
 
 		if (playerData.getViewer() == null) {
 			List<Structure> structures = structureManager.getStructures();
 
-			inv = new InventoryUtil(
-					ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")), null,
-					6);
-			inv.addItem(inv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 					configLoad.getString("Menu.Admin.Creator.Browse.Item.Exit.Displayname"), null, null, null, null), 0,
 					8);
-			inv.addItem(inv.createItem(new ItemStack(org.bukkit.Material.SIGN),
+			nInv.addItem(nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
 					configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"),
 					configLoad.getStringList("Menu.Admin.Creator.Browse.Item.Information.Lore"),
-					inv.createItemLoreVariable(new String[] { "%structures#" + structures.size() }), null, null), 4);
-			inv.addItem(inv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+					nInv.createItemLoreVariable(new String[] { "%structures#" + structures.size() }), null, null), 4);
+			nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 					configLoad.getString("Menu.Admin.Creator.Browse.Item.Barrier.Displayname"), null, null, null, null),
 					9, 10, 11, 12, 13, 14, 15, 16, 17);
 
 			int playerMenuPage = playerData.getPage(), nextEndIndex = structures.size() - playerMenuPage * 36;
 
 			if (playerMenuPage != 1) {
-				inv.addItem(inv.createItem(SkullUtil.create(
+				nInv.addItem(nInv.createItem(SkullUtil.create(
 						"ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
 						"eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
 						configLoad.getString("Menu.Admin.Creator.Browse.Item.Previous.Displayname"), null, null, null,
@@ -87,7 +84,7 @@ public class Creator implements Listener {
 			}
 
 			if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-				inv.addItem(inv.createItem(SkullUtil.create(
+				nInv.addItem(nInv.createItem(SkullUtil.create(
 						"wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
 						"eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
 						configLoad.getString("Menu.Admin.Creator.Browse.Item.Next.Displayname"), null, null, null,
@@ -95,7 +92,7 @@ public class Creator implements Listener {
 			}
 
 			if (structures.size() == 0) {
-				inv.addItem(inv.createItem(new ItemStack(Material.BARRIER),
+				nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER),
 						configLoad.getString("Menu.Admin.Creator.Browse.Item.Nothing.Displayname"), null, null, null,
 						null), 31);
 			} else {
@@ -107,7 +104,7 @@ public class Creator implements Listener {
 						inventorySlot++;
 
 						Structure structure = structures.get(index);
-						inv.addItem(inv.createItem(structure.getMaterials().parseItem(),
+						nInv.addItem(nInv.createItem(structure.getMaterials().parseItem(),
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Admin.Creator.Browse.Item.Structure.Displayname")
 												.replace("%structure", structure.getName())),
@@ -116,13 +113,12 @@ public class Creator implements Listener {
 					}
 				}
 			}
+
+			nInv.setRows(6);
 		} else {
 			Structure structure = structureManager.getStructure(((Creator.Viewer) playerData.getViewer()).getName());
 
-			inv = new InventoryUtil(
-					ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")), null,
-					1);
-			inv.addItem(inv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.Return.Displayname"), null, null, null, null),
 					0, 8);
 
@@ -133,10 +129,12 @@ public class Creator implements Listener {
 				displayName = ChatColor.translateAlternateColorCodes('&', structure.getDisplayname());
 			}
 
-			inv.addItem(inv.createItem(new ItemStack(Material.NAME_TAG),
-					configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Displayname"),
-					configLoad.getStringList("Menu.Admin.Creator.Options.Item.Displayname.Lore"),
-					inv.createItemLoreVariable(new String[] { "%displayname#" + displayName }), null, null), 2);
+			nInv.addItem(
+					nInv.createItem(new ItemStack(Material.NAME_TAG),
+							configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Displayname"),
+							configLoad.getStringList("Menu.Admin.Creator.Options.Item.Displayname.Lore"),
+							nInv.createItemLoreVariable(new String[] { "%displayname#" + displayName }), null, null),
+					2);
 
 			List<String> descriptionLore = new ArrayList<>();
 
@@ -162,7 +160,7 @@ public class Creator implements Listener {
 				}
 			}
 
-			inv.addItem(inv.createItem(new ItemStack(Material.BOOK),
+			nInv.addItem(nInv.createItem(new ItemStack(Material.BOOK),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.Description.Displayname"), descriptionLore,
 					null, null, null), 3);
 
@@ -174,9 +172,9 @@ public class Creator implements Listener {
 				permissionLore = configLoad.getStringList("Menu.Admin.Creator.Options.Item.Permission.Enable.Lore");
 			}
 
-			inv.addItem(inv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
+			nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.Permission.Displayname"), permissionLore,
-					inv.createItemLoreVariable(new String[] { "%permission#" + structure.getPermission() }), null,
+					nInv.createItemLoreVariable(new String[] { "%permission#" + structure.getPermission() }), null,
 					null), 4);
 
 			String fileName = ChatColor.translateAlternateColorCodes('&',
@@ -186,18 +184,27 @@ public class Creator implements Listener {
 				fileName = ChatColor.translateAlternateColorCodes('&', structure.getFile());
 			}
 
-			inv.addItem(inv.createItem(new ItemStack(Material.PAPER),
+			nInv.addItem(nInv.createItem(new ItemStack(Material.PAPER),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.File.Displayname"),
 					configLoad.getStringList("Menu.Admin.Creator.Options.Item.File.Lore"),
-					inv.createItemLoreVariable(new String[] { "%file#" + fileName }), null, null), 5);
-			inv.addItem(inv.createItem(new ItemStack(Material.DIAMOND),
+					nInv.createItemLoreVariable(new String[] { "%file#" + fileName }), null, null), 5);
+			nInv.addItem(nInv.createItem(new ItemStack(Material.DIAMOND),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.Item.Displayname"),
 					configLoad.getStringList("Menu.Admin.Creator.Options.Item.Item.Lore"),
-					inv.createItemLoreVariable(new String[] { "%material#" + structure.getMaterials().name() }), null,
+					nInv.createItemLoreVariable(new String[] { "%material#" + structure.getMaterials().name() }), null,
 					null), 6);
+
+			nInv.setRows(1);
 		}
 
-		player.openInventory(inv.getInventory());
+		nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")));
+
+		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+			@Override
+			public void run() {
+				nInv.open();
+			}
+		});
 	}
 
 	@SuppressWarnings("deprecation")
@@ -249,8 +256,16 @@ public class Creator implements Listener {
 					} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 							configLoad.getString("Menu.Admin.Creator.Options.Item.Return.Displayname")))) {
 						playerData.setViewer(null);
-						open(player);
 						soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+
+						player.closeInventory();
+
+						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+							@Override
+							public void run() {
+								open(player);
+							}
+						}, 1L);
 
 						return;
 					}
@@ -284,13 +299,6 @@ public class Creator implements Listener {
 												.replace("%structure", event1.getName()));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 3L);
-
 								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 									@Override
 									public void run() {
@@ -307,6 +315,15 @@ public class Creator implements Listener {
 										}
 									}
 								});
+
+								player.closeInventory();
+
+								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+									@Override
+									public void run() {
+										open(player);
+									}
+								}, 1L);
 							}
 
 							event1.setWillClose(true);
@@ -336,11 +353,18 @@ public class Creator implements Listener {
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Displayname"))))) {
 					if (playerData.getViewer() == null) {
-						open(player);
-
 						messageManager.sendMessage(player,
 								configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+						player.closeInventory();
+
+						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+							@Override
+							public void run() {
+								open(player);
+							}
+						}, 1L);
 					} else {
 						String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
@@ -356,37 +380,36 @@ public class Creator implements Listener {
 												configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else if (playerData.getViewer() == null) {
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										}, 3L);
-
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Selected.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-									} else if (!structureManager.containsStructure(name)) {
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										}, 3L);
 
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
+									} else if (!structureManager.containsStructure(name)) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Exist.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
 									} else {
 										Structure structure = structureManager.getStructure(name);
 										structure.setDisplayname(event1.getName());
-
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										}, 3L);
 
 										soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
@@ -409,6 +432,16 @@ public class Creator implements Listener {
 														}
 													}
 												});
+
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
 									}
 
 									event1.setWillClose(true);
@@ -429,11 +462,19 @@ public class Creator implements Listener {
 							gui.open();
 						} else {
 							playerData.setViewer(null);
-							open(player);
 
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							player.closeInventory();
+
+							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									open(player);
+								}
+							}, 1L);
 						}
 					}
 
@@ -442,11 +483,18 @@ public class Creator implements Listener {
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Creator.Options.Item.Description.Displayname"))))) {
 					if (playerData.getViewer() == null) {
-						open(player);
-
 						messageManager.sendMessage(player,
 								configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+						player.closeInventory();
+
+						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+							@Override
+							public void run() {
+								open(player);
+							}
+						}, 1L);
 					} else {
 						String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
@@ -456,8 +504,6 @@ public class Creator implements Listener {
 							if (structure.getDescription() != null && !structure.getDescription().isEmpty()) {
 								if (event.getClick() == ClickType.RIGHT) {
 									structure.removeLine(structure.getDescription().size() - 1);
-
-									open(player);
 									soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
 
 									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
@@ -478,6 +524,16 @@ public class Creator implements Listener {
 										}
 									});
 
+									player.closeInventory();
+
+									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+											new Runnable() {
+												@Override
+												public void run() {
+													open(player);
+												}
+											}, 1L);
+
 									return;
 								} else if (event.getClick() != ClickType.LEFT) {
 									return;
@@ -495,36 +551,35 @@ public class Creator implements Listener {
 												configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else if (playerData.getViewer() == null) {
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										}, 3L);
-
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Selected.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-									} else if (!structureManager.containsStructure(name)) {
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										}, 3L);
 
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
+									} else if (!structureManager.containsStructure(name)) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Exist.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
 									} else {
 										structure.addLine(event1.getName());
-
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										}, 3L);
 
 										soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
@@ -547,6 +602,16 @@ public class Creator implements Listener {
 														}
 													}
 												});
+
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
 									}
 
 									event1.setWillClose(true);
@@ -567,11 +632,19 @@ public class Creator implements Listener {
 							gui.open();
 						} else {
 							playerData.setViewer(null);
-							open(player);
 
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							player.closeInventory();
+
+							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									open(player);
+								}
+							}, 1L);
 						}
 					}
 
@@ -581,11 +654,18 @@ public class Creator implements Listener {
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Creator.Options.Item.Permission.Displayname"))))) {
 					if (playerData.getViewer() == null) {
-						open(player);
-
 						messageManager.sendMessage(player,
 								configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+						player.closeInventory();
+
+						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+							@Override
+							public void run() {
+								open(player);
+							}
+						}, 1L);
 					} else {
 						String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
@@ -598,7 +678,6 @@ public class Creator implements Listener {
 								structure.setPermission(true);
 							}
 
-							open(player);
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
 							Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
@@ -618,13 +697,30 @@ public class Creator implements Listener {
 									}
 								}
 							});
+
+							player.closeInventory();
+
+							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									open(player);
+								}
+							}, 1L);
 						} else {
 							playerData.setViewer(null);
-							open(player);
 
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							player.closeInventory();
+
+							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									open(player);
+								}
+							}, 1L);
 						}
 					}
 
@@ -633,11 +729,18 @@ public class Creator implements Listener {
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Creator.Options.Item.File.Displayname"))))) {
 					if (playerData.getViewer() == null) {
-						open(player);
-
 						messageManager.sendMessage(player,
 								configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+						player.closeInventory();
+
+						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+							@Override
+							public void run() {
+								open(player);
+							}
+						}, 1L);
 					} else {
 						String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
@@ -653,40 +756,39 @@ public class Creator implements Listener {
 												configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 									} else if (playerData.getViewer() == null) {
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										}, 3L);
-
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Selected.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-									} else if (!structureManager.containsStructure(name)) {
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										}, 3L);
 
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
+									} else if (!structureManager.containsStructure(name)) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Exist.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
 									} else {
 										if (fileManager.isFileExist(
 												new File(skyblock.getDataFolder().toString() + "/structures",
 														event1.getName()))) {
 											Structure structure = structureManager.getStructure(name);
 											structure.setFile(event1.getName());
-
-											Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 3L);
 
 											soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
@@ -716,12 +818,15 @@ public class Creator implements Listener {
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 										}
 
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-											@Override
-											public void run() {
-												open(player);
-											}
-										}, 3L);
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
 									}
 
 									event1.setWillClose(true);
@@ -741,11 +846,19 @@ public class Creator implements Listener {
 							gui.open();
 						} else {
 							playerData.setViewer(null);
-							open(player);
 
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							player.closeInventory();
+
+							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									open(player);
+								}
+							}, 1L);
 						}
 					}
 
@@ -754,11 +867,18 @@ public class Creator implements Listener {
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Creator.Options.Item.Item.Displayname"))))) {
 					if (playerData.getViewer() == null) {
-						open(player);
-
 						messageManager.sendMessage(player,
 								configLoad.getString("Island.Admin.Creator.Selected.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+						player.closeInventory();
+
+						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+							@Override
+							public void run() {
+								open(player);
+							}
+						}, 1L);
 					} else {
 						Creator.Viewer viewer = (Viewer) playerData.getViewer();
 						String name = viewer.getName();
@@ -776,11 +896,19 @@ public class Creator implements Listener {
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 							} else {
 								playerData.setViewer(null);
-								open(player);
 
 								messageManager.sendMessage(player,
 										configLoad.getString("Island.Admin.Creator.Exist.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								player.closeInventory();
+
+								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+									@Override
+									public void run() {
+										open(player);
+									}
+								}, 1L);
 							}
 						}
 					}
@@ -826,18 +954,34 @@ public class Creator implements Listener {
 							}
 
 							viewer.setItem(false);
-							open(player);
 
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Admin.Creator.Item.Removed.Message"));
 							soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+
+							player.closeInventory();
+
+							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									open(player);
+								}
+							}, 1L);
 						} else {
 							playerData.setViewer(null);
-							open(player);
 
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Admin.Creator.Exist.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							player.closeInventory();
+
+							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									open(player);
+								}
+							}, 1L);
 						}
 
 						return;
@@ -851,11 +995,18 @@ public class Creator implements Listener {
 										.equals(structureList.getName())) {
 							if (event.getClick() == ClickType.LEFT) {
 								playerData.setViewer(new Viewer(structureList.getName()));
-								open(player);
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+
+								player.closeInventory();
+
+								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+									@Override
+									public void run() {
+										open(player);
+									}
+								}, 1L);
 							} else if (event.getClick() == ClickType.RIGHT) {
 								structureManager.removeStructure(structureList);
-								open(player);
 
 								messageManager.sendMessage(player,
 										configLoad.getString("Island.Admin.Creator.Removed.Message")
@@ -878,6 +1029,15 @@ public class Creator implements Listener {
 										}
 									}
 								});
+
+								player.closeInventory();
+
+								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+									@Override
+									public void run() {
+										open(player);
+									}
+								}, 1L);
 							}
 
 							return;
@@ -887,7 +1047,14 @@ public class Creator implements Listener {
 					messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Exist.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-					open(player);
+					player.closeInventory();
+
+					Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+						@Override
+						public void run() {
+							open(player);
+						}
+					}, 1L);
 				}
 			}
 		}

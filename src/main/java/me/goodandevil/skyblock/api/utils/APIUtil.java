@@ -1,5 +1,6 @@
 package me.goodandevil.skyblock.api.utils;
 
+import me.goodandevil.skyblock.api.island.IslandBorderColor;
 import me.goodandevil.skyblock.api.island.IslandEnvironment;
 import me.goodandevil.skyblock.api.island.IslandMessage;
 import me.goodandevil.skyblock.api.island.IslandRole;
@@ -8,6 +9,7 @@ import me.goodandevil.skyblock.api.island.IslandWorld;
 import me.goodandevil.skyblock.island.Location.Environment;
 import me.goodandevil.skyblock.island.Location.World;
 import me.goodandevil.skyblock.upgrade.Upgrade;
+import me.goodandevil.skyblock.utils.world.WorldBorder;
 
 public final class APIUtil {
 
@@ -95,20 +97,41 @@ public final class APIUtil {
 
 	public static Upgrade.Type toImplementation(IslandUpgrade upgrade) {
 		switch (upgrade) {
-		case Crop:
+		case CROP:
 			return Upgrade.Type.Crop;
-		case Drops:
+		case DROPS:
 			return Upgrade.Type.Drops;
-		case Fly:
+		case FLY:
 			return Upgrade.Type.Fly;
-		case Jump:
+		case JUMP:
 			return Upgrade.Type.Jump;
-		case Size:
+		case SIZE:
 			return Upgrade.Type.Size;
-		case Spawner:
+		case SPAWNER:
 			return Upgrade.Type.Spawner;
-		case Speed:
+		case SPEED:
 			return Upgrade.Type.Speed;
+		}
+
+		return null;
+	}
+
+	public static IslandUpgrade fromImplementation(Upgrade.Type upgrade) {
+		switch (upgrade) {
+		case Crop:
+			return IslandUpgrade.CROP;
+		case Drops:
+			return IslandUpgrade.DROPS;
+		case Fly:
+			return IslandUpgrade.FLY;
+		case Jump:
+			return IslandUpgrade.JUMP;
+		case Size:
+			return IslandUpgrade.SIZE;
+		case Spawner:
+			return IslandUpgrade.SPAWNER;
+		case Speed:
+			return IslandUpgrade.SPEED;
 		}
 
 		return null;
@@ -135,6 +158,32 @@ public final class APIUtil {
 			return IslandMessage.SIGNATURE;
 		case Welcome:
 			return IslandMessage.WELCOME;
+		}
+
+		return null;
+	}
+
+	public static WorldBorder.Color toImplementation(IslandBorderColor color) {
+		switch (color) {
+		case Blue:
+			return WorldBorder.Color.Blue;
+		case Green:
+			return WorldBorder.Color.Green;
+		case Red:
+			return WorldBorder.Color.Red;
+		}
+
+		return null;
+	}
+
+	public static IslandBorderColor fromImplementation(WorldBorder.Color color) {
+		switch (color) {
+		case Blue:
+			return IslandBorderColor.Blue;
+		case Green:
+			return IslandBorderColor.Green;
+		case Red:
+			return IslandBorderColor.Red;
 		}
 
 		return null;

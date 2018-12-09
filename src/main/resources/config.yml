@@ -177,6 +177,9 @@ Island:
             Enable: true
             # The Y position that the player is teleported when reached.
             Offset: 30
+    Obsidian:
+        # When enabled, players can right-click an obsidian block to retrieve lava at an Island.
+        Enable: false
     Liquid:
         Teleport:
             # Teleports the player back to the Island if they enter the liquid if world is a

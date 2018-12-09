@@ -10,12 +10,12 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.player.PlayerIslandLeaveEvent;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandLeaveEvent;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
@@ -58,7 +58,7 @@ public class LeaveCommand extends SubCommand {
 						languageConfig.getFileConfiguration().getString("Command.Island.Leave.Owner.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			} else {
-				IslandLeaveEvent islandLeaveEvent = new IslandLeaveEvent(player, island);
+				PlayerIslandLeaveEvent islandLeaveEvent = new PlayerIslandLeaveEvent(player, island.getAPIWrapper());
 				Bukkit.getServer().getPluginManager().callEvent(islandLeaveEvent);
 
 				if (!islandLeaveEvent.isCancelled()) {

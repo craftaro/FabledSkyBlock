@@ -18,6 +18,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.IslandUpgradeEvent;
+import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.economy.EconomyManager;
 import me.goodandevil.skyblock.island.Island;
@@ -100,7 +102,8 @@ public class Upgrade {
 									configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")))) {
 								if (island.hasUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed)) {
 									if (island.isUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed)) {
-										island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed, false);
+										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed,
+												false);
 
 										for (Location.World worldList : Location.World.values()) {
 											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
@@ -108,7 +111,8 @@ public class Upgrade {
 											}
 										}
 									} else {
-										island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed, true);
+										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed,
+												true);
 
 										for (Location.World worldList : Location.World.values()) {
 											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
@@ -141,7 +145,8 @@ public class Upgrade {
 											soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
 											economyManager.withdraw(player, upgrade.getCost());
-											island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed, true);
+											island.setUpgrade(player,
+													me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed, true);
 
 											for (Location.World worldList : Location.World.values()) {
 												for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
@@ -178,7 +183,8 @@ public class Upgrade {
 									'&', configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")))) {
 								if (island.hasUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump)) {
 									if (island.isUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump)) {
-										island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump, false);
+										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump,
+												false);
 
 										for (Location.World worldList : Location.World.values()) {
 											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
@@ -186,7 +192,8 @@ public class Upgrade {
 											}
 										}
 									} else {
-										island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump, true);
+										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump,
+												true);
 
 										for (Location.World worldList : Location.World.values()) {
 											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
@@ -219,7 +226,8 @@ public class Upgrade {
 											soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
 											economyManager.withdraw(player, upgrade.getCost());
-											island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump, true);
+											island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump,
+													true);
 
 											for (Location.World worldList : Location.World.values()) {
 												for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
@@ -258,9 +266,9 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Crop.Displayname"))))) {
 							if (island.hasUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop)) {
 								if (island.isUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop)) {
-									island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop, false);
+									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop, false);
 								} else {
-									island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop, true);
+									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop, true);
 								}
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -285,7 +293,8 @@ public class Upgrade {
 										soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
 										economyManager.withdraw(player, upgrade.getCost());
-										island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop, true);
+										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop,
+												true);
 
 										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
 												new Runnable() {
@@ -316,7 +325,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Fly.Displayname"))))) {
 							if (island.hasUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly)) {
 								if (island.isUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly)) {
-									island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly, false);
+									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly, false);
 
 									for (Location.World worldList : Location.World.values()) {
 										for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
@@ -327,7 +336,7 @@ public class Upgrade {
 										}
 									}
 								} else {
-									island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly, true);
+									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly, true);
 
 									for (Location.World worldList : Location.World.values()) {
 										for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
@@ -359,7 +368,8 @@ public class Upgrade {
 										soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
 										economyManager.withdraw(player, upgrade.getCost());
-										island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly, true);
+										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly,
+												true);
 
 										for (Location.World worldList : Location.World.values()) {
 											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
@@ -397,9 +407,10 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Drops.Displayname"))))) {
 							if (island.hasUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops)) {
 								if (island.isUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops)) {
-									island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops, false);
+									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops,
+											false);
 								} else {
-									island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops, true);
+									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops, true);
 								}
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -424,7 +435,8 @@ public class Upgrade {
 										soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
 										economyManager.withdraw(player, upgrade.getCost());
-										island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops, true);
+										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops,
+												true);
 
 										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
 												new Runnable() {
@@ -475,6 +487,10 @@ public class Upgrade {
 												economyManager.withdraw(player, upgrade.getCost());
 												island.setSize(upgrade.getValue());
 
+												Bukkit.getServer().getPluginManager().callEvent(new IslandUpgradeEvent(
+														island.getAPIWrapper(), player, APIUtil.fromImplementation(
+																me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)));
+
 												Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
 														new Runnable() {
 															@Override
@@ -509,9 +525,11 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname"))))) {
 							if (island.hasUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner)) {
 								if (island.isUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner)) {
-									island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner, false);
+									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner,
+											false);
 								} else {
-									island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner, true);
+									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner,
+											true);
 								}
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -536,7 +554,8 @@ public class Upgrade {
 										soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
 										economyManager.withdraw(player, upgrade.getCost());
-										island.setUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner, true);
+										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner,
+												true);
 
 										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
 												new Runnable() {

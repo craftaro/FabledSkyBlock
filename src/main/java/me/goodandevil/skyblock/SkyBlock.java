@@ -37,7 +37,9 @@ import me.goodandevil.skyblock.listeners.Respawn;
 import me.goodandevil.skyblock.listeners.Spawner;
 import me.goodandevil.skyblock.listeners.Teleport;
 import me.goodandevil.skyblock.menus.Rollback;
+import me.goodandevil.skyblock.menus.admin.Creator;
 import me.goodandevil.skyblock.menus.admin.Generator;
+import me.goodandevil.skyblock.menus.admin.Levelling;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.placeholder.PlaceholderManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -139,10 +141,9 @@ public class SkyBlock extends JavaPlugin {
 		pluginManager.registerEvents(new Spawner(this), this);
 
 		pluginManager.registerEvents(new Rollback(), this);
-
-		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Levelling(), this);
-		pluginManager.registerEvents(new me.goodandevil.skyblock.menus.admin.Creator(), this);
+		pluginManager.registerEvents(new Levelling(), this);
 		pluginManager.registerEvents(new Generator(), this);
+		pluginManager.registerEvents(new Creator(), this);
 
 		SkyBlockAPI.setImplementation(instance);
 	}

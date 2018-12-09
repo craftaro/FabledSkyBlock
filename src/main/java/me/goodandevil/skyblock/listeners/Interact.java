@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.Set;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -21,6 +22,7 @@ import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.utils.item.InventoryUtil;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
@@ -315,10 +317,59 @@ public class Interact implements Listener {
 
 						return;
 					}
+				} else if ((player.getGameMode() == GameMode.SURVIVAL)
+						&& (event.getClickedBlock().getType() == Material.OBSIDIAN) && (event.getItem() != null)
+						&& (event.getItem().getType() != Material.AIR)
+						&& (event.getItem().getType() == Material.BUCKET)) {
+					if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+							.getFileConfiguration().getBoolean("Island.Obsidian.Enable")
+							&& islandManager.hasPermission(player, "Bucket")) {
+						int NMSVersion = NMSUtil.getVersionNumber();
+						boolean isInventoryFull = false;
+
+						if (NMSVersion > 8) {
+							isInventoryFull = InventoryUtil.isInventoryFull(player.getInventory(), 5, 1,
+									Material.BUCKET);
+						} else {
+							isInventoryFull = InventoryUtil.isInventoryFull(player.getInventory(), 0, 1,
+									Material.BUCKET);
+						}
+
+						soundManager.playSound(event.getClickedBlock().getLocation(), Sounds.FIZZ.bukkitSound(), 1.0F,
+								1.0F);
+
+						InventoryUtil.removeItem(player.getInventory(), 1, false, Material.BUCKET);
+						event.getClickedBlock().setType(Material.AIR);
+
+						if (isInventoryFull) {
+							player.getWorld().dropItemNaturally(player.getLocation(),
+									new ItemStack(Material.LAVA_BUCKET));
+						} else {
+							if (NMSVersion > 8) {
+								isInventoryFull = InventoryUtil.isInventoryFull(player.getInventory(), 5, 1,
+										Material.LAVA_BUCKET);
+							} else {
+								isInventoryFull = InventoryUtil.isInventoryFull(player.getInventory(), 0, 1,
+										Material.LAVA_BUCKET);
+							}
+
+							if (isInventoryFull) {
+								player.getWorld().dropItemNaturally(player.getLocation(),
+										new ItemStack(Material.LAVA_BUCKET));
+							} else {
+								player.getInventory().addItem(new ItemStack(Material.LAVA_BUCKET));
+							}
+						}
+
+						event.setCancelled(true);
+
+						return;
+					}
 				}
 
 				if ((event.getItem() != null) && (event.getItem().getType() != Material.AIR)) {
-					if (event.getItem().getType() == Material.WATER_BUCKET
+					if (event.getItem().getType() == Material.BUCKET
+							|| event.getItem().getType() == Material.WATER_BUCKET
 							|| event.getItem().getType() == Material.LAVA_BUCKET) {
 						if (!islandManager.hasPermission(player, "Bucket")) {
 							event.setCancelled(true);

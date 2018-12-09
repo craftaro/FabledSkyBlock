@@ -82,7 +82,9 @@ public final class EntityUtil {
 			EntityEquipment entityEquipment = livingEntity.getEquipment();
 
 			if (NMSVersion > 8) {
-				entityData.setAI(livingEntity.hasAI());
+				if (NMSVersion > 9) {
+					entityData.setAI(livingEntity.hasAI());
+				}
 
 				if (entityEquipment.getItemInMainHand() != null
 						&& entityEquipment.getItemInMainHand().getType() != Material.AIR) {
@@ -321,7 +323,9 @@ public final class EntityUtil {
 			EntityEquipment entityEquipment = livingEntity.getEquipment();
 
 			if (NMSVersion > 8) {
-				livingEntity.setAI(entityData.hasAI());
+				if (NMSVersion > 9) {
+					livingEntity.setAI(entityData.hasAI());
+				}
 
 				if (entityData.getHand() != null && !entityData.getHand().isEmpty()) {
 					entityEquipment.setItemInMainHand(ItemStackUtil.deserializeItemStack(entityData.getHand()));

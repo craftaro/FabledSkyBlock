@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.entity.Player;
 
 import com.google.common.base.Preconditions;
 
@@ -102,6 +103,35 @@ public class Island {
 		World bukkitWorld = getLocation(world, environment).getWorld();
 		this.handle.setLocation(APIUtil.toImplementation(world), APIUtil.toImplementation(environment),
 				new Location(bukkitWorld, x, y, z));
+	}
+
+	/**
+	 * @return true of conditions met, false otherwise
+	 */
+	public boolean isBorder() {
+		return this.handle.isBorder();
+	}
+
+	/**
+	 * Set the border visible to players for the Island
+	 */
+	public void setBorder(boolean border) {
+		this.handle.setBorder(border);
+	}
+
+	/**
+	 * @return The color of the Island border
+	 */
+	public IslandBorderColor getBorderColor() {
+		return APIUtil.fromImplementation(this.handle.getBorderColor());
+	}
+
+	/**
+	 * Set the border color for the Island
+	 */
+	public void setBorderColor(IslandBorderColor color) {
+		Preconditions.checkArgument(color != null, "IslandBorderColor null does not exist");
+		this.handle.setBorderColor(APIUtil.toImplementation(color));
 	}
 
 	/**
@@ -305,9 +335,9 @@ public class Island {
 	/**
 	 * Set the condition of an IslandUpgrade for the Island
 	 */
-	public void setUpgrade(IslandUpgrade upgrade, boolean status) {
+	public void setUpgrade(Player player, IslandUpgrade upgrade, boolean status) {
 		Preconditions.checkArgument(upgrade != null, "Cannot set upgrade to null upgrade");
-		this.handle.setUpgrade(APIUtil.toImplementation(upgrade), status);
+		this.handle.setUpgrade(player, APIUtil.toImplementation(upgrade), status);
 	}
 
 	/**

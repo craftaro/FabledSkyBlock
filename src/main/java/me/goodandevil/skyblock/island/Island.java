@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.event.island.IslandBiomeChangeEvent;
@@ -26,6 +27,7 @@ import me.goodandevil.skyblock.api.event.island.IslandMessageChangeEvent;
 import me.goodandevil.skyblock.api.event.island.IslandOpenEvent;
 import me.goodandevil.skyblock.api.event.island.IslandPasswordChangeEvent;
 import me.goodandevil.skyblock.api.event.island.IslandRoleChangeEvent;
+import me.goodandevil.skyblock.api.event.island.IslandUpgradeEvent;
 import me.goodandevil.skyblock.api.event.island.IslandWeatherChangeEvent;
 import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.ban.Ban;
@@ -35,6 +37,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.StringUtil;
+import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.visit.Visit;
 import me.goodandevil.skyblock.visit.VisitManager;
 import me.goodandevil.skyblock.world.WorldManager;
@@ -93,6 +96,11 @@ public class Island {
 
 			if (configLoad.getString("Levelling.Materials") != null) {
 				configLoad.set("Levelling.Materials", null);
+			}
+
+			if (configLoad.getString("Border") == null) {
+				configLoad.set("Border.Enable", true);
+				configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
 			}
 
 			if (configLoad.getString("Members") != null) {
@@ -195,6 +203,8 @@ public class Island {
 			FileConfiguration configLoad = config.getFileConfiguration();
 
 			configLoad.set("Visitor.Open", mainConfigLoad.getBoolean("Island.Visitor.Open"));
+			configLoad.set("Border.Enable", true);
+			configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
 			configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
 			configLoad.set("Weather.Synchronised", mainConfigLoad.getBoolean("Island.Weather.Default.Synchronised"));
 			configLoad.set("Weather.Time", mainConfigLoad.getInt("Island.Weather.Default.Time"));
@@ -357,6 +367,30 @@ public class Island {
 				break;
 			}
 		}
+	}
+
+	public boolean isBorder() {
+		return skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().getBoolean("Border.Enable");
+	}
+
+	public void setBorder(boolean border) {
+		skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().set("Border.Enable", border);
+	}
+
+	public WorldBorder.Color getBorderColor() {
+		return WorldBorder.Color.valueOf(skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().getString("Border.Color"));
+	}
+
+	public void setBorderColor(WorldBorder.Color color) {
+		skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().set("Border.Color", color.name());
 	}
 
 	public Biome getBiome() {
@@ -553,10 +587,13 @@ public class Island {
 		return getRole(role).contains(uuid);
 	}
 
-	public void setUpgrade(Upgrade.Type type, boolean status) {
+	public void setUpgrade(Player player, Upgrade.Type type, boolean status) {
 		skyblock.getFileManager().getConfig(
 				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
 				.getFileConfiguration().set("Upgrade." + type.name(), status);
+
+		Bukkit.getServer().getPluginManager()
+				.callEvent(new IslandUpgradeEvent(getAPIWrapper(), player, APIUtil.fromImplementation(type)));
 	}
 
 	public boolean hasUpgrade(Upgrade.Type type) {

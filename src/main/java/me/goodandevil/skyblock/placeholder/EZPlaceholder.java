@@ -94,8 +94,6 @@ public class EZPlaceholder extends PlaceholderExpansion {
 							islandOwnerName = targetPlayer.getName();
 						}
 
-						System.out.println(islandOwnerName + " | " + visit.getOwnerUUID().toString());
-
 						return ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Placeholder.skyblock_leaderboard_level.Non-empty.Message")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)

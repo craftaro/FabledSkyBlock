@@ -13,8 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.player.PlayerIslandChatEvent;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandChatEvent;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
@@ -77,8 +77,8 @@ public class Chat implements Listener {
 					islandRole = configLoad.getString("Island.Chat.Format.Role.Owner");
 				}
 
-				IslandChatEvent islandChatEvent = new IslandChatEvent(player, island, event.getMessage(),
-						configLoad.getString("Island.Chat.Format.Message"));
+				PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, island.getAPIWrapper(),
+						event.getMessage(), configLoad.getString("Island.Chat.Format.Message"));
 				Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
 
 				if (!islandChatEvent.isCancelled()) {

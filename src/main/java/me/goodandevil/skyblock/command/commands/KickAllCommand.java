@@ -10,11 +10,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.IslandKickEvent;
+import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandKickEvent;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
@@ -62,8 +63,9 @@ public class KickAllCommand extends SubCommand {
 						for (UUID islandVisitorList : islandVisitors) {
 							Player targetPlayer = Bukkit.getServer().getPlayer(islandVisitorList);
 
-							IslandKickEvent islandKickEvent = new IslandKickEvent(island, IslandRole.Visitor,
-									islandVisitorList, player);
+							IslandKickEvent islandKickEvent = new IslandKickEvent(island.getAPIWrapper(),
+									APIUtil.fromImplementation(IslandRole.Visitor),
+									Bukkit.getServer().getOfflinePlayer(islandVisitorList), player);
 							Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
 
 							if (!islandKickEvent.isCancelled()) {

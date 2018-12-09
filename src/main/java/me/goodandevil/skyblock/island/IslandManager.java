@@ -34,6 +34,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.invite.InviteManager;
+import me.goodandevil.skyblock.island.Location.Environment;
 import me.goodandevil.skyblock.island.Location.World;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
@@ -572,7 +573,11 @@ public class IslandManager {
 			int nonIslandMembers = islandVisitors - getCoopPlayersAtIsland(island).size();
 
 			if (nonIslandMembers <= 0) {
-				removeCoopPlayers(island, uuid);
+				if (island.isOpen()) {
+					return;
+				} else {
+					removeCoopPlayers(island, uuid);
+				}
 			} else {
 				return;
 			}
@@ -919,8 +924,8 @@ public class IslandManager {
 							player.setPlayerWeather(island.getWeather());
 						}
 
-						if (configLoad.getBoolean("Island.WorldBorder.Enable")) {
-							WorldBorder.send(player, null, island.getSize() + 2.5,
+						if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
+							WorldBorder.send(player, island.getBorderColor(), island.getSize() + 2.5,
 									island.getLocation(Location.World.Normal, Location.Environment.Island));
 						}
 
@@ -973,6 +978,25 @@ public class IslandManager {
 	}
 
 	public void removeUpgrades(Player player) {
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+
+		if (playerDataManager.hasPlayerData(player)) {
+			PlayerData playerData = playerDataManager.getPlayerData(player);
+
+			if (playerData.getIsland() != null) {
+				if (hasIsland(playerData.getIsland())) {
+					Island island = getIsland(playerData.getIsland());
+
+					if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
+							island.getLocation(World.Normal, Environment.Island), island.getRadius() + 2.0D)
+							|| LocationUtil.isLocationAtLocationRadius(player.getLocation(),
+									island.getLocation(World.Nether, Environment.Island), island.getRadius() + 2.0D)) {
+						return;
+					}
+				}
+			}
+		}
+
 		player.removePotionEffect(PotionEffectType.SPEED);
 		player.removePotionEffect(PotionEffectType.JUMP);
 
@@ -1061,5 +1085,23 @@ public class IslandManager {
 		}
 
 		return safeLevel;
+	}
+
+	public void updateBorder(Island island) {
+		if (island.isBorder()) {
+			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+					.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+				for (UUID playerList : getPlayersAtIsland(island)) {
+					Player player = Bukkit.getServer().getPlayer(playerList);
+					WorldBorder.send(player, island.getBorderColor(), island.getSize() + 2.5,
+							island.getLocation(Location.World.Normal, Location.Environment.Island));
+				}
+			}
+		} else {
+			for (UUID playerList : getPlayersAtIsland(island)) {
+				Player player = Bukkit.getServer().getPlayer(playerList);
+				WorldBorder.send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
+			}
+		}
 	}
 }

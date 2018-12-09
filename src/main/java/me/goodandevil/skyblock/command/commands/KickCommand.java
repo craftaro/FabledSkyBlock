@@ -12,12 +12,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.IslandKickEvent;
+import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.events.IslandKickEvent;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
@@ -99,8 +100,9 @@ public class KickCommand extends SubCommand {
 									.getString("Command.Island.Kick.Cooped.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else {
-							IslandKickEvent islandKickEvent = new IslandKickEvent(island, IslandRole.Visitor,
-									targetPlayerUUID, player);
+							IslandKickEvent islandKickEvent = new IslandKickEvent(island.getAPIWrapper(),
+									APIUtil.fromImplementation(IslandRole.Visitor),
+									Bukkit.getServer().getOfflinePlayer(targetPlayerUUID), player);
 							Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
 
 							if (!islandKickEvent.isCancelled()) {
@@ -126,8 +128,9 @@ public class KickCommand extends SubCommand {
 							islandRole = IslandRole.Operator;
 						}
 
-						IslandKickEvent islandKickEvent = new IslandKickEvent(island, islandRole, targetPlayerUUID,
-								player);
+						IslandKickEvent islandKickEvent = new IslandKickEvent(island.getAPIWrapper(),
+								APIUtil.fromImplementation(islandRole),
+								Bukkit.getServer().getOfflinePlayer(targetPlayerUUID), player);
 						Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
 
 						if (!islandKickEvent.isCancelled()) {

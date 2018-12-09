@@ -40,60 +40,63 @@ public class nInventoryUtil {
 	public nInventoryUtil(Player player, final ClickEventHandler handler) {
 		this.player = player;
 
-		this.listener = new Listener() {
-			@EventHandler
-			public void onInventoryClick(InventoryClickEvent event) {
-				if (!(event.getWhoClicked() instanceof Player)) {
-					return;
-				}
-
-				if (inv != null && event.getInventory().equals(inv)) {
-					if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+		if (handler != null) {
+			this.listener = new Listener() {
+				@EventHandler
+				public void onInventoryClick(InventoryClickEvent event) {
+					if (!(event.getWhoClicked() instanceof Player)) {
 						return;
 					}
 
-					event.setCancelled(true);
+					if (inv != null && event.getInventory().equals(inv)) {
+						if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+							return;
+						}
 
-					ClickEvent clickEvent = new ClickEvent(event.getClick(), event.getSlot(), event.getCurrentItem());
-					handler.onClick(clickEvent);
+						event.setCancelled(true);
 
-					if (!clickEvent.getCancelled()) {
-						event.setCancelled(false);
+						ClickEvent clickEvent = new ClickEvent(event.getClick(), event.getSlot(),
+								event.getCurrentItem());
+						handler.onClick(clickEvent);
+
+						if (!clickEvent.getCancelled()) {
+							event.setCancelled(false);
+						}
+
+						if (clickEvent.getWillClose()) {
+							event.getWhoClicked().closeInventory();
+						}
+
+						if (clickEvent.getWillDestroy()) {
+							destroy();
+						}
+					}
+				}
+
+				@EventHandler
+				public void onInventoryClose(InventoryCloseEvent event) {
+					if (!(event.getPlayer() instanceof Player)) {
+						return;
 					}
 
-					if (clickEvent.getWillClose()) {
-						event.getWhoClicked().closeInventory();
-					}
+					Inventory inv = event.getInventory();
 
-					if (clickEvent.getWillDestroy()) {
+					if (inv.equals(nInventoryUtil.this.inv)) {
+						inv.clear();
 						destroy();
 					}
 				}
-			}
 
-			@EventHandler
-			public void onInventoryClose(InventoryCloseEvent event) {
-				if (!(event.getPlayer() instanceof Player)) {
-					return;
+				@EventHandler
+				public void onPlayerQuit(PlayerQuitEvent event) {
+					if (event.getPlayer().getUniqueId().equals(player.getUniqueId())) {
+						destroy();
+					}
 				}
+			};
 
-				Inventory inv = event.getInventory();
-
-				if (inv.equals(nInventoryUtil.this.inv)) {
-					inv.clear();
-					destroy();
-				}
-			}
-
-			@EventHandler
-			public void onPlayerQuit(PlayerQuitEvent event) {
-				if (event.getPlayer().getUniqueId().equals(player.getUniqueId())) {
-					destroy();
-				}
-			}
-		};
-
-		Bukkit.getPluginManager().registerEvents(listener, SkyBlock.getInstance());
+			Bukkit.getPluginManager().registerEvents(listener, SkyBlock.getInstance());
+		}
 	}
 
 	public void addItem(Item item, int... slots) {
@@ -260,7 +263,9 @@ public class nInventoryUtil {
 	}
 
 	public void destroy() {
-		HandlerList.unregisterAll(listener);
+		if (listener != null) {
+			HandlerList.unregisterAll(listener);
+		}
 
 		title = null;
 		type = null;
