@@ -135,8 +135,16 @@ public class Move implements Listener {
 										if (keepItemsOnDeath) {
 											player.setFallDistance(0.0F);
 
-											player.teleport(island.getLocation(world,
-													me.goodandevil.skyblock.island.Location.Environment.Main));
+											if (island.getVisit().isVisitor(player.getUniqueId())) {
+												player.teleport(island.getLocation(
+														me.goodandevil.skyblock.island.Location.World.Normal,
+														me.goodandevil.skyblock.island.Location.Environment.Visitor));
+											} else {
+												player.teleport(island.getLocation(
+														me.goodandevil.skyblock.island.Location.World.Normal,
+														me.goodandevil.skyblock.island.Location.Environment.Main));
+											}
+
 											soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F,
 													1.0F);
 										}
@@ -168,8 +176,16 @@ public class Move implements Listener {
 
 										player.setFallDistance(0.0F);
 
-										player.teleport(island.getLocation(world,
-												me.goodandevil.skyblock.island.Location.Environment.Main));
+										if (island.getVisit().isVisitor(player.getUniqueId())) {
+											player.teleport(island.getLocation(
+													me.goodandevil.skyblock.island.Location.World.Normal,
+													me.goodandevil.skyblock.island.Location.Environment.Visitor));
+										} else {
+											player.teleport(island.getLocation(
+													me.goodandevil.skyblock.island.Location.World.Normal,
+													me.goodandevil.skyblock.island.Location.Environment.Main));
+										}
+
 										soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F,
 												1.0F);
 									}

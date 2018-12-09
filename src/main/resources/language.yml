@@ -439,7 +439,7 @@ Command:
         Coop:
             Info:
                 Message: "&f&oOpen the Island Coop menu or add/remove coop players."
-            Permisison:
+            Permission:
                 Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to do that."
             Invalid:
                 Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island coop [<player>]"

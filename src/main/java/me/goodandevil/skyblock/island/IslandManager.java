@@ -436,21 +436,29 @@ public class IslandManager {
 
 		UUID islandOwnerUUID = null;
 
+		Config config = fileManager.getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+		FileConfiguration configLoad = config.getFileConfiguration();
+
 		if (isIslandExist(uuid)) {
+			if (configLoad.getString("Island.Owner") == null
+					|| !configLoad.getString("Island.Owner").equals(uuid.toString())) {
+				fileManager.deleteConfig(
+						new File(skyblock.getDataFolder().toString() + "/island-data", uuid.toString() + ".yml"));
+
+				return;
+			}
+
 			islandOwnerUUID = uuid;
 		} else {
-			Config config = fileManager.getConfig(
-					new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
-			FileConfiguration configLoad = config.getFileConfiguration();
-
 			if (configLoad.getString("Island.Owner") != null) {
 				islandOwnerUUID = UUID.fromString(configLoad.getString("Island.Owner"));
 			}
 		}
 
 		if (islandOwnerUUID != null && !hasIsland(islandOwnerUUID)) {
-			File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
-			Config config = fileManager.getConfig(new File(configFile, islandOwnerUUID.toString() + ".yml"));
+			config = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/island-data",
+					islandOwnerUUID.toString() + ".yml"));
 
 			org.bukkit.Location islandNormalLocation = fileManager.getLocation(config, "Location.Normal.Island", true);
 

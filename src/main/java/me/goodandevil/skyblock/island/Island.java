@@ -89,6 +89,42 @@ public class Island {
 				configLoad.set("Settings", null);
 			}
 
+			if (configLoad.getString("Members") != null) {
+				List<String> members = configLoad.getStringList("Members");
+
+				for (int i = 0; i < members.size(); i++) {
+					String member = members.get(i);
+					Config playerDataConfig = new FileManager.Config(fileManager,
+							new File(skyblock.getDataFolder().toString() + "/player-data", member + ".yml"));
+					FileConfiguration playerDataConfigLoad = playerDataConfig.getFileConfiguration();
+
+					if (playerDataConfigLoad.getString("Island.Owner") == null
+							|| !playerDataConfigLoad.getString("Island.Owner").equals(uuid.toString())) {
+						members.remove(member);
+					}
+				}
+
+				configLoad.set("Members", members);
+			}
+
+			if (configLoad.getString("Operators") != null) {
+				List<String> operators = configLoad.getStringList("Operators");
+
+				for (int i = 0; i < operators.size(); i++) {
+					String operator = operators.get(i);
+					Config playerDataConfig = new FileManager.Config(fileManager,
+							new File(skyblock.getDataFolder().toString() + "/player-data", operator + ".yml"));
+					FileConfiguration playerDataConfigLoad = playerDataConfig.getFileConfiguration();
+
+					if (playerDataConfigLoad.getString("Island.Owner") == null
+							|| !playerDataConfigLoad.getString("Island.Owner").equals(uuid.toString())) {
+						operators.remove(operator);
+					}
+				}
+
+				configLoad.set("Operators", operators);
+			}
+
 			for (Location.World worldList : Location.World.values()) {
 				for (Location.Environment environmentList : Location.Environment.values()) {
 					if (environmentList != Location.Environment.Island) {
@@ -480,8 +516,9 @@ public class Island {
 	public boolean removeRole(IslandRole role, UUID uuid) {
 		if (!(role == IslandRole.Visitor || role == IslandRole.Coop || role == IslandRole.Owner)) {
 			if (hasRole(role, uuid)) {
-				Config config = skyblock.getFileManager().getConfig(new File(
-						new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"));
+				Config config = skyblock.getFileManager()
+						.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
+								getOwnerUUID().toString() + ".yml"));
 				File configFile = config.getFile();
 				FileConfiguration configLoad = config.getFileConfiguration();
 				List<String> islandMembers = configLoad.getStringList(role.name() + "s");

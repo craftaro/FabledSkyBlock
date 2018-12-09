@@ -35,23 +35,23 @@ public final class EntityUtil {
 			ArmorStand armorStand = (ArmorStand) entity;
 			entityData.setArms(armorStand.hasArms());
 
-			if (armorStand.getItemInHand() != null) {
+			if (armorStand.getItemInHand() != null && armorStand.getItemInHand().getType() != Material.AIR) {
 				entityData.setHand(ItemStackUtil.serializeItemStack(armorStand.getItemInHand()));
 			}
 
-			if (armorStand.getHelmet() != null) {
+			if (armorStand.getHelmet() != null && armorStand.getHelmet().getType() != Material.AIR) {
 				entityData.setHelmet(ItemStackUtil.serializeItemStack(armorStand.getHelmet()));
 			}
 
-			if (armorStand.getChestplate() != null) {
+			if (armorStand.getChestplate() != null && armorStand.getChestplate().getType() != Material.AIR) {
 				entityData.setChestplate(ItemStackUtil.serializeItemStack(armorStand.getChestplate()));
 			}
 
-			if (armorStand.getLeggings() != null) {
+			if (armorStand.getLeggings() != null && armorStand.getLeggings().getType() != Material.AIR) {
 				entityData.setLeggings(ItemStackUtil.serializeItemStack(armorStand.getLeggings()));
 			}
 
-			if (armorStand.getBoots() != null) {
+			if (armorStand.getBoots() != null && armorStand.getBoots().getType() != Material.AIR) {
 				entityData.setBoots(ItemStackUtil.serializeItemStack(armorStand.getBoots()));
 			}
 
@@ -84,38 +84,41 @@ public final class EntityUtil {
 			if (NMSVersion > 8) {
 				entityData.setAI(livingEntity.hasAI());
 
-				if (entityEquipment.getItemInMainHand() != null) {
+				if (entityEquipment.getItemInMainHand() != null
+						&& entityEquipment.getItemInMainHand().getType() != Material.AIR) {
 					entityData.setHand(ItemStackUtil.serializeItemStack(entityEquipment.getItemInMainHand()));
 				}
 
 				entityData.setHandChance(entityEquipment.getItemInMainHandDropChance());
 
-				if (entityEquipment.getItemInOffHand() != null) {
+				if (entityEquipment.getItemInOffHand() != null
+						&& entityEquipment.getItemInOffHand().getType() != Material.AIR) {
 					entityData.setOffHand(ItemStackUtil.serializeItemStack(entityEquipment.getItemInOffHand()));
 				}
 
 				entityData.setOffHandChange(entityEquipment.getItemInOffHandDropChance());
 			} else {
-				if (entityEquipment.getItemInHand() != null) {
+				if (entityEquipment.getItemInHand() != null
+						&& entityEquipment.getItemInHand().getType() != Material.AIR) {
 					entityData.setHand(ItemStackUtil.serializeItemStack(entityEquipment.getItemInHand()));
 				}
 
 				entityData.setHandChance(entityEquipment.getItemInHandDropChance());
 			}
 
-			if (entityEquipment.getHelmet() != null) {
+			if (entityEquipment.getHelmet() != null && entityEquipment.getHelmet().getType() != Material.AIR) {
 				entityData.setHelmet(ItemStackUtil.serializeItemStack(entityEquipment.getHelmet()));
 			}
 
-			if (entityEquipment.getChestplate() != null) {
+			if (entityEquipment.getChestplate() != null && entityEquipment.getChestplate().getType() != Material.AIR) {
 				entityData.setChestplate(ItemStackUtil.serializeItemStack(entityEquipment.getChestplate()));
 			}
 
-			if (entityEquipment.getLeggings() != null) {
+			if (entityEquipment.getLeggings() != null && entityEquipment.getLeggings().getType() != Material.AIR) {
 				entityData.setLeggings(ItemStackUtil.serializeItemStack(entityEquipment.getLeggings()));
 			}
 
-			if (entityEquipment.getBoots() != null) {
+			if (entityEquipment.getBoots() != null && entityEquipment.getBoots().getType() != Material.AIR) {
 				entityData.setBoots(ItemStackUtil.serializeItemStack(entityEquipment.getBoots()));
 			}
 
@@ -144,9 +147,7 @@ public final class EntityUtil {
 				List<String> items = new ArrayList<>();
 
 				for (ItemStack itemList : horse.getInventory().getContents()) {
-					if (itemList == null) {
-						items.add(ItemStackUtil.serializeItemStack(new ItemStack(Material.AIR)));
-					} else {
+					if (itemList != null && itemList.getType() != Material.AIR) {
 						items.add(ItemStackUtil.serializeItemStack(itemList));
 					}
 				}
@@ -181,9 +182,7 @@ public final class EntityUtil {
 				List<String> items = new ArrayList<>();
 
 				for (ItemStack itemList : villager.getInventory().getContents()) {
-					if (itemList == null) {
-						items.add(ItemStackUtil.serializeItemStack(new ItemStack(Material.AIR)));
-					} else {
+					if (itemList != null && itemList.getType() != Material.AIR) {
 						items.add(ItemStackUtil.serializeItemStack(itemList));
 					}
 				}
@@ -200,9 +199,7 @@ public final class EntityUtil {
 					List<String> items = new ArrayList<>();
 
 					for (ItemStack itemList : llama.getInventory().getContents()) {
-						if (itemList == null) {
-							items.add(ItemStackUtil.serializeItemStack(new ItemStack(Material.AIR)));
-						} else {
+						if (itemList != null && itemList.getType() != Material.AIR) {
 							items.add(ItemStackUtil.serializeItemStack(itemList));
 						}
 					}
@@ -229,9 +226,7 @@ public final class EntityUtil {
 				List<String> items = new ArrayList<>();
 
 				for (ItemStack itemList : ((InventoryHolder) entity).getInventory().getContents()) {
-					if (itemList == null) {
-						items.add(ItemStackUtil.serializeItemStack(new ItemStack(Material.AIR)));
-					} else {
+					if (itemList != null && itemList.getType() != Material.AIR) {
 						items.add(ItemStackUtil.serializeItemStack(itemList));
 					}
 				}

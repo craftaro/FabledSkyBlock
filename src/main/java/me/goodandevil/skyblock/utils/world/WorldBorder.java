@@ -61,7 +61,6 @@ public final class WorldBorder {
 
 			Method transitionSizeBetween = worldBorder.getClass().getMethod("transitionSizeBetween", double.class,
 					double.class, long.class);
-			transitionSizeBetween.invoke(worldBorder, size, size - 1.0D, 20000000L);
 
 			if (color == Color.Green) {
 				transitionSizeBetween.invoke(worldBorder, size - 0.2D, size - 0.1D + 0.1D, 20000000L);
