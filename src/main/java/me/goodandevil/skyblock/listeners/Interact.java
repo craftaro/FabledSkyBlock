@@ -719,7 +719,7 @@ public class Interact implements Listener {
 			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
 					|| player.getWorld().getName()
 							.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-				if (!islandManager.hasPermission(player, "ArmorStand")) {
+				if (!islandManager.hasPermission(player, "ArmorStandUse")) {
 					event.setCancelled(true);
 
 					skyblock.getMessageManager().sendMessage(player,

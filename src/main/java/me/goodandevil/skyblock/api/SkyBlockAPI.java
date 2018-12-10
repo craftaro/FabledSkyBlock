@@ -144,6 +144,18 @@ public class SkyBlockAPI {
 	}
 
 	/**
+	 * Checks if a player has permission at a location at an Island for a Setting
+	 * 
+	 * @return true of conditions met, false otherwise
+	 */
+	public static boolean hasPermission(Player player, Location location, String setting) {
+		Preconditions.checkArgument(player != null, "Cannot check permission to null player");
+		Preconditions.checkArgument(location != null, "Cannot check permission to null location");
+
+		return implementation.getIslandManager().hasPermission(player, location, setting);
+	}
+
+	/**
 	 * Checks the permission of a Setting for a Role at a Location
 	 * 
 	 * @return true of conditions met, false otherwise

@@ -766,11 +766,15 @@ public class IslandManager {
 	}
 
 	public boolean hasPermission(Player player, String setting) {
+		return hasPermission(player, player.getLocation(), setting);
+	}
+
+	public boolean hasPermission(Player player, org.bukkit.Location location, String setting) {
 		if (hasIsland(player)) {
 			Island island = getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 
 			for (Location.World worldList : Location.World.values()) {
-				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
+				if (LocationUtil.isLocationAtLocationRadius(location,
 						island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 					if (island.hasRole(IslandRole.Member, player.getUniqueId())) {
 						if (!island.getSetting(IslandRole.Member, setting).getStatus()) {
@@ -787,7 +791,7 @@ public class IslandManager {
 			Island island = getIslands().get(islandList);
 
 			for (Location.World worldList : Location.World.values()) {
-				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
+				if (LocationUtil.isLocationAtLocationRadius(location,
 						island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
 					if (player.hasPermission("skyblock.bypass." + setting.toLowerCase())
 							|| player.hasPermission("skyblock.bypass.*") || player.hasPermission("skyblock.*")) {
