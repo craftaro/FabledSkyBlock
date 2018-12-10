@@ -25,6 +25,7 @@ import me.goodandevil.skyblock.listeners.Bucket;
 import me.goodandevil.skyblock.listeners.Chat;
 import me.goodandevil.skyblock.listeners.Death;
 import me.goodandevil.skyblock.listeners.Entity;
+import me.goodandevil.skyblock.listeners.Food;
 import me.goodandevil.skyblock.listeners.Interact;
 import me.goodandevil.skyblock.listeners.Inventory;
 import me.goodandevil.skyblock.listeners.Item;
@@ -139,6 +140,7 @@ public class SkyBlock extends JavaPlugin {
 		pluginManager.registerEvents(new Respawn(this), this);
 		pluginManager.registerEvents(new Chat(this), this);
 		pluginManager.registerEvents(new Spawner(this), this);
+		pluginManager.registerEvents(new Food(this), this);
 
 		pluginManager.registerEvents(new Rollback(), this);
 		pluginManager.registerEvents(new Levelling(), this);

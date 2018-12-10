@@ -283,7 +283,46 @@ public class MVdWPlaceholder {
 			}
 		});
 
+		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_coops", new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
+				Player player = event.getPlayer();
+
+				if (player == null) {
+					return null;
+				}
+
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
+			}
+		});
+
+		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_coops_total", new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
+				Player player = event.getPlayer();
+
+				if (player == null) {
+					return null;
+				}
+
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
+			}
+		});
+
 		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_visitors", new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
+				Player player = event.getPlayer();
+
+				if (player == null) {
+					return null;
+				}
+
+				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
+			}
+		});
+
+		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_invites", new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
 				Player player = event.getPlayer();

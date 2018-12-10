@@ -167,7 +167,8 @@ public class Island {
 
 				for (String settingList : defaultSettingsConfig.getFileConfiguration()
 						.getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
-					if (settingsDataConfig == null) {
+					if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
+							.getString("Settings." + roleList.name() + "." + settingList) == null) {
 						settings.add(new Setting(settingList, defaultSettingsConfig.getFileConfiguration()
 								.getBoolean("Settings." + roleList.name() + "." + settingList)));
 					} else {

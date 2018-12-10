@@ -746,133 +746,325 @@ public class Settings {
 					if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")) {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 9);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
-										new ItemStack(Material.ITEM_FRAME)), 16);
-								nInv.addItemStack(createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()),
-										17);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 13);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											17);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 17);
+								}
 							} else {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 13);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
-										new ItemStack(Material.ITEM_FRAME)), 16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											17);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											13);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 16);
+								}
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 13);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()),
-										16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											17);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											13);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								}
 							} else {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 14);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										15);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											13);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											16);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											16);
+								}
 							}
 						}
 					} else {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										13);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
-								nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
-										new ItemStack(Material.ITEM_FRAME)), 15);
-								nInv.addItemStack(createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()),
-										16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											11);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											17);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 13);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								}
 							} else {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
-										new ItemStack(Material.ITEM_FRAME)), 16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 13);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											16);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 16);
+								}
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()),
-										16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 13);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											16);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								}
 							} else {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 13);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											16);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 11);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											13);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+								}
 							}
 						}
 					}

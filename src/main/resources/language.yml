@@ -411,6 +411,17 @@ Command:
                     Minute: "minute(s)"
                     Second: "second(s)"
                 Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore processing an Island level request."
+        Value:
+            Info:
+                Message: "&f&oGets the value of a material in your hand."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to get the value of an item."
+            Hand:
+                Message: "&bSkyBlock &8| &cError&8: &eYou must be holding an item in your hand."
+            None:
+                Message: "&bSkyBlock &8| &cError&8: &eCannot get the value of that material."
+            Value:
+                Message: "&bSkyBlock &8| &aInfo&8: &eThe value of the material '&d%material&e' is &d%points &epoints and has a &d%level &elevel increase."
         Settings:
             Info:
                 Message: "&f&oOpen the Island Settings menu."
@@ -1047,7 +1058,22 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+    skyblock_island_coops:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_coops_total:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
     skyblock_island_visitors:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_invites:
         Empty:
             Message: "&c0"
         Non-empty:
@@ -1936,6 +1962,8 @@ Menu:
                         Displayname: "&aKeep Items on Death"
                     Damage:
                         Displayname: "&aDamage"
+                    Hunger:
+                        Displayname: "&aHunger"
         Default:
             Item:
                 Setting:
@@ -3004,6 +3032,8 @@ Menu:
                             Displayname: "&aKeep Items on Death"
                         Damage:
                             Displayname: "&aDamage"
+                        Hunger:
+                            Displayname: "&aHunger"
             Default:
                 Item:
                     Setting:

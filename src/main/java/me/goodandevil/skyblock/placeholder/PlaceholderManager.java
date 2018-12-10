@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.placeholder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ import org.bukkit.plugin.PluginManager;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
@@ -212,6 +214,24 @@ public class PlaceholderManager {
 						configLoad.getString("Placeholder.skyblock_island_operators.Non-empty.Message")
 								.replace("%placeholder", "" + island.getRole(IslandRole.Operator).size()));
 			}
+		} else if (placeholder.equalsIgnoreCase("skyblock_island_coops")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.skyblock_island_coops.Empty.Message"));
+			} else {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.skyblock_island_coops.Non-empty.Message")
+								.replace("%placeholder", "" + islandManager.getCoopPlayersAtIsland(island).size()));
+			}
+		} else if (placeholder.equalsIgnoreCase("skyblock_island_coops_total")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.skyblock_island_coops_total.Empty.Message"));
+			} else {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.skyblock_island_coops_total.Non-empty.Message")
+								.replace("%placeholder", "" + island.getCoopPlayers().size()));
+			}
 		} else if (placeholder.equalsIgnoreCase("skyblock_island_visitors")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
@@ -220,6 +240,27 @@ public class PlaceholderManager {
 				return ChatColor.translateAlternateColorCodes('&',
 						configLoad.getString("Placeholder.skyblock_island_visitors.Non-empty.Message")
 								.replace("%placeholder", "" + islandManager.getVisitorsAtIsland(island).size()));
+			}
+		} else if (placeholder.equalsIgnoreCase("skyblock_island_invites")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.skyblock_island_invites.Empty.Message"));
+			} else {
+				Map<UUID, Invite> invites = skyblock.getInviteManager().getInvites();
+				int invitedPlayers = 0;
+
+				for (int i = 0; i < invites.size(); i++) {
+					UUID uuid = (UUID) invites.keySet().toArray()[i];
+					Invite invite = invites.get(uuid);
+
+					if (invite.getOwnerUUID().equals(island.getOwnerUUID())) {
+						invitedPlayers++;
+					}
+				}
+
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.skyblock_island_invites.Non-empty.Message")
+								.replace("%placeholder", "" + invitedPlayers));
 			}
 		}
 
@@ -241,7 +282,10 @@ public class PlaceholderManager {
 		placeholders.add("skyblock_island_members_total");
 		placeholders.add("skyblock_island_members");
 		placeholders.add("skyblock_island_operators");
+		placeholders.add("skyblock_island_coops");
+		placeholders.add("skyblock_island_coops_total");
 		placeholders.add("skyblock_island_visitors");
+		placeholders.add("skyblock_island_invites");
 
 		return placeholders;
 	}

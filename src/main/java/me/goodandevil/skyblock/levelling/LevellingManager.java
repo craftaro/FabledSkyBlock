@@ -233,6 +233,16 @@ public class LevellingManager {
 		return false;
 	}
 
+	public Material getMaterial(Materials materials) {
+		for (Material materialList : materialStorage) {
+			if (materialList.getMaterials().name().equals(materials.name())) {
+				return materialList;
+			}
+		}
+
+		return null;
+	}
+
 	public List<Material> getMaterials() {
 		return materialStorage;
 	}

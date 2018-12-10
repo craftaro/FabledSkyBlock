@@ -144,7 +144,7 @@ public class SkyBlockAPI {
 	}
 
 	/**
-	 * Checks if a player has permission at a location at an Island for a Setting
+	 * Checks if a player has permission at a location of an Island for a Setting
 	 * 
 	 * @return true of conditions met, false otherwise
 	 */

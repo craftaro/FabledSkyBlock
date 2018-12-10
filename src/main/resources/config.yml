@@ -206,6 +206,9 @@ Island:
         # void damage.
         Damage:
             Enable: true
+        # When disabled, the hunger setting will be removed from the Island Settings menu.
+        Hunger:
+            Enable: false
     Admin:
         Structure:
             # Item Material used to select positions for a structure.

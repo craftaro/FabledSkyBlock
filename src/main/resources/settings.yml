@@ -155,3 +155,4 @@ Settings:
         LeafDecay: true
         KeepItemsOnDeath: true
         Damage: true
+        Hunger: true
