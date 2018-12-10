@@ -185,13 +185,18 @@ public class Entity implements Listener {
 			if (event.getEntity() instanceof Player) {
 				Player player = (Player) event.getEntity();
 
-				if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-						.getBoolean("Island.Settings.Damage.Enable")) {
-					if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "Damage")) {
+				if (player.getWorld().getName()
+						.equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
+						|| player.getWorld().getName()
+								.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+							.getBoolean("Island.Settings.Damage.Enable")) {
+						if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "Damage")) {
+							event.setCancelled(true);
+						}
+					} else {
 						event.setCancelled(true);
 					}
-				} else {
-					event.setCancelled(true);
 				}
 			}
 		}
