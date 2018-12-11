@@ -203,16 +203,18 @@ public class Scoreboard {
 					islandRole = displayVariables.get("%member");
 				}
 
-				displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumber(level.getLevel()))
+				displayLine = displayLine.replace("%island_points", "" + NumberUtil.formatNumber(level.getPoints()))
+						.replace("%island_level", "" + NumberUtil.formatNumber(level.getLevel()))
 						.replace("%island_members", "" + islandMembers).replace("%island_role", islandRole)
 						.replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size())
 						.replace("%island_size", "" + island.getSize())
 						.replace("%island_radius", "" + island.getRadius());
 			}
 		} else {
-			displayLine = displayLine.replace("%island_level", ChatColor.RED + "0")
-					.replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null")
-					.replace("%island_size", ChatColor.RED + "0").replace("%island_radius", ChatColor.RED + "0");
+			displayLine = displayLine.replace("%island_points", ChatColor.RED + "0")
+					.replace("%island_level", ChatColor.RED + "0").replace("%island_members", ChatColor.RED + "0")
+					.replace("%island_role", ChatColor.RED + "null").replace("%island_size", ChatColor.RED + "0")
+					.replace("%island_radius", ChatColor.RED + "0");
 		}
 
 		PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();

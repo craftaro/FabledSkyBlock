@@ -253,7 +253,8 @@ public final class BlockUtil {
 		if (NMSVersion > 12 && blockData.getVersion() > 12 && blockData.getBlockData() != null) {
 			block.setBlockData(Bukkit.getServer().createBlockData(blockData.getBlockData()));
 		} else {
-			material = getMaterial(NMSVersion, blockData.getVersion(), blockData.getMaterial(), block.getData());
+			material = me.goodandevil.skyblock.utils.item.MaterialUtil.getMaterial(NMSVersion, blockData.getVersion(),
+					blockData.getMaterial(), block.getData());
 			setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
 		}
 
@@ -398,7 +399,8 @@ public final class BlockUtil {
 					String[] flower = blockData.getFlower().split(":");
 					int materialData = Integer.parseInt(flower[1]);
 
-					material = getMaterial(NMSVersion, blockData.getVersion(), flower[0].toUpperCase(), materialData);
+					material = me.goodandevil.skyblock.utils.item.MaterialUtil.getMaterial(NMSVersion,
+							blockData.getVersion(), flower[0].toUpperCase(), materialData);
 
 					if (material != null) {
 						ItemStack is = new ItemStack(material, 1, (byte) materialData);
@@ -517,26 +519,6 @@ public final class BlockUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	private static Material getMaterial(int NMSVersion, int blockVersion, String material, int data) {
-		if (NMSVersion > 12) {
-			if (blockVersion > 12) {
-				return Material.valueOf(material);
-			} else {
-				return Materials.requestMaterials(material, (byte) data).getPostMaterial();
-			}
-		} else {
-			try {
-				if (blockVersion > 12) {
-					return Materials.fromString(material).parseMaterial();
-				} else {
-					return Material.valueOf(material);
-				}
-			} catch (Exception e) {
-				return Material.STONE;
-			}
 		}
 	}
 }

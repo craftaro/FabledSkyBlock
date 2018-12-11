@@ -61,7 +61,8 @@ public class ConfirmCommand extends SubCommand {
 					me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
 					Confirmation confirmation = playerData.getConfirmation();
 
-					if (confirmation == Confirmation.Ownership || confirmation == Confirmation.Deletion) {
+					if (confirmation == Confirmation.Ownership || confirmation == Confirmation.Reset
+							|| confirmation == Confirmation.Deletion) {
 						if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 							if (confirmation == Confirmation.Ownership) {
 								UUID targetPlayerUUID = playerData.getOwnership();
@@ -107,6 +108,9 @@ public class ConfirmCommand extends SubCommand {
 											.getString("Command.Island.Confirmation.Ownership.Member.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 								}
+							} else if (confirmation == Confirmation.Reset) {
+								playerData.setConfirmation(null);
+								playerData.setConfirmationTime(0);
 							} else if (confirmation == Confirmation.Deletion) {
 								playerData.setConfirmation(null);
 								playerData.setConfirmationTime(0);
@@ -188,6 +192,7 @@ public class ConfirmCommand extends SubCommand {
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		}
+
 	}
 
 	@Override

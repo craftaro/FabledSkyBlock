@@ -95,6 +95,7 @@ public class nInventoryUtil {
 				}
 			};
 
+			// TODO Check if listener is already registered
 			Bukkit.getPluginManager().registerEvents(listener, SkyBlock.getInstance());
 		}
 	}

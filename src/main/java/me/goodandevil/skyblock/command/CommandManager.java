@@ -56,9 +56,11 @@ import me.goodandevil.skyblock.command.commands.VisitCommand;
 import me.goodandevil.skyblock.command.commands.VisitorsCommand;
 import me.goodandevil.skyblock.command.commands.VoteCommand;
 import me.goodandevil.skyblock.command.commands.WeatherCommand;
+import me.goodandevil.skyblock.command.commands.admin.AddUpgradeCommand;
 import me.goodandevil.skyblock.command.commands.admin.GeneratorCommand;
 import me.goodandevil.skyblock.command.commands.admin.ReloadCommand;
 import me.goodandevil.skyblock.command.commands.admin.RemoveHologramCommand;
+import me.goodandevil.skyblock.command.commands.admin.RemoveUpgradeCommand;
 import me.goodandevil.skyblock.command.commands.admin.SetHologramCommand;
 import me.goodandevil.skyblock.command.commands.admin.SetSizeCommand;
 import me.goodandevil.skyblock.command.commands.admin.StructureCommand;
@@ -107,6 +109,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 				configLoad.getString("Command.Island.Leaderboard.Info.Message"))));
 		subCommands.add(new CreateCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
 				configLoad.getString("Command.Island.Create.Info.Message"))));
+		// subCommands.add(new
+		// ResetCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',configLoad.getString("Command.Island.Reset.Info.Message"))));
 		subCommands.add(new DeleteCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
 				configLoad.getString("Command.Island.Delete.Info.Message"))));
 		subCommands.add(new TeleportCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
@@ -185,6 +189,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 				configLoad.getString("Command.Island.Admin.RemoveHologram.Info.Message"))));
 		subCommands.add(new SetSizeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
 				configLoad.getString("Command.Island.Admin.SetSize.Info.Message"))));
+		subCommands.add(new AddUpgradeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
+				configLoad.getString("Command.Island.Admin.AddUpgrade.Info.Message"))));
+		subCommands.add(new RemoveUpgradeCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
+				configLoad.getString("Command.Island.Admin.RemoveUpgrade.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.CreateCommand(skyblock).setInfo(ChatColor
 				.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Admin.Create.Info.Message"))));
 		subCommands.add(new me.goodandevil.skyblock.command.commands.admin.UpgradeCommand(skyblock).setInfo(ChatColor

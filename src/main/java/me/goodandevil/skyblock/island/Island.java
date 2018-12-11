@@ -597,6 +597,12 @@ public class Island {
 				.callEvent(new IslandUpgradeEvent(getAPIWrapper(), player, APIUtil.fromImplementation(type)));
 	}
 
+	public void removeUpgrade(Upgrade.Type type) {
+		skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().set("Upgrade." + type.name(), null);
+	}
+
 	public boolean hasUpgrade(Upgrade.Type type) {
 		if (skyblock.getFileManager().getConfig(
 				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
@@ -693,6 +699,26 @@ public class Island {
 				getVisit().setSignature(lines);
 			}
 		}
+	}
+
+	public void setStructure(String structure) {
+		skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().set("Structure", structure);
+	}
+
+	public boolean hasStructure() {
+		if (getStructure() != null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public String getStructure() {
+		return skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().getString("Structure");
 	}
 
 	public Visit getVisit() {

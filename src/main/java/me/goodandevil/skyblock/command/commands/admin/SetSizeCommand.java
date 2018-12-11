@@ -82,7 +82,7 @@ public class SetSizeCommand extends SubCommand {
 
 					if (islandOwnerUUID == null) {
 						messageManager.sendMessage(sender,
-								configLoad.getString("Command.Island.Admin.SetSize.Island.Message"));
+								configLoad.getString("Command.Island.Admin.SetSize.Island.Owner.Message"));
 						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else if (size < 50) {
 						messageManager.sendMessage(sender,
@@ -103,13 +103,23 @@ public class SetSizeCommand extends SubCommand {
 								islandManager.updateBorder(island);
 							}
 						} else {
-							File configFile = new File(skyblock.getDataFolder().toString() + "/island-data",
+							File islandDataFile = new File(skyblock.getDataFolder().toString() + "/island-data",
 									islandOwnerUUID.toString() + ".yml");
-							FileConfiguration islandConfigLoad = YamlConfiguration.loadConfiguration(configFile);
-							islandConfigLoad.set("Size", size);
+
+							if (!fileManager.isFileExist(islandDataFile)) {
+								messageManager.sendMessage(sender,
+										configLoad.getString("Command.Island.Admin.SetSize.Island.Data.Message"));
+								soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								return;
+							}
+
+							FileConfiguration islandDataConfigLoad = YamlConfiguration
+									.loadConfiguration(islandDataFile);
+							islandDataConfigLoad.set("Size", size);
 
 							try {
-								islandConfigLoad.save(configFile);
+								islandDataConfigLoad.save(islandDataFile);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}

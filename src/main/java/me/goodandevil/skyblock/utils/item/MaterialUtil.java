@@ -37,4 +37,24 @@ public class MaterialUtil {
 
 		return material;
 	}
+
+	public static Material getMaterial(int NMSVersion, int blockVersion, String material, int data) {
+		if (NMSVersion > 12) {
+			if (blockVersion > 12) {
+				return Material.valueOf(material);
+			} else {
+				return Materials.requestMaterials(material, (byte) data).getPostMaterial();
+			}
+		} else {
+			try {
+				if (blockVersion > 12) {
+					return Materials.fromString(material).parseMaterial();
+				} else {
+					return Material.valueOf(material);
+				}
+			} catch (Exception e) {
+				return Material.STONE;
+			}
+		}
+	}
 }

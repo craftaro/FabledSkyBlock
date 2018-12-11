@@ -49,6 +49,21 @@ Command:
                 Message: "&f&oOpens the Island Creator menu."
             Owner:
                 Message: "&bSkyBlock &8| &cError&8: &eYou are already an Island owner."
+        Reset:
+            Info:
+                Message: "&f&oResets your Island."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to reset your Island."
+            Confirmation:
+                Pending:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou currently have a pending confirmation. Please try again in a few seconds!"
+                Confirm:
+                    Word:
+                        Confirm: "confirm"
+                        Tutorial: "&7Click to &f&oconfirm &r&7Island reset!"
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to reset your Island. You have &c%time &eseconds to confirm."
         Delete:
             Info:
                 Message: "&f&oDeletes your Island."
@@ -730,7 +745,7 @@ Command:
                 Permission:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
-                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player_name> <size>"
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player> <size>"
                 Numerical:
                     Message: "&bSkyBlock &8| &cError&8: &eYou must enter a numerical value."
                 Size:
@@ -739,9 +754,50 @@ Command:
                     Less:
                         Message: "&bSkyBlock &8| &cError&8: &eThe size of the Island must be less than 1000."
                 Island:
-                    Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Owner:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Data:
+                        Message: "&bSkyBlock &8| &cError&8: &eThe island data for that players island does not exist."
                 Set:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the player &d%player's &eIsland size to &d%size&e."
+            AddUpgrade:
+                Info:
+                    Message: "&f&oAdd an upgrade to a players Island."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin addupgrade <player> <upgrade>"
+                Island:
+                    Owner:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Data:
+                        Message: "&bSkyBlock &8| &cError&8: &eThe island data for that players island does not exist."
+                Upgrade:
+                    Exist:
+                        Message: "&bSkyBlock &8| &cError&8: &eAn upgrade by that name does not exist."
+                    Already:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat players island already has that upgrade."
+                Added:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have &a&lADDED the upgrade '&d%upgrade&e' to the player &d%player's &eIsland."
+            RemoveUpgrade:
+                Info:
+                    Message: "&f&oRemove an upgrade to a players Island."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin removeupgrade <player> <upgrade>"
+                Island:
+                    Owner:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Data:
+                        Message: "&bSkyBlock &8| &cError&8: &eThe island data for that players island does not exist."
+                Upgrade:
+                    Exist:
+                        Message: "&bSkyBlock &8| &cError&8: &eAn upgrade by that name does not exist."
+                    Missing:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat players island does not have that upgrade."
+                Removed:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have &c&lREMOVED &ethe upgrade '&d%upgrade&e' from the player &d%player's &eIsland."
             Delete:
                 Info:
                     Message: "&f&oDelete a players Island permanently."
