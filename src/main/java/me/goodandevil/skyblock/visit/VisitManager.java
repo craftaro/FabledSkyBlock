@@ -105,24 +105,24 @@ public class VisitManager {
 		}
 	}
 
-	public void transfer(UUID uuid, UUID islandOwnerUUID) {
-		Visit visit = getIsland(islandOwnerUUID);
-		visit.setOwnerUUID(uuid);
-		visit.getLevel().setOwnerUUID(uuid);
+	public void transfer(UUID uuid1, UUID uuid2) {
+		Visit visit = getIsland(uuid1);
+		visit.setOwnerUUID(uuid2);
+		visit.getLevel().setOwnerUUID(uuid2);
 		visit.save();
 
 		File oldVisitDataFile = new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
-				islandOwnerUUID.toString() + ".yml");
+				uuid1.toString() + ".yml");
 		File newVisitDataFile = new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
-				uuid.toString() + ".yml");
+				uuid2.toString() + ".yml");
 
 		skyblock.getFileManager().unloadConfig(oldVisitDataFile);
 		skyblock.getFileManager().unloadConfig(newVisitDataFile);
 
 		oldVisitDataFile.renameTo(newVisitDataFile);
 
-		removeIsland(islandOwnerUUID);
-		addIsland(uuid, visit);
+		removeIsland(uuid1);
+		addIsland(uuid2, visit);
 	}
 
 	public void removeVisitors(Island island, VisitManager.Removal removal) {

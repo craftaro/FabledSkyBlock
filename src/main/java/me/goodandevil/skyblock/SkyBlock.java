@@ -225,6 +225,10 @@ public class SkyBlock extends JavaPlugin {
 		return scoreboardManager;
 	}
 
+	public void setScoreboardManager(ScoreboardManager scoreboardManager) {
+		this.scoreboardManager = scoreboardManager;
+	}
+
 	public InviteManager getInviteManager() {
 		return inviteManager;
 	}
@@ -251,6 +255,10 @@ public class SkyBlock extends JavaPlugin {
 
 	public GeneratorManager getGeneratorManager() {
 		return generatorManager;
+	}
+
+	public void setGeneratorManager(GeneratorManager generatorManager) {
+		this.generatorManager = generatorManager;
 	}
 
 	public LeaderboardManager getLeaderboardManager() {

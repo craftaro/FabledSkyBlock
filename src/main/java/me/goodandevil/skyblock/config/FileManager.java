@@ -271,8 +271,10 @@ public class FileManager {
 			return configLoad;
 		}
 
-		public void loadFile() {
+		public FileConfiguration loadFile() {
 			configLoad = YamlConfiguration.loadConfiguration(configFile);
+
+			return configLoad;
 		}
 	}
 }

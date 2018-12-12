@@ -206,7 +206,10 @@ public class IslandManager {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		if (configLoad.getBoolean("Island.Creation.Cooldown.Creation.Enable")) {
-			skyblock.getCreationManager().createPlayer(player, configLoad.getInt("Island.Creation.Cooldown.Time"));
+			if (!player.hasPermission("skyblock.bypass.cooldown") && !player.hasPermission("skyblock.bypass.*")
+					&& !player.hasPermission("skyblock.*")) {
+				skyblock.getCreationManager().createPlayer(player, configLoad.getInt("Island.Creation.Cooldown.Time"));
+			}
 		}
 
 		Bukkit.getServer().getPluginManager().callEvent(new IslandCreateEvent(island.getAPIWrapper(), player));
@@ -347,9 +350,10 @@ public class IslandManager {
 			fileManager.unloadConfig(newIslandDataFile);
 			oldIslandDataFile.renameTo(newIslandDataFile);
 
-			skyblock.getVisitManager().transfer(uuid, islandOwnerUUID);
-			skyblock.getBanManager().transfer(uuid, islandOwnerUUID);
-			skyblock.getInviteManager().tranfer(uuid, islandOwnerUUID);
+			skyblock.getVisitManager().transfer(islandOwnerUUID, uuid);
+			skyblock.getBanManager().transfer(islandOwnerUUID, uuid);
+			skyblock.getInviteManager().tranfer(islandOwnerUUID, uuid);
+			skyblock.getLevellingManager().transferLevelling(islandOwnerUUID, uuid);
 
 			if (configLoad.getBoolean("Island.Ownership.Transfer.Operator")) {
 				island.setRole(IslandRole.Operator, islandOwnerUUID);
@@ -418,7 +422,11 @@ public class IslandManager {
 				playerData.save();
 
 				if (configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable")) {
-					skyblock.getCreationManager().createPlayer(all, configLoad.getInt("Island.Creation.Cooldown.Time"));
+					if (!all.hasPermission("skyblock.bypass.cooldown") && !all.hasPermission("skyblock.bypass.*")
+							&& !all.hasPermission("skyblock.*")) {
+						skyblock.getCreationManager().createPlayer(all,
+								configLoad.getInt("Island.Creation.Cooldown.Time"));
+					}
 				}
 			}
 
@@ -954,6 +962,9 @@ public class IslandManager {
 						if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
 							WorldBorder.send(player, island.getBorderColor(), island.getSize() + 2.5,
 									island.getLocation(Location.World.Normal, Location.Environment.Island));
+						} else {
+							WorldBorder.send(player, null, 1.4999992E7D,
+									new org.bukkit.Location(player.getWorld(), 0, 0, 0));
 						}
 
 						giveUpgrades(player, island);

@@ -154,11 +154,15 @@ public class Biome {
 								selectedBiomeType = Biomes.ROOFED_FOREST.bukkitBiome();
 							}
 
-							biomeManager.createPlayer(player,
-									skyblock.getFileManager()
-											.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-											.getFileConfiguration().getInt("Island.Biome.Cooldown"));
-							biomeManager.setBiome(island, selectedBiomeType);
+							if (!player.hasPermission("skyblock.bypass.cooldown")
+									&& !player.hasPermission("skyblock.bypass.*")
+									&& !player.hasPermission("skyblock.*")) {
+								biomeManager.createPlayer(player,
+										skyblock.getFileManager()
+												.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+												.getFileConfiguration().getInt("Island.Biome.Cooldown"));
+								biomeManager.setBiome(island, selectedBiomeType);
+							}
 
 							island.setBiome(selectedBiomeType);
 							island.save();

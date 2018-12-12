@@ -30,7 +30,10 @@ public class GeneratorManager {
 
 	public GeneratorManager(SkyBlock skyblock) {
 		this.skyblock = skyblock;
+		registerGenerators();
+	}
 
+	public void registerGenerators() {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -59,6 +62,10 @@ public class GeneratorManager {
 						configLoad.getBoolean("Generators." + generatorList + ".Permission")));
 			}
 		}
+	}
+
+	public void unregisterGenerators() {
+		generatorStorage.clear();
 	}
 
 	public boolean isGenerator(Block block) {
@@ -196,7 +203,7 @@ public class GeneratorManager {
 	public void generateBlock(Player player, Block block) {
 		block.setType(Material.AIR);
 
-		Bukkit.getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 			@Override
 			public void run() {
 				for (int i = generatorStorage.size() - 1; i >= 0; i--) {
@@ -238,6 +245,13 @@ public class GeneratorManager {
 
 					return;
 				}
+
+				Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+					@Override
+					public void run() {
+						block.setType(Material.COBBLESTONE);
+					}
+				});
 			}
 		});
 	}

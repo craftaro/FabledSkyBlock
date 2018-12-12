@@ -78,7 +78,7 @@ Command:
                     Word:
                         Confirm: "confirm"
                         Tutorial: "&7Click to &f&oconfirm &r&7Island deletion!"
-                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to delete your Island. You have &c%time &eseconds to confirm."
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to delete your Island. You have &c%time &eseconds to confirm.   %confirm"
         Teleport:
             Info:
                 Message: "&f&oTeleport to your Island."
@@ -159,7 +159,7 @@ Command:
                     Tutorial: "&7Click to &f&o%action &r&7invite!"
                 Sender:
                     Sent:
-                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have invited the player &d%player &eto join your Island. They have &c%time &eto respond."
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have invited the player &d%player &eto join your Island. They have &c%time &eto respond.   %cancel"
                     Expired:
                         Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player &edidn't respond to your invite in time."
                     Disconnected:
@@ -511,7 +511,7 @@ Command:
                     Word:
                         Confirm: "confirm"
                         Tutorial: "&7Click to &f&oconfirm &r&7ownership assignment!"
-                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to assign ownership of the Island to the player &d%player&e. You have &c%time &eseconds to confirm."
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to assign ownership of the Island to the player &d%player&e. You have &c%time &eseconds to confirm.   %confirm"
             Password:
                 Unset:
                     Message: "&bSkyBlock &8| &cError&8: &eThe owner of the Island has not set a password."
@@ -781,7 +781,7 @@ Command:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have &a&lADDED the upgrade '&d%upgrade&e' to the player &d%player's &eIsland."
             RemoveUpgrade:
                 Info:
-                    Message: "&f&oRemove an upgrade to a players Island."
+                    Message: "&f&oRemoves an upgrade from a players Island."
                 Permission:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
