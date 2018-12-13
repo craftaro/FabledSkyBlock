@@ -263,6 +263,7 @@ public class IslandManager {
 				}
 
 				player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
+				player.setFallDistance(0.0F);
 			}
 		});
 
@@ -281,22 +282,13 @@ public class IslandManager {
 		return true;
 	}
 
-	public void giveIslandOwnership(UUID uuid) {
+	public void giveIslandOwnership(Island island, UUID uuid) {
 		FileManager fileManager = skyblock.getFileManager();
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 
-		Player targetPlayer = Bukkit.getServer().getPlayer(uuid);
-		UUID islandOwnerUUID;
+		if (island.hasRole(IslandRole.Member, uuid) || island.hasRole(IslandRole.Operator, uuid)) {
+			UUID uuid2 = island.getOwnerUUID();
 
-		if (targetPlayer == null) {
-			OfflinePlayer offlinePlayer = new OfflinePlayer(uuid);
-			islandOwnerUUID = offlinePlayer.getOwner();
-		} else {
-			islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
-		}
-
-		if (containsIsland(islandOwnerUUID)) {
-			Island island = getIsland(islandOwnerUUID);
 			island.save();
 			island.setOwnerUUID(uuid);
 
@@ -312,7 +304,7 @@ public class IslandManager {
 			}
 
 			File oldCoopDataFile = new File(new File(skyblock.getDataFolder().toString() + "/coop-data"),
-					islandOwnerUUID.toString() + ".yml");
+					uuid2.toString() + ".yml");
 			fileManager.unloadConfig(oldCoopDataFile);
 
 			if (fileManager.isFileExist(oldCoopDataFile)) {
@@ -324,7 +316,7 @@ public class IslandManager {
 			}
 
 			File oldLevelDataFile = new File(new File(skyblock.getDataFolder().toString() + "/level-data"),
-					islandOwnerUUID.toString() + ".yml");
+					uuid2.toString() + ".yml");
 			File newLevelDataFile = new File(new File(skyblock.getDataFolder().toString() + "/level-data"),
 					uuid.toString() + ".yml");
 
@@ -333,7 +325,7 @@ public class IslandManager {
 			oldLevelDataFile.renameTo(newLevelDataFile);
 
 			File oldSettingDataFile = new File(new File(skyblock.getDataFolder().toString() + "/setting-data"),
-					islandOwnerUUID.toString() + ".yml");
+					uuid2.toString() + ".yml");
 			File newSettingDataFile = new File(new File(skyblock.getDataFolder().toString() + "/setting-data"),
 					uuid.toString() + ".yml");
 
@@ -342,7 +334,7 @@ public class IslandManager {
 			oldSettingDataFile.renameTo(newSettingDataFile);
 
 			File oldIslandDataFile = new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
-					islandOwnerUUID.toString() + ".yml");
+					uuid2.toString() + ".yml");
 			File newIslandDataFile = new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
 					uuid.toString() + ".yml");
 
@@ -350,15 +342,16 @@ public class IslandManager {
 			fileManager.unloadConfig(newIslandDataFile);
 			oldIslandDataFile.renameTo(newIslandDataFile);
 
-			skyblock.getVisitManager().transfer(islandOwnerUUID, uuid);
-			skyblock.getBanManager().transfer(islandOwnerUUID, uuid);
-			skyblock.getInviteManager().tranfer(islandOwnerUUID, uuid);
-			skyblock.getLevellingManager().transferLevelling(islandOwnerUUID, uuid);
+			skyblock.getVisitManager().transfer(uuid2, uuid);
+			skyblock.getBanManager().transfer(uuid2, uuid);
+			skyblock.getInviteManager().tranfer(uuid2, uuid);
+			skyblock.getLevellingManager().transferLevelling(uuid2, uuid);
+			skyblock.getOwnershipManager().transferOwnership(uuid2, uuid);
 
 			if (configLoad.getBoolean("Island.Ownership.Transfer.Operator")) {
-				island.setRole(IslandRole.Operator, islandOwnerUUID);
+				island.setRole(IslandRole.Operator, uuid2);
 			} else {
-				island.setRole(IslandRole.Member, islandOwnerUUID);
+				island.setRole(IslandRole.Member, uuid2);
 			}
 
 			if (island.hasRole(IslandRole.Member, uuid)) {
@@ -367,7 +360,7 @@ public class IslandManager {
 				island.removeRole(IslandRole.Operator, uuid);
 			}
 
-			removeIsland(islandOwnerUUID);
+			removeIsland(uuid2);
 			islandStorage.put(uuid, island);
 
 			Bukkit.getServer().getPluginManager().callEvent(new IslandOwnershipTransferEvent(island.getAPIWrapper(),
@@ -379,7 +372,7 @@ public class IslandManager {
 			islandMembers.add(uuid);
 
 			for (UUID islandMemberList : islandMembers) {
-				targetPlayer = Bukkit.getServer().getPlayer(islandMemberList);
+				Player targetPlayer = Bukkit.getServer().getPlayer(islandMemberList);
 
 				if (targetPlayer == null) {
 					File configFile = new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
@@ -406,7 +399,11 @@ public class IslandManager {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		FileManager fileManager = skyblock.getFileManager();
 
+		skyblock.getVisitManager().deleteIsland(island.getOwnerUUID());
+		skyblock.getBanManager().deleteIsland(island.getOwnerUUID());
 		skyblock.getVisitManager().removeVisitors(island, VisitManager.Removal.Deleted);
+		skyblock.getLevellingManager().unloadLevelling(island.getOwnerUUID());
+		skyblock.getOwnershipManager().unloadOwnership(island.getOwnerUUID());
 
 		FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 				.getFileConfiguration();
@@ -657,6 +654,7 @@ public class IslandManager {
 				|| island.hasRole(IslandRole.Operator, player.getUniqueId())
 				|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 			player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Visitor));
+			player.setFallDistance(0.0F);
 		} else {
 			if (scoreboardManager != null) {
 				int islandVisitors = getVisitorsAtIsland(island).size(),
@@ -704,6 +702,7 @@ public class IslandManager {
 				@Override
 				public void run() {
 					player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Visitor));
+					player.setFallDistance(0.0F);
 				}
 			});
 
@@ -968,6 +967,16 @@ public class IslandManager {
 						}
 
 						giveUpgrades(player, island);
+
+						if (player.hasPermission("skyblock.fly") || player.hasPermission("skyblock.*")) {
+							Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									player.setAllowFlight(true);
+									player.setFlying(true);
+								}
+							});
+						}
 					}
 				}
 			}

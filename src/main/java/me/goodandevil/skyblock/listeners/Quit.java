@@ -21,6 +21,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.ownership.OwnershipManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -57,6 +58,10 @@ public class Quit implements Listener {
 				LevellingManager levellingManager = skyblock.getLevellingManager();
 				levellingManager.saveLevelling(island.getOwnerUUID());
 				levellingManager.unloadLevelling(island.getOwnerUUID());
+
+				OwnershipManager ownershipManager = skyblock.getOwnershipManager();
+				ownershipManager.saveOwnership(island.getOwnerUUID());
+				ownershipManager.unloadOwnership(island.getOwnerUUID());
 			} else if (islandMembersOnline.size() == 2) {
 				for (UUID islandMembersOnlineList : islandMembersOnline) {
 					if (!islandMembersOnlineList.equals(player.getUniqueId())) {

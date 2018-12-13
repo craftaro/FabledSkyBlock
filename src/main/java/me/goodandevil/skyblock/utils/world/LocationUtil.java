@@ -198,6 +198,7 @@ public final class LocationUtil {
 				@Override
 				public void run() {
 					player.teleport(fileManager.getLocation(config, "Location.Spawn", true));
+					player.setFallDistance(0.0F);
 				}
 			});
 		}

@@ -130,14 +130,32 @@ public class Scoreboard {
 													suffixLine = ChatColor.translateAlternateColorCodes('&',
 															"&" + suffixLine);
 												} else {
-													String[] colourCodes = prefixLine.split("&");
-													String lastColourCodeText = colourCodes[colourCodes.length - 1];
-													String lastColourCodeValue = lastColourCodeText.substring(0,
-															Math.min(lastColourCodeText.length(), 1));
+													String lastColorCodes;
+
+													if (prefixLine.contains("&")) {
+														String[] colorCodes = prefixLine.split("&");
+														String lastColorCodeText = colorCodes[colorCodes.length - 1];
+														lastColorCodes = "&" + lastColorCodeText.substring(0,
+																Math.min(lastColorCodeText.length(), 1));
+
+														if ((colorCodes.length >= 2) && (lastColorCodes.equals("&l")
+																|| lastColorCodes.equals("&m")
+																|| lastColorCodes.equals("&n")
+																|| lastColorCodes.equals("&o"))) {
+															lastColorCodeText = colorCodes[colorCodes.length - 2];
+															lastColorCodes = "&"
+																	+ lastColorCodeText.substring(0,
+																			Math.min(lastColorCodeText.length(), 1))
+																	+ lastColorCodes;
+														}
+													} else {
+														lastColorCodes = "&f";
+													}
+
 													prefixLine = ChatColor.translateAlternateColorCodes('&',
 															prefixLine);
 													suffixLine = ChatColor.translateAlternateColorCodes('&',
-															"&" + lastColourCodeValue + suffixLine);
+															lastColorCodes + suffixLine);
 												}
 
 												scoreboard.getTeam(ranStr + i1).setPrefix(prefixLine);

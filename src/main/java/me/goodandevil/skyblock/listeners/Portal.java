@@ -58,6 +58,8 @@ public class Portal implements Listener {
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
 
+					player.setFallDistance(0.0F);
+
 					break;
 				}
 			}
@@ -80,6 +82,8 @@ public class Portal implements Listener {
 										.getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
+
+					player.setFallDistance(0.0F);
 
 					break;
 				}

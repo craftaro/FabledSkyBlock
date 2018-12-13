@@ -88,6 +88,7 @@ public class Join implements Listener {
 				Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
 
 				skyblock.getLevellingManager().loadLevelling(island.getOwnerUUID());
+				skyblock.getOwnershipManager().loadOwnership(island.getOwnerUUID());
 
 				if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
 					scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',

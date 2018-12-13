@@ -23,6 +23,7 @@ import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.ownership.OwnershipManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
@@ -45,6 +46,7 @@ public class ConfirmCommand extends SubCommand {
 	public void onCommandByPlayer(Player player, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		OwnershipManager ownershipManager = skyblock.getOwnershipManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -102,7 +104,10 @@ public class ConfirmCommand extends SubCommand {
 									playerData.setConfirmation(null);
 									playerData.setConfirmationTime(0);
 
-									islandManager.giveIslandOwnership(targetPlayerUUID);
+									islandManager.giveIslandOwnership(island, targetPlayerUUID);
+
+									ownershipManager.createOwnership(island.getOwnerUUID());
+									ownershipManager.loadOwnership(island.getOwnerUUID());
 								} else {
 									messageManager.sendMessage(player, configLoad
 											.getString("Command.Island.Confirmation.Ownership.Member.Message"));
@@ -164,9 +169,6 @@ public class ConfirmCommand extends SubCommand {
 								}
 
 								islandManager.deleteIsland(island);
-
-								skyblock.getVisitManager().deleteIsland(player.getUniqueId());
-								skyblock.getBanManager().deleteIsland(player.getUniqueId());
 
 								messageManager.sendMessage(player,
 										configLoad.getString("Command.Island.Confirmation.Deletion.Sender.Message"));

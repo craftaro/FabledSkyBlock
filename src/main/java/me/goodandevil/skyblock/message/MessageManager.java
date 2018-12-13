@@ -39,6 +39,6 @@ public class MessageManager {
 					.replace("clr", "&");
 		}
 
-		return message;
+		return message.replace("\n", System.getProperty("line.separator"));
 	}
 }

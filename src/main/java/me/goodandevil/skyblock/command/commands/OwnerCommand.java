@@ -19,9 +19,11 @@ import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.menus.Ownership;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.ownership.OwnershipManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
+import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
@@ -41,6 +43,7 @@ public class OwnerCommand extends SubCommand {
 
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
+		OwnershipManager ownershipManager = skyblock.getOwnershipManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -93,6 +96,37 @@ public class OwnerCommand extends SubCommand {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Ownership.Yourself.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						} else if (ownershipManager.hasOwnership(island.getOwnerUUID())) {
+							me.goodandevil.skyblock.ownership.Ownership ownership = ownershipManager
+									.getOwnership(island.getOwnerUUID());
+							long[] durationTime = NumberUtil.getDuration(ownership.getTime());
+
+							if (ownership.getTime() >= 3600) {
+								messageManager.sendMessage(player, configLoad
+										.getString("Command.Island.Ownership.Cooldown.Message")
+										.replace("%time", durationTime[1] + " "
+												+ configLoad.getString("Command.Island.Ownership.Cooldown.Word.Minute")
+												+ " " + durationTime[2] + " "
+												+ configLoad.getString("Command.Island.Ownership.Cooldown.Word.Minute")
+												+ " " + durationTime[3] + " " + configLoad
+														.getString("Command.Island.Ownership.Cooldown.Word.Second")));
+							} else if (ownership.getTime() >= 60) {
+								messageManager.sendMessage(player, configLoad
+										.getString("Command.Island.Ownership.Cooldown.Message")
+										.replace("%time", durationTime[2] + " "
+												+ configLoad.getString("Command.Island.Ownership.Cooldown.Word.Minute")
+												+ " " + durationTime[3] + " " + configLoad
+														.getString("Command.Island.Ownership.Cooldown.Word.Second")));
+							} else {
+								messageManager.sendMessage(player,
+										configLoad.getString("Command.Island.Ownership.Cooldown.Message")
+												.replace("%time", ownership.getTime() + " " + configLoad
+														.getString("Command.Island.Ownership.Cooldown.Word.Second")));
+							}
+
+							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+							return;
 						} else {
 							int confirmationTime = fileManager
 									.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
@@ -171,7 +205,10 @@ public class OwnerCommand extends SubCommand {
 									configLoad.getString("Command.Island.Ownership.Assigned.Sender.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
 
-							islandManager.giveIslandOwnership(player.getUniqueId());
+							islandManager.giveIslandOwnership(island, player.getUniqueId());
+
+							ownershipManager.createOwnership(island.getOwnerUUID());
+							ownershipManager.loadOwnership(island.getOwnerUUID());
 						} else {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Ownership.Password.Incorrect.Message"));

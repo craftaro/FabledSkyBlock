@@ -129,6 +129,7 @@ public class TeleportCommand extends SubCommand {
 				@Override
 				public void run() {
 					player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
+					player.setFallDistance(0.0F);
 				}
 			});
 		} else {

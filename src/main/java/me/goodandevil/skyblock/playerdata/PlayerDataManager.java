@@ -188,6 +188,11 @@ public class PlayerDataManager {
 
 								islandManager.giveUpgrades(player, island);
 
+								if (player.hasPermission("skyblock.fly") || player.hasPermission("skyblock.*")) {
+									player.setAllowFlight(true);
+									player.setFlying(true);
+								}
+
 								return;
 							} else if (island.isOpen() || island.isCoopPlayer(player.getUniqueId())) {
 								if (!island.isOpen() && island.isCoopPlayer(player.getUniqueId())) {
@@ -210,6 +215,11 @@ public class PlayerDataManager {
 								}
 
 								islandManager.giveUpgrades(player, island);
+
+								if (player.hasPermission("skyblock.fly") || player.hasPermission("skyblock.*")) {
+									player.setAllowFlight(true);
+									player.setFlying(true);
+								}
 
 								ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 
@@ -318,6 +328,12 @@ public class PlayerDataManager {
 										}
 
 										islandManager.giveUpgrades(player, island);
+
+										if (player.hasPermission("skyblock.fly")
+												|| player.hasPermission("skyblock.*")) {
+											player.setAllowFlight(true);
+											player.setFlying(true);
+										}
 									}
 
 									return;

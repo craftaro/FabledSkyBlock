@@ -79,6 +79,7 @@ public class Move implements Listener {
 														me.goodandevil.skyblock.island.Location.Environment.Main));
 									}
 
+									player.setFallDistance(0.0F);
 									soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 
 									return;
@@ -145,6 +146,7 @@ public class Move implements Listener {
 														me.goodandevil.skyblock.island.Location.Environment.Main));
 											}
 
+											player.setFallDistance(0.0F);
 											soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F,
 													1.0F);
 										}
@@ -186,6 +188,7 @@ public class Move implements Listener {
 													me.goodandevil.skyblock.island.Location.Environment.Main));
 										}
 
+										player.setFallDistance(0.0F);
 										soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F,
 												1.0F);
 									}
@@ -201,6 +204,7 @@ public class Move implements Listener {
 												island.getRadius() + 2)) {
 									player.teleport(player.getLocation()
 											.add(from.toVector().subtract(to.toVector()).normalize().multiply(2.0D)));
+									player.setFallDistance(0.0F);
 									soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 								} else {
 									if (player.getWorld().getName()
@@ -216,6 +220,7 @@ public class Move implements Listener {
 														me.goodandevil.skyblock.island.Location.Environment.Main));
 									}
 
+									player.setFallDistance(0.0F);
 									messageManager.sendMessage(player, skyblock.getFileManager()
 											.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 											.getFileConfiguration().getString("Island.WorldBorder.Outside.Message"));

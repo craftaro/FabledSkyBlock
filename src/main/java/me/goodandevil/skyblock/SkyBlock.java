@@ -42,6 +42,7 @@ import me.goodandevil.skyblock.menus.admin.Creator;
 import me.goodandevil.skyblock.menus.admin.Generator;
 import me.goodandevil.skyblock.menus.admin.Levelling;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.ownership.OwnershipManager;
 import me.goodandevil.skyblock.placeholder.PlaceholderManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.playtime.PlaytimeTask;
@@ -79,6 +80,7 @@ public class SkyBlock extends JavaPlugin {
 	private MessageManager messageManager;
 	private EconomyManager economyManager;
 	private HologramManager hologramManager;
+	private OwnershipManager ownershipManager;
 
 	@Override
 	public void onEnable() {
@@ -118,6 +120,7 @@ public class SkyBlock extends JavaPlugin {
 		messageManager = new MessageManager(this);
 		economyManager = new EconomyManager();
 		hologramManager = new HologramManager(this);
+		ownershipManager = new OwnershipManager(this);
 
 		new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
 		new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -182,6 +185,10 @@ public class SkyBlock extends JavaPlugin {
 
 		if (this.hologramManager != null) {
 			this.hologramManager.onDisable();
+		}
+
+		if (this.ownershipManager != null) {
+			this.ownershipManager.onDisable();
 		}
 	}
 
@@ -279,6 +286,10 @@ public class SkyBlock extends JavaPlugin {
 
 	public HologramManager getHologramManager() {
 		return hologramManager;
+	}
+
+	public OwnershipManager getOwnershipManager() {
+		return ownershipManager;
 	}
 
 	@Override

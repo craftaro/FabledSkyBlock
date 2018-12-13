@@ -98,13 +98,10 @@ public class SkyBlockAPI {
 	/**
 	 * Gives Island ownership to a player of their Island
 	 */
-	public static void giveOwnership(Player player) {
+	public static void giveOwnership(Island island, OfflinePlayer player) {
+		Preconditions.checkArgument(player != null, "Cannot give ownership to null island");
 		Preconditions.checkArgument(player != null, "Cannot give ownership to null player");
-		Island island = getIsland(player);
-
-		if (island != null && island.getRole(player) != IslandRole.OWNER) {
-			implementation.getIslandManager().giveIslandOwnership(player.getUniqueId());
-		}
+		implementation.getIslandManager().giveIslandOwnership(island.getIsland(), player.getUniqueId());
 	}
 
 	/**

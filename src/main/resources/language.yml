@@ -522,6 +522,12 @@ Command:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have assigned yourself ownership of the Island."
                 Broadcast:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe ownership of the Island has been assigned to the player &a%player&e!"
+            Cooldown:
+                Word:
+                    Hour: "hour(s)"
+                    Minute: "minute(s)"
+                    Second: "second(s)"
+                Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore transferring island ownership."
         Confirmation:
             Info:
                 Message: "&f&oConfirmation for permanent operations."
@@ -2377,6 +2383,8 @@ Menu:
     Ownership:
         Title: "&8Island Ownership"
         Item:
+            Exit:
+                Displayname: "&cExit Island Ownership"
             Original:
                 Displayname: "&bOriginal Owner"
                 Lore:

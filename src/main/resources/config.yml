@@ -171,6 +171,8 @@ Island:
             # When ownership has been assigned to a player the Island password will
             # be reset.
             Reset: true
+        # Time until Island Ownership reassign expires
+        Cooldown: 60
     Void:
         Teleport:
             # Prevents players from being killed by the Void when at an Island.
