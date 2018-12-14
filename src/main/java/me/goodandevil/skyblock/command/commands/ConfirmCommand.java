@@ -1,8 +1,6 @@
 package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -117,62 +115,65 @@ public class ConfirmCommand extends SubCommand {
 								playerData.setConfirmation(null);
 								playerData.setConfirmationTime(0);
 							} else if (confirmation == Confirmation.Deletion) {
-								playerData.setConfirmation(null);
-								playerData.setConfirmationTime(0);
+								if (island.isOpen()) {
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Confirmation.Deletion.Open.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+								} else {
+									playerData.setConfirmation(null);
+									playerData.setConfirmationTime(0);
 
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Confirmation.Confirmed.Message"));
+									islandManager.deleteIsland(island);
 
-								boolean hasSpawnPoint = skyblock.getFileManager()
-										.getConfig(new File(skyblock.getDataFolder(), "locations.yml"))
-										.getFileConfiguration().getString("Location.Spawn") != null;
-								List<UUID> islandMembers = new ArrayList<>();
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Confirmation.Confirmed.Message"));
 
-								for (Player all : Bukkit.getOnlinePlayers()) {
-									if (island.hasRole(IslandRole.Member, all.getUniqueId())
-											|| island.hasRole(IslandRole.Operator, all.getUniqueId())
-											|| island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-										if (scoreboardManager != null) {
-											Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-											scoreboard.cancel();
-											scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-													configLoad.getString("Scoreboard.Tutorial.Displayname")));
-											scoreboard.setDisplayList(
-													configLoad.getStringList("Scoreboard.Tutorial.Displaylines"));
-											scoreboard.run();
-										}
+									boolean hasSpawnPoint = skyblock.getFileManager()
+											.getConfig(new File(skyblock.getDataFolder(), "locations.yml"))
+											.getFileConfiguration().getString("Location.Spawn") != null;
 
-										for (Location.World worldList : Location.World.values()) {
-											if (LocationUtil.isLocationAtLocationRadius(all.getLocation(),
-													island.getLocation(worldList, Location.Environment.Island),
-													island.getRadius())) {
-												if (hasSpawnPoint) {
-													LocationUtil.teleportPlayerToSpawn(all);
-												} else {
-													Bukkit.getServer().getLogger().log(Level.WARNING,
-															"SkyBlock | Error: A spawn point hasn't been set.");
+									for (Player all : Bukkit.getOnlinePlayers()) {
+										if (island.hasRole(IslandRole.Member, all.getUniqueId())
+												|| island.hasRole(IslandRole.Operator, all.getUniqueId())
+												|| island.hasRole(IslandRole.Owner, all.getUniqueId())) {
+											if (scoreboardManager != null) {
+												Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
+												scoreboard.cancel();
+												scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+														configLoad.getString("Scoreboard.Tutorial.Displayname")));
+												scoreboard.setDisplayList(
+														configLoad.getStringList("Scoreboard.Tutorial.Displaylines"));
+												scoreboard.run();
+											}
+
+											for (Location.World worldList : Location.World.values()) {
+												if (LocationUtil.isLocationAtLocationRadius(all.getLocation(),
+														island.getLocation(worldList, Location.Environment.Island),
+														island.getRadius())) {
+													if (hasSpawnPoint) {
+														LocationUtil.teleportPlayerToSpawn(all);
+													} else {
+														Bukkit.getServer().getLogger().log(Level.WARNING,
+																"SkyBlock | Error: A spawn point hasn't been set.");
+													}
+
+													break;
 												}
+											}
 
-												break;
+											if (!island.hasRole(IslandRole.Owner, all.getUniqueId())) {
+												all.sendMessage(ChatColor.translateAlternateColorCodes('&',
+														configLoad.getString(
+																"Command.Island.Confirmation.Deletion.Broadcast.Message")));
+												soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 											}
 										}
-
-										if (!island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-											all.sendMessage(
-													ChatColor.translateAlternateColorCodes('&', configLoad.getString(
-															"Command.Island.Confirmation.Deletion.Broadcast.Message")));
-											soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
-										}
-
-										islandMembers.add(all.getUniqueId());
 									}
+
+									messageManager.sendMessage(player, configLoad
+											.getString("Command.Island.Confirmation.Deletion.Sender.Message"));
+									soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 								}
-
-								islandManager.deleteIsland(island);
-
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Confirmation.Deletion.Sender.Message"));
-								soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 							}
 						} else {
 							messageManager.sendMessage(player,

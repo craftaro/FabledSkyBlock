@@ -3,11 +3,15 @@ package me.goodandevil.skyblock.utils.world;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -201,6 +205,51 @@ public final class LocationUtil {
 					player.setFallDistance(0.0F);
 				}
 			});
+		}
+	}
+
+	public static Location getRandomLocation(World world, int xRange, int zRange, boolean loadChunk,
+			boolean ignoreLiquid) {
+		Random rnd = new Random();
+
+		int rndX = (int) rnd.nextInt(xRange);
+		int rndZ = (int) rnd.nextInt(zRange);
+
+		if (loadChunk) {
+			Chunk chunk = world.getChunkAt(new Location(world, rndX, 10, rndZ));
+			world.loadChunk(chunk);
+		}
+
+		double rndY = -1;
+
+		if (world.getEnvironment() == Environment.NETHER) {
+			for (int i = 120; i > 0; i--) {
+				Location rndLoc = new Location(world, rndX, i, rndZ);
+
+				if (rndLoc.getBlock().getType() != Material.AIR
+						&& rndLoc.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR
+						&& rndLoc.clone().add(0.0D, 2.0D, 0.0D).getBlock().getType() == Material.AIR
+						&& rndLoc.clone().add(0.0D, 3.0D, 0.0D).getBlock().getType() == Material.AIR
+						&& rndLoc.clone().add(0.0D, 4.0D, 0.0D).getBlock().getType() == Material.AIR) {
+					rndY = i;
+
+					break;
+				}
+			}
+
+			if (rndY == -1) {
+				return getRandomLocation(world, xRange, zRange, loadChunk, ignoreLiquid);
+			}
+		} else {
+			rndY = world.getHighestBlockYAt(rndX, rndZ);
+		}
+
+		Location rndLoc = new Location(world, rndX, rndY, rndZ);
+
+		if (ignoreLiquid && rndLoc.getBlock().isLiquid() || rndLoc.getBlock().getRelative(BlockFace.DOWN).isLiquid()) {
+			return getRandomLocation(world, xRange, zRange, loadChunk, ignoreLiquid);
+		} else {
+			return rndLoc;
 		}
 	}
 }

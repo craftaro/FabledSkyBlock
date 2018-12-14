@@ -295,13 +295,14 @@ public class Settings {
 				nInv.addItemStack(createItem(role, "Fishing", new ItemStack(Material.FISHING_ROD)), 42);
 				nInv.addItemStack(createItem(role, "DropperDispenser", new ItemStack(Material.DISPENSER)), 43);
 				nInv.addItemStack(createItem(role, "SpawnEgg", new ItemStack(Material.EGG)), 44);
+				nInv.addItemStack(createItem(role, "HangingDestroy", new ItemStack(Material.ITEM_FRAME)), 45);
 				nInv.addItemStack(createItem(role, "Cake", new ItemStack(Material.CAKE)), 46);
 				nInv.addItemStack(createItem(role, "DragonEggUse", new ItemStack(Material.DRAGON_EGG)), 47);
 				nInv.addItemStack(createItem(role, "MinecartBoat", new ItemStack(Material.MINECART)), 48);
-				nInv.addItemStack(createItem(role, "Portal", new ItemStack(Material.ENDER_PEARL)), 49);
-				nInv.addItemStack(createItem(role, "Hopper", new ItemStack(Material.HOPPER)), 50);
-				nInv.addItemStack(createItem(role, "ArmorStandPlacement", new ItemStack(Material.ARMOR_STAND)), 51);
-				nInv.addItemStack(createItem(role, "ExperienceOrbPickup", Materials.EXPERIENCE_BOTTLE.parseItem()), 52);
+				nInv.addItemStack(createItem(role, "Portal", new ItemStack(Material.ENDER_PEARL)), 50);
+				nInv.addItemStack(createItem(role, "Hopper", new ItemStack(Material.HOPPER)), 51);
+				nInv.addItemStack(createItem(role, "EntityPlacement", new ItemStack(Material.ARMOR_STAND)), 52);
+				nInv.addItemStack(createItem(role, "ExperienceOrbPickup", Materials.EXPERIENCE_BOTTLE.parseItem()), 53);
 
 				nInv.setRows(6);
 			} else if (role == me.goodandevil.skyblock.island.IslandRole.Operator) {

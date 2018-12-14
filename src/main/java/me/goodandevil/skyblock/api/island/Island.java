@@ -417,6 +417,28 @@ public class Island {
 	}
 
 	/**
+	 * Set the Structure for the Island
+	 */
+	public void setStructure(String structure) {
+		Preconditions.checkArgument(structure != null, "Cannot set structure to null structure");
+		this.handle.setStructure(structure);
+	}
+
+	/**
+	 * @return true of conditions met, false otherwise
+	 */
+	public boolean hasStructure() {
+		return this.handle.hasStructure();
+	}
+
+	/**
+	 * @return The Structure name for the Island
+	 */
+	public String getStructure() {
+		return this.handle.getStructure();
+	}
+
+	/**
 	 * @return The Visit implementation for the Island
 	 */
 	public Visit getVisit() {

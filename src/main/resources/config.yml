@@ -32,12 +32,6 @@ Island:
             Deletion:
                 Enable: true
             Time: 60
-        # Commands that are executed either by the player or the console on Island creation.
-        # [!] To add commands, create a list and remove the open and closed brackets.
-        #     Use the variable %player to get the players name.
-        Commands:
-            Player: []
-            Console: []
     World:
         # [!] The Island height is 72 blocks.
         #     Delete the Island world when changing the liquid option.
@@ -177,6 +171,8 @@ Island:
         Teleport:
             # Prevents players from being killed by the Void when at an Island.
             Enable: true
+            # When disabled, players will teleport the the main spawn point rather than the Island.
+            Island: true
             # The Y position that the player is teleported when reached.
             Offset: 30
     Obsidian:
@@ -211,6 +207,11 @@ Island:
         # When disabled, the hunger setting will be removed from the Island Settings menu.
         Hunger:
             Enable: false
+    Portal:
+        # When disabled, when a player enters a portal, they will teleport to the nether or
+        # end world rather than the island world.
+        # [!] Recommend to keep this enabled to prevent performance drop with chunk loading.
+        Island: true
     Admin:
         Structure:
             # Item Material used to select positions for a structure.

@@ -244,6 +244,8 @@ public class Leaderboard {
 
 					nInv.addItem(nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
 							configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Displayname")
+									.replace("%owner",
+											playerName)
 									.replace("%position", "" + (leaderboard.getPosition() + 1)),
 							itemLore,
 							nInv.createItemLoreVariable(new String[] { "%position#" + (leaderboard.getPosition() + 1),

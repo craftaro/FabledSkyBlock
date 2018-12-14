@@ -47,7 +47,6 @@ import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.upgrade.UpgradeManager;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
-import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
@@ -156,13 +155,21 @@ public class IslandManager {
 
 		Island island = new Island(player.getUniqueId(), prepareNextAvailableLocation(Location.World.Normal),
 				prepareNextAvailableLocation(Location.World.Nether));
+		island.setStructure(structure.getName());
 		islandStorage.put(player.getUniqueId(), island);
 
 		try {
-			File structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-					structure.getFile());
-
 			for (World worldList : World.values()) {
+				File structureFile;
+
+				if (worldList == World.Normal) {
+					structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+							structure.getOverworldFile());
+				} else {
+					structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+							structure.getNetherFile());
+				}
+
 				Float[] direction = StructureUtil.pasteStructure(StructureUtil.loadStructure(structureFile),
 						island.getLocation(worldList, Location.Environment.Island), BlockDegreesType.ROTATE_360);
 				org.bukkit.Location spawnLocation = island.getLocation(worldList, Location.Environment.Main).clone();
@@ -237,28 +244,10 @@ public class IslandManager {
 		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 			@Override
 			public void run() {
-				Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-				FileConfiguration configLoad = config.getFileConfiguration();
-
-				if (configLoad.getString("Island.Creation.Commands.Player") != null) {
-					List<String> commands = configLoad.getStringList("Island.Creation.Commands.Player");
-
-					if (commands != null) {
-						for (String commandList : commands) {
-							Bukkit.getServer().dispatchCommand(player,
-									commandList.replace("%player", player.getName()));
-						}
-					}
-				}
-
-				if (configLoad.getString("Island.Creation.Commands.Console") != null) {
-					List<String> commands = configLoad.getStringList("Island.Creation.Commands.Console");
-
-					if (commands != null) {
-						for (String commandList : commands) {
-							Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-									commandList.replace("%player", player.getName()));
-						}
+				if (structure.getCommands() != null) {
+					for (String commandList : structure.getCommands()) {
+						Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(),
+								commandList.replace("%player", player.getName()));
 					}
 				}
 
@@ -861,12 +850,6 @@ public class IslandManager {
 		return false;
 	}
 
-	public void setSpawnProtection(org.bukkit.Location location) {
-		location.getBlock().setType(Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial());
-		location.clone().add(0.0D, 1.0D, 0.0D).getBlock()
-				.setType(Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial());
-	}
-
 	public void removeSpawnProtection(org.bukkit.Location location) {
 		location.getBlock().setType(Material.AIR);
 		location.clone().add(0.0D, 1.0D, 0.0D).getBlock().setType(Material.AIR);
@@ -1024,10 +1007,10 @@ public class IslandManager {
 		}
 	}
 
-	public void removeUpgrades(Player player) {
+	public void removeUpgrades(Player player, boolean bypassIsland) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 
-		if (playerDataManager.hasPlayerData(player)) {
+		if (!bypassIsland && playerDataManager.hasPlayerData(player)) {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
 
 			if (playerData.getIsland() != null) {

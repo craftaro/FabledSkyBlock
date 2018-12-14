@@ -179,6 +179,14 @@ public class Island {
 
 				islandSettings.put(roleList, settings);
 			}
+
+			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					islandManager.removeSpawnProtection(islandNormalLocation);
+					islandManager.removeSpawnProtection(islandNetherLocation);
+				}
+			});
 		} else {
 			islandLocations.add(new Location(Location.World.Normal, Location.Environment.Main,
 					islandNormalLocation.clone().add(0.5D, 0.0D, 0.5D)));
@@ -237,8 +245,6 @@ public class Island {
 					@Override
 					public void run() {
 						islandNormalLocation.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().setType(Material.STONE);
-						islandManager.setSpawnProtection(islandNormalLocation);
-						islandManager.setSpawnProtection(islandNetherLocation);
 					}
 				});
 			}

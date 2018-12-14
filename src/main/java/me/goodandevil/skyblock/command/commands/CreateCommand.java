@@ -60,9 +60,19 @@ public class CreateCommand extends SubCommand {
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 					return;
-				} else if (!fileManager.isFileExist(new File(
-						new File(skyblock.getDataFolder().toString() + "/structures"), structures.get(0).getFile()))) {
-					messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.File.Message"));
+				} else if (!fileManager
+						.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+								structures.get(0).getOverworldFile()))) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				} else if (!fileManager
+						.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+								structures.get(0).getNetherFile()))) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 					return;

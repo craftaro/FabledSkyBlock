@@ -547,6 +547,8 @@ Command:
             Deletion:
                 Sender:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou are no longer an Island owner."
+                Open:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must close your island before deleting it."
                 Broadcast:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe Island owner has disbanded the Island."
             Confirmed:
@@ -721,8 +723,6 @@ Command:
                     Message: "&f&oSets the spawn point to your location."
                 Permission:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
-                World:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot set the spawn point in an Island world."
                 Set:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe spawn point has been set to your location."
             SetHologram:
@@ -846,7 +846,10 @@ Island:
             Permission:
                 Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to use that Structure."
             File:
-                Message: "&bSkyBlock &8| &cError&8: &eThe File for that Structure does not exist."
+                Overworld:
+                    Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the overworld does not exist."
+                Nether:
+                    Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the nether does not exist."
             Cooldown:
                 Word:
                     Minute: "minute(s)"
@@ -890,6 +893,9 @@ Island:
             Signature:
                 Disabled:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to use that feature."
+    Portal:
+        Destination:
+            Message: "&bSkyBlock &8| &cError&8: &eThere is no destination to travel to going through that portal."
     World:
         Nether:
             Message: "&bSkyBlock &8| &aInfo&8: &eYou have been teleported out of the nether because the nether is disabled."
@@ -2108,6 +2114,8 @@ Menu:
                         Displayname: "&aDropper/Dispenser Use"
                     SpawnEgg:
                         Displayname: "&aSpawn Eggs"
+                    HangingDestroy:
+                        Displayname: "&aHanging Destroy"
                     Cake:
                         Displayname: "&aCake Consumption"
                     DragonEggUse:
@@ -2118,8 +2126,8 @@ Menu:
                         Displayname: "&aPortal Use"
                     Hopper:
                         Displayname: "&aHopper Use"
-                    ArmorStandPlacement:
-                        Displayname: "&aArmorStand Placement"
+                    EntityPlacement:
+                        Displayname: "&aEntity Placement"
                     ExperienceOrbPickup:
                         Displayname: "&aExperience Orb Pickup"
     Information:
@@ -2745,23 +2753,56 @@ Menu:
                             Enter: "Enter file name"
                         Displayname: "&aStructure File"
                         Lore:
-                        - "&7File&8:"
-                        - "&f&o%file"
+                        - "&7Overworld File&8:"
+                        - "&f&o%overworld_file"
                         - ""
-                        - "&eClick to set file!"
+                        - "&7Nether File&8:"
+                        - "&f&o%nether_file"
+                        - ""
+                        - "&eLeft-Click to set overworld file!"
+                        - "&eRight-Click to set nether file!"
                     Item:
                         Displayname: "&aItem"
                         Lore:
                         - "&7Material&8:"
                         - "&f&o%material"
                         - ""
-                        - "&7When clicked, select"
-                        - "&7an item in your"
-                        - "&7inventory or click"
-                        - "&7this item again to"
-                        - "&7cancel."
+                        - "&c[!] When clicked,"
+                        - "&cselect an item in"
+                        - "&cyour inventory or"
+                        - "&cclick this item"
+                        - "&cagain to cancel."
                         - ""
                         - "&eClick to set item!"
+                    Commands:
+                        Word:
+                            Enter: "Enter command"
+                        Displayname: "&aCommands"
+                        Unset:
+                            Lore:
+                            - "&7Commands&8:"
+                            - "%commands"
+                            - ""
+                            - "&c[!] Commands performed on"
+                            - "&cisland creation by the"
+                            - "&cconsole."
+                            - ""
+                            - "&c[!] Use %player for player name."
+                            - ""
+                            - "&eClick to add a command!"
+                        Set:
+                            Lore:
+                            - "&7Commands&8:"
+                            - "%commands"
+                            - ""
+                            - "&c[!] Commands performed on"
+                            - "&cisland creation by the"
+                            - "&cconsole."
+                            - ""
+                            - "&c[!] Use %player for player name."
+                            - ""
+                            - "&eLeft-Click to add a command!"
+                            - "&eRight-click to remove a command!"
         Upgrade:
             Upgrades:
                 Title: "&8Upgrade Editor"
@@ -3180,6 +3221,8 @@ Menu:
                             Displayname: "&aDropper/Dispenser Use"
                         SpawnEgg:
                             Displayname: "&aSpawn Eggs"
+                        HangingDestroy:
+                            Displayname: "&aHanging Destroy"
                         Cake:
                             Displayname: "&aCake Consumption"
                         DragonEggUse:
@@ -3190,7 +3233,7 @@ Menu:
                             Displayname: "&aPortal Use"
                         Hopper:
                             Displayname: "&aHopper Use"
-                        ArmorStandPlacement:
-                            Displayname: "&aArmorStand Placement"
+                        EntityPlacement:
+                            Displayname: "&aEntity Placement"
                         ExperienceOrbPickup:
                             Displayname: "&aExperience Orb Pickup"

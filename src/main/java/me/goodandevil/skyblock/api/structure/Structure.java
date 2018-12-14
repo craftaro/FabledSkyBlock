@@ -12,9 +12,13 @@ public interface Structure {
 
 	public void setMaterials(Materials materials);
 
-	public String getFile();
+	public String getOverworldFile();
 
-	public void setFile(String file);
+	public String getNetherFile();
+
+	public void setOverworldFile(String file);
+
+	public void setNetherFile(String file);
 
 	public String getDisplayname();
 
@@ -31,4 +35,10 @@ public interface Structure {
 	public void addLine(String line);
 
 	public void removeLine(int index);
+
+	public List<String> getCommands();
+
+	public void addCommand(String command);
+
+	public void removeCommand(int index);
 }

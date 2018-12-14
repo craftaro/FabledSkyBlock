@@ -129,7 +129,6 @@ public class SetSpawnCommand extends SubCommand {
 
 													islandManager.removeSpawnProtection(
 															island.getLocation(worldList, locationEnvironment));
-													islandManager.setSpawnProtection(location);
 												}
 											}.runTask(skyblock);
 										} else {

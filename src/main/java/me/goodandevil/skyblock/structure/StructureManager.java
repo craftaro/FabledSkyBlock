@@ -33,18 +33,46 @@ public class StructureManager {
 					}
 				}
 
+				String structureFile = null, overworldFile = null, netherFile = null;
+
+				if (configLoad.getString("Structures." + structureList + ".File.Overworld") == null
+						&& configLoad.getString("Structures." + structureList + ".File.Nether") == null) {
+					if (configLoad.getString("Structures." + structureList + ".File") != null) {
+						structureFile = configLoad.getString("Structures." + structureList + ".File");
+						overworldFile = structureFile;
+						netherFile = structureFile;
+					}
+				} else {
+					if (configLoad.getString("Structures." + structureList + ".File.Overworld") != null) {
+						overworldFile = configLoad.getString("Structures." + structureList + ".File.Overworld");
+					}
+
+					if (configLoad.getString("Structures." + structureList + ".File.Nether") == null
+							&& overworldFile != null) {
+						netherFile = overworldFile;
+					} else {
+						netherFile = configLoad.getString("Structures." + structureList + ".File.Nether");
+					}
+
+					if (overworldFile == null && netherFile != null) {
+						overworldFile = netherFile;
+					}
+				}
+
 				structureStorage.add(new Structure(configLoad.getString("Structures." + structureList + ".Name"),
-						materials, configLoad.getString("Structures." + structureList + ".File"),
+						materials, overworldFile, netherFile,
 						configLoad.getString("Structures." + structureList + ".Displayname"),
 						configLoad.getBoolean("Structures." + structureList + ".Permission"),
-						configLoad.getStringList("Structures." + structureList + ".Description")));
+						configLoad.getStringList("Structures." + structureList + ".Description"),
+						configLoad.getStringList("Structures." + structureList + ".Commands")));
 			}
 		}
 	}
 
-	public void addStructure(String name, Materials materials, String fileName, String displayName, boolean permission,
-			List<String> description) {
-		structureStorage.add(new Structure(name, materials, fileName, displayName, permission, description));
+	public void addStructure(String name, Materials materials, String overworldFile, String netherFile,
+			String displayName, boolean permission, List<String> description, List<String> commands) {
+		structureStorage.add(new Structure(name, materials, overworldFile, netherFile, displayName, permission,
+				description, commands));
 	}
 
 	public void removeStructure(Structure structure) {

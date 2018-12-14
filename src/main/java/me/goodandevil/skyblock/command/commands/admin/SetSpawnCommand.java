@@ -2,7 +2,6 @@ package me.goodandevil.skyblock.command.commands.admin;
 
 import java.io.File;
 
-import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -13,7 +12,6 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -38,18 +36,6 @@ public class SetSpawnCommand extends SubCommand {
 
 		if (player.hasPermission("skyblock.admin.setspawn") || player.hasPermission("skyblock.admin.*")
 				|| player.hasPermission("skyblock.*")) {
-			for (Location.World worldList : Location.World.values()) {
-				World world = skyblock.getWorldManager().getWorld(worldList);
-
-				if (world.getName().equals(player.getWorld().getName())) {
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Admin.SetSpawn.World.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-					return;
-				}
-			}
-
 			fileManager.setLocation(fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")),
 					"Location.Spawn", player.getLocation(), true);
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSpawn.Set.Message"));

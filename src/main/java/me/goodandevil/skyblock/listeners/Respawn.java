@@ -85,10 +85,10 @@ public class Respawn implements Listener {
 							"SkyBlock | Error: A spawn point hasn't been set.");
 				} else {
 					Location playerLocation = player.getLocation().clone(),
-							islandLocation = fileManager.getLocation(config, "Location.Spawn", true);
+							spawnLocation = fileManager.getLocation(config, "Location.Spawn", true);
 					Bukkit.getServer().getPluginManager()
-							.callEvent(new PlayerTeleportEvent(player, playerLocation, islandLocation));
-					event.setRespawnLocation(islandLocation);
+							.callEvent(new PlayerTeleportEvent(player, playerLocation, spawnLocation));
+					event.setRespawnLocation(spawnLocation);
 				}
 
 				break;

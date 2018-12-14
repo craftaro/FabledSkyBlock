@@ -410,7 +410,7 @@ public class Interact implements Listener {
 							player.updateInventory();
 						}
 					} else if (event.getItem().getType() == Material.ARMOR_STAND) {
-						if (!islandManager.hasPermission(player, "ArmorStandPlacement")) {
+						if (!islandManager.hasPermission(player, "EntityPlacement")) {
 							event.setCancelled(true);
 
 							messageManager.sendMessage(player,

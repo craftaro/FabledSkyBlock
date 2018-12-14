@@ -92,13 +92,8 @@ public class Block implements Listener {
 							}
 
 							if (LocationUtil.isLocationLocation(event.getBlock().getLocation(),
-									island.getLocation(worldList, Location.Environment.Main))
-									|| LocationUtil.isLocationLocation(event.getBlock().getLocation(),
-											island.getLocation(worldList, Location.Environment.Main).clone().add(0.0D,
-													1.0D, 0.0D))
-									|| LocationUtil.isLocationLocation(event.getBlock().getLocation(),
-											island.getLocation(worldList, Location.Environment.Main).clone()
-													.subtract(0.0D, 1.0D, 0.0D))) {
+									island.getLocation(worldList, Location.Environment.Main).clone().subtract(0.0D,
+											1.0D, 0.0D))) {
 								if (skyblock.getFileManager()
 										.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 										.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {

@@ -194,7 +194,7 @@ public class SkyBlockAPI {
 	 */
 	public static void removeUpgrades(Player player) {
 		Preconditions.checkArgument(player != null, "Cannot remove upgrades to null player");
-		implementation.getIslandManager().removeUpgrades(player);
+		implementation.getIslandManager().removeUpgrades(player, false);
 	}
 
 	/**

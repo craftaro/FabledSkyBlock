@@ -178,14 +178,18 @@ public class Move implements Listener {
 
 										player.setFallDistance(0.0F);
 
-										if (island.getVisit().isVisitor(player.getUniqueId())) {
-											player.teleport(island.getLocation(
-													me.goodandevil.skyblock.island.Location.World.Normal,
-													me.goodandevil.skyblock.island.Location.Environment.Visitor));
+										if (configLoad.getBoolean("Island.Void.Teleport.Island")) {
+											if (island.getVisit().isVisitor(player.getUniqueId())) {
+												player.teleport(island.getLocation(
+														me.goodandevil.skyblock.island.Location.World.Normal,
+														me.goodandevil.skyblock.island.Location.Environment.Visitor));
+											} else {
+												player.teleport(island.getLocation(
+														me.goodandevil.skyblock.island.Location.World.Normal,
+														me.goodandevil.skyblock.island.Location.Environment.Main));
+											}
 										} else {
-											player.teleport(island.getLocation(
-													me.goodandevil.skyblock.island.Location.World.Normal,
-													me.goodandevil.skyblock.island.Location.Environment.Main));
+											LocationUtil.teleportPlayerToSpawn(player);
 										}
 
 										player.setFallDistance(0.0F);

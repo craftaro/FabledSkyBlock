@@ -48,7 +48,7 @@ public class Teleport implements Listener {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		islandManager.removeUpgrades(player);
+		islandManager.removeUpgrades(player, false);
 		islandManager.loadPlayer(player);
 
 		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())

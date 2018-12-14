@@ -161,13 +161,13 @@ public class ScoreboardManager {
 	}
 
 	public void unloadPlayer(Player player) {
-		if (hasScoreboard(player)) {
+		if (scoreboardStorage.containsKey(player.getUniqueId())) {
 			scoreboardStorage.remove(player.getUniqueId());
 		}
 	}
 
 	public Scoreboard getScoreboard(Player player) {
-		if (hasScoreboard(player)) {
+		if (scoreboardStorage.containsKey(player.getUniqueId())) {
 			return scoreboardStorage.get(player.getUniqueId());
 		}
 

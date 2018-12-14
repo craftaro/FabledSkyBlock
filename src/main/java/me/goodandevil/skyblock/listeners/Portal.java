@@ -3,6 +3,10 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,11 +14,13 @@ import org.bukkit.event.entity.EntityPortalEnterEvent;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
+import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 
@@ -43,13 +49,45 @@ public class Portal implements Listener {
 			for (UUID islandList : islandManager.getIslands().keySet()) {
 				Island island = islandManager.getIslands().get(islandList);
 
+				Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+				FileConfiguration configLoad = config.getFileConfiguration();
+
 				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
 						island.getLocation(Location.World.Normal, Location.Environment.Island), island.getRadius())) {
-					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-							.getBoolean("Island.World.Nether.Enable")
+					if (configLoad.getBoolean("Island.World.Nether.Enable")
 							&& islandManager.hasPermission(player, "Portal")) {
-						player.teleport(island.getLocation(Location.World.Nether, Location.Environment.Main));
-						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+						if (configLoad.getBoolean("Island.Portal.Island")) {
+							player.teleport(island.getLocation(Location.World.Nether, Location.Environment.Main));
+							soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+						} else if (event.getLocation().getBlock().getType() == Materials.NETHER_PORTAL.parseMaterial()
+								&& Bukkit.getServer().getAllowNether()) {
+							for (World worldList : Bukkit.getServer().getWorlds()) {
+								if (worldList.getEnvironment() == Environment.NETHER) {
+									player.teleport(LocationUtil.getRandomLocation(worldList, 5000, 5000, true, true));
+
+									break;
+								}
+							}
+
+							soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+						} else if (event.getLocation().getBlock().getType() == Materials.END_PORTAL.parseMaterial()
+								&& Bukkit.getServer().getAllowEnd()) {
+							for (World worldList : Bukkit.getServer().getWorlds()) {
+								if (worldList.getEnvironment() == Environment.THE_END) {
+									player.teleport(worldList.getSpawnLocation());
+
+									break;
+								}
+							}
+
+							soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+						} else {
+							player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
+							messageManager.sendMessage(player,
+									fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+											.getFileConfiguration().getString("Island.Portal.Destination.Message"));
+							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						}
 					} else {
 						player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
 						messageManager.sendMessage(player,
@@ -68,13 +106,45 @@ public class Portal implements Listener {
 			for (UUID islandList : islandManager.getIslands().keySet()) {
 				Island island = islandManager.getIslands().get(islandList);
 
+				Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+				FileConfiguration configLoad = config.getFileConfiguration();
+
 				if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
 						island.getLocation(Location.World.Nether, Location.Environment.Island), island.getRadius())) {
-					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-							.getBoolean("Island.World.Nether.Enable")
+					if (configLoad.getBoolean("Island.World.Nether.Enable")
 							&& islandManager.hasPermission(player, "Portal")) {
-						player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
-						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+						if (configLoad.getBoolean("Island.Portal.Island")) {
+							player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
+							soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+						} else if (event.getLocation().getBlock().getType() == Materials.NETHER_PORTAL.parseMaterial()
+								&& Bukkit.getServer().getAllowNether()) {
+							for (World worldList : Bukkit.getServer().getWorlds()) {
+								if (worldList.getEnvironment() == Environment.NETHER) {
+									player.teleport(LocationUtil.getRandomLocation(worldList, 5000, 5000, true, true));
+
+									break;
+								}
+							}
+
+							soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+						} else if (event.getLocation().getBlock().getType() == Materials.END_PORTAL.parseMaterial()
+								&& Bukkit.getServer().getAllowEnd()) {
+							for (World worldList : Bukkit.getServer().getWorlds()) {
+								if (worldList.getEnvironment() == Environment.THE_END) {
+									player.teleport(worldList.getSpawnLocation());
+
+									break;
+								}
+							}
+
+							soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+						} else {
+							player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
+							messageManager.sendMessage(player,
+									fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+											.getFileConfiguration().getString("Island.Portal.Destination.Message"));
+							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						}
 					} else {
 						player.teleport(island.getLocation(Location.World.Nether, Location.Environment.Main));
 						messageManager.sendMessage(player,

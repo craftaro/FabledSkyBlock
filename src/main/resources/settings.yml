@@ -36,12 +36,13 @@ Settings:
         Fishing: false
         DropperDispenser: false
         SpawnEgg: false
+        HangingDestroy: false
         Cake: false
         DragonEggUse: false
         MinecartBoat: false
         Portal: false
         Hopper: false
-        ArmorStandPlacement: false
+        EntityPlacement: false
         ExperienceOrbPickup: false
     Member:
         Destroy: true
@@ -81,11 +82,12 @@ Settings:
         DropperDispenser: true
         SpawnEgg: true
         MinecartBoat: true
+        HangingDestroy: true
         Cake: true
         DragonEggUse: true
         Portal: true
         Hopper: true
-        ArmorStandPlacement: true
+        EntityPlacement: true
         ExperienceOrbPickup: true
     Operator:
         Invite: true
@@ -140,11 +142,12 @@ Settings:
         DropperDispenser: true
         SpawnEgg: true
         MinecartBoat: true
+        HangingDestroy: true
         Cake: true
         DragonEggUse: true
         Portal: true
         Hopper: true
-        ArmorStandPlacement: true
+        EntityPlacement: true
         ExperienceOrbPickup: true
     Owner:
         NaturalMobSpawning: true

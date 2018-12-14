@@ -519,16 +519,18 @@ public class Settings {
 					nInv.addItemStack(createItem(island, role, "DropperDispenser", new ItemStack(Material.DISPENSER)),
 							43);
 					nInv.addItemStack(createItem(island, role, "SpawnEgg", new ItemStack(Material.EGG)), 44);
+					nInv.addItemStack(createItem(island, role, "HangingDestroy", new ItemStack(Material.ITEM_FRAME)),
+							45);
 					nInv.addItemStack(createItem(island, role, "Cake", new ItemStack(Material.CAKE)), 46);
 					nInv.addItemStack(createItem(island, role, "DragonEggUse", new ItemStack(Material.DRAGON_EGG)), 47);
 					nInv.addItemStack(createItem(island, role, "MinecartBoat", new ItemStack(Material.MINECART)), 48);
-					nInv.addItemStack(createItem(island, role, "Portal", new ItemStack(Material.ENDER_PEARL)), 49);
-					nInv.addItemStack(createItem(island, role, "Hopper", new ItemStack(Material.HOPPER)), 50);
-					nInv.addItemStack(
-							createItem(island, role, "ArmorStandPlacement", new ItemStack(Material.ARMOR_STAND)), 51);
+					nInv.addItemStack(createItem(island, role, "Portal", new ItemStack(Material.ENDER_PEARL)), 50);
+					nInv.addItemStack(createItem(island, role, "Hopper", new ItemStack(Material.HOPPER)), 51);
+					nInv.addItemStack(createItem(island, role, "EntityPlacement", new ItemStack(Material.ARMOR_STAND)),
+							52);
 					nInv.addItemStack(
 							createItem(island, role, "ExperienceOrbPickup", Materials.EXPERIENCE_BOTTLE.parseItem()),
-							52);
+							53);
 
 					nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
 							configLoad.getString("Menu.Settings." + role.name() + ".Title")));
