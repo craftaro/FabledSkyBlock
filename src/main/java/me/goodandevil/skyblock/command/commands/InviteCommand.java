@@ -27,6 +27,8 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 public class InviteCommand extends SubCommand {
 
@@ -132,32 +134,57 @@ public class InviteCommand extends SubCommand {
 									} else {
 										ChatComponent chatComponent = new ChatComponent("", false, null, null, null);
 
-										for (String cancellationMessageList : cancellationMessages) {
-											chatComponent
-													.addExtraChatComponent(
-															new ChatComponent(
-																	messageManager
-																			.replaceMessage(player,
-																					cancellationMessageList
+										for (int i = 0; i < cancellationMessages.length; i++) {
+											String message = cancellationMessages[i];
+
+											if (message.contains("\n") || message.contains("\\n")) {
+												message = message.replace("\\n", "\n");
+
+												for (String messageList : message.split("\n")) {
+													chatComponent
+															.addExtraChatComponent(
+																	new ChatComponent(
+																			messageManager.replaceMessage(player,
+																					messageList
 																							.replace("%player",
 																									targetPlayer
 																											.getName())
 																							.replace("%time",
 																									timeMessage)),
-																	false, null, null, null));
-											chatComponent.addExtraChatComponent(new ChatComponent(
-													configLoad.getString("Command.Island.Invite.Invited.Word.Cancel")
-															.toUpperCase(),
-													true, ChatColor.RED,
-													new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-															"/island cancel " + targetPlayer.getName()),
-													new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
-															ChatColor.translateAlternateColorCodes('&', configLoad
-																	.getString(
-																			"Command.Island.Invite.Invited.Word.Tutorial")
-																	.replace("%action", configLoad.getString(
-																			"Command.Island.Invite.Invited.Word.Cancel"))))
-																					.create())));
+																			false, null, null, null));
+
+													chatComponent.addExtra(new TextComponent(
+															ComponentSerializer.parse("{text: \"\n\"}")));
+												}
+											} else {
+												chatComponent
+														.addExtraChatComponent(new ChatComponent(
+																messageManager.replaceMessage(player,
+																		message.replace("%player",
+																				targetPlayer.getName())
+																				.replace("%time", timeMessage)),
+																false, null, null, null));
+											}
+
+											if (cancellationMessages.length == 1
+													|| i + 1 != cancellationMessages.length) {
+												chatComponent.addExtraChatComponent(new ChatComponent(
+														configLoad
+																.getString("Command.Island.Invite.Invited.Word.Cancel")
+																.toUpperCase(),
+														true, ChatColor.RED,
+														new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+																"/island cancel " + targetPlayer.getName()),
+														new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+																new ComponentBuilder(ChatColor
+																		.translateAlternateColorCodes('&', configLoad
+																				.getString(
+																						"Command.Island.Invite.Invited.Word.Tutorial")
+																				.replace("%action",
+																						configLoad.getString(
+																								"Command.Island.Invite.Invited.Word.Cancel"))))
+																										.create())));
+											}
 										}
 
 										player.spigot().sendMessage(chatComponent.getTextComponent());

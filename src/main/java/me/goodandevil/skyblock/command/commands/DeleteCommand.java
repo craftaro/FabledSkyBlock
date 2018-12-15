@@ -25,6 +25,8 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 public class DeleteCommand extends SubCommand {
 
@@ -80,23 +82,43 @@ public class DeleteCommand extends SubCommand {
 						} else {
 							ChatComponent chatComponent = new ChatComponent("", false, null, null, null);
 
-							for (String confirmationMessageList : confirmationMessages) {
-								chatComponent
-										.addExtraChatComponent(
-												new ChatComponent(
-														messageManager.replaceMessage(player,
-																confirmationMessageList.replace("%time",
-																		"" + confirmationTime)),
-														false, null, null, null));
-								chatComponent.addExtraChatComponent(new ChatComponent(
-										configLoad.getString("Command.Island.Delete.Confirmation.Confirm.Word.Confirm")
-												.toUpperCase(),
-										true, ChatColor.RED,
-										new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island confirm"),
-										new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
-												ChatColor.translateAlternateColorCodes('&', configLoad.getString(
-														"Command.Island.Delete.Confirmation.Confirm.Word.Tutorial")))
-																.create())));
+							for (int i = 0; i < confirmationMessages.length; i++) {
+								String message = confirmationMessages[i];
+
+								if (message.contains("\n") || message.contains("\\n")) {
+									message = message.replace("\\n", "\n");
+
+									for (String messageList : message.split("\n")) {
+										chatComponent
+												.addExtraChatComponent(
+														new ChatComponent(
+																messageManager.replaceMessage(player,
+																		messageList.replace("%time",
+																				"" + confirmationTime)),
+																false, null, null, null));
+
+										chatComponent.addExtra(
+												new TextComponent(ComponentSerializer.parse("{text: \"\n\"}")));
+									}
+								} else {
+									chatComponent.addExtraChatComponent(new ChatComponent(
+											messageManager.replaceMessage(player,
+													message.replace("%time", "" + confirmationTime)),
+											false, null, null, null));
+								}
+
+								if (confirmationMessages.length == 1 || i + 1 != confirmationMessages.length) {
+									chatComponent.addExtraChatComponent(new ChatComponent(
+											configLoad.getString(
+													"Command.Island.Delete.Confirmation.Confirm.Word.Confirm")
+													.toUpperCase(),
+											true, ChatColor.RED,
+											new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island confirm"),
+											new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+													ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+															"Command.Island.Delete.Confirmation.Confirm.Word.Tutorial")))
+																	.create())));
+								}
 							}
 
 							player.spigot().sendMessage(chatComponent.getTextComponent());

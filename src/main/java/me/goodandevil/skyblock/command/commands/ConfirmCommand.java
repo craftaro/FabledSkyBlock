@@ -2,7 +2,6 @@ package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,19 +16,15 @@ import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.ownership.OwnershipManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
-import me.goodandevil.skyblock.scoreboard.Scoreboard;
-import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class ConfirmCommand extends SubCommand {
 
@@ -43,7 +38,6 @@ public class ConfirmCommand extends SubCommand {
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 		OwnershipManager ownershipManager = skyblock.getOwnershipManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
@@ -123,52 +117,21 @@ public class ConfirmCommand extends SubCommand {
 									playerData.setConfirmation(null);
 									playerData.setConfirmationTime(0);
 
-									islandManager.deleteIsland(island);
-
 									messageManager.sendMessage(player,
 											configLoad.getString("Command.Island.Confirmation.Confirmed.Message"));
 
-									boolean hasSpawnPoint = skyblock.getFileManager()
-											.getConfig(new File(skyblock.getDataFolder(), "locations.yml"))
-											.getFileConfiguration().getString("Location.Spawn") != null;
-
 									for (Player all : Bukkit.getOnlinePlayers()) {
 										if (island.hasRole(IslandRole.Member, all.getUniqueId())
-												|| island.hasRole(IslandRole.Operator, all.getUniqueId())
-												|| island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-											if (scoreboardManager != null) {
-												Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-												scoreboard.cancel();
-												scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-														configLoad.getString("Scoreboard.Tutorial.Displayname")));
-												scoreboard.setDisplayList(
-														configLoad.getStringList("Scoreboard.Tutorial.Displaylines"));
-												scoreboard.run();
-											}
-
-											for (Location.World worldList : Location.World.values()) {
-												if (LocationUtil.isLocationAtLocationRadius(all.getLocation(),
-														island.getLocation(worldList, Location.Environment.Island),
-														island.getRadius())) {
-													if (hasSpawnPoint) {
-														LocationUtil.teleportPlayerToSpawn(all);
-													} else {
-														Bukkit.getServer().getLogger().log(Level.WARNING,
-																"SkyBlock | Error: A spawn point hasn't been set.");
-													}
-
-													break;
-												}
-											}
-
-											if (!island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-												all.sendMessage(ChatColor.translateAlternateColorCodes('&',
-														configLoad.getString(
-																"Command.Island.Confirmation.Deletion.Broadcast.Message")));
-												soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
-											}
+												|| island.hasRole(IslandRole.Operator, all.getUniqueId())) {
+											all.sendMessage(
+													ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+															"Command.Island.Confirmation.Deletion.Broadcast.Message")));
+											soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 										}
 									}
+
+									island.setDeleted(true);
+									islandManager.deleteIsland(island);
 
 									messageManager.sendMessage(player, configLoad
 											.getString("Command.Island.Confirmation.Deletion.Sender.Message"));

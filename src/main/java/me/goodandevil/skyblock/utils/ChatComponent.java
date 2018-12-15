@@ -32,6 +32,12 @@ public class ChatComponent {
 		return textComponent;
 	}
 
+	public ChatComponent addExtra(TextComponent textComponent) {
+		this.textComponent.addExtra(textComponent);
+
+		return this;
+	}
+
 	public ChatComponent addExtraChatComponent(ChatComponent chatComponent) {
 		textComponent.addExtra(chatComponent.getTextComponent());
 

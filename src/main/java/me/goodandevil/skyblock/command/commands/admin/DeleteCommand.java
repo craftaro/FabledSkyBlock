@@ -2,7 +2,6 @@ package me.goodandevil.skyblock.command.commands.admin;
 
 import java.io.File;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,16 +17,12 @@ import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
-import me.goodandevil.skyblock.scoreboard.Scoreboard;
-import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class DeleteCommand extends SubCommand {
 
@@ -49,7 +44,6 @@ public class DeleteCommand extends SubCommand {
 	}
 
 	public void onCommand(CommandSender sender, String[] args) {
-		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -83,50 +77,19 @@ public class DeleteCommand extends SubCommand {
 				if (islandManager.isIslandExist(targetPlayerUUID)) {
 					islandManager.loadIsland(targetPlayerUUID);
 
-					boolean hasSpawnPoint = skyblock.getFileManager()
-							.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration()
-							.getString("Location.Spawn") != null;
 					Island island = islandManager.getIsland(targetPlayerUUID);
 
 					for (Player all : Bukkit.getOnlinePlayers()) {
 						if (island.hasRole(IslandRole.Member, all.getUniqueId())
-								|| island.hasRole(IslandRole.Operator, all.getUniqueId())
-								|| island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-							if (scoreboardManager != null) {
-								Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-								scoreboard.cancel();
-								scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Scoreboard.Tutorial.Displayname")));
-								scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Tutorial.Displaylines"));
-								scoreboard.run();
-							}
-
-							for (Location.World worldList : Location.World.values()) {
-								if (LocationUtil.isLocationAtLocationRadius(all.getLocation(),
-										island.getLocation(worldList, Location.Environment.Island),
-										island.getRadius())) {
-									if (hasSpawnPoint) {
-										LocationUtil.teleportPlayerToSpawn(all);
-									} else {
-										Bukkit.getServer().getLogger().log(Level.WARNING,
-												"SkyBlock | Error: A spawn point hasn't been set.");
-									}
-
-									break;
-								}
-							}
-
-							if (!island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-								all.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad
-										.getString("Command.Island.Confirmation.Deletion.Broadcast.Message")));
-								soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
-							}
+								|| island.hasRole(IslandRole.Operator, all.getUniqueId())) {
+							all.sendMessage(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Command.Island.Confirmation.Deletion.Broadcast.Message")));
+							soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 						}
 					}
 
+					island.setDeleted(true);
 					islandManager.deleteIsland(island);
-					skyblock.getVisitManager().deleteIsland(targetPlayerUUID);
-					skyblock.getBanManager().deleteIsland(targetPlayerUUID);
 
 					messageManager.sendMessage(sender,
 							configLoad.getString("Command.Island.Admin.Delete.Deleted.Message").replace("%player",

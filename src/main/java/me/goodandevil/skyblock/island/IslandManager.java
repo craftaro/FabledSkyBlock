@@ -275,6 +275,10 @@ public class IslandManager {
 		FileManager fileManager = skyblock.getFileManager();
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 
+		if (island.isDeleted()) {
+			return;
+		}
+
 		if (island.hasRole(IslandRole.Member, uuid) || island.hasRole(IslandRole.Operator, uuid)) {
 			UUID uuid2 = island.getOwnerUUID();
 
@@ -385,6 +389,7 @@ public class IslandManager {
 	}
 
 	public void deleteIsland(Island island) {
+		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		FileManager fileManager = skyblock.getFileManager();
 
@@ -394,8 +399,14 @@ public class IslandManager {
 		skyblock.getLevellingManager().unloadLevelling(island.getOwnerUUID());
 		skyblock.getOwnershipManager().unloadOwnership(island.getOwnerUUID());
 
-		FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-				.getFileConfiguration();
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+		FileConfiguration configLoad = config.getFileConfiguration();
+
+		boolean cooldownEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable");
+		int cooldownTime = configLoad.getInt("Island.Creation.Cooldown.Time");
+
+		config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+		configLoad = config.getFileConfiguration();
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			if ((island.hasRole(IslandRole.Member, all.getUniqueId())
@@ -407,11 +418,28 @@ public class IslandManager {
 				playerData.setChat(false);
 				playerData.save();
 
-				if (configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable")) {
+				if (scoreboardManager != null) {
+					Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
+					scoreboard.cancel();
+					scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Scoreboard.Tutorial.Displayname")));
+					scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Tutorial.Displaylines"));
+					scoreboard.run();
+				}
+
+				for (Location.World worldList : Location.World.values()) {
+					if (LocationUtil.isLocationAtLocationRadius(all.getLocation(),
+							island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+						LocationUtil.teleportPlayerToSpawn(all);
+
+						break;
+					}
+				}
+
+				if (cooldownEnabled) {
 					if (!all.hasPermission("skyblock.bypass.cooldown") && !all.hasPermission("skyblock.bypass.*")
 							&& !all.hasPermission("skyblock.*")) {
-						skyblock.getCreationManager().createPlayer(all,
-								configLoad.getInt("Island.Creation.Cooldown.Time"));
+						skyblock.getCreationManager().createPlayer(all, cooldownTime);
 					}
 				}
 			}
@@ -522,6 +550,10 @@ public class IslandManager {
 
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
+
+		if (island.isDeleted()) {
+			return;
+		}
 
 		island.save();
 

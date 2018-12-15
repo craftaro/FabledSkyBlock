@@ -54,6 +54,7 @@ public class Island {
 	private UUID uuid;
 	private Level level;
 	private int size;
+	private boolean deleted = false;
 
 	public Island(UUID uuid, org.bukkit.Location islandNormalLocation, org.bukkit.Location islandNetherLocation) {
 		this.skyblock = SkyBlock.getInstance();
@@ -438,9 +439,19 @@ public class Island {
 	}
 
 	public WeatherType getWeather() {
-		return WeatherType.valueOf(skyblock.getFileManager().getConfig(
+		String weatherTypeName = skyblock.getFileManager().getConfig(
 				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
-				.getFileConfiguration().getString("Weather.Weather"));
+				.getFileConfiguration().getString("Weather.Weather");
+
+		WeatherType weatherType;
+
+		if (weatherTypeName == null || weatherTypeName.isEmpty() || WeatherType.valueOf(weatherTypeName) == null) {
+			weatherType = WeatherType.CLEAR;
+		} else {
+			weatherType = WeatherType.valueOf(weatherTypeName);
+		}
+
+		return weatherType;
 	}
 
 	public String getWeatherName() {
@@ -737,6 +748,14 @@ public class Island {
 
 	public Level getLevel() {
 		return level;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
 	}
 
 	public void save() {

@@ -15,6 +15,7 @@ public class Generator {
 		this.name = name;
 		this.materials = materials;
 		this.generatorMaterials = generatorMaterials;
+		this.permission = permission;
 	}
 
 	public String getName() {
