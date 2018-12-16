@@ -39,8 +39,11 @@ public class Quit implements Listener {
 		Player player = event.getPlayer();
 
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		CreationManager creationManager = skyblock.getCreationManager();
 		MessageManager messageManager = skyblock.getMessageManager();
+		InviteManager inviteManager = skyblock.getInviteManager();
 		IslandManager islandManager = skyblock.getIslandManager();
+		BiomeManager biomeManager = skyblock.getBiomeManager();
 
 		PlayerData playerData = playerDataManager.getPlayerData(player);
 
@@ -100,8 +103,6 @@ public class Quit implements Listener {
 			islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
 		}
 
-		InviteManager inviteManager = skyblock.getInviteManager();
-
 		if (inviteManager.hasInvite(player.getUniqueId())) {
 			Invite invite = inviteManager.getInvite(player.getUniqueId());
 			Player targetPlayer = Bukkit.getServer().getPlayer(invite.getOwnerUUID());
@@ -118,11 +119,9 @@ public class Quit implements Listener {
 			inviteManager.removeInvite(player.getUniqueId());
 		}
 
-		BiomeManager biomeManager = skyblock.getBiomeManager();
 		biomeManager.savePlayer(player);
 		biomeManager.unloadPlayer(player);
 
-		CreationManager creationManager = skyblock.getCreationManager();
 		creationManager.savePlayer(player);
 		creationManager.unloadPlayer(player);
 	}

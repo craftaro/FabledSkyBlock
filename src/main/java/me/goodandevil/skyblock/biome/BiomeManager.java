@@ -18,6 +18,8 @@ import org.bukkit.entity.Player;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 
@@ -46,8 +48,7 @@ public class BiomeManager {
 		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 			@Override
 			public void run() {
-				Location location = island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal,
-						me.goodandevil.skyblock.island.Location.Environment.Island);
+				Location location = island.getLocation(IslandWorld.Normal, IslandEnvironment.Island);
 
 				for (Location locationList : LocationUtil.getLocations(
 						new Location(location.getWorld(), location.getBlockX() - island.getRadius(), 0,
@@ -69,8 +70,7 @@ public class BiomeManager {
 		Class<?> packetPlayOutMapChunkClass = NMSUtil.getNMSClass("PacketPlayOutMapChunk");
 		Class<?> chunkClass = NMSUtil.getNMSClass("Chunk");
 
-		for (Player all : skyblock.getIslandManager().getPlayersAtIsland(island,
-				me.goodandevil.skyblock.island.Location.World.Normal)) {
+		for (Player all : skyblock.getIslandManager().getPlayersAtIsland(island, IslandWorld.Normal)) {
 			for (Chunk chunkList : chunks) {
 				try {
 					if (NMSUtil.getVersionNumber() < 10) {

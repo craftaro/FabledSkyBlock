@@ -15,6 +15,7 @@ import com.google.common.base.Preconditions;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.island.Island;
 import me.goodandevil.skyblock.api.island.IslandRole;
+import me.goodandevil.skyblock.api.island.IslandWorld;
 import me.goodandevil.skyblock.api.structure.Structure;
 import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -173,11 +174,22 @@ public class SkyBlockAPI {
 	}
 
 	/**
-	 * @return A Set of Players at an Island
+	 * @return A List of Players at an Island
 	 */
-	public static Set<UUID> getPlayersAtIsland(Island island) {
+	public static List<Player> getPlayersAtIsland(Island island) {
 		Preconditions.checkArgument(island != null, "Cannot get players at island to null island");
 		return implementation.getIslandManager().getPlayersAtIsland(island.getIsland());
+	}
+
+	/**
+	 * @return A List of Players at an Island by IslandWorld
+	 */
+	public static List<Player> getPlayersAtIsland(Island island, IslandWorld world) {
+		Preconditions.checkArgument(island != null, "Cannot get players at island to null island");
+		Preconditions.checkArgument(world != null, "Cannot get players at island to null world");
+
+		return implementation.getIslandManager().getPlayersAtIsland(island.getIsland(),
+				APIUtil.toImplementation(world));
 	}
 
 	/**
@@ -257,6 +269,26 @@ public class SkyBlockAPI {
 	}
 
 	/**
+	 * @return The Island the player is occupying
+	 */
+	public static Island getIslandPlayerAt(Player player) {
+		Preconditions.checkArgument(player != null, "Cannot get Island to null player");
+
+		PlayerDataManager playerDataManager = implementation.getPlayerDataManager();
+		IslandManager islandManager = implementation.getIslandManager();
+
+		if (playerDataManager.hasPlayerData(player)) {
+			PlayerData playerData = playerDataManager.getPlayerData(player);
+
+			if (playerData.getIsland() != null && islandManager.hasIsland(playerData.getIsland())) {
+				return islandManager.getIsland(playerData.getIsland()).getAPIWrapper();
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * @return true of conditions met, false otherwise
 	 */
 	public static boolean isPlayerAtAnIsland(Player player) {
@@ -279,39 +311,50 @@ public class SkyBlockAPI {
 	 * 
 	 * @return true of conditions met, false otherwise
 	 */
-	public static boolean isPlayerAtIsland(Player player, Island island) {
-		Preconditions.checkArgument(player != null, "Cannot check to null player");
+	public static boolean isPlayerAtIsland(Island island, Player player) {
 		Preconditions.checkArgument(island != null, "Cannot check to null island");
-		PlayerDataManager playerDataManager = implementation.getPlayerDataManager();
+		Preconditions.checkArgument(player != null, "Cannot check to null player");
 
-		if (playerDataManager.hasPlayerData(player)) {
-			PlayerData playerData = playerDataManager.getPlayerData(player);
-
-			if (playerData.getIsland() != null && playerData.getIsland().equals(island.getOwnerUUID())) {
-				return true;
-			}
-		}
-
-		return false;
+		return implementation.getIslandManager().isPlayerAtIsland(island.getIsland(), player);
 	}
 
 	/**
-	 * @return The Island the player is occupying
+	 * Check if a player is occupying an Island by IslandWorld
+	 * 
+	 * @return true of conditions met, false otherwise
 	 */
-	public static Island getIslandPlayerAt(Player player) {
-		Preconditions.checkArgument(player != null, "Cannot get Island to null player");
+	public static boolean isPlayerAtIsland(Island island, Player player, IslandWorld world) {
+		Preconditions.checkArgument(island != null, "Cannot check to null island");
+		Preconditions.checkArgument(player != null, "Cannot check to null player");
+		Preconditions.checkArgument(world != null, "Cannot check to null world");
 
-		PlayerDataManager playerDataManager = implementation.getPlayerDataManager();
-		IslandManager islandManager = implementation.getIslandManager();
+		return implementation.getIslandManager().isPlayerAtIsland(island.getIsland(), player,
+				APIUtil.toImplementation(world));
+	}
 
-		if (playerDataManager.hasPlayerData(player)) {
-			PlayerData playerData = playerDataManager.getPlayerData(player);
+	/**
+	 * Check if a location is at an Island
+	 * 
+	 * @return true of conditions met, false otherwise
+	 */
+	public static boolean isLocationAtIsland(Island island, Location location) {
+		Preconditions.checkArgument(island != null, "Cannot check to null island");
+		Preconditions.checkArgument(location != null, "Cannot check to null location");
 
-			if (playerData.getIsland() != null && islandManager.hasIsland(playerData.getIsland())) {
-				return islandManager.getIsland(playerData.getIsland()).getAPIWrapper();
-			}
-		}
+		return implementation.getIslandManager().isLocationAtIsland(island.getIsland(), location);
+	}
 
-		return null;
+	/**
+	 * Check if a location is at an Island by IslandWorld
+	 * 
+	 * @return true of conditions met, false otherwise
+	 */
+	public static boolean isPlayerAtIsland(Island island, Location location, IslandWorld world) {
+		Preconditions.checkArgument(island != null, "Cannot check to null island");
+		Preconditions.checkArgument(location != null, "Cannot check to null location");
+		Preconditions.checkArgument(world != null, "Cannot check to null world");
+
+		return implementation.getIslandManager().isLocationAtIsland(island.getIsland(), location,
+				APIUtil.toImplementation(world));
 	}
 }

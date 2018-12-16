@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.FallingBlock;
@@ -33,8 +34,8 @@ import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
+import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -42,7 +43,6 @@ import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Entity implements Listener {
 
@@ -60,9 +60,9 @@ public class Entity implements Listener {
 
 		Player player = (Player) event.getEntity();
 
-		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| player.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+		FileManager fileManager = skyblock.getFileManager();
+
+		if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
 			if (event.getCause() != null) {
 				if (event.getCause() == DamageCause.VOID) {
 					return;
@@ -87,18 +87,16 @@ public class Entity implements Listener {
 				}
 			}
 
-			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-					.getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")) {
-				if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-						.getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")
-						|| !skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), IslandRole.Owner,
-								"Damage")) {
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+			FileConfiguration configLoad = config.getFileConfiguration();
+
+			if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
+				if (!configLoad.getBoolean("Island.Settings.PvP.Enable")
+						|| !skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "Damage")) {
 					event.setCancelled(true);
 				}
 			} else {
 				event.setCancelled(true);
-
-				return;
 			}
 		}
 	}
@@ -106,19 +104,19 @@ public class Entity implements Listener {
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
 
 		if (event.getDamager() instanceof Player) {
 			Player player = (Player) event.getDamager();
+			org.bukkit.entity.Entity entity = event.getEntity();
 
-			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-					|| player.getWorld().getName()
-							.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-				if (event.getEntity() instanceof Player) {
+			if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
+				if (entity instanceof Player) {
 					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
 							.getBoolean("Island.Settings.PvP.Enable")) {
-						if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "PvP")) {
+						if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "PvP")) {
 							event.setCancelled(true);
 						}
 					} else {
@@ -126,27 +124,21 @@ public class Entity implements Listener {
 
 						return;
 					}
-				} else if (event.getEntity() instanceof ArmorStand) {
-					if (player.getWorld().getName()
-							.equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-							|| player.getWorld().getName()
-									.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-						if (!skyblock.getIslandManager().hasPermission(player, "Destroy")) {
-							event.setCancelled(true);
-
-							messageManager.sendMessage(player,
-									skyblock.getFileManager()
-											.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-											.getFileConfiguration().getString("Island.Settings.Permission.Message"));
-							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-						}
-					}
-				} else {
-					if (!skyblock.getIslandManager().hasPermission(player, "MobHurting")) {
+				} else if (entity instanceof ArmorStand) {
+					if (!islandManager.hasPermission(player, entity.getLocation(), "Destroy")) {
 						event.setCancelled(true);
 
 						messageManager.sendMessage(player,
-								skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+								fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+										.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+					}
+				} else {
+					if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
+						event.setCancelled(true);
+
+						messageManager.sendMessage(player,
+								fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 										.getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
@@ -161,25 +153,24 @@ public class Entity implements Listener {
 		if (event.getDamager() instanceof Projectile
 				&& ((Projectile) event.getDamager()).getShooter() instanceof Player) {
 			Player player = (Player) ((Projectile) event.getDamager()).getShooter();
+			org.bukkit.entity.Entity entity = event.getEntity();
 
-			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-					|| player.getWorld().getName()
-							.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+			if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
 				if (event.getEntity() instanceof Player) {
 					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
 							.getBoolean("Island.Settings.PvP.Enable")) {
-						if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "PvP")) {
+						if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "PvP")) {
 							event.setCancelled(true);
 						}
 					} else {
 						event.setCancelled(true);
 					}
 				} else {
-					if (!skyblock.getIslandManager().hasPermission(player, "MobHurting")) {
+					if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
 						event.setCancelled(true);
 
 						messageManager.sendMessage(player,
-								skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+								fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 										.getFileConfiguration().getString("Island.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
@@ -190,14 +181,12 @@ public class Entity implements Listener {
 		} else if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
 
-			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-					|| player.getWorld().getName()
-							.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+			if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
 				if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
 						.getBoolean("Island.Settings.Damage.Enable")) {
-					if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "Damage")
-							|| (event.getDamager() instanceof TNTPrimed && !skyblock.getIslandManager()
-									.hasSetting(event.getEntity().getLocation(), IslandRole.Owner, "Explosions"))) {
+					if (!islandManager.hasSetting(player.getLocation(), IslandRole.Owner, "Damage")
+							|| (event.getDamager() instanceof TNTPrimed && !islandManager
+									.hasSetting(player.getLocation(), IslandRole.Owner, "Explosions"))) {
 						event.setCancelled(true);
 					}
 				} else {
@@ -205,12 +194,10 @@ public class Entity implements Listener {
 				}
 			}
 		} else if (event.getDamager() instanceof TNTPrimed) {
-			if (event.getEntity().getWorld().getName()
-					.equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-					|| event.getEntity().getWorld().getName()
-							.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-				if (!skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), IslandRole.Owner,
-						"Explosions")) {
+			org.bukkit.entity.Entity entity = event.getEntity();
+
+			if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
+				if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "Explosions")) {
 					event.setCancelled(true);
 				}
 			}
@@ -221,10 +208,8 @@ public class Entity implements Listener {
 	public void onPlayerShearEntity(PlayerShearEntityEvent event) {
 		Player player = event.getPlayer();
 
-		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| player.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!skyblock.getIslandManager().hasPermission(player, "Shearing")) {
+		if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
+			if (!skyblock.getIslandManager().hasPermission(player, event.getEntity().getLocation(), "Shearing")) {
 				event.setCancelled(true);
 
 				skyblock.getMessageManager().sendMessage(player,
@@ -239,10 +224,9 @@ public class Entity implements Listener {
 	public void onHangingPlace(HangingPlaceEvent event) {
 		Player player = event.getPlayer();
 
-		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| player.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!skyblock.getIslandManager().hasPermission(player, "EntityPlacement")) {
+		if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
+			if (!skyblock.getIslandManager().hasPermission(player, event.getEntity().getLocation(),
+					"EntityPlacement")) {
 				event.setCancelled(true);
 
 				skyblock.getMessageManager().sendMessage(player,
@@ -257,14 +241,13 @@ public class Entity implements Listener {
 	public void onHangingBreak(HangingBreakEvent event) {
 		Hanging hanging = event.getEntity();
 
-		if (hanging.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| hanging.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (event.getCause() == RemoveCause.EXPLOSION) {
-				if (!skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), IslandRole.Owner,
-						"Explosions")) {
-					event.setCancelled(true);
-				}
+		if (event.getCause() != RemoveCause.EXPLOSION) {
+			return;
+		}
+
+		if (skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) {
+			if (!skyblock.getIslandManager().hasSetting(hanging.getLocation(), IslandRole.Owner, "Explosions")) {
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -279,10 +262,8 @@ public class Entity implements Listener {
 
 		Player player = (Player) event.getRemover();
 
-		if (hanging.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| hanging.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!skyblock.getIslandManager().hasPermission(player, "HangingDestroy")) {
+		if (skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) {
+			if (!skyblock.getIslandManager().hasPermission(player, hanging.getLocation(), "HangingDestroy")) {
 				event.setCancelled(true);
 
 				skyblock.getMessageManager().sendMessage(player,
@@ -301,10 +282,8 @@ public class Entity implements Listener {
 
 		Player player = (Player) event.getOwner();
 
-		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| player.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!skyblock.getIslandManager().hasPermission(player, "MobTaming")) {
+		if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
+			if (!skyblock.getIslandManager().hasPermission(player, event.getEntity().getLocation(), "MobTaming")) {
 				event.setCancelled(true);
 
 				skyblock.getMessageManager().sendMessage(player,
@@ -319,17 +298,13 @@ public class Entity implements Listener {
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
 		org.bukkit.entity.Entity entity = event.getEntity();
 
-		if (entity instanceof FallingBlock) {
+		if (entity instanceof FallingBlock || entity instanceof Player) {
 			return;
 		}
 
-		if (!(entity instanceof Player)) {
-			if (entity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-					|| entity.getWorld().getName()
-							.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-				if (!skyblock.getIslandManager().hasSetting(entity.getLocation(), IslandRole.Owner, "MobGriefing")) {
-					event.setCancelled(true);
-				}
+		if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
+			if (!skyblock.getIslandManager().hasSetting(entity.getLocation(), IslandRole.Owner, "MobGriefing")) {
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -338,11 +313,8 @@ public class Entity implements Listener {
 	public void onEntityExplode(EntityExplodeEvent event) {
 		org.bukkit.entity.Entity entity = event.getEntity();
 
-		if (entity.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| entity.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), IslandRole.Owner,
-					"Explosions")) {
+		if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
+			if (!skyblock.getIslandManager().hasSetting(entity.getLocation(), IslandRole.Owner, "Explosions")) {
 				event.setCancelled(true);
 			}
 		}
@@ -356,31 +328,27 @@ public class Entity implements Listener {
 
 		LivingEntity livingEntity = event.getEntity();
 
-		if (livingEntity.getWorld().getName()
-				.equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| livingEntity.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-			if (!livingEntity.hasMetadata("SkyBlock")) {
-				IslandManager islandManager = skyblock.getIslandManager();
+		if (livingEntity.hasMetadata("SkyBlock")) {
+			return;
+		}
 
-				for (UUID islandList : islandManager.getIslands().keySet()) {
-					Island island = islandManager.getIslands().get(islandList);
+		IslandManager islandManager = skyblock.getIslandManager();
 
-					for (Location.World worldList : Location.World.values()) {
-						if (LocationUtil.isLocationAtLocationRadius(livingEntity.getLocation(),
-								island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-							List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
+		if (skyblock.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
+			for (UUID islandList : islandManager.getIslands().keySet()) {
+				Island island = islandManager.getIslands().get(islandList);
 
-							if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-									&& island.isUpgrade(Upgrade.Type.Drops)) {
-								List<ItemStack> entityDrops = event.getDrops();
+				if (islandManager.isLocationAtIsland(island, livingEntity.getLocation())) {
+					List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
 
-								if (entityDrops != null) {
-									for (int i = 0; i < entityDrops.size(); i++) {
-										ItemStack is = entityDrops.get(i);
-										is.setAmount(is.getAmount() * 2);
-									}
-								}
+					if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
+							&& island.isUpgrade(Upgrade.Type.Drops)) {
+						List<ItemStack> entityDrops = event.getDrops();
+
+						if (entityDrops != null) {
+							for (int i = 0; i < entityDrops.size(); i++) {
+								ItemStack is = entityDrops.get(i);
+								is.setAmount(is.getAmount() * 2);
 							}
 						}
 					}
@@ -401,9 +369,7 @@ public class Entity implements Listener {
 
 		Player player = (Player) event.getTarget();
 
-		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| player.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+		if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
 			if (!skyblock.getIslandManager().hasPermission(player, "ExperienceOrbPickup")) {
 				event.setTarget(null);
 				event.setCancelled(true);
@@ -413,24 +379,25 @@ public class Entity implements Listener {
 
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if (event.getSpawnReason() == SpawnReason.NATURAL) {
-			LivingEntity livingEntity = event.getEntity();
+		if (event.getEntity() instanceof ArmorStand || event.getEntity() instanceof FallingBlock
+				|| event.getEntity() instanceof org.bukkit.entity.Item) {
+			return;
+		}
 
-			if (event.getEntity() instanceof ArmorStand || event.getEntity() instanceof FallingBlock
-					|| event.getEntity() instanceof org.bukkit.entity.Item) {
-				return;
-			}
+		if (event.getSpawnReason() != SpawnReason.NATURAL) {
+			return;
+		}
 
-			if (livingEntity.getWorld().getName()
-					.equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-					|| livingEntity.getWorld().getName()
-							.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
-				if (!livingEntity.hasMetadata("SkyBlock")) {
-					if (!skyblock.getIslandManager().hasSetting(event.getEntity().getLocation(), IslandRole.Owner,
-							"NaturalMobSpawning")) {
-						livingEntity.remove();
-					}
-				}
+		LivingEntity livingEntity = event.getEntity();
+
+		if (livingEntity.hasMetadata("SkyBlock")) {
+			return;
+		}
+
+		if (skyblock.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
+			if (!skyblock.getIslandManager().hasSetting(livingEntity.getLocation(), IslandRole.Owner,
+					"NaturalMobSpawning")) {
+				livingEntity.remove();
 			}
 		}
 	}

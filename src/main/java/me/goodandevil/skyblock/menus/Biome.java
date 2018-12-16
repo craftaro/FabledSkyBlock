@@ -15,9 +15,10 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -29,7 +30,6 @@ import me.goodandevil.skyblock.utils.version.Biomes;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Biome {
 
@@ -167,13 +167,10 @@ public class Biome {
 							island.setBiome(selectedBiomeType);
 							island.save();
 
-							soundManager.playSound(
-									island.getLocation(Location.World.Normal, Location.Environment.Island),
+							soundManager.playSound(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island),
 									Sounds.SPLASH.bukkitSound(), 1.0F, 1.0F);
 
-							if (!LocationUtil.isLocationAtLocationRadius(player.getLocation(),
-									island.getLocation(Location.World.Normal, Location.Environment.Island),
-									island.getRadius())) {
+							if (!islandManager.isPlayerAtIsland(island, player, IslandWorld.Normal)) {
 								soundManager.playSound(player, Sounds.SPLASH.bukkitSound(), 1.0F, 1.0F);
 							}
 

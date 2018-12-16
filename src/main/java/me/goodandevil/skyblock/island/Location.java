@@ -2,21 +2,21 @@ package me.goodandevil.skyblock.island;
 
 public class Location {
 
-	private World world;
-	private Environment environment;
+	private IslandWorld world;
+	private IslandEnvironment environment;
 	private org.bukkit.Location location;
 
-	public Location(World world, Environment environment, org.bukkit.Location location) {
+	public Location(IslandWorld world, IslandEnvironment environment, org.bukkit.Location location) {
 		this.world = world;
 		this.environment = environment;
 		this.location = location;
 	}
 
-	public World getWorld() {
+	public IslandWorld getWorld() {
 		return world;
 	}
 
-	public Environment getEnvironment() {
+	public IslandEnvironment getEnvironment() {
 		return environment;
 	}
 
@@ -26,13 +26,5 @@ public class Location {
 
 	public void setLocation(org.bukkit.Location location) {
 		this.location = location;
-	}
-
-	public enum Environment {
-		Island, Visitor, Main;
-	}
-
-	public enum World {
-		Normal, Nether;
 	}
 }

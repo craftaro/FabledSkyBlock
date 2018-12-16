@@ -2,11 +2,11 @@ package me.goodandevil.skyblock.generator;
 
 import org.bukkit.block.Block;
 
-import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.island.IslandWorld;
 
 public class GeneratorLocation {
 
-	private Location.World world;
+	private IslandWorld world;
 
 	private int blockX;
 	private int blockY;
@@ -16,7 +16,7 @@ public class GeneratorLocation {
 	private int liquidY;
 	private int liquidZ;
 
-	public GeneratorLocation(Location.World world, Block block, Block liquid) {
+	public GeneratorLocation(IslandWorld world, Block block, Block liquid) {
 		this.world = world;
 
 		this.blockX = block.getLocation().getBlockX();
@@ -30,7 +30,7 @@ public class GeneratorLocation {
 		}
 	}
 
-	public Location.World getWorld() {
+	public IslandWorld getWorld() {
 		return world;
 	}
 

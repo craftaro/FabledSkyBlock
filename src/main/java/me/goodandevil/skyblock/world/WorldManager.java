@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
@@ -11,7 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.world.generator.VoidGenerator;
 
 public class WorldManager {
@@ -20,6 +21,7 @@ public class WorldManager {
 
 	private org.bukkit.World normalWorld;
 	private org.bukkit.World netherWorld;
+	private org.bukkit.World endWorld;
 
 	public WorldManager(SkyBlock skyblock) {
 		this.skyblock = skyblock;
@@ -31,11 +33,13 @@ public class WorldManager {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		String netherWorldName = configLoad.getString("Island.World.Nether.Name");
 		String normalWorldName = configLoad.getString("Island.World.Normal.Name");
+		String netherWorldName = configLoad.getString("Island.World.Nether.Name");
+		String endWorldName = configLoad.getString("Island.World.End.Name");
 
 		normalWorld = Bukkit.getServer().getWorld(normalWorldName);
 		netherWorld = Bukkit.getServer().getWorld(netherWorldName);
+		endWorld = Bukkit.getServer().getWorld(endWorldName);
 
 		if (normalWorld == null) {
 			Bukkit.getServer().getLogger().log(Level.INFO,
@@ -64,6 +68,20 @@ public class WorldManager {
 				}
 			});
 		}
+
+		if (endWorld == null) {
+			Bukkit.getServer().getLogger().log(Level.INFO,
+					"SkyBlock | Info: Generating VoidWorld '" + endWorldName + "'.");
+			endWorld = WorldCreator.name(endWorldName).type(WorldType.FLAT).environment(World.Environment.THE_END)
+					.generator(new VoidGenerator()).createWorld();
+
+			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					registerMultiverse(endWorldName, World.Environment.THE_END);
+				}
+			});
+		}
 	}
 
 	public void registerMultiverse(String worldName, World.Environment environment) {
@@ -75,13 +93,52 @@ public class WorldManager {
 		}
 	}
 
-	public org.bukkit.World getWorld(Location.World world) {
-		if (world == Location.World.Normal) {
+	public World getWorld(IslandWorld world) {
+		if (world == IslandWorld.Normal) {
 			return normalWorld;
-		} else if (world == Location.World.Nether) {
+		} else if (world == IslandWorld.Nether) {
 			return netherWorld;
+		} else if (world == IslandWorld.End) {
+			return endWorld;
 		}
 
 		return null;
+	}
+
+	public IslandWorld getIslandWorld(World world) {
+		if (world == null) {
+			return null;
+		}
+
+		if (normalWorld.getName().equals(world.getName())) {
+			return IslandWorld.Normal;
+		} else if (netherWorld.getName().equals(world.getName())) {
+			return IslandWorld.Nether;
+		} else if (endWorld.getName().equals(world.getName())) {
+			return IslandWorld.End;
+		}
+
+		return null;
+	}
+
+	public boolean isIslandWorld(World world) {
+		if (world == null) {
+			return false;
+		}
+
+		if (normalWorld.getName().equals(world.getName()) || netherWorld.getName().equals(world.getName())
+				|| endWorld.getName().equals(world.getName())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public Location getLocation(Location location, IslandWorld world) {
+		if (location != null && location.getWorld() == null) {
+			location.setWorld(getWorld(world));
+		}
+
+		return location;
 	}
 }

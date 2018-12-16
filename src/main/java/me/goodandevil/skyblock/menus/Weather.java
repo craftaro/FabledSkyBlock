@@ -14,9 +14,9 @@ import org.bukkit.inventory.ItemStack;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -116,7 +116,7 @@ public class Weather {
 							}
 
 							if (!island.isWeatherSynchronized()) {
-								for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
+								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
 									all.setPlayerTime(island.getTime(),
 											fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 													.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
@@ -141,7 +141,7 @@ public class Weather {
 							}
 
 							if (!island.isWeatherSynchronized()) {
-								for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
+								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
 									all.setPlayerWeather(island.getWeather());
 								}
 							}
@@ -163,7 +163,7 @@ public class Weather {
 								int islandTime = island.getTime();
 								WeatherType islandWeather = island.getWeather();
 
-								for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
+								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
 									all.setPlayerTime(islandTime,
 											fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 													.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
@@ -172,7 +172,7 @@ public class Weather {
 							} else {
 								island.setWeatherSynchronized(true);
 
-								for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
+								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
 									all.resetPlayerTime();
 									all.resetPlayerWeather();
 								}

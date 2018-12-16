@@ -20,9 +20,9 @@ import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
@@ -144,15 +144,14 @@ public class PlayerDataManager {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (hasPlayerData(player)
-				&& (player.getWorld().getName().equals(worldManager.getWorld(Location.World.Normal).getName()) || player
-						.getWorld().getName().equals(worldManager.getWorld(Location.World.Nether).getName()))) {
-			for (UUID islandList : islandManager.getIslands().keySet()) {
-				Island island = islandManager.getIslands().get(islandList);
+		if (hasPlayerData(player)) {
+			if (worldManager.isIslandWorld(player.getWorld())) {
+				IslandWorld world = worldManager.getIslandWorld(player.getWorld());
 
-				for (Location.World worldList : Location.World.values()) {
-					if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
-							island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
+				for (UUID islandList : islandManager.getIslands().keySet()) {
+					Island island = islandManager.getIslands().get(islandList);
+
+					if (islandManager.isPlayerAtIsland(island, player, world)) {
 						Player targetPlayer = Bukkit.getServer().getPlayer(islandList);
 						String targetPlayerName;
 
@@ -176,7 +175,7 @@ public class PlayerDataManager {
 								PlayerData playerData = getPlayerData(player);
 								playerData.setIsland(island.getOwnerUUID());
 
-								if (worldList == Location.World.Normal) {
+								if (world == IslandWorld.Normal) {
 									if (!island.isWeatherSynchronized()) {
 										player.setPlayerTime(island.getTime(),
 												fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
@@ -204,7 +203,7 @@ public class PlayerDataManager {
 								PlayerData playerData = getPlayerData(player);
 								playerData.setIsland(island.getOwnerUUID());
 
-								if (worldList == Location.World.Normal) {
+								if (world == IslandWorld.Normal) {
 									if (!island.isWeatherSynchronized()) {
 										player.setPlayerTime(island.getTime(),
 												fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
@@ -273,15 +272,13 @@ public class PlayerDataManager {
 						return;
 					}
 				}
-			}
 
-			HashMap<UUID, Visit> visitIslands = skyblock.getVisitManager().getIslands();
+				HashMap<UUID, Visit> visitIslands = skyblock.getVisitManager().getIslands();
 
-			for (UUID visitIslandList : visitIslands.keySet()) {
-				Visit visit = visitIslands.get(visitIslandList);
+				for (UUID visitIslandList : visitIslands.keySet()) {
+					Visit visit = visitIslands.get(visitIslandList);
 
-				for (Location.World worldList : Location.World.values()) {
-					if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), visit.getLocation(worldList),
+					if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), visit.getLocation(world),
 							visit.getRadius())) {
 						Player targetPlayer = Bukkit.getServer().getPlayer(visitIslandList);
 						String targetPlayerName;
@@ -317,7 +314,7 @@ public class PlayerDataManager {
 									playerData.setIsland(visitIslandList);
 
 									if (island != null) {
-										if (worldList == Location.World.Normal) {
+										if (world == IslandWorld.Normal) {
 											if (!island.isWeatherSynchronized()) {
 												player.setPlayerTime(island.getTime(), fileManager
 														.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
@@ -351,6 +348,8 @@ public class PlayerDataManager {
 						return;
 					}
 				}
+
+				return;
 			}
 		}
 	}

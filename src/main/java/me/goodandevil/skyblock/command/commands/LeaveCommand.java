@@ -16,7 +16,6 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -62,13 +61,8 @@ public class LeaveCommand extends SubCommand {
 				Bukkit.getServer().getPluginManager().callEvent(islandLeaveEvent);
 
 				if (!islandLeaveEvent.isCancelled()) {
-					for (Location.World worldList : Location.World.values()) {
-						if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
-								island.getLocation(worldList, Location.Environment.Island), island.getRadius())) {
-							LocationUtil.teleportPlayerToSpawn(player);
-
-							break;
-						}
+					if (islandManager.isPlayerAtIsland(island, player)) {
+						LocationUtil.teleportPlayerToSpawn(player);
 					}
 
 					if (island.hasRole(IslandRole.Member, player.getUniqueId())) {

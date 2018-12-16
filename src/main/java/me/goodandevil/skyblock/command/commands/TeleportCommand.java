@@ -13,9 +13,10 @@ import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
@@ -128,7 +129,7 @@ public class TeleportCommand extends SubCommand {
 			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 				@Override
 				public void run() {
-					player.teleport(island.getLocation(Location.World.Normal, Location.Environment.Main));
+					player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
 					player.setFallDistance(0.0F);
 				}
 			});

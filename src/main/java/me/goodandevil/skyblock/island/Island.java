@@ -14,7 +14,6 @@ import java.util.UUID;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,7 +30,6 @@ import me.goodandevil.skyblock.api.event.island.IslandUpgradeEvent;
 import me.goodandevil.skyblock.api.event.island.IslandWeatherChangeEvent;
 import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.ban.Ban;
-import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.playerdata.PlayerData;
@@ -39,8 +37,6 @@ import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.StringUtil;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.visit.Visit;
-import me.goodandevil.skyblock.visit.VisitManager;
-import me.goodandevil.skyblock.world.WorldManager;
 
 public class Island {
 
@@ -56,11 +52,9 @@ public class Island {
 	private int size;
 	private boolean deleted = false;
 
-	public Island(UUID uuid, org.bukkit.Location islandNormalLocation, org.bukkit.Location islandNetherLocation) {
+	public Island(UUID uuid) {
 		this.skyblock = SkyBlock.getInstance();
 
-		IslandManager islandManager = skyblock.getIslandManager();
-		WorldManager worldManager = skyblock.getWorldManager();
 		FileManager fileManager = skyblock.getFileManager();
 
 		this.uuid = uuid;
@@ -70,9 +64,6 @@ public class Island {
 		if (this.size > 1000) {
 			this.size = 50;
 		}
-
-		islandLocations.add(new Location(Location.World.Normal, Location.Environment.Island, islandNormalLocation));
-		islandLocations.add(new Location(Location.World.Nether, Location.Environment.Island, islandNetherLocation));
 
 		level = new Level(getOwnerUUID(), skyblock);
 
@@ -140,21 +131,6 @@ public class Island {
 				configLoad.set("Operators", operators);
 			}
 
-			for (Location.World worldList : Location.World.values()) {
-				for (Location.Environment environmentList : Location.Environment.values()) {
-					if (environmentList != Location.Environment.Island) {
-						Location spawnLocation = new Location(worldList, environmentList, fileManager.getLocation(
-								config, "Location." + worldList.name() + ".Spawn." + environmentList.name(), true));
-
-						if (spawnLocation.getLocation().getWorld() == null) {
-							spawnLocation.getLocation().setWorld(worldManager.getWorld(worldList));
-						}
-
-						islandLocations.add(spawnLocation);
-					}
-				}
-			}
-
 			Config settingsDataConfig = null;
 
 			if (fileManager.isFileExist(new File(skyblock.getDataFolder().toString() + "/setting-data",
@@ -180,35 +156,7 @@ public class Island {
 
 				islandSettings.put(roleList, settings);
 			}
-
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					islandManager.removeSpawnProtection(islandNormalLocation);
-					islandManager.removeSpawnProtection(islandNetherLocation);
-				}
-			});
 		} else {
-			islandLocations.add(new Location(Location.World.Normal, Location.Environment.Main,
-					islandNormalLocation.clone().add(0.5D, 0.0D, 0.5D)));
-			islandLocations.add(new Location(Location.World.Nether, Location.Environment.Main,
-					islandNetherLocation.clone().add(0.5D, 0.0D, 0.5D)));
-			islandLocations.add(new Location(Location.World.Normal, Location.Environment.Visitor,
-					islandNormalLocation.clone().add(0.5D, 0.0D, 0.5D)));
-			islandLocations.add(new Location(Location.World.Nether, Location.Environment.Visitor,
-					islandNetherLocation.clone().add(0.5D, 0.0D, 0.5D)));
-
-			fileManager.setLocation(config, "Location.Normal.Island", islandNormalLocation, true);
-			fileManager.setLocation(config, "Location.Nether.Island", islandNetherLocation, true);
-			fileManager.setLocation(config, "Location.Normal.Spawn.Main",
-					islandNormalLocation.clone().add(0.5D, 0.0D, 0.5D), true);
-			fileManager.setLocation(config, "Location.Nether.Spawn.Main",
-					islandNetherLocation.clone().add(0.5D, 0.0D, 0.5D), true);
-			fileManager.setLocation(config, "Location.Normal.Spawn.Visitor",
-					islandNormalLocation.clone().add(0.5D, 0.0D, 0.5D), true);
-			fileManager.setLocation(config, "Location.Nether.Spawn.Visitor",
-					islandNetherLocation.clone().add(0.5D, 0.0D, 0.5D), true);
-
 			configFile = config.getFile();
 			FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -240,15 +188,6 @@ public class Island {
 			playerData.setOwner(uuid);
 			playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 			playerData.save();
-
-			if (mainConfigLoad.getBoolean("Island.Spawn.Protection")) {
-				Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-					@Override
-					public void run() {
-						islandNormalLocation.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().setType(Material.STONE);
-					}
-				});
-			}
 		}
 
 		if (!mainConfigLoad.getBoolean("Island.Coop.Unload")) {
@@ -265,22 +204,6 @@ public class Island {
 					}
 				}
 			}
-		}
-
-		VisitManager visitManager = skyblock.getVisitManager();
-
-		if (!visitManager.hasIsland(getOwnerUUID())) {
-			visitManager.createIsland(getOwnerUUID(),
-					new org.bukkit.Location[] { getLocation(Location.World.Normal, Location.Environment.Island),
-							getLocation(Location.World.Nether, Location.Environment.Island) },
-					size, getRole(IslandRole.Member).size() + getRole(IslandRole.Operator).size() + 1,
-					visitManager.getIslandSafeLevel(uuid), level, getMessage(IslandMessage.Signature), isOpen());
-		}
-
-		BanManager banManager = skyblock.getBanManager();
-
-		if (!banManager.hasIsland(getOwnerUUID())) {
-			banManager.createIsland(getOwnerUUID());
 		}
 
 		this.apiWrapper = new me.goodandevil.skyblock.api.island.Island(this);
@@ -345,7 +268,7 @@ public class Island {
 				.getFileConfiguration().set("Ownership.Password", islandPasswordChangeEvent.getPassword());
 	}
 
-	public org.bukkit.Location getLocation(Location.World world, Location.Environment environment) {
+	public org.bukkit.Location getLocation(IslandWorld world, IslandEnvironment environment) {
 		for (Location islandLocationList : islandLocations) {
 			if (islandLocationList.getWorld() == world && islandLocationList.getEnvironment() == environment) {
 				return islandLocationList.getLocation();
@@ -355,7 +278,11 @@ public class Island {
 		return null;
 	}
 
-	public void setLocation(Location.World world, Location.Environment environment, org.bukkit.Location location) {
+	public void addLocation(IslandWorld world, IslandEnvironment environment, org.bukkit.Location location) {
+		islandLocations.add(new Location(world, environment, location));
+	}
+
+	public void setLocation(IslandWorld world, IslandEnvironment environment, org.bukkit.Location location) {
 		for (Location islandLocationList : islandLocations) {
 			if (islandLocationList.getWorld() == world && islandLocationList.getEnvironment() == environment) {
 				Bukkit.getServer().getPluginManager()

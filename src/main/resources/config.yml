@@ -35,16 +35,26 @@ Island:
     World:
         # [!] The Island height is 72 blocks.
         #     Delete the Island world when changing the liquid option.
+        # If lava disabled, the world will be a water world.
         Normal:
             Name: "island_normal_world"
             Liquid:
                 Enable: false
+                Lava: false
                 Height: 60
         Nether:
             Name: "island_nether_world"
             Enable: true
             Liquid:
                 Enable: false
+                Lava: true
+                Height: 60
+        End:
+            Name: "island_end_world"
+            Enable: true
+            Liquid:
+                Enable: false
+                Lava: false
                 Height: 60
     Member:
         # Max amount of players allowed to be in a team.
@@ -227,6 +237,10 @@ World:
             x: 0.0
             z: 0.0
     Nether:
+        nextAvailableLocation:
+            x: 0.0
+            z: 0.0
+    End:
         nextAvailableLocation:
             x: 0.0
             z: 0.0

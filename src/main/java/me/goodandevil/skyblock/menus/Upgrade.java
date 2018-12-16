@@ -24,7 +24,6 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.economy.EconomyManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -105,20 +104,16 @@ public class Upgrade {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed,
 												false);
 
-										for (Location.World worldList : Location.World.values()) {
-											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
-												all.removePotionEffect(PotionEffectType.SPEED);
-											}
+										for (Player all : islandManager.getPlayersAtIsland(island)) {
+											all.removePotionEffect(PotionEffectType.SPEED);
 										}
 									} else {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed,
 												true);
 
-										for (Location.World worldList : Location.World.values()) {
-											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
-												all.addPotionEffect(
-														new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
-											}
+										for (Player all : islandManager.getPlayersAtIsland(island)) {
+											all.addPotionEffect(
+													new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
 										}
 									}
 
@@ -148,11 +143,9 @@ public class Upgrade {
 											island.setUpgrade(player,
 													me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed, true);
 
-											for (Location.World worldList : Location.World.values()) {
-												for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
-													all.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
-															Integer.MAX_VALUE, 1));
-												}
+											for (Player all : islandManager.getPlayersAtIsland(island)) {
+												all.addPotionEffect(
+														new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
 											}
 
 											Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
@@ -186,20 +179,16 @@ public class Upgrade {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump,
 												false);
 
-										for (Location.World worldList : Location.World.values()) {
-											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
-												all.removePotionEffect(PotionEffectType.JUMP);
-											}
+										for (Player all : islandManager.getPlayersAtIsland(island)) {
+											all.removePotionEffect(PotionEffectType.JUMP);
 										}
 									} else {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump,
 												true);
 
-										for (Location.World worldList : Location.World.values()) {
-											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
-												all.addPotionEffect(
-														new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
-											}
+										for (Player all : islandManager.getPlayersAtIsland(island)) {
+											all.addPotionEffect(
+													new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
 										}
 									}
 
@@ -229,11 +218,9 @@ public class Upgrade {
 											island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump,
 													true);
 
-											for (Location.World worldList : Location.World.values()) {
-												for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
-													all.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,
-															Integer.MAX_VALUE, 1));
-												}
+											for (Player all : islandManager.getPlayersAtIsland(island)) {
+												all.addPotionEffect(
+														new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
 											}
 
 											Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
@@ -327,22 +314,18 @@ public class Upgrade {
 								if (island.isUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly)) {
 									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly, false);
 
-									for (Location.World worldList : Location.World.values()) {
-										for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
-											if (all.getGameMode() != GameMode.CREATIVE) {
-												all.setFlying(false);
-												all.setAllowFlight(false);
-											}
+									for (Player all : islandManager.getPlayersAtIsland(island)) {
+										if (all.getGameMode() != GameMode.CREATIVE) {
+											all.setFlying(false);
+											all.setAllowFlight(false);
 										}
 									}
 								} else {
 									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly, true);
 
-									for (Location.World worldList : Location.World.values()) {
-										for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
-											all.setAllowFlight(true);
-											all.setFlying(true);
-										}
+									for (Player all : islandManager.getPlayersAtIsland(island)) {
+										all.setAllowFlight(true);
+										all.setFlying(true);
 									}
 								}
 
@@ -371,11 +354,9 @@ public class Upgrade {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly,
 												true);
 
-										for (Location.World worldList : Location.World.values()) {
-											for (Player all : islandManager.getPlayersAtIsland(island, worldList)) {
-												all.setAllowFlight(true);
-												all.setFlying(true);
-											}
+										for (Player all : islandManager.getPlayersAtIsland(island)) {
+											all.setAllowFlight(true);
+											all.setFlying(true);
 										}
 
 										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,

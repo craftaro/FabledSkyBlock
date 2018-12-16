@@ -10,6 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
+import me.goodandevil.skyblock.island.IslandWorld;
 
 public class Chunk {
 
@@ -44,14 +46,15 @@ public class Chunk {
 	}
 
 	private void prepareChunkSnapshots() {
-		for (me.goodandevil.skyblock.island.Location.World worldList : me.goodandevil.skyblock.island.Location.World
-				.values()) {
-			if (worldList == me.goodandevil.skyblock.island.Location.World.Normal
-					|| (worldList == me.goodandevil.skyblock.island.Location.World.Nether
+		for (IslandWorld worldList : IslandWorld.values()) {
+			if (worldList == IslandWorld.Normal
+					|| (worldList == IslandWorld.Nether
 							&& skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.World.Nether.Enable"))) {
-				Location islandLocation = island.getLocation(worldList,
-						me.goodandevil.skyblock.island.Location.Environment.Island);
+									.getFileConfiguration().getBoolean("Island.World.Nether.Enable"))
+					|| (worldList == IslandWorld.End
+							&& skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+									.getFileConfiguration().getBoolean("Island.World.End.Enable"))) {
+				Location islandLocation = island.getLocation(worldList, IslandEnvironment.Island);
 
 				Location minLocation = new Location(islandLocation.getWorld(),
 						islandLocation.getBlockX() - island.getRadius(), 0,

@@ -116,6 +116,7 @@ public class FileManager {
 		Location location = null;
 
 		FileConfiguration configLoad = config.getFileConfiguration();
+
 		if (configLoad.contains(path)) {
 			String world = configLoad.getString(path + ".world");
 

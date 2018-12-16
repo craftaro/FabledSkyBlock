@@ -13,7 +13,7 @@ import org.bukkit.generator.ChunkGenerator;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.utils.version.Materials;
 
 public class VoidGenerator extends ChunkGenerator {
@@ -27,11 +27,16 @@ public class VoidGenerator extends ChunkGenerator {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		for (Location.World worldList : Location.World.values()) {
-			if (world.getEnvironment().name().equals(worldList.name().toUpperCase())) {
+		for (IslandWorld worldList : IslandWorld.values()) {
+			if (world.getEnvironment() == worldList.getEnvironment()) {
 				if (configLoad.getBoolean("Island.World." + worldList.name() + ".Liquid.Enable")) {
-					setBlock(chunkData, Materials.LEGACY_STATIONARY_WATER.parseMaterial(),
-							configLoad.getInt("Island.World." + worldList.name() + ".Liquid.Height"));
+					if (configLoad.getBoolean("Island.World." + worldList.name() + ".Liquid.Lava")) {
+						setBlock(chunkData, Materials.LEGACY_STATIONARY_LAVA.parseMaterial(),
+								configLoad.getInt("Island.World." + worldList.name() + ".Liquid.Height"));
+					} else {
+						setBlock(chunkData, Materials.LEGACY_STATIONARY_WATER.parseMaterial(),
+								configLoad.getInt("Island.World." + worldList.name() + ".Liquid.Height"));
+					}
 				}
 
 				break;

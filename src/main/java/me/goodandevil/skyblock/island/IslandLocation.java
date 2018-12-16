@@ -2,18 +2,18 @@ package me.goodandevil.skyblock.island;
 
 public class IslandLocation {
 
-	private Location.World world;
+	private IslandWorld world;
 
 	private double x;
 	private double z;
 
-	public IslandLocation(Location.World world, double x, double z) {
+	public IslandLocation(IslandWorld world, double x, double z) {
 		this.world = world;
 		this.x = x;
 		this.z = z;
 	}
 
-	public Location.World getWorld() {
+	public IslandWorld getWorld() {
 		return world;
 	}
 

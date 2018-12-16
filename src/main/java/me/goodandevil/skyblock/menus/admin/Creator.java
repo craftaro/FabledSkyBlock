@@ -330,7 +330,7 @@ public class Creator implements Listener {
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else {
 								structureManager.addStructure(event1.getName(), Materials.GRASS_BLOCK, null, null, null,
-										false, new ArrayList<>(), new ArrayList<>());
+										null, false, new ArrayList<>(), new ArrayList<>());
 
 								messageManager.sendMessage(player,
 										configLoad.getString("Island.Admin.Creator.Created.Message")
@@ -936,7 +936,8 @@ public class Creator implements Listener {
 				} else if ((event.getCurrentItem().getType() == Material.PAPER) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Creator.Options.Item.File.Displayname"))))) {
-					if (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT) {
+					if (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.MIDDLE
+							|| event.getClick() == ClickType.RIGHT) {
 						if (playerData.getViewer() == null) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Admin.Creator.Selected.Message"));
@@ -1025,7 +1026,7 @@ public class Creator implements Listener {
 																	}
 																}
 															});
-												} else {
+												} else if (event.getClick() == ClickType.MIDDLE) {
 													Structure structure = structureManager.getStructure(name);
 													structure.setNetherFile(event1.getName());
 
@@ -1044,6 +1045,33 @@ public class Creator implements Listener {
 
 																	configLoad.set("Structures." + structure.getName()
 																			+ ".File.Nether", event1.getName());
+
+																	try {
+																		configLoad.save(config.getFile());
+																	} catch (IOException e) {
+																		e.printStackTrace();
+																	}
+																}
+															});
+												} else {
+													Structure structure = structureManager.getStructure(name);
+													structure.setEndFile(event1.getName());
+
+													soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(),
+															1.0F, 1.0F);
+
+													Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
+															new Runnable() {
+																@Override
+																public void run() {
+																	Config config = fileManager.getConfig(
+																			new File(skyblock.getDataFolder(),
+																					"structures.yml"));
+																	FileConfiguration configLoad = config
+																			.getFileConfiguration();
+
+																	configLoad.set("Structures." + structure.getName()
+																			+ ".File.End", event1.getName());
 
 																	try {
 																		configLoad.save(config.getFile());

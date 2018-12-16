@@ -23,7 +23,7 @@ import me.goodandevil.skyblock.api.event.island.IslandLevelChangeEvent;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
@@ -95,7 +95,7 @@ public class LevellingManager {
 
 					int worldMaxHeight = 0;
 
-					for (Location.World worldList : Location.World.values()) {
+					for (IslandWorld worldList : IslandWorld.values()) {
 						org.bukkit.World world = worldManager.getWorld(worldList);
 
 						if (worldMaxHeight == 0 || worldMaxHeight > world.getMaxHeight()) {

@@ -19,7 +19,6 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -162,14 +161,8 @@ public class KickCommand extends SubCommand {
 												.replace("%player", player.getName()));
 								soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								for (Location.World worldList : Location.World.values()) {
-									if (LocationUtil.isLocationAtLocationRadius(targetPlayer.getLocation(),
-											island.getLocation(worldList, Location.Environment.Island),
-											island.getRadius())) {
-										LocationUtil.teleportPlayerToSpawn(targetPlayer);
-
-										break;
-									}
+								if (islandManager.isPlayerAtIsland(island, targetPlayer)) {
+									LocationUtil.teleportPlayerToSpawn(targetPlayer);
 								}
 
 								if (scoreboardManager != null) {

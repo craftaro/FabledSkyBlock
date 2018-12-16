@@ -37,7 +37,10 @@ public class Join implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 
+		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		IslandManager islandManager = skyblock.getIslandManager();
+		FileManager fileManager = skyblock.getFileManager();
 
 		try {
 			islandManager.loadIsland(player.getUniqueId());
@@ -46,7 +49,6 @@ public class Join implements Listener {
 			e.printStackTrace();
 		}
 
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		playerDataManager.loadPlayerData(player);
 
 		if (playerDataManager.hasPlayerData(player)) {
@@ -76,9 +78,6 @@ public class Join implements Listener {
 
 		skyblock.getBiomeManager().loadPlayer(player);
 		skyblock.getCreationManager().loadPlayer(player);
-
-		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
-		FileManager fileManager = skyblock.getFileManager();
 
 		if (scoreboardManager != null) {
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));

@@ -12,6 +12,7 @@ public class Structure implements me.goodandevil.skyblock.api.structure.Structur
 	private String name;
 	private String overworldFile;
 	private String netherFile;
+	private String endFile;
 	private String displayName;
 
 	private boolean permission;
@@ -19,12 +20,13 @@ public class Structure implements me.goodandevil.skyblock.api.structure.Structur
 	private List<String> description = new ArrayList<>();
 	private List<String> commands = new ArrayList<>();
 
-	public Structure(String name, Materials materials, String overworldFile, String netherFile, String displayName,
-			boolean permission, List<String> description, List<String> commands) {
+	public Structure(String name, Materials materials, String overworldFile, String netherFile, String endFile,
+			String displayName, boolean permission, List<String> description, List<String> commands) {
 		this.name = name;
 		this.materials = materials;
 		this.overworldFile = overworldFile;
 		this.netherFile = netherFile;
+		this.endFile = endFile;
 		this.displayName = displayName;
 		this.permission = permission;
 		this.description = description;
@@ -57,6 +59,14 @@ public class Structure implements me.goodandevil.skyblock.api.structure.Structur
 
 	public void setNetherFile(String file) {
 		this.netherFile = file;
+	}
+
+	public String getEndFile() {
+		return endFile;
+	}
+
+	public void setEndFile(String file) {
+		this.endFile = file;
 	}
 
 	public String getDisplayname() {

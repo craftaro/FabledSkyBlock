@@ -897,8 +897,10 @@ Island:
         Destination:
             Message: "&bSkyBlock &8| &cError&8: &eThere is no destination to travel to going through that portal."
     World:
-        Nether:
-            Message: "&bSkyBlock &8| &aInfo&8: &eYou have been teleported out of the nether because the nether is disabled."
+        Word:
+            Nether: "nether"
+            End: "end"
+        Message: "&bSkyBlock &8| &aInfo&8: &eYou have been teleported out of the nether because the nether is disabled."
     WorldBorder:
         Outside:
             Message: "&bSkyBlock &8| &cError&8: &eYou went too far outside the Island WorldBorder."
@@ -2759,8 +2761,12 @@ Menu:
                         - "&7Nether File&8:"
                         - "&f&o%nether_file"
                         - ""
+                        - "&7End File&8:"
+                        - "&f&o%end_file"
+                        - ""
                         - "&eLeft-Click to set overworld file!"
-                        - "&eRight-Click to set nether file!"
+                        - "&eMiddle-Click to set nether file!"
+                        - "&eRight-Click to set end file!"
                     Item:
                         Displayname: "&aItem"
                         Lore:

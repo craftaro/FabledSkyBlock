@@ -19,7 +19,6 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -35,7 +34,6 @@ import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.visit.VisitManager;
 
 public class Visit {
@@ -239,20 +237,16 @@ public class Visit {
 										}
 									}
 
-									for (Location.World worldList : Location.World.values()) {
-										if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
-												island.getLocation(worldList, Location.Environment.Island),
-												island.getRadius())) {
-											messageManager.sendMessage(player,
-													configLoad.getString("Island.Visit.Already.Message")
-															.replace("%player", targetPlayerName));
-											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+									if (islandManager.isPlayerAtIsland(island, player)) {
+										messageManager.sendMessage(player,
+												configLoad.getString("Island.Visit.Already.Message").replace("%player",
+														targetPlayerName));
+										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-											event.setWillClose(false);
-											event.setWillDestroy(false);
+										event.setWillClose(false);
+										event.setWillDestroy(false);
 
-											return;
-										}
+										return;
 									}
 
 									islandManager.visitIsland(player, island);
