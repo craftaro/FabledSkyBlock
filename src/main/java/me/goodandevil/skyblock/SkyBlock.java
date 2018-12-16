@@ -2,6 +2,7 @@ package me.goodandevil.skyblock;
 
 import java.io.File;
 
+import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -190,6 +191,8 @@ public class SkyBlock extends JavaPlugin {
 		if (this.ownershipManager != null) {
 			this.ownershipManager.onDisable();
 		}
+
+		HandlerList.unregisterAll(this);
 	}
 
 	public static SkyBlock getInstance() {

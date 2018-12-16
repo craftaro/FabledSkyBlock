@@ -1,5 +1,6 @@
 package me.goodandevil.skyblock.utils.world.block;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -210,7 +211,7 @@ public final class BlockUtil {
 			blockData.setFacing(((Stairs) materialData).getFacing().toString());
 			blockData.setDataType(BlockDataType.STAIRS.toString());
 		} else if (materialData instanceof org.bukkit.material.FlowerPot) {
-			if (NMSVersion == 8 || NMSVersion == 9) {
+			if (NMSVersion >= 8 && NMSVersion <= 12) {
 				try {
 					World world = block.getWorld();
 
@@ -221,22 +222,36 @@ public final class BlockUtil {
 							.newInstance(block.getX(), block.getY(), block.getZ());
 					Object tileEntity = worldHandle.getClass().getMethod("getTileEntity", blockPositionClass)
 							.invoke(worldHandle, blockPosition);
-					Object item = tileEntity.getClass().getMethod("b").invoke(tileEntity);
-					Object itemStackNMS = NMSUtil.getNMSClass("ItemStack").getConstructor(NMSUtil.getNMSClass("Item"))
-							.newInstance(item);
 
-					ItemStack itemStack = (ItemStack) NMSUtil.getCraftClass("inventory.CraftItemStack")
-							.getMethod("asBukkitCopy", itemStackNMS.getClass()).invoke(null, itemStackNMS);
-					int data = (int) tileEntity.getClass().getMethod("c").invoke(tileEntity);
+					Field aField = tileEntity.getClass().getDeclaredField("a");
+					aField.setAccessible(true);
 
-					blockData.setFlower(itemStack.getType().name() + ":" + data);
+					Object item = aField.get(tileEntity);
+
+					if (item != null) {
+						Object itemStackNMS = NMSUtil.getNMSClass("ItemStack")
+								.getConstructor(NMSUtil.getNMSClass("Item")).newInstance(item);
+
+						ItemStack itemStack = (ItemStack) NMSUtil.getCraftClass("inventory.CraftItemStack")
+								.getMethod("asBukkitCopy", itemStackNMS.getClass()).invoke(null, itemStackNMS);
+
+						Field fField = tileEntity.getClass().getDeclaredField("f");
+						fField.setAccessible(true);
+
+						int data = (int) fField.get(tileEntity);
+
+						blockData.setFlower(itemStack.getType().name() + ":" + data);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			} else {
 				org.bukkit.material.FlowerPot flowerPot = (org.bukkit.material.FlowerPot) materialData;
-				blockData.setFlower(
-						flowerPot.getContents().getItemType().toString() + ":" + flowerPot.getContents().getData());
+
+				if (flowerPot.getContents() != null && flowerPot.getContents().getItemType() != Material.AIR) {
+					blockData.setFlower(
+							flowerPot.getContents().getItemType().toString() + ":" + flowerPot.getContents().getData());
+				}
 			}
 
 			blockData.setDataType(BlockDataType.FLOWERPOT.toString());
@@ -281,8 +296,10 @@ public final class BlockUtil {
 			beacon.setSecondaryEffect(PotionEffectType.getByName(potionEffect[1].toUpperCase()));
 
 			for (Integer slotList : blockData.getInventory().keySet()) {
-				ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
-				beacon.getInventory().setItem(slotList, is);
+				if (slotList < beacon.getInventory().getSize()) {
+					ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
+					beacon.getInventory().setItem(slotList, is);
+				}
 			}
 		} else if (blockTypeState == BlockStateType.BREWINGSTAND) {
 			BrewingStand brewingStand = (BrewingStand) block.getState();
@@ -296,29 +313,37 @@ public final class BlockUtil {
 			Chest chest = (Chest) block.getState();
 
 			for (Integer slotList : blockData.getInventory().keySet()) {
-				ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
-				chest.getInventory().setItem(slotList, is);
+				if (slotList < chest.getInventory().getSize()) {
+					ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
+					chest.getInventory().setItem(slotList, is);
+				}
 			}
 		} else if (blockTypeState == BlockStateType.DISPENSER) {
 			Dispenser dispenser = (Dispenser) block.getState();
 
 			for (Integer slotList : blockData.getInventory().keySet()) {
-				ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
-				dispenser.getInventory().setItem(slotList, is);
+				if (slotList < dispenser.getInventory().getSize()) {
+					ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
+					dispenser.getInventory().setItem(slotList, is);
+				}
 			}
 		} else if (blockTypeState == BlockStateType.DROPPER) {
 			Dropper dropper = (Dropper) block.getState();
 
 			for (Integer slotList : blockData.getInventory().keySet()) {
-				ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
-				dropper.getInventory().setItem(slotList, is);
+				if (slotList < dropper.getInventory().getSize()) {
+					ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
+					dropper.getInventory().setItem(slotList, is);
+				}
 			}
 		} else if (blockTypeState == BlockStateType.HOPPER) {
 			Hopper hopper = (Hopper) block.getState();
 
 			for (Integer slotList : blockData.getInventory().keySet()) {
-				ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
-				hopper.getInventory().setItem(slotList, is);
+				if (slotList < hopper.getInventory().getSize()) {
+					ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
+					hopper.getInventory().setItem(slotList, is);
+				}
 			}
 		} else if (blockTypeState == BlockStateType.CREATURESPAWNER) {
 			CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
@@ -330,8 +355,10 @@ public final class BlockUtil {
 			furnace.setCookTime(blockData.getCookTime());
 
 			for (Integer slotList : blockData.getInventory().keySet()) {
-				ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
-				furnace.getInventory().setItem(slotList, is);
+				if (slotList < furnace.getInventory().getSize()) {
+					ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
+					furnace.getInventory().setItem(slotList, is);
+				}
 			}
 		} else if (blockTypeState == BlockStateType.JUKEBOX) {
 			Jukebox jukebox = (Jukebox) block.getState();
@@ -372,9 +399,11 @@ public final class BlockUtil {
 							ShulkerBox shulkerBox = (ShulkerBox) block.getState();
 
 							for (Integer slotList : blockData.getInventory().keySet()) {
-								ItemStack is = ItemStackUtil
-										.deserializeItemStack(blockData.getInventory().get(slotList));
-								shulkerBox.getInventory().setItem(slotList, is);
+								if (slotList < shulkerBox.getInventory().getSize()) {
+									ItemStack is = ItemStackUtil
+											.deserializeItemStack(blockData.getInventory().get(slotList));
+									shulkerBox.getInventory().setItem(slotList, is);
+								}
 							}
 						}
 					}
@@ -389,63 +418,74 @@ public final class BlockUtil {
 			stairs.setFacingDirection(BlockFace.valueOf(blockData.getFacing()));
 			block.getState().setData(stairs);
 		} else if (blockDataType == BlockDataType.FLOWERPOT) {
-			if (NMSVersion == 8 || NMSVersion == 9) {
+			if (NMSVersion >= 8 && NMSVersion <= 12) {
 				if (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR) {
 					setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), Material.STONE,
 							(byte) 0);
 				}
 
-				try {
-					String[] flower = blockData.getFlower().split(":");
-					int materialData = Integer.parseInt(flower[1]);
+				if (blockData.getFlower() != null && !blockData.getFlower().isEmpty()) {
+					try {
+						String[] flower = blockData.getFlower().split(":");
+						int materialData = Integer.parseInt(flower[1]);
 
-					material = me.goodandevil.skyblock.utils.item.MaterialUtil.getMaterial(NMSVersion,
-							blockData.getVersion(), flower[0].toUpperCase(), materialData);
+						material = me.goodandevil.skyblock.utils.item.MaterialUtil.getMaterial(NMSVersion,
+								blockData.getVersion(), flower[0].toUpperCase(), materialData);
 
-					if (material != null) {
-						ItemStack is = new ItemStack(material, 1, (byte) materialData);
+						if (material != null) {
+							ItemStack is = new ItemStack(material, 1, (byte) materialData);
 
-						World world = block.getWorld();
+							World world = block.getWorld();
 
-						Class<?> blockPositionClass = NMSUtil.getNMSClass("BlockPosition");
+							Class<?> blockPositionClass = NMSUtil.getNMSClass("BlockPosition");
 
-						Object worldHandle = world.getClass().getMethod("getHandle").invoke(world);
-						Object blockPosition = blockPositionClass.getConstructor(int.class, int.class, int.class)
-								.newInstance(block.getX(), block.getY(), block.getZ());
-						Object tileEntity = worldHandle.getClass().getMethod("getTileEntity", blockPositionClass)
-								.invoke(worldHandle, blockPosition);
-						Object itemStack = NMSUtil.getCraftClass("inventory.CraftItemStack")
-								.getMethod("asNMSCopy", is.getClass()).invoke(null, is);
-						Object item = itemStack.getClass().getMethod("getItem").invoke(itemStack);
-						Object data = itemStack.getClass().getMethod("getData").invoke(itemStack);
+							Object worldHandle = world.getClass().getMethod("getHandle").invoke(world);
+							Object blockPosition = blockPositionClass.getConstructor(int.class, int.class, int.class)
+									.newInstance(block.getX(), block.getY(), block.getZ());
+							Object tileEntity = worldHandle.getClass().getMethod("getTileEntity", blockPositionClass)
+									.invoke(worldHandle, blockPosition);
+							Object itemStack = NMSUtil.getCraftClass("inventory.CraftItemStack")
+									.getMethod("asNMSCopy", is.getClass()).invoke(null, is);
+							Object item = itemStack.getClass().getMethod("getItem").invoke(itemStack);
+							Object data = itemStack.getClass().getMethod("getData").invoke(itemStack);
 
-						tileEntity.getClass().getMethod("a", NMSUtil.getNMSClass("Item"), int.class).invoke(tileEntity,
-								item, data);
-						tileEntity.getClass().getMethod("update").invoke(tileEntity);
+							Field aField = tileEntity.getClass().getDeclaredField("a");
+							aField.setAccessible(true);
+							aField.set(tileEntity, item);
+
+							Field fField = tileEntity.getClass().getDeclaredField("f");
+							fField.setAccessible(true);
+							fField.set(tileEntity, data);
+
+							tileEntity.getClass().getMethod("update").invoke(tileEntity);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
 			} else {
-				org.bukkit.material.FlowerPot flowerPot = (org.bukkit.material.FlowerPot) block.getState().getData();
-				String[] flower = blockData.getFlower().split(":");
-				material = null;
+				if (blockData.getFlower() != null && !blockData.getFlower().isEmpty()) {
+					org.bukkit.material.FlowerPot flowerPot = (org.bukkit.material.FlowerPot) block.getState()
+							.getData();
+					String[] flower = blockData.getFlower().split(":");
+					material = null;
 
-				if (blockData.getVersion() > 12) {
-					if (NMSVersion > 12) {
-						material = Material.valueOf(flower[0].toUpperCase());
+					if (blockData.getVersion() > 12) {
+						if (NMSVersion > 12) {
+							material = Material.valueOf(flower[0].toUpperCase());
+						}
+					} else {
+						if (NMSVersion < 13) {
+							material = Material.valueOf(flower[0].toUpperCase());
+						}
 					}
-				} else {
-					if (NMSVersion < 13) {
-						material = Material.valueOf(flower[0].toUpperCase());
+
+					if (material != null) {
+						flowerPot.setContents(new MaterialData(material, (byte) Integer.parseInt(flower[1])));
 					}
-				}
 
-				if (material != null) {
-					flowerPot.setContents(new MaterialData(material, (byte) Integer.parseInt(flower[1])));
+					block.getState().setData(flowerPot);
 				}
-
-				block.getState().setData(flowerPot);
 			}
 		}
 

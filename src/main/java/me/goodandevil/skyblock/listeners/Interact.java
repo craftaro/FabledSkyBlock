@@ -394,33 +394,6 @@ public class Interact implements Listener {
 					}
 				}
 			}
-
-			if (event.getItem() != null) {
-				try {
-					ItemStack structureTool = StructureUtil.getTool();
-
-					if ((event.getItem().getType() == structureTool.getType()) && (event.getItem().hasItemMeta())
-							&& (event.getItem().getItemMeta().getDisplayName()
-									.equals(structureTool.getItemMeta().getDisplayName()))) {
-						if (player.hasPermission("skyblock.admin.structure.selection")
-								|| player.hasPermission("skyblock.admin.structure.*")
-								|| player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
-							event.setCancelled(true);
-
-							skyblock.getPlayerDataManager().getPlayerData(player).getArea().setPosition(2,
-									block.getLocation());
-
-							messageManager.sendMessage(player,
-									skyblock.getFileManager()
-											.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-											.getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
-											.replace("%position", "2"));
-							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-						}
-					}
-				} catch (Exception e) {
-				}
-			}
 		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			if (player.getTargetBlock((Set<Material>) null, 5).getType() == Material.FIRE) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Fire")) {
@@ -430,33 +403,6 @@ public class Interact implements Listener {
 							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-				}
-			}
-
-			if (event.getItem() != null) {
-				try {
-					ItemStack structureTool = StructureUtil.getTool();
-
-					if ((event.getItem().getType() == structureTool.getType()) && (event.getItem().hasItemMeta())
-							&& (event.getItem().getItemMeta().getDisplayName()
-									.equals(structureTool.getItemMeta().getDisplayName()))) {
-						if (player.hasPermission("skyblock.admin.structure.selection")
-								|| player.hasPermission("skyblock.admin.structure.*")
-								|| player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
-							event.setCancelled(true);
-
-							skyblock.getPlayerDataManager().getPlayerData(player).getArea().setPosition(1,
-									block.getLocation());
-
-							messageManager.sendMessage(player,
-									skyblock.getFileManager()
-											.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-											.getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
-											.replace("%position", "1"));
-							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-						}
-					}
-				} catch (Exception e) {
 				}
 			}
 		} else if (event.getAction() == Action.PHYSICAL) {
@@ -490,6 +436,65 @@ public class Interact implements Listener {
 				}
 			}
 
+		}
+	}
+
+	@EventHandler
+	public void onPlayerInteractStructure(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+
+		MessageManager messageManager = skyblock.getMessageManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+
+		if (event.getItem() != null) {
+			try {
+				if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+					ItemStack structureTool = StructureUtil.getTool();
+
+					if ((event.getItem().getType() == structureTool.getType()) && (event.getItem().hasItemMeta())
+							&& (event.getItem().getItemMeta().getDisplayName()
+									.equals(structureTool.getItemMeta().getDisplayName()))) {
+						if (player.hasPermission("skyblock.admin.structure.selection")
+								|| player.hasPermission("skyblock.admin.structure.*")
+								|| player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+							event.setCancelled(true);
+
+							skyblock.getPlayerDataManager().getPlayerData(player).getArea().setPosition(1,
+									event.getClickedBlock().getLocation());
+
+							messageManager.sendMessage(player,
+									skyblock.getFileManager()
+											.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+											.getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
+											.replace("%position", "1"));
+							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+						}
+					}
+				} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					ItemStack structureTool = StructureUtil.getTool();
+
+					if ((event.getItem().getType() == structureTool.getType()) && (event.getItem().hasItemMeta())
+							&& (event.getItem().getItemMeta().getDisplayName()
+									.equals(structureTool.getItemMeta().getDisplayName()))) {
+						if (player.hasPermission("skyblock.admin.structure.selection")
+								|| player.hasPermission("skyblock.admin.structure.*")
+								|| player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+							event.setCancelled(true);
+
+							skyblock.getPlayerDataManager().getPlayerData(player).getArea().setPosition(2,
+									event.getClickedBlock().getLocation());
+
+							messageManager.sendMessage(player,
+									skyblock.getFileManager()
+											.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+											.getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
+											.replace("%position", "2"));
+							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+						}
+					}
+				}
+			} catch (Exception e) {
+			}
 		}
 	}
 
@@ -612,14 +617,19 @@ public class Interact implements Listener {
 				}
 			} else if (entity.getType() == EntityType.PIG) {
 				if (!(is.getType() == Materials.CARROT.parseMaterial()
-						|| is.getType() == Materials.POTATO.parseMaterial() || is.getType() == Material.BAKED_POTATO
-						|| is.getType() == Material.POISONOUS_POTATO)) {
+						|| is.getType() == Materials.POTATO.parseMaterial())) {
 					return;
 				}
 			} else if (entity.getType() == EntityType.CHICKEN) {
 				if (!(is.getType() == Materials.WHEAT_SEEDS.parseMaterial() || is.getType() == Material.PUMPKIN_SEEDS
 						|| is.getType() == Material.MELON_SEEDS)) {
-					return;
+					if (NMSUtil.getVersionNumber() > 8) {
+						if (!(is.getType() == Materials.BEETROOT_SEEDS.parseMaterial())) {
+							return;
+						}
+					} else {
+						return;
+					}
 				}
 			} else if (entity.getType() == EntityType.WOLF) {
 				if (!(is.getType() == Material.BONE || is.getType() == Materials.PORKCHOP.parseMaterial()
@@ -628,13 +638,13 @@ public class Interact implements Listener {
 						|| is.getType() == Material.MUTTON || is.getType() == Material.ROTTEN_FLESH
 						|| is.getType() == Materials.COOKED_PORKCHOP.parseMaterial()
 						|| is.getType() == Material.COOKED_BEEF || is.getType() == Material.COOKED_CHICKEN
-						|| is.getType() == Material.COOKED_RABBIT || is.getType() == Material.COOKED_MUTTON
-						|| is.getType() == Materials.COD.parseMaterial()
-						|| is.getType() == Materials.COOKED_COD.parseMaterial())) {
+						|| is.getType() == Material.COOKED_RABBIT || is.getType() == Material.COOKED_MUTTON)) {
 					return;
 				}
 			} else if (entity.getType() == EntityType.OCELOT) {
-				if (!(is.getType() == Materials.COD.parseMaterial())) {
+				if (!(is.getType() == Materials.COD.parseMaterial() || is.getType() == Materials.SALMON.parseMaterial()
+						|| is.getType() == Materials.TROPICAL_FISH.parseMaterial()
+						|| is.getType() == Materials.PUFFERFISH.parseMaterial())) {
 					return;
 				}
 			} else if (entity.getType() == EntityType.RABBIT) {
@@ -644,7 +654,27 @@ public class Interact implements Listener {
 					return;
 				}
 			} else {
-				return;
+				int NMSVersion = NMSUtil.getVersionNumber();
+
+				if (NMSVersion > 10) {
+					if (entity.getType() == EntityType.LLAMA) {
+						if (!(is.getType() == Materials.HAY_BLOCK.parseMaterial())) {
+							return;
+						}
+					} else if (NMSVersion > 12) {
+						if (entity.getType() == EntityType.TURTLE) {
+							if (!(is.getType() == Materials.SEAGRASS.parseMaterial())) {
+								return;
+							}
+						} else {
+							return;
+						}
+					} else {
+						return;
+					}
+				} else {
+					return;
+				}
 			}
 
 			if (!islandManager.hasPermission(player, entity.getLocation(), "AnimalBreeding")) {
