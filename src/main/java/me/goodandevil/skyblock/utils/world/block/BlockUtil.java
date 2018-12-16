@@ -542,11 +542,11 @@ public final class BlockUtil {
 				worldHandle.getClass().getMethod("setTypeAndData", blockPosition.getClass(), IBlockDataClass, int.class)
 						.invoke(worldHandle, blockPosition, IBlockData, 2);
 
-				if (NMSUtil.getVersionReleaseNumber() > 1) {
-					chunk.getClass().getMethod("setType", blockPosition.getClass(), IBlockDataClass, boolean.class)
-							.invoke(chunk, blockPosition, IBlockData, true);
-				} else {
+				try {
 					chunk.getClass().getMethod("a", blockPosition.getClass(), IBlockDataClass, boolean.class)
+							.invoke(chunk, blockPosition, IBlockData, true);
+				} catch (Exception e) {
+					chunk.getClass().getMethod("setType", blockPosition.getClass(), IBlockDataClass, boolean.class)
 							.invoke(chunk, blockPosition, IBlockData, true);
 				}
 			} else {

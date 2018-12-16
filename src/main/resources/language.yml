@@ -166,7 +166,7 @@ Command:
                         Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player &edisconnected and didn't respond to your invite."
                 Target:
                     Received:
-                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have been invited to join &d%player's &eIsland. You have &c%time &eto respond."
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have been invited to join &d%player's &eIsland. You have &c%time &eto respond.    "
                     Expired:
                         Message: "&bSkyBlock &8| &aInfo&8: &eYou didn't respond to &c%player's &einvite in time."
         Accept:

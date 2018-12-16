@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -46,6 +47,7 @@ import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.upgrade.UpgradeManager;
 import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
+import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
@@ -954,8 +956,17 @@ public class IslandManager {
 	}
 
 	public void removeSpawnProtection(org.bukkit.Location location) {
-		location.getBlock().setType(Material.AIR);
-		location.clone().add(0.0D, 1.0D, 0.0D).getBlock().setType(Material.AIR);
+		Block block = location.getBlock();
+
+		if (block.getType() == Materials.MOVING_PISTON.parseMaterial()) {
+			block.setType(Material.AIR);
+		}
+
+		block = location.clone().add(0.0D, 1.0D, 0.0D).getBlock();
+
+		if (block.getType() == Materials.MOVING_PISTON.parseMaterial()) {
+			block.setType(Material.AIR);
+		}
 	}
 
 	public Set<UUID> getMembersOnline(Island island) {

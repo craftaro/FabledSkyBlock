@@ -142,7 +142,7 @@ public class InviteCommand extends SubCommand {
 
 												for (String messageList : message.split("\n")) {
 													chatComponent
-															.addExtraChatComponent(
+															.addExtra(
 																	new ChatComponent(
 																			messageManager.replaceMessage(player,
 																					messageList
@@ -158,7 +158,7 @@ public class InviteCommand extends SubCommand {
 												}
 											} else {
 												chatComponent
-														.addExtraChatComponent(new ChatComponent(
+														.addExtra(new ChatComponent(
 																messageManager.replaceMessage(player,
 																		message.replace("%player",
 																				targetPlayer.getName())
@@ -168,7 +168,7 @@ public class InviteCommand extends SubCommand {
 
 											if (cancellationMessages.length == 1
 													|| i + 1 != cancellationMessages.length) {
-												chatComponent.addExtraChatComponent(new ChatComponent(
+												chatComponent.addExtra(new ChatComponent(
 														configLoad
 																.getString("Command.Island.Invite.Invited.Word.Cancel")
 																.toUpperCase(),
@@ -194,46 +194,62 @@ public class InviteCommand extends SubCommand {
 											.replace("%player", targetPlayer.getName()).replace("%time", timeMessage));
 								}
 
-								targetPlayer.spigot().sendMessage(new ChatComponent(messageManager.replaceMessage(
-										targetPlayer,
-										ChatColor.translateAlternateColorCodes('&', configLoad
-												.getString("Command.Island.Invite.Invited.Target.Received.Message")
-												.replace("%player", player.getName()).replace("%time", timeMessage)
-												+ "   ")),
-										false, null, null, null)
-												.addExtraChatComponent(new ChatComponent(
-														configLoad.getString(
-																"Command.Island.Invite.Invited.Word.Accept")
-																.toUpperCase(),
-														true, ChatColor.GREEN,
-														new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-																"/island accept " + player.getName()),
-														new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-																new ComponentBuilder(ChatColor
-																		.translateAlternateColorCodes('&', configLoad
-																				.getString(
-																						"Command.Island.Invite.Invited.Word.Tutorial")
-																				.replace("%action",
-																						configLoad.getString(
-																								"Command.Island.Invite.Invited.Word.Accept"))))
-																										.create())))
-												.addExtraChatComponent(new ChatComponent(" | ", false,
-														ChatColor.DARK_GRAY, null, null))
-												.addExtra(new ChatComponent(
-														configLoad.getString("Command.Island.Invite.Invited.Word.Deny")
-																.toUpperCase(),
-														true, ChatColor.RED,
-														new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-																"/island deny " + player.getName()),
-														new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-																new ComponentBuilder(ChatColor
-																		.translateAlternateColorCodes('&', configLoad
-																				.getString(
-																						"Command.Island.Invite.Invited.Word.Tutorial")
-																				.replace("%action",
-																						configLoad.getString(
-																								"Command.Island.Invite.Invited.Word.Deny"))))
-																										.create()))));
+								String invitationMessage = configLoad
+										.getString("Command.Island.Invite.Invited.Target.Received.Message");
+								ChatComponent chatComponent = new ChatComponent("", false, null, null, null);
+
+								if (invitationMessage.contains("\n") || invitationMessage.contains("\\n")) {
+									invitationMessage = invitationMessage.replace("\\n", "\n");
+
+									for (String messageList : invitationMessage.split("\n")) {
+										chatComponent.addExtra(new ChatComponent(
+												messageManager.replaceMessage(player,
+														messageList.replace("%player", player.getName())
+																.replace("%time", timeMessage)),
+												false, null, null, null));
+
+										chatComponent.addExtra(
+												new TextComponent(ComponentSerializer.parse("{text: \"\n\"}")));
+									}
+								} else {
+									chatComponent
+											.addExtra(new ChatComponent(
+													messageManager.replaceMessage(player,
+															invitationMessage.replace("%player", player.getName())
+																	.replace("%time", timeMessage)),
+													false, null, null, null));
+								}
+
+								chatComponent.addExtra(new ChatComponent(
+										configLoad.getString("Command.Island.Invite.Invited.Word.Accept").toUpperCase(),
+										true, ChatColor.GREEN,
+										new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+												"/island accept " + player.getName()),
+										new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+												ChatColor.translateAlternateColorCodes('&', configLoad
+														.getString("Command.Island.Invite.Invited.Word.Tutorial")
+														.replace("%action",
+																configLoad.getString(
+																		"Command.Island.Invite.Invited.Word.Accept"))))
+																				.create())));
+
+								chatComponent
+										.addExtra(new ChatComponent(" | ", false, ChatColor.DARK_GRAY, null, null));
+
+								chatComponent.addExtra(new ChatComponent(
+										configLoad.getString("Command.Island.Invite.Invited.Word.Deny").toUpperCase(),
+										true, ChatColor.RED,
+										new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+												"/island deny " + player.getName()),
+										new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+												ChatColor.translateAlternateColorCodes('&', configLoad
+														.getString("Command.Island.Invite.Invited.Word.Tutorial")
+														.replace("%action",
+																configLoad.getString(
+																		"Command.Island.Invite.Invited.Word.Deny"))))
+																				.create())));
+
+								targetPlayer.spigot().sendMessage(chatComponent.getTextComponent());
 
 								Invite invite = skyblock.getInviteManager().createInvite(targetPlayer, player,
 										island.getOwnerUUID(), respondTime);
