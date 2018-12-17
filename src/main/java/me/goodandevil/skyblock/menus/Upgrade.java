@@ -597,7 +597,7 @@ public class Upgrade {
 									configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimed.Lore"),
 							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 											"%status#" + getStatus(island,
 													me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed) }),
 							null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 0);
@@ -608,7 +608,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 0);
 					} else {
 						nInv.addItem(nInv.createItem(potion,
@@ -616,7 +616,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Speed.Unclaimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 0);
 					}
 				}
@@ -648,7 +648,7 @@ public class Upgrade {
 									configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimed.Lore"),
 							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 											"%status#" + getStatus(island,
 													me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump) }),
 							null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 1);
@@ -659,7 +659,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 1);
 					} else {
 						nInv.addItem(nInv.createItem(potion,
@@ -667,7 +667,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Jump.Unclaimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 1);
 					}
 				}
@@ -684,7 +684,7 @@ public class Upgrade {
 									configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimed.Lore"),
 							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 											"%status#" + getStatus(island,
 													me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop) }),
 							null, null), 3);
@@ -695,7 +695,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, null), 3);
 					} else {
 						nInv.addItem(nInv.createItem(Materials.WHEAT_SEEDS.parseItem(),
@@ -703,7 +703,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Crop.Unclaimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, null), 3);
 					}
 				}
@@ -720,7 +720,7 @@ public class Upgrade {
 									configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimed.Lore"),
 							nInv.createItemLoreVariable(new String[] {
-									"%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+									"%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 									"%status#" + getStatus(island, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly) }),
 							null, null), 4);
 				} else {
@@ -730,7 +730,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, null), 4);
 					} else {
 						nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
@@ -738,7 +738,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Fly.Unclaimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, null), 4);
 					}
 				}
@@ -755,7 +755,7 @@ public class Upgrade {
 									configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimed.Lore"),
 							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 											"%status#" + getStatus(island,
 													me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops) }),
 							null, null), 5);
@@ -766,7 +766,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, null), 5);
 					} else {
 						nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
@@ -774,7 +774,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Drops.Unclaimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, null), 5);
 					}
 				}
@@ -801,7 +801,7 @@ public class Upgrade {
 														.replace("%tier", "" + tier)),
 										configLoad.getStringList("Menu.Upgrade.Item.Size.Claimed.Lore"),
 										nInv.createItemLoreVariable(
-												new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+												new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 														"%tier#" + tier, "%size#" + upgrade.getValue() }),
 										null, null),
 								7);
@@ -814,7 +814,7 @@ public class Upgrade {
 															.replace("%tier", "" + tier)),
 											configLoad.getStringList("Menu.Upgrade.Item.Size.Claimable.Lore"),
 											nInv.createItemLoreVariable(new String[] {
-													"%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+													"%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 													"%tier#" + tier, "%size#" + upgrade.getValue() }),
 											null, null),
 									7);
@@ -826,7 +826,7 @@ public class Upgrade {
 															.replace("%tier", "" + tier)),
 											configLoad.getStringList("Menu.Upgrade.Item.Size.Unclaimable.Lore"),
 											nInv.createItemLoreVariable(new String[] {
-													"%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+													"%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 													"%tier#" + tier, "%size#" + upgrade.getValue() }),
 											null, null),
 									7);
@@ -848,7 +848,7 @@ public class Upgrade {
 									configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimed.Lore"),
 							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 											"%status#" + getStatus(island,
 													me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner) }),
 							null, null), 8);
@@ -859,7 +859,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, null), 8);
 					} else {
 						nInv.addItem(nInv.createItem(Materials.SPAWNER.parseItem(),
@@ -867,7 +867,7 @@ public class Upgrade {
 										configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Spawner.Unclaimable.Lore"),
 								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 								null, null), 8);
 					}
 				}

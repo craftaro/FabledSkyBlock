@@ -35,6 +35,7 @@ public class Interact implements Listener {
 		this.skyblock = skyblock;
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -300,7 +301,7 @@ public class Interact implements Listener {
 					&& (event.getItem() != null) && (event.getItem().getType() != Material.AIR)
 					&& (event.getItem().getType() == Material.BUCKET)) {
 				if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-						.getFileConfiguration().getBoolean("Island.Obsidian.Enable")
+						.getFileConfiguration().getBoolean("Island.Block.Obsidian.Enable")
 						&& islandManager.hasPermission(player, block.getLocation(), "Bucket")) {
 					int NMSVersion = NMSUtil.getVersionNumber();
 					boolean isInventoryFull = false;
@@ -338,6 +339,24 @@ public class Interact implements Listener {
 					event.setCancelled(true);
 
 					return;
+				}
+			} else if (block.getType() == Materials.END_PORTAL_FRAME.parseMaterial()) {
+				if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+						.getFileConfiguration().getBoolean("Island.Block.EndFrame.Enable")
+						&& islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
+					ItemStack is = event.getItem();
+
+					if (is == null || is.getType() == Material.AIR) {
+						block.setType(Material.AIR);
+						player.getInventory().setItemInHand(new ItemStack(Materials.END_PORTAL_FRAME.parseMaterial()));
+						player.updateInventory();
+
+						soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 10.0F, 10.0F);
+
+						event.setCancelled(true);
+
+						return;
+					}
 				}
 			}
 
@@ -394,7 +413,9 @@ public class Interact implements Listener {
 					}
 				}
 			}
-		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK)
+
+		{
 			if (player.getTargetBlock((Set<Material>) null, 5).getType() == Material.FIRE) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Fire")) {
 					event.setCancelled(true);

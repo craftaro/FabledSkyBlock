@@ -23,7 +23,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class SetSizeCommand extends SubCommand {
@@ -128,7 +128,7 @@ public class SetSizeCommand extends SubCommand {
 						messageManager.sendMessage(sender,
 								configLoad.getString("Command.Island.Admin.SetSize.Set.Message")
 										.replace("%player", targetPlayerName)
-										.replace("%size", NumberUtil.formatNumber(size)));
+										.replace("%size", NumberUtil.formatNumberByDecimal(size)));
 						soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {

@@ -51,6 +51,7 @@ import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.structure.StructureManager;
 import me.goodandevil.skyblock.upgrade.UpgradeManager;
+import me.goodandevil.skyblock.usercache.UserCacheManager;
 import me.goodandevil.skyblock.visit.VisitManager;
 import me.goodandevil.skyblock.visit.VisitTask;
 import me.goodandevil.skyblock.world.WorldManager;
@@ -62,6 +63,7 @@ public class SkyBlock extends JavaPlugin {
 
 	private FileManager fileManager;
 	private WorldManager worldManager;
+	private UserCacheManager userCacheManager;
 	private VisitManager visitManager;
 	private BanManager banManager;
 	private IslandManager islandManager;
@@ -89,6 +91,7 @@ public class SkyBlock extends JavaPlugin {
 
 		fileManager = new FileManager(this);
 		worldManager = new WorldManager(this);
+		userCacheManager = new UserCacheManager(this);
 		visitManager = new VisitManager(this);
 		banManager = new BanManager(this);
 		islandManager = new IslandManager(this);
@@ -156,6 +159,10 @@ public class SkyBlock extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		if (this.userCacheManager != null) {
+			this.userCacheManager.onDisable();
+		}
+
 		if (this.levellingManager != null) {
 			this.levellingManager.onDisable();
 		}
@@ -205,6 +212,10 @@ public class SkyBlock extends JavaPlugin {
 
 	public WorldManager getWorldManager() {
 		return worldManager;
+	}
+
+	public UserCacheManager getUserCacheManager() {
+		return userCacheManager;
 	}
 
 	public VisitManager getVisitManager() {

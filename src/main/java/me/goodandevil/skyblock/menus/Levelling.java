@@ -212,8 +212,8 @@ public class Levelling {
 					configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"),
 					configLoad.getStringList("Menu.Levelling.Item.Statistics.Lore"),
 					nInv.createItemLoreVariable(
-							new String[] { "%level_points#" + NumberUtil.formatNumber(level.getPoints()),
-									"%level#" + NumberUtil.formatNumber(level.getLevel()) }),
+							new String[] { "%level_points#" + NumberUtil.formatNumberByDecimal(level.getPoints()),
+									"%level#" + NumberUtil.formatNumberByDecimal(level.getLevel()) }),
 					null, null), 4);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
@@ -268,7 +268,7 @@ public class Levelling {
 
 									nInv.addItem(nInv.createItem(is, configLoad
 											.getString("Menu.Levelling.Item.Material.Displayname")
-											.replace("%points", NumberUtil.formatNumber(pointsEarned))
+											.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
 											.replace("%material",
 													WordUtils.capitalize(material.toLowerCase().replace("_", " ")
 															.replace("item", "").replace("block", ""))),

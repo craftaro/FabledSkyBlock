@@ -23,7 +23,7 @@ import me.goodandevil.skyblock.leaderboard.Leaderboard;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.visit.Visit;
 
@@ -113,13 +113,13 @@ public class HologramManager {
 						hologramLines.add(ChatColor.translateAlternateColorCodes('&',
 								languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
-										.replace("%level", NumberUtil.formatNumber(level.getLevel()))
-										.replace("%points", NumberUtil.formatNumber(level.getPoints()))));
+										.replace("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))
+										.replace("%points", NumberUtil.formatNumberByDecimal(level.getPoints()))));
 					} else if (type == HologramType.Votes) {
 						hologramLines.add(ChatColor.translateAlternateColorCodes('&',
 								languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
-										.replace("%votes", "" + NumberUtil.formatNumber(visit.getVoters().size()))));
+										.replace("%votes", "" + NumberUtil.formatNumberByDecimal(visit.getVoters().size()))));
 					}
 				}
 			}
@@ -271,14 +271,14 @@ public class HologramManager {
 							hologram.setLine(hologramLine, ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Hologram.Leaderboard." + hologramTypeList.name() + ".Claimed")
 											.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
-											.replace("%level", NumberUtil.formatNumber(level.getLevel()))
-											.replace("%points", NumberUtil.formatNumber(level.getPoints()))));
+											.replace("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))
+											.replace("%points", NumberUtil.formatNumberByDecimal(level.getPoints()))));
 						} else if (hologramTypeList == HologramType.Votes) {
 							hologram.setLine(hologramLine, ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Hologram.Leaderboard." + hologramTypeList.name() + ".Claimed")
 											.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
 											.replace("%votes",
-													"" + NumberUtil.formatNumber(visit.getVoters().size()))));
+													"" + NumberUtil.formatNumberByDecimal(visit.getVoters().size()))));
 						}
 					}
 				}

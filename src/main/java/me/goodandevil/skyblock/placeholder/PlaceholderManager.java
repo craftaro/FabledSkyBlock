@@ -20,6 +20,7 @@ import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
+import me.goodandevil.skyblock.utils.NumberUtil;
 
 public class PlaceholderManager {
 
@@ -103,6 +104,15 @@ public class PlaceholderManager {
 				return ChatColor.translateAlternateColorCodes('&',
 						configLoad.getString("Placeholder.skyblock_island_level.Non-empty.Message")
 								.replace("%placeholder", "" + island.getLevel().getLevel()));
+			}
+		} else if (placeholder.equalsIgnoreCase("skyblock_island_level_formatted")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.skyblock_island_level_formatted.Empty.Message"));
+			} else {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.skyblock_island_level_formatted.Non-empty.Message").replace(
+								"%placeholder", "" + NumberUtil.formatNumberBySuffix(island.getLevel().getLevel())));
 			}
 		} else if (placeholder.equalsIgnoreCase("skyblock_island_points")) {
 			if (island == null) {
@@ -272,6 +282,7 @@ public class PlaceholderManager {
 		placeholders.add("skyblock_island_size");
 		placeholders.add("skyblock_island_radius");
 		placeholders.add("skyblock_island_level");
+		placeholders.add("skyblock_island_level_formatted");
 		placeholders.add("skyblock_island_points");
 		placeholders.add("skyblock_island_role");
 		placeholders.add("skyblock_island_owner");

@@ -24,6 +24,7 @@ import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
+import me.goodandevil.skyblock.usercache.UserCacheManager;
 
 public class Join implements Listener {
 
@@ -39,8 +40,12 @@ public class Join implements Listener {
 
 		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		UserCacheManager userCacheManager = skyblock.getUserCacheManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		FileManager fileManager = skyblock.getFileManager();
+
+		userCacheManager.addUser(player.getUniqueId(), player.getName());
+		userCacheManager.saveAsync();
 
 		try {
 			islandManager.loadIsland(player.getUniqueId());

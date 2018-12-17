@@ -64,11 +64,7 @@ public class Respawn implements Listener {
 						event.setRespawnLocation(islandLocation);
 
 						islandManager.giveUpgrades(player, island);
-
-						if (player.hasPermission("skyblock.fly") || player.hasPermission("skyblock.*")) {
-							player.setAllowFlight(true);
-							player.setFlying(true);
-						}
+						islandManager.giveFly(player, island);
 
 						return;
 					}

@@ -20,7 +20,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.visit.VisitManager;
 
@@ -72,7 +72,7 @@ public class LevelCommand extends SubCommand {
 						messageManager.sendMessage(player,
 								configLoad.getString("Command.Island.Level.Level.Message")
 										.replace("%player", targetPlayerName)
-										.replace("%level", "" + NumberUtil.formatNumber(visit.getLevel().getLevel())));
+										.replace("%level", "" + NumberUtil.formatNumberByDecimal(visit.getLevel().getLevel())));
 						soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
 						return;

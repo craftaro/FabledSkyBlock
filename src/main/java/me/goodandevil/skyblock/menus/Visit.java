@@ -26,12 +26,12 @@ import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.StringUtil;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.visit.VisitManager;
@@ -372,9 +372,9 @@ public class Visit {
 				configLoad.getString("Menu.Visit.Item.Statistics.Displayname"),
 				configLoad.getStringList("Menu.Visit.Item.Statistics.Lore"),
 				nInv.createItemLoreVariable(
-						new String[] { "%islands_open#" + NumberUtil.formatNumber(visitIslands.size()),
-								"%islands_closed#" + NumberUtil.formatNumber(totalIslands - visitIslands.size()),
-								"%islands#" + NumberUtil.formatNumber(totalIslands) }),
+						new String[] { "%islands_open#" + NumberUtil.formatNumberByDecimal(visitIslands.size()),
+								"%islands_closed#" + NumberUtil.formatNumberByDecimal(totalIslands - visitIslands.size()),
+								"%islands#" + NumberUtil.formatNumberByDecimal(totalIslands) }),
 				null, null), 4);
 		nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
 				configLoad.getString("Menu.Visit.Item.Sort.Displayname"),

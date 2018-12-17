@@ -203,7 +203,7 @@ public class Scoreboard {
 			Level level = island.getLevel();
 
 			if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
-				displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumber(level.getLevel()))
+				displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel()))
 						.replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null")
 						.replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size())
 						.replace("%island_size", "" + island.getSize())
@@ -221,8 +221,8 @@ public class Scoreboard {
 					islandRole = displayVariables.get("%member");
 				}
 
-				displayLine = displayLine.replace("%island_points", "" + NumberUtil.formatNumber(level.getPoints()))
-						.replace("%island_level", "" + NumberUtil.formatNumber(level.getLevel()))
+				displayLine = displayLine.replace("%island_points", "" + NumberUtil.formatNumberByDecimal(level.getPoints()))
+						.replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel()))
 						.replace("%island_members", "" + islandMembers).replace("%island_role", islandRole)
 						.replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size())
 						.replace("%island_size", "" + island.getSize())

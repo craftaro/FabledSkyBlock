@@ -45,7 +45,7 @@ import me.goodandevil.skyblock.structure.Structure;
 import me.goodandevil.skyblock.structure.StructureManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.upgrade.UpgradeManager;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
@@ -1040,16 +1040,7 @@ public class IslandManager {
 							}
 
 							giveUpgrades(player, island);
-
-							if (player.hasPermission("skyblock.fly") || player.hasPermission("skyblock.*")) {
-								Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										player.setAllowFlight(true);
-										player.setFlying(true);
-									}
-								});
-							}
+							giveFly(player, island);
 
 							return;
 						}
@@ -1100,6 +1091,33 @@ public class IslandManager {
 			});
 		}
 
+	}
+
+	public void giveFly(Player player, Island island) {
+		if (island.hasRole(IslandRole.Member, player.getUniqueId())
+				|| island.hasRole(IslandRole.Operator, player.getUniqueId())
+				|| island.hasRole(IslandRole.Operator, player.getUniqueId())) {
+			if (player.hasPermission("skyblock.fly") || player.hasPermission("skyblock.fly")
+					|| player.hasPermission("skyblock.*")) {
+				Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+					@Override
+					public void run() {
+						player.setAllowFlight(true);
+						player.setFlying(true);
+					}
+				});
+			}
+		} else {
+			if (player.hasPermission("skyblock.fly") || player.hasPermission("skyblock.*")) {
+				Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+					@Override
+					public void run() {
+						player.setAllowFlight(true);
+						player.setFlying(true);
+					}
+				});
+			}
+		}
 	}
 
 	public void removeUpgrades(Player player, boolean bypassIsland) {

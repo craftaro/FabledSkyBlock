@@ -112,7 +112,7 @@ public class Levelling implements Listener {
 											.replace("%material", material.getMaterials().name())),
 							configLoad.getStringList("Menu.Admin.Levelling.Item.Material.Lore"),
 							nInv.createItemLoreVariable(
-									new String[] { "%points#" + NumberUtil.formatNumber(material.getPoints()) }),
+									new String[] { "%points#" + NumberUtil.formatNumberByDecimal(material.getPoints()) }),
 							null, null), inventorySlot);
 				}
 			}
@@ -195,7 +195,7 @@ public class Levelling implements Listener {
 
 								messageManager.sendMessage(player,
 										configLoad.getString("Island.Admin.Levelling.Division.Message")
-												.replace("%division", NumberUtil.formatNumber(pointDivision)));
+												.replace("%division", NumberUtil.formatNumberByDecimal(pointDivision)));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
 								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
@@ -318,7 +318,7 @@ public class Levelling implements Listener {
 														configLoad.getString("Island.Admin.Levelling.Points.Message")
 																.replace("%material", materials.name())
 																.replace("%points",
-																		NumberUtil.formatNumber(materialPoints)));
+																		NumberUtil.formatNumberByDecimal(materialPoints)));
 												soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F,
 														1.0F);
 												player.closeInventory();

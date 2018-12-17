@@ -21,7 +21,7 @@ import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class DeleteCommand extends SubCommand {
@@ -74,7 +74,11 @@ public class DeleteCommand extends SubCommand {
 					targetPlayerName = targetPlayer.getName();
 				}
 
-				if (islandManager.isIslandExist(targetPlayerUUID)) {
+				if (targetPlayerUUID == null || !islandManager.isIslandExist(targetPlayerUUID)) {
+					messageManager.sendMessage(sender,
+							configLoad.getString("Command.Island.Admin.Delete.Owner.Message"));
+					soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				} else {
 					islandManager.loadIsland(targetPlayerUUID);
 
 					Island island = islandManager.getIsland(targetPlayerUUID);
@@ -95,10 +99,6 @@ public class DeleteCommand extends SubCommand {
 							configLoad.getString("Command.Island.Admin.Delete.Deleted.Message").replace("%player",
 									targetPlayerName));
 					soundManager.playSound(sender, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
-				} else {
-					messageManager.sendMessage(sender,
-							configLoad.getString("Command.Island.Admin.Delete.Owner.Message"));
-					soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
 				messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Delete.Invalid.Message"));

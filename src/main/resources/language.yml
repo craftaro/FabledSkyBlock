@@ -1075,6 +1075,11 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+    skyblock_island_level_formatted:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
     skyblock_island_points:
         Empty:
             Message: "&c0"

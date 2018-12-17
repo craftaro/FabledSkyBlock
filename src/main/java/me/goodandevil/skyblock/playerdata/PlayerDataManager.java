@@ -26,7 +26,7 @@ import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.visit.Visit;
 import me.goodandevil.skyblock.world.WorldManager;
@@ -186,11 +186,7 @@ public class PlayerDataManager {
 								}
 
 								islandManager.giveUpgrades(player, island);
-
-								if (player.hasPermission("skyblock.fly") || player.hasPermission("skyblock.*")) {
-									player.setAllowFlight(true);
-									player.setFlying(true);
-								}
+								islandManager.giveFly(player, island);
 
 								return;
 							} else if (island.isOpen() || island.isCoopPlayer(player.getUniqueId())) {
@@ -214,11 +210,7 @@ public class PlayerDataManager {
 								}
 
 								islandManager.giveUpgrades(player, island);
-
-								if (player.hasPermission("skyblock.fly") || player.hasPermission("skyblock.*")) {
-									player.setAllowFlight(true);
-									player.setFlying(true);
-								}
+								islandManager.giveFly(player, island);
 
 								ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 
@@ -325,12 +317,7 @@ public class PlayerDataManager {
 										}
 
 										islandManager.giveUpgrades(player, island);
-
-										if (player.hasPermission("skyblock.fly")
-												|| player.hasPermission("skyblock.*")) {
-											player.setAllowFlight(true);
-											player.setFlying(true);
-										}
+										islandManager.giveFly(player, island);
 									}
 
 									return;

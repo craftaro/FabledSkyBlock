@@ -18,7 +18,7 @@ import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.leaderboard.Leaderboard;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.visit.Visit;
 
 public class MVdWPlaceholder {
@@ -71,7 +71,7 @@ public class MVdWPlaceholder {
 										configLoad.getString("Placeholder.skyblock_leaderboard_votes.Non-empty.Message")
 												.replace("%position", "" + (index + 1))
 												.replace("%player", islandOwnerName)
-												.replace("%votes", NumberUtil.formatNumber(visit.getVoters().size())));
+												.replace("%votes", NumberUtil.formatNumberByDecimal(visit.getVoters().size())));
 							}
 
 							return ChatColor.translateAlternateColorCodes('&',
@@ -104,8 +104,8 @@ public class MVdWPlaceholder {
 										configLoad.getString("Placeholder.skyblock_leaderboard_level.Non-empty.Message")
 												.replace("%position", "" + (index + 1))
 												.replace("%player", islandOwnerName)
-												.replace("%level", NumberUtil.formatNumber(level.getLevel()))
-												.replace("%points", NumberUtil.formatNumber(level.getPoints())));
+												.replace("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))
+												.replace("%points", NumberUtil.formatNumberByDecimal(level.getPoints())));
 							}
 
 							return ChatColor.translateAlternateColorCodes('&',
@@ -114,225 +114,19 @@ public class MVdWPlaceholder {
 					});
 		}
 
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_size", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
+		for (String placeholderList : placeholderManager.getPlaceholders()) {
+			PlaceholderAPI.registerPlaceholder(skyblock, placeholderList, new PlaceholderReplacer() {
+				@Override
+				public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
+					Player player = event.getPlayer();
 
-				if (player == null) {
-					return null;
+					if (player == null) {
+						return null;
+					}
+
+					return placeholderManager.getPlaceholder(player, event.getPlaceholder());
 				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_radius", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_level", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_points", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_role", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_owner", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_biome", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_time", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_weather", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_bans", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_members_total", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_members", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_operators", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_coops", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_coops_total", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_visitors", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
-
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_island_invites", new PlaceholderReplacer() {
-			@Override
-			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
-				Player player = event.getPlayer();
-
-				if (player == null) {
-					return null;
-				}
-
-				return placeholderManager.getPlaceholder(player, event.getPlaceholder());
-			}
-		});
+			});
+		}
 	}
 }

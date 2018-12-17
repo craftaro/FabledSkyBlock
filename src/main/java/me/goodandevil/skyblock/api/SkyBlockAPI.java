@@ -202,6 +202,15 @@ public class SkyBlockAPI {
 	}
 
 	/**
+	 * Gives Fly to a player if they have permission at an Island
+	 */
+	public static void giveFly(Player player, Island island) {
+		Preconditions.checkArgument(player != null, "Cannot give upgrades to null player");
+		Preconditions.checkArgument(island != null, "Cannot give upgrades to null island");
+		implementation.getIslandManager().giveFly(player, island.getIsland());
+	}
+
+	/**
 	 * Removes the Island Upgrades from a player
 	 */
 	public static void removeUpgrades(Player player) {
@@ -265,7 +274,7 @@ public class SkyBlockAPI {
 	 */
 	public static boolean hasIsland(OfflinePlayer player) {
 		Preconditions.checkArgument(player != null, "Cannot check island to null player");
-		return new me.goodandevil.skyblock.utils.OfflinePlayer(player.getUniqueId()).getOwner() != null;
+		return new me.goodandevil.skyblock.utils.player.OfflinePlayer(player.getUniqueId()).getOwner() != null;
 	}
 
 	/**

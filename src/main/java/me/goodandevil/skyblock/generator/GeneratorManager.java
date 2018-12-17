@@ -43,23 +43,25 @@ public class GeneratorManager {
 			Random rnd = new Random();
 
 			for (String generatorList : configLoad.getConfigurationSection("Generators").getKeys(false)) {
-				List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
+				if (configLoad.getString("Generators." + generatorList + ".Name") != null) {
+					List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
 
-				if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
-					for (String materialList : configLoad
-							.getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
-						Materials materials = Materials.fromString(materialList);
+					if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
+						for (String materialList : configLoad
+								.getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
+							Materials materials = Materials.fromString(materialList);
 
-						if (materials != null) {
-							generatorMaterials.add(new GeneratorMaterial(materials, configLoad
-									.getInt("Generators." + generatorList + ".Materials." + materialList + ".Chance")));
+							if (materials != null) {
+								generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getInt(
+										"Generators." + generatorList + ".Materials." + materialList + ".Chance")));
+							}
 						}
 					}
-				}
 
-				generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
-						oreMaterials[rnd.nextInt(oreMaterials.length)], generatorMaterials,
-						configLoad.getBoolean("Generators." + generatorList + ".Permission")));
+					generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
+							oreMaterials[rnd.nextInt(oreMaterials.length)], generatorMaterials,
+							configLoad.getBoolean("Generators." + generatorList + ".Permission")));
+				}
 			}
 		}
 	}

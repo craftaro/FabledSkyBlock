@@ -8,7 +8,7 @@ public final class NumberUtil {
 		return String.format("%,d", number);
 	}
 
-	public static String formatNumber(double number) {
+	public static String formatNumberByDecimal(double number) {
 		String withoutDecimal = String.valueOf(number), withDecimal = "";
 
 		if (withoutDecimal.contains(".")) {
@@ -23,6 +23,16 @@ public final class NumberUtil {
 		int itemCostWithoutDecimalValue = Integer.valueOf(withoutDecimal);
 
 		return formatNumber(itemCostWithoutDecimalValue) + withDecimal;
+	}
+
+	public static String formatNumberBySuffix(int number) {
+		if (number < 1000) {
+			return "" + number;
+		}
+
+		int exp = (int) (Math.log(number) / Math.log(1000));
+
+		return String.format("%.1f %c", number / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
 	}
 
 	public static long[] getDuration(int time) {

@@ -271,7 +271,7 @@ public class Upgrade {
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Speed.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Speed.Lore"),
 						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 										"%status#" + getStatus(upgrade) }),
 						null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 1);
 
@@ -289,7 +289,7 @@ public class Upgrade {
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Jump.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Jump.Lore"),
 						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 										"%status#" + getStatus(upgrade) }),
 						null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 2);
 
@@ -299,7 +299,7 @@ public class Upgrade {
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Crop.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Crop.Lore"),
 						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 										"%status#" + getStatus(upgrade) }),
 						null, null), 3);
 
@@ -309,7 +309,7 @@ public class Upgrade {
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Fly.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Fly.Lore"),
 						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 										"%status#" + getStatus(upgrade) }),
 						null, null), 4);
 
@@ -319,7 +319,7 @@ public class Upgrade {
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Drops.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Drops.Lore"),
 						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 										"%status#" + getStatus(upgrade) }),
 						null, null), 5);
 
@@ -343,7 +343,7 @@ public class Upgrade {
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Lore"),
 						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumber(upgrade.getCost()),
+								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
 										"%status#" + getStatus(upgrade) }),
 						null, null), 7);
 
@@ -828,7 +828,7 @@ public class Upgrade {
 														.replace("%tier", "" + tier)),
 										configLoad.getStringList("Menu.Admin.Upgrade.Size.Item.Tier.Lore"),
 										nInv.createItemLoreVariable(new String[] { "%size#" + upgrade.getValue(),
-												"%cost#" + NumberUtil.formatNumber(upgrade.getCost()) }),
+												"%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
 										null, null), i + 3);
 							}
 						}

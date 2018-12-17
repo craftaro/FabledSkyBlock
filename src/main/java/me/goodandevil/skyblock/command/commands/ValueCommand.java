@@ -67,7 +67,7 @@ public class ValueCommand extends SubCommand {
 									.replace("%material",
 											WordUtils.capitalizeFully(materials.name().toLowerCase().replace("_", " ")))
 									.replace("%points", "" + material.getPoints())
-									.replace("%level", "" + NumberUtil.formatNumber(level)));
+									.replace("%level", "" + NumberUtil.formatNumberByDecimal(level)));
 					soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 				} else {
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.None.Message"));
