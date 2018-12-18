@@ -1,7 +1,6 @@
 package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -44,30 +43,28 @@ public class Respawn implements Listener {
 			FileConfiguration configLoad = config.getFileConfiguration();
 
 			if (configLoad.getBoolean("Island.Death.Respawn.Island")) {
-				for (UUID islandList : islandManager.getIslands().keySet()) {
-					Island island = islandManager.getIslands().get(islandList);
+				Island island = islandManager.getIslandAtLocation(player.getLocation());
 
-					if (islandManager.isPlayerAtIsland(island, player)) {
-						Location playerLocation = player.getLocation().clone(), islandLocation;
-						IslandWorld world = worldManager.getIslandWorld(player.getWorld());
+				if (island != null) {
+					Location playerLocation = player.getLocation().clone(), islandLocation;
+					IslandWorld world = worldManager.getIslandWorld(player.getWorld());
 
-						if (island.hasRole(IslandRole.Member, player.getUniqueId())
-								|| island.hasRole(IslandRole.Operator, player.getUniqueId())
-								|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-							islandLocation = island.getLocation(world, IslandEnvironment.Main);
-						} else {
-							islandLocation = island.getLocation(world, IslandEnvironment.Visitor);
-						}
-
-						Bukkit.getServer().getPluginManager()
-								.callEvent(new PlayerTeleportEvent(player, playerLocation, islandLocation));
-						event.setRespawnLocation(islandLocation);
-
-						islandManager.giveUpgrades(player, island);
-						islandManager.giveFly(player, island);
-
-						return;
+					if (island.hasRole(IslandRole.Member, player.getUniqueId())
+							|| island.hasRole(IslandRole.Operator, player.getUniqueId())
+							|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+						islandLocation = island.getLocation(world, IslandEnvironment.Main);
+					} else {
+						islandLocation = island.getLocation(world, IslandEnvironment.Visitor);
 					}
+
+					Bukkit.getServer().getPluginManager()
+							.callEvent(new PlayerTeleportEvent(player, playerLocation, islandLocation));
+					event.setRespawnLocation(islandLocation);
+
+					islandManager.giveUpgrades(player, island);
+					islandManager.giveFly(player, island);
+
+					return;
 				}
 			}
 

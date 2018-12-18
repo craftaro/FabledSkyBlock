@@ -189,11 +189,11 @@ public final class LocationUtil {
 		if (config.getFileConfiguration().getString("Location.Spawn") == null) {
 			Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");
 		} else {
-			Location spawnLocation = fileManager.getLocation(config, "Location.Spawn", true);
+			Location spawnLocation = getSpawnLocation();
 
-			if (spawnLocation.getWorld() == null) {
+			if (spawnLocation == null) {
 				Bukkit.getServer().getLogger().log(Level.WARNING,
-						"SkyBlock | Error: The world for the spawn point is not loaded or no longer exists.");
+						"SkyBlock | Error: The location for the spawn point could not be found.");
 
 				return;
 			}
@@ -201,11 +201,29 @@ public final class LocationUtil {
 			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 				@Override
 				public void run() {
-					player.teleport(fileManager.getLocation(config, "Location.Spawn", true));
+					player.teleport(spawnLocation);
 					player.setFallDistance(0.0F);
 				}
 			});
 		}
+	}
+
+	public static Location getSpawnLocation() {
+		SkyBlock skyblock = SkyBlock.getInstance();
+
+		FileManager fileManager = skyblock.getFileManager();
+
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
+
+		if (config.getFileConfiguration().getString("Location.Spawn") != null) {
+			Location location = fileManager.getLocation(config, "Location.Spawn", true);
+
+			if (location != null && location.getWorld() != null) {
+				return location;
+			}
+		}
+
+		return null;
 	}
 
 	public static Location getRandomLocation(World world, int xRange, int zRange, boolean loadChunk,

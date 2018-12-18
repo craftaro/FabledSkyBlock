@@ -22,6 +22,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -365,22 +366,21 @@ public class Visit {
 		nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
 				configLoad.getString("Menu.Visit.Item.Type.Displayname"),
 				configLoad.getStringList("Menu.Visit.Item.Type.Lore"),
-				nInv.createItemLoreVariable(
-						new String[] { "%type#" + StringUtil.capatilizeUppercaseLetters(type.name()) }),
+				new Placeholder[] { new Placeholder("%type", StringUtil.capatilizeUppercaseLetters(type.name())) },
 				null, null), 3);
 		nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
 				configLoad.getString("Menu.Visit.Item.Statistics.Displayname"),
 				configLoad.getStringList("Menu.Visit.Item.Statistics.Lore"),
-				nInv.createItemLoreVariable(
-						new String[] { "%islands_open#" + NumberUtil.formatNumberByDecimal(visitIslands.size()),
-								"%islands_closed#" + NumberUtil.formatNumberByDecimal(totalIslands - visitIslands.size()),
-								"%islands#" + NumberUtil.formatNumberByDecimal(totalIslands) }),
+				new Placeholder[] {
+						new Placeholder("%islands_open", NumberUtil.formatNumberByDecimal(visitIslands.size())),
+						new Placeholder("%islands_closed",
+								NumberUtil.formatNumberByDecimal(totalIslands - visitIslands.size())),
+						new Placeholder("%islands", NumberUtil.formatNumberByDecimal(totalIslands)) },
 				null, null), 4);
 		nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
 				configLoad.getString("Menu.Visit.Item.Sort.Displayname"),
 				configLoad.getStringList("Menu.Visit.Item.Sort.Lore"),
-				nInv.createItemLoreVariable(
-						new String[] { "%sort#" + StringUtil.capatilizeUppercaseLetters(sort.name()) }),
+				new Placeholder[] { new Placeholder("%sort", StringUtil.capatilizeUppercaseLetters(sort.name())) },
 				null, null), 5);
 		nInv.addItem(
 				nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
@@ -500,15 +500,17 @@ public class Visit {
 						}
 
 						nInv.addItem(nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]),
-								configLoad.getString(
-										"Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName),
+								configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player",
+										targetPlayerName),
 								itemLore,
-								nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(),
-										"%members#" + visit.getMembers(), "%votes#" + visit.getVoters().size(),
-										"%visits#" + visit.getVisitors().size(),
-										"%players#" + islandManager.getPlayersAtIsland(island).size(),
-										"%player_capacity#" + playerCapacity, "%action#" + voteAction,
-										"%safety#" + safety }),
+								new Placeholder[] { new Placeholder("%level", "" + visit.getLevel().getLevel()),
+										new Placeholder("%members", "" + visit.getMembers()),
+										new Placeholder("%votes", "" + visit.getVoters().size()),
+										new Placeholder("%visits", "" + visit.getVisitors().size()),
+										new Placeholder("%players",
+												"" + islandManager.getPlayersAtIsland(island).size()),
+										new Placeholder("%player_capacity", "" + playerCapacity),
+										new Placeholder("%action", voteAction), new Placeholder("%safety", safety) },
 								null, null), inventorySlot);
 					} else {
 						if (signatureEnabled) {
@@ -534,13 +536,16 @@ public class Visit {
 						}
 
 						nInv.addItem(nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]),
-								configLoad.getString(
-										"Menu.Visit.Item.Island.Displayname").replace("%player", targetPlayerName),
+								configLoad.getString("Menu.Visit.Item.Island.Displayname").replace("%player",
+										targetPlayerName),
 								itemLore,
-								nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(),
-										"%members#" + visit.getMembers(), "%visits#" + visit.getVisitors().size(),
-										"%players#" + islandManager.getPlayersAtIsland(island).size(),
-										"%player_capacity#" + playerCapacity, "%safety#" + safety }),
+								new Placeholder[] { new Placeholder("%level", "" + visit.getLevel().getLevel()),
+										new Placeholder("%members", "" + visit.getMembers()),
+										new Placeholder("%visits", "" + visit.getVisitors().size()),
+										new Placeholder("%players",
+												"" + islandManager.getPlayersAtIsland(island).size()),
+										new Placeholder("%player_capacity", "" + playerCapacity),
+										new Placeholder("%safety", safety) },
 								null, null), inventorySlot);
 					}
 				}

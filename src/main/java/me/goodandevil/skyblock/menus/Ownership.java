@@ -19,6 +19,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -299,12 +300,10 @@ public class Ownership {
 
 			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 					configLoad.getString("Menu.Ownership.Item.Exit.Displayname"), null, null, null, null), 0);
-			nInv.addItem(
-					nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
-							configLoad.getString("Menu.Ownership.Item.Original.Displayname"),
-							configLoad.getStringList("Menu.Ownership.Item.Original.Lore"),
-							nInv.createItemLoreVariable(new String[] { "%player#" + originalOwnerName }), null, null),
-					1);
+			nInv.addItem(nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
+					configLoad.getString("Menu.Ownership.Item.Original.Displayname"),
+					configLoad.getStringList("Menu.Ownership.Item.Original.Lore"),
+					new Placeholder[] { new Placeholder("%player", originalOwnerName) }, null, null), 1);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							configLoad.getString("Menu.Ownership.Item.Barrier.Displayname"), null, null, null, null),
@@ -319,10 +318,11 @@ public class Ownership {
 							configLoad.getString("Menu.Ownership.Item.Password.Displayname"),
 							configLoad.getStringList("Menu.Ownership.Item.Password.Hidden.Lore"), null, null, null), 4);
 				} else {
-					nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
-							configLoad.getString("Menu.Ownership.Item.Password.Displayname"),
-							configLoad.getStringList("Menu.Ownership.Item.Password.Visible.Lore"),
-							nInv.createItemLoreVariable(new String[] { "%password#" + ownershipPassword }), null, null),
+					nInv.addItem(
+							nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
+									configLoad.getString("Menu.Ownership.Item.Password.Displayname"),
+									configLoad.getStringList("Menu.Ownership.Item.Password.Visible.Lore"),
+									new Placeholder[] { new Placeholder("%password", ownershipPassword) }, null, null),
 							4);
 				}
 			} else {

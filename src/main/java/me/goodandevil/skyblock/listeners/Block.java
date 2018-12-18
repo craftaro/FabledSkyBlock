@@ -3,7 +3,6 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -62,51 +61,44 @@ public class Block implements Listener {
 
 		if (worldManager.isIslandWorld(block.getWorld())) {
 			IslandWorld world = worldManager.getIslandWorld(block.getWorld());
+			Island island = islandManager.getIslandAtLocation(block.getLocation());
 
 			if (islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
-				for (UUID islandList : islandManager.getIslands().keySet()) {
-					Island island = islandManager.getIslands().get(islandList);
+				if (generatorManager != null) {
+					if (generatorManager.isGenerator(block)) {
+						if (playerDataManager.hasPlayerData(player)) {
+							org.bukkit.block.Block liquid = null;
 
-					if (islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
-						if (generatorManager != null) {
-							if (generatorManager.isGenerator(block)) {
-								if (playerDataManager.hasPlayerData(player)) {
-									org.bukkit.block.Block liquid = null;
+							if (NMSUtil.getVersionNumber() < 13) {
+								BlockFace[] blockFaces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST,
+										BlockFace.SOUTH, BlockFace.WEST };
 
-									if (NMSUtil.getVersionNumber() < 13) {
-										BlockFace[] blockFaces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST,
-												BlockFace.SOUTH, BlockFace.WEST };
-
-										for (BlockFace blockFaceList : blockFaces) {
-											if (event.getBlock().getRelative(blockFaceList)
-													.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial()
-													|| event.getBlock().getRelative(blockFaceList)
-															.getType() == Materials.LAVA.parseMaterial()) {
-												liquid = event.getBlock().getRelative(blockFaceList);
-												break;
-											}
-										}
+								for (BlockFace blockFaceList : blockFaces) {
+									if (event.getBlock().getRelative(blockFaceList)
+											.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial()
+											|| event.getBlock().getRelative(blockFaceList).getType() == Materials.LAVA
+													.parseMaterial()) {
+										liquid = event.getBlock().getRelative(blockFaceList);
+										break;
 									}
-
-									playerDataManager.getPlayerData(player)
-											.setGenerator(new GeneratorLocation(world, block, liquid));
 								}
 							}
-						}
 
-						if (LocationUtil.isLocationLocation(block.getLocation(),
-								island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
-							if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
-								event.setCancelled(true);
-							}
+							playerDataManager.getPlayerData(player)
+									.setGenerator(new GeneratorLocation(world, block, liquid));
 						}
-
-						return;
 					}
 				}
 
-				event.setCancelled(true);
+				if (LocationUtil.isLocationLocation(block.getLocation(),
+						island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
+					if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+							.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+						event.setCancelled(true);
+					}
+				}
+
+				return;
 			} else {
 				event.setCancelled(true);
 
@@ -128,51 +120,38 @@ public class Block implements Listener {
 
 		if (worldManager.isIslandWorld(block.getWorld())) {
 			IslandWorld world = worldManager.getIslandWorld(block.getWorld());
+			Island island = islandManager.getIslandAtLocation(block.getLocation());
 
-			if (islandManager.hasPermission(player, "Place")) {
-				for (UUID islandList : islandManager.getIslands().keySet()) {
-					Island island = islandManager.getIslands().get(islandList);
+			if (islandManager.hasPermission(player, block.getLocation(), "Place")) {
+				Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+				FileConfiguration configLoad = config.getFileConfiguration();
 
-					if (islandManager.isLocationAtIsland(island, block.getLocation())) {
-						Config config = skyblock.getFileManager()
-								.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-						FileConfiguration configLoad = config.getFileConfiguration();
-
-						if (configLoad.getBoolean("Island.WorldBorder.Block")) {
-							if (block.getType() == Materials.PISTON.parseMaterial()
-									|| block.getType() == Materials.STICKY_PISTON.parseMaterial()) {
-								if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
-										island.getLocation(world, IslandEnvironment.Island),
-										island.getRadius() - 12.0D)) {
-									event.setCancelled(true);
-								}
-							} else if (block.getType() == Material.DISPENSER) {
-								if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
-										island.getLocation(world, IslandEnvironment.Island),
-										island.getRadius() - 2.0D)) {
-									event.setCancelled(true);
-								}
-							}
+				if (configLoad.getBoolean("Island.WorldBorder.Block")) {
+					if (block.getType() == Materials.PISTON.parseMaterial()
+							|| block.getType() == Materials.STICKY_PISTON.parseMaterial()) {
+						if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
+								island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 12.0D)) {
+							event.setCancelled(true);
 						}
-
-						if (LocationUtil.isLocationLocation(block.getLocation(),
-								island.getLocation(world, IslandEnvironment.Main))
-								|| LocationUtil.isLocationLocation(block.getLocation(),
-										island.getLocation(world, IslandEnvironment.Main).clone().add(0.0D, 1.0D, 0.0D))
-								|| LocationUtil.isLocationLocation(block.getLocation(),
-										island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D,
-												0.0D))) {
-							if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
-								event.setCancelled(true);
-							}
+					} else if (block.getType() == Material.DISPENSER) {
+						if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
+								island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+							event.setCancelled(true);
 						}
-
-						return;
 					}
 				}
 
-				event.setCancelled(true);
+				if (LocationUtil.isLocationLocation(block.getLocation(),
+						island.getLocation(world, IslandEnvironment.Main))
+						|| LocationUtil.isLocationLocation(block.getLocation(),
+								island.getLocation(world, IslandEnvironment.Main).clone().add(0.0D, 1.0D, 0.0D))
+						|| LocationUtil.isLocationLocation(block.getLocation(),
+								island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
+					if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+							.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+						event.setCancelled(true);
+					}
+				}
 			} else {
 				event.setCancelled(true);
 
@@ -338,45 +317,43 @@ public class Block implements Listener {
 		IslandManager islandManager = skyblock.getIslandManager();
 
 		if (skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
-			for (UUID islandList : islandManager.getIslands().keySet()) {
-				Island island = islandManager.getIslands().get(islandList);
+			Island island = islandManager.getIslandAtLocation(block.getLocation());
 
-				if (islandManager.isLocationAtIsland(island, block.getLocation())) {
-					List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
+			if (island != null) {
+				List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
 
-					if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-							&& island.isUpgrade(Upgrade.Type.Crop)) {
-						if (NMSUtil.getVersionNumber() > 12) {
-							try {
-								Object blockData = block.getClass().getMethod("getBlockData").invoke(block);
+				if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
+						&& island.isUpgrade(Upgrade.Type.Crop)) {
+					if (NMSUtil.getVersionNumber() > 12) {
+						try {
+							Object blockData = block.getClass().getMethod("getBlockData").invoke(block);
 
-								if (blockData instanceof org.bukkit.block.data.Ageable) {
-									org.bukkit.block.data.Ageable ageable = (org.bukkit.block.data.Ageable) blockData;
-									ageable.setAge(ageable.getAge() + 1);
-									block.getClass()
-											.getMethod("setBlockData", Class.forName("org.bukkit.block.data.BlockData"))
-											.invoke(block, ageable);
-								}
-							} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-									| NoSuchMethodException | SecurityException | ClassNotFoundException e) {
-								e.printStackTrace();
+							if (blockData instanceof org.bukkit.block.data.Ageable) {
+								org.bukkit.block.data.Ageable ageable = (org.bukkit.block.data.Ageable) blockData;
+								ageable.setAge(ageable.getAge() + 1);
+								block.getClass()
+										.getMethod("setBlockData", Class.forName("org.bukkit.block.data.BlockData"))
+										.invoke(block, ageable);
 							}
-						} else {
-							if (block.getState().getData() instanceof Crops) {
-								try {
-									block.getClass().getMethod("setData", byte.class).invoke(block,
-											(byte) (block.getData() + 1));
-									block.getState().update();
-								} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-										| NoSuchMethodException | SecurityException e) {
-									e.printStackTrace();
-								}
+						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+								| NoSuchMethodException | SecurityException | ClassNotFoundException e) {
+							e.printStackTrace();
+						}
+					} else {
+						if (block.getState().getData() instanceof Crops) {
+							try {
+								block.getClass().getMethod("setData", byte.class).invoke(block,
+										(byte) (block.getData() + 1));
+								block.getState().update();
+							} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+									| NoSuchMethodException | SecurityException e) {
+								e.printStackTrace();
 							}
 						}
 					}
-
-					return;
 				}
+
+				return;
 			}
 		}
 	}

@@ -25,6 +25,7 @@ import me.goodandevil.skyblock.economy.EconomyManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -596,10 +597,10 @@ public class Upgrade {
 							ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimed.Lore"),
-							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-											"%status#" + getStatus(island,
-													me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed) }),
+							new Placeholder[] {
+									new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+									new Placeholder("%status",
+											getStatus(island, me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed)) },
 							null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 0);
 				} else {
 					if (economyManager.hasBalance(player, upgrade.getCost())) {
@@ -607,16 +608,16 @@ public class Upgrade {
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 0);
 					} else {
 						nInv.addItem(nInv.createItem(potion,
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Speed.Unclaimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 0);
 					}
 				}
@@ -647,10 +648,10 @@ public class Upgrade {
 							ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimed.Lore"),
-							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-											"%status#" + getStatus(island,
-													me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump) }),
+							new Placeholder[] {
+									new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+									new Placeholder("%status",
+											getStatus(island, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump)) },
 							null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 1);
 				} else {
 					if (economyManager.hasBalance(player, upgrade.getCost())) {
@@ -658,16 +659,16 @@ public class Upgrade {
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 1);
 					} else {
 						nInv.addItem(nInv.createItem(potion,
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Jump.Unclaimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 1);
 					}
 				}
@@ -683,10 +684,10 @@ public class Upgrade {
 							ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimed.Lore"),
-							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-											"%status#" + getStatus(island,
-													me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop) }),
+							new Placeholder[] {
+									new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+									new Placeholder("%status",
+											getStatus(island, me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop)) },
 							null, null), 3);
 				} else {
 					if (economyManager.hasBalance(player, upgrade.getCost())) {
@@ -694,16 +695,16 @@ public class Upgrade {
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, null), 3);
 					} else {
 						nInv.addItem(nInv.createItem(Materials.WHEAT_SEEDS.parseItem(),
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Crop.Unclaimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, null), 3);
 					}
 				}
@@ -719,9 +720,10 @@ public class Upgrade {
 							ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimed.Lore"),
-							nInv.createItemLoreVariable(new String[] {
-									"%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-									"%status#" + getStatus(island, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly) }),
+							new Placeholder[] {
+									new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+									new Placeholder("%status",
+											getStatus(island, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly)) },
 							null, null), 4);
 				} else {
 					if (economyManager.hasBalance(player, upgrade.getCost())) {
@@ -729,16 +731,16 @@ public class Upgrade {
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, null), 4);
 					} else {
 						nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Fly.Unclaimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, null), 4);
 					}
 				}
@@ -754,10 +756,10 @@ public class Upgrade {
 							ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimed.Lore"),
-							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-											"%status#" + getStatus(island,
-													me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops) }),
+							new Placeholder[] {
+									new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+									new Placeholder("%status",
+											getStatus(island, me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops)) },
 							null, null), 5);
 				} else {
 					if (economyManager.hasBalance(player, upgrade.getCost())) {
@@ -765,16 +767,16 @@ public class Upgrade {
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, null), 5);
 					} else {
 						nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Drops.Unclaimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, null), 5);
 					}
 				}
@@ -794,17 +796,16 @@ public class Upgrade {
 					}
 
 					if (island.getSize() >= upgrade.getValue()) {
-						nInv.addItem(
-								nInv.createItem(new ItemStack(Material.BEACON),
-										ChatColor.translateAlternateColorCodes('&',
-												configLoad.getString("Menu.Upgrade.Item.Size.Displayname")
-														.replace("%tier", "" + tier)),
-										configLoad.getStringList("Menu.Upgrade.Item.Size.Claimed.Lore"),
-										nInv.createItemLoreVariable(
-												new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-														"%tier#" + tier, "%size#" + upgrade.getValue() }),
-										null, null),
-								7);
+						nInv.addItem(nInv.createItem(new ItemStack(Material.BEACON),
+								ChatColor.translateAlternateColorCodes('&',
+										configLoad.getString("Menu.Upgrade.Item.Size.Displayname").replace("%tier",
+												"" + tier)),
+								configLoad.getStringList("Menu.Upgrade.Item.Size.Claimed.Lore"),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+										new Placeholder("%tier", "" + tier),
+										new Placeholder("%size", "" + upgrade.getValue()) },
+								null, null), 7);
 					} else {
 						if (economyManager.hasBalance(player, upgrade.getCost())) {
 							nInv.addItem(
@@ -813,9 +814,11 @@ public class Upgrade {
 													configLoad.getString("Menu.Upgrade.Item.Size.Displayname")
 															.replace("%tier", "" + tier)),
 											configLoad.getStringList("Menu.Upgrade.Item.Size.Claimable.Lore"),
-											nInv.createItemLoreVariable(new String[] {
-													"%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-													"%tier#" + tier, "%size#" + upgrade.getValue() }),
+											new Placeholder[] {
+													new Placeholder("%cost",
+															NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+													new Placeholder("%tier", "" + tier),
+													new Placeholder("%size", "" + upgrade.getValue()) },
 											null, null),
 									7);
 						} else {
@@ -825,9 +828,11 @@ public class Upgrade {
 													configLoad.getString("Menu.Upgrade.Item.Size.Displayname")
 															.replace("%tier", "" + tier)),
 											configLoad.getStringList("Menu.Upgrade.Item.Size.Unclaimable.Lore"),
-											nInv.createItemLoreVariable(new String[] {
-													"%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-													"%tier#" + tier, "%size#" + upgrade.getValue() }),
+											new Placeholder[] {
+													new Placeholder("%cost",
+															NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+													new Placeholder("%tier", "" + tier),
+													new Placeholder("%size", "" + upgrade.getValue()) },
 											null, null),
 									7);
 						}
@@ -847,10 +852,10 @@ public class Upgrade {
 							ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
 							configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimed.Lore"),
-							nInv.createItemLoreVariable(
-									new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-											"%status#" + getStatus(island,
-													me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner) }),
+							new Placeholder[] {
+									new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+									new Placeholder("%status",
+											getStatus(island, me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner)) },
 							null, null), 8);
 				} else {
 					if (economyManager.hasBalance(player, upgrade.getCost())) {
@@ -858,16 +863,16 @@ public class Upgrade {
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, null), 8);
 					} else {
 						nInv.addItem(nInv.createItem(Materials.SPAWNER.parseItem(),
 								ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
 								configLoad.getStringList("Menu.Upgrade.Item.Spawner.Unclaimable.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+								new Placeholder[] {
+										new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 								null, null), 8);
 					}
 				}

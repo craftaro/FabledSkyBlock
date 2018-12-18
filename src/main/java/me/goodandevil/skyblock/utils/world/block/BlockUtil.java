@@ -142,12 +142,20 @@ public final class BlockUtil {
 			blockData.setStateType(BlockStateType.COMMANDBLOCK.toString());
 		} else if (blockState instanceof CreatureSpawner) {
 			CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
-			blockData.setEntity(creatureSpawner.getSpawnedType().toString());
+
+			if (creatureSpawner.getSpawnedType() != null) {
+				blockData.setEntity(creatureSpawner.getSpawnedType().toString());
+			}
+
 			blockData.setDelay(creatureSpawner.getDelay());
 			blockData.setStateType(BlockStateType.CREATURESPAWNER.toString());
 		} else if (blockState instanceof Jukebox) {
 			Jukebox jukebox = (Jukebox) blockState;
-			blockData.setPlaying(jukebox.getPlaying().toString());
+
+			if (jukebox.getPlaying() != null) {
+				blockData.setPlaying(jukebox.getPlaying().toString());
+			}
+
 			blockData.setStateType(BlockStateType.JUKEBOX.toString());
 		} else if (blockState instanceof Sign) {
 			Sign sign = (Sign) blockState;
@@ -347,8 +355,12 @@ public final class BlockUtil {
 			}
 		} else if (blockTypeState == BlockStateType.CREATURESPAWNER) {
 			CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
+
+			if (blockData.getEntity() != null) {
+				creatureSpawner.setSpawnedType(EntityType.valueOf(blockData.getEntity().toUpperCase()));
+			}
+
 			creatureSpawner.setDelay(blockData.getDelay());
-			creatureSpawner.setSpawnedType(EntityType.valueOf(blockData.getEntity().toUpperCase()));
 		} else if (blockTypeState == BlockStateType.FURNACE) {
 			Furnace furnace = (Furnace) block.getState();
 			furnace.setBurnTime(blockData.getBurnTime());
@@ -362,7 +374,10 @@ public final class BlockUtil {
 			}
 		} else if (blockTypeState == BlockStateType.JUKEBOX) {
 			Jukebox jukebox = (Jukebox) block.getState();
-			jukebox.setPlaying(Material.valueOf(blockData.getPlaying().toUpperCase()));
+
+			if (blockData.getPlaying() != null) {
+				jukebox.setPlaying(Material.valueOf(blockData.getPlaying().toUpperCase()));
+			}
 		} else if (blockTypeState == BlockStateType.SIGN) {
 			Sign sign = (Sign) block.getState();
 

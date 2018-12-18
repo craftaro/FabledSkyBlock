@@ -292,10 +292,20 @@ public class Island {
 										location)));
 
 				FileManager fileManager = skyblock.getFileManager();
-				fileManager.setLocation(
-						fileManager.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
-								getOwnerUUID().toString() + ".yml")),
-						"Location." + world.name() + ".Spawn." + environment.name(), location, true);
+
+				if (environment == IslandEnvironment.Island) {
+					fileManager.setLocation(
+							fileManager
+									.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
+											getOwnerUUID().toString() + ".yml")),
+							"Location." + world.name() + "." + environment.name(), location, true);
+				} else {
+					fileManager.setLocation(
+							fileManager
+									.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
+											getOwnerUUID().toString() + ".yml")),
+							"Location." + world.name() + ".Spawn." + environment.name(), location, true);
+				}
 
 				islandLocationList.setLocation(location);
 

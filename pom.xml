@@ -2,7 +2,7 @@
     <groupId>com.songoda</groupId>
     <artifactId>SkyBlock</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>53</version>
+    <version>54</version>
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
@@ -43,6 +43,11 @@
         	<groupId>net.nifheim.beelzubu</groupId>
         	<artifactId>coins</artifactId>
         	<version>2.3.2</version>
+        </dependency>
+        <dependency>
+        	<groupId>me.robin</groupId>
+        	<artifactId>leaderheads</artifactId>
+        	<version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>

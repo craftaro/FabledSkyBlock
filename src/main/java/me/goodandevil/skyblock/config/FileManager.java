@@ -15,12 +15,14 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
 import com.google.common.io.ByteStreams;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.island.IslandWorld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -47,7 +49,8 @@ public class FileManager {
 			new File(skyblock.getDataFolder().toString() + "/structures").mkdir();
 		}
 
-		Map<String, File> configFiles = new HashMap<>();
+		Map<String, File> configFiles = new LinkedHashMap<>();
+		configFiles.put("worlds.yml", new File(skyblock.getDataFolder(), "worlds.yml"));
 		configFiles.put("levelling.yml", new File(skyblock.getDataFolder(), "levelling.yml"));
 		configFiles.put("config.yml", new File(skyblock.getDataFolder(), "config.yml"));
 		configFiles.put("language.yml", new File(skyblock.getDataFolder(), "language.yml"));
@@ -82,6 +85,34 @@ public class FileManager {
 					try (InputStream is = skyblock.getResource(configFileList);
 							OutputStream os = new FileOutputStream(configFile)) {
 						ByteStreams.copy(is, os);
+					}
+
+					if (configFileList.equals("worlds.yml")) {
+						File mainConfigFile = new File(skyblock.getDataFolder(), "config.yml");
+
+						if (isFileExist(mainConfigFile)) {
+							Config config = new Config(this, configFile);
+							Config mainConfig = new Config(this, mainConfigFile);
+
+							FileConfiguration configLoad = config.getFileConfiguration();
+							FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();
+
+							for (IslandWorld worldList : IslandWorld.values()) {
+								if (mainConfigLoad.getString("World." + worldList.name()) != null) {
+									configLoad.set("World." + worldList.name() + ".nextAvailableLocation.x",
+											mainConfigLoad.getDouble(
+													"World." + worldList.name() + ".nextAvailableLocation.x"));
+									configLoad.set("World." + worldList.name() + ".nextAvailableLocation.z",
+											mainConfigLoad.getDouble(
+													"World." + worldList.name() + ".nextAvailableLocation.z"));
+								}
+							}
+
+							mainConfigLoad.set("World", null);
+
+							configLoad.save(config.getFile());
+							saveConfig(mainConfigLoad.saveToString(), mainConfig.getFile());
+						}
 					}
 				} catch (IOException ex) {
 					Bukkit.getServer().getLogger().log(Level.WARNING,

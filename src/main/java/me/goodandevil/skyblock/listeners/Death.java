@@ -36,8 +36,10 @@ public class Death implements Listener {
 						"KeepItemsOnDeath")) {
 					keepInventory = true;
 				}
-			} else {
+			} else if (configLoad.getBoolean("Island.KeepItemsOnDeath.Enable")) {
 				keepInventory = true;
+			} else {
+				keepInventory = false;
 			}
 
 			if (keepInventory) {

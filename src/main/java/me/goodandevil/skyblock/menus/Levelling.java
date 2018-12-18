@@ -20,6 +20,7 @@ import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -211,9 +212,9 @@ public class Levelling {
 			nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
 					configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"),
 					configLoad.getStringList("Menu.Levelling.Item.Statistics.Lore"),
-					nInv.createItemLoreVariable(
-							new String[] { "%level_points#" + NumberUtil.formatNumberByDecimal(level.getPoints()),
-									"%level#" + NumberUtil.formatNumberByDecimal(level.getLevel()) }),
+					new Placeholder[] {
+							new Placeholder("%level_points", NumberUtil.formatNumberByDecimal(level.getPoints())),
+							new Placeholder("%level", NumberUtil.formatNumberByDecimal(level.getLevel())) },
 					null, null), 4);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),

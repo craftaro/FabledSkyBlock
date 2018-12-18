@@ -18,6 +18,7 @@ import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
@@ -237,26 +238,24 @@ public class Weather {
 			nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG),
 					configLoad.getString("Menu.Weather.Item.Info.Displayname"),
 					configLoad.getStringList("Menu.Weather.Item.Info.Lore"),
-					nInv.createItemLoreVariable(
-							new String[] { "%synchronised#" + weatherSynchronised, "%time_name#" + timeName,
-									"%time#" + island.getTime(), "%weather#" + island.getWeatherName() }),
+					new Placeholder[] { new Placeholder("%synchronised", weatherSynchronised),
+							new Placeholder("%time_name", timeName), new Placeholder("%time", "" + island.getTime()),
+							new Placeholder("%weather", island.getWeatherName()) },
 					null, null), 0);
 			nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 					configLoad.getString("Menu.Weather.Item.Barrier.Displayname"), null, null, null, null), 1);
 			nInv.addItem(nInv.createItem(Materials.SUNFLOWER.parseItem(),
 					configLoad.getString("Menu.Weather.Item.Time.Displayname"),
 					configLoad.getStringList("Menu.Weather.Item.Time.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%choice#" + timeChoice }), null, null), 2);
+					new Placeholder[] { new Placeholder("%choice", timeChoice) }, null, null), 2);
 			nInv.addItem(nInv.createItem(new ItemStack(Material.GHAST_TEAR),
 					configLoad.getString("Menu.Weather.Item.Weather.Displayname"),
 					configLoad.getStringList("Menu.Weather.Item.Weather.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%choice#" + weatherChoice }), null, null), 3);
-			nInv.addItem(
-					nInv.createItem(new ItemStack(Material.TRIPWIRE_HOOK),
-							configLoad.getString("Menu.Weather.Item.Synchronised.Displayname"),
-							configLoad.getStringList("Menu.Weather.Item.Synchronised.Lore"),
-							nInv.createItemLoreVariable(new String[] { "%choice#" + synchronisedChoice }), null, null),
-					4);
+					new Placeholder[] { new Placeholder("%choice", weatherChoice) }, null, null), 3);
+			nInv.addItem(nInv.createItem(new ItemStack(Material.TRIPWIRE_HOOK),
+					configLoad.getString("Menu.Weather.Item.Synchronised.Displayname"),
+					configLoad.getStringList("Menu.Weather.Item.Synchronised.Lore"),
+					new Placeholder[] { new Placeholder("%choice", synchronisedChoice) }, null, null), 4);
 
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Weather.Title")));
 			nInv.setType(InventoryType.HOPPER);

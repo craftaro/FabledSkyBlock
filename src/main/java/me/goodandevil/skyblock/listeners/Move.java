@@ -116,8 +116,10 @@ public class Move implements Listener {
 								} else {
 									keepItemsOnDeath = false;
 								}
-							} else {
+							} else if (configLoad.getBoolean("Island.KeepItemsOnDeath.Enable")) {
 								keepItemsOnDeath = true;
+							} else {
+								keepItemsOnDeath = false;
 							}
 
 							if (configLoad.getBoolean("Island.World." + world.name() + ".Liquid.Enable")) {

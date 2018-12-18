@@ -23,6 +23,7 @@ import me.goodandevil.skyblock.island.IslandMessage;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.Setting;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.AnvilGUI;
@@ -428,22 +429,20 @@ public class Settings {
 										configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
 										configLoad.getStringList(
 												"Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Open.Lore"),
-										nInv.createItemLoreVariable(
-												new String[] { "%visits#" + visit.getVisitors().size(),
-														"%votes#" + visit.getVoters().size(),
-														"%visitors#"
-																+ islandManager.getVisitorsAtIsland(island).size() }),
+										new Placeholder[] { new Placeholder("%visits", "" + visit.getVisitors().size()),
+												new Placeholder("%votes", "" + visit.getVoters().size()),
+												new Placeholder("%visitors",
+														"" + islandManager.getVisitorsAtIsland(island).size()) },
 										null, null), 4);
 							} else {
 								nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
 										configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
 										configLoad.getStringList(
 												"Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Closed.Lore"),
-										nInv.createItemLoreVariable(
-												new String[] { "%visits#" + visit.getVisitors().size(),
-														"%votes#" + visit.getVoters().size(),
-														"%visitors#"
-																+ islandManager.getVisitorsAtIsland(island).size() }),
+										new Placeholder[] { new Placeholder("%visits", "" + visit.getVisitors().size()),
+												new Placeholder("%votes", "" + visit.getVoters().size()),
+												new Placeholder("%visitors",
+														"" + islandManager.getVisitorsAtIsland(island).size()) },
 										null, null), 4);
 							}
 						} else {
@@ -452,20 +451,18 @@ public class Settings {
 										configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
 										configLoad.getStringList(
 												"Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Open.Lore"),
-										nInv.createItemLoreVariable(
-												new String[] { "%visits#" + visit.getVisitors().size(),
-														"%visitors#"
-																+ islandManager.getVisitorsAtIsland(island).size() }),
+										new Placeholder[] { new Placeholder("%visits", "" + visit.getVisitors().size()),
+												new Placeholder("%visitors",
+														"" + islandManager.getVisitorsAtIsland(island).size()) },
 										null, null), 4);
 							} else {
 								nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
 										configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
 										configLoad.getStringList(
 												"Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Closed.Lore"),
-										nInv.createItemLoreVariable(
-												new String[] { "%visits#" + visit.getVisitors().size(),
-														"%visitors#"
-																+ islandManager.getVisitorsAtIsland(island).size() }),
+										new Placeholder[] { new Placeholder("%visits", "" + visit.getVisitors().size()),
+												new Placeholder("%visitors",
+														"" + islandManager.getVisitorsAtIsland(island).size()) },
 										null, null), 4);
 							}
 						}

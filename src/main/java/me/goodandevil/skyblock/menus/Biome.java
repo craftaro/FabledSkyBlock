@@ -20,6 +20,7 @@ import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -194,7 +195,7 @@ public class Biome {
 					ChatColor.translateAlternateColorCodes('&',
 							configLoad.getString("Menu.Biome.Item.Info.Displayname")),
 					configLoad.getStringList("Menu.Biome.Item.Info.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%biome_type#" + islandBiomeName }), null, null), 0);
+					new Placeholder[] { new Placeholder("%biome_type", islandBiomeName) }, null, null), 0);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							ChatColor.translateAlternateColorCodes('&',

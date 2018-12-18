@@ -549,6 +549,8 @@ Command:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou are no longer an Island owner."
                 Open:
                     Message: "&bSkyBlock &8| &cError&8: &eYou must close your island before deleting it."
+                Spawn:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot delete your island because the main spawn point is set there."
                 Broadcast:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe Island owner has disbanded the Island."
             Confirmed:

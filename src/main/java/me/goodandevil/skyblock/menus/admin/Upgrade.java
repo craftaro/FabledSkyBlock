@@ -21,6 +21,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -270,9 +271,9 @@ public class Upgrade {
 						ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Speed.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Speed.Lore"),
-						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-										"%status#" + getStatus(upgrade) }),
+						new Placeholder[] {
+								new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+								new Placeholder("%status", getStatus(upgrade)) },
 						null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 1);
 
 				if (NMSVersion > 12) {
@@ -288,9 +289,9 @@ public class Upgrade {
 						ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Jump.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Jump.Lore"),
-						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-										"%status#" + getStatus(upgrade) }),
+						new Placeholder[] {
+								new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+								new Placeholder("%status", getStatus(upgrade)) },
 						null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 2);
 
 				upgrade = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop).get(0);
@@ -298,9 +299,9 @@ public class Upgrade {
 						ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Crop.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Crop.Lore"),
-						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-										"%status#" + getStatus(upgrade) }),
+						new Placeholder[] {
+								new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+								new Placeholder("%status", getStatus(upgrade)) },
 						null, null), 3);
 
 				upgrade = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly).get(0);
@@ -308,9 +309,9 @@ public class Upgrade {
 						ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Fly.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Fly.Lore"),
-						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-										"%status#" + getStatus(upgrade) }),
+						new Placeholder[] {
+								new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+								new Placeholder("%status", getStatus(upgrade)) },
 						null, null), 4);
 
 				upgrade = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops).get(0);
@@ -318,9 +319,9 @@ public class Upgrade {
 						ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Drops.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Drops.Lore"),
-						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-										"%status#" + getStatus(upgrade) }),
+						new Placeholder[] {
+								new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+								new Placeholder("%status", getStatus(upgrade)) },
 						null, null), 5);
 
 				List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager
@@ -335,16 +336,16 @@ public class Upgrade {
 						ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Size.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Size.Lore"),
-						nInv.createItemLoreVariable(new String[] { "%tiers#" + upgradeTiers }), null, null), 6);
+						new Placeholder[] { new Placeholder("%tiers", "" + upgradeTiers) }, null, null), 6);
 
 				upgrade = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner).get(0);
 				nInv.addItem(nInv.createItem(Materials.SPAWNER.parseItem(),
 						ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Lore"),
-						nInv.createItemLoreVariable(
-								new String[] { "%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()),
-										"%status#" + getStatus(upgrade) }),
+						new Placeholder[] {
+								new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+								new Placeholder("%status", getStatus(upgrade)) },
 						null, null), 7);
 
 				nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
@@ -827,8 +828,9 @@ public class Upgrade {
 												configLoad.getString("Menu.Admin.Upgrade.Size.Item.Tier.Displayname")
 														.replace("%tier", "" + tier)),
 										configLoad.getStringList("Menu.Admin.Upgrade.Size.Item.Tier.Lore"),
-										nInv.createItemLoreVariable(new String[] { "%size#" + upgrade.getValue(),
-												"%cost#" + NumberUtil.formatNumberByDecimal(upgrade.getCost()) }),
+										new Placeholder[] { new Placeholder("%size", "" + upgrade.getValue()),
+												new Placeholder("%cost",
+														NumberUtil.formatNumberByDecimal(upgrade.getCost())) },
 										null, null), i + 3);
 							}
 						}

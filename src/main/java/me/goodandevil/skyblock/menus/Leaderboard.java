@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
@@ -98,20 +99,26 @@ public class Leaderboard {
 				nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 						configLoad.getString("Menu.Leaderboard." + viewer.getType().name() + ".Item.Exit.Displayname"),
 						null, null, null, null), 0, 4);
-				nInv.addItem(nInv.createItem(new ItemStack(Material.DIAMOND), configLoad
-						.getString("Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
-						.replace("%leaderboard", Viewer.Type.Level.name()),
-						configLoad.getStringList(
-								"Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
-						nInv.createItemLoreVariable(new String[] { "%leaderboard#" + Viewer.Type.Level.name() }), null,
-						null), 1);
-				nInv.addItem(nInv.createItem(new ItemStack(Material.EMERALD), configLoad
-						.getString("Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
-						.replace("%leaderboard", Viewer.Type.Votes.name()),
-						configLoad.getStringList(
-								"Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
-						nInv.createItemLoreVariable(new String[] { "%leaderboard#" + Viewer.Type.Votes.name() }), null,
-						null), 3);
+				nInv.addItem(
+						nInv.createItem(new ItemStack(Material.DIAMOND), configLoad
+								.getString(
+										"Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
+								.replace("%leaderboard", Viewer.Type.Level.name()),
+								configLoad.getStringList(
+										"Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
+								new Placeholder[] { new Placeholder("%leaderboard", Viewer.Type.Level.name()) }, null,
+								null),
+						1);
+				nInv.addItem(
+						nInv.createItem(new ItemStack(Material.EMERALD), configLoad
+								.getString(
+										"Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
+								.replace("%leaderboard", Viewer.Type.Votes.name()),
+								configLoad.getStringList(
+										"Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
+								new Placeholder[] { new Placeholder("%leaderboard", Viewer.Type.Votes.name()) }, null,
+								null),
+						3);
 
 				nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
 						configLoad.getString("Menu.Leaderboard." + viewer.getType().name() + ".Title")));
@@ -242,16 +249,21 @@ public class Leaderboard {
 						}
 					}
 
-					nInv.addItem(nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
-							configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Displayname")
-									.replace("%owner",
-											playerName)
-									.replace("%position", "" + (leaderboard.getPosition() + 1)),
-							itemLore,
-							nInv.createItemLoreVariable(new String[] { "%position#" + (leaderboard.getPosition() + 1),
-									"%owner#" + playerName, "%level#" + visit.getLevel().getLevel(),
-									"%votes#" + visit.getVoters().size(), "%members#" + visit.getMembers() }),
-							null, null), itemSlot);
+					nInv.addItem(
+							nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
+									configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Displayname")
+											.replace(
+													"%owner", playerName)
+											.replace("%position", "" + (leaderboard.getPosition() + 1)),
+									itemLore,
+									new Placeholder[] {
+											new Placeholder("%position", "" + (leaderboard.getPosition() + 1)),
+											new Placeholder("%owner", playerName),
+											new Placeholder("%level", "" + visit.getLevel().getLevel()),
+											new Placeholder("%votes", "" + visit.getVoters().size()),
+											new Placeholder("%members", "" + visit.getMembers()) },
+									null, null),
+							itemSlot);
 				}
 
 				int[] itemSlots = new int[] { 13, 21, 22, 23, 29, 31, 33, 37, 40, 43 };
@@ -264,7 +276,7 @@ public class Leaderboard {
 								configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Empty.Displayname")
 										.replace("%position", "" + (i + 1)),
 								configLoad.getStringList("Menu.Leaderboard.Leaderboard.Item.Empty.Lore"),
-								nInv.createItemLoreVariable(new String[] { "%position#" + (i + 1) }), null, null),
+								new Placeholder[] { new Placeholder("%position", "" + (i + 1)) }, null, null),
 								itemSlots[i]);
 					}
 				}

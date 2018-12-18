@@ -22,6 +22,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -65,10 +66,12 @@ public class Creator implements Listener {
 			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 					configLoad.getString("Menu.Admin.Creator.Browse.Item.Exit.Displayname"), null, null, null, null), 0,
 					8);
-			nInv.addItem(nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
-					configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"),
-					configLoad.getStringList("Menu.Admin.Creator.Browse.Item.Information.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%structures#" + structures.size() }), null, null), 4);
+			nInv.addItem(
+					nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
+							configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"),
+							configLoad.getStringList("Menu.Admin.Creator.Browse.Item.Information.Lore"),
+							new Placeholder[] { new Placeholder("%structures", "" + structures.size()) }, null, null),
+					4);
 			nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 					configLoad.getString("Menu.Admin.Creator.Browse.Item.Barrier.Displayname"), null, null, null, null),
 					9, 10, 11, 12, 13, 14, 15, 16, 17);
@@ -129,12 +132,10 @@ public class Creator implements Listener {
 				displayName = ChatColor.translateAlternateColorCodes('&', structure.getDisplayname());
 			}
 
-			nInv.addItem(
-					nInv.createItem(new ItemStack(Material.NAME_TAG),
-							configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Displayname"),
-							configLoad.getStringList("Menu.Admin.Creator.Options.Item.Displayname.Lore"),
-							nInv.createItemLoreVariable(new String[] { "%displayname#" + displayName }), null, null),
-					1);
+			nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG),
+					configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Displayname"),
+					configLoad.getStringList("Menu.Admin.Creator.Options.Item.Displayname.Lore"),
+					new Placeholder[] { new Placeholder("%displayname", displayName) }, null, null), 1);
 
 			List<String> descriptionLore = new ArrayList<>();
 
@@ -201,8 +202,7 @@ public class Creator implements Listener {
 
 			nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.Permission.Displayname"), permissionLore,
-					nInv.createItemLoreVariable(new String[] { "%permission#" + structure.getPermission() }), null,
-					null), 4);
+					new Placeholder[] { new Placeholder("%permission", structure.getPermission()) }, null, null), 4);
 
 			String fileName = ChatColor.translateAlternateColorCodes('&',
 					configLoad.getString("Menu.Admin.Creator.Options.Item.Word.Unset")), overworldFileName,
@@ -223,14 +223,14 @@ public class Creator implements Listener {
 			nInv.addItem(nInv.createItem(new ItemStack(Material.PAPER),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.File.Displayname"),
 					configLoad.getStringList("Menu.Admin.Creator.Options.Item.File.Lore"),
-					nInv.createItemLoreVariable(
-							new String[] { "%overworld_file#" + overworldFileName, "%nether_file#" + netherFileName }),
+					new Placeholder[] { new Placeholder("%overworld_file", overworldFileName),
+							new Placeholder("%nether_file", netherFileName) },
 					null, null), 5);
 			nInv.addItem(nInv.createItem(new ItemStack(Material.DIAMOND),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.Item.Displayname"),
 					configLoad.getStringList("Menu.Admin.Creator.Options.Item.Item.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%material#" + structure.getMaterials().name() }), null,
-					null), 6);
+					new Placeholder[] { new Placeholder("%material", structure.getMaterials().name()) }, null, null),
+					6);
 
 			nInv.setRows(1);
 		}

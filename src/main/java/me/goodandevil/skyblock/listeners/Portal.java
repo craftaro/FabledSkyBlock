@@ -1,7 +1,6 @@
 package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -55,100 +54,97 @@ public class Portal implements Listener {
 		}
 
 		IslandWorld world = worldManager.getIslandWorld(player.getWorld());
+		Island island = islandManager.getIslandAtLocation(player.getLocation());
 
-		for (UUID islandList : islandManager.getIslands().keySet()) {
-			Island island = islandManager.getIslands().get(islandList);
-
+		if (island != null) {
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 
-			if (islandManager.isPlayerAtIsland(island, player)) {
-				if (((block.getType() == Materials.NETHER_PORTAL.parseMaterial()
-						&& configLoad.getBoolean("Island.World.Nether.Enable"))
-						|| (block.getType() == Materials.END_PORTAL.parseMaterial()
-								&& configLoad.getBoolean("Island.World.End.Enable")))
-						&& islandManager.hasPermission(player, "Portal")) {
-					if (configLoad.getBoolean("Island.Portal.Island")) {
-						if (island.hasRole(IslandRole.Member, player.getUniqueId())
-								|| island.hasRole(IslandRole.Operator, player.getUniqueId())
-								|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-							if (world == IslandWorld.Normal) {
-								if (block.getType() == Materials.NETHER_PORTAL.parseMaterial()) {
-									player.teleport(island.getLocation(IslandWorld.Nether, IslandEnvironment.Main));
-								} else if (block.getType() == Materials.END_PORTAL.parseMaterial()) {
-									player.teleport(island.getLocation(IslandWorld.End, IslandEnvironment.Main));
-								}
-							} else {
-								player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+			if (((block.getType() == Materials.NETHER_PORTAL.parseMaterial()
+					&& configLoad.getBoolean("Island.World.Nether.Enable"))
+					|| (block.getType() == Materials.END_PORTAL.parseMaterial()
+							&& configLoad.getBoolean("Island.World.End.Enable")))
+					&& islandManager.hasPermission(player, "Portal")) {
+				if (configLoad.getBoolean("Island.Portal.Island")) {
+					if (island.hasRole(IslandRole.Member, player.getUniqueId())
+							|| island.hasRole(IslandRole.Operator, player.getUniqueId())
+							|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+						if (world == IslandWorld.Normal) {
+							if (block.getType() == Materials.NETHER_PORTAL.parseMaterial()) {
+								player.teleport(island.getLocation(IslandWorld.Nether, IslandEnvironment.Main));
+							} else if (block.getType() == Materials.END_PORTAL.parseMaterial()) {
+								player.teleport(island.getLocation(IslandWorld.End, IslandEnvironment.Main));
 							}
 						} else {
-							if (world == IslandWorld.Normal) {
-								if (block.getType() == Materials.NETHER_PORTAL.parseMaterial()) {
-									player.teleport(island.getLocation(IslandWorld.Nether, IslandEnvironment.Visitor));
-								} else if (block.getType() == Materials.END_PORTAL.parseMaterial()) {
-									player.teleport(island.getLocation(IslandWorld.End, IslandEnvironment.Visitor));
-								}
-							} else {
-								player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-							}
-						}
-
-						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-					} else if (block.getType() == Materials.NETHER_PORTAL.parseMaterial()
-							&& Bukkit.getServer().getAllowNether()) {
-						for (World worldList : Bukkit.getServer().getWorlds()) {
-							if (worldList.getEnvironment() == Environment.NETHER) {
-								player.teleport(LocationUtil.getRandomLocation(worldList, 5000, 5000, true, true));
-
-								break;
-							}
-						}
-
-						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-					} else if (block.getType() == Materials.END_PORTAL.parseMaterial()
-							&& Bukkit.getServer().getAllowEnd()) {
-						for (World worldList : Bukkit.getServer().getWorlds()) {
-							if (worldList.getEnvironment() == Environment.THE_END) {
-								player.teleport(worldList.getSpawnLocation());
-
-								break;
-							}
-						}
-
-						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-					} else {
-						if (island.hasRole(IslandRole.Member, player.getUniqueId())
-								|| island.hasRole(IslandRole.Operator, player.getUniqueId())
-								|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 							player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+						}
+					} else {
+						if (world == IslandWorld.Normal) {
+							if (block.getType() == Materials.NETHER_PORTAL.parseMaterial()) {
+								player.teleport(island.getLocation(IslandWorld.Nether, IslandEnvironment.Visitor));
+							} else if (block.getType() == Materials.END_PORTAL.parseMaterial()) {
+								player.teleport(island.getLocation(IslandWorld.End, IslandEnvironment.Visitor));
+							}
 						} else {
 							player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
 						}
-
-						messageManager.sendMessage(player,
-								fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-										.getFileConfiguration().getString("Island.Portal.Destination.Message"));
-						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					}
+
+					soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+				} else if (block.getType() == Materials.NETHER_PORTAL.parseMaterial()
+						&& Bukkit.getServer().getAllowNether()) {
+					for (World worldList : Bukkit.getServer().getWorlds()) {
+						if (worldList.getEnvironment() == Environment.NETHER) {
+							player.teleport(LocationUtil.getRandomLocation(worldList, 5000, 5000, true, true));
+
+							break;
+						}
+					}
+
+					soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+				} else if (block.getType() == Materials.END_PORTAL.parseMaterial()
+						&& Bukkit.getServer().getAllowEnd()) {
+					for (World worldList : Bukkit.getServer().getWorlds()) {
+						if (worldList.getEnvironment() == Environment.THE_END) {
+							player.teleport(worldList.getSpawnLocation());
+
+							break;
+						}
+					}
+
+					soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 				} else {
 					if (island.hasRole(IslandRole.Member, player.getUniqueId())
 							|| island.hasRole(IslandRole.Operator, player.getUniqueId())
 							|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-						player.teleport(island.getLocation(world, IslandEnvironment.Main));
+						player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
 					} else {
-						player.teleport(island.getLocation(world, IslandEnvironment.Visitor));
+						player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
 					}
 
 					messageManager.sendMessage(player,
 							fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+									.getFileConfiguration().getString("Island.Portal.Destination.Message"));
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
+			} else {
+				if (island.hasRole(IslandRole.Member, player.getUniqueId())
+						|| island.hasRole(IslandRole.Operator, player.getUniqueId())
+						|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+					player.teleport(island.getLocation(world, IslandEnvironment.Main));
+				} else {
+					player.teleport(island.getLocation(world, IslandEnvironment.Visitor));
+				}
 
-				player.setFallDistance(0.0F);
-
-				return;
+				messageManager.sendMessage(player,
+						fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
+								.getString("Island.Settings.Permission.Message"));
+				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
+
+			player.setFallDistance(0.0F);
+
+			return;
 		}
 	}
 }

@@ -21,6 +21,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -185,10 +186,12 @@ public class Visitors {
 
 			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 					configLoad.getString("Menu.Visitors.Item.Exit.Displayname"), null, null, null, null), 0, 8);
-			nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
-					configLoad.getString("Menu.Visitors.Item.Statistics.Displayname"),
-					configLoad.getStringList("Menu.Visitors.Item.Statistics.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%visitors#" + islandVisitors.size() }), null, null), 4);
+			nInv.addItem(
+					nInv.createItem(new ItemStack(Material.PAINTING),
+							configLoad.getString("Menu.Visitors.Item.Statistics.Displayname"),
+							configLoad.getStringList("Menu.Visitors.Item.Statistics.Lore"),
+							new Placeholder[] { new Placeholder("%visitors", "" + islandVisitors.size()) }, null, null),
+					4);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							configLoad.getString("Menu.Visitors.Item.Barrier.Displayname"), null, null, null, null),
@@ -296,13 +299,15 @@ public class Visitors {
 							}
 						}
 
-						nInv.addItem(nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]),
-								ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Visitors.Item.Visitor.Displayname")
-												.replace("%player", targetPlayer.getName())),
-								itemLore,
-								nInv.createItemLoreVariable(new String[] { "%time#" + islandVisitTimeFormatted }), null,
-								null), inventorySlot);
+						nInv.addItem(
+								nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]),
+										ChatColor.translateAlternateColorCodes('&',
+												configLoad.getString("Menu.Visitors.Item.Visitor.Displayname")
+														.replace("%player", targetPlayer.getName())),
+										itemLore,
+										new Placeholder[] { new Placeholder("%time", islandVisitTimeFormatted) }, null,
+										null),
+								inventorySlot);
 					}
 				}
 			}

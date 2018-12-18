@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 
 public class nInventoryUtil {
 
@@ -115,28 +116,9 @@ public class nInventoryUtil {
 		return items;
 	}
 
-	public Item createItem(ItemStack is, String itemDisplayname, List<String> itemLore,
-			Map<String, String> itemLoreVariables, Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
-		return new Item(is, itemDisplayname, itemLore, itemLoreVariables, itemEnchantments, itemFlags);
-	}
-
-	public Map<String, String> createItemLoreVariable(String[] itemLoreVariables) {
-		Map<String, String> itemLoreVariablesFormatted = new HashMap<>();
-
-		for (String itemLoreVariableList : itemLoreVariables) {
-			String variableName = itemLoreVariableList.split("#")[0];
-			String variableObject;
-
-			if (itemLoreVariableList.split("#").length == 1) {
-				variableObject = "null";
-			} else {
-				variableObject = itemLoreVariableList.split("#")[1];
-			}
-
-			itemLoreVariablesFormatted.put(variableName, variableObject);
-		}
-
-		return itemLoreVariablesFormatted;
+	public Item createItem(ItemStack is, String itemDisplayname, List<String> itemLore, Placeholder[] placeholders,
+			Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
+		return new Item(is, itemDisplayname, itemLore, placeholders, itemEnchantments, itemFlags);
 	}
 
 	public void open() {
@@ -199,17 +181,17 @@ public class nInventoryUtil {
 
 		private ItemStack is;
 		private String itemDisplayname;
-		private Map<String, String> itemLoreVariables;
 		private List<String> itemLore;
+		private Placeholder[] placeholders;
 		private Enchantment[] itemEnchantments;
 		private ItemFlag[] itemFlags;
 
-		public Item(ItemStack is, String itemDisplayname, List<String> itemLore, Map<String, String> itemLoreVariables,
+		public Item(ItemStack is, String itemDisplayname, List<String> itemLore, Placeholder[] placeholders,
 				Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
 			this.is = is;
 			this.itemDisplayname = ChatColor.translateAlternateColorCodes('&', itemDisplayname);
 			this.itemLore = itemLore;
-			this.itemLoreVariables = itemLoreVariables;
+			this.placeholders = placeholders;
 			this.itemEnchantments = itemEnchantments;
 			this.itemFlags = itemFlags;
 		}
@@ -219,11 +201,11 @@ public class nInventoryUtil {
 				ArrayList<String> formattedItemLore = new ArrayList<>();
 
 				for (String itemLoreList : itemLore) {
-					if (itemLoreVariables != null) {
-						for (String itemLoreVariableList : itemLoreVariables.keySet()) {
-							if (itemLoreList.contains(itemLoreVariableList)) {
+					if (placeholders != null) {
+						for (Placeholder placeholderList : placeholders) {
+							if (itemLoreList.contains(placeholderList.getPlaceholder())) {
 								itemLoreList = ChatColor.translateAlternateColorCodes('&', itemLoreList
-										.replace(itemLoreVariableList, itemLoreVariables.get(itemLoreVariableList)));
+										.replace(placeholderList.getPlaceholder(), placeholderList.getResult()));
 							}
 						}
 					}

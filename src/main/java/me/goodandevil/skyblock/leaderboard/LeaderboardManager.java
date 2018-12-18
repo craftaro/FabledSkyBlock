@@ -6,7 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.leaderboard.leaderheads.TopLevel;
+import me.goodandevil.skyblock.leaderboard.leaderheads.TopVotes;
 import me.goodandevil.skyblock.visit.Visit;
 import me.goodandevil.skyblock.visit.VisitManager;
 
@@ -24,6 +28,7 @@ public class LeaderboardManager {
 						.getFileConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
 
 		resetLeaderboard();
+		setupLeaderHeads();
 	}
 
 	public void resetLeaderboard() {
@@ -63,6 +68,13 @@ public class LeaderboardManager {
 				leaderboardStorage.add(new Leaderboard(Leaderboard.Type.Votes,
 						visitManager.getIsland((UUID) islandVotes.get(i).getUUID()), i));
 			}
+		}
+	}
+
+	public void setupLeaderHeads() {
+		if (Bukkit.getServer().getPluginManager().getPlugin("LeaderHeads") != null) {
+			new TopLevel(skyblock);
+			new TopVotes(skyblock);
 		}
 	}
 

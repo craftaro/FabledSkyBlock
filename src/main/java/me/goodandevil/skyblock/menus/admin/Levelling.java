@@ -21,6 +21,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.AnvilGUI;
@@ -63,13 +64,16 @@ public class Levelling implements Listener {
 				nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 						configLoad.getString("Menu.Admin.Levelling.Item.Exit.Displayname"), null, null, null, null),
 				0, 8);
-		nInv.addItem(nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
-				configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"),
-				configLoad.getStringList("Menu.Admin.Levelling.Item.Information.Lore"),
-				nInv.createItemLoreVariable(new String[] { "%materials#" + levellingMaterials.size(),
-						"%division#" + fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-								.getFileConfiguration().getInt("Island.Levelling.Division") }),
-				null, null), 4);
+		nInv.addItem(
+				nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
+						configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"),
+						configLoad.getStringList("Menu.Admin.Levelling.Item.Information.Lore"),
+						new Placeholder[] { new Placeholder("%materials", "" + levellingMaterials.size()),
+								new Placeholder("%division",
+										"" + fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+												.getFileConfiguration().getInt("Island.Levelling.Division")) },
+						null, null),
+				4);
 		nInv.addItem(
 				nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 						configLoad.getString("Menu.Admin.Levelling.Item.Barrier.Displayname"), null, null, null, null),
@@ -104,16 +108,18 @@ public class Levelling implements Listener {
 					inventorySlot++;
 
 					me.goodandevil.skyblock.levelling.Material material = levellingMaterials.get(index);
-					nInv.addItem(nInv.createItem(
-							new ItemStack(MaterialUtil.correctMaterial(material.getItemStack().getType()), 1,
-									material.getItemStack().getDurability()),
-							ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Levelling.Item.Material.Displayname")
-											.replace("%material", material.getMaterials().name())),
-							configLoad.getStringList("Menu.Admin.Levelling.Item.Material.Lore"),
-							nInv.createItemLoreVariable(
-									new String[] { "%points#" + NumberUtil.formatNumberByDecimal(material.getPoints()) }),
-							null, null), inventorySlot);
+					nInv.addItem(
+							nInv.createItem(
+									new ItemStack(MaterialUtil.correctMaterial(material.getItemStack().getType()), 1,
+											material.getItemStack().getDurability()),
+									ChatColor.translateAlternateColorCodes('&',
+											configLoad.getString("Menu.Admin.Levelling.Item.Material.Displayname")
+													.replace("%material", material.getMaterials().name())),
+									configLoad.getStringList("Menu.Admin.Levelling.Item.Material.Lore"),
+									new Placeholder[] { new Placeholder("%points",
+											NumberUtil.formatNumberByDecimal(material.getPoints())) },
+									null, null),
+							inventorySlot);
 				}
 			}
 		}
@@ -314,11 +320,10 @@ public class Levelling implements Listener {
 												int materialPoints = Integer.valueOf(event1.getName());
 												materialList.setPoints(materialPoints);
 
-												messageManager.sendMessage(player,
-														configLoad.getString("Island.Admin.Levelling.Points.Message")
-																.replace("%material", materials.name())
-																.replace("%points",
-																		NumberUtil.formatNumberByDecimal(materialPoints)));
+												messageManager.sendMessage(player, configLoad
+														.getString("Island.Admin.Levelling.Points.Message")
+														.replace("%material", materials.name()).replace("%points",
+																NumberUtil.formatNumberByDecimal(materialPoints)));
 												soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F,
 														1.0F);
 												player.closeInventory();

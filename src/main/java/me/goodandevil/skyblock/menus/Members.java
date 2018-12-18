@@ -25,6 +25,7 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -366,24 +367,23 @@ public class Members {
 			nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
 					configLoad.getString("Menu.Members.Item.Type.Displayname"),
 					configLoad.getStringList("Menu.Members.Item.Type.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%type#" + type.name() }), null, null), 3);
-			nInv.addItem(
-					nInv.createItem(new ItemStack(Material.PAINTING),
-							configLoad.getString("Menu.Members.Item.Statistics.Displayname"),
-							configLoad.getStringList("Menu.Members.Item.Statistics.Lore"),
-							nInv.createItemLoreVariable(new String[] {
-									"%island_members#" + (islandMembers.size() + islandOperators.size() + 1),
-									"%island_capacity#"
-											+ fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-													.getFileConfiguration().getInt("Island.Member.Capacity"),
-									"%members#" + islandMembers.size(), "%operators#" + islandOperators.size() }),
-							null, null),
-					4);
+					new Placeholder[] { new Placeholder("%type", type.name()) }, null, null), 3);
+			nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
+					configLoad.getString("Menu.Members.Item.Statistics.Displayname"),
+					configLoad.getStringList("Menu.Members.Item.Statistics.Lore"),
+					new Placeholder[] {
+							new Placeholder("%island_members",
+									"" + (islandMembers.size() + islandOperators.size() + 1)),
+							new Placeholder("%island_capacity",
+									"" + fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+											.getFileConfiguration().getInt("Island.Member.Capacity")),
+							new Placeholder("%members", "" + islandMembers.size()),
+							new Placeholder("%operators", "" + islandOperators.size()) },
+					null, null), 4);
 			nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
 					configLoad.getString("Menu.Members.Item.Sort.Displayname"),
 					configLoad.getStringList("Menu.Members.Item.Sort.Lore"),
-					nInv.createItemLoreVariable(
-							new String[] { "%sort#" + StringUtil.capatilizeUppercaseLetters(sort.name()) }),
+					new Placeholder[] { new Placeholder("%sort", StringUtil.capatilizeUppercaseLetters(sort.name())) },
 					null, null), 5);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
@@ -602,14 +602,17 @@ public class Members {
 							}
 						}
 
-						nInv.addItem(nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
-								configLoad.getString(
-										"Menu.Members.Item.Member.Displayname").replace("%player", playerName),
-								itemLore,
-								nInv.createItemLoreVariable(new String[] { "%role#" + islandRole,
-										"%playtime#" + islandPlaytimeFormatted, "%since#" + memberSinceFormatted,
-										"%last_online#" + lastOnlineFormatted }),
-								null, null), inventorySlot);
+						nInv.addItem(
+								nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
+										configLoad.getString("Menu.Members.Item.Member.Displayname").replace("%player",
+												playerName),
+										itemLore,
+										new Placeholder[] { new Placeholder("%role", islandRole),
+												new Placeholder("%playtime", islandPlaytimeFormatted),
+												new Placeholder("%since", memberSinceFormatted),
+												new Placeholder("%last_online", lastOnlineFormatted) },
+										null, null),
+								inventorySlot);
 					}
 				}
 			}

@@ -23,6 +23,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.generator.GeneratorMaterial;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.AnvilGUI;
@@ -63,10 +64,12 @@ public class Generator implements Listener {
 			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 					configLoad.getString("Menu.Admin.Generator.Browse.Item.Exit.Displayname"), null, null, null, null),
 					0, 8);
-			nInv.addItem(nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
-					configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Displayname"),
-					configLoad.getStringList("Menu.Admin.Generator.Browse.Item.Information.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%generators#" + generators.size() }), null, null), 4);
+			nInv.addItem(
+					nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
+							configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Displayname"),
+							configLoad.getStringList("Menu.Admin.Generator.Browse.Item.Information.Lore"),
+							new Placeholder[] { new Placeholder("%generators", "" + generators.size()) }, null, null),
+					4);
 			nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 					configLoad.getString("Menu.Admin.Generator.Browse.Item.Barrier.Displayname"), null, null, null,
 					null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
@@ -127,9 +130,9 @@ public class Generator implements Listener {
 
 			nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
 					configLoad.getString("Menu.Admin.Generator.Generator.Item.Information.Displayname"), permissionLore,
-					nInv.createItemLoreVariable(new String[] { "%name#" + generator.getName(),
-							"%materials#" + generator.getGeneratorMaterials().size(),
-							"%permission#" + generator.getPermission() }),
+					new Placeholder[] { new Placeholder("%name", generator.getName()),
+							new Placeholder("%materials", "" + generator.getGeneratorMaterials().size()),
+							new Placeholder("%permission", generator.getPermission()) },
 					null, null), 4);
 			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 					configLoad.getString("Menu.Admin.Generator.Generator.Item.Return.Displayname"), null, null, null,
@@ -159,8 +162,7 @@ public class Generator implements Listener {
 										configLoad.getString("Menu.Admin.Generator.Generator.Item.Material.Displayname")
 												.replace("%material", generatorMaterial.getMaterials().name())),
 								configLoad.getStringList("Menu.Admin.Generator.Generator.Item.Material.Lore"),
-								nInv.createItemLoreVariable(
-										new String[] { "%chance#" + generatorMaterial.getChance() }),
+								new Placeholder[] { new Placeholder("%chance", "" + generatorMaterial.getChance()) },
 								null, null), inventorySlot);
 					}
 				}

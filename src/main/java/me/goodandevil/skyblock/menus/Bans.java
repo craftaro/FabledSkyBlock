@@ -19,6 +19,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -193,7 +194,7 @@ public class Bans {
 			nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
 					configLoad.getString("Menu.Bans.Item.Information.Displayname"),
 					configLoad.getStringList("Menu.Bans.Item.Information.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%bans#" + islandBans.size() }), null, null), 4);
+					new Placeholder[] { new Placeholder("%bans", "" + islandBans.size()) }, null, null), 4);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							configLoad.getString("Menu.Bans.Item.Barrier.Displayname"), null, null, null, null),

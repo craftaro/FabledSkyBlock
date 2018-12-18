@@ -82,86 +82,88 @@ public class Teleport implements Listener {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
 
 			UUID islandOwnerUUID = playerData.getIsland();
+			Island island = islandManager.getIslandAtLocation(event.getTo());
 
-			for (UUID islandList : islandManager.getIslands().keySet()) {
-				Island island = islandManager.getIslands().get(islandList);
+			if (island != null) {
+				if (!island.getOwnerUUID().equals(playerData.getOwner())) {
+					if (!player.hasPermission("skyblock.bypass") && !player.hasPermission("skyblock.bypass.*")
+							&& !player.hasPermission("skyblock.*")) {
+						if (!island.isOpen() && !island.isCoopPlayer(player.getUniqueId())) {
+							event.setCancelled(true);
 
-				if (islandManager.isLocationAtIsland(island, event.getTo())) {
-					if (!island.getOwnerUUID().equals(playerData.getOwner())) {
-						if (!player.hasPermission("skyblock.bypass") && !player.hasPermission("skyblock.bypass.*")
-								&& !player.hasPermission("skyblock.*")) {
-							if (!island.isOpen() && !island.isCoopPlayer(player.getUniqueId())) {
-								event.setCancelled(true);
+							messageManager.sendMessage(player,
+									configLoad.getString("Island.Visit.Closed.Plugin.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-								messageManager.sendMessage(player,
-										configLoad.getString("Island.Visit.Closed.Plugin.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+							return;
+						} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+								.getFileConfiguration().getBoolean("Island.Visitor.Banning")
+								&& island.getBan().isBanned(player.getUniqueId())) {
+							event.setCancelled(true);
 
-								return;
-							} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.Visitor.Banning")
-									&& island.getBan().isBanned(player.getUniqueId())) {
-								event.setCancelled(true);
+							messageManager.sendMessage(player,
+									configLoad.getString("Island.Visit.Banned.Teleport.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-								messageManager.sendMessage(player,
-										configLoad.getString("Island.Visit.Banned.Teleport.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-								return;
-							}
+							return;
 						}
 					}
-
-					if (playerData.getIsland() != null && !playerData.getIsland().equals(island.getOwnerUUID())) {
-						Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandExitEvent(player,
-								islandManager.getIsland(islandOwnerUUID).getAPIWrapper()));
-						Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandSwitchEvent(player,
-								islandManager.getIsland(islandOwnerUUID).getAPIWrapper(), island.getAPIWrapper()));
-
-						playerData.setVisitTime(0);
-					}
-
-					if (worldManager.getIslandWorld(event.getTo().getWorld()) == IslandWorld.Normal) {
-						if (!island.isWeatherSynchronized()) {
-							player.setPlayerTime(island.getTime(),
-									fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-											.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
-							player.setPlayerWeather(island.getWeather());
-						}
-					}
-
-					playerData.setIsland(island.getOwnerUUID());
-
-					if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID)
-							&& (playerData.getOwner() == null || !playerData.getOwner().equals(islandOwnerUUID))) {
-						islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
-					}
-
-					Visit visit = island.getVisit();
-
-					if (!visit.isVisitor(player.getUniqueId())) {
-						Bukkit.getServer().getPluginManager()
-								.callEvent(new PlayerIslandEnterEvent(player, island.getAPIWrapper()));
-
-						visit.addVisitor(player.getUniqueId());
-						visit.save();
-					}
-
-					return;
 				}
+
+				if (playerData.getIsland() != null && !playerData.getIsland().equals(island.getOwnerUUID())) {
+					me.goodandevil.skyblock.api.island.Island exitIsland = null;
+
+					if (islandManager.containsIsland(islandOwnerUUID)) {
+						exitIsland = islandManager.getIsland(islandOwnerUUID).getAPIWrapper();
+					}
+
+					Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandExitEvent(player, exitIsland));
+					Bukkit.getServer().getPluginManager()
+							.callEvent(new PlayerIslandSwitchEvent(player, exitIsland, island.getAPIWrapper()));
+
+					playerData.setVisitTime(0);
+				}
+
+				if (worldManager.getIslandWorld(event.getTo().getWorld()) == IslandWorld.Normal) {
+					if (!island.isWeatherSynchronized()) {
+						player.setPlayerTime(island.getTime(),
+								fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+										.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+						player.setPlayerWeather(island.getWeather());
+					}
+				}
+
+				playerData.setIsland(island.getOwnerUUID());
+
+				if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID)
+						&& (playerData.getOwner() == null || !playerData.getOwner().equals(islandOwnerUUID))) {
+					islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
+				}
+
+				Visit visit = island.getVisit();
+
+				if (!visit.isVisitor(player.getUniqueId())) {
+					Bukkit.getServer().getPluginManager()
+							.callEvent(new PlayerIslandEnterEvent(player, island.getAPIWrapper()));
+
+					visit.addVisitor(player.getUniqueId());
+					visit.save();
+				}
+
+				return;
 			}
 
 			player.resetPlayerTime();
 			player.resetPlayerWeather();
 
 			if (islandOwnerUUID != null) {
-				me.goodandevil.skyblock.api.island.Island island = null;
+				me.goodandevil.skyblock.api.island.Island islandWrapper = null;
 
 				if (islandManager.hasIsland(islandOwnerUUID)) {
-					island = islandManager.getIsland(islandOwnerUUID).getAPIWrapper();
+					islandWrapper = islandManager.getIsland(islandOwnerUUID).getAPIWrapper();
 				}
 
-				Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandExitEvent(player, island));
+				Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandExitEvent(player, islandWrapper));
 
 				playerData.setVisitTime(0);
 			}

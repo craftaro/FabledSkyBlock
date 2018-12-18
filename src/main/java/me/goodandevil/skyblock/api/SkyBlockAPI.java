@@ -270,6 +270,21 @@ public class SkyBlockAPI {
 	}
 
 	/**
+	 * @return The Island at a location
+	 */
+	public static Island getIslandAtLocation(Location location) {
+		Preconditions.checkArgument(location != null, "Cannot get island to null location");
+
+		me.goodandevil.skyblock.island.Island island = implementation.getIslandManager().getIslandAtLocation(location);
+
+		if (island != null) {
+			return island.getAPIWrapper();
+		}
+
+		return null;
+	}
+
+	/**
 	 * @return true of conditions met, false otherwise
 	 */
 	public static boolean hasIsland(OfflinePlayer player) {

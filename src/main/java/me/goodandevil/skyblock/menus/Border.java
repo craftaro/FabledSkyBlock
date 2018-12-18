@@ -16,6 +16,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
@@ -201,50 +202,42 @@ public class Border {
 			nInv.addItem(nInv.createItem(new ItemStack(Material.TRIPWIRE_HOOK),
 					configLoad.getString("Menu.Border.Item.Toggle.Displayname"),
 					configLoad.getStringList("Menu.Border.Item.Toggle.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%toggle#" + borderToggle }), null, null), 1);
+					new Placeholder[] { new Placeholder("%toggle", borderToggle) }, null, null), 1);
 
 			if (borderColor == WorldBorder.Color.Blue) {
-				nInv.addItem(
-						nInv.createItem(Materials.LIGHT_BLUE_DYE.parseItem(),
-								configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
-										configLoad.getString("Menu.Border.Item.Word.Blue")),
-								configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
-								nInv.createItemLoreVariable(new String[] {
-										"%color#" + configLoad.getString("Menu.Border.Item.Word.Blue") }),
-								null, null),
-						2);
+				nInv.addItem(nInv.createItem(Materials.LIGHT_BLUE_DYE.parseItem(),
+						configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
+								configLoad.getString("Menu.Border.Item.Word.Blue")),
+						configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
+						new Placeholder[] {
+								new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Blue")) },
+						null, null), 2);
 			} else {
-				nInv.addItem(
-						nInv.createItem(Materials.LIGHT_BLUE_DYE.parseItem(),
-								configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
-										configLoad.getString("Menu.Border.Item.Word.Blue")),
-								configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
-								nInv.createItemLoreVariable(new String[] {
-										"%color#" + configLoad.getString("Menu.Border.Item.Word.Blue") }),
-								null, null),
-						2);
+				nInv.addItem(nInv.createItem(Materials.LIGHT_BLUE_DYE.parseItem(),
+						configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
+								configLoad.getString("Menu.Border.Item.Word.Blue")),
+						configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
+						new Placeholder[] {
+								new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Blue")) },
+						null, null), 2);
 			}
 
 			if (borderColor == WorldBorder.Color.Green) {
-				nInv.addItem(
-						nInv.createItem(Materials.LIME_DYE.parseItem(),
-								configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
-										configLoad.getString("Menu.Border.Item.Word.Green")),
-								configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
-								nInv.createItemLoreVariable(new String[] {
-										"%color#" + configLoad.getString("Menu.Border.Item.Word.Green") }),
-								null, null),
-						3);
+				nInv.addItem(nInv.createItem(Materials.LIME_DYE.parseItem(),
+						configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
+								configLoad.getString("Menu.Border.Item.Word.Green")),
+						configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
+						new Placeholder[] {
+								new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Green")) },
+						null, null), 3);
 			} else {
-				nInv.addItem(
-						nInv.createItem(Materials.LIME_DYE.parseItem(),
-								configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
-										configLoad.getString("Menu.Border.Item.Word.Green")),
-								configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
-								nInv.createItemLoreVariable(new String[] {
-										"%color#" + configLoad.getString("Menu.Border.Item.Word.Green") }),
-								null, null),
-						3);
+				nInv.addItem(nInv.createItem(Materials.LIME_DYE.parseItem(),
+						configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
+								configLoad.getString("Menu.Border.Item.Word.Green")),
+						configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
+						new Placeholder[] {
+								new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Green")) },
+						null, null), 3);
 			}
 
 			if (borderColor == WorldBorder.Color.Red) {
@@ -252,16 +245,16 @@ public class Border {
 						configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
 								configLoad.getString("Menu.Border.Item.Word.Red")),
 						configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
-						nInv.createItemLoreVariable(
-								new String[] { "%color#" + configLoad.getString("Menu.Border.Item.Word.Red") }),
+						new Placeholder[] {
+								new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Red")) },
 						null, null), 4);
 			} else {
 				nInv.addItem(nInv.createItem(Materials.ROSE_RED.parseItem(),
 						configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
 								configLoad.getString("Menu.Border.Item.Word.Red")),
 						configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
-						nInv.createItemLoreVariable(
-								new String[] { "%color#" + configLoad.getString("Menu.Border.Item.Word.Red") }),
+						new Placeholder[] {
+								new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Red")) },
 						null, null), 4);
 			}
 

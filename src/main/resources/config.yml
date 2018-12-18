@@ -206,21 +206,27 @@ Island:
             # [!] If Enabled Players will respawn at the Island they died at. If Disabled
             #     Players will respawn at the Spawn location.
             Island: true
+    Damage:
+        # When the setting 'Damage' has been disabled, if this option is enabled, players will take
+        # damage at an island. This discludes entity and void damage.
+        Enable: false
+    PvP:
+        # When the setting 'PvP' has been disabled, if this option is enabled, players will be
+        # able to damage other players at an island.
+        Enable: false
+    KeepItemsOnDeath:
+        # When the setting 'KeepItemsOnDeath' has been disabled, if this option is enabled, players will keep
+        # items in their inventory if they die at an island.
+        Enable: true
     Settings:
-        # When disabled, players will not lose their items when they die at an island and
-        # the setting will be removed from the Island Settings menu.
+        # When any of these options are disabled, the setting will be removed from the 'Island Settings'
+        # menu.
         KeepItemsOnDeath:
             Enable: true
-        # When disabled, players will not take any damage from entities when at an island
-        # and the setting will be removed from the Island Settings menu.
         PvP:
             Enable: true
-        # When disabled, players will not take any damage when at an island and the setting
-        # will be removed from the Island Settings menu. This setting discludes entity and
-        # void damage.
         Damage:
             Enable: true
-        # When disabled, the hunger setting will be removed from the Island Settings menu.
         Hunger:
             Enable: false
     Portal:
@@ -236,17 +242,3 @@ Island:
         Enable: true
     Generator:
         Enable: true
-# Stuff you shouldn't change
-World:
-    Normal:
-        nextAvailableLocation:
-            x: 0.0
-            z: 0.0
-    Nether:
-        nextAvailableLocation:
-            x: 0.0
-            z: 0.0
-    End:
-        nextAvailableLocation:
-            x: 0.0
-            z: 0.0

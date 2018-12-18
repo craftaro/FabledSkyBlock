@@ -2,7 +2,6 @@ package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
@@ -14,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -90,12 +90,11 @@ public class Entity implements Listener {
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 
-			if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
-				if (!configLoad.getBoolean("Island.Settings.PvP.Enable")
-						|| !skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "Damage")) {
+			if (configLoad.getBoolean("Island.Settings.Damage.Enable")) {
+				if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "Damage")) {
 					event.setCancelled(true);
 				}
-			} else {
+			} else if (!configLoad.getBoolean("Island.Damage.Enable")) {
 				event.setCancelled(true);
 			}
 		}
@@ -114,15 +113,15 @@ public class Entity implements Listener {
 
 			if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
 				if (entity instanceof Player) {
-					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-							.getBoolean("Island.Settings.PvP.Enable")) {
+					Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+					FileConfiguration configLoad = config.getFileConfiguration();
+
+					if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
 						if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "PvP")) {
 							event.setCancelled(true);
 						}
-					} else {
+					} else if (!configLoad.getBoolean("Island.PvP.Enable")) {
 						event.setCancelled(true);
-
-						return;
 					}
 				} else if (entity instanceof ArmorStand) {
 					if (!islandManager.hasPermission(player, entity.getLocation(), "Destroy")) {
@@ -157,12 +156,14 @@ public class Entity implements Listener {
 
 			if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
 				if (event.getEntity() instanceof Player) {
-					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-							.getBoolean("Island.Settings.PvP.Enable")) {
+					Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+					FileConfiguration configLoad = config.getFileConfiguration();
+
+					if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
 						if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "PvP")) {
 							event.setCancelled(true);
 						}
-					} else {
+					} else if (!configLoad.getBoolean("Island.PvP.Enable")) {
 						event.setCancelled(true);
 					}
 				} else {
@@ -182,14 +183,16 @@ public class Entity implements Listener {
 			Player player = (Player) event.getEntity();
 
 			if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-				if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-						.getBoolean("Island.Settings.Damage.Enable")) {
+				Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+				FileConfiguration configLoad = config.getFileConfiguration();
+
+				if (configLoad.getBoolean("Island.Settings.Damage.Enable")) {
 					if (!islandManager.hasSetting(player.getLocation(), IslandRole.Owner, "Damage")
 							|| (event.getDamager() instanceof TNTPrimed && !islandManager
 									.hasSetting(player.getLocation(), IslandRole.Owner, "Explosions"))) {
 						event.setCancelled(true);
 					}
-				} else {
+				} else if (!configLoad.getBoolean("Island.Damage.Enable")) {
 					event.setCancelled(true);
 				}
 			}
@@ -320,7 +323,7 @@ public class Entity implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (event.getEntity() instanceof Player) {
 			return;
@@ -335,21 +338,19 @@ public class Entity implements Listener {
 		IslandManager islandManager = skyblock.getIslandManager();
 
 		if (skyblock.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
-			for (UUID islandList : islandManager.getIslands().keySet()) {
-				Island island = islandManager.getIslands().get(islandList);
+			Island island = islandManager.getIslandAtLocation(livingEntity.getLocation());
 
-				if (islandManager.isLocationAtIsland(island, livingEntity.getLocation())) {
-					List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
+			if (island != null) {
+				List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
 
-					if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-							&& island.isUpgrade(Upgrade.Type.Drops)) {
-						List<ItemStack> entityDrops = event.getDrops();
+				if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
+						&& island.isUpgrade(Upgrade.Type.Drops)) {
+					List<ItemStack> entityDrops = event.getDrops();
 
-						if (entityDrops != null) {
-							for (int i = 0; i < entityDrops.size(); i++) {
-								ItemStack is = entityDrops.get(i);
-								is.setAmount(is.getAmount() * 2);
-							}
+					if (entityDrops != null) {
+						for (int i = 0; i < entityDrops.size(); i++) {
+							ItemStack is = entityDrops.get(i);
+							is.setAmount(is.getAmount() * 2);
 						}
 					}
 				}
