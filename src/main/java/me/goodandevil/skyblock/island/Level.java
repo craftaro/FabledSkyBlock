@@ -109,6 +109,23 @@ public class Level {
 		this.materials.put(material, amount);
 	}
 
+	public int getMaterialAmount(String material) {
+		if (materials.containsKey(material)) {
+			return materials.get(material);
+		}
+
+		return 0;
+	}
+
+	public void removeMaterial(String material) {
+		skyblock.getFileManager()
+				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"),
+						ownerUUID.toString() + ".yml"))
+				.getFileConfiguration().set("Levelling.Materials." + material, null);
+
+		this.materials.remove(material);
+	}
+
 	public void setMaterials(Map<String, Integer> materials) {
 		Config config = skyblock.getFileManager().getConfig(
 				new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
@@ -121,6 +138,10 @@ public class Level {
 		}
 
 		this.materials = materials;
+	}
+
+	public boolean hasMaterial(String material) {
+		return materials.containsKey(material);
 	}
 
 	public boolean hasMaterials() {

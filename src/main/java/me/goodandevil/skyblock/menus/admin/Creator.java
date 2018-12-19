@@ -206,7 +206,7 @@ public class Creator implements Listener {
 
 			String fileName = ChatColor.translateAlternateColorCodes('&',
 					configLoad.getString("Menu.Admin.Creator.Options.Item.Word.Unset")), overworldFileName,
-					netherFileName;
+					netherFileName, endFileName;
 
 			if (structure.getOverworldFile() != null && !structure.getOverworldFile().isEmpty()) {
 				overworldFileName = structure.getOverworldFile();
@@ -220,11 +220,18 @@ public class Creator implements Listener {
 				netherFileName = fileName;
 			}
 
+			if (structure.getEndFile() != null && !structure.getEndFile().isEmpty()) {
+				endFileName = structure.getEndFile();
+			} else {
+				endFileName = fileName;
+			}
+
 			nInv.addItem(nInv.createItem(new ItemStack(Material.PAPER),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.File.Displayname"),
 					configLoad.getStringList("Menu.Admin.Creator.Options.Item.File.Lore"),
 					new Placeholder[] { new Placeholder("%overworld_file", overworldFileName),
-							new Placeholder("%nether_file", netherFileName) },
+							new Placeholder("%nether_file", netherFileName),
+							new Placeholder("%end_file", endFileName) },
 					null, null), 5);
 			nInv.addItem(nInv.createItem(new ItemStack(Material.DIAMOND),
 					configLoad.getString("Menu.Admin.Creator.Options.Item.Item.Displayname"),

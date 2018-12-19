@@ -1,8 +1,10 @@
 package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.ExperienceOrb;
@@ -37,10 +39,12 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
+import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
@@ -305,9 +309,66 @@ public class Entity implements Listener {
 			return;
 		}
 
+		IslandManager islandManager = skyblock.getIslandManager();
+
 		if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
-			if (!skyblock.getIslandManager().hasSetting(entity.getLocation(), IslandRole.Owner, "MobGriefing")) {
+			if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "MobGriefing")) {
 				event.setCancelled(true);
+			}
+
+			if (!event.isCancelled()) {
+				Island island = islandManager.getIslandAtLocation(entity.getLocation());
+
+				if (island != null) {
+					if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+							.getFileConfiguration().getBoolean("Island.Block.Level.Enable")) {
+						org.bukkit.block.Block block = event.getBlock();
+
+						@SuppressWarnings("deprecation")
+						Materials materials = Materials.getMaterials(block.getType(), block.getData());
+
+						if (materials != null) {
+							Level level = island.getLevel();
+
+							if (level.hasMaterial(materials.name())) {
+								int materialAmount = level.getMaterialAmount(materials.name());
+
+								if (materialAmount - 1 <= 0) {
+									level.removeMaterial(materials.name());
+								} else {
+									level.setMaterialAmount(materials.name(), materialAmount - 1);
+								}
+							}
+						}
+
+						if (event.getTo() != null && event.getTo() != Material.AIR) {
+							materials = null;
+
+							if (NMSUtil.getVersionNumber() > 12) {
+								materials = Materials.fromString(event.getTo().name());
+							} else {
+								try {
+									materials = Materials.requestMaterials(event.getTo().name(),
+											(byte) event.getClass().getMethod("getData", byte.class).invoke(event));
+								} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+										| NoSuchMethodException | SecurityException e) {
+									e.printStackTrace();
+								}
+							}
+
+							if (materials != null) {
+								int materialAmount = 0;
+								Level level = island.getLevel();
+
+								if (level.hasMaterial(materials.name())) {
+									materialAmount = level.getMaterialAmount(materials.name());
+								}
+
+								level.setMaterialAmount(materials.name(), materialAmount + 1);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -316,9 +377,39 @@ public class Entity implements Listener {
 	public void onEntityExplode(EntityExplodeEvent event) {
 		org.bukkit.entity.Entity entity = event.getEntity();
 
+		IslandManager islandManager = skyblock.getIslandManager();
+
 		if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
-			if (!skyblock.getIslandManager().hasSetting(entity.getLocation(), IslandRole.Owner, "Explosions")) {
+			if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "Explosions")) {
 				event.setCancelled(true);
+			}
+
+			if (!event.isCancelled()) {
+				Island island = islandManager.getIslandAtLocation(entity.getLocation());
+
+				if (island != null) {
+					if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+							.getFileConfiguration().getBoolean("Island.Block.Level.Enable")) {
+						for (org.bukkit.block.Block blockList : event.blockList()) {
+							@SuppressWarnings("deprecation")
+							Materials materials = Materials.getMaterials(blockList.getType(), blockList.getData());
+
+							if (materials != null) {
+								Level level = island.getLevel();
+
+								if (level.hasMaterial(materials.name())) {
+									int materialAmount = level.getMaterialAmount(materials.name());
+
+									if (materialAmount - 1 <= 0) {
+										level.removeMaterial(materials.name());
+									} else {
+										level.setMaterialAmount(materials.name(), materialAmount - 1);
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}

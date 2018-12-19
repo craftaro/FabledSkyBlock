@@ -76,8 +76,7 @@ public class AcceptCommand extends SubCommand {
 						if (islandManager.containsIsland(invite.getOwnerUUID())) {
 							island = islandManager.getIsland(invite.getOwnerUUID());
 						} else {
-							islandManager.loadIsland(invite.getOwnerUUID());
-							island = islandManager.getIsland(invite.getOwnerUUID());
+							island = islandManager.loadIsland(invite.getOwnerUUID());
 							unloadIsland = true;
 						}
 

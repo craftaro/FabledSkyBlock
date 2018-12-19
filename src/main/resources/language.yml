@@ -938,8 +938,6 @@ Island:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &a&lADDED &efor &a%player's &eIsland."
             Removed:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &c&lREMOVED &efor &a%player's &eIsland."
-        Banned:
-            Message: "&bSkyBlock &8| &aInfo&8: &eYou have been banned from the Island."
     Structure:
         Tool:
             Position:

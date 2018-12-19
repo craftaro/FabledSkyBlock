@@ -472,7 +472,7 @@ public class IslandManager {
 				.deleteConfig(new File(skyblock.getDataFolder().toString() + "/visit-data", uuid.toString() + ".yml"));
 	}
 
-	public void loadIsland(UUID uuid) {
+	public Island loadIsland(UUID uuid) {
 		VisitManager visitManager = skyblock.getVisitManager();
 		FileManager fileManager = skyblock.getFileManager();
 		BanManager banManager = skyblock.getBanManager();
@@ -489,7 +489,7 @@ public class IslandManager {
 				deleteIslandData(uuid);
 				configLoad.set("Island.Owner", null);
 
-				return;
+				return null;
 			}
 
 			islandOwnerUUID = uuid;
@@ -507,7 +507,7 @@ public class IslandManager {
 				deleteIslandData(islandOwnerUUID);
 				configLoad.set("Island.Owner", null);
 
-				return;
+				return null;
 			}
 
 			Island island = new Island(islandOwnerUUID);
@@ -533,7 +533,11 @@ public class IslandManager {
 			}
 
 			Bukkit.getServer().getPluginManager().callEvent(new IslandLoadEvent(island.getAPIWrapper()));
+
+			return island;
 		}
+
+		return null;
 	}
 
 	public void unloadIsland(Island island, UUID uuid) {

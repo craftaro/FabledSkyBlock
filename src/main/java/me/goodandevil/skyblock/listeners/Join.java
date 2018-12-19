@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,13 +19,16 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.usercache.UserCacheManager;
+import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Join implements Listener {
 
@@ -48,8 +52,23 @@ public class Join implements Listener {
 		userCacheManager.saveAsync();
 
 		try {
-			islandManager.loadIsland(player.getUniqueId());
-			islandManager.loadPlayer(player);
+			Island island = islandManager.loadIsland(player.getUniqueId());
+			boolean teleportedToIsland = false;
+
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+			FileConfiguration configLoad = config.getFileConfiguration();
+
+			if (configLoad.getBoolean("Island.Join.Spawn")) {
+				LocationUtil.teleportPlayerToSpawn(player);
+			} else if (configLoad.getBoolean("Island.Join.Island") && island != null) {
+				player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+				player.setFallDistance(0.0F);
+				teleportedToIsland = true;
+			}
+
+			if (!teleportedToIsland) {
+				islandManager.loadPlayer(player);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

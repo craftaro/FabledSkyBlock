@@ -31,6 +31,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.IslandWorld;
+import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -86,15 +87,40 @@ public class Block implements Listener {
 
 							playerDataManager.getPlayerData(player)
 									.setGenerator(new GeneratorLocation(world, block, liquid));
+
+							return;
 						}
 					}
 				}
 
+				Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+				FileConfiguration configLoad = config.getFileConfiguration();
+
 				if (LocationUtil.isLocationLocation(block.getLocation(),
 						island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
-					if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-							.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+					if (configLoad.getBoolean("Island.Spawn.Protection")) {
 						event.setCancelled(true);
+					}
+				}
+
+				if (!event.isCancelled()) {
+					if (configLoad.getBoolean("Island.Block.Level.Enable")) {
+						@SuppressWarnings("deprecation")
+						Materials materials = Materials.getMaterials(block.getType(), block.getData());
+
+						if (materials != null) {
+							Level level = island.getLevel();
+
+							if (level.hasMaterial(materials.name())) {
+								int materialAmount = level.getMaterialAmount(materials.name());
+
+								if (materialAmount - 1 <= 0) {
+									level.removeMaterial(materials.name());
+								} else {
+									level.setMaterialAmount(materials.name(), materialAmount - 1);
+								}
+							}
+						}
 					}
 				}
 
@@ -147,9 +173,26 @@ public class Block implements Listener {
 								island.getLocation(world, IslandEnvironment.Main).clone().add(0.0D, 1.0D, 0.0D))
 						|| LocationUtil.isLocationLocation(block.getLocation(),
 								island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
-					if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-							.getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+					if (configLoad.getBoolean("Island.Spawn.Protection")) {
 						event.setCancelled(true);
+					}
+				}
+
+				if (!event.isCancelled()) {
+					if (configLoad.getBoolean("Island.Block.Level.Enable")) {
+						@SuppressWarnings("deprecation")
+						Materials materials = Materials.getMaterials(block.getType(), block.getData());
+
+						if (materials != null) {
+							int materialAmount = 0;
+							Level level = island.getLevel();
+
+							if (level.hasMaterial(materials.name())) {
+								materialAmount = level.getMaterialAmount(materials.name());
+							}
+
+							level.setMaterialAmount(materials.name(), materialAmount + 1);
+						}
 					}
 				}
 			} else {

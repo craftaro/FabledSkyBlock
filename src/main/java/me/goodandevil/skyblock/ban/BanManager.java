@@ -87,7 +87,7 @@ public class BanManager {
 
 			LocationUtil.teleportPlayerToSpawn(targetPlayer);
 
-			messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Banned.Message"));
+			messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Banned.Island.Message"));
 			soundManager.playSound(targetPlayer, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

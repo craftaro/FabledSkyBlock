@@ -61,7 +61,7 @@ Island:
         Capacity: 12
     WorldBorder:
         # Generates a worldborder around Islands.
-        # [!] WorldBorders will not show in Nether world due to centring bug
+        # [!] WorldBorders will not show in Nether world due to centering bug
         #     with some Spigot builds.
         Enable: true
         # Prevent blocks being placed that would go outside of the Island border
@@ -70,17 +70,10 @@ Island:
     Spawn:
         # Prevents blocks being placed inside the location where players spawn on
         # an Island. When setting the spawn points, this option when enabled will
-        # require the player to position themselves at the centre of the block.
+        # require the player to position themselves at the center of the block.
         # [!] Recommended to use especially to prevent players glitching in blocks
         #     and to prevent liquid flow at spawn point.
         Protection: true
-    Block:
-        Piston:
-            # Prevent Piston blocks being retracted or extended when connected to a circuit
-            # [!] Prevents Pistons extending out of Island border bug
-            Connected:
-                Retract: false
-                Extent: false
     Leaderboard:
         Reset:
             # Time until Leaderboard resets
@@ -194,6 +187,16 @@ Island:
             # When enabled, players can right-click an end frame to retrieve it at an Island.
             # [!] This requires the player to have the 'Destroy' permission.
             Enable: false
+        Level:
+            # When enabled, any changes to a block will be made to the levelling materials
+            # calculated for an island.
+            Enable: false
+        Piston:
+            # Prevent Piston blocks being retracted or extended when connected to a circuit
+            # [!] Prevents Pistons extending out of Island border bug
+            Connected:
+                Retract: false
+                Extent: false
     Liquid:
         Teleport:
             # Teleports the player back to the Island if they enter the liquid if world is a
@@ -202,10 +205,15 @@ Island:
     Death:
         AutoRespawn: true
         Respawn:
-            # When a Player respawns after dying at an Island decide where they respawn.
-            # [!] If Enabled Players will respawn at the Island they died at. If Disabled
-            #     Players will respawn at the Spawn location.
+            # When a player respawns after dying at an island decide where they respawn.
+            # [!] If enabled, players will respawn at the island they died at. If disabled,
+            #     players will respawn at the main spawn location.
             Island: true
+    Join:
+        # When enabled, players will be teleported to the main spawn point when they join the server.
+        Spawn: false
+        # When enabled, players will be teleported to their island spawn point when they join the server.
+        Island: false
     Damage:
         # When the setting 'Damage' has been disabled, if this option is enabled, players will take
         # damage at an island. This discludes entity and void damage.
