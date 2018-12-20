@@ -120,7 +120,7 @@ public class Join implements Listener {
 
 				cooldownManager.addCooldownPlayer(CooldownType.Levelling,
 						cooldownManager.loadCooldownPlayer(CooldownType.Levelling, offlinePlayer));
-				cooldownManager.addCooldownPlayer(CooldownType.Levelling,
+				cooldownManager.addCooldownPlayer(CooldownType.Ownership,
 						cooldownManager.loadCooldownPlayer(CooldownType.Ownership, offlinePlayer));
 
 				if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
