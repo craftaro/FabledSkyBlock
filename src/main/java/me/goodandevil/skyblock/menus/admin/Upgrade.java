@@ -170,23 +170,20 @@ public class Upgrade {
 															1.0F, 1.0F);
 
 													return;
+												} else if (!(event1.getName().matches("[0-9]+")
+														|| event1.getName().matches("([0-9]*)\\.([0-9]{1,2}$)"))) {
+													messageManager.sendMessage(player, configLoad
+															.getString("Island.Admin.Upgrade.Numerical.Message"));
+													soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+															1.0F, 1.0F);
+
+													event1.setWillClose(false);
+													event1.setWillDestroy(false);
+
+													return;
 												}
 
-												if (playerDataManager.hasPlayerData(player)
-														&& playerDataManager.getPlayerData(player) != null) {
-													if (!(event1.getName().matches("[0-9]+")
-															|| event1.getName().matches("([0-9]*)\\.([0-9]{2}$)"))) {
-														messageManager.sendMessage(player, configLoad
-																.getString("Island.Admin.Upgrade.Numerical.Message"));
-														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
-																1.0F, 1.0F);
-
-														event1.setWillClose(false);
-														event1.setWillDestroy(false);
-
-														return;
-													}
-
+												if (playerDataManager.hasPlayerData(player)) {
 													double upgradeCost = Double.valueOf(event1.getName());
 													me.goodandevil.skyblock.upgrade.Upgrade.Type upgradeType = ((Viewer) playerDataManager
 															.getPlayerData(player).getViewer()).getUpgrade();

@@ -33,6 +33,8 @@ import me.goodandevil.skyblock.api.event.island.IslandUnloadEvent;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -214,7 +216,7 @@ public class IslandManager {
 		if (configLoad.getBoolean("Island.Creation.Cooldown.Creation.Enable")) {
 			if (!player.hasPermission("skyblock.bypass.cooldown") && !player.hasPermission("skyblock.bypass.*")
 					&& !player.hasPermission("skyblock.*")) {
-				skyblock.getCreationManager().createPlayer(player, configLoad.getInt("Island.Creation.Cooldown.Time"));
+				skyblock.getCooldownManager().createPlayer(CooldownType.Creation, player);
 			}
 		}
 
@@ -265,8 +267,9 @@ public class IslandManager {
 	}
 
 	public void giveIslandOwnership(Island island, UUID uuid) {
-		FileManager fileManager = skyblock.getFileManager();
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
+		FileManager fileManager = skyblock.getFileManager();
 
 		if (island.isDeleted()) {
 			return;
@@ -331,8 +334,12 @@ public class IslandManager {
 			skyblock.getVisitManager().transfer(uuid2, uuid);
 			skyblock.getBanManager().transfer(uuid2, uuid);
 			skyblock.getInviteManager().tranfer(uuid2, uuid);
-			skyblock.getLevellingManager().transferLevelling(uuid2, uuid);
-			skyblock.getOwnershipManager().transferOwnership(uuid2, uuid);
+
+			org.bukkit.OfflinePlayer offlinePlayer1 = Bukkit.getServer().getOfflinePlayer(uuid2);
+			org.bukkit.OfflinePlayer offlinePlayer2 = Bukkit.getServer().getOfflinePlayer(uuid);
+
+			cooldownManager.transferPlayer(CooldownType.Levelling, offlinePlayer1, offlinePlayer2);
+			cooldownManager.transferPlayer(CooldownType.Ownership, offlinePlayer1, offlinePlayer2);
 
 			if (configLoad.getBoolean("Island.Ownership.Transfer.Operator")) {
 				island.setRole(IslandRole.Operator, uuid2);
@@ -384,19 +391,21 @@ public class IslandManager {
 	public void deleteIsland(Island island) {
 		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		FileManager fileManager = skyblock.getFileManager();
 
 		skyblock.getVisitManager().deleteIsland(island.getOwnerUUID());
 		skyblock.getBanManager().deleteIsland(island.getOwnerUUID());
 		skyblock.getVisitManager().removeVisitors(island, VisitManager.Removal.Deleted);
-		skyblock.getLevellingManager().unloadLevelling(island.getOwnerUUID());
-		skyblock.getOwnershipManager().unloadOwnership(island.getOwnerUUID());
+
+		org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
+		cooldownManager.removeCooldownPlayer(CooldownType.Levelling, offlinePlayer);
+		cooldownManager.removeCooldownPlayer(CooldownType.Ownership, offlinePlayer);
 
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		boolean cooldownEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable");
-		int cooldownTime = configLoad.getInt("Island.Creation.Cooldown.Time");
 
 		config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		configLoad = config.getFileConfiguration();
@@ -427,7 +436,7 @@ public class IslandManager {
 				if (cooldownEnabled) {
 					if (!all.hasPermission("skyblock.bypass.cooldown") && !all.hasPermission("skyblock.bypass.*")
 							&& !all.hasPermission("skyblock.*")) {
-						skyblock.getCreationManager().createPlayer(all, cooldownTime);
+						skyblock.getCooldownManager().createPlayer(CooldownType.Creation, all);
 					}
 				}
 			}

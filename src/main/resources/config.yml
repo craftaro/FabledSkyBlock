@@ -31,6 +31,7 @@ Island:
             # When enabled cooldown will start when a player deletes their Island.
             Deletion:
                 Enable: true
+            # Time until player can create another island.
             Time: 60
     World:
         # [!] The Island height is 72 blocks.
@@ -130,7 +131,8 @@ Island:
         # JUNGLE | ROOFED_JUNGLE
         Default:
             Type: Plains
-        Cooldown: 900
+        Cooldown:
+            Time: 900
     Weather:
         Default:
             # The weather and time will operate the same weather and time as the world.
@@ -152,8 +154,9 @@ Island:
     Levelling:
         # Island Level Points divided by value
         Division: 100
-        # Time until Island level rescan expires
-        Cooldown: 60
+        Cooldown:
+            # Time until Island level rescan expires
+            Time: 60
     Confirmation:
         # Time until confirmation expires for island ownership and island deletion
         # confirmations.
@@ -168,8 +171,9 @@ Island:
             # When ownership has been assigned to a player the Island password will
             # be reset.
             Reset: true
-        # Time until Island Ownership reassign expires
-        Cooldown: 60
+        Cooldown:
+            # Time until Island Ownership reassign expires
+            Time: 60
     Void:
         Teleport:
             # Prevents players from being killed by the Void when at an Island.

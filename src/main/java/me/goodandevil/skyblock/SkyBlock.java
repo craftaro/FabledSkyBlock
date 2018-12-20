@@ -13,7 +13,7 @@ import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.confirmation.ConfirmationTask;
-import me.goodandevil.skyblock.creation.CreationManager;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
 import me.goodandevil.skyblock.economy.EconomyManager;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.hologram.HologramManager;
@@ -43,7 +43,6 @@ import me.goodandevil.skyblock.menus.admin.Creator;
 import me.goodandevil.skyblock.menus.admin.Generator;
 import me.goodandevil.skyblock.menus.admin.Levelling;
 import me.goodandevil.skyblock.message.MessageManager;
-import me.goodandevil.skyblock.ownership.OwnershipManager;
 import me.goodandevil.skyblock.placeholder.PlaceholderManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.playtime.PlaytimeTask;
@@ -68,8 +67,8 @@ public class SkyBlock extends JavaPlugin {
 	private BanManager banManager;
 	private IslandManager islandManager;
 	private UpgradeManager upgradeManager;
-	private CreationManager creationManager;
 	private PlayerDataManager playerDataManager;
+	private CooldownManager cooldownManager;
 	private ScoreboardManager scoreboardManager;
 	private InviteManager inviteManager;
 	private BiomeManager biomeManager;
@@ -83,7 +82,6 @@ public class SkyBlock extends JavaPlugin {
 	private MessageManager messageManager;
 	private EconomyManager economyManager;
 	private HologramManager hologramManager;
-	private OwnershipManager ownershipManager;
 
 	@Override
 	public void onEnable() {
@@ -96,8 +94,8 @@ public class SkyBlock extends JavaPlugin {
 		banManager = new BanManager(this);
 		islandManager = new IslandManager(this);
 		upgradeManager = new UpgradeManager(this);
-		creationManager = new CreationManager(this);
 		playerDataManager = new PlayerDataManager(this);
+		cooldownManager = new CooldownManager(this);
 
 		if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Scoreboard.Enable")) {
@@ -124,7 +122,6 @@ public class SkyBlock extends JavaPlugin {
 		messageManager = new MessageManager(this);
 		economyManager = new EconomyManager();
 		hologramManager = new HologramManager(this);
-		ownershipManager = new OwnershipManager(this);
 
 		new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
 		new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -163,10 +160,6 @@ public class SkyBlock extends JavaPlugin {
 			this.userCacheManager.onDisable();
 		}
 
-		if (this.levellingManager != null) {
-			this.levellingManager.onDisable();
-		}
-
 		if (this.islandManager != null) {
 			this.islandManager.onDisable();
 		}
@@ -179,24 +172,16 @@ public class SkyBlock extends JavaPlugin {
 			this.banManager.onDisable();
 		}
 
-		if (this.biomeManager != null) {
-			this.biomeManager.onDisable();
-		}
-
-		if (this.creationManager != null) {
-			this.creationManager.onDisable();
-		}
-
 		if (this.playerDataManager != null) {
 			this.playerDataManager.onDisable();
 		}
 
-		if (this.hologramManager != null) {
-			this.hologramManager.onDisable();
+		if (this.cooldownManager != null) {
+			this.cooldownManager.onDisable();
 		}
 
-		if (this.ownershipManager != null) {
-			this.ownershipManager.onDisable();
+		if (this.hologramManager != null) {
+			this.hologramManager.onDisable();
 		}
 
 		HandlerList.unregisterAll(this);
@@ -234,12 +219,12 @@ public class SkyBlock extends JavaPlugin {
 		return upgradeManager;
 	}
 
-	public CreationManager getCreationManager() {
-		return creationManager;
-	}
-
 	public PlayerDataManager getPlayerDataManager() {
 		return playerDataManager;
+	}
+
+	public CooldownManager getCooldownManager() {
+		return cooldownManager;
 	}
 
 	public ScoreboardManager getScoreboardManager() {
@@ -300,10 +285,6 @@ public class SkyBlock extends JavaPlugin {
 
 	public HologramManager getHologramManager() {
 		return hologramManager;
-	}
-
-	public OwnershipManager getOwnershipManager() {
-		return ownershipManager;
 	}
 
 	@Override

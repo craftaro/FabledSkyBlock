@@ -551,6 +551,8 @@ Command:
                     Message: "&bSkyBlock &8| &cError&8: &eYou must close your island before deleting it."
                 Spawn:
                     Message: "&bSkyBlock &8| &cError&8: &eYou cannot delete your island because the main spawn point is set there."
+                Money:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have enough money to delete your island. The cost of deleting your island is &c%cost&e."
                 Broadcast:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe Island owner has disbanded the Island."
             Confirmed:
@@ -974,6 +976,8 @@ Island:
                 Message: "&bSkyBlock &8| &cError&8: &eThat structure does not exist."
             Selected:
                 Message: "&bSkyBlock &8| &cError&8: &eYou have not selected a structure."
+            Numerical:
+                Message: "&bSkyBlock &8| &cError&8: &eYou must enter a numerical value."
             File:
                 Message: "&bSkyBlock &8| &cError&8: &eThat file does not exist in the structures directory."
             Characters:
@@ -2814,6 +2818,17 @@ Menu:
                             - ""
                             - "&eLeft-Click to add a command!"
                             - "&eRight-click to remove a command!"
+                    DeletionCost:
+                        Word:
+                            Enter: "Enter Cost"
+                        Displayname: "&aDeletion Cost"
+                        Lore:
+                        - "&7Cost&8: &f%cost"
+                        - ""
+                        - "&c[!] For no deletion"
+                        - "&ccost, enter 0.0."
+                        - ""
+                        - "&eClick to set cost!"
         Upgrade:
             Upgrades:
                 Title: "&8Upgrade Editor"

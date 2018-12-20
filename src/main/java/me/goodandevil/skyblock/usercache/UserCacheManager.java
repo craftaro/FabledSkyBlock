@@ -32,6 +32,8 @@ public class UserCacheManager {
 			@Override
 			public void run() {
 				if (configFile.exists()) {
+					int usersIgnored = 0;
+
 					Bukkit.getServer().getLogger().log(Level.INFO,
 							"SkyBlock | Info: Fetching user information from island data. This may take a while...");
 
@@ -79,19 +81,21 @@ public class UserCacheManager {
 									}
 								}
 							} catch (Exception e) {
-								if (islandOwnerUUID != null) {
-									Bukkit.getServer().getLogger().log(Level.WARNING,
-											"SkyBlock | Error: An error occured when fetching the user information for the island '"
-													+ islandOwnerUUID.toString() + "'. Continuing anyways...");
-								}
+								usersIgnored++;
 							}
 						}
 					}
 
 					save();
 
-					Bukkit.getServer().getLogger().log(Level.INFO,
-							"SkyBlock | Info: Finished fetching user information from island data.");
+					if (usersIgnored != 0) {
+						Bukkit.getServer().getLogger().log(Level.INFO,
+								"SkyBlock | Info: Finished fetching user information from island data. There were "
+										+ usersIgnored + " users that were skipped.");
+					} else {
+						Bukkit.getServer().getLogger().log(Level.INFO,
+								"SkyBlock | Info: Finished fetching user information from island data.");
+					}
 				}
 			}
 		});

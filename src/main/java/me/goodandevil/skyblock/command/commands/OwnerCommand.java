@@ -15,11 +15,14 @@ import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
+import me.goodandevil.skyblock.cooldown.Cooldown;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownPlayer;
+import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.menus.Ownership;
 import me.goodandevil.skyblock.message.MessageManager;
-import me.goodandevil.skyblock.ownership.OwnershipManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
@@ -45,7 +48,7 @@ public class OwnerCommand extends SubCommand {
 
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
-		OwnershipManager ownershipManager = skyblock.getOwnershipManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -98,12 +101,14 @@ public class OwnerCommand extends SubCommand {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Ownership.Yourself.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-						} else if (ownershipManager.hasOwnership(island.getOwnerUUID())) {
-							me.goodandevil.skyblock.ownership.Ownership ownership = ownershipManager
-									.getOwnership(island.getOwnerUUID());
-							long[] durationTime = NumberUtil.getDuration(ownership.getTime());
+						} else if (cooldownManager.hasPlayer(CooldownType.Ownership,
+								Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()))) {
+							CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Ownership,
+									Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
+							Cooldown cooldown = cooldownPlayer.getCooldown();
+							long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
 
-							if (ownership.getTime() >= 3600) {
+							if (cooldown.getTime() >= 3600) {
 								messageManager.sendMessage(player, configLoad
 										.getString("Command.Island.Ownership.Cooldown.Message")
 										.replace("%time", durationTime[1] + " "
@@ -112,7 +117,7 @@ public class OwnerCommand extends SubCommand {
 												+ configLoad.getString("Command.Island.Ownership.Cooldown.Word.Minute")
 												+ " " + durationTime[3] + " " + configLoad
 														.getString("Command.Island.Ownership.Cooldown.Word.Second")));
-							} else if (ownership.getTime() >= 60) {
+							} else if (cooldown.getTime() >= 60) {
 								messageManager.sendMessage(player, configLoad
 										.getString("Command.Island.Ownership.Cooldown.Message")
 										.replace("%time", durationTime[2] + " "
@@ -122,7 +127,7 @@ public class OwnerCommand extends SubCommand {
 							} else {
 								messageManager.sendMessage(player,
 										configLoad.getString("Command.Island.Ownership.Cooldown.Message")
-												.replace("%time", ownership.getTime() + " " + configLoad
+												.replace("%time", cooldown.getTime() + " " + configLoad
 														.getString("Command.Island.Ownership.Cooldown.Word.Second")));
 							}
 
@@ -228,8 +233,8 @@ public class OwnerCommand extends SubCommand {
 
 							islandManager.giveIslandOwnership(island, player.getUniqueId());
 
-							ownershipManager.createOwnership(island.getOwnerUUID());
-							ownershipManager.loadOwnership(island.getOwnerUUID());
+							cooldownManager.createPlayer(CooldownType.Ownership,
+									Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
 						} else {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Ownership.Password.Incorrect.Message"));

@@ -14,6 +14,10 @@ import org.bukkit.inventory.ItemStack;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.cooldown.Cooldown;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownPlayer;
+import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -48,6 +52,7 @@ public class Biome {
 		SkyBlock skyblock = SkyBlock.getInstance();
 
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		BiomeManager biomeManager = skyblock.getBiomeManager();
@@ -108,17 +113,19 @@ public class Biome {
 							event.setWillClose(false);
 							event.setWillDestroy(false);
 						} else {
-							if (biomeManager.hasPlayer(player)) {
-								me.goodandevil.skyblock.biome.Biome biome = biomeManager.getPlayer(player);
+							if (cooldownManager.hasPlayer(CooldownType.Biome, player)) {
+								CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome,
+										player);
+								Cooldown cooldown = cooldownPlayer.getCooldown();
 
-								if (biome.getTime() < 60) {
+								if (cooldown.getTime() < 60) {
 									messageManager.sendMessage(player,
 											config.getFileConfiguration().getString("Island.Biome.Cooldown.Message")
 													.replace("%time",
-															biome.getTime() + " " + config.getFileConfiguration()
+															cooldown.getTime() + " " + config.getFileConfiguration()
 																	.getString("Island.Biome.Cooldown.Word.Second")));
 								} else {
-									long[] durationTime = NumberUtil.getDuration(biome.getTime());
+									long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
 									messageManager.sendMessage(player,
 											config.getFileConfiguration().getString("Island.Biome.Cooldown.Message")
 													.replace("%time", durationTime[2] + " "
@@ -158,10 +165,7 @@ public class Biome {
 							if (!player.hasPermission("skyblock.bypass.cooldown")
 									&& !player.hasPermission("skyblock.bypass.*")
 									&& !player.hasPermission("skyblock.*")) {
-								biomeManager.createPlayer(player,
-										skyblock.getFileManager()
-												.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-												.getFileConfiguration().getInt("Island.Biome.Cooldown"));
+								cooldownManager.createPlayer(CooldownType.Biome, player);
 								biomeManager.setBiome(island, selectedBiomeType);
 							}
 

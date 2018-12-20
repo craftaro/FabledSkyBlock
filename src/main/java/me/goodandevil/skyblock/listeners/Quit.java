@@ -7,21 +7,20 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.biome.BiomeManager;
-import me.goodandevil.skyblock.creation.CreationManager;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.message.MessageManager;
-import me.goodandevil.skyblock.ownership.OwnershipManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -39,11 +38,10 @@ public class Quit implements Listener {
 		Player player = event.getPlayer();
 
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-		CreationManager creationManager = skyblock.getCreationManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		InviteManager inviteManager = skyblock.getInviteManager();
 		IslandManager islandManager = skyblock.getIslandManager();
-		BiomeManager biomeManager = skyblock.getBiomeManager();
 
 		PlayerData playerData = playerDataManager.getPlayerData(player);
 
@@ -58,13 +56,12 @@ public class Quit implements Listener {
 			Set<UUID> islandMembersOnline = islandManager.getMembersOnline(island);
 
 			if (islandMembersOnline.size() == 1) {
-				LevellingManager levellingManager = skyblock.getLevellingManager();
-				levellingManager.saveLevelling(island.getOwnerUUID());
-				levellingManager.unloadLevelling(island.getOwnerUUID());
+				OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
+				cooldownManager.setCooldownPlayer(CooldownType.Levelling, offlinePlayer);
+				cooldownManager.removeCooldownPlayer(CooldownType.Levelling, offlinePlayer);
 
-				OwnershipManager ownershipManager = skyblock.getOwnershipManager();
-				ownershipManager.saveOwnership(island.getOwnerUUID());
-				ownershipManager.unloadOwnership(island.getOwnerUUID());
+				cooldownManager.setCooldownPlayer(CooldownType.Ownership, offlinePlayer);
+				cooldownManager.removeCooldownPlayer(CooldownType.Ownership, offlinePlayer);
 			} else if (islandMembersOnline.size() == 2) {
 				for (UUID islandMembersOnlineList : islandMembersOnline) {
 					if (!islandMembersOnlineList.equals(player.getUniqueId())) {
@@ -84,6 +81,12 @@ public class Quit implements Listener {
 
 			islandManager.unloadIsland(island, player.getUniqueId());
 		}
+
+		cooldownManager.setCooldownPlayer(CooldownType.Biome, player);
+		cooldownManager.removeCooldownPlayer(CooldownType.Biome, player);
+
+		cooldownManager.setCooldownPlayer(CooldownType.Creation, player);
+		cooldownManager.removeCooldownPlayer(CooldownType.Creation, player);
 
 		playerDataManager.savePlayerData(player);
 		playerDataManager.unloadPlayerData(player);
@@ -118,11 +121,5 @@ public class Quit implements Listener {
 
 			inviteManager.removeInvite(player.getUniqueId());
 		}
-
-		biomeManager.savePlayer(player);
-		biomeManager.unloadPlayer(player);
-
-		creationManager.savePlayer(player);
-		creationManager.unloadPlayer(player);
 	}
 }

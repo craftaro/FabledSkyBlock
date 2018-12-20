@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import me.goodandevil.skyblock.api.event.player.PlayerWithdrawMoneyEvent;
 import net.milkbowl.vault.economy.Economy;
 import net.nifheim.beelzebu.coins.CoinsAPI;
 
@@ -55,6 +56,8 @@ public class EconomyManager {
 		} else if (economyPlugin == EconomyPlugin.Coins) {
 			CoinsAPI.takeCoins(player.getUniqueId(), money);
 		}
+
+		Bukkit.getServer().getPluginManager().callEvent(new PlayerWithdrawMoneyEvent(player, money));
 	}
 
 	public boolean isEconomy() {

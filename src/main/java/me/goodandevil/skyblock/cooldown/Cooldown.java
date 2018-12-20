@@ -1,10 +1,10 @@
-package me.goodandevil.skyblock.levelling;
+package me.goodandevil.skyblock.cooldown;
 
-public class Levelling {
+public class Cooldown {
 
 	private int time;
 
-	public Levelling(int time) {
+	public Cooldown(int time) {
 		this.time = time;
 	}
 

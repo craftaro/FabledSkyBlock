@@ -17,13 +17,16 @@ import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
+import me.goodandevil.skyblock.cooldown.CooldownType;
+import me.goodandevil.skyblock.economy.EconomyManager;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
-import me.goodandevil.skyblock.ownership.OwnershipManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.structure.Structure;
+import me.goodandevil.skyblock.structure.StructureManager;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
@@ -40,8 +43,9 @@ public class ConfirmCommand extends SubCommand {
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-		OwnershipManager ownershipManager = skyblock.getOwnershipManager();
+		StructureManager structureManager = skyblock.getStructureManager();
 		MessageManager messageManager = skyblock.getMessageManager();
+		EconomyManager economyManager = skyblock.getEconomyManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
@@ -100,8 +104,8 @@ public class ConfirmCommand extends SubCommand {
 
 									islandManager.giveIslandOwnership(island, targetPlayerUUID);
 
-									ownershipManager.createOwnership(island.getOwnerUUID());
-									ownershipManager.loadOwnership(island.getOwnerUUID());
+									skyblock.getCooldownManager().createPlayer(CooldownType.Ownership,
+											Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
 								} else {
 									messageManager.sendMessage(player, configLoad
 											.getString("Command.Island.Confirmation.Ownership.Member.Message"));
@@ -125,6 +129,28 @@ public class ConfirmCommand extends SubCommand {
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 										return;
+									}
+
+									if (economyManager.isEconomy() && island.getStructure() != null
+											&& !island.getStructure().isEmpty()
+											&& structureManager.containsStructure(island.getStructure())) {
+										Structure structure = structureManager.getStructure(island.getStructure());
+										double deletionCost = structure.getDeletionCost();
+
+										if (deletionCost != 0.0D) {
+											if (economyManager.hasBalance(player, deletionCost)) {
+												economyManager.withdraw(player, deletionCost);
+											} else {
+												messageManager.sendMessage(player,
+														configLoad.getString(
+																"Command.Island.Confirmation.Deletion.Money.Message")
+																.replace("%cost", "" + deletionCost));
+												soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+														1.0F);
+
+												return;
+											}
+										}
 									}
 
 									playerData.setConfirmation(null);

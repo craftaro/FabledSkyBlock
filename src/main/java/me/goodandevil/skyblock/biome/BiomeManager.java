@@ -1,22 +1,15 @@
 package me.goodandevil.skyblock.biome;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandWorld;
@@ -26,22 +19,9 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 public class BiomeManager {
 
 	private final SkyBlock skyblock;
-	private Map<UUID, me.goodandevil.skyblock.biome.Biome> playerBiomeStorage = new HashMap<>();
 
 	public BiomeManager(SkyBlock skyblock) {
 		this.skyblock = skyblock;
-
-		new BiomeTask(skyblock).runTaskTimerAsynchronously(skyblock, 0L, 20L);
-
-		for (Player all : Bukkit.getOnlinePlayers()) {
-			loadPlayer(all);
-		}
-	}
-
-	public void onDisable() {
-		for (Player all : Bukkit.getOnlinePlayers()) {
-			savePlayer(all);
-		}
 	}
 
 	public void setBiome(Island island, Biome biome) {
@@ -90,95 +70,5 @@ public class BiomeManager {
 				}
 			}
 		}
-	}
-
-	public void createPlayer(Player player, int time) {
-		Config config = skyblock.getFileManager()
-				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
-						player.getUniqueId().toString() + ".yml"));
-		File configFile = config.getFile();
-		FileConfiguration configLoad = config.getFileConfiguration();
-
-		configLoad.set("Island.Biome.Cooldown", time);
-
-		try {
-			configLoad.save(configFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		me.goodandevil.skyblock.biome.Biome biome = new me.goodandevil.skyblock.biome.Biome(time);
-		playerBiomeStorage.put(player.getUniqueId(), biome);
-	}
-
-	public void loadPlayer(Player player) {
-		Config config = skyblock.getFileManager()
-				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
-						player.getUniqueId().toString() + ".yml"));
-		FileConfiguration configLoad = config.getFileConfiguration();
-
-		if (configLoad.getString("Island.Biome.Cooldown") != null) {
-			me.goodandevil.skyblock.biome.Biome biome = new me.goodandevil.skyblock.biome.Biome(
-					configLoad.getInt("Island.Biome.Cooldown"));
-			playerBiomeStorage.put(player.getUniqueId(), biome);
-		}
-	}
-
-	public void removePlayer(Player player) {
-		if (hasPlayer(player)) {
-			Config config = skyblock.getFileManager()
-					.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
-							player.getUniqueId().toString() + ".yml"));
-			File configFile = config.getFile();
-			FileConfiguration configLoad = config.getFileConfiguration();
-
-			configLoad.set("Island.Biome.Cooldown", null);
-
-			try {
-				configLoad.save(configFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			playerBiomeStorage.remove(player.getUniqueId());
-		}
-	}
-
-	public void savePlayer(Player player) {
-		if (hasPlayer(player)) {
-			me.goodandevil.skyblock.biome.Biome biome = getPlayer(player);
-
-			Config config = skyblock.getFileManager()
-					.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
-							player.getUniqueId().toString() + ".yml"));
-			File configFile = config.getFile();
-			FileConfiguration configLoad = config.getFileConfiguration();
-
-			configLoad.set("Island.Biome.Cooldown", biome.getTime());
-
-			try {
-				configLoad.save(configFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public void unloadPlayer(Player player) {
-		if (hasPlayer(player)) {
-			playerBiomeStorage.remove(player.getUniqueId());
-		}
-	}
-
-	public me.goodandevil.skyblock.biome.Biome getPlayer(Player player) {
-		if (hasPlayer(player)) {
-			return playerBiomeStorage.get(player.getUniqueId());
-		}
-
-		return null;
-	}
-
-	public boolean hasPlayer(Player player) {
-		return playerBiomeStorage.containsKey(player.getUniqueId());
 	}
 }

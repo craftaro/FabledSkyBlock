@@ -85,15 +85,17 @@ public class StructureManager {
 						configLoad.getString("Structures." + structureList + ".Displayname"),
 						configLoad.getBoolean("Structures." + structureList + ".Permission"),
 						configLoad.getStringList("Structures." + structureList + ".Description"),
-						configLoad.getStringList("Structures." + structureList + ".Commands")));
+						configLoad.getStringList("Structures." + structureList + ".Commands"),
+						configLoad.getDouble("Structures." + structureList + ".Deletion.Cost")));
 			}
 		}
 	}
 
 	public void addStructure(String name, Materials materials, String overworldFile, String netherFile, String endFile,
-			String displayName, boolean permission, List<String> description, List<String> commands) {
+			String displayName, boolean permission, List<String> description, List<String> commands,
+			double deletionCost) {
 		structureStorage.add(new Structure(name, materials, overworldFile, netherFile, endFile, displayName, permission,
-				description, commands));
+				description, commands, deletionCost));
 	}
 
 	public void removeStructure(Structure structure) {

@@ -238,6 +238,10 @@ public class Creator implements Listener {
 					configLoad.getStringList("Menu.Admin.Creator.Options.Item.Item.Lore"),
 					new Placeholder[] { new Placeholder("%material", structure.getMaterials().name()) }, null, null),
 					6);
+			nInv.addItem(nInv.createItem(new ItemStack(Material.GOLD_NUGGET),
+					configLoad.getString("Menu.Admin.Creator.Options.Item.DeletionCost.Displayname"),
+					configLoad.getStringList("Menu.Admin.Creator.Options.Item.DeletionCost.Lore"),
+					new Placeholder[] { new Placeholder("%cost", "" + structure.getDeletionCost()) }, null, null), 7);
 
 			nInv.setRows(1);
 		}
@@ -337,7 +341,7 @@ public class Creator implements Listener {
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 							} else {
 								structureManager.addStructure(event1.getName(), Materials.GRASS_BLOCK, null, null, null,
-										null, false, new ArrayList<>(), new ArrayList<>());
+										null, false, new ArrayList<>(), new ArrayList<>(), 0.0D);
 
 								messageManager.sendMessage(player,
 										configLoad.getString("Island.Admin.Creator.Created.Message")
@@ -1189,6 +1193,147 @@ public class Creator implements Listener {
 									}
 								}, 1L);
 							}
+						}
+					}
+
+					return;
+				} else if ((event.getCurrentItem().getType() == Material.GOLD_NUGGET) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Creator.Options.Item.DeletionCost.Displayname"))))) {
+					if (playerData.getViewer() == null) {
+						messageManager.sendMessage(player,
+								configLoad.getString("Island.Admin.Creator.Selected.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+						player.closeInventory();
+
+						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+							@Override
+							public void run() {
+								open(player);
+							}
+						}, 1L);
+					} else {
+						String name = ((Creator.Viewer) playerData.getViewer()).getName();
+
+						if (structureManager.containsStructure(name)) {
+							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+
+							AnvilGUI gui = new AnvilGUI(player, event1 -> {
+								if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+									if (!(player.hasPermission("skyblock.admin.creator")
+											|| player.hasPermission("skyblock.admin.*")
+											|| player.hasPermission("skyblock.*"))) {
+										messageManager.sendMessage(player,
+												configLoad.getString("Island.Admin.Creator.Permission.Message"));
+										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+										return;
+									} else if (playerData.getViewer() == null) {
+										messageManager.sendMessage(player,
+												configLoad.getString("Island.Admin.Creator.Selected.Message"));
+										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
+
+										return;
+									} else if (!structureManager.containsStructure(name)) {
+										messageManager.sendMessage(player,
+												configLoad.getString("Island.Admin.Creator.Exist.Message"));
+										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+										player.closeInventory();
+
+										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+												new Runnable() {
+													@Override
+													public void run() {
+														open(player);
+													}
+												}, 1L);
+
+										return;
+									} else if (!(event1.getName().matches("[0-9]+")
+											|| event1.getName().matches("([0-9]*)\\.([0-9]{1,2}$)"))) {
+										messageManager.sendMessage(player,
+												configLoad.getString("Island.Admin.Creator.Numerical.Message"));
+										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+										event1.setWillClose(false);
+										event1.setWillDestroy(false);
+
+										return;
+									}
+
+									double deletionCost = Double.valueOf(event1.getName());
+
+									Structure structure = structureManager.getStructure(name);
+									structure.setDeletionCost(deletionCost);
+
+									soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+
+									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
+										@Override
+										public void run() {
+											Config config = fileManager
+													.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+											FileConfiguration configLoad = config.getFileConfiguration();
+
+											configLoad.set("Structures." + structure.getName() + ".Deletion.Cost",
+													deletionCost);
+
+											try {
+												configLoad.save(config.getFile());
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+										}
+									});
+
+									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+											new Runnable() {
+												@Override
+												public void run() {
+													open(player);
+												}
+											}, 1L);
+								} else {
+									event1.setWillClose(false);
+									event1.setWillDestroy(false);
+								}
+							});
+
+							is = new ItemStack(Material.NAME_TAG);
+							ItemMeta im = is.getItemMeta();
+							im.setDisplayName(
+									configLoad.getString("Menu.Admin.Creator.Options.Item.DeletionCost.Word.Enter"));
+							is.setItemMeta(im);
+
+							gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+							gui.open();
+						} else {
+							playerData.setViewer(null);
+
+							messageManager.sendMessage(player,
+									configLoad.getString("Island.Admin.Creator.Exist.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							player.closeInventory();
+
+							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
+								@Override
+								public void run() {
+									open(player);
+								}
+							}, 1L);
 						}
 					}
 
