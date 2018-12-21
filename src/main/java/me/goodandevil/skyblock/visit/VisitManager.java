@@ -10,7 +10,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -18,8 +17,9 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandLevel;
+import me.goodandevil.skyblock.island.IslandLocation;
 import me.goodandevil.skyblock.island.IslandWorld;
-import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -92,20 +92,20 @@ public class VisitManager {
 							}
 
 							createIsland(islandOwnerUUID,
-									new Location[] {
-											worldManager.getLocation(
-													fileManager.getLocation(config, "Location.Normal.Island", true),
-													IslandWorld.Normal),
-											worldManager.getLocation(
-													fileManager.getLocation(config, "Location.Nether.Island", true),
-													IslandWorld.Nether),
-											worldManager.getLocation(
-													fileManager.getLocation(config, "Location.End.Island", true),
-													IslandWorld.End) },
+									new IslandLocation[] {
+											new IslandLocation(IslandWorld.Normal, null,
+													worldManager.getLocation(fileManager.getLocation(config,
+															"Location.Normal.Island", true), IslandWorld.Normal)),
+											new IslandLocation(IslandWorld.Nether, null,
+													worldManager.getLocation(fileManager.getLocation(config,
+															"Location.Nether.Island", true), IslandWorld.Nether)),
+											new IslandLocation(IslandWorld.End, null,
+													worldManager.getLocation(fileManager.getLocation(config,
+															"Location.Nether.Island", true), IslandWorld.End)) },
 									size,
 									configLoad.getStringList("Members").size()
 											+ configLoad.getStringList("Operators").size() + 1,
-									getIslandSafeLevel(islandOwnerUUID), new Level(islandOwnerUUID, skyblock),
+									getIslandSafeLevel(islandOwnerUUID), new IslandLevel(islandOwnerUUID, skyblock),
 									islandSignature, configLoad.getBoolean("Visitor.Open"));
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -217,8 +217,8 @@ public class VisitManager {
 		return visitIslands;
 	}
 
-	public void createIsland(UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers,
-			int safeLevel, Level islandLevel, List<String> islandSignature, boolean open) {
+	public void createIsland(UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize, int islandMembers,
+			int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
 		visitStorage.put(islandOwnerUUID, new Visit(skyblock, islandOwnerUUID, islandLocations, islandSize,
 				islandMembers, safeLevel, islandLevel, islandSignature, open));
 	}

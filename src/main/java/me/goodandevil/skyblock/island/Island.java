@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -43,12 +44,12 @@ public class Island {
 	private final SkyBlock skyblock;
 	private final me.goodandevil.skyblock.api.island.Island apiWrapper;
 
-	private Map<IslandRole, List<Setting>> islandSettings = new HashMap<>();
-	private List<Location> islandLocations = new ArrayList<>();
+	private Map<IslandRole, List<IslandSetting>> islandSettings = new HashMap<>();
+	private List<IslandLocation> islandLocations = new ArrayList<>();
 	private Set<UUID> coopPlayers = new HashSet<>();
 
 	private UUID uuid;
-	private Level level;
+	private IslandLevel level;
 	private int size;
 	private boolean deleted = false;
 
@@ -65,7 +66,7 @@ public class Island {
 			this.size = 50;
 		}
 
-		level = new Level(getOwnerUUID(), skyblock);
+		level = new IslandLevel(getOwnerUUID(), skyblock);
 
 		File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 
@@ -140,16 +141,16 @@ public class Island {
 			}
 
 			for (IslandRole roleList : IslandRole.values()) {
-				List<Setting> settings = new ArrayList<>();
+				List<IslandSetting> settings = new ArrayList<>();
 
 				for (String settingList : defaultSettingsConfig.getFileConfiguration()
 						.getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
 					if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
 							.getString("Settings." + roleList.name() + "." + settingList) == null) {
-						settings.add(new Setting(settingList, defaultSettingsConfig.getFileConfiguration()
+						settings.add(new IslandSetting(settingList, defaultSettingsConfig.getFileConfiguration()
 								.getBoolean("Settings." + roleList.name() + "." + settingList)));
 					} else {
-						settings.add(new Setting(settingList, settingsDataConfig.getFileConfiguration()
+						settings.add(new IslandSetting(settingList, settingsDataConfig.getFileConfiguration()
 								.getBoolean("Settings." + roleList.name() + "." + settingList)));
 					}
 				}
@@ -170,11 +171,11 @@ public class Island {
 			configLoad.set("Ownership.Original", uuid.toString());
 
 			for (IslandRole roleList : IslandRole.values()) {
-				List<Setting> settings = new ArrayList<>();
+				List<IslandSetting> settings = new ArrayList<>();
 
 				for (String settingList : defaultSettingsConfig.getFileConfiguration()
 						.getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
-					settings.add(new Setting(settingList, defaultSettingsConfig.getFileConfiguration()
+					settings.add(new IslandSetting(settingList, defaultSettingsConfig.getFileConfiguration()
 							.getBoolean("Settings." + roleList.name() + "." + settingList)));
 				}
 
@@ -268,8 +269,8 @@ public class Island {
 				.getFileConfiguration().set("Ownership.Password", islandPasswordChangeEvent.getPassword());
 	}
 
-	public org.bukkit.Location getLocation(IslandWorld world, IslandEnvironment environment) {
-		for (Location islandLocationList : islandLocations) {
+	public Location getLocation(IslandWorld world, IslandEnvironment environment) {
+		for (IslandLocation islandLocationList : islandLocations) {
 			if (islandLocationList.getWorld() == world && islandLocationList.getEnvironment() == environment) {
 				return islandLocationList.getLocation();
 			}
@@ -278,12 +279,22 @@ public class Island {
 		return null;
 	}
 
-	public void addLocation(IslandWorld world, IslandEnvironment environment, org.bukkit.Location location) {
-		islandLocations.add(new Location(world, environment, location));
+	public IslandLocation getIslandLocation(IslandWorld world, IslandEnvironment environment) {
+		for (IslandLocation islandLocationList : islandLocations) {
+			if (islandLocationList.getWorld() == world && islandLocationList.getEnvironment() == environment) {
+				return islandLocationList;
+			}
+		}
+
+		return null;
 	}
 
-	public void setLocation(IslandWorld world, IslandEnvironment environment, org.bukkit.Location location) {
-		for (Location islandLocationList : islandLocations) {
+	public void addLocation(IslandWorld world, IslandEnvironment environment, Location location) {
+		islandLocations.add(new IslandLocation(world, environment, location));
+	}
+
+	public void setLocation(IslandWorld world, IslandEnvironment environment, Location location) {
+		for (IslandLocation islandLocationList : islandLocations) {
 			if (islandLocationList.getWorld() == world && islandLocationList.getEnvironment() == environment) {
 				Bukkit.getServer().getPluginManager()
 						.callEvent(new IslandLocationChangeEvent(getAPIWrapper(),
@@ -573,9 +584,9 @@ public class Island {
 				.getFileConfiguration().getBoolean("Upgrade." + type.name());
 	}
 
-	public Setting getSetting(IslandRole role, String setting) {
+	public IslandSetting getSetting(IslandRole role, String setting) {
 		if (islandSettings.containsKey(role)) {
-			for (Setting settingList : islandSettings.get(role)) {
+			for (IslandSetting settingList : islandSettings.get(role)) {
 				if (settingList.getName().equalsIgnoreCase(setting)) {
 					return settingList;
 				}
@@ -585,7 +596,7 @@ public class Island {
 		return null;
 	}
 
-	public List<Setting> getSettings(IslandRole role) {
+	public List<IslandSetting> getSettings(IslandRole role) {
 		if (islandSettings.containsKey(role)) {
 			return islandSettings.get(role);
 		}
@@ -683,7 +694,7 @@ public class Island {
 		return skyblock.getBanManager().getIsland(getOwnerUUID());
 	}
 
-	public Level getLevel() {
+	public IslandLevel getLevel() {
 		return level;
 	}
 
@@ -712,7 +723,7 @@ public class Island {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		for (IslandRole roleList : islandSettings.keySet()) {
-			for (Setting settingList : islandSettings.get(roleList)) {
+			for (IslandSetting settingList : islandSettings.get(roleList)) {
 				configLoad.set("Settings." + roleList + "." + settingList.getName(), settingList.getStatus());
 			}
 		}

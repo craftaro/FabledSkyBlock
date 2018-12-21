@@ -12,7 +12,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Level;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.leaderboard.Leaderboard;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -83,7 +83,7 @@ public class EZPlaceholder extends PlaceholderExpansion {
 					if (i < leaderboardLevelPlayers.size()) {
 						Leaderboard leaderboard = leaderboardLevelPlayers.get(i);
 						Visit visit = leaderboard.getVisit();
-						Level level = visit.getLevel();
+						IslandLevel level = visit.getLevel();
 
 						Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
 						String islandOwnerName;

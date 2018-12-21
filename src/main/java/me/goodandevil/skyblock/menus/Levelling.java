@@ -21,8 +21,8 @@ import me.goodandevil.skyblock.cooldown.CooldownManager;
 import me.goodandevil.skyblock.cooldown.CooldownPlayer;
 import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.placeholder.Placeholder;
@@ -204,7 +204,7 @@ public class Levelling {
 			});
 
 			Island island = islandManager.getIsland(playerData.getOwner());
-			Level level = island.getLevel();
+			IslandLevel level = island.getLevel();
 
 			Map<String, Integer> islandMaterials = level.getMaterials();
 

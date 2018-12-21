@@ -38,8 +38,8 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -328,7 +328,7 @@ public class Entity implements Listener {
 						Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
 						if (materials != null) {
-							Level level = island.getLevel();
+							IslandLevel level = island.getLevel();
 
 							if (level.hasMaterial(materials.name())) {
 								int materialAmount = level.getMaterialAmount(materials.name());
@@ -358,7 +358,7 @@ public class Entity implements Listener {
 
 							if (materials != null) {
 								int materialAmount = 0;
-								Level level = island.getLevel();
+								IslandLevel level = island.getLevel();
 
 								if (level.hasMaterial(materials.name())) {
 									materialAmount = level.getMaterialAmount(materials.name());
@@ -395,7 +395,7 @@ public class Entity implements Listener {
 							Materials materials = Materials.getMaterials(blockList.getType(), blockList.getData());
 
 							if (materials != null) {
-								Level level = island.getLevel();
+								IslandLevel level = island.getLevel();
 
 								if (level.hasMaterial(materials.name())) {
 									int materialAmount = level.getMaterialAmount(materials.name());

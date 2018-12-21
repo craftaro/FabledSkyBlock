@@ -11,7 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 
-public class Level {
+public class IslandLevel {
 
 	private final SkyBlock skyblock;
 
@@ -22,7 +22,7 @@ public class Level {
 
 	private Map<String, Integer> materials;
 
-	public Level(UUID ownerUUID, SkyBlock skyblock) {
+	public IslandLevel(UUID ownerUUID, SkyBlock skyblock) {
 		this.skyblock = skyblock;
 		this.ownerUUID = ownerUUID;
 
@@ -53,8 +53,8 @@ public class Level {
 
 		int pointsEarned = 0;
 
-		for (String materialList : materials.keySet()) {
-			int materialAmount = materials.get(materialList);
+		for (String materialList : this.materials.keySet()) {
+			int materialAmount = this.materials.get(materialList);
 
 			if (configLoad.getString("Materials." + materialList + ".Points") != null) {
 				int pointsRequired = config.getFileConfiguration().getInt("Materials." + materialList + ".Points");
@@ -74,8 +74,8 @@ public class Level {
 
 		int pointsEarned = 0;
 
-		if (materials.containsKey(material)) {
-			int materialAmount = materials.get(material);
+		if (this.materials.containsKey(material)) {
+			int materialAmount = this.materials.get(material);
 
 			if (configLoad.getString("Materials." + materials + ".Points") != null) {
 				int pointsRequired = config.getFileConfiguration().getInt("Materials." + materials + ".Points");
@@ -110,8 +110,8 @@ public class Level {
 	}
 
 	public int getMaterialAmount(String material) {
-		if (materials.containsKey(material)) {
-			return materials.get(material);
+		if (this.materials.containsKey(material)) {
+			return this.materials.get(material);
 		}
 
 		return 0;
@@ -141,11 +141,11 @@ public class Level {
 	}
 
 	public boolean hasMaterial(String material) {
-		return materials.containsKey(material);
+		return this.materials.containsKey(material);
 	}
 
 	public boolean hasMaterials() {
-		if (materials.size() == 0) {
+		if (this.materials.size() == 0) {
 			return false;
 		}
 
@@ -153,7 +153,7 @@ public class Level {
 	}
 
 	public Map<String, Integer> getMaterials() {
-		return materials;
+		return this.materials;
 	}
 
 	public void setLastCalculatedPoints(int lastCalculatedPoints) {
@@ -161,7 +161,7 @@ public class Level {
 	}
 
 	public int getLastCalculatedPoints() {
-		return lastCalculatedPoints;
+		return this.lastCalculatedPoints;
 	}
 
 	public void setLastCalculatedLevel(int lastCalculatedLevel) {
@@ -169,7 +169,7 @@ public class Level {
 	}
 
 	public int getLastCalculatedLevel() {
-		return lastCalculatedLevel;
+		return this.lastCalculatedLevel;
 	}
 
 	public void save() {

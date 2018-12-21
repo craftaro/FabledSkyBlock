@@ -1,10 +1,10 @@
-package me.goodandevil.skyblock.api.setting;
+package me.goodandevil.skyblock.api.island;
 
-public class Setting {
+public class IslandSetting {
 
-	private final me.goodandevil.skyblock.island.Setting handle;
+	private final me.goodandevil.skyblock.island.IslandSetting handle;
 
-	public Setting(me.goodandevil.skyblock.island.Setting handle) {
+	public IslandSetting(me.goodandevil.skyblock.island.IslandSetting handle) {
 		this.handle = handle;
 	}
 

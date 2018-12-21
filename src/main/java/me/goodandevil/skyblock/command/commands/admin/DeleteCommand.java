@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,6 +24,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class DeleteCommand extends SubCommand {
 
@@ -80,6 +82,17 @@ public class DeleteCommand extends SubCommand {
 					soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				} else {
 					Island island = islandManager.loadIsland(targetPlayerUUID);
+					Location spawnLocation = LocationUtil.getSpawnLocation();
+
+					if (spawnLocation != null && islandManager.isLocationAtIsland(island, spawnLocation)) {
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.Admin.Delete.Spawn.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+						islandManager.unloadIsland(island, null);
+
+						return;
+					}
 
 					for (Player all : Bukkit.getOnlinePlayers()) {
 						if (island.hasRole(IslandRole.Member, all.getUniqueId())

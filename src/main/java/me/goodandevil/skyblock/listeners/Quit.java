@@ -20,6 +20,7 @@ import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -91,19 +92,23 @@ public class Quit implements Listener {
 		playerDataManager.savePlayerData(player);
 		playerDataManager.unloadPlayerData(player);
 
+		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+				.getBoolean("Island.Coop.Unload")) {
+			for (Island islandList : islandManager.getCoopIslands(player)) {
+				islandList.removeCoopPlayer(player.getUniqueId());
+			}
+		}
+
 		UUID islandOwnerUUID = playerData.getIsland();
 
 		if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID)) {
-			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-					.getFileConfiguration().getBoolean("Island.Coop.Unload")) {
-				Island island = islandManager.getIsland(islandOwnerUUID);
+			Island island = islandManager.getIsland(islandOwnerUUID);
 
-				if (island.isCoopPlayer(islandOwnerUUID)) {
-					island.removeCoopPlayer(islandOwnerUUID);
-				}
+			if (!island.hasRole(IslandRole.Member, player.getUniqueId())
+					&& !island.hasRole(IslandRole.Operator, player.getUniqueId())
+					&& !island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+				islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
 			}
-
-			islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
 		}
 
 		if (inviteManager.hasInvite(player.getUniqueId())) {

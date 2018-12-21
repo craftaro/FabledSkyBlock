@@ -29,9 +29,9 @@ import me.goodandevil.skyblock.generator.GeneratorLocation;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandEnvironment;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.IslandWorld;
-import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -109,7 +109,7 @@ public class Block implements Listener {
 						Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
 						if (materials != null) {
-							Level level = island.getLevel();
+							IslandLevel level = island.getLevel();
 
 							if (level.hasMaterial(materials.name())) {
 								int materialAmount = level.getMaterialAmount(materials.name());
@@ -185,7 +185,7 @@ public class Block implements Listener {
 
 						if (materials != null) {
 							int materialAmount = 0;
-							Level level = island.getLevel();
+							IslandLevel level = island.getLevel();
 
 							if (level.hasMaterial(materials.name())) {
 								materialAmount = level.getMaterialAmount(materials.name());

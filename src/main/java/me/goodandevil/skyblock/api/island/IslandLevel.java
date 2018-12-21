@@ -1,17 +1,16 @@
-package me.goodandevil.skyblock.api.level;
+package me.goodandevil.skyblock.api.island;
 
 import org.bukkit.Material;
 
 import com.google.common.base.Preconditions;
 
-import me.goodandevil.skyblock.api.island.Island;
 import me.goodandevil.skyblock.utils.version.Materials;
 
-public class Level {
+public class IslandLevel {
 
 	private final Island handle;
 
-	public Level(Island handle) {
+	public IslandLevel(Island handle) {
 		this.handle = handle;
 	}
 
@@ -19,28 +18,28 @@ public class Level {
 	 * @return Points of the Island from gathered materials
 	 */
 	public int getPoints() {
-		return this.handle.getLevel().getPoints();
+		return this.handle.getIsland().getLevel().getPoints();
 	}
 
 	/**
 	 * @return Level of the Island from points
 	 */
 	public int getLevel() {
-		return this.handle.getLevel().getLevel();
+		return this.handle.getIsland().getLevel().getLevel();
 	}
 
 	/**
 	 * @return Last calculated points of the Island
 	 */
 	public int getLastCalculatedPoints() {
-		return this.handle.getLevel().getLastCalculatedPoints();
+		return this.handle.getIsland().getLevel().getLastCalculatedPoints();
 	}
 
 	/**
 	 * @return Last calculated level of the Island
 	 */
 	public int getLastCalculatedLevel() {
-		return this.handle.getLevel().getLastCalculatedLevel();
+		return this.handle.getIsland().getLevel().getLastCalculatedLevel();
 	}
 
 	/**
@@ -67,7 +66,7 @@ public class Level {
 		Preconditions.checkArgument(material != null, "Cannot get material amount to null material");
 
 		Materials materials = Materials.fromString(material.name());
-		me.goodandevil.skyblock.island.Level level = this.handle.getIsland().getLevel();
+		me.goodandevil.skyblock.island.IslandLevel level = this.handle.getIsland().getLevel();
 
 		if (level.getMaterials().containsKey(materials.name())) {
 			return level.getMaterials().get(materials.name());
@@ -83,7 +82,7 @@ public class Level {
 		Preconditions.checkArgument(material != null, "Cannot get material amount to null material");
 
 		Materials materials = Materials.requestMaterials(material.name(), data);
-		me.goodandevil.skyblock.island.Level level = this.handle.getIsland().getLevel();
+		me.goodandevil.skyblock.island.IslandLevel level = this.handle.getIsland().getLevel();
 
 		if (level.getMaterials().containsKey(materials.name())) {
 			return level.getMaterials().get(materials.name());

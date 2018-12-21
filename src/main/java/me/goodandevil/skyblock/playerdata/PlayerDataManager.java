@@ -20,6 +20,7 @@ import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandLocation;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.IslandWorld;
@@ -263,9 +264,10 @@ public class PlayerDataManager {
 
 				for (UUID visitIslandList : visitIslands.keySet()) {
 					Visit visit = visitIslands.get(visitIslandList);
+					IslandLocation location = visit.getLocation(world);
 
-					if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), visit.getLocation(world),
-							visit.getRadius())) {
+					if (location != null && LocationUtil.isLocationAtLocationRadius(player.getLocation(),
+							location.getLocation(), visit.getRadius())) {
 						Player targetPlayer = Bukkit.getServer().getPlayer(visitIslandList);
 						String targetPlayerName;
 

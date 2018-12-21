@@ -20,6 +20,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.event.island.IslandLevelChangeEvent;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
@@ -145,7 +146,7 @@ public class LevellingManager {
 							skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						}
 					} else {
-						me.goodandevil.skyblock.island.Level level = island.getLevel();
+						IslandLevel level = island.getLevel();
 						level.setLastCalculatedPoints(level.getPoints());
 						level.setLastCalculatedLevel(level.getLevel());
 						level.setMaterials(materials);

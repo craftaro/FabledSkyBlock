@@ -14,7 +14,7 @@ import be.maximvdw.placeholderapi.PlaceholderReplacer;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Level;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.leaderboard.Leaderboard;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -70,8 +70,8 @@ public class MVdWPlaceholder {
 								return ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Placeholder.skyblock_leaderboard_votes.Non-empty.Message")
 												.replace("%position", "" + (index + 1))
-												.replace("%player", islandOwnerName)
-												.replace("%votes", NumberUtil.formatNumberByDecimal(visit.getVoters().size())));
+												.replace("%player", islandOwnerName).replace("%votes",
+														NumberUtil.formatNumberByDecimal(visit.getVoters().size())));
 							}
 
 							return ChatColor.translateAlternateColorCodes('&',
@@ -89,7 +89,7 @@ public class MVdWPlaceholder {
 							if (index < leaderboardLevelPlayers.size()) {
 								Leaderboard leaderboard = leaderboardLevelPlayers.get(index);
 								Visit visit = leaderboard.getVisit();
-								Level level = visit.getLevel();
+								IslandLevel level = visit.getLevel();
 
 								Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
 								String islandOwnerName;
@@ -100,12 +100,11 @@ public class MVdWPlaceholder {
 									islandOwnerName = targetPlayer.getName();
 								}
 
-								return ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Placeholder.skyblock_leaderboard_level.Non-empty.Message")
-												.replace("%position", "" + (index + 1))
-												.replace("%player", islandOwnerName)
-												.replace("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))
-												.replace("%points", NumberUtil.formatNumberByDecimal(level.getPoints())));
+								return ChatColor.translateAlternateColorCodes('&', configLoad
+										.getString("Placeholder.skyblock_leaderboard_level.Non-empty.Message")
+										.replace("%position", "" + (index + 1)).replace("%player", islandOwnerName)
+										.replace("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))
+										.replace("%points", NumberUtil.formatNumberByDecimal(level.getPoints())));
 							}
 
 							return ChatColor.translateAlternateColorCodes('&',

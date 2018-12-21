@@ -21,7 +21,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandMessage;
 import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandSetting;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -365,7 +365,7 @@ public class Settings {
 							} else if (is.hasItemMeta()) {
 								String roleName = getRoleName(role);
 
-								for (Setting settingList : island.getSettings(role)) {
+								for (IslandSetting settingList : island.getSettings(role)) {
 									if (is.getItemMeta().getDisplayName()
 											.equals(ChatColor.translateAlternateColorCodes('&',
 													configLoad.getString("Menu.Settings." + roleName + ".Item.Setting."

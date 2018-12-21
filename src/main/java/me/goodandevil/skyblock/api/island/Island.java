@@ -15,8 +15,6 @@ import org.bukkit.entity.Player;
 import com.google.common.base.Preconditions;
 
 import me.goodandevil.skyblock.api.ban.Ban;
-import me.goodandevil.skyblock.api.level.Level;
-import me.goodandevil.skyblock.api.setting.Setting;
 import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.api.visit.Visit;
 
@@ -359,23 +357,23 @@ public class Island {
 	/**
 	 * @return Setting of an IslandRole for the Island
 	 */
-	public Setting getSetting(IslandRole role, String setting) {
+	public IslandSetting getSetting(IslandRole role, String setting) {
 		Preconditions.checkArgument(role != null, "Cannot get setting to null role");
 		Preconditions.checkArgument(setting != null, "Cannot get setting for null setting");
 
-		return new Setting(this.handle.getSetting(APIUtil.toImplementation(role), setting));
+		return new IslandSetting(this.handle.getSetting(APIUtil.toImplementation(role), setting));
 	}
 
 	/**
 	 * @return A List of Settings of an IslandRole for the Island
 	 */
-	public List<Setting> getSettings(IslandRole role) {
+	public List<IslandSetting> getSettings(IslandRole role) {
 		Preconditions.checkArgument(role != null, "Cannot get settings to null role");
-		List<Setting> settings = new ArrayList<>();
+		List<IslandSetting> settings = new ArrayList<>();
 
-		for (me.goodandevil.skyblock.island.Setting settingList : this.handle
+		for (me.goodandevil.skyblock.island.IslandSetting settingList : this.handle
 				.getSettings(APIUtil.toImplementation(role))) {
-			settings.add(new Setting(settingList));
+			settings.add(new IslandSetting(settingList));
 		}
 
 		return settings;
@@ -455,8 +453,8 @@ public class Island {
 	/**
 	 * @return The Level implementation for the Island
 	 */
-	public Level getLevel() {
-		return new Level(this);
+	public IslandLevel getLevel() {
+		return new IslandLevel(this);
 	}
 
 	/**

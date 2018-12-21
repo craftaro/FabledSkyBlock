@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Level;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.leaderboard.Leaderboard;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -109,7 +109,7 @@ public class HologramManager {
 					}
 
 					if (type == HologramType.Level) {
-						Level level = visit.getLevel();
+						IslandLevel level = visit.getLevel();
 						hologramLines.add(ChatColor.translateAlternateColorCodes('&',
 								languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
@@ -119,7 +119,8 @@ public class HologramManager {
 						hologramLines.add(ChatColor.translateAlternateColorCodes('&',
 								languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
-										.replace("%votes", "" + NumberUtil.formatNumberByDecimal(visit.getVoters().size()))));
+										.replace("%votes",
+												"" + NumberUtil.formatNumberByDecimal(visit.getVoters().size()))));
 					}
 				}
 			}
@@ -267,7 +268,7 @@ public class HologramManager {
 						}
 
 						if (hologramTypeList == HologramType.Level) {
-							Level level = visit.getLevel();
+							IslandLevel level = visit.getLevel();
 							hologram.setLine(hologramLine, ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Hologram.Leaderboard." + hologramTypeList.name() + ".Claimed")
 											.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)

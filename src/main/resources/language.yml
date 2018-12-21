@@ -817,6 +817,8 @@ Command:
                     Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin delete <player_name>"
                 Owner:
                     Message: "&bSkyBlock &8| &cError&8: &eThat player is not an Island owner."
+                Spawn:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot delete that island because the main spawn point is set there."
                 Deleted:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have deleted the player &c%player's &eIsland."
             Owner:

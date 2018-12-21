@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.ban.Ban;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.IslandLevel;
+import me.goodandevil.skyblock.island.IslandLocation;
 import me.goodandevil.skyblock.island.IslandWorld;
-import me.goodandevil.skyblock.island.Level;
 
 public class Visit {
 
@@ -25,24 +25,22 @@ public class Visit {
 
 	private String islandOwnerName;
 
-	private Location[] islandLocations;
+	private IslandLocation[] islandLocations;
 
 	private int islandSize;
 	private int islandMembers;
 	private int safeLevel;
 
-	private final Level islandLevel;
+	private final IslandLevel islandLevel;
 
 	private List<String> islandSignature;
 
 	private boolean open;
 
-	protected Visit(SkyBlock skyblock, UUID islandOwnerUUID, Location[] islandLocations, int islandSize,
-			int islandMembers, int safeLevel, Level islandLevel, List<String> islandSignature, boolean open) {
+	protected Visit(SkyBlock skyblock, UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize,
+			int islandMembers, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
 		this.skyblock = skyblock;
 		this.islandOwnerUUID = islandOwnerUUID;
-		// this.islandOwnerName = new
-		// OfflinePlayer(islandOwnerUUID).getNames()[0].getName();
 		this.islandLocations = islandLocations;
 		this.islandSize = islandSize;
 		this.islandMembers = islandMembers;
@@ -68,7 +66,7 @@ public class Visit {
 		this.islandOwnerName = islandOwnerName;
 	}
 
-	public Location getLocation(IslandWorld world) {
+	public IslandLocation getLocation(IslandWorld world) {
 		switch (world) {
 		case End:
 			return islandLocations[2];
@@ -105,7 +103,7 @@ public class Visit {
 		this.islandSize = islandSize;
 	}
 
-	public Level getLevel() {
+	public IslandLevel getLevel() {
 		return islandLevel;
 	}
 
