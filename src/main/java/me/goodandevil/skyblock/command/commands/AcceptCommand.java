@@ -66,17 +66,16 @@ public class AcceptCommand extends SubCommand {
 				if (invite.getSenderName().equalsIgnoreCase(playerName)) {
 					inviteManager.removeInvite(player.getUniqueId());
 
-					if (islandManager.hasIsland(player)) {
-						messageManager.sendMessage(player, configLoad.getString("Command.Island.Accept.Owner.Message"));
-						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-					} else {
+					if (islandManager.getIsland(player) == null) {
 						boolean unloadIsland = false;
 						Island island;
 
 						if (islandManager.containsIsland(invite.getOwnerUUID())) {
-							island = islandManager.getIsland(invite.getOwnerUUID());
+							island = islandManager
+									.getIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
 						} else {
-							island = islandManager.loadIsland(invite.getOwnerUUID());
+							island = islandManager
+									.loadIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
 							unloadIsland = true;
 						}
 
@@ -215,6 +214,9 @@ public class AcceptCommand extends SubCommand {
 								scoreboard.run();
 							}
 						}
+					} else {
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Accept.Owner.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Accept.Invited.Message"));

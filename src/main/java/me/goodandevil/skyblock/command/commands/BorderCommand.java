@@ -12,6 +12,7 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -37,28 +38,25 @@ public class BorderCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (islandManager.hasIsland(player)) {
-			me.goodandevil.skyblock.island.Island island = islandManager
-					.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+		Island island = islandManager.getIsland(player);
 
-			if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-					&& island.getSetting(IslandRole.Operator, "Border").getStatus())
-					|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-				if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-						.getBoolean("Island.WorldBorder.Enable")) {
-					me.goodandevil.skyblock.menus.Border.getInstance().open(player);
-					soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
-				} else {
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Disabled.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-				}
-			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Permission.Message"));
-				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-			}
-		} else {
+		if (island == null) {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
+				&& island.getSetting(IslandRole.Operator, "Border").getStatus())
+				|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+			if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+					.getBoolean("Island.WorldBorder.Enable")) {
+				me.goodandevil.skyblock.menus.Border.getInstance().open(player);
+				soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+			} else {
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Disabled.Message"));
+				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			}
+		} else {
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Permission.Message"));
+			soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 

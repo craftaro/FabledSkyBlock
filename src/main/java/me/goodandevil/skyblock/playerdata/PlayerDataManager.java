@@ -285,14 +285,18 @@ public class PlayerDataManager {
 									configLoad.getString("Island.Visit.Teleport.Island.Message").replace("%player",
 											targetPlayerName));
 						} else {
-							islandManager.loadIsland(visitIslandList);
-							island = islandManager.getIsland(visitIslandList);
+							org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer()
+									.getOfflinePlayer(visitIslandList);
+
+							islandManager.loadIsland(offlinePlayer);
+							island = islandManager.getIsland(offlinePlayer);
 
 							if (island != null) {
 								if (island.isOpen() || island.isCoopPlayer(player.getUniqueId())) {
 									if (!island.isOpen() && island.isCoopPlayer(player.getUniqueId())) {
 										if (islandManager.removeCoopPlayers(island, null)) {
-											islandManager.unloadIsland(island, visitIslandList);
+											islandManager.unloadIsland(island,
+													Bukkit.getServer().getOfflinePlayer(visitIslandList));
 
 											return;
 										}
@@ -318,7 +322,8 @@ public class PlayerDataManager {
 
 									return;
 								} else {
-									islandManager.unloadIsland(island, visitIslandList);
+									islandManager.unloadIsland(island,
+											Bukkit.getServer().getOfflinePlayer(visitIslandList));
 									messageManager.sendMessage(player,
 											configLoad.getString("Island.Visit.Closed.Island.Message")
 													.replace("%player", targetPlayerName));

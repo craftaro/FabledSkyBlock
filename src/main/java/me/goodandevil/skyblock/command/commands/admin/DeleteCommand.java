@@ -81,7 +81,7 @@ public class DeleteCommand extends SubCommand {
 							configLoad.getString("Command.Island.Admin.Delete.Owner.Message"));
 					soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				} else {
-					Island island = islandManager.loadIsland(targetPlayerUUID);
+					Island island = islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
 					Location spawnLocation = LocationUtil.getSpawnLocation();
 
 					if (spawnLocation != null && islandManager.isLocationAtIsland(island, spawnLocation)) {

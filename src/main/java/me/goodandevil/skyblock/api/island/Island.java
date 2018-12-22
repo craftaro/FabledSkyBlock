@@ -14,16 +14,19 @@ import org.bukkit.entity.Player;
 
 import com.google.common.base.Preconditions;
 
+import me.goodandevil.skyblock.api.SkyBlockAPI;
 import me.goodandevil.skyblock.api.ban.Ban;
 import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.api.visit.Visit;
 
 public class Island {
 
-	private final me.goodandevil.skyblock.island.Island handle;
+	private me.goodandevil.skyblock.island.Island handle;
+	private OfflinePlayer player;
 
-	public Island(me.goodandevil.skyblock.island.Island handle) {
+	public Island(me.goodandevil.skyblock.island.Island handle, OfflinePlayer player) {
 		this.handle = handle;
+		this.player = player;
 	}
 
 	/**
@@ -455,6 +458,39 @@ public class Island {
 	 */
 	public IslandLevel getLevel() {
 		return new IslandLevel(this);
+	}
+
+	/**
+	 * @return true of conditions met, false otherwise
+	 */
+	public boolean isLoaded() {
+		return this.handle != null;
+	}
+
+	/**
+	 * Loads the Island if unloaded
+	 */
+	public void load() {
+		if (this.handle == null) {
+			this.handle = SkyBlockAPI.getImplementation().getIslandManager().loadIsland(player);
+		}
+	}
+
+	/**
+	 * Unloads the Island if loaded
+	 */
+	public void unload() {
+		if (this.handle != null) {
+			SkyBlockAPI.getImplementation().getIslandManager().unloadIsland(getIsland(), null);
+			this.handle = null;
+		}
+	}
+
+	/**
+	 * Sets the player of the Island
+	 */
+	public void setPlayer(OfflinePlayer player) {
+		this.player = player;
 	}
 
 	/**

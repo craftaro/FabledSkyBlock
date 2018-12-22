@@ -56,7 +56,7 @@ public class Settings {
 		FileManager fileManager = skyblock.getFileManager();
 
 		if (playerDataManager.hasPlayerData(player)) {
-			Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
+			Island island = islandManager.getIsland(player);
 
 			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 			FileConfiguration configLoad = skyblock.getFileManager()
@@ -67,22 +67,17 @@ public class Settings {
 					@Override
 					public void onClick(ClickEvent event) {
 						if (playerDataManager.hasPlayerData(player)) {
-							Island island;
+							Island island = islandManager.getIsland(player);
 
-							if (islandManager.hasIsland(player)) {
-								island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-								if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
-										|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Command.Island.Role.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-									return;
-								}
-							} else {
+							if (island == null) {
 								messageManager.sendMessage(player,
 										configLoad.getString("Command.Island.Settings.Owner.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								return;
+							} else if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
+									|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Role.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 								return;
@@ -271,41 +266,37 @@ public class Settings {
 					@Override
 					public void onClick(ClickEvent event) {
 						if (playerDataManager.hasPlayerData(player)) {
-							Island island;
+							Island island = islandManager.getIsland(player);
 
-							if (islandManager.hasIsland(player)) {
-								island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-								if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
-										|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Command.Island.Settings.Role.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-									return;
-								} else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
-										&& !island.getSetting(IslandRole.Operator, role.name()).getStatus()) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-									return;
-								} else if (role == IslandRole.Coop) {
-									if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-											.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
-										messageManager.sendMessage(player,
-												configLoad.getString("Command.Island.Coop.Disabled.Message"));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-										return;
-									}
-								}
-							} else {
+							if (island == null) {
 								messageManager.sendMessage(player,
 										configLoad.getString("Command.Island.Settings.Owner.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 								return;
+							} else if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
+									|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+								messageManager.sendMessage(player,
+										configLoad.getString("Command.Island.Settings.Role.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								return;
+							} else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
+									&& !island.getSetting(IslandRole.Operator, role.name()).getStatus()) {
+								messageManager.sendMessage(player,
+										configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								return;
+							} else if (role == IslandRole.Coop) {
+								if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+										.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Coop.Disabled.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+									return;
+								}
 							}
 
 							ItemStack is = event.getItem();
@@ -1089,23 +1080,18 @@ public class Settings {
 						@Override
 						public void onClick(ClickEvent event) {
 							if (playerDataManager.hasPlayerData(player)) {
-								Island island;
+								Island island = islandManager.getIsland(player);
 
-								if (islandManager.hasIsland(player)) {
-									island = islandManager
-											.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-									if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
-											|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-										messageManager.sendMessage(player,
-												configLoad.getString("Command.Island.Role.Message"));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-										return;
-									}
-								} else {
+								if (island == null) {
 									messageManager.sendMessage(player,
 											configLoad.getString("Command.Island.Settings.Owner.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+									return;
+								} else if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
+										|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Role.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 									return;
@@ -1182,47 +1168,9 @@ public class Settings {
 													public void run() {
 														AnvilGUI gui = new AnvilGUI(player, event1 -> {
 															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																Island island1;
+																Island island1 = islandManager.getIsland(player);
 
-																if (islandManager.hasIsland(player)) {
-																	island1 = islandManager.getIsland(playerDataManager
-																			.getPlayerData(player).getOwner());
-
-																	if (!(island1.hasRole(IslandRole.Operator,
-																			player.getUniqueId())
-																			|| island1.hasRole(IslandRole.Owner,
-																					player.getUniqueId()))) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Command.Island.Role.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-																		player.closeInventory();
-
-																		event1.setWillClose(true);
-																		event1.setWillDestroy(true);
-
-																		return;
-																	} else if (!skyblock.getFileManager()
-																			.getConfig(
-																					new File(skyblock.getDataFolder(),
-																							"config.yml"))
-																			.getFileConfiguration().getBoolean(
-																					"Island.Visitor.Welcome.Enable")) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Settings.Visitor.Welcome.Disabled.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-
-																		event1.setWillClose(true);
-																		event1.setWillDestroy(true);
-
-																		return;
-																	}
-																} else {
+																if (island1 == null) {
 																	messageManager.sendMessage(player,
 																			configLoad.getString(
 																					"Command.Island.Settings.Owner.Message"));
@@ -1230,6 +1178,37 @@ public class Settings {
 																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
 																			1.0F);
 																	player.closeInventory();
+
+																	event1.setWillClose(true);
+																	event1.setWillDestroy(true);
+
+																	return;
+																} else if (!(island1.hasRole(IslandRole.Operator,
+																		player.getUniqueId())
+																		|| island1.hasRole(IslandRole.Owner,
+																				player.getUniqueId()))) {
+																	messageManager.sendMessage(player, configLoad
+																			.getString("Command.Island.Role.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
+																	player.closeInventory();
+
+																	event1.setWillClose(true);
+																	event1.setWillDestroy(true);
+
+																	return;
+																} else if (!skyblock.getFileManager()
+																		.getConfig(new File(skyblock.getDataFolder(),
+																				"config.yml"))
+																		.getFileConfiguration()
+																		.getBoolean("Island.Visitor.Welcome.Enable")) {
+																	messageManager.sendMessage(player,
+																			configLoad.getString(
+																					"Island.Settings.Visitor.Welcome.Disabled.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
 
 																	event1.setWillClose(true);
 																	event1.setWillDestroy(true);
@@ -1383,23 +1362,18 @@ public class Settings {
 						@Override
 						public void onClick(ClickEvent event) {
 							if (playerDataManager.hasPlayerData(player)) {
-								Island island;
+								Island island = islandManager.getIsland(player);
 
-								if (islandManager.hasIsland(player)) {
-									island = islandManager
-											.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-									if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
-											|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-										messageManager.sendMessage(player,
-												configLoad.getString("Command.Island.Role.Message"));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-										return;
-									}
-								} else {
+								if (island == null) {
 									messageManager.sendMessage(player,
 											configLoad.getString("Command.Island.Settings.Owner.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+									return;
+								} else if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
+										|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Role.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 									return;
@@ -1476,47 +1450,9 @@ public class Settings {
 													public void run() {
 														AnvilGUI gui = new AnvilGUI(player, event1 -> {
 															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																Island island1;
+																Island island1 = islandManager.getIsland(player);
 
-																if (islandManager.hasIsland(player)) {
-																	island1 = islandManager.getIsland(playerDataManager
-																			.getPlayerData(player).getOwner());
-
-																	if (!(island1.hasRole(IslandRole.Operator,
-																			player.getUniqueId())
-																			|| island1.hasRole(IslandRole.Owner,
-																					player.getUniqueId()))) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Command.Island.Role.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-																		player.closeInventory();
-
-																		event1.setWillClose(true);
-																		event1.setWillDestroy(true);
-
-																		return;
-																	} else if (!skyblock.getFileManager()
-																			.getConfig(
-																					new File(skyblock.getDataFolder(),
-																							"config.yml"))
-																			.getFileConfiguration().getBoolean(
-																					"Island.Visitor.Signature.Enable")) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Settings.Visitor.Signature.Disabled.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-
-																		event1.setWillClose(true);
-																		event1.setWillDestroy(true);
-
-																		return;
-																	}
-																} else {
+																if (island1 == null) {
 																	messageManager.sendMessage(player,
 																			configLoad.getString(
 																					"Command.Island.Settings.Owner.Message"));
@@ -1524,6 +1460,37 @@ public class Settings {
 																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
 																			1.0F);
 																	player.closeInventory();
+
+																	event1.setWillClose(true);
+																	event1.setWillDestroy(true);
+
+																	return;
+																} else if (!(island1.hasRole(IslandRole.Operator,
+																		player.getUniqueId())
+																		|| island1.hasRole(IslandRole.Owner,
+																				player.getUniqueId()))) {
+																	messageManager.sendMessage(player, configLoad
+																			.getString("Command.Island.Role.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
+																	player.closeInventory();
+
+																	event1.setWillClose(true);
+																	event1.setWillDestroy(true);
+
+																	return;
+																} else if (!skyblock.getFileManager()
+																		.getConfig(new File(skyblock.getDataFolder(),
+																				"config.yml"))
+																		.getFileConfiguration().getBoolean(
+																				"Island.Visitor.Signature.Enable")) {
+																	messageManager.sendMessage(player,
+																			configLoad.getString(
+																					"Island.Settings.Visitor.Signature.Disabled.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
 
 																	event1.setWillClose(true);
 																	event1.setWillDestroy(true);

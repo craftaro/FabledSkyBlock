@@ -1,8 +1,8 @@
 package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
-import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -72,7 +72,8 @@ public class Move implements Listener {
 						PlayerData playerData = playerDataManager.getPlayerData(player);
 
 						if (playerData.getIsland() != null) {
-							Island island = islandManager.getIsland(playerData.getIsland());
+							Island island = islandManager
+									.getIsland(Bukkit.getServer().getOfflinePlayer(playerData.getIsland()));
 
 							if (island != null) {
 								if (island.hasRole(IslandRole.Member, player.getUniqueId())
@@ -98,10 +99,10 @@ public class Move implements Listener {
 
 			if (playerDataManager.hasPlayerData(player)) {
 				PlayerData playerData = playerDataManager.getPlayerData(player);
-				UUID islandOwnerUUID = playerData.getIsland();
 
-				if (islandOwnerUUID != null) {
-					Island island = islandManager.getIsland(islandOwnerUUID);
+				if (playerData.getIsland() != null) {
+					Island island = islandManager
+							.getIsland(Bukkit.getServer().getOfflinePlayer(playerData.getIsland()));
 
 					if (island != null) {
 						if (islandManager.isLocationAtIsland(island, to)) {

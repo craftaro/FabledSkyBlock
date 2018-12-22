@@ -95,7 +95,7 @@ public class Creator {
 		nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (islandManager.hasIsland(player)) {
+				if (islandManager.getIsland(player) != null) {
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 

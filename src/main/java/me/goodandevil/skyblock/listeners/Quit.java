@@ -51,9 +51,9 @@ public class Quit implements Listener {
 		} catch (Exception e) {
 		}
 
-		if (islandManager.hasIsland(player)) {
-			Island island = islandManager.getIsland(playerData.getOwner());
+		Island island = islandManager.getIsland(player);
 
+		if (island != null) {
 			Set<UUID> islandMembersOnline = islandManager.getMembersOnline(island);
 
 			if (islandMembersOnline.size() == 1) {
@@ -80,7 +80,7 @@ public class Quit implements Listener {
 				}
 			}
 
-			islandManager.unloadIsland(island, player.getUniqueId());
+			islandManager.unloadIsland(island, player);
 		}
 
 		cooldownManager.setCooldownPlayer(CooldownType.Biome, player);
@@ -99,15 +99,13 @@ public class Quit implements Listener {
 			}
 		}
 
-		UUID islandOwnerUUID = playerData.getIsland();
-
-		if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID)) {
-			Island island = islandManager.getIsland(islandOwnerUUID);
+		if (playerData.getIsland() != null && islandManager.containsIsland(playerData.getIsland())) {
+			island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(playerData.getIsland()));
 
 			if (!island.hasRole(IslandRole.Member, player.getUniqueId())
 					&& !island.hasRole(IslandRole.Operator, player.getUniqueId())
 					&& !island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-				islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
+				islandManager.unloadIsland(island, null);
 			}
 		}
 

@@ -17,7 +17,6 @@ import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 
 public class CooldownManager {
 
@@ -28,7 +27,6 @@ public class CooldownManager {
 	public CooldownManager(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 
 		for (CooldownType cooldownTypeList : CooldownType.values()) {
@@ -40,8 +38,9 @@ public class CooldownManager {
 				if (cooldownTypeList == CooldownType.Biome || cooldownTypeList == CooldownType.Creation) {
 					cooldownPlayer = loadCooldownPlayer(cooldownTypeList, all);
 				} else if (cooldownTypeList == CooldownType.Levelling || cooldownTypeList == CooldownType.Ownership) {
-					if (islandManager.hasIsland(all)) {
-						Island island = islandManager.getIsland(playerDataManager.getPlayerData(all).getOwner());
+					Island island = islandManager.getIsland(all);
+
+					if (island != null) {
 						OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
 
 						if (!hasPlayer(cooldownTypeList, offlinePlayer)) {

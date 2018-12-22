@@ -75,11 +75,9 @@ public class Members {
 						}
 
 						ItemStack is = event.getItem();
-						Island island = null;
+						Island island = islandManager.getIsland(player);
 
-						if (islandManager.hasIsland(player)) {
-							island = islandManager.getIsland(playerData.getOwner());
-						} else {
+						if (island == null) {
 							skyblock.getMessageManager().sendMessage(player,
 									configLoad.getString("Command.Island.Members.Owner.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -243,7 +241,7 @@ public class Members {
 			});
 
 			PlayerData playerData = playerDataManager.getPlayerData(player);
-			Island island = islandManager.getIsland(playerData.getOwner());
+			Island island = islandManager.getIsland(player);
 
 			List<UUID> displayedMembers = new ArrayList<>();
 			Set<UUID> islandMembers = island.getRole(IslandRole.Member);

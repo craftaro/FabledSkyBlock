@@ -17,6 +17,7 @@ import me.goodandevil.skyblock.cooldown.Cooldown;
 import me.goodandevil.skyblock.cooldown.CooldownManager;
 import me.goodandevil.skyblock.cooldown.CooldownPlayer;
 import me.goodandevil.skyblock.cooldown.CooldownType;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.menus.Levelling;
@@ -103,10 +104,12 @@ public class LevelCommand extends SubCommand {
 			return;
 		}
 
-		if (islandManager.hasIsland(player)) {
-			me.goodandevil.skyblock.island.Island island = islandManager
-					.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+		Island island = islandManager.getIsland(player);
 
+		if (island == null) {
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Owner.Yourself.Message"));
+			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else {
 			player.closeInventory();
 
 			if (!island.getLevel().hasMaterials()) {
@@ -158,9 +161,6 @@ public class LevelCommand extends SubCommand {
 				soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 				Levelling.getInstance().open(player);
 			}
-		} else {
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Owner.Yourself.Message"));
-			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 

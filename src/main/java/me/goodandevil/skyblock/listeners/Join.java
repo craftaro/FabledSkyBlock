@@ -57,7 +57,7 @@ public class Join implements Listener {
 		userCacheManager.saveAsync();
 
 		try {
-			Island island = islandManager.loadIsland(player.getUniqueId());
+			Island island = islandManager.loadIsland(player);
 			boolean teleportedToIsland = false;
 
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
@@ -113,9 +113,9 @@ public class Join implements Listener {
 		if (scoreboardManager != null) {
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			Scoreboard scoreboard = new Scoreboard(player);
+			Island island = islandManager.getIsland(player);
 
-			if (islandManager.hasIsland(player)) {
-				Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
+			if (island != null) {
 				OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
 
 				cooldownManager.addCooldownPlayer(CooldownType.Levelling,

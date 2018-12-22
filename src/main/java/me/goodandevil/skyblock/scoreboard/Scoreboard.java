@@ -21,7 +21,6 @@ import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.placeholder.PlaceholderManager;
-import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.utils.NumberUtil;
 
 public class Scoreboard {
@@ -193,13 +192,14 @@ public class Scoreboard {
 	private String replaceDisplayLine(String displayLine) {
 		SkyBlock skyblock = SkyBlock.getInstance();
 
-		PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 		IslandManager islandManager = skyblock.getIslandManager();
+
 		displayLine = displayLine.replace("%players_online", "" + Bukkit.getServer().getOnlinePlayers().size())
 				.replace("%players_max", "" + Bukkit.getServer().getMaxPlayers());
 
-		if (islandManager.hasIsland(player)) {
-			Island island = islandManager.getIsland(playerData.getOwner());
+		Island island = islandManager.getIsland(player);
+
+		if (island != null) {
 			IslandLevel level = island.getLevel();
 
 			if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {

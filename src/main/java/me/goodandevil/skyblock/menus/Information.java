@@ -59,14 +59,15 @@ public class Information {
 
 			if (playerData.getViewer() != null) {
 				Information.Viewer viewer = (Information.Viewer) playerData.getViewer();
+				org.bukkit.OfflinePlayer targetOfflinePlayer = Bukkit.getServer().getOfflinePlayer(viewer.getOwner());
 
-				if (!islandManager.hasIsland(viewer.getOwner())) {
-					islandManager.loadIsland(viewer.getOwner());
+				if (islandManager.getIsland(targetOfflinePlayer) == null) {
+					islandManager.loadIsland(targetOfflinePlayer);
 				}
 
 				FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 						.getFileConfiguration();
-				Island island = islandManager.getIsland(viewer.getOwner());
+				Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(viewer.getOwner()));
 
 				if (island == null) {
 					messageManager.sendMessage(player, configLoad.getString("Island.Information.Island.Message"));

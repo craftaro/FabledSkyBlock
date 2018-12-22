@@ -239,16 +239,16 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 						if (player == null) {
 							sendConsoleHelpCommands(sender);
 						} else {
-							if (skyblock.getIslandManager().hasIsland(player)) {
-								ControlPanel.getInstance().open(player);
-								soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
-							} else {
+							if (skyblock.getIslandManager().getIsland(player) == null) {
 								Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 									@Override
 									public void run() {
 										Bukkit.getServer().dispatchCommand(sender, "island create");
 									}
 								});
+							} else {
+								ControlPanel.getInstance().open(player);
+								soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 							}
 						}
 

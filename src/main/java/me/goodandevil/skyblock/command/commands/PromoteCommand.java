@@ -15,11 +15,10 @@ import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
-import me.goodandevil.skyblock.playerdata.PlayerData;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -35,117 +34,99 @@ public class PromoteCommand extends SubCommand {
 
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
-
-		PlayerData playerData = playerDataManager.getPlayerData(player);
 
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		if (args.length == 1) {
-			if (islandManager.hasIsland(player)) {
-				me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
+			Island island = islandManager.getIsland(player);
 
-				if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-					if (Bukkit.getServer().getPlayer(args[0]) == null) {
-						OfflinePlayer targetPlayer = new OfflinePlayer(args[0]);
-						Set<UUID> islandOperators = island.getRole(IslandRole.Operator);
-
-						if (targetPlayer.getUniqueId() != null
-								&& (island.getRole(IslandRole.Member).contains(targetPlayer.getUniqueId())
-										|| islandOperators.contains(targetPlayer.getUniqueId()))) {
-							if (islandOperators.contains(targetPlayer.getUniqueId())) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Promote.Operator.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-							} else {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Promote.Promoted.Sender.Message")
-												.replace("%player", targetPlayer.getName()));
-
-								for (Player all : Bukkit.getOnlinePlayers()) {
-									if (islandManager.hasIsland(all)) {
-										playerData = playerDataManager.getPlayerData(all);
-
-										if (islandManager.getIsland(playerData.getOwner()).hasRole(IslandRole.Owner,
-												player.getUniqueId())) {
-											if (!all.getUniqueId().equals(player.getUniqueId())) {
-												all.sendMessage(ChatColor.translateAlternateColorCodes('&',
-														configLoad.getString(
-																"Command.Island.Promote.Promoted.Broadcast.Message")
-																.replace("%player", targetPlayer.getName())));
-											}
-
-											soundManager.playSound(all, Sounds.FIREWORK_BLAST.bukkitSound(), 1.0F,
-													1.0F);
-										}
-									}
-								}
-
-								island.removeRole(IslandRole.Member, targetPlayer.getUniqueId());
-								island.setRole(IslandRole.Operator, targetPlayer.getUniqueId());
-								island.save();
-							}
-						} else {
-							messageManager.sendMessage(player,
-									configLoad.getString("Command.Island.Promote.Member.Message"));
-							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-						}
-					} else {
-						Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
-
-						if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())
-								|| island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())) {
-							if (island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Promote.Operator.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-							} else {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Promote.Promoted.Sender.Message")
-												.replace("%player", targetPlayer.getName()));
-								messageManager.sendMessage(targetPlayer,
-										configLoad.getString("Command.Island.Promote.Promoted.Target.Message"));
-
-								for (Player all : Bukkit.getOnlinePlayers()) {
-									if (islandManager.hasIsland(all)) {
-										playerData = playerDataManager.getPlayerData(all);
-
-										if (islandManager.getIsland(playerData.getOwner()).hasRole(IslandRole.Owner,
-												player.getUniqueId())) {
-											if (!(all.getUniqueId().equals(player.getUniqueId())
-													|| all.getUniqueId().equals(targetPlayer.getUniqueId()))) {
-												all.sendMessage(ChatColor.translateAlternateColorCodes('&',
-														configLoad.getString(
-																"Command.Island.Promote.Promoted.Broadcast.Message")
-																.replace("%player", targetPlayer.getName())));
-											}
-
-											soundManager.playSound(all, Sounds.FIREWORK_BLAST.bukkitSound(), 1.0F,
-													1.0F);
-										}
-									}
-								}
-
-								island.setRole(IslandRole.Operator, targetPlayer.getUniqueId());
-							}
-						} else {
-							messageManager.sendMessage(player,
-									configLoad.getString("Command.Island.Promote.Member.Message"));
-							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-						}
-					}
-				} else {
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Promote.Permission.Message"));
-					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-				}
-			} else {
+			if (island == null) {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Promote.Owner.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			} else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+
+				if (targetPlayer == null) {
+					OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);
+					Set<UUID> islandOperators = island.getRole(IslandRole.Operator);
+
+					if (offlinePlayer.getUniqueId() != null
+							&& (island.getRole(IslandRole.Member).contains(offlinePlayer.getUniqueId())
+									|| islandOperators.contains(offlinePlayer.getUniqueId()))) {
+						if (islandOperators.contains(offlinePlayer.getUniqueId())) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Promote.Operator.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						} else {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Promote.Promoted.Sender.Message")
+											.replace("%player", offlinePlayer.getName()));
+							soundManager.playSound(player, Sounds.FIREWORK_BLAST.bukkitSound(), 1.0F, 1.0F);
+
+							for (Player all : Bukkit.getOnlinePlayers()) {
+								if (!all.getUniqueId().equals(player.getUniqueId())) {
+									if (island.hasRole(IslandRole.Member, player.getUniqueId())
+											|| island.hasRole(IslandRole.Operator, all.getUniqueId())
+											|| island.hasRole(IslandRole.Owner, all.getUniqueId())) {
+										all.sendMessage(ChatColor.translateAlternateColorCodes('&',
+												configLoad
+														.getString("Command.Island.Promote.Promoted.Broadcast.Message")
+														.replace("%player", offlinePlayer.getName())));
+										soundManager.playSound(all, Sounds.FIREWORK_BLAST.bukkitSound(), 1.0F, 1.0F);
+									}
+								}
+							}
+
+							island.setRole(IslandRole.Operator, offlinePlayer.getUniqueId());
+						}
+					} else {
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.Promote.Member.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					}
+				} else {
+					if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())
+							|| island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())) {
+						if (island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Promote.Operator.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						} else {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Promote.Promoted.Sender.Message")
+											.replace("%player", targetPlayer.getName()));
+							messageManager.sendMessage(targetPlayer,
+									configLoad.getString("Command.Island.Promote.Promoted.Target.Message"));
+
+							for (Player all : Bukkit.getOnlinePlayers()) {
+								if (!all.getUniqueId().equals(player.getUniqueId())) {
+									if (island.hasRole(IslandRole.Member, player.getUniqueId())
+											|| island.hasRole(IslandRole.Operator, all.getUniqueId())
+											|| island.hasRole(IslandRole.Owner, all.getUniqueId())) {
+										all.sendMessage(ChatColor.translateAlternateColorCodes('&',
+												configLoad
+														.getString("Command.Island.Promote.Promoted.Broadcast.Message")
+														.replace("%player", targetPlayer.getName())));
+										soundManager.playSound(all, Sounds.FIREWORK_BLAST.bukkitSound(), 1.0F, 1.0F);
+									}
+								}
+							}
+
+							island.setRole(IslandRole.Operator, targetPlayer.getUniqueId());
+						}
+					} else {
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.Promote.Member.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					}
+				}
+			} else {
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Promote.Permission.Message"));
+				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Promote.Invalid.Message"));

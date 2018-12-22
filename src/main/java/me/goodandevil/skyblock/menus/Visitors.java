@@ -62,11 +62,9 @@ public class Visitors {
 				public void onClick(ClickEvent event) {
 					if (playerDataManager.hasPlayerData(player)) {
 						PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
-						Island island = null;
+						Island island = islandManager.getIsland(player);
 
-						if (islandManager.hasIsland(player)) {
-							island = islandManager.getIsland(playerData.getOwner());
-						} else {
+						if (island == null) {
 							skyblock.getMessageManager().sendMessage(player,
 									configLoad.getString("Command.Island.Visitors.Owner.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -179,7 +177,7 @@ public class Visitors {
 			});
 
 			PlayerData playerData = playerDataManager.getPlayerData(player);
-			Island island = skyblock.getIslandManager().getIsland(playerData.getOwner());
+			Island island = skyblock.getIslandManager().getIsland(player);
 
 			Set<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
 			Map<Integer, UUID> sortedIslandVisitors = new TreeMap<>();

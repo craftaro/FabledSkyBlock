@@ -94,7 +94,8 @@ public class SetSizeCommand extends SubCommand {
 						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						if (islandManager.containsIsland(islandOwnerUUID)) {
-							Island island = islandManager.getIsland(islandOwnerUUID);
+							Island island = islandManager
+									.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 							island.setSize(size);
 
 							if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))

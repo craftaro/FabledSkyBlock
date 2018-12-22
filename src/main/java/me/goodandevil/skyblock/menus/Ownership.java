@@ -62,22 +62,18 @@ public class Ownership {
 				public void onClick(ClickEvent event) {
 					if (playerDataManager.hasPlayerData(player)) {
 						PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
-						Island island = null;
+						Island island = islandManager.getIsland(player);
 
-						if (islandManager.hasIsland(player)) {
-							island = islandManager.getIsland(playerData.getOwner());
-
-							if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Ownership.Role.Message"));
-								soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-
-								return;
-							}
-						} else {
+						if (island == null) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Ownership.Owner.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							return;
+						} else if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Ownership.Role.Message"));
+							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
 							return;
 						}
@@ -120,24 +116,20 @@ public class Ownership {
 										public void onAnvilClick(final AnvilGUI.AnvilClickEvent event) {
 											if (event.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
 												if (playerDataManager.hasPlayerData(player)) {
-													Island island;
+													Island island = islandManager.getIsland(player);
 
-													if (islandManager.hasIsland(player)) {
-														island = islandManager.getIsland(
-																playerDataManager.getPlayerData(player).getOwner());
-
-														if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-															messageManager.sendMessage(player, configLoad.getString(
-																	"Command.Island.Ownership.Role.Message"));
-															soundManager.playSound(player,
-																	Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-
-															return;
-														}
-													} else {
+													if (island == null) {
 														messageManager.sendMessage(player, configLoad
 																.getString("Command.Island.Ownership.Owner.Message"));
 														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+																1.0F, 1.0F);
+
+														return;
+													} else if (!island.hasRole(IslandRole.Owner,
+															player.getUniqueId())) {
+														messageManager.sendMessage(player, configLoad
+																.getString("Command.Island.Ownership.Role.Message"));
+														soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(),
 																1.0F, 1.0F);
 
 														return;
@@ -222,24 +214,20 @@ public class Ownership {
 										public void onAnvilClick(final AnvilGUI.AnvilClickEvent event) {
 											if (event.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
 												if (playerDataManager.hasPlayerData(player)) {
-													Island island;
+													Island island = islandManager.getIsland(player);
 
-													if (islandManager.hasIsland(player)) {
-														island = islandManager.getIsland(
-																playerDataManager.getPlayerData(player).getOwner());
-
-														if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-															messageManager.sendMessage(player, configLoad.getString(
-																	"Command.Island.Ownership.Role.Message"));
-															soundManager.playSound(player,
-																	Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-
-															return;
-														}
-													} else {
+													if (island == null) {
 														messageManager.sendMessage(player, configLoad
 																.getString("Command.Island.Ownership.Owner.Message"));
 														soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+																1.0F, 1.0F);
+
+														return;
+													} else if (!island.hasRole(IslandRole.Owner,
+															player.getUniqueId())) {
+														messageManager.sendMessage(player, configLoad
+																.getString("Command.Island.Ownership.Role.Message"));
+														soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(),
 																1.0F, 1.0F);
 
 														return;
@@ -280,7 +268,7 @@ public class Ownership {
 				}
 			});
 
-			Island island = skyblock.getIslandManager().getIsland(playerDataManager.getPlayerData(player).getOwner());
+			Island island = skyblock.getIslandManager().getIsland(player);
 
 			UUID originalOwnerUUID = island.getOriginalOwnerUUID();
 

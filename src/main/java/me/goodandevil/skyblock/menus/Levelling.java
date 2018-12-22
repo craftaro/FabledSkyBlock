@@ -69,7 +69,7 @@ public class Levelling {
 			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					if (!islandManager.hasIsland(player)) {
+					if (islandManager.getIsland(player) == null) {
 						messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Owner.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
@@ -108,8 +108,7 @@ public class Levelling {
 						} else if ((is.getType() == Materials.FIREWORK_STAR.parseMaterial()) && (is.hasItemMeta())
 								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"))))) {
-							Island island = islandManager
-									.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+							Island island = islandManager.getIsland(player);
 							OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
 
 							if (cooldownManager.hasPlayer(CooldownType.Levelling, offlinePlayer)) {
@@ -203,7 +202,7 @@ public class Levelling {
 				}
 			});
 
-			Island island = islandManager.getIsland(playerData.getOwner());
+			Island island = islandManager.getIsland(player);
 			IslandLevel level = island.getLevel();
 
 			Map<String, Integer> islandMaterials = level.getMaterials();

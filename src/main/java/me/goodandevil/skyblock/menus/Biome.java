@@ -65,25 +65,21 @@ public class Biome {
 			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Island island = null;
+					Island island = islandManager.getIsland(player);
 
-					if (playerDataManager.hasPlayerData(player) && islandManager.hasIsland(player)) {
-						island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-						if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-								&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
-								|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-							messageManager.sendMessage(player,
-									config.getFileConfiguration().getString("Command.Island.Biome.Permission.Message"));
-							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-							player.closeInventory();
-
-							return;
-						}
-					} else {
+					if (island == null) {
 						messageManager.sendMessage(player,
 								config.getFileConfiguration().getString("Command.Island.Biome.Owner.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						player.closeInventory();
+
+						return;
+					} else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
+							&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
+							|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+						messageManager.sendMessage(player,
+								config.getFileConfiguration().getString("Command.Island.Biome.Permission.Message"));
+						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 
 						return;
@@ -190,7 +186,7 @@ public class Biome {
 				}
 			});
 
-			Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
+			Island island = islandManager.getIsland(player);
 			String islandBiomeName = island.getBiomeName();
 
 			int NMSVersion = NMSUtil.getVersionNumber();

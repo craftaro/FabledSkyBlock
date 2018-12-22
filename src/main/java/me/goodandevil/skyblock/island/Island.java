@@ -15,6 +15,7 @@ import java.util.UUID;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -53,12 +54,12 @@ public class Island {
 	private int size;
 	private boolean deleted = false;
 
-	public Island(UUID uuid) {
+	public Island(OfflinePlayer player) {
 		this.skyblock = SkyBlock.getInstance();
 
 		FileManager fileManager = skyblock.getFileManager();
 
-		this.uuid = uuid;
+		this.uuid = player.getUniqueId();
 		this.size = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
 				.getInt("Island.Size.Minimum");
 
@@ -207,7 +208,7 @@ public class Island {
 			}
 		}
 
-		this.apiWrapper = new me.goodandevil.skyblock.api.island.Island(this);
+		this.apiWrapper = new me.goodandevil.skyblock.api.island.Island(this, player);
 	}
 
 	public UUID getOwnerUUID() {

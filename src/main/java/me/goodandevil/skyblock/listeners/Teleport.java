@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -81,7 +82,6 @@ public class Teleport implements Listener {
 		if (playerDataManager.hasPlayerData(player)) {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
 
-			UUID islandOwnerUUID = playerData.getIsland();
 			Island island = islandManager.getIslandAtLocation(event.getTo());
 
 			if (island != null) {
@@ -113,8 +113,10 @@ public class Teleport implements Listener {
 				if (playerData.getIsland() != null && !playerData.getIsland().equals(island.getOwnerUUID())) {
 					me.goodandevil.skyblock.api.island.Island exitIsland = null;
 
-					if (islandManager.containsIsland(islandOwnerUUID)) {
-						exitIsland = islandManager.getIsland(islandOwnerUUID).getAPIWrapper();
+					OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(playerData.getIsland());
+
+					if (islandManager.containsIsland(playerData.getIsland())) {
+						exitIsland = islandManager.getIsland(offlinePlayer).getAPIWrapper();
 					}
 
 					Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandExitEvent(player, exitIsland));
@@ -133,11 +135,13 @@ public class Teleport implements Listener {
 					}
 				}
 
+				UUID islandOwnerUUID = playerData.getIsland();
 				playerData.setIsland(island.getOwnerUUID());
 
 				if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID)
 						&& (playerData.getOwner() == null || !playerData.getOwner().equals(islandOwnerUUID))) {
-					islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
+					islandManager.unloadIsland(
+							islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)), null);
 				}
 
 				Visit visit = island.getVisit();
@@ -156,11 +160,12 @@ public class Teleport implements Listener {
 			player.resetPlayerTime();
 			player.resetPlayerWeather();
 
-			if (islandOwnerUUID != null) {
+			if (playerData.getIsland() != null) {
 				me.goodandevil.skyblock.api.island.Island islandWrapper = null;
+				island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(playerData.getIsland()));
 
-				if (islandManager.hasIsland(islandOwnerUUID)) {
-					islandWrapper = islandManager.getIsland(islandOwnerUUID).getAPIWrapper();
+				if (island != null) {
+					islandWrapper = island.getAPIWrapper();
 				}
 
 				Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandExitEvent(player, islandWrapper));
@@ -168,11 +173,13 @@ public class Teleport implements Listener {
 				playerData.setVisitTime(0);
 			}
 
+			UUID islandOwnerUUID = playerData.getIsland();
 			playerData.setIsland(null);
 
 			if (islandOwnerUUID != null && islandManager.containsIsland(islandOwnerUUID)
 					&& (playerData.getOwner() == null || !playerData.getOwner().equals(islandOwnerUUID))) {
-				islandManager.unloadIsland(islandManager.getIsland(islandOwnerUUID), null);
+				islandManager.unloadIsland(
+						islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)), null);
 			}
 		}
 	}

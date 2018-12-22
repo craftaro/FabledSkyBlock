@@ -55,7 +55,7 @@ public class Bans {
 
 		if (playerDataManager.hasPlayerData(player)) {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
-			Island island = skyblock.getIslandManager().getIsland(playerData.getOwner());
+			Island island = skyblock.getIslandManager().getIsland(player);
 
 			Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = languageConfig.getFileConfiguration();
@@ -65,22 +65,18 @@ public class Bans {
 				public void onClick(ClickEvent event) {
 					if (playerDataManager.hasPlayerData(player)) {
 						PlayerData playerData = playerDataManager.getPlayerData(player);
-						Island island = null;
+						Island island = islandManager.getIsland(player);
 
-						if (islandManager.hasIsland(player)) {
-							island = islandManager.getIsland(playerData.getOwner());
-
-							if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Bans.Disabled.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-								return;
-							}
-						} else {
+						if (island == null) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Bans.Owner.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							return;
+						} else if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+								.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Bans.Disabled.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 							return;

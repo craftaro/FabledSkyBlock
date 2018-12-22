@@ -33,7 +33,11 @@ public class UpgradeCommand extends SubCommand {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (skyblock.getIslandManager().hasIsland(player)) {
+		if (skyblock.getIslandManager().getIsland(player) == null) {
+			skyblock.getMessageManager().sendMessage(player,
+					configLoad.getString("Command.Island.Upgrade.Owner.Message"));
+			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else {
 			if (!skyblock.getEconomyManager().isEconomy()) {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Upgrade.Disabled.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -43,10 +47,6 @@ public class UpgradeCommand extends SubCommand {
 
 			Upgrade.getInstance().open(player);
 			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
-		} else {
-			skyblock.getMessageManager().sendMessage(player,
-					configLoad.getString("Command.Island.Upgrade.Owner.Message"));
-			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 

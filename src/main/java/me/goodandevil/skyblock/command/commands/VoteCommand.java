@@ -79,10 +79,10 @@ public class VoteCommand extends SubCommand {
 
 				if (visit.isOpen()) {
 					if (!islandManager.containsIsland(islandOwnerUUID)) {
-						islandManager.loadIsland(islandOwnerUUID);
+						islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 					}
 
-					Island island = islandManager.getIsland(islandOwnerUUID);
+					Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 
 					if (island.hasRole(IslandRole.Member, player.getUniqueId())
 							|| island.hasRole(IslandRole.Operator, player.getUniqueId())

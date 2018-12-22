@@ -167,9 +167,11 @@ public class Visit {
 							if (visitManager.hasIsland(targetPlayerUUID)) {
 								me.goodandevil.skyblock.visit.Visit visit = visitManager.getIsland(targetPlayerUUID);
 								boolean isCoopPlayer = false;
+								org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer()
+										.getOfflinePlayer(targetPlayerUUID);
 
 								if (islandManager.containsIsland(targetPlayerUUID)) {
-									if (islandManager.getIsland(targetPlayerUUID).isCoopPlayer(player.getUniqueId())) {
+									if (islandManager.getIsland(offlinePlayer).isCoopPlayer(player.getUniqueId())) {
 										isCoopPlayer = true;
 									}
 								}
@@ -178,10 +180,10 @@ public class Visit {
 										|| player.hasPermission("skyblock.bypass.*")
 										|| player.hasPermission("skyblock.*") || visit.isOpen()) {
 									if (!islandManager.containsIsland(targetPlayerUUID)) {
-										islandManager.loadIsland(targetPlayerUUID);
+										islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
 									}
 
-									Island island = islandManager.getIsland(targetPlayerUUID);
+									Island island = islandManager.getIsland(offlinePlayer);
 
 									if ((!island.hasRole(IslandRole.Member, player.getUniqueId())
 											&& !island.hasRole(IslandRole.Operator, player.getUniqueId())
@@ -331,14 +333,18 @@ public class Visit {
 
 						if (islandManager.containsIsland(visit1.getOwnerUUID())) {
 							playersAtIsland1 = islandManager
-									.getPlayersAtIsland(islandManager.getIsland(visit1.getOwnerUUID())).size();
+									.getPlayersAtIsland(islandManager
+											.getIsland(Bukkit.getServer().getOfflinePlayer(visit1.getOwnerUUID())))
+									.size();
 						}
 
 						int playersAtIsland2 = 0;
 
 						if (islandManager.containsIsland(visit2.getOwnerUUID())) {
 							playersAtIsland2 = islandManager
-									.getPlayersAtIsland(islandManager.getIsland(visit2.getOwnerUUID())).size();
+									.getPlayersAtIsland(islandManager
+											.getIsland(Bukkit.getServer().getOfflinePlayer(visit2.getOwnerUUID())))
+									.size();
 						}
 
 						return Integer.valueOf(playersAtIsland2).compareTo(playersAtIsland1);
@@ -436,7 +442,7 @@ public class Visit {
 					Island island = null;
 
 					if (islandManager.containsIsland(visit.getOwnerUUID())) {
-						island = islandManager.getIsland(visit.getOwnerUUID());
+						island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(visit.getOwnerUUID()));
 					}
 
 					List<String> itemLore = new ArrayList<>();

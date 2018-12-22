@@ -99,7 +99,7 @@ public class AddUpgradeCommand extends SubCommand {
 					soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				} else {
 					if (islandManager.containsIsland(islandOwnerUUID)) {
-						Island island = islandManager.getIsland(islandOwnerUUID);
+						Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 
 						if (island.hasUpgrade(upgrade)) {
 							messageManager.sendMessage(sender,

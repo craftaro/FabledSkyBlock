@@ -62,22 +62,18 @@ public class Coop {
 				public void onClick(ClickEvent event) {
 					if (playerDataManager.hasPlayerData(player)) {
 						PlayerData playerData = playerDataManager.getPlayerData(player);
-						Island island = null;
+						Island island = islandManager.getIsland(player);
 
-						if (islandManager.hasIsland(player)) {
-							island = islandManager.getIsland(playerData.getOwner());
-
-							if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Coop.Disabled.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-								return;
-							}
-						} else {
+						if (island == null) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Coop.Owner.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							return;
+						} else if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+								.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Coop.Disabled.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 							return;
@@ -186,7 +182,7 @@ public class Coop {
 			});
 
 			PlayerData playerData = playerDataManager.getPlayerData(player);
-			Island island = islandManager.getIsland(playerData.getOwner());
+			Island island = islandManager.getIsland(player);
 
 			Set<UUID> coopPlayers = island.getCoopPlayers();
 

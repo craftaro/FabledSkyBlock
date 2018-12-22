@@ -13,6 +13,7 @@ import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -46,39 +47,39 @@ public class ResetCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (islandManager.hasIsland(player)) {
-			if (islandManager.getIsland(playerData.getOwner()).hasRole(IslandRole.Owner, player.getUniqueId())) {
-				if (playerData.getConfirmationTime() > 0) {
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Reset.Confirmation.Pending.Message"));
-					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
-				} else {
-					int confirmationTime = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-							.getFileConfiguration().getInt("Island.Confirmation.Timeout");
+		Island island = islandManager.getIsland(player);
 
-					playerData.setConfirmation(Confirmation.Reset);
-					playerData.setConfirmationTime(confirmationTime);
-
-					player.spigot().sendMessage(new ChatComponent(
-							configLoad.getString("Command.Island.Reset.Confirmation.Confirm.Message").replace("%time",
-									"" + confirmationTime) + "   ",
-							false, null, null, null)
-									.addExtra(new ChatComponent(configLoad
-											.getString("Command.Island.Reset.Confirmation.Confirm.Word.Confirm")
-											.toUpperCase(), true, ChatColor.RED,
-											new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island confirm"),
-											new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
-													ChatColor.translateAlternateColorCodes('&', configLoad.getString(
-															"Command.Island.Reset.Confirmation.Confirm.Word.Tutorial")))
-																	.create()))));
-					soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
-				}
+		if (island == null) {
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Reset.Owner.Message"));
+			soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+		} else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+			if (playerData.getConfirmationTime() > 0) {
+				messageManager.sendMessage(player,
+						configLoad.getString("Command.Island.Reset.Confirmation.Pending.Message"));
+				soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Reset.Permission.Message"));
-				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+				int confirmationTime = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+						.getFileConfiguration().getInt("Island.Confirmation.Timeout");
+
+				playerData.setConfirmation(Confirmation.Reset);
+				playerData.setConfirmationTime(confirmationTime);
+
+				player.spigot().sendMessage(new ChatComponent(
+						configLoad.getString("Command.Island.Reset.Confirmation.Confirm.Message").replace("%time",
+								"" + confirmationTime) + "   ",
+						false, null, null, null)
+								.addExtra(new ChatComponent(configLoad
+										.getString("Command.Island.Reset.Confirmation.Confirm.Word.Confirm")
+										.toUpperCase(), true, ChatColor.RED,
+										new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island confirm"),
+										new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+												ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+														"Command.Island.Reset.Confirmation.Confirm.Word.Tutorial")))
+																.create()))));
+				soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Reset.Owner.Message"));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Reset.Permission.Message"));
 			soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

@@ -45,7 +45,7 @@ public class Chat implements Listener {
 			Island island = null;
 
 			if (playerData.getOwner() != null) {
-				island = skyblock.getIslandManager().getIsland(playerData.getOwner());
+				island = skyblock.getIslandManager().getIsland(player);
 			}
 
 			String messageFormat = event.getFormat();

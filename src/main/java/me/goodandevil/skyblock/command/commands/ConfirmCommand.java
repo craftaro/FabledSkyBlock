@@ -19,6 +19,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
 import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.economy.EconomyManager;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -57,8 +58,13 @@ public class ConfirmCommand extends SubCommand {
 			FileConfiguration configLoad = config.getFileConfiguration();
 
 			if (playerData.getConfirmationTime() > 0) {
-				if (islandManager.hasIsland(player)) {
-					me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
+				Island island = islandManager.getIsland(player);
+
+				if (island == null) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Command.Island.Confirmation.Owner.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				} else {
 					Confirmation confirmation = playerData.getConfirmation();
 
 					if (confirmation == Confirmation.Ownership || confirmation == Confirmation.Reset
@@ -102,7 +108,8 @@ public class ConfirmCommand extends SubCommand {
 									playerData.setConfirmation(null);
 									playerData.setConfirmationTime(0);
 
-									islandManager.giveIslandOwnership(island, targetPlayerUUID);
+									islandManager.giveOwnership(island,
+											Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
 
 									skyblock.getCooldownManager().createPlayer(CooldownType.Ownership,
 											Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
@@ -187,10 +194,6 @@ public class ConfirmCommand extends SubCommand {
 								configLoad.getString("Command.Island.Confirmation.Specified.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					}
-				} else {
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Confirmation.Owner.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Pending.Message"));

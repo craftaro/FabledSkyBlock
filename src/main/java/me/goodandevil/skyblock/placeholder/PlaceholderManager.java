@@ -18,8 +18,6 @@ import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.playerdata.PlayerData;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
 
 public class PlaceholderManager {
@@ -62,18 +60,9 @@ public class PlaceholderManager {
 	}
 
 	public String getPlaceholder(Player player, String placeholder) {
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 
-		Island island = null;
-
-		if (playerDataManager.hasPlayerData(player)) {
-			PlayerData playerData = playerDataManager.getPlayerData(player);
-
-			if (playerData.getOwner() != null && islandManager.containsIsland(playerData.getOwner())) {
-				island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
-			}
-		}
+		Island island = islandManager.getIsland(player);
 
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();

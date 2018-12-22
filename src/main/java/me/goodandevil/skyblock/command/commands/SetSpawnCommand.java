@@ -16,6 +16,7 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
@@ -47,7 +48,12 @@ public class SetSpawnCommand extends SubCommand {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		if (args.length == 1) {
-			if (islandManager.hasIsland(player)) {
+			Island island = islandManager.getIsland(player);
+
+			if (island == null) {
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Owner.Message"));
+				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			} else {
 				IslandEnvironment environment;
 
 				if (args[0].equalsIgnoreCase("Main")) {
@@ -60,9 +66,6 @@ public class SetSpawnCommand extends SubCommand {
 
 					return;
 				}
-
-				me.goodandevil.skyblock.island.Island island = islandManager
-						.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
 
 				if (island.hasRole(IslandRole.Operator, player.getUniqueId())
 						|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
@@ -163,9 +166,6 @@ public class SetSpawnCommand extends SubCommand {
 							.replace("%spawn", environment.name().toLowerCase()));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
-			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Owner.Message"));
-				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Invalid.Message"));

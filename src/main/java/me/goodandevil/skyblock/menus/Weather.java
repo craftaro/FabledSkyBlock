@@ -56,25 +56,21 @@ public class Weather {
 				@Override
 				public void onClick(ClickEvent event) {
 					if (playerDataManager.hasPlayerData(player)) {
-						Island island = null;
+						Island island = islandManager.getIsland(player);
 
-						if (islandManager.hasIsland(player)) {
-							island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-							if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-									&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
-									|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Weather.Permission.Message"));
-								soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-								player.closeInventory();
-
-								return;
-							}
-						} else {
+						if (island == null) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Weather.Owner.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+							player.closeInventory();
+
+							return;
+						} else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
+								&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
+								|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Weather.Permission.Message"));
+							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							player.closeInventory();
 
 							return;
@@ -192,7 +188,7 @@ public class Weather {
 				}
 			});
 
-			Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
+			Island island = islandManager.getIsland(player);
 
 			String timeName = "", timeChoice = "", weatherSynchronised, weatherChoice, synchronisedChoice;
 			int islandTime = island.getTime();

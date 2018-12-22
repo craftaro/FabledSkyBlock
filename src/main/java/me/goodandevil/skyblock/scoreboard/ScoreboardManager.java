@@ -16,7 +16,6 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 
 public class ScoreboardManager {
 
@@ -29,7 +28,6 @@ public class ScoreboardManager {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 				IslandManager islandManager = skyblock.getIslandManager();
 				FileManager fileManager = skyblock.getFileManager();
 
@@ -39,10 +37,14 @@ public class ScoreboardManager {
 
 					for (Player all : Bukkit.getOnlinePlayers()) {
 						Scoreboard scoreboard = new Scoreboard(all);
+						Island island = islandManager.getIsland(all);
 
-						if (islandManager.hasIsland(all)) {
-							Island island = islandManager.getIsland(playerDataManager.getPlayerData(all).getOwner());
-
+						if (island == null) {
+							scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+									config.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
+							scoreboard.setDisplayList(
+									config.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
+						} else {
 							if (island.getRole(IslandRole.Member).size() == 0
 									&& island.getRole(IslandRole.Operator).size() == 0) {
 								scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
@@ -77,11 +79,6 @@ public class ScoreboardManager {
 
 								scoreboard.setDisplayVariables(displayVariables);
 							}
-						} else {
-							scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-									config.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-							scoreboard.setDisplayList(
-									config.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
 						}
 
 						scoreboard.run();
@@ -93,7 +90,6 @@ public class ScoreboardManager {
 	}
 
 	public void resendScoreboard() {
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		FileManager fileManager = skyblock.getFileManager();
 
@@ -106,9 +102,14 @@ public class ScoreboardManager {
 					Scoreboard scoreboard = getScoreboard(all);
 					scoreboard.cancel();
 
-					if (islandManager.hasIsland(all)) {
-						Island island = islandManager.getIsland(playerDataManager.getPlayerData(all).getOwner());
+					Island island = islandManager.getIsland(all);
 
+					if (island == null) {
+						scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+								config.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
+						scoreboard.setDisplayList(
+								config.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
+					} else {
 						if (island.getRole(IslandRole.Member).size() == 0
 								&& island.getRole(IslandRole.Operator).size() == 0) {
 							scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
@@ -143,11 +144,6 @@ public class ScoreboardManager {
 
 							scoreboard.setDisplayVariables(displayVariables);
 						}
-					} else {
-						scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-								config.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-						scoreboard.setDisplayList(
-								config.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
 					}
 
 					scoreboard.run();
