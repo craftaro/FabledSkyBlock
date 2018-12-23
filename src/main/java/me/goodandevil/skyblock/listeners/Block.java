@@ -208,9 +208,9 @@ public class Block implements Listener {
 
 	@EventHandler
 	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
-		if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-				.getFileConfiguration().getBoolean("Island.Piston.Connected.Extend")) {
-			if (skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) {
+		if (skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) {
+			if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+					.getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Extend")) {
 				for (org.bukkit.block.Block blockList : event.getBlocks()) {
 					if (blockList.getType() == Materials.PISTON.parseMaterial()
 							|| blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
@@ -225,9 +225,9 @@ public class Block implements Listener {
 
 	@EventHandler
 	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-		if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-				.getFileConfiguration().getBoolean("Island.Piston.Connected.Retract")) {
-			if (skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) {
+		if (skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) {
+			if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+					.getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
 				for (org.bukkit.block.Block blockList : event.getBlocks()) {
 					if (blockList.getType() == Materials.PISTON.parseMaterial()
 							|| blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
@@ -344,6 +344,10 @@ public class Block implements Listener {
 		org.bukkit.block.Block block = event.getBlock();
 
 		WorldManager worldManager = skyblock.getWorldManager();
+
+		if (event.getSource().getType() != Material.FIRE) {
+			return;
+		}
 
 		if (worldManager.isIslandWorld(block.getWorld())) {
 			if (!skyblock.getIslandManager().hasSetting(block.getLocation(), IslandRole.Owner, "FireSpread")) {

@@ -388,7 +388,13 @@ public final class BlockUtil {
 			sign.update();
 		} else if (blockTypeState == BlockStateType.SKULL) {
 			Skull skull = (Skull) block.getState();
-			skull.setOwningPlayer(Bukkit.getServer().getOfflinePlayer(blockData.getSkullOwner()));
+
+			if (NMSVersion > 9) {
+				skull.setOwningPlayer(Bukkit.getServer().getOfflinePlayer(blockData.getSkullOwner()));
+			} else {
+				skull.setOwner(skull.getOwner());
+			}
+
 			skull.setRotation(BlockFace.valueOf(blockData.getRotateFace().toUpperCase()));
 			skull.setSkullType(SkullType.valueOf(blockData.getSkullType().toUpperCase()));
 		} else {

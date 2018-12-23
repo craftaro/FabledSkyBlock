@@ -47,24 +47,27 @@ public class DemoteCommand extends SubCommand {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Demote.Owner.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			} else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-				if (Bukkit.getServer().getPlayer(args[0]) == null) {
-					OfflinePlayer targetPlayer = new OfflinePlayer(args[0]);
+				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+
+				if (targetPlayer == null) {
+					OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);
 					Set<UUID> islandMembers = island.getRole(IslandRole.Member);
 
-					if (targetPlayer.getUniqueId() != null && (islandMembers.contains(targetPlayer.getUniqueId())
-							|| island.getRole(IslandRole.Operator).contains(targetPlayer.getUniqueId()))) {
-						if (islandMembers.contains(targetPlayer.getUniqueId())) {
+					if (offlinePlayer.getUniqueId() != null && (islandMembers.contains(offlinePlayer.getUniqueId())
+							|| island.getRole(IslandRole.Operator).contains(offlinePlayer.getUniqueId()))) {
+						if (islandMembers.contains(offlinePlayer.getUniqueId())) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Demote.Role.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						} else {
 							messageManager.sendMessage(player,
-									configLoad.getString("Command.Island.Demote.Promoted.Sender.Message")
-											.replace("%player", targetPlayer.getName()));
+									configLoad.getString("Command.Island.Demote.Demoted.Sender.Message")
+											.replace("%player", offlinePlayer.getName()));
+
 							soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 
-							island.removeRole(IslandRole.Operator, targetPlayer.getUniqueId());
-							island.setRole(IslandRole.Member, targetPlayer.getUniqueId());
+							island.removeRole(IslandRole.Operator, offlinePlayer.getUniqueId());
+							island.setRole(IslandRole.Member, offlinePlayer.getUniqueId());
 							island.save();
 						}
 					} else {
@@ -73,8 +76,6 @@ public class DemoteCommand extends SubCommand {
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {
-					Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
-
 					if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())
 							|| island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())) {
 						if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())) {

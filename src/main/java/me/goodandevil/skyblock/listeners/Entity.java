@@ -476,7 +476,7 @@ public class Entity implements Listener {
 			return;
 		}
 
-		if (event.getSpawnReason() != SpawnReason.CUSTOM || event.getSpawnReason() != SpawnReason.NATURAL) {
+		if (!(event.getSpawnReason() == SpawnReason.CUSTOM || event.getSpawnReason() == SpawnReason.NATURAL)) {
 			return;
 		}
 

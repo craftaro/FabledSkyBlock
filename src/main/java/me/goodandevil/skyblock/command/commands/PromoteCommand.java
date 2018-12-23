@@ -99,8 +99,11 @@ public class PromoteCommand extends SubCommand {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Promote.Promoted.Sender.Message")
 											.replace("%player", targetPlayer.getName()));
+							soundManager.playSound(player, Sounds.FIREWORK_BLAST.bukkitSound(), 1.0F, 1.0F);
+
 							messageManager.sendMessage(targetPlayer,
 									configLoad.getString("Command.Island.Promote.Promoted.Target.Message"));
+							soundManager.playSound(targetPlayer, Sounds.FIREWORK_BLAST.bukkitSound(), 1.0F, 1.0F);
 
 							for (Player all : Bukkit.getOnlinePlayers()) {
 								if (!all.getUniqueId().equals(player.getUniqueId())) {

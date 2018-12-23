@@ -14,7 +14,7 @@ Island:
         # The size of an Island when created.
         # [!] Do not go over the maximum.
         Minimum: 100
-        # The maximum size of an Island based on the permission note 'skyblock.size.<size>'.
+        # The maximum size of an Island based on the permission node 'skyblock.size.<size>'.
         Maximum: 200
     Creation:
         # Rather than opening the 'Island Creator' menu. Create an island
@@ -199,8 +199,8 @@ Island:
             # Prevent Piston blocks being retracted or extended when connected to a circuit
             # [!] Prevents Pistons extending out of Island border bug
             Connected:
-                Retract: false
-                Extent: false
+                Retract: true
+                Extend: true
     Liquid:
         Teleport:
             # Teleports the player back to the Island if they enter the liquid if world is a

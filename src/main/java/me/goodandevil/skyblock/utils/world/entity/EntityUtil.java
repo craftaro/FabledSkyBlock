@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Art;
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -135,12 +136,22 @@ public final class EntityUtil {
 			} else if (entity instanceof Creeper) {
 				entityData.setPowered(((Creeper) entity).isPowered());
 			} else if (entity instanceof Enderman) {
-				MaterialData materialData = ((Enderman) entity).getCarriedMaterial();
+				Enderman enderman = ((Enderman) entity);
 
-				if (materialData == null) {
-					entityData.setCarryBlock("");
+				if (NMSVersion > 12) {
+					if (enderman.getCarriedBlock() == null) {
+						entityData.setCarryBlock("");
+					} else {
+						entityData.setCarryBlock(enderman.getCarriedBlock().getMaterial().name() + ":0");
+					}
 				} else {
-					entityData.setCarryBlock(materialData.getItemType().toString() + ":" + materialData.getData());
+					MaterialData materialData = enderman.getCarriedMaterial();
+
+					if (materialData == null) {
+						entityData.setCarryBlock("");
+					} else {
+						entityData.setCarryBlock(materialData.getItemType().toString() + ":" + materialData.getData());
+					}
 				}
 			} else if (entity instanceof Horse) {
 				Horse horse = ((Horse) entity);
@@ -380,7 +391,11 @@ public final class EntityUtil {
 							materialData[0].toUpperCase(), data);
 
 					if (material != null) {
-						((Enderman) entity).setCarriedMaterial(new MaterialData(material, data));
+						if (NMSVersion > 12) {
+							((Enderman) entity).setCarriedBlock(Bukkit.getServer().createBlockData(material));
+						} else {
+							((Enderman) entity).setCarriedMaterial(new MaterialData(material, data));
+						}
 					}
 				}
 			} else if (entity instanceof Horse) {
