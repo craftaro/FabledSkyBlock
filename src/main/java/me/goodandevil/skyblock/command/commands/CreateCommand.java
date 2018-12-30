@@ -13,8 +13,10 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.creation.Creation;
-import me.goodandevil.skyblock.creation.CreationManager;
+import me.goodandevil.skyblock.cooldown.Cooldown;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownPlayer;
+import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.menus.Creator;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -34,7 +36,7 @@ public class CreateCommand extends SubCommand {
 
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
-		CreationManager creationManager = skyblock.getCreationManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -43,10 +45,7 @@ public class CreateCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (islandManager.hasIsland(player)) {
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
-			soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-		} else {
+		if (islandManager.getIsland(player) == null) {
 			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 
 			if (mainConfig.getFileConfiguration().getBoolean("Island.Creation.Menu.Enable")) {
@@ -60,24 +59,35 @@ public class CreateCommand extends SubCommand {
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 					return;
-				} else if (!fileManager.isFileExist(new File(
-						new File(skyblock.getDataFolder().toString() + "/structures"), structures.get(0).getFile()))) {
-					messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.File.Message"));
+				} else if (!fileManager
+						.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+								structures.get(0).getOverworldFile()))) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				} else if (!fileManager
+						.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+								structures.get(0).getNetherFile()))) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 					return;
 				} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 						.getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
-						&& creationManager.hasPlayer(player)) {
-					Creation creation = creationManager.getPlayer(player);
+						&& cooldownManager.hasPlayer(CooldownType.Creation, player)) {
+					CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Creation, player);
+					Cooldown cooldown = cooldownPlayer.getCooldown();
 
-					if (creation.getTime() < 60) {
+					if (cooldown.getTime() < 60) {
 						messageManager.sendMessage(player,
 								config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Message")
-										.replace("%time", creation.getTime() + " " + config.getFileConfiguration()
+										.replace("%time", cooldown.getTime() + " " + config.getFileConfiguration()
 												.getString("Island.Creator.Selector.Cooldown.Word.Second")));
 					} else {
-						long[] durationTime = NumberUtil.getDuration(creation.getTime());
+						long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
 						messageManager.sendMessage(player,
 								config.getFileConfiguration().getString("Island.Creator.Selector.Cooldown.Message")
 										.replace("%time", durationTime[2] + " "
@@ -97,6 +107,9 @@ public class CreateCommand extends SubCommand {
 					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 				}
 			}
+		} else {
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
+			soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 

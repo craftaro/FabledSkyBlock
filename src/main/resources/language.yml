@@ -49,6 +49,21 @@ Command:
                 Message: "&f&oOpens the Island Creator menu."
             Owner:
                 Message: "&bSkyBlock &8| &cError&8: &eYou are already an Island owner."
+        Reset:
+            Info:
+                Message: "&f&oResets your Island."
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have the right to reset your Island."
+            Confirmation:
+                Pending:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou currently have a pending confirmation. Please try again in a few seconds!"
+                Confirm:
+                    Word:
+                        Confirm: "confirm"
+                        Tutorial: "&7Click to &f&oconfirm &r&7Island reset!"
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to reset your Island. You have &c%time &eseconds to confirm."
         Delete:
             Info:
                 Message: "&f&oDeletes your Island."
@@ -63,7 +78,7 @@ Command:
                     Word:
                         Confirm: "confirm"
                         Tutorial: "&7Click to &f&oconfirm &r&7Island deletion!"
-                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to delete your Island. You have &c%time &eseconds to confirm."
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to delete your Island. You have &c%time &eseconds to confirm.   %confirm"
         Teleport:
             Info:
                 Message: "&f&oTeleport to your Island."
@@ -144,14 +159,14 @@ Command:
                     Tutorial: "&7Click to &f&o%action &r&7invite!"
                 Sender:
                     Sent:
-                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have invited the player &d%player &eto join your Island. They have &c%time &eto respond."
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have invited the player &d%player &eto join your Island. They have &c%time &eto respond.   %cancel"
                     Expired:
                         Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player &edidn't respond to your invite in time."
                     Disconnected:
                         Message: "&bSkyBlock &8| &aInfo&8: &eThe player &c%player &edisconnected and didn't respond to your invite."
                 Target:
                     Received:
-                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have been invited to join &d%player's &eIsland. You have &c%time &eto respond."
+                        Message: "&bSkyBlock &8| &aInfo&8: &eYou have been invited to join &d%player's &eIsland. You have &c%time &eto respond.    "
                     Expired:
                         Message: "&bSkyBlock &8| &aInfo&8: &eYou didn't respond to &c%player's &einvite in time."
         Accept:
@@ -411,6 +426,17 @@ Command:
                     Minute: "minute(s)"
                     Second: "second(s)"
                 Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore processing an Island level request."
+        Value:
+            Info:
+                Message: "&f&oGets the value of a material in your hand."
+            Permission:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to get the value of an item."
+            Hand:
+                Message: "&bSkyBlock &8| &cError&8: &eYou must be holding an item in your hand."
+            None:
+                Message: "&bSkyBlock &8| &cError&8: &eCannot get the value of that material."
+            Value:
+                Message: "&bSkyBlock &8| &aInfo&8: &eThe value of the material '&d%material&e' is &d%points &epoints and has a &d%level &elevel increase."
         Settings:
             Info:
                 Message: "&f&oOpen the Island Settings menu."
@@ -485,7 +511,7 @@ Command:
                     Word:
                         Confirm: "confirm"
                         Tutorial: "&7Click to &f&oconfirm &r&7ownership assignment!"
-                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to assign ownership of the Island to the player &d%player&e. You have &c%time &eseconds to confirm."
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou want to assign ownership of the Island to the player &d%player&e. You have &c%time &eseconds to confirm.   %confirm"
             Password:
                 Unset:
                     Message: "&bSkyBlock &8| &cError&8: &eThe owner of the Island has not set a password."
@@ -496,6 +522,12 @@ Command:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have assigned yourself ownership of the Island."
                 Broadcast:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe ownership of the Island has been assigned to the player &a%player&e!"
+            Cooldown:
+                Word:
+                    Hour: "hour(s)"
+                    Minute: "minute(s)"
+                    Second: "second(s)"
+                Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore transferring island ownership."
         Confirmation:
             Info:
                 Message: "&f&oConfirmation for permanent operations."
@@ -515,6 +547,12 @@ Command:
             Deletion:
                 Sender:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou are no longer an Island owner."
+                Open:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou must close your island before deleting it."
+                Spawn:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot delete your island because the main spawn point is set there."
+                Money:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have enough money to delete your island. The cost of deleting your island is &c%cost&e."
                 Broadcast:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe Island owner has disbanded the Island."
             Confirmed:
@@ -689,8 +727,6 @@ Command:
                     Message: "&f&oSets the spawn point to your location."
                 Permission:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
-                World:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot set the spawn point in an Island world."
                 Set:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe spawn point has been set to your location."
             SetHologram:
@@ -719,7 +755,7 @@ Command:
                 Permission:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
-                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player_name> <size>"
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player> <size>"
                 Numerical:
                     Message: "&bSkyBlock &8| &cError&8: &eYou must enter a numerical value."
                 Size:
@@ -728,9 +764,50 @@ Command:
                     Less:
                         Message: "&bSkyBlock &8| &cError&8: &eThe size of the Island must be less than 1000."
                 Island:
-                    Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Owner:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Data:
+                        Message: "&bSkyBlock &8| &cError&8: &eThe island data for that players island does not exist."
                 Set:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the player &d%player's &eIsland size to &d%size&e."
+            AddUpgrade:
+                Info:
+                    Message: "&f&oAdd an upgrade to a players Island."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin addupgrade <player> <upgrade>"
+                Island:
+                    Owner:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Data:
+                        Message: "&bSkyBlock &8| &cError&8: &eThe island data for that players island does not exist."
+                Upgrade:
+                    Exist:
+                        Message: "&bSkyBlock &8| &cError&8: &eAn upgrade by that name does not exist."
+                    Already:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat players island already has that upgrade."
+                Added:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have &a&lADDED the upgrade '&d%upgrade&e' to the player &d%player's &eIsland."
+            RemoveUpgrade:
+                Info:
+                    Message: "&f&oRemoves an upgrade from a players Island."
+                Permission:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin removeupgrade <player> <upgrade>"
+                Island:
+                    Owner:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Data:
+                        Message: "&bSkyBlock &8| &cError&8: &eThe island data for that players island does not exist."
+                Upgrade:
+                    Exist:
+                        Message: "&bSkyBlock &8| &cError&8: &eAn upgrade by that name does not exist."
+                    Missing:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat players island does not have that upgrade."
+                Removed:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have &c&lREMOVED &ethe upgrade '&d%upgrade&e' from the player &d%player's &eIsland."
             Delete:
                 Info:
                     Message: "&f&oDelete a players Island permanently."
@@ -740,6 +817,8 @@ Command:
                     Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin delete <player_name>"
                 Owner:
                     Message: "&bSkyBlock &8| &cError&8: &eThat player is not an Island owner."
+                Spawn:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot delete that island because the main spawn point is set there."
                 Deleted:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have deleted the player &c%player's &eIsland."
             Owner:
@@ -773,7 +852,10 @@ Island:
             Permission:
                 Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to use that Structure."
             File:
-                Message: "&bSkyBlock &8| &cError&8: &eThe File for that Structure does not exist."
+                Overworld:
+                    Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the overworld does not exist."
+                Nether:
+                    Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the nether does not exist."
             Cooldown:
                 Word:
                     Minute: "minute(s)"
@@ -817,9 +899,14 @@ Island:
             Signature:
                 Disabled:
                     Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to use that feature."
+    Portal:
+        Destination:
+            Message: "&bSkyBlock &8| &cError&8: &eThere is no destination to travel to going through that portal."
     World:
-        Nether:
-            Message: "&bSkyBlock &8| &aInfo&8: &eYou have been teleported out of the nether because the nether is disabled."
+        Word:
+            Nether: "nether"
+            End: "end"
+        Message: "&bSkyBlock &8| &aInfo&8: &eYou have been teleported out of the nether because the nether is disabled."
     WorldBorder:
         Outside:
             Message: "&bSkyBlock &8| &cError&8: &eYou went too far outside the Island WorldBorder."
@@ -855,8 +942,6 @@ Island:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &a&lADDED &efor &a%player's &eIsland."
             Removed:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYour vote has been &c&lREMOVED &efor &a%player's &eIsland."
-        Banned:
-            Message: "&bSkyBlock &8| &aInfo&8: &eYou have been banned from the Island."
     Structure:
         Tool:
             Position:
@@ -893,6 +978,8 @@ Island:
                 Message: "&bSkyBlock &8| &cError&8: &eThat structure does not exist."
             Selected:
                 Message: "&bSkyBlock &8| &cError&8: &eYou have not selected a structure."
+            Numerical:
+                Message: "&bSkyBlock &8| &cError&8: &eYou must enter a numerical value."
             File:
                 Message: "&bSkyBlock &8| &cError&8: &eThat file does not exist in the structures directory."
             Characters:
@@ -994,6 +1081,11 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+    skyblock_island_level_formatted:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
     skyblock_island_points:
         Empty:
             Message: "&c0"
@@ -1047,7 +1139,22 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+    skyblock_island_coops:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_coops_total:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
     skyblock_island_visitors:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_invites:
         Empty:
             Message: "&c0"
         Non-empty:
@@ -1936,6 +2043,8 @@ Menu:
                         Displayname: "&aKeep Items on Death"
                     Damage:
                         Displayname: "&aDamage"
+                    Hunger:
+                        Displayname: "&aHunger"
         Default:
             Item:
                 Setting:
@@ -2018,6 +2127,8 @@ Menu:
                         Displayname: "&aDropper/Dispenser Use"
                     SpawnEgg:
                         Displayname: "&aSpawn Eggs"
+                    HangingDestroy:
+                        Displayname: "&aHanging Destroy"
                     Cake:
                         Displayname: "&aCake Consumption"
                     DragonEggUse:
@@ -2028,8 +2139,8 @@ Menu:
                         Displayname: "&aPortal Use"
                     Hopper:
                         Displayname: "&aHopper Use"
-                    ArmorStandPlacement:
-                        Displayname: "&aArmorStand Placement"
+                    EntityPlacement:
+                        Displayname: "&aEntity Placement"
                     ExperienceOrbPickup:
                         Displayname: "&aExperience Orb Pickup"
     Information:
@@ -2293,6 +2404,8 @@ Menu:
     Ownership:
         Title: "&8Island Ownership"
         Item:
+            Exit:
+                Displayname: "&cExit Island Ownership"
             Original:
                 Displayname: "&bOriginal Owner"
                 Lore:
@@ -2653,23 +2766,74 @@ Menu:
                             Enter: "Enter file name"
                         Displayname: "&aStructure File"
                         Lore:
-                        - "&7File&8:"
-                        - "&f&o%file"
+                        - "&7Overworld File&8:"
+                        - "&f&o%overworld_file"
                         - ""
-                        - "&eClick to set file!"
+                        - "&7Nether File&8:"
+                        - "&f&o%nether_file"
+                        - ""
+                        - "&7End File&8:"
+                        - "&f&o%end_file"
+                        - ""
+                        - "&c[!] The structure file must be"
+                        - "&cset for all worlds."
+                        - ""
+                        - "&eLeft-Click to set overworld file!"
+                        - "&eMiddle-Click to set nether file!"
+                        - "&eRight-Click to set end file!"
                     Item:
                         Displayname: "&aItem"
                         Lore:
                         - "&7Material&8:"
                         - "&f&o%material"
                         - ""
-                        - "&7When clicked, select"
-                        - "&7an item in your"
-                        - "&7inventory or click"
-                        - "&7this item again to"
-                        - "&7cancel."
+                        - "&c[!] When clicked,"
+                        - "&cselect an item in"
+                        - "&cyour inventory or"
+                        - "&cclick this item"
+                        - "&cagain to cancel."
                         - ""
                         - "&eClick to set item!"
+                    Commands:
+                        Word:
+                            Enter: "Enter command"
+                        Displayname: "&aCommands"
+                        Unset:
+                            Lore:
+                            - "&7Commands&8:"
+                            - "%commands"
+                            - ""
+                            - "&c[!] Commands performed on"
+                            - "&cisland creation by the"
+                            - "&cconsole."
+                            - ""
+                            - "&c[!] Use %player for player name."
+                            - ""
+                            - "&eClick to add a command!"
+                        Set:
+                            Lore:
+                            - "&7Commands&8:"
+                            - "%commands"
+                            - ""
+                            - "&c[!] Commands performed on"
+                            - "&cisland creation by the"
+                            - "&cconsole."
+                            - ""
+                            - "&c[!] Use %player for player name."
+                            - ""
+                            - "&eLeft-Click to add a command!"
+                            - "&eRight-click to remove a command!"
+                    DeletionCost:
+                        Word:
+                            Enter: "Enter Cost"
+                        Displayname: "&aDeletion Cost"
+                        Lore:
+                        - "&7Cost&8: &f%cost"
+                        - ""
+                        - "&c[!] For no deletion"
+                        - "&ccost, enter 0.0."
+                        - ""
+                        - "&eClick to set cost!"
         Upgrade:
             Upgrades:
                 Title: "&8Upgrade Editor"
@@ -3004,6 +3168,8 @@ Menu:
                             Displayname: "&aKeep Items on Death"
                         Damage:
                             Displayname: "&aDamage"
+                        Hunger:
+                            Displayname: "&aHunger"
             Default:
                 Item:
                     Setting:
@@ -3086,6 +3252,8 @@ Menu:
                             Displayname: "&aDropper/Dispenser Use"
                         SpawnEgg:
                             Displayname: "&aSpawn Eggs"
+                        HangingDestroy:
+                            Displayname: "&aHanging Destroy"
                         Cake:
                             Displayname: "&aCake Consumption"
                         DragonEggUse:
@@ -3096,7 +3264,7 @@ Menu:
                             Displayname: "&aPortal Use"
                         Hopper:
                             Displayname: "&aHopper Use"
-                        ArmorStandPlacement:
-                            Displayname: "&aArmorStand Placement"
+                        EntityPlacement:
+                            Displayname: "&aEntity Placement"
                         ExperienceOrbPickup:
                             Displayname: "&aExperience Orb Pickup"

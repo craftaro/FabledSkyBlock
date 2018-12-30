@@ -15,10 +15,13 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.hologram.Hologram;
 import me.goodandevil.skyblock.hologram.HologramManager;
 import me.goodandevil.skyblock.hologram.HologramType;
+import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
@@ -71,9 +74,30 @@ public class ReloadCommand extends SubCommand {
 				}
 			}
 
-			if (skyblock.getScoreboardManager() != null) {
+			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+			FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();
+
+			if (skyblock.getScoreboardManager() == null) {
+				if (mainConfigLoad.getBoolean("Island.Scoreboard.Enable")) {
+					skyblock.setScoreboardManager(new ScoreboardManager(skyblock));
+				}
+			} else {
 				skyblock.getScoreboardManager().resendScoreboard();
 			}
+
+			if (skyblock.getGeneratorManager() == null) {
+				if (mainConfigLoad.getBoolean("Island.Generator.Enable")) {
+					skyblock.setGeneratorManager(new GeneratorManager(skyblock));
+				}
+			} else {
+				GeneratorManager generatorManager = skyblock.getGeneratorManager();
+				generatorManager.unregisterGenerators();
+				generatorManager.registerGenerators();
+			}
+
+			LevellingManager levellingManager = skyblock.getLevellingManager();
+			levellingManager.unregisterMaterials();
+			levellingManager.registerMaterials();
 
 			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 				@Override

@@ -1,13 +1,11 @@
 package me.goodandevil.skyblock.command.commands;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -19,16 +17,18 @@ import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
-import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.cooldown.CooldownType;
+import me.goodandevil.skyblock.economy.EconomyManager;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
-import me.goodandevil.skyblock.scoreboard.Scoreboard;
-import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.structure.Structure;
+import me.goodandevil.skyblock.structure.StructureManager;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 
@@ -44,8 +44,9 @@ public class ConfirmCommand extends SubCommand {
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		StructureManager structureManager = skyblock.getStructureManager();
 		MessageManager messageManager = skyblock.getMessageManager();
+		EconomyManager economyManager = skyblock.getEconomyManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
@@ -57,11 +58,17 @@ public class ConfirmCommand extends SubCommand {
 			FileConfiguration configLoad = config.getFileConfiguration();
 
 			if (playerData.getConfirmationTime() > 0) {
-				if (islandManager.hasIsland(player)) {
-					me.goodandevil.skyblock.island.Island island = islandManager.getIsland(playerData.getOwner());
+				Island island = islandManager.getIsland(player);
+
+				if (island == null) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Command.Island.Confirmation.Owner.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				} else {
 					Confirmation confirmation = playerData.getConfirmation();
 
-					if (confirmation == Confirmation.Ownership || confirmation == Confirmation.Deletion) {
+					if (confirmation == Confirmation.Ownership || confirmation == Confirmation.Reset
+							|| confirmation == Confirmation.Deletion) {
 						if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
 							if (confirmation == Confirmation.Ownership) {
 								UUID targetPlayerUUID = playerData.getOwnership();
@@ -101,72 +108,81 @@ public class ConfirmCommand extends SubCommand {
 									playerData.setConfirmation(null);
 									playerData.setConfirmationTime(0);
 
-									islandManager.giveIslandOwnership(targetPlayerUUID);
+									islandManager.giveOwnership(island,
+											Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
+
+									skyblock.getCooldownManager().createPlayer(CooldownType.Ownership,
+											Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
 								} else {
 									messageManager.sendMessage(player, configLoad
 											.getString("Command.Island.Confirmation.Ownership.Member.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 								}
-							} else if (confirmation == Confirmation.Deletion) {
+							} else if (confirmation == Confirmation.Reset) {
 								playerData.setConfirmation(null);
 								playerData.setConfirmationTime(0);
+							} else if (confirmation == Confirmation.Deletion) {
+								if (island.isOpen()) {
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Confirmation.Deletion.Open.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+								} else {
+									Location spawnLocation = LocationUtil.getSpawnLocation();
 
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Confirmation.Confirmed.Message"));
+									if (spawnLocation != null
+											&& islandManager.isLocationAtIsland(island, spawnLocation)) {
+										messageManager.sendMessage(player, configLoad
+												.getString("Command.Island.Confirmation.Deletion.Spawn.Message"));
+										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-								boolean hasSpawnPoint = skyblock.getFileManager()
-										.getConfig(new File(skyblock.getDataFolder(), "locations.yml"))
-										.getFileConfiguration().getString("Location.Spawn") != null;
-								List<UUID> islandMembers = new ArrayList<>();
+										return;
+									}
 
-								for (Player all : Bukkit.getOnlinePlayers()) {
-									if (island.hasRole(IslandRole.Member, all.getUniqueId())
-											|| island.hasRole(IslandRole.Operator, all.getUniqueId())
-											|| island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-										if (scoreboardManager != null) {
-											Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-											scoreboard.cancel();
-											scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-													configLoad.getString("Scoreboard.Tutorial.Displayname")));
-											scoreboard.setDisplayList(
-													configLoad.getStringList("Scoreboard.Tutorial.Displaylines"));
-											scoreboard.run();
-										}
+									if (economyManager.isEconomy() && island.getStructure() != null
+											&& !island.getStructure().isEmpty()
+											&& structureManager.containsStructure(island.getStructure())) {
+										Structure structure = structureManager.getStructure(island.getStructure());
+										double deletionCost = structure.getDeletionCost();
 
-										for (Location.World worldList : Location.World.values()) {
-											if (LocationUtil.isLocationAtLocationRadius(all.getLocation(),
-													island.getLocation(worldList, Location.Environment.Island),
-													island.getRadius())) {
-												if (hasSpawnPoint) {
-													LocationUtil.teleportPlayerToSpawn(all);
-												} else {
-													Bukkit.getServer().getLogger().log(Level.WARNING,
-															"SkyBlock | Error: A spawn point hasn't been set.");
-												}
+										if (deletionCost != 0.0D) {
+											if (economyManager.hasBalance(player, deletionCost)) {
+												economyManager.withdraw(player, deletionCost);
+											} else {
+												messageManager.sendMessage(player,
+														configLoad.getString(
+																"Command.Island.Confirmation.Deletion.Money.Message")
+																.replace("%cost", "" + deletionCost));
+												soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+														1.0F);
 
-												break;
+												return;
 											}
 										}
+									}
 
-										if (!island.hasRole(IslandRole.Owner, all.getUniqueId())) {
+									playerData.setConfirmation(null);
+									playerData.setConfirmationTime(0);
+
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Confirmation.Confirmed.Message"));
+
+									for (Player all : Bukkit.getOnlinePlayers()) {
+										if (island.hasRole(IslandRole.Member, all.getUniqueId())
+												|| island.hasRole(IslandRole.Operator, all.getUniqueId())) {
 											all.sendMessage(
 													ChatColor.translateAlternateColorCodes('&', configLoad.getString(
 															"Command.Island.Confirmation.Deletion.Broadcast.Message")));
 											soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 										}
-
-										islandMembers.add(all.getUniqueId());
 									}
+
+									island.setDeleted(true);
+									islandManager.deleteIsland(island);
+
+									messageManager.sendMessage(player, configLoad
+											.getString("Command.Island.Confirmation.Deletion.Sender.Message"));
+									soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 								}
-
-								islandManager.deleteIsland(island);
-
-								skyblock.getVisitManager().deleteIsland(player.getUniqueId());
-								skyblock.getBanManager().deleteIsland(player.getUniqueId());
-
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Confirmation.Deletion.Sender.Message"));
-								soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
 							}
 						} else {
 							messageManager.sendMessage(player,
@@ -178,16 +194,13 @@ public class ConfirmCommand extends SubCommand {
 								configLoad.getString("Command.Island.Confirmation.Specified.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					}
-				} else {
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Confirmation.Owner.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Pending.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			}
 		}
+
 	}
 
 	@Override

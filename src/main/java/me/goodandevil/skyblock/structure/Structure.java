@@ -10,21 +10,31 @@ public class Structure implements me.goodandevil.skyblock.api.structure.Structur
 	private Materials materials;
 
 	private String name;
-	private String file;
+	private String overworldFile;
+	private String netherFile;
+	private String endFile;
 	private String displayName;
 
 	private boolean permission;
 
 	private List<String> description = new ArrayList<>();
+	private List<String> commands = new ArrayList<>();
 
-	public Structure(String name, Materials materials, String file, String displayName, boolean permission,
-			List<String> description) {
+	private double deletionCost;
+
+	public Structure(String name, Materials materials, String overworldFile, String netherFile, String endFile,
+			String displayName, boolean permission, List<String> description, List<String> commands,
+			double deletionCost) {
 		this.name = name;
 		this.materials = materials;
-		this.file = file;
+		this.overworldFile = overworldFile;
+		this.netherFile = netherFile;
+		this.endFile = endFile;
 		this.displayName = displayName;
 		this.permission = permission;
 		this.description = description;
+		this.commands = commands;
+		this.deletionCost = deletionCost;
 	}
 
 	public String getName() {
@@ -39,12 +49,28 @@ public class Structure implements me.goodandevil.skyblock.api.structure.Structur
 		this.materials = materials;
 	}
 
-	public String getFile() {
-		return file;
+	public String getOverworldFile() {
+		return overworldFile;
 	}
 
-	public void setFile(String file) {
-		this.file = file;
+	public void setOverworldFile(String file) {
+		this.overworldFile = file;
+	}
+
+	public String getNetherFile() {
+		return netherFile;
+	}
+
+	public void setNetherFile(String file) {
+		this.netherFile = file;
+	}
+
+	public String getEndFile() {
+		return endFile;
+	}
+
+	public void setEndFile(String file) {
+		this.endFile = file;
 	}
 
 	public String getDisplayname() {
@@ -77,5 +103,25 @@ public class Structure implements me.goodandevil.skyblock.api.structure.Structur
 
 	public void removeLine(int index) {
 		description.remove(index);
+	}
+
+	public List<String> getCommands() {
+		return commands;
+	}
+
+	public void addCommand(String command) {
+		commands.add(command);
+	}
+
+	public void removeCommand(int index) {
+		commands.remove(index);
+	}
+
+	public double getDeletionCost() {
+		return deletionCost;
+	}
+
+	public void setDeletionCost(double deletionCost) {
+		this.deletionCost = deletionCost;
 	}
 }

@@ -12,11 +12,11 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Level;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.leaderboard.Leaderboard;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.visit.Visit;
 
 public class EZPlaceholder extends PlaceholderExpansion {
@@ -74,7 +74,7 @@ public class EZPlaceholder extends PlaceholderExpansion {
 						return ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Placeholder.skyblock_leaderboard_votes.Non-empty.Message")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
-										.replace("%votes", NumberUtil.formatNumber(visit.getVoters().size())));
+										.replace("%votes", NumberUtil.formatNumberByDecimal(visit.getVoters().size())));
 					}
 
 					return ChatColor.translateAlternateColorCodes('&',
@@ -83,7 +83,7 @@ public class EZPlaceholder extends PlaceholderExpansion {
 					if (i < leaderboardLevelPlayers.size()) {
 						Leaderboard leaderboard = leaderboardLevelPlayers.get(i);
 						Visit visit = leaderboard.getVisit();
-						Level level = visit.getLevel();
+						IslandLevel level = visit.getLevel();
 
 						Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
 						String islandOwnerName;
@@ -97,8 +97,8 @@ public class EZPlaceholder extends PlaceholderExpansion {
 						return ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Placeholder.skyblock_leaderboard_level.Non-empty.Message")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
-										.replace("%level", NumberUtil.formatNumber(level.getLevel()))
-										.replace("%points", NumberUtil.formatNumber(level.getPoints())));
+										.replace("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))
+										.replace("%points", NumberUtil.formatNumberByDecimal(level.getPoints())));
 					}
 
 					return ChatColor.translateAlternateColorCodes('&',

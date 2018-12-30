@@ -29,14 +29,14 @@ public class InviteManager {
 		}
 	}
 
-	public void tranfer(UUID uuid, UUID islandOwnerUUID) {
+	public void tranfer(UUID uuid1, UUID uuid2) {
 		Map<UUID, Invite> islandInvites = getInvites();
 
 		for (UUID islandInviteList : islandInvites.keySet()) {
 			Invite invite = islandInvites.get(islandInviteList);
 
-			if (invite.getOwnerUUID().equals(islandOwnerUUID)) {
-				invite.setOwnerUUID(uuid);
+			if (invite.getOwnerUUID().equals(uuid1)) {
+				invite.setOwnerUUID(uuid2);
 			}
 		}
 	}

@@ -19,15 +19,16 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.AnvilGUI;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
@@ -54,7 +55,7 @@ public class Bans {
 
 		if (playerDataManager.hasPlayerData(player)) {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
-			Island island = skyblock.getIslandManager().getIsland(playerData.getOwner());
+			Island island = skyblock.getIslandManager().getIsland(player);
 
 			Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = languageConfig.getFileConfiguration();
@@ -64,22 +65,18 @@ public class Bans {
 				public void onClick(ClickEvent event) {
 					if (playerDataManager.hasPlayerData(player)) {
 						PlayerData playerData = playerDataManager.getPlayerData(player);
-						Island island = null;
+						Island island = islandManager.getIsland(player);
 
-						if (islandManager.hasIsland(player)) {
-							island = islandManager.getIsland(playerData.getOwner());
-
-							if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Bans.Disabled.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-								return;
-							}
-						} else {
+						if (island == null) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Bans.Owner.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							return;
+						} else if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+								.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Bans.Disabled.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 							return;
@@ -193,7 +190,7 @@ public class Bans {
 			nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
 					configLoad.getString("Menu.Bans.Item.Information.Displayname"),
 					configLoad.getStringList("Menu.Bans.Item.Information.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%bans#" + islandBans.size() }), null, null), 4);
+					new Placeholder[] { new Placeholder("%bans", "" + islandBans.size()) }, null, null), 4);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							configLoad.getString("Menu.Bans.Item.Barrier.Displayname"), null, null, null, null),

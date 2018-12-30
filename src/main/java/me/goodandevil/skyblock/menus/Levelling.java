@@ -7,6 +7,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -15,11 +16,16 @@ import org.bukkit.inventory.ItemStack;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.cooldown.Cooldown;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownPlayer;
+import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Level;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -48,6 +54,8 @@ public class Levelling {
 		SkyBlock skyblock = SkyBlock.getInstance();
 
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		LevellingManager levellingManager = skyblock.getLevellingManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -61,7 +69,7 @@ public class Levelling {
 			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					if (!islandManager.hasIsland(player)) {
+					if (islandManager.getIsland(player) == null) {
 						messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Owner.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
@@ -100,16 +108,17 @@ public class Levelling {
 						} else if ((is.getType() == Materials.FIREWORK_STAR.parseMaterial()) && (is.hasItemMeta())
 								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"))))) {
-							LevellingManager levellingManager = skyblock.getLevellingManager();
-							Island island = islandManager
-									.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+							Island island = islandManager.getIsland(player);
+							OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
 
-							if (levellingManager.hasLevelling(island.getOwnerUUID())) {
-								me.goodandevil.skyblock.levelling.Levelling levelling = levellingManager
-										.getLevelling(island.getOwnerUUID());
-								long[] durationTime = NumberUtil.getDuration(levelling.getTime());
+							if (cooldownManager.hasPlayer(CooldownType.Levelling, offlinePlayer)) {
+								CooldownPlayer cooldownPlayer = cooldownManager
+										.getCooldownPlayer(CooldownType.Levelling, offlinePlayer);
+								Cooldown cooldown = cooldownPlayer.getCooldown();
 
-								if (levelling.getTime() >= 3600) {
+								long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
+
+								if (cooldown.getTime() >= 3600) {
 									messageManager.sendMessage(player, configLoad
 											.getString("Command.Island.Level.Cooldown.Message")
 											.replace("%time", durationTime[1] + " "
@@ -118,7 +127,7 @@ public class Levelling {
 													+ configLoad.getString("Command.Island.Level.Cooldown.Word.Minute")
 													+ " " + durationTime[3] + " " + configLoad
 															.getString("Command.Island.Level.Cooldown.Word.Second")));
-								} else if (levelling.getTime() >= 60) {
+								} else if (cooldown.getTime() >= 60) {
 									messageManager.sendMessage(player, configLoad
 											.getString("Command.Island.Level.Cooldown.Message")
 											.replace("%time", durationTime[2] + " "
@@ -128,7 +137,7 @@ public class Levelling {
 								} else {
 									messageManager.sendMessage(player,
 											configLoad.getString("Command.Island.Level.Cooldown.Message")
-													.replace("%time", levelling.getTime() + " " + configLoad
+													.replace("%time", cooldown.getTime() + " " + configLoad
 															.getString("Command.Island.Level.Cooldown.Word.Second")));
 								}
 
@@ -147,8 +156,8 @@ public class Levelling {
 											configLoad.getString("Command.Island.Level.Processing.Message"));
 									soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 
-									levellingManager.createLevelling(island.getOwnerUUID());
-									levellingManager.loadLevelling(island.getOwnerUUID());
+									cooldownManager.createPlayer(CooldownType.Levelling,
+											Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
 									levellingManager.calculatePoints(player, island);
 								}
 							});
@@ -193,8 +202,8 @@ public class Levelling {
 				}
 			});
 
-			Island island = islandManager.getIsland(playerData.getOwner());
-			Level level = island.getLevel();
+			Island island = islandManager.getIsland(player);
+			IslandLevel level = island.getLevel();
 
 			Map<String, Integer> islandMaterials = level.getMaterials();
 
@@ -211,9 +220,9 @@ public class Levelling {
 			nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
 					configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"),
 					configLoad.getStringList("Menu.Levelling.Item.Statistics.Lore"),
-					nInv.createItemLoreVariable(
-							new String[] { "%level_points#" + NumberUtil.formatNumber(level.getPoints()),
-									"%level#" + NumberUtil.formatNumber(level.getLevel()) }),
+					new Placeholder[] {
+							new Placeholder("%level_points", NumberUtil.formatNumberByDecimal(level.getPoints())),
+							new Placeholder("%level", NumberUtil.formatNumberByDecimal(level.getLevel())) },
 					null, null), 4);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
@@ -268,7 +277,7 @@ public class Levelling {
 
 									nInv.addItem(nInv.createItem(is, configLoad
 											.getString("Menu.Levelling.Item.Material.Displayname")
-											.replace("%points", NumberUtil.formatNumber(pointsEarned))
+											.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
 											.replace("%material",
 													WordUtils.capitalize(material.toLowerCase().replace("_", " ")
 															.replace("item", "").replace("block", ""))),

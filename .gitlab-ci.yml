@@ -1,6 +1,5 @@
 stages:
 - build
-- pages
 
 build:
   stage: build
@@ -11,12 +10,3 @@ build:
     paths:
     - "/builds/Songoda/Skyblock/target/*.jar"
 #    - "/builds/Songoda/EpicAnchors/Read_this_before_your_first_use.txt"
-pages:
-  stage: pages
-  image: maven:3.3.9-jdk-8
-  script: "mvn install"
-  artifacts:
-    paths:
-    - public
-  only:
-  - master

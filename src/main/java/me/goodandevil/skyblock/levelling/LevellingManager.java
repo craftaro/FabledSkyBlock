@@ -1,14 +1,12 @@
 package me.goodandevil.skyblock.levelling;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -22,9 +20,8 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.event.island.IslandLevelChangeEvent;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.Location;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
+import me.goodandevil.skyblock.island.IslandLevel;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -35,40 +32,11 @@ public class LevellingManager {
 	private final SkyBlock skyblock;
 
 	private List<Material> materialStorage = new ArrayList<>();
-	private Map<UUID, Levelling> islandLevellingStorage = new HashMap<>();
 
 	public LevellingManager(SkyBlock skyblock) {
 		this.skyblock = skyblock;
 
-		new LevellingTask(this, skyblock).runTaskTimerAsynchronously(skyblock, 0L, 20L);
-
 		registerMaterials();
-
-		IslandManager islandManager = skyblock.getIslandManager();
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-
-		for (Player all : Bukkit.getOnlinePlayers()) {
-			if (islandManager.hasIsland(all)) {
-				Island island = islandManager.getIsland(playerDataManager.getPlayerData(all).getOwner());
-
-				if (!hasLevelling(island.getOwnerUUID())) {
-					loadLevelling(island.getOwnerUUID());
-				}
-			}
-		}
-	}
-
-	public void onDisable() {
-		IslandManager islandManager = skyblock.getIslandManager();
-
-		for (UUID islandList : islandManager.getIslands().keySet()) {
-			Island island = islandManager.getIslands().get(islandList);
-
-			if (hasLevelling(island.getOwnerUUID())) {
-				saveLevelling(island.getOwnerUUID());
-				unloadLevelling(island.getOwnerUUID());
-			}
-		}
 	}
 
 	public void calculatePoints(Player player, Island island) {
@@ -95,7 +63,7 @@ public class LevellingManager {
 
 					int worldMaxHeight = 0;
 
-					for (Location.World worldList : Location.World.values()) {
+					for (IslandWorld worldList : IslandWorld.values()) {
 						org.bukkit.World world = worldManager.getWorld(worldList);
 
 						if (worldMaxHeight == 0 || worldMaxHeight > world.getMaxHeight()) {
@@ -178,7 +146,7 @@ public class LevellingManager {
 							skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						}
 					} else {
-						me.goodandevil.skyblock.island.Level level = island.getLevel();
+						IslandLevel level = island.getLevel();
 						level.setLastCalculatedPoints(level.getPoints());
 						level.setLastCalculatedLevel(level.getLevel());
 						level.setMaterials(materials);
@@ -215,6 +183,10 @@ public class LevellingManager {
 		}
 	}
 
+	public void unregisterMaterials() {
+		materialStorage.clear();
+	}
+
 	public void addMaterial(Materials materials, int points) {
 		materialStorage.add(new Material(materials, points));
 	}
@@ -233,86 +205,17 @@ public class LevellingManager {
 		return false;
 	}
 
-	public List<Material> getMaterials() {
-		return materialStorage;
-	}
-
-	public void createLevelling(UUID playerUUID) {
-		Config config = skyblock.getFileManager().getConfig(new File(
-				new File(skyblock.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
-		File configFile = config.getFile();
-		FileConfiguration configLoad = config.getFileConfiguration();
-
-		configLoad.set("Levelling.Cooldown",
-				skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-						.getFileConfiguration().getInt("Island.Levelling.Cooldown"));
-
-		try {
-			configLoad.save(configFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void removeLevelling(UUID playerUUID) {
-		Config config = skyblock.getFileManager().getConfig(new File(
-				new File(skyblock.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
-		File configFile = config.getFile();
-		FileConfiguration configLoad = config.getFileConfiguration();
-
-		configLoad.set("Levelling.Cooldown", null);
-
-		try {
-			configLoad.save(configFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void saveLevelling(UUID playerUUID) {
-		if (hasLevelling(playerUUID)) {
-			Config config = skyblock.getFileManager().getConfig(new File(
-					new File(skyblock.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
-			File configFile = config.getFile();
-			FileConfiguration configLoad = config.getFileConfiguration();
-
-			configLoad.set("Levelling.Cooldown", getLevelling(playerUUID).getTime());
-
-			try {
-				configLoad.save(configFile);
-			} catch (IOException e) {
-				e.printStackTrace();
+	public Material getMaterial(Materials materials) {
+		for (Material materialList : materialStorage) {
+			if (materialList.getMaterials().name().equals(materials.name())) {
+				return materialList;
 			}
-		}
-	}
-
-	public void loadLevelling(UUID playerUUID) {
-		if (!hasLevelling(playerUUID)) {
-			Config config = skyblock.getFileManager().getConfig(new File(
-					new File(skyblock.getDataFolder().toString() + "/island-data"), playerUUID.toString() + ".yml"));
-			FileConfiguration configLoad = config.getFileConfiguration();
-
-			if (configLoad.getString("Levelling.Cooldown") != null) {
-				islandLevellingStorage.put(playerUUID, new Levelling(configLoad.getInt("Levelling.Cooldown")));
-			}
-		}
-	}
-
-	public void unloadLevelling(UUID playerUUID) {
-		if (hasLevelling(playerUUID)) {
-			islandLevellingStorage.remove(playerUUID);
-		}
-	}
-
-	public Levelling getLevelling(UUID playerUUID) {
-		if (hasLevelling(playerUUID)) {
-			return islandLevellingStorage.get(playerUUID);
 		}
 
 		return null;
 	}
 
-	public boolean hasLevelling(UUID playerUUID) {
-		return islandLevellingStorage.containsKey(playerUUID);
+	public List<Material> getMaterials() {
+		return materialStorage;
 	}
 }

@@ -14,18 +14,19 @@ import org.bukkit.entity.Player;
 
 import com.google.common.base.Preconditions;
 
+import me.goodandevil.skyblock.api.SkyBlockAPI;
 import me.goodandevil.skyblock.api.ban.Ban;
-import me.goodandevil.skyblock.api.level.Level;
-import me.goodandevil.skyblock.api.setting.Setting;
 import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.api.visit.Visit;
 
 public class Island {
 
-	private final me.goodandevil.skyblock.island.Island handle;
+	private me.goodandevil.skyblock.island.Island handle;
+	private OfflinePlayer player;
 
-	public Island(me.goodandevil.skyblock.island.Island handle) {
+	public Island(me.goodandevil.skyblock.island.Island handle, OfflinePlayer player) {
 		this.handle = handle;
+		this.player = player;
 	}
 
 	/**
@@ -359,23 +360,23 @@ public class Island {
 	/**
 	 * @return Setting of an IslandRole for the Island
 	 */
-	public Setting getSetting(IslandRole role, String setting) {
+	public IslandSetting getSetting(IslandRole role, String setting) {
 		Preconditions.checkArgument(role != null, "Cannot get setting to null role");
 		Preconditions.checkArgument(setting != null, "Cannot get setting for null setting");
 
-		return new Setting(this.handle.getSetting(APIUtil.toImplementation(role), setting));
+		return new IslandSetting(this.handle.getSetting(APIUtil.toImplementation(role), setting));
 	}
 
 	/**
 	 * @return A List of Settings of an IslandRole for the Island
 	 */
-	public List<Setting> getSettings(IslandRole role) {
+	public List<IslandSetting> getSettings(IslandRole role) {
 		Preconditions.checkArgument(role != null, "Cannot get settings to null role");
-		List<Setting> settings = new ArrayList<>();
+		List<IslandSetting> settings = new ArrayList<>();
 
-		for (me.goodandevil.skyblock.island.Setting settingList : this.handle
+		for (me.goodandevil.skyblock.island.IslandSetting settingList : this.handle
 				.getSettings(APIUtil.toImplementation(role))) {
-			settings.add(new Setting(settingList));
+			settings.add(new IslandSetting(settingList));
 		}
 
 		return settings;
@@ -417,6 +418,28 @@ public class Island {
 	}
 
 	/**
+	 * Set the Structure for the Island
+	 */
+	public void setStructure(String structure) {
+		Preconditions.checkArgument(structure != null, "Cannot set structure to null structure");
+		this.handle.setStructure(structure);
+	}
+
+	/**
+	 * @return true of conditions met, false otherwise
+	 */
+	public boolean hasStructure() {
+		return this.handle.hasStructure();
+	}
+
+	/**
+	 * @return The Structure name for the Island
+	 */
+	public String getStructure() {
+		return this.handle.getStructure();
+	}
+
+	/**
 	 * @return The Visit implementation for the Island
 	 */
 	public Visit getVisit() {
@@ -433,8 +456,41 @@ public class Island {
 	/**
 	 * @return The Level implementation for the Island
 	 */
-	public Level getLevel() {
-		return new Level(this);
+	public IslandLevel getLevel() {
+		return new IslandLevel(this);
+	}
+
+	/**
+	 * @return true of conditions met, false otherwise
+	 */
+	public boolean isLoaded() {
+		return this.handle != null;
+	}
+
+	/**
+	 * Loads the Island if unloaded
+	 */
+	public void load() {
+		if (this.handle == null) {
+			this.handle = SkyBlockAPI.getImplementation().getIslandManager().loadIsland(player);
+		}
+	}
+
+	/**
+	 * Unloads the Island if loaded
+	 */
+	public void unload() {
+		if (this.handle != null) {
+			SkyBlockAPI.getImplementation().getIslandManager().unloadIsland(getIsland(), null);
+			this.handle = null;
+		}
+	}
+
+	/**
+	 * Sets the player of the Island
+	 */
+	public void setPlayer(OfflinePlayer player) {
+		this.player = player;
 	}
 
 	/**

@@ -408,7 +408,14 @@ public enum Materials {
 			}
 			return xmat;
 		}
+	}
 
+	public static Materials getMaterials(Material material, byte data) {
+		if (NMSUtil.getVersionNumber() > 12) {
+			return fromString(material.name());
+		} else {
+			return requestMaterials(material.name(), data);
+		}
 	}
 
 	public boolean isDamageable(Materials type) {

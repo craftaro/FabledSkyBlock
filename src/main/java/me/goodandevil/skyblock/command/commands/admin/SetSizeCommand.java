@@ -23,7 +23,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class SetSizeCommand extends SubCommand {
@@ -82,7 +82,7 @@ public class SetSizeCommand extends SubCommand {
 
 					if (islandOwnerUUID == null) {
 						messageManager.sendMessage(sender,
-								configLoad.getString("Command.Island.Admin.SetSize.Island.Message"));
+								configLoad.getString("Command.Island.Admin.SetSize.Island.Owner.Message"));
 						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else if (size < 50) {
 						messageManager.sendMessage(sender,
@@ -94,7 +94,8 @@ public class SetSizeCommand extends SubCommand {
 						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						if (islandManager.containsIsland(islandOwnerUUID)) {
-							Island island = islandManager.getIsland(islandOwnerUUID);
+							Island island = islandManager
+									.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 							island.setSize(size);
 
 							if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
@@ -103,13 +104,23 @@ public class SetSizeCommand extends SubCommand {
 								islandManager.updateBorder(island);
 							}
 						} else {
-							File configFile = new File(skyblock.getDataFolder().toString() + "/island-data",
+							File islandDataFile = new File(skyblock.getDataFolder().toString() + "/island-data",
 									islandOwnerUUID.toString() + ".yml");
-							FileConfiguration islandConfigLoad = YamlConfiguration.loadConfiguration(configFile);
-							islandConfigLoad.set("Size", size);
+
+							if (!fileManager.isFileExist(islandDataFile)) {
+								messageManager.sendMessage(sender,
+										configLoad.getString("Command.Island.Admin.SetSize.Island.Data.Message"));
+								soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								return;
+							}
+
+							FileConfiguration islandDataConfigLoad = YamlConfiguration
+									.loadConfiguration(islandDataFile);
+							islandDataConfigLoad.set("Size", size);
 
 							try {
-								islandConfigLoad.save(configFile);
+								islandDataConfigLoad.save(islandDataFile);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
@@ -118,7 +129,7 @@ public class SetSizeCommand extends SubCommand {
 						messageManager.sendMessage(sender,
 								configLoad.getString("Command.Island.Admin.SetSize.Set.Message")
 										.replace("%player", targetPlayerName)
-										.replace("%size", NumberUtil.formatNumber(size)));
+										.replace("%size", NumberUtil.formatNumberByDecimal(size)));
 						soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 					}
 				} else {

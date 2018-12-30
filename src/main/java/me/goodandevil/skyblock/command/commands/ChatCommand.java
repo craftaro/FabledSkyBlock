@@ -41,36 +41,35 @@ public class ChatCommand extends SubCommand {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (islandManager.hasIsland(player)) {
-			PlayerData playerData = playerDataManager.getPlayerData(player);
-			Island island = islandManager.getIsland(playerData.getOwner());
+		Island island = islandManager.getIsland(player);
 
-			if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()) == 0) {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Team.Message"));
-				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-			} else if ((islandManager.getMembersOnline(island).size() - 1) <= 0) {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Offline.Message"));
-				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-			} else {
-				if (playerData.isChat()) {
-					Bukkit.getServer().getPluginManager()
-							.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), false));
-					playerData.setChat(false);
-
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Untoggled.Message"));
-					soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
-				} else {
-					Bukkit.getServer().getPluginManager()
-							.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), true));
-					playerData.setChat(true);
-
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Toggled.Message"));
-					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
-				}
-			}
-		} else {
+		if (island == null) {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()) == 0) {
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Team.Message"));
+			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else if ((islandManager.getMembersOnline(island).size() - 1) <= 0) {
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Offline.Message"));
+			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else {
+			PlayerData playerData = playerDataManager.getPlayerData(player);
+
+			if (playerData.isChat()) {
+				Bukkit.getServer().getPluginManager()
+						.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), false));
+				playerData.setChat(false);
+
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Untoggled.Message"));
+				soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+			} else {
+				Bukkit.getServer().getPluginManager()
+						.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), true));
+				playerData.setChat(true);
+
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Toggled.Message"));
+				soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+			}
 		}
 	}
 

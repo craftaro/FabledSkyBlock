@@ -1,7 +1,6 @@
 package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -17,9 +16,11 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
+import me.goodandevil.skyblock.island.IslandWorld;
+import me.goodandevil.skyblock.world.WorldManager;
 
 public class Respawn implements Listener {
 
@@ -33,60 +34,50 @@ public class Respawn implements Listener {
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
 
-		for (me.goodandevil.skyblock.island.Location.World worldList : me.goodandevil.skyblock.island.Location.World
-				.values()) {
-			if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(worldList).getName())) {
-				FileManager fileManager = skyblock.getFileManager();
-				Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-				FileConfiguration configLoad = config.getFileConfiguration();
+		IslandManager islandManager = skyblock.getIslandManager();
+		WorldManager worldManager = skyblock.getWorldManager();
+		FileManager fileManager = skyblock.getFileManager();
 
-				IslandManager islandManager = skyblock.getIslandManager();
+		if (worldManager.isIslandWorld(player.getWorld())) {
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+			FileConfiguration configLoad = config.getFileConfiguration();
 
-				if (configLoad.getBoolean("Island.Death.Respawn.Island")) {
-					for (UUID islandList : islandManager.getIslands().keySet()) {
-						Island island = islandManager.getIslands().get(islandList);
+			if (configLoad.getBoolean("Island.Death.Respawn.Island")) {
+				Island island = islandManager.getIslandAtLocation(player.getLocation());
 
-						if (LocationUtil.isLocationAtLocationRadius(player.getLocation(),
-								island.getLocation(worldList,
-										me.goodandevil.skyblock.island.Location.Environment.Island),
-								island.getRadius())) {
-							Location playerLocation = player.getLocation().clone(), islandLocation;
+				if (island != null) {
+					Location playerLocation = player.getLocation().clone(), islandLocation;
+					IslandWorld world = worldManager.getIslandWorld(player.getWorld());
 
-							if (island.hasRole(IslandRole.Member, player.getUniqueId())
-									|| island.hasRole(IslandRole.Operator, player.getUniqueId())
-									|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-								islandLocation = island.getLocation(worldList,
-										me.goodandevil.skyblock.island.Location.Environment.Main);
-							} else {
-								islandLocation = island.getLocation(worldList,
-										me.goodandevil.skyblock.island.Location.Environment.Visitor);
-							}
-
-							Bukkit.getServer().getPluginManager()
-									.callEvent(new PlayerTeleportEvent(player, playerLocation, islandLocation));
-							event.setRespawnLocation(islandLocation);
-
-							islandManager.giveUpgrades(player, island);
-
-							return;
-						}
+					if (island.hasRole(IslandRole.Member, player.getUniqueId())
+							|| island.hasRole(IslandRole.Operator, player.getUniqueId())
+							|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+						islandLocation = island.getLocation(world, IslandEnvironment.Main);
+					} else {
+						islandLocation = island.getLocation(world, IslandEnvironment.Visitor);
 					}
-				}
 
-				config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
-
-				if (config.getFileConfiguration().getString("Location.Spawn") == null) {
-					Bukkit.getServer().getLogger().log(Level.WARNING,
-							"SkyBlock | Error: A spawn point hasn't been set.");
-				} else {
-					Location playerLocation = player.getLocation().clone(),
-							islandLocation = fileManager.getLocation(config, "Location.Spawn", true);
 					Bukkit.getServer().getPluginManager()
 							.callEvent(new PlayerTeleportEvent(player, playerLocation, islandLocation));
 					event.setRespawnLocation(islandLocation);
-				}
 
-				break;
+					islandManager.giveUpgrades(player, island);
+					islandManager.giveFly(player, island);
+
+					return;
+				}
+			}
+
+			config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
+
+			if (config.getFileConfiguration().getString("Location.Spawn") == null) {
+				Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");
+			} else {
+				Location playerLocation = player.getLocation().clone(),
+						spawnLocation = fileManager.getLocation(config, "Location.Spawn", true);
+				Bukkit.getServer().getPluginManager()
+						.callEvent(new PlayerTeleportEvent(player, playerLocation, spawnLocation));
+				event.setRespawnLocation(spawnLocation);
 			}
 		}
 	}

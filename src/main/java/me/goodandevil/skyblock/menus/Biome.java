@@ -14,11 +14,17 @@ import org.bukkit.inventory.ItemStack;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.cooldown.Cooldown;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownPlayer;
+import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Location;
+import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -29,7 +35,6 @@ import me.goodandevil.skyblock.utils.version.Biomes;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Biome {
 
@@ -47,6 +52,7 @@ public class Biome {
 		SkyBlock skyblock = SkyBlock.getInstance();
 
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		BiomeManager biomeManager = skyblock.getBiomeManager();
@@ -59,25 +65,21 @@ public class Biome {
 			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Island island = null;
+					Island island = islandManager.getIsland(player);
 
-					if (playerDataManager.hasPlayerData(player) && islandManager.hasIsland(player)) {
-						island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-						if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-								&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
-								|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-							messageManager.sendMessage(player,
-									config.getFileConfiguration().getString("Command.Island.Biome.Permission.Message"));
-							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-							player.closeInventory();
-
-							return;
-						}
-					} else {
+					if (island == null) {
 						messageManager.sendMessage(player,
 								config.getFileConfiguration().getString("Command.Island.Biome.Owner.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						player.closeInventory();
+
+						return;
+					} else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
+							&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
+							|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+						messageManager.sendMessage(player,
+								config.getFileConfiguration().getString("Command.Island.Biome.Permission.Message"));
+						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 
 						return;
@@ -107,17 +109,19 @@ public class Biome {
 							event.setWillClose(false);
 							event.setWillDestroy(false);
 						} else {
-							if (biomeManager.hasPlayer(player)) {
-								me.goodandevil.skyblock.biome.Biome biome = biomeManager.getPlayer(player);
+							if (cooldownManager.hasPlayer(CooldownType.Biome, player)) {
+								CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome,
+										player);
+								Cooldown cooldown = cooldownPlayer.getCooldown();
 
-								if (biome.getTime() < 60) {
+								if (cooldown.getTime() < 60) {
 									messageManager.sendMessage(player,
 											config.getFileConfiguration().getString("Island.Biome.Cooldown.Message")
 													.replace("%time",
-															biome.getTime() + " " + config.getFileConfiguration()
+															cooldown.getTime() + " " + config.getFileConfiguration()
 																	.getString("Island.Biome.Cooldown.Word.Second")));
 								} else {
-									long[] durationTime = NumberUtil.getDuration(biome.getTime());
+									long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
 									messageManager.sendMessage(player,
 											config.getFileConfiguration().getString("Island.Biome.Cooldown.Message")
 													.replace("%time", durationTime[2] + " "
@@ -154,22 +158,20 @@ public class Biome {
 								selectedBiomeType = Biomes.ROOFED_FOREST.bukkitBiome();
 							}
 
-							biomeManager.createPlayer(player,
-									skyblock.getFileManager()
-											.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-											.getFileConfiguration().getInt("Island.Biome.Cooldown"));
-							biomeManager.setBiome(island, selectedBiomeType);
+							if (!player.hasPermission("skyblock.bypass.cooldown")
+									&& !player.hasPermission("skyblock.bypass.*")
+									&& !player.hasPermission("skyblock.*")) {
+								cooldownManager.createPlayer(CooldownType.Biome, player);
+								biomeManager.setBiome(island, selectedBiomeType);
+							}
 
 							island.setBiome(selectedBiomeType);
 							island.save();
 
-							soundManager.playSound(
-									island.getLocation(Location.World.Normal, Location.Environment.Island),
+							soundManager.playSound(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island),
 									Sounds.SPLASH.bukkitSound(), 1.0F, 1.0F);
 
-							if (!LocationUtil.isLocationAtLocationRadius(player.getLocation(),
-									island.getLocation(Location.World.Normal, Location.Environment.Island),
-									island.getRadius())) {
+							if (!islandManager.isPlayerAtIsland(island, player, IslandWorld.Normal)) {
 								soundManager.playSound(player, Sounds.SPLASH.bukkitSound(), 1.0F, 1.0F);
 							}
 
@@ -184,7 +186,7 @@ public class Biome {
 				}
 			});
 
-			Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
+			Island island = islandManager.getIsland(player);
 			String islandBiomeName = island.getBiomeName();
 
 			int NMSVersion = NMSUtil.getVersionNumber();
@@ -193,7 +195,7 @@ public class Biome {
 					ChatColor.translateAlternateColorCodes('&',
 							configLoad.getString("Menu.Biome.Item.Info.Displayname")),
 					configLoad.getStringList("Menu.Biome.Item.Info.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%biome_type#" + islandBiomeName }), null, null), 0);
+					new Placeholder[] { new Placeholder("%biome_type", islandBiomeName) }, null, null), 0);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							ChatColor.translateAlternateColorCodes('&',

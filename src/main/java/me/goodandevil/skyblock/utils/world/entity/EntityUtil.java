@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Art;
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,6 +21,7 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.util.EulerAngle;
 
 import me.goodandevil.skyblock.utils.item.ItemStackUtil;
+import me.goodandevil.skyblock.utils.item.MaterialUtil;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
 
@@ -134,12 +136,22 @@ public final class EntityUtil {
 			} else if (entity instanceof Creeper) {
 				entityData.setPowered(((Creeper) entity).isPowered());
 			} else if (entity instanceof Enderman) {
-				MaterialData materialData = ((Enderman) entity).getCarriedMaterial();
+				Enderman enderman = ((Enderman) entity);
 
-				if (materialData == null) {
-					entityData.setCarryBlock("");
+				if (NMSVersion > 12) {
+					if (enderman.getCarriedBlock() == null) {
+						entityData.setCarryBlock("");
+					} else {
+						entityData.setCarryBlock(enderman.getCarriedBlock().getMaterial().name() + ":0");
+					}
 				} else {
-					entityData.setCarryBlock(materialData.getItemType().toString() + ":" + materialData.getData());
+					MaterialData materialData = enderman.getCarriedMaterial();
+
+					if (materialData == null) {
+						entityData.setCarryBlock("");
+					} else {
+						entityData.setCarryBlock(materialData.getItemType().toString() + ":" + materialData.getData());
+					}
 				}
 			} else if (entity instanceof Horse) {
 				Horse horse = ((Horse) entity);
@@ -371,10 +383,20 @@ public final class EntityUtil {
 			} else if (entity instanceof Creeper) {
 				((Creeper) entity).setPowered(entityData.isPowered());
 			} else if (entity instanceof Enderman) {
-				if (entityData.getCarryBlock().length() == 0) {
-					String[] material = entityData.getCarryBlock().split(":");
-					((Enderman) entity).setCarriedMaterial(
-							new MaterialData(Material.valueOf(material[0].toUpperCase()), Byte.parseByte(material[1])));
+				if (entityData.getCarryBlock() != null && !entityData.getCarryBlock().isEmpty()) {
+					String[] materialData = entityData.getCarryBlock().split(":");
+
+					byte data = Byte.parseByte(materialData[1]);
+					Material material = MaterialUtil.getMaterial(NMSVersion, entityData.getVersion(),
+							materialData[0].toUpperCase(), data);
+
+					if (material != null) {
+						if (NMSVersion > 12) {
+							((Enderman) entity).setCarriedBlock(Bukkit.getServer().createBlockData(material));
+						} else {
+							((Enderman) entity).setCarriedMaterial(new MaterialData(material, data));
+						}
+					}
 				}
 			} else if (entity instanceof Horse) {
 				Horse horse = ((Horse) entity);

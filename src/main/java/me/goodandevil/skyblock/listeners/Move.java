@@ -1,8 +1,8 @@
 package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
-import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,8 +16,10 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -25,6 +27,7 @@ import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
+import me.goodandevil.skyblock.world.WorldManager;
 
 public class Move implements Listener {
 
@@ -42,198 +45,181 @@ public class Move implements Listener {
 		Location from = event.getFrom();
 		Location to = event.getTo();
 
-		if (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()) {
-			String netherWorldName = skyblock.getWorldManager()
-					.getWorld(me.goodandevil.skyblock.island.Location.World.Nether).getName();
+		if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
+			return;
+		}
 
-			if (player.getWorld().getName().equals(
-					skyblock.getWorldManager().getWorld(me.goodandevil.skyblock.island.Location.World.Normal).getName())
-					|| player.getWorld().getName().equals(netherWorldName)) {
-				PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-				MessageManager messageManager = skyblock.getMessageManager();
-				IslandManager islandManager = skyblock.getIslandManager();
-				SoundManager soundManager = skyblock.getSoundManager();
-				FileManager fileManager = skyblock.getFileManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		WorldManager worldManager = skyblock.getWorldManager();
+		FileManager fileManager = skyblock.getFileManager();
 
-				if (player.getWorld().getName().equals(netherWorldName)) {
-					if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-							.getBoolean("Island.World.Nether.Enable")) {
-						messageManager.sendMessage(player,
-								fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-										.getFileConfiguration().getString("Island.World.Nether.Message"));
+		if (worldManager.isIslandWorld(player.getWorld())) {
+			IslandWorld world = worldManager.getIslandWorld(player.getWorld());
 
-						if (playerDataManager.hasPlayerData(player)) {
-							PlayerData playerData = playerDataManager.getPlayerData(player);
+			if (world == IslandWorld.Nether || world == IslandWorld.End) {
+				if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+						.getBoolean("Island.World." + world.name() + ".Enable")) {
+					Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+					FileConfiguration configLoad = config.getFileConfiguration();
 
-							if (playerData.getIsland() != null) {
-								Island island = islandManager.getIsland(playerData.getIsland());
+					messageManager.sendMessage(player, configLoad.getString("Island.World.Message")
+							.replace(configLoad.getString("Island.World.Word." + world.name()), world.name()));
 
-								if (island != null) {
-									if (island.getVisit().isVisitor(player.getUniqueId())) {
-										player.teleport(
-												island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal,
-														me.goodandevil.skyblock.island.Location.Environment.Visitor));
-									} else {
-										player.teleport(
-												island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal,
-														me.goodandevil.skyblock.island.Location.Environment.Main));
-									}
+					if (playerDataManager.hasPlayerData(player)) {
+						PlayerData playerData = playerDataManager.getPlayerData(player);
 
-									soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+						if (playerData.getIsland() != null) {
+							Island island = islandManager
+									.getIsland(Bukkit.getServer().getOfflinePlayer(playerData.getIsland()));
 
-									return;
-								}
-							}
-						}
-
-						LocationUtil.teleportPlayerToSpawn(player);
-						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-					}
-				}
-
-				if (playerDataManager.hasPlayerData(player)) {
-					PlayerData playerData = playerDataManager.getPlayerData(player);
-					UUID islandOwnerUUID = playerData.getIsland();
-
-					if (islandOwnerUUID != null) {
-						Island island = islandManager.getIsland(islandOwnerUUID);
-
-						if (island != null) {
-							me.goodandevil.skyblock.island.Location.World world = null;
-
-							if (LocationUtil.isLocationAtLocationRadius(to,
-									island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal,
-											me.goodandevil.skyblock.island.Location.Environment.Island),
-									island.getRadius())) {
-								world = me.goodandevil.skyblock.island.Location.World.Normal;
-							} else if (LocationUtil.isLocationAtLocationRadius(to,
-									island.getLocation(me.goodandevil.skyblock.island.Location.World.Nether,
-											me.goodandevil.skyblock.island.Location.Environment.Island),
-									island.getRadius())) {
-								world = me.goodandevil.skyblock.island.Location.World.Nether;
-							}
-
-							if (world != null) {
-								Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-								FileConfiguration configLoad = config.getFileConfiguration();
-
-								boolean keepItemsOnDeath;
-
-								if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
-									if (island.getSetting(IslandRole.Owner, "KeepItemsOnDeath").getStatus()) {
-										keepItemsOnDeath = true;
-									} else {
-										keepItemsOnDeath = false;
-									}
+							if (island != null) {
+								if (island.hasRole(IslandRole.Member, player.getUniqueId())
+										|| island.hasRole(IslandRole.Operator, player.getUniqueId())
+										|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+									player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
 								} else {
-									keepItemsOnDeath = true;
+									player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
 								}
 
-								if (configLoad.getBoolean("Island.World." + world.name() + ".Liquid.Enable")) {
-									if (to.getY() <= configLoad
-											.getInt("Island.World." + world.name() + ".Liquid.Height")) {
-										if (keepItemsOnDeath) {
-											player.setFallDistance(0.0F);
+								player.setFallDistance(0.0F);
+								soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 
-											if (island.getVisit().isVisitor(player.getUniqueId())) {
-												player.teleport(island.getLocation(
-														me.goodandevil.skyblock.island.Location.World.Normal,
-														me.goodandevil.skyblock.island.Location.Environment.Visitor));
-											} else {
-												player.teleport(island.getLocation(
-														me.goodandevil.skyblock.island.Location.World.Normal,
-														me.goodandevil.skyblock.island.Location.Environment.Main));
-											}
-
-											soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F,
-													1.0F);
-										}
-
-										return;
-									}
-								}
-
-								if (configLoad.getBoolean("Island.Void.Teleport.Enable")) {
-									if (to.getY() <= configLoad.getInt("Island.Void.Teleport.Offset")) {
-										if (!keepItemsOnDeath) {
-											player.getInventory().clear();
-											player.setLevel(0);
-											player.setExp(0.0F);
-
-											if (NMSUtil.getVersionNumber() > 8) {
-												player.setHealth(
-														player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-											} else {
-												player.setHealth(player.getMaxHealth());
-											}
-
-											player.setFoodLevel(20);
-
-											for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-												player.removePotionEffect(potionEffect.getType());
-											}
-										}
-
-										player.setFallDistance(0.0F);
-
-										if (island.getVisit().isVisitor(player.getUniqueId())) {
-											player.teleport(island.getLocation(
-													me.goodandevil.skyblock.island.Location.World.Normal,
-													me.goodandevil.skyblock.island.Location.Environment.Visitor));
-										} else {
-											player.teleport(island.getLocation(
-													me.goodandevil.skyblock.island.Location.World.Normal,
-													me.goodandevil.skyblock.island.Location.Environment.Main));
-										}
-
-										soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F,
-												1.0F);
-									}
-								}
-							} else {
-								if (LocationUtil.isLocationAtLocationRadius(to,
-										island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal,
-												me.goodandevil.skyblock.island.Location.Environment.Island),
-										island.getRadius() + 2)
-										|| LocationUtil.isLocationAtLocationRadius(to,
-												island.getLocation(me.goodandevil.skyblock.island.Location.World.Nether,
-														me.goodandevil.skyblock.island.Location.Environment.Island),
-												island.getRadius() + 2)) {
-									player.teleport(player.getLocation()
-											.add(from.toVector().subtract(to.toVector()).normalize().multiply(2.0D)));
-									soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-								} else {
-									if (player.getWorld().getName()
-											.equals(skyblock.getWorldManager()
-													.getWorld(me.goodandevil.skyblock.island.Location.World.Normal)
-													.getName())) {
-										player.teleport(
-												island.getLocation(me.goodandevil.skyblock.island.Location.World.Normal,
-														me.goodandevil.skyblock.island.Location.Environment.Main));
-									} else {
-										player.teleport(
-												island.getLocation(me.goodandevil.skyblock.island.Location.World.Nether,
-														me.goodandevil.skyblock.island.Location.Environment.Main));
-									}
-
-									messageManager.sendMessage(player, skyblock.getFileManager()
-											.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-											.getFileConfiguration().getString("Island.WorldBorder.Outside.Message"));
-									soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-								}
+								return;
 							}
-
-							return;
 						}
 					}
 
 					LocationUtil.teleportPlayerToSpawn(player);
-
-					messageManager.sendMessage(player,
-							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-									.getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
 					soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 				}
+			}
+
+			if (playerDataManager.hasPlayerData(player)) {
+				PlayerData playerData = playerDataManager.getPlayerData(player);
+
+				if (playerData.getIsland() != null) {
+					Island island = islandManager
+							.getIsland(Bukkit.getServer().getOfflinePlayer(playerData.getIsland()));
+
+					if (island != null) {
+						if (islandManager.isLocationAtIsland(island, to)) {
+							Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+							FileConfiguration configLoad = config.getFileConfiguration();
+
+							boolean keepItemsOnDeath;
+
+							if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
+								if (island.getSetting(IslandRole.Owner, "KeepItemsOnDeath").getStatus()) {
+									keepItemsOnDeath = true;
+								} else {
+									keepItemsOnDeath = false;
+								}
+							} else if (configLoad.getBoolean("Island.KeepItemsOnDeath.Enable")) {
+								keepItemsOnDeath = true;
+							} else {
+								keepItemsOnDeath = false;
+							}
+
+							if (configLoad.getBoolean("Island.World." + world.name() + ".Liquid.Enable")) {
+								if (to.getY() <= configLoad.getInt("Island.World." + world.name() + ".Liquid.Height")) {
+									if (keepItemsOnDeath) {
+										player.setFallDistance(0.0F);
+
+										if (island.hasRole(IslandRole.Member, player.getUniqueId())
+												|| island.hasRole(IslandRole.Operator, player.getUniqueId())
+												|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+											player.teleport(
+													island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+										} else {
+											player.teleport(
+													island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+										}
+
+										player.setFallDistance(0.0F);
+										soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F,
+												1.0F);
+									}
+
+									return;
+								}
+							}
+
+							if (configLoad.getBoolean("Island.Void.Teleport.Enable")) {
+								if (to.getY() <= configLoad.getInt("Island.Void.Teleport.Offset")) {
+									if (!keepItemsOnDeath) {
+										player.getInventory().clear();
+										player.setLevel(0);
+										player.setExp(0.0F);
+
+										if (NMSUtil.getVersionNumber() > 8) {
+											player.setHealth(
+													player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+										} else {
+											player.setHealth(player.getMaxHealth());
+										}
+
+										player.setFoodLevel(20);
+
+										for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+											player.removePotionEffect(potionEffect.getType());
+										}
+									}
+
+									player.setFallDistance(0.0F);
+
+									if (configLoad.getBoolean("Island.Void.Teleport.Island")) {
+										if (island.hasRole(IslandRole.Member, player.getUniqueId())
+												|| island.hasRole(IslandRole.Operator, player.getUniqueId())
+												|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+											player.teleport(
+													island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+										} else {
+											player.teleport(
+													island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+										}
+									} else {
+										LocationUtil.teleportPlayerToSpawn(player);
+									}
+
+									player.setFallDistance(0.0F);
+									soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+								}
+							}
+						} else {
+							if (LocationUtil.isLocationAtLocationRadius(to,
+									island.getLocation(world, IslandEnvironment.Island), island.getRadius() + 2)) {
+								player.teleport(player.getLocation()
+										.add(from.toVector().subtract(to.toVector()).normalize().multiply(2.0D)));
+								player.setFallDistance(0.0F);
+								soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+							} else {
+								if (island.getVisit().isVisitor(player.getUniqueId())) {
+									player.teleport(island.getLocation(world, IslandEnvironment.Visitor));
+								} else {
+									player.teleport(island.getLocation(world, IslandEnvironment.Main));
+								}
+
+								player.setFallDistance(0.0F);
+								messageManager.sendMessage(player, skyblock.getFileManager()
+										.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+										.getFileConfiguration().getString("Island.WorldBorder.Outside.Message"));
+								soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+							}
+						}
+
+						return;
+					}
+				}
+
+				LocationUtil.teleportPlayerToSpawn(player);
+
+				messageManager.sendMessage(player,
+						skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+								.getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
+				soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 			}
 		}
 	}

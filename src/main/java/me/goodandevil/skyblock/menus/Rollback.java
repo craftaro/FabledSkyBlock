@@ -105,8 +105,6 @@ public class Rollback implements Listener {
 		player.openInventory(inv);
 	}
 
-	private Island island = null;
-
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();
@@ -126,20 +124,18 @@ public class Rollback implements Listener {
 					.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Rollback.Title")))) {
 				event.setCancelled(true);
 
-				if (islandManager.hasIsland(player)) {
-					island = islandManager.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+				Island island = islandManager.getIsland(player);
 
-					if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-						messageManager.sendMessage(player,
-								config.getFileConfiguration().getString("Command.Island.Rollback.Role.Message"));
-						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-						player.closeInventory();
-
-						return;
-					}
-				} else {
+				if (island == null) {
 					messageManager.sendMessage(player,
 							config.getFileConfiguration().getString("Command.Island.Rollback.Owner.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					player.closeInventory();
+
+					return;
+				} else if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+					messageManager.sendMessage(player,
+							config.getFileConfiguration().getString("Command.Island.Rollback.Role.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					player.closeInventory();
 

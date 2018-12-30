@@ -11,6 +11,7 @@ import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -35,22 +36,19 @@ public class BiomeCommand extends SubCommand {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (islandManager.hasIsland(player)) {
-			me.goodandevil.skyblock.island.Island island = islandManager
-					.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+		Island island = islandManager.getIsland(player);
 
-			if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-					&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
-					|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-				me.goodandevil.skyblock.menus.Biome.getInstance().open(player);
-				soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
-			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Biome.Permission.Message"));
-				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-			}
-		} else {
+		if (island == null) {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Biome.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
+				&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
+				|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+			me.goodandevil.skyblock.menus.Biome.getInstance().open(player);
+			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+		} else {
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Biome.Permission.Message"));
+			soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 

@@ -19,15 +19,16 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.AnvilGUI;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
@@ -61,22 +62,18 @@ public class Coop {
 				public void onClick(ClickEvent event) {
 					if (playerDataManager.hasPlayerData(player)) {
 						PlayerData playerData = playerDataManager.getPlayerData(player);
-						Island island = null;
+						Island island = islandManager.getIsland(player);
 
-						if (islandManager.hasIsland(player)) {
-							island = islandManager.getIsland(playerData.getOwner());
-
-							if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Coop.Disabled.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-								return;
-							}
-						} else {
+						if (island == null) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Coop.Owner.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							return;
+						} else if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+								.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Coop.Disabled.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 							return;
@@ -185,7 +182,7 @@ public class Coop {
 			});
 
 			PlayerData playerData = playerDataManager.getPlayerData(player);
-			Island island = islandManager.getIsland(playerData.getOwner());
+			Island island = islandManager.getIsland(player);
 
 			Set<UUID> coopPlayers = island.getCoopPlayers();
 
@@ -193,12 +190,10 @@ public class Coop {
 
 			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 					configLoad.getString("Menu.Coop.Item.Exit.Displayname"), null, null, null, null), 0, 8);
-			nInv.addItem(
-					nInv.createItem(new ItemStack(Material.PAINTING),
-							configLoad.getString("Menu.Coop.Item.Information.Displayname"),
-							configLoad.getStringList("Menu.Coop.Item.Information.Lore"),
-							nInv.createItemLoreVariable(new String[] { "%coops#" + coopPlayers.size() }), null, null),
-					4);
+			nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
+					configLoad.getString("Menu.Coop.Item.Information.Displayname"),
+					configLoad.getStringList("Menu.Coop.Item.Information.Lore"),
+					new Placeholder[] { new Placeholder("%coops", "" + coopPlayers.size()) }, null, null), 4);
 			nInv.addItem(
 					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							configLoad.getString("Menu.Coop.Item.Barrier.Displayname"), null, null, null, null),

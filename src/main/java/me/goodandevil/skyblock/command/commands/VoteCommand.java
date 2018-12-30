@@ -21,7 +21,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.visit.VisitManager;
 
@@ -79,10 +79,10 @@ public class VoteCommand extends SubCommand {
 
 				if (visit.isOpen()) {
 					if (!islandManager.containsIsland(islandOwnerUUID)) {
-						islandManager.loadIsland(islandOwnerUUID);
+						islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 					}
 
-					Island island = islandManager.getIsland(islandOwnerUUID);
+					Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 
 					if (island.hasRole(IslandRole.Member, player.getUniqueId())
 							|| island.hasRole(IslandRole.Operator, player.getUniqueId())

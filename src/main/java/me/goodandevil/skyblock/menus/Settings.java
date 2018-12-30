@@ -21,8 +21,9 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandMessage;
 import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.island.Setting;
+import me.goodandevil.skyblock.island.IslandSetting;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.AnvilGUI;
@@ -55,7 +56,7 @@ public class Settings {
 		FileManager fileManager = skyblock.getFileManager();
 
 		if (playerDataManager.hasPlayerData(player)) {
-			Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
+			Island island = islandManager.getIsland(player);
 
 			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 			FileConfiguration configLoad = skyblock.getFileManager()
@@ -66,22 +67,17 @@ public class Settings {
 					@Override
 					public void onClick(ClickEvent event) {
 						if (playerDataManager.hasPlayerData(player)) {
-							Island island;
+							Island island = islandManager.getIsland(player);
 
-							if (islandManager.hasIsland(player)) {
-								island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-								if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
-										|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Command.Island.Role.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-									return;
-								}
-							} else {
+							if (island == null) {
 								messageManager.sendMessage(player,
 										configLoad.getString("Command.Island.Settings.Owner.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								return;
+							} else if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
+									|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+								messageManager.sendMessage(player, configLoad.getString("Command.Island.Role.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 								return;
@@ -270,41 +266,37 @@ public class Settings {
 					@Override
 					public void onClick(ClickEvent event) {
 						if (playerDataManager.hasPlayerData(player)) {
-							Island island;
+							Island island = islandManager.getIsland(player);
 
-							if (islandManager.hasIsland(player)) {
-								island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-								if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
-										|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Command.Island.Settings.Role.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-									return;
-								} else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
-										&& !island.getSetting(IslandRole.Operator, role.name()).getStatus()) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-									return;
-								} else if (role == IslandRole.Coop) {
-									if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-											.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
-										messageManager.sendMessage(player,
-												configLoad.getString("Command.Island.Coop.Disabled.Message"));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-										return;
-									}
-								}
-							} else {
+							if (island == null) {
 								messageManager.sendMessage(player,
 										configLoad.getString("Command.Island.Settings.Owner.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 								return;
+							} else if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
+									|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+								messageManager.sendMessage(player,
+										configLoad.getString("Command.Island.Settings.Role.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								return;
+							} else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
+									&& !island.getSetting(IslandRole.Operator, role.name()).getStatus()) {
+								messageManager.sendMessage(player,
+										configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								return;
+							} else if (role == IslandRole.Coop) {
+								if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+										.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Coop.Disabled.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+									return;
+								}
 							}
 
 							ItemStack is = event.getItem();
@@ -364,7 +356,7 @@ public class Settings {
 							} else if (is.hasItemMeta()) {
 								String roleName = getRoleName(role);
 
-								for (Setting settingList : island.getSettings(role)) {
+								for (IslandSetting settingList : island.getSettings(role)) {
 									if (is.getItemMeta().getDisplayName()
 											.equals(ChatColor.translateAlternateColorCodes('&',
 													configLoad.getString("Menu.Settings." + roleName + ".Item.Setting."
@@ -428,22 +420,20 @@ public class Settings {
 										configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
 										configLoad.getStringList(
 												"Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Open.Lore"),
-										nInv.createItemLoreVariable(
-												new String[] { "%visits#" + visit.getVisitors().size(),
-														"%votes#" + visit.getVoters().size(),
-														"%visitors#"
-																+ islandManager.getVisitorsAtIsland(island).size() }),
+										new Placeholder[] { new Placeholder("%visits", "" + visit.getVisitors().size()),
+												new Placeholder("%votes", "" + visit.getVoters().size()),
+												new Placeholder("%visitors",
+														"" + islandManager.getVisitorsAtIsland(island).size()) },
 										null, null), 4);
 							} else {
 								nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
 										configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
 										configLoad.getStringList(
 												"Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Closed.Lore"),
-										nInv.createItemLoreVariable(
-												new String[] { "%visits#" + visit.getVisitors().size(),
-														"%votes#" + visit.getVoters().size(),
-														"%visitors#"
-																+ islandManager.getVisitorsAtIsland(island).size() }),
+										new Placeholder[] { new Placeholder("%visits", "" + visit.getVisitors().size()),
+												new Placeholder("%votes", "" + visit.getVoters().size()),
+												new Placeholder("%visitors",
+														"" + islandManager.getVisitorsAtIsland(island).size()) },
 										null, null), 4);
 							}
 						} else {
@@ -452,20 +442,18 @@ public class Settings {
 										configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
 										configLoad.getStringList(
 												"Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Open.Lore"),
-										nInv.createItemLoreVariable(
-												new String[] { "%visits#" + visit.getVisitors().size(),
-														"%visitors#"
-																+ islandManager.getVisitorsAtIsland(island).size() }),
+										new Placeholder[] { new Placeholder("%visits", "" + visit.getVisitors().size()),
+												new Placeholder("%visitors",
+														"" + islandManager.getVisitorsAtIsland(island).size()) },
 										null, null), 4);
 							} else {
 								nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
 										configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
 										configLoad.getStringList(
 												"Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Closed.Lore"),
-										nInv.createItemLoreVariable(
-												new String[] { "%visits#" + visit.getVisitors().size(),
-														"%visitors#"
-																+ islandManager.getVisitorsAtIsland(island).size() }),
+										new Placeholder[] { new Placeholder("%visits", "" + visit.getVisitors().size()),
+												new Placeholder("%visitors",
+														"" + islandManager.getVisitorsAtIsland(island).size()) },
 										null, null), 4);
 							}
 						}
@@ -519,16 +507,18 @@ public class Settings {
 					nInv.addItemStack(createItem(island, role, "DropperDispenser", new ItemStack(Material.DISPENSER)),
 							43);
 					nInv.addItemStack(createItem(island, role, "SpawnEgg", new ItemStack(Material.EGG)), 44);
+					nInv.addItemStack(createItem(island, role, "HangingDestroy", new ItemStack(Material.ITEM_FRAME)),
+							45);
 					nInv.addItemStack(createItem(island, role, "Cake", new ItemStack(Material.CAKE)), 46);
 					nInv.addItemStack(createItem(island, role, "DragonEggUse", new ItemStack(Material.DRAGON_EGG)), 47);
 					nInv.addItemStack(createItem(island, role, "MinecartBoat", new ItemStack(Material.MINECART)), 48);
-					nInv.addItemStack(createItem(island, role, "Portal", new ItemStack(Material.ENDER_PEARL)), 49);
-					nInv.addItemStack(createItem(island, role, "Hopper", new ItemStack(Material.HOPPER)), 50);
-					nInv.addItemStack(
-							createItem(island, role, "ArmorStandPlacement", new ItemStack(Material.ARMOR_STAND)), 51);
+					nInv.addItemStack(createItem(island, role, "Portal", new ItemStack(Material.ENDER_PEARL)), 50);
+					nInv.addItemStack(createItem(island, role, "Hopper", new ItemStack(Material.HOPPER)), 51);
+					nInv.addItemStack(createItem(island, role, "EntityPlacement", new ItemStack(Material.ARMOR_STAND)),
+							52);
 					nInv.addItemStack(
 							createItem(island, role, "ExperienceOrbPickup", Materials.EXPERIENCE_BOTTLE.parseItem()),
-							52);
+							53);
 
 					nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
 							configLoad.getString("Menu.Settings." + role.name() + ".Title")));
@@ -746,133 +736,325 @@ public class Settings {
 					if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")) {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 9);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
-										new ItemStack(Material.ITEM_FRAME)), 16);
-								nInv.addItemStack(createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()),
-										17);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 13);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											17);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 17);
+								}
 							} else {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 13);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
-										new ItemStack(Material.ITEM_FRAME)), 16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											17);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											13);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 16);
+								}
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 13);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()),
-										16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											17);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											13);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								}
 							} else {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 14);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										15);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											13);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											16);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "PvP", new ItemStack(Material.DIAMOND_SWORD)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											16);
+								}
 							}
 						}
 					} else {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										13);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
-								nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
-										new ItemStack(Material.ITEM_FRAME)), 15);
-								nInv.addItemStack(createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()),
-										16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 9);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											10);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											11);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 12);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											17);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 13);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								}
 							} else {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
-										new ItemStack(Material.ITEM_FRAME)), 16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 13);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											16);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
+											new ItemStack(Material.ITEM_FRAME)), 16);
+								}
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 10);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()),
-										16);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 13);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											14);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 15);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											16);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								}
 							} else {
-								nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
-										Materials.PIG_SPAWN_EGG.parseItem()), 11);
-								nInv.addItemStack(
-										createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()), 12);
-								nInv.addItemStack(
-										createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()), 13);
-								nInv.addItemStack(
-										createItem(island, role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)),
-										14);
-								nInv.addItemStack(
-										createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
+								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 10);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											11);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											12);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+									nInv.addItemStack(
+											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
+											16);
+								} else {
+									nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
+											Materials.PIG_SPAWN_EGG.parseItem()), 11);
+									nInv.addItemStack(
+											createItem(island, role, "MobGriefing", Materials.IRON_SHOVEL.parseItem()),
+											12);
+									nInv.addItemStack(
+											createItem(island, role, "Explosions", Materials.GUNPOWDER.parseItem()),
+											13);
+									nInv.addItemStack(createItem(island, role, "FireSpread",
+											new ItemStack(Material.FLINT_AND_STEEL)), 14);
+									nInv.addItemStack(
+											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
+											15);
+								}
 							}
 						}
 					}
@@ -898,23 +1080,18 @@ public class Settings {
 						@Override
 						public void onClick(ClickEvent event) {
 							if (playerDataManager.hasPlayerData(player)) {
-								Island island;
+								Island island = islandManager.getIsland(player);
 
-								if (islandManager.hasIsland(player)) {
-									island = islandManager
-											.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-									if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
-											|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-										messageManager.sendMessage(player,
-												configLoad.getString("Command.Island.Role.Message"));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-										return;
-									}
-								} else {
+								if (island == null) {
 									messageManager.sendMessage(player,
 											configLoad.getString("Command.Island.Settings.Owner.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+									return;
+								} else if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
+										|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Role.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 									return;
@@ -991,47 +1168,9 @@ public class Settings {
 													public void run() {
 														AnvilGUI gui = new AnvilGUI(player, event1 -> {
 															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																Island island1;
+																Island island1 = islandManager.getIsland(player);
 
-																if (islandManager.hasIsland(player)) {
-																	island1 = islandManager.getIsland(playerDataManager
-																			.getPlayerData(player).getOwner());
-
-																	if (!(island1.hasRole(IslandRole.Operator,
-																			player.getUniqueId())
-																			|| island1.hasRole(IslandRole.Owner,
-																					player.getUniqueId()))) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Command.Island.Role.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-																		player.closeInventory();
-
-																		event1.setWillClose(true);
-																		event1.setWillDestroy(true);
-
-																		return;
-																	} else if (!skyblock.getFileManager()
-																			.getConfig(
-																					new File(skyblock.getDataFolder(),
-																							"config.yml"))
-																			.getFileConfiguration().getBoolean(
-																					"Island.Visitor.Welcome.Enable")) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Settings.Visitor.Welcome.Disabled.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-
-																		event1.setWillClose(true);
-																		event1.setWillDestroy(true);
-
-																		return;
-																	}
-																} else {
+																if (island1 == null) {
 																	messageManager.sendMessage(player,
 																			configLoad.getString(
 																					"Command.Island.Settings.Owner.Message"));
@@ -1039,6 +1178,37 @@ public class Settings {
 																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
 																			1.0F);
 																	player.closeInventory();
+
+																	event1.setWillClose(true);
+																	event1.setWillDestroy(true);
+
+																	return;
+																} else if (!(island1.hasRole(IslandRole.Operator,
+																		player.getUniqueId())
+																		|| island1.hasRole(IslandRole.Owner,
+																				player.getUniqueId()))) {
+																	messageManager.sendMessage(player, configLoad
+																			.getString("Command.Island.Role.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
+																	player.closeInventory();
+
+																	event1.setWillClose(true);
+																	event1.setWillDestroy(true);
+
+																	return;
+																} else if (!skyblock.getFileManager()
+																		.getConfig(new File(skyblock.getDataFolder(),
+																				"config.yml"))
+																		.getFileConfiguration()
+																		.getBoolean("Island.Visitor.Welcome.Enable")) {
+																	messageManager.sendMessage(player,
+																			configLoad.getString(
+																					"Island.Settings.Visitor.Welcome.Disabled.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
 
 																	event1.setWillClose(true);
 																	event1.setWillDestroy(true);
@@ -1192,23 +1362,18 @@ public class Settings {
 						@Override
 						public void onClick(ClickEvent event) {
 							if (playerDataManager.hasPlayerData(player)) {
-								Island island;
+								Island island = islandManager.getIsland(player);
 
-								if (islandManager.hasIsland(player)) {
-									island = islandManager
-											.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-									if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
-											|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-										messageManager.sendMessage(player,
-												configLoad.getString("Command.Island.Role.Message"));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-										return;
-									}
-								} else {
+								if (island == null) {
 									messageManager.sendMessage(player,
 											configLoad.getString("Command.Island.Settings.Owner.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+									return;
+								} else if (!(island.hasRole(IslandRole.Operator, player.getUniqueId())
+										|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+									messageManager.sendMessage(player,
+											configLoad.getString("Command.Island.Role.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 									return;
@@ -1285,47 +1450,9 @@ public class Settings {
 													public void run() {
 														AnvilGUI gui = new AnvilGUI(player, event1 -> {
 															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																Island island1;
+																Island island1 = islandManager.getIsland(player);
 
-																if (islandManager.hasIsland(player)) {
-																	island1 = islandManager.getIsland(playerDataManager
-																			.getPlayerData(player).getOwner());
-
-																	if (!(island1.hasRole(IslandRole.Operator,
-																			player.getUniqueId())
-																			|| island1.hasRole(IslandRole.Owner,
-																					player.getUniqueId()))) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Command.Island.Role.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-																		player.closeInventory();
-
-																		event1.setWillClose(true);
-																		event1.setWillDestroy(true);
-
-																		return;
-																	} else if (!skyblock.getFileManager()
-																			.getConfig(
-																					new File(skyblock.getDataFolder(),
-																							"config.yml"))
-																			.getFileConfiguration().getBoolean(
-																					"Island.Visitor.Signature.Enable")) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Settings.Visitor.Signature.Disabled.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-
-																		event1.setWillClose(true);
-																		event1.setWillDestroy(true);
-
-																		return;
-																	}
-																} else {
+																if (island1 == null) {
 																	messageManager.sendMessage(player,
 																			configLoad.getString(
 																					"Command.Island.Settings.Owner.Message"));
@@ -1333,6 +1460,37 @@ public class Settings {
 																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
 																			1.0F);
 																	player.closeInventory();
+
+																	event1.setWillClose(true);
+																	event1.setWillDestroy(true);
+
+																	return;
+																} else if (!(island1.hasRole(IslandRole.Operator,
+																		player.getUniqueId())
+																		|| island1.hasRole(IslandRole.Owner,
+																				player.getUniqueId()))) {
+																	messageManager.sendMessage(player, configLoad
+																			.getString("Command.Island.Role.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
+																	player.closeInventory();
+
+																	event1.setWillClose(true);
+																	event1.setWillDestroy(true);
+
+																	return;
+																} else if (!skyblock.getFileManager()
+																		.getConfig(new File(skyblock.getDataFolder(),
+																				"config.yml"))
+																		.getFileConfiguration().getBoolean(
+																				"Island.Visitor.Signature.Enable")) {
+																	messageManager.sendMessage(player,
+																			configLoad.getString(
+																					"Island.Settings.Visitor.Signature.Disabled.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
 
 																	event1.setWillClose(true);
 																	event1.setWillDestroy(true);

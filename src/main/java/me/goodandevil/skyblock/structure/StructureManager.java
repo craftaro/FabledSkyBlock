@@ -33,18 +33,69 @@ public class StructureManager {
 					}
 				}
 
+				String structureFile = null, overworldFile = null, netherFile = null, endFile = null;
+
+				if (configLoad.getString("Structures." + structureList + ".File.Overworld") == null
+						&& configLoad.getString("Structures." + structureList + ".File.Nether") == null
+						&& configLoad.getString("Structures." + structureList + ".File.End") == null) {
+					if (configLoad.getString("Structures." + structureList + ".File") != null) {
+						structureFile = configLoad.getString("Structures." + structureList + ".File");
+						overworldFile = structureFile;
+						netherFile = structureFile;
+						endFile = structureFile;
+					}
+				} else {
+					if (configLoad.getString("Structures." + structureList + ".File.Overworld") != null) {
+						overworldFile = configLoad.getString("Structures." + structureList + ".File.Overworld");
+					}
+
+					if (configLoad.getString("Structures." + structureList + ".File.Nether") == null
+							&& overworldFile != null) {
+						netherFile = overworldFile;
+					} else {
+						netherFile = configLoad.getString("Structures." + structureList + ".File.Nether");
+					}
+
+					if (configLoad.getString("Structures." + structureList + ".File.End") == null
+							&& overworldFile != null) {
+						endFile = overworldFile;
+					} else {
+						endFile = configLoad.getString("Structures." + structureList + ".File.End");
+					}
+
+					if (overworldFile == null && netherFile != null) {
+						overworldFile = netherFile;
+					} else if (overworldFile == null && endFile != null) {
+						overworldFile = endFile;
+					}
+
+					if (netherFile == null && endFile != null) {
+						netherFile = endFile;
+					}
+
+					if (endFile == null && overworldFile != null) {
+						endFile = overworldFile;
+					} else if (endFile == null && netherFile != null) {
+						endFile = netherFile;
+					}
+				}
+
 				structureStorage.add(new Structure(configLoad.getString("Structures." + structureList + ".Name"),
-						materials, configLoad.getString("Structures." + structureList + ".File"),
+						materials, overworldFile, netherFile, endFile,
 						configLoad.getString("Structures." + structureList + ".Displayname"),
 						configLoad.getBoolean("Structures." + structureList + ".Permission"),
-						configLoad.getStringList("Structures." + structureList + ".Description")));
+						configLoad.getStringList("Structures." + structureList + ".Description"),
+						configLoad.getStringList("Structures." + structureList + ".Commands"),
+						configLoad.getDouble("Structures." + structureList + ".Deletion.Cost")));
 			}
 		}
 	}
 
-	public void addStructure(String name, Materials materials, String fileName, String displayName, boolean permission,
-			List<String> description) {
-		structureStorage.add(new Structure(name, materials, fileName, displayName, permission, description));
+	public void addStructure(String name, Materials materials, String overworldFile, String netherFile, String endFile,
+			String displayName, boolean permission, List<String> description, List<String> commands,
+			double deletionCost) {
+		structureStorage.add(new Structure(name, materials, overworldFile, netherFile, endFile, displayName, permission,
+				description, commands, deletionCost));
 	}
 
 	public void removeStructure(Structure structure) {

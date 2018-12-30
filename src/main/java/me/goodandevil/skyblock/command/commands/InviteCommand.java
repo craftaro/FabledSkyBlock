@@ -16,6 +16,7 @@ import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.invite.Invite;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -27,6 +28,8 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 public class InviteCommand extends SubCommand {
 
@@ -48,226 +51,214 @@ public class InviteCommand extends SubCommand {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		if (args.length == 1) {
-			if (islandManager.hasIsland(player)) {
-				me.goodandevil.skyblock.island.Island island = islandManager
-						.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+			Island island = islandManager.getIsland(player);
 
-				if (island.hasRole(IslandRole.Owner, player.getUniqueId())
-						|| (island.hasRole(IslandRole.Operator, player.getUniqueId())
-								&& island.getSetting(IslandRole.Operator, "Invite").getStatus())) {
-					Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+			if (island == null) {
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Owner.Message"));
+				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+			} else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
+					|| (island.hasRole(IslandRole.Operator, player.getUniqueId())
+							&& island.getSetting(IslandRole.Operator, "Invite").getStatus())) {
+				Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 
-					if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()
-							+ 1) >= mainConfig.getFileConfiguration().getInt("Island.Member.Capacity")) {
+				if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()
+						+ 1) >= mainConfig.getFileConfiguration().getInt("Island.Member.Capacity")) {
+					messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Capacity.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				} else {
+					String playerName = args[0];
+
+					if (playerName.equalsIgnoreCase(player.getName())) {
 						messageManager.sendMessage(player,
-								configLoad.getString("Command.Island.Invite.Capacity.Message"));
+								configLoad.getString("Command.Island.Invite.Yourself.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 					} else {
-						String playerName = args[0];
+						Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
 
-						if (playerName.equalsIgnoreCase(player.getName())) {
+						if (targetPlayer == null) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Invite.Offline.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						} else if (targetPlayer.getName().equalsIgnoreCase(player.getName())) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Invite.Yourself.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						} else if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())
+								|| island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())
+								|| island.hasRole(IslandRole.Owner, targetPlayer.getUniqueId())) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Invite.Member.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						} else if (skyblock.getInviteManager().hasInvite(targetPlayer.getUniqueId())) {
+							Invite invite = skyblock.getInviteManager().getInvite(targetPlayer.getUniqueId());
+
+							if (invite.getOwnerUUID().equals(island.getOwnerUUID())) {
+								messageManager.sendMessage(player,
+										configLoad.getString("Command.Island.Invite.Already.Own.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+							} else {
+								messageManager.sendMessage(player,
+										configLoad.getString("Command.Island.Invite.Already.Other.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+							}
 						} else {
-							Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
+							int respondTime = mainConfig.getFileConfiguration().getInt("Island.Invite.Time");
 
-							if (targetPlayer == null) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Invite.Offline.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-							} else if (targetPlayer.getName().equalsIgnoreCase(player.getName())) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Invite.Yourself.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-							} else if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())
-									|| island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())
-									|| island.hasRole(IslandRole.Owner, targetPlayer.getUniqueId())) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Invite.Member.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-							} else if (skyblock.getInviteManager().hasInvite(targetPlayer.getUniqueId())) {
-								Invite invite = skyblock.getInviteManager().getInvite(targetPlayer.getUniqueId());
+							String cancellationMessage = configLoad
+									.getString("Command.Island.Invite.Invited.Sender.Sent.Message");
+							String timeMessage;
 
-								if (invite.getOwnerUUID().equals(island.getOwnerUUID())) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Command.Island.Invite.Already.Own.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+							if (respondTime < 60) {
+								timeMessage = respondTime + " "
+										+ configLoad.getString("Command.Island.Invite.Invited.Word.Second");
+							} else {
+								timeMessage = respondTime / 60 + " "
+										+ configLoad.getString("Command.Island.Invite.Invited.Word.Minute");
+							}
+
+							if (cancellationMessage.contains("%cancel")) {
+								String[] cancellationMessages = cancellationMessage.split("%cancel");
+
+								if (cancellationMessages.length == 0) {
+									player.spigot().sendMessage(new ChatComponent(configLoad
+											.getString("Command.Island.Invite.Invited.Word.Cancel").toUpperCase(), true,
+											ChatColor.RED,
+											new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+													"/island cancel " + targetPlayer.getName()),
+											new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+													ChatColor.translateAlternateColorCodes('&', configLoad
+															.getString("Command.Island.Invite.Invited.Word.Tutorial")
+															.replace("%action", configLoad.getString(
+																	"Command.Island.Invite.Invited.Word.Cancel"))))
+																			.create())).getTextComponent());
 								} else {
-									messageManager.sendMessage(player,
-											configLoad.getString("Command.Island.Invite.Already.Other.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+									ChatComponent chatComponent = new ChatComponent("", false, null, null, null);
+
+									for (int i = 0; i < cancellationMessages.length; i++) {
+										String message = cancellationMessages[i];
+
+										if (message.contains("\n") || message.contains("\\n")) {
+											message = message.replace("\\n", "\n");
+
+											for (String messageList : message.split("\n")) {
+												chatComponent
+														.addExtra(new ChatComponent(
+																messageManager.replaceMessage(player,
+																		messageList
+																				.replace("%player",
+																						targetPlayer.getName())
+																				.replace("%time", timeMessage)),
+																false, null, null, null));
+
+												chatComponent.addExtra(
+														new TextComponent(ComponentSerializer.parse("{text: \"\n\"}")));
+											}
+										} else {
+											chatComponent
+													.addExtra(
+															new ChatComponent(
+																	messageManager
+																			.replaceMessage(
+																					player, message
+																							.replace("%player",
+																									targetPlayer
+																											.getName())
+																							.replace("%time",
+																									timeMessage)),
+																	false, null, null, null));
+										}
+
+										if (cancellationMessages.length == 1 || i + 1 != cancellationMessages.length) {
+											chatComponent.addExtra(new ChatComponent(
+													configLoad.getString("Command.Island.Invite.Invited.Word.Cancel")
+															.toUpperCase(),
+													true, ChatColor.RED,
+													new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+															"/island cancel " + targetPlayer.getName()),
+													new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+															ChatColor.translateAlternateColorCodes('&', configLoad
+																	.getString(
+																			"Command.Island.Invite.Invited.Word.Tutorial")
+																	.replace("%action", configLoad.getString(
+																			"Command.Island.Invite.Invited.Word.Cancel"))))
+																					.create())));
+										}
+									}
+
+									player.spigot().sendMessage(chatComponent.getTextComponent());
 								}
 							} else {
-								int respondTime = mainConfig.getFileConfiguration().getInt("Island.Invite.Time");
-
-								if (respondTime < 60) {
-									player.spigot().sendMessage(new ChatComponent(messageManager.replaceMessage(player,
-											ChatColor
-													.translateAlternateColorCodes('&', configLoad
-															.getString(
-																	"Command.Island.Invite.Invited.Sender.Sent.Message")
-															.replace("%player", targetPlayer.getName())
-															.replace("%time", respondTime + " " + configLoad.getString(
-																	"Command.Island.Invite.Invited.Word.Second")))
-													+ "   "),
-											false, null, null, null)
-													.addExtra(new ChatComponent(
-															configLoad.getString(
-																	"Command.Island.Invite.Invited.Word.Cancel")
-																	.toUpperCase(),
-															true, ChatColor.RED,
-															new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-																	"/island cancel " + targetPlayer.getName()),
-															new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-																	new ComponentBuilder(
-																			ChatColor.translateAlternateColorCodes('&',
-																					configLoad.getString(
-																							"Command.Island.Invite.Invited.Word.Tutorial")
-																							.replace("%action",
-																									configLoad
-																											.getString(
-																													"Command.Island.Invite.Invited.Word.Cancel"))))
-																															.create()))));
-									targetPlayer.spigot().sendMessage(new ChatComponent(messageManager.replaceMessage(
-											targetPlayer,
-											ChatColor.translateAlternateColorCodes('&', configLoad
-													.getString("Command.Island.Invite.Invited.Target.Received.Message")
-													.replace("%player", player.getName()).replace("%time",
-															respondTime + " " + configLoad.getString(
-																	"Command.Island.Invite.Invited.Word.Second")))
-													+ "   "),
-											false, null, null, null)
-													.addExtraChatComponent(new ChatComponent(
-															configLoad
-																	.getString(
-																			"Command.Island.Invite.Invited.Word.Accept")
-																	.toUpperCase(),
-															true, ChatColor.GREEN,
-															new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-																	"/island accept " + player.getName()),
-															new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-																	new ComponentBuilder(
-																			ChatColor.translateAlternateColorCodes('&',
-																					configLoad.getString(
-																							"Command.Island.Invite.Invited.Word.Tutorial")
-																							.replace("%action",
-																									configLoad
-																											.getString(
-																													"Command.Island.Invite.Invited.Word.Accept"))))
-																															.create())))
-													.addExtraChatComponent(new ChatComponent(" | ", false,
-															ChatColor.DARK_GRAY, null, null))
-													.addExtra(new ChatComponent(
-															configLoad.getString(
-																	"Command.Island.Invite.Invited.Word.Deny")
-																	.toUpperCase(),
-															true, ChatColor.RED,
-															new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-																	"/island deny " + player.getName()),
-															new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-																	new ComponentBuilder(
-																			ChatColor.translateAlternateColorCodes('&',
-																					configLoad.getString(
-																							"Command.Island.Invite.Invited.Word.Tutorial")
-																							.replace("%action",
-																									configLoad
-																											.getString(
-																													"Command.Island.Invite.Invited.Word.Deny"))))
-																															.create()))));
-								} else {
-									player.spigot().sendMessage(new ChatComponent(messageManager.replaceMessage(player,
-											ChatColor.translateAlternateColorCodes('&', configLoad
-													.getString("Command.Island.Invite.Invited.Sender.Sent.Message")
-													.replace("%player", targetPlayer.getName()).replace("%time",
-															respondTime / 60 + " " + configLoad.getString(
-																	"Command.Island.Invite.Invited.Word.Minute")))
-													+ "   "),
-											false, null, null, null)
-													.addExtra(new ChatComponent(
-															configLoad.getString(
-																	"Command.Island.Invite.Invited.Word.Cancel")
-																	.toUpperCase(),
-															true, ChatColor.RED,
-															new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-																	"/island cancel " + targetPlayer.getName()),
-															new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-																	new ComponentBuilder(
-																			ChatColor.translateAlternateColorCodes('&',
-																					configLoad.getString(
-																							"Command.Island.Invite.Invited.Word.Tutorial")
-																							.replace("%action",
-																									configLoad
-																											.getString(
-																													"Command.Island.Invite.Invited.Word.Cancel"))))
-																															.create()))));
-									targetPlayer.spigot().sendMessage(new ChatComponent(messageManager.replaceMessage(
-											targetPlayer,
-											ChatColor.translateAlternateColorCodes('&', configLoad
-													.getString("Command.Island.Invite.Invited.Target.Received.Message")
-													.replace("%player", player.getName()).replace("%time",
-															respondTime / 60 + " " + configLoad.getString(
-																	"Command.Island.Invite.Invited.Word.Minute")))
-													+ "   "),
-											false, null, null, null)
-													.addExtraChatComponent(new ChatComponent(
-															configLoad
-																	.getString(
-																			"Command.Island.Invite.Invited.Word.Accept")
-																	.toUpperCase(),
-															true, ChatColor.GREEN,
-															new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-																	"/island accept " + player.getName()),
-															new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-																	new ComponentBuilder(
-																			ChatColor.translateAlternateColorCodes('&',
-																					configLoad.getString(
-																							"Command.Island.Invite.Invited.Word.Tutorial")
-																							.replace("%action",
-																									configLoad
-																											.getString(
-																													"Command.Island.Invite.Invited.Word.Accept"))))
-																															.create())))
-													.addExtraChatComponent(new ChatComponent(" | ", false,
-															ChatColor.DARK_GRAY, null, null))
-													.addExtra(new ChatComponent(
-															configLoad.getString(
-																	"Command.Island.Invite.Invited.Word.Deny")
-																	.toUpperCase(),
-															true, ChatColor.RED,
-															new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-																	"/island deny " + player.getName()),
-															new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-																	new ComponentBuilder(
-																			ChatColor.translateAlternateColorCodes('&',
-																					configLoad.getString(
-																							"Command.Island.Invite.Invited.Word.Tutorial")
-																							.replace("%action",
-																									configLoad
-																											.getString(
-																													"Command.Island.Invite.Invited.Word.Deny"))))
-																															.create()))));
-								}
-
-								Invite invite = skyblock.getInviteManager().createInvite(targetPlayer, player,
-										island.getOwnerUUID(), respondTime);
-
-								Bukkit.getServer().getPluginManager()
-										.callEvent(new IslandInviteEvent(island.getAPIWrapper(),
-												new IslandInvitation(targetPlayer, player, invite.getTime())));
-
-								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
-								soundManager.playSound(targetPlayer, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+								messageManager.sendMessage(player, cancellationMessage
+										.replace("%player", targetPlayer.getName()).replace("%time", timeMessage));
 							}
+
+							String invitationMessage = configLoad
+									.getString("Command.Island.Invite.Invited.Target.Received.Message");
+							ChatComponent chatComponent = new ChatComponent("", false, null, null, null);
+
+							if (invitationMessage.contains("\n") || invitationMessage.contains("\\n")) {
+								invitationMessage = invitationMessage.replace("\\n", "\n");
+
+								for (String messageList : invitationMessage.split("\n")) {
+									chatComponent
+											.addExtra(new ChatComponent(
+													messageManager.replaceMessage(player,
+															messageList.replace("%player", player.getName())
+																	.replace("%time", timeMessage)),
+													false, null, null, null));
+
+									chatComponent
+											.addExtra(new TextComponent(ComponentSerializer.parse("{text: \"\n\"}")));
+								}
+							} else {
+								chatComponent
+										.addExtra(new ChatComponent(
+												messageManager.replaceMessage(player,
+														invitationMessage.replace("%player", player.getName())
+																.replace("%time", timeMessage)),
+												false, null, null, null));
+							}
+
+							chatComponent.addExtra(new ChatComponent(
+									configLoad.getString("Command.Island.Invite.Invited.Word.Accept").toUpperCase(),
+									true, ChatColor.GREEN,
+									new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island accept " + player.getName()),
+									new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+											new ComponentBuilder(ChatColor.translateAlternateColorCodes('&',
+													configLoad.getString("Command.Island.Invite.Invited.Word.Tutorial")
+															.replace("%action", configLoad.getString(
+																	"Command.Island.Invite.Invited.Word.Accept"))))
+																			.create())));
+
+							chatComponent.addExtra(new ChatComponent(" | ", false, ChatColor.DARK_GRAY, null, null));
+
+							chatComponent.addExtra(new ChatComponent(
+									configLoad.getString("Command.Island.Invite.Invited.Word.Deny").toUpperCase(), true,
+									ChatColor.RED,
+									new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island deny " + player.getName()),
+									new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+											new ComponentBuilder(ChatColor.translateAlternateColorCodes('&',
+													configLoad.getString("Command.Island.Invite.Invited.Word.Tutorial")
+															.replace("%action", configLoad.getString(
+																	"Command.Island.Invite.Invited.Word.Deny"))))
+																			.create())));
+
+							targetPlayer.spigot().sendMessage(chatComponent.getTextComponent());
+
+							Invite invite = skyblock.getInviteManager().createInvite(targetPlayer, player,
+									island.getOwnerUUID(), respondTime);
+
+							Bukkit.getServer().getPluginManager()
+									.callEvent(new IslandInviteEvent(island.getAPIWrapper(),
+											new IslandInvitation(targetPlayer, player, invite.getTime())));
+
+							soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+							soundManager.playSound(targetPlayer, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 						}
 					}
-				} else {
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Invite.Permission.Message"));
-					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
 			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Owner.Message"));
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Permission.Message"));
 				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {

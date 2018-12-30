@@ -21,14 +21,15 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
@@ -58,14 +59,15 @@ public class Information {
 
 			if (playerData.getViewer() != null) {
 				Information.Viewer viewer = (Information.Viewer) playerData.getViewer();
+				org.bukkit.OfflinePlayer targetOfflinePlayer = Bukkit.getServer().getOfflinePlayer(viewer.getOwner());
 
-				if (!islandManager.hasIsland(viewer.getOwner())) {
-					islandManager.loadIsland(viewer.getOwner());
+				if (islandManager.getIsland(targetOfflinePlayer) == null) {
+					islandManager.loadIsland(targetOfflinePlayer);
 				}
 
 				FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 						.getFileConfiguration();
-				Island island = islandManager.getIsland(viewer.getOwner());
+				Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(viewer.getOwner()));
 
 				if (island == null) {
 					messageManager.sendMessage(player, configLoad.getString("Island.Information.Island.Message"));
@@ -219,13 +221,17 @@ public class Information {
 						nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
 								configLoad.getString("Menu.Information.Categories.Item.Information.Displayname"),
 								itemLore,
-								nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(),
-										"%members#" + visit.getMembers(), "%votes#" + visit.getVoters().size(),
-										"%visits#" + visit.getVisitors().size(),
-										"%players#" + islandManager.getPlayersAtIsland(island).size(),
-										"%player_capacity#"
-												+ mainConfig.getFileConfiguration().getInt("Island.Visitor.Capacity"),
-										"%owner#" + islandOwnerName, "%safety#" + safety }),
+								new Placeholder[] { new Placeholder("%level", "" + visit.getLevel().getLevel()),
+										new Placeholder("%members", "" + visit.getMembers()),
+										new Placeholder("%votes", "" + visit.getVoters().size()),
+										new Placeholder("%visits", "" + visit.getVisitors().size()),
+										new Placeholder("%players",
+												"" + islandManager.getPlayersAtIsland(island).size()),
+										new Placeholder("%player_capacity",
+												"" + mainConfig.getFileConfiguration()
+														.getInt("Island.Visitor.Capacity")),
+										new Placeholder("%owner", islandOwnerName),
+										new Placeholder("%safety", safety) },
 								null, null), 2);
 					} else {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
@@ -254,12 +260,16 @@ public class Information {
 						nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
 								configLoad.getString("Menu.Information.Categories.Item.Information.Displayname"),
 								itemLore,
-								nInv.createItemLoreVariable(new String[] { "%level#" + visit.getLevel().getLevel(),
-										"%members#" + visit.getMembers(), "%visits#" + visit.getVisitors().size(),
-										"%players#" + islandManager.getPlayersAtIsland(island).size(),
-										"%player_capacity#"
-												+ mainConfig.getFileConfiguration().getInt("Island.Visitor.Capacity"),
-										"%owner#" + islandOwnerName, "%safety#" + safety }),
+								new Placeholder[] { new Placeholder("%level", "" + visit.getLevel().getLevel()),
+										new Placeholder("%members", "" + visit.getMembers()),
+										new Placeholder("%visits", "" + visit.getVisitors().size()),
+										new Placeholder("%players",
+												"" + islandManager.getPlayersAtIsland(island).size()),
+										new Placeholder("%player_capacity",
+												"" + mainConfig.getFileConfiguration()
+														.getInt("Island.Visitor.Capacity")),
+										new Placeholder("%owner", islandOwnerName),
+										new Placeholder("%safety", safety) },
 								null, null), 2);
 					}
 
@@ -366,16 +376,21 @@ public class Information {
 					nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 							configLoad.getString("Menu.Information.Members.Item.Return.Displayname"), null, null, null,
 							null), 0, 8);
-					nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
-							configLoad.getString("Menu.Information.Members.Item.Statistics.Displayname"),
-							configLoad.getStringList("Menu.Information.Members.Item.Statistics.Lore"),
-							nInv.createItemLoreVariable(new String[] {
-									"%island_members#" + (islandMembers.size() + islandOperators.size() + 1),
-									"%island_capacity#" + skyblock.getFileManager()
-											.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-											.getFileConfiguration().getInt("Island.Member.Capacity"),
-									"%members#" + islandMembers.size(), "%operators#" + islandOperators.size() }),
-							null, null), 4);
+					nInv.addItem(
+							nInv.createItem(new ItemStack(Material.PAINTING),
+									configLoad.getString("Menu.Information.Members.Item.Statistics.Displayname"),
+									configLoad.getStringList("Menu.Information.Members.Item.Statistics.Lore"),
+									new Placeholder[] {
+											new Placeholder("%island_members",
+													"" + (islandMembers.size() + islandOperators.size() + 1)),
+											new Placeholder("%island_capacity",
+													"" + skyblock.getFileManager()
+															.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+															.getFileConfiguration().getInt("Island.Member.Capacity")),
+											new Placeholder("%members", "" + islandMembers.size()),
+											new Placeholder("%operators", "" + islandOperators.size()) },
+									null, null),
+							4);
 					nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							configLoad.getString("Menu.Information.Members.Item.Barrier.Displayname"), null, null, null,
 							null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
@@ -432,11 +447,12 @@ public class Information {
 								islandRole = configLoad.getString("Menu.Information.Members.Item.Member.Word.Owner");
 							}
 
-							nInv.addItem(nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
-									configLoad.getString("Menu.Information.Members.Item.Member.Displayname")
-											.replace("%player", playerName),
-									configLoad.getStringList("Menu.Information.Members.Item.Member.Lore"),
-									nInv.createItemLoreVariable(new String[] { "%role#" + islandRole }), null, null),
+							nInv.addItem(
+									nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
+											configLoad.getString("Menu.Information.Members.Item.Member.Displayname")
+													.replace("%player", playerName),
+											configLoad.getStringList("Menu.Information.Members.Item.Member.Lore"),
+											new Placeholder[] { new Placeholder("%role", islandRole) }, null, null),
 									inventorySlot);
 						}
 					}
@@ -538,14 +554,11 @@ public class Information {
 					nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 							configLoad.getString("Menu.Information.Visitors.Item.Return.Displayname"), null, null, null,
 							null), 0, 8);
-					nInv.addItem(
-							nInv.createItem(new ItemStack(Material.PAINTING),
-									configLoad.getString("Menu.Information.Visitors.Item.Statistics.Displayname"),
-									configLoad.getStringList("Menu.Information.Visitors.Item.Statistics.Lore"),
-									nInv.createItemLoreVariable(
-											new String[] { "%island_visitors#" + displayedVisitors.size() }),
-									null, null),
-							4);
+					nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
+							configLoad.getString("Menu.Information.Visitors.Item.Statistics.Displayname"),
+							configLoad.getStringList("Menu.Information.Visitors.Item.Statistics.Lore"),
+							new Placeholder[] { new Placeholder("%island_visitors", "" + displayedVisitors.size()) },
+							null, null), 4);
 					nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							configLoad.getString("Menu.Information.Visitors.Item.Barrier.Displayname"), null, null,
 							null, null), 9, 10, 11, 12, 13, 14, 15, 16, 17);

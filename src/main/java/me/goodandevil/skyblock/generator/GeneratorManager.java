@@ -30,7 +30,10 @@ public class GeneratorManager {
 
 	public GeneratorManager(SkyBlock skyblock) {
 		this.skyblock = skyblock;
+		registerGenerators();
+	}
 
+	public void registerGenerators() {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -40,25 +43,31 @@ public class GeneratorManager {
 			Random rnd = new Random();
 
 			for (String generatorList : configLoad.getConfigurationSection("Generators").getKeys(false)) {
-				List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
+				if (configLoad.getString("Generators." + generatorList + ".Name") != null) {
+					List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
 
-				if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
-					for (String materialList : configLoad
-							.getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
-						Materials materials = Materials.fromString(materialList);
+					if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
+						for (String materialList : configLoad
+								.getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
+							Materials materials = Materials.fromString(materialList);
 
-						if (materials != null) {
-							generatorMaterials.add(new GeneratorMaterial(materials, configLoad
-									.getInt("Generators." + generatorList + ".Materials." + materialList + ".Chance")));
+							if (materials != null) {
+								generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getInt(
+										"Generators." + generatorList + ".Materials." + materialList + ".Chance")));
+							}
 						}
 					}
-				}
 
-				generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
-						oreMaterials[rnd.nextInt(oreMaterials.length)], generatorMaterials,
-						configLoad.getBoolean("Generators." + generatorList + ".Permission")));
+					generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
+							oreMaterials[rnd.nextInt(oreMaterials.length)], generatorMaterials,
+							configLoad.getBoolean("Generators." + generatorList + ".Permission")));
+				}
 			}
 		}
+	}
+
+	public void unregisterGenerators() {
+		generatorStorage.clear();
 	}
 
 	public boolean isGenerator(Block block) {
@@ -196,7 +205,7 @@ public class GeneratorManager {
 	public void generateBlock(Player player, Block block) {
 		block.setType(Material.AIR);
 
-		Bukkit.getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 			@Override
 			public void run() {
 				for (int i = generatorStorage.size() - 1; i >= 0; i--) {
@@ -238,6 +247,13 @@ public class GeneratorManager {
 
 					return;
 				}
+
+				Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+					@Override
+					public void run() {
+						block.setType(Material.COBBLESTONE);
+					}
+				});
 			}
 		});
 	}

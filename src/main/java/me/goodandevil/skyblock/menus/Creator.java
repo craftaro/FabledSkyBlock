@@ -13,8 +13,10 @@ import org.bukkit.inventory.ItemStack;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.creation.Creation;
-import me.goodandevil.skyblock.creation.CreationManager;
+import me.goodandevil.skyblock.cooldown.Cooldown;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownPlayer;
+import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -40,7 +42,7 @@ public class Creator {
 	public void open(Player player) {
 		SkyBlock skyblock = SkyBlock.getInstance();
 
-		CreationManager creationManager = skyblock.getCreationManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -53,7 +55,8 @@ public class Creator {
 
 		for (Structure structureList : skyblock.getStructureManager().getStructures()) {
 			if (structureList.getDisplayname() == null || structureList.getDisplayname().isEmpty()
-					|| structureList.getFile() == null || structureList.getFile().isEmpty()) {
+					|| structureList.getOverworldFile() == null || structureList.getOverworldFile().isEmpty()
+					|| structureList.getNetherFile() == null || structureList.getNetherFile().isEmpty()) {
 				continue;
 			}
 
@@ -92,7 +95,7 @@ public class Creator {
 		nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (islandManager.hasIsland(player)) {
+				if (islandManager.getIsland(player) != null) {
 					messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
@@ -133,9 +136,20 @@ public class Creator {
 
 								if (!fileManager.isFileExist(
 										new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-												structureList.getFile()))) {
+												structureList.getOverworldFile()))) {
 									messageManager.sendMessage(player,
-											configLoad.getString("Island.Creator.Selector.File.Message"));
+											configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+									event.setWillClose(false);
+									event.setWillDestroy(false);
+
+									return;
+								} else if (!fileManager.isFileExist(
+										new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+												structureList.getNetherFile()))) {
+									messageManager.sendMessage(player,
+											configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 									event.setWillClose(false);
@@ -144,17 +158,19 @@ public class Creator {
 									return;
 								} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 										.getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
-										&& creationManager.hasPlayer(player)) {
-									Creation creation = creationManager.getPlayer(player);
+										&& cooldownManager.hasPlayer(CooldownType.Creation, player)) {
+									CooldownPlayer cooldownPlayer = cooldownManager
+											.getCooldownPlayer(CooldownType.Creation, player);
+									Cooldown cooldown = cooldownPlayer.getCooldown();
 
-									if (creation.getTime() < 60) {
+									if (cooldown.getTime() < 60) {
 										messageManager.sendMessage(player, config.getFileConfiguration()
 												.getString("Island.Creator.Selector.Cooldown.Message")
-												.replace("%time", creation.getTime() + " "
+												.replace("%time", cooldown.getTime() + " "
 														+ config.getFileConfiguration().getString(
 																"Island.Creator.Selector.Cooldown.Word.Second")));
 									} else {
-										long[] durationTime = NumberUtil.getDuration(creation.getTime());
+										long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
 										messageManager.sendMessage(player, config.getFileConfiguration()
 												.getString("Island.Creator.Selector.Cooldown.Message")
 												.replace("%time", durationTime[2] + " "

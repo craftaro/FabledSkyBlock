@@ -13,6 +13,11 @@ import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.cooldown.Cooldown;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownPlayer;
+import me.goodandevil.skyblock.cooldown.CooldownType;
+import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.menus.Levelling;
@@ -20,7 +25,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.visit.VisitManager;
 
@@ -36,6 +41,8 @@ public class LevelCommand extends SubCommand {
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		LevellingManager levellingManager = skyblock.getLevellingManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -71,8 +78,8 @@ public class LevelCommand extends SubCommand {
 
 						messageManager.sendMessage(player,
 								configLoad.getString("Command.Island.Level.Level.Message")
-										.replace("%player", targetPlayerName)
-										.replace("%level", "" + NumberUtil.formatNumber(visit.getLevel().getLevel())));
+										.replace("%player", targetPlayerName).replace("%level",
+												"" + NumberUtil.formatNumberByDecimal(visit.getLevel().getLevel())));
 						soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
 						return;
@@ -97,21 +104,25 @@ public class LevelCommand extends SubCommand {
 			return;
 		}
 
-		if (islandManager.hasIsland(player)) {
-			me.goodandevil.skyblock.island.Island island = islandManager
-					.getIsland(skyblock.getPlayerDataManager().getPlayerData(player).getOwner());
+		Island island = islandManager.getIsland(player);
 
+		if (island == null) {
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Owner.Yourself.Message"));
+			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else {
 			player.closeInventory();
 
 			if (!island.getLevel().hasMaterials()) {
-				LevellingManager levellingManager = skyblock.getLevellingManager();
+				org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
 
-				if (levellingManager.hasLevelling(island.getOwnerUUID())) {
-					me.goodandevil.skyblock.levelling.Levelling levelling = levellingManager
-							.getLevelling(island.getOwnerUUID());
-					long[] durationTime = NumberUtil.getDuration(levelling.getTime());
+				if (cooldownManager.hasPlayer(CooldownType.Levelling, offlinePlayer)) {
+					CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Levelling,
+							offlinePlayer);
+					Cooldown cooldown = cooldownPlayer.getCooldown();
 
-					if (levelling.getTime() >= 3600) {
+					long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
+
+					if (cooldown.getTime() >= 3600) {
 						messageManager.sendMessage(player,
 								configLoad.getString("Command.Island.Level.Cooldown.Message").replace("%time",
 										durationTime[1] + " "
@@ -120,7 +131,7 @@ public class LevelCommand extends SubCommand {
 												+ configLoad.getString("Command.Island.Level.Cooldown.Word.Minute")
 												+ " " + durationTime[3] + " "
 												+ configLoad.getString("Command.Island.Level.Cooldown.Word.Second")));
-					} else if (levelling.getTime() >= 60) {
+					} else if (cooldown.getTime() >= 60) {
 						messageManager.sendMessage(player,
 								configLoad.getString("Command.Island.Level.Cooldown.Message").replace("%time",
 										durationTime[2] + " "
@@ -130,7 +141,7 @@ public class LevelCommand extends SubCommand {
 					} else {
 						messageManager.sendMessage(player,
 								configLoad.getString("Command.Island.Level.Cooldown.Message").replace("%time",
-										levelling.getTime() + " "
+										cooldown.getTime() + " "
 												+ configLoad.getString("Command.Island.Level.Cooldown.Word.Second")));
 					}
 
@@ -142,17 +153,14 @@ public class LevelCommand extends SubCommand {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Processing.Message"));
 				soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 
-				levellingManager.createLevelling(island.getOwnerUUID());
-				levellingManager.loadLevelling(island.getOwnerUUID());
+				cooldownManager.createPlayer(CooldownType.Levelling,
+						Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
 				levellingManager.calculatePoints(player, island);
 			} else {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Loading.Message"));
 				soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 				Levelling.getInstance().open(player);
 			}
-		} else {
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Owner.Yourself.Message"));
-			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 

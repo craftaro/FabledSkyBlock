@@ -2,6 +2,6 @@ package me.goodandevil.skyblock.api.island;
 
 public enum IslandWorld {
 
-	OVERWORLD, NETHER;
+	OVERWORLD, NETHER, END;
 
 }

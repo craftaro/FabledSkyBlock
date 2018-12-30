@@ -5,7 +5,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,13 +20,19 @@ import com.mojang.authlib.properties.Property;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.cooldown.CooldownManager;
+import me.goodandevil.skyblock.cooldown.CooldownType;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
+import me.goodandevil.skyblock.usercache.UserCacheManager;
+import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class Join implements Listener {
 
@@ -37,16 +46,38 @@ public class Join implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 
+		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
+		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		UserCacheManager userCacheManager = skyblock.getUserCacheManager();
+		CooldownManager cooldownManager = skyblock.getCooldownManager();
 		IslandManager islandManager = skyblock.getIslandManager();
+		FileManager fileManager = skyblock.getFileManager();
+
+		userCacheManager.addUser(player.getUniqueId(), player.getName());
+		userCacheManager.saveAsync();
 
 		try {
-			islandManager.loadIsland(player.getUniqueId());
-			islandManager.loadPlayer(player);
+			Island island = islandManager.loadIsland(player);
+			boolean teleportedToIsland = false;
+
+			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+			FileConfiguration configLoad = config.getFileConfiguration();
+
+			if (configLoad.getBoolean("Island.Join.Spawn")) {
+				LocationUtil.teleportPlayerToSpawn(player);
+			} else if (configLoad.getBoolean("Island.Join.Island") && island != null) {
+				player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+				player.setFallDistance(0.0F);
+				teleportedToIsland = true;
+			}
+
+			if (!teleportedToIsland) {
+				islandManager.loadPlayer(player);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		playerDataManager.loadPlayerData(player);
 
 		if (playerDataManager.hasPlayerData(player)) {
@@ -74,20 +105,23 @@ public class Join implements Listener {
 
 		playerDataManager.storeIsland(player);
 
-		skyblock.getBiomeManager().loadPlayer(player);
-		skyblock.getCreationManager().loadPlayer(player);
-
-		ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
-		FileManager fileManager = skyblock.getFileManager();
+		cooldownManager.addCooldownPlayer(CooldownType.Biome,
+				cooldownManager.loadCooldownPlayer(CooldownType.Biome, player));
+		cooldownManager.addCooldownPlayer(CooldownType.Creation,
+				cooldownManager.loadCooldownPlayer(CooldownType.Creation, player));
 
 		if (scoreboardManager != null) {
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			Scoreboard scoreboard = new Scoreboard(player);
+			Island island = islandManager.getIsland(player);
 
-			if (islandManager.hasIsland(player)) {
-				Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
+			if (island != null) {
+				OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
 
-				skyblock.getLevellingManager().loadLevelling(island.getOwnerUUID());
+				cooldownManager.addCooldownPlayer(CooldownType.Levelling,
+						cooldownManager.loadCooldownPlayer(CooldownType.Levelling, offlinePlayer));
+				cooldownManager.addCooldownPlayer(CooldownType.Ownership,
+						cooldownManager.loadCooldownPlayer(CooldownType.Ownership, offlinePlayer));
 
 				if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
 					scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',

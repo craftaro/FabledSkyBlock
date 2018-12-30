@@ -54,24 +54,24 @@ public class BanManager {
 		}
 	}
 
-	public void transfer(UUID uuid, UUID islandOwnerUUID) {
+	public void transfer(UUID uuid1, UUID uuid2) {
 		FileManager fileManager = skyblock.getFileManager();
 
-		Ban ban = getIsland(islandOwnerUUID);
+		Ban ban = getIsland(uuid1);
 		ban.save();
 
 		File oldBanDataFile = new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-				islandOwnerUUID.toString() + ".yml");
+				uuid1.toString() + ".yml");
 		File newBanDataFile = new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-				uuid.toString() + ".yml");
+				uuid2.toString() + ".yml");
 
 		fileManager.unloadConfig(oldBanDataFile);
 		fileManager.unloadConfig(newBanDataFile);
 
 		oldBanDataFile.renameTo(newBanDataFile);
 
-		removeIsland(islandOwnerUUID);
-		addIsland(uuid, ban);
+		removeIsland(uuid1);
+		addIsland(uuid2, ban);
 	}
 
 	public void removeVisitor(Island island) {
@@ -87,7 +87,7 @@ public class BanManager {
 
 			LocationUtil.teleportPlayerToSpawn(targetPlayer);
 
-			messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Banned.Message"));
+			messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Banned.Island.Message"));
 			soundManager.playSound(targetPlayer, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

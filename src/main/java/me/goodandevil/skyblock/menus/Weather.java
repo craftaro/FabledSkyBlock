@@ -14,10 +14,11 @@ import org.bukkit.inventory.ItemStack;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Location;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
@@ -55,25 +56,21 @@ public class Weather {
 				@Override
 				public void onClick(ClickEvent event) {
 					if (playerDataManager.hasPlayerData(player)) {
-						Island island = null;
+						Island island = islandManager.getIsland(player);
 
-						if (islandManager.hasIsland(player)) {
-							island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
-
-							if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-									&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
-									|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Weather.Permission.Message"));
-								soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-								player.closeInventory();
-
-								return;
-							}
-						} else {
+						if (island == null) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.Weather.Owner.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+							player.closeInventory();
+
+							return;
+						} else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
+								&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
+								|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Weather.Permission.Message"));
+							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 							player.closeInventory();
 
 							return;
@@ -116,7 +113,7 @@ public class Weather {
 							}
 
 							if (!island.isWeatherSynchronized()) {
-								for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
+								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
 									all.setPlayerTime(island.getTime(),
 											fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 													.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
@@ -141,7 +138,7 @@ public class Weather {
 							}
 
 							if (!island.isWeatherSynchronized()) {
-								for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
+								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
 									all.setPlayerWeather(island.getWeather());
 								}
 							}
@@ -163,7 +160,7 @@ public class Weather {
 								int islandTime = island.getTime();
 								WeatherType islandWeather = island.getWeather();
 
-								for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
+								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
 									all.setPlayerTime(islandTime,
 											fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 													.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
@@ -172,7 +169,7 @@ public class Weather {
 							} else {
 								island.setWeatherSynchronized(true);
 
-								for (Player all : islandManager.getPlayersAtIsland(island, Location.World.Normal)) {
+								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
 									all.resetPlayerTime();
 									all.resetPlayerWeather();
 								}
@@ -191,7 +188,7 @@ public class Weather {
 				}
 			});
 
-			Island island = islandManager.getIsland(playerDataManager.getPlayerData(player).getOwner());
+			Island island = islandManager.getIsland(player);
 
 			String timeName = "", timeChoice = "", weatherSynchronised, weatherChoice, synchronisedChoice;
 			int islandTime = island.getTime();
@@ -237,26 +234,24 @@ public class Weather {
 			nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG),
 					configLoad.getString("Menu.Weather.Item.Info.Displayname"),
 					configLoad.getStringList("Menu.Weather.Item.Info.Lore"),
-					nInv.createItemLoreVariable(
-							new String[] { "%synchronised#" + weatherSynchronised, "%time_name#" + timeName,
-									"%time#" + island.getTime(), "%weather#" + island.getWeatherName() }),
+					new Placeholder[] { new Placeholder("%synchronised", weatherSynchronised),
+							new Placeholder("%time_name", timeName), new Placeholder("%time", "" + island.getTime()),
+							new Placeholder("%weather", island.getWeatherName()) },
 					null, null), 0);
 			nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 					configLoad.getString("Menu.Weather.Item.Barrier.Displayname"), null, null, null, null), 1);
 			nInv.addItem(nInv.createItem(Materials.SUNFLOWER.parseItem(),
 					configLoad.getString("Menu.Weather.Item.Time.Displayname"),
 					configLoad.getStringList("Menu.Weather.Item.Time.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%choice#" + timeChoice }), null, null), 2);
+					new Placeholder[] { new Placeholder("%choice", timeChoice) }, null, null), 2);
 			nInv.addItem(nInv.createItem(new ItemStack(Material.GHAST_TEAR),
 					configLoad.getString("Menu.Weather.Item.Weather.Displayname"),
 					configLoad.getStringList("Menu.Weather.Item.Weather.Lore"),
-					nInv.createItemLoreVariable(new String[] { "%choice#" + weatherChoice }), null, null), 3);
-			nInv.addItem(
-					nInv.createItem(new ItemStack(Material.TRIPWIRE_HOOK),
-							configLoad.getString("Menu.Weather.Item.Synchronised.Displayname"),
-							configLoad.getStringList("Menu.Weather.Item.Synchronised.Lore"),
-							nInv.createItemLoreVariable(new String[] { "%choice#" + synchronisedChoice }), null, null),
-					4);
+					new Placeholder[] { new Placeholder("%choice", weatherChoice) }, null, null), 3);
+			nInv.addItem(nInv.createItem(new ItemStack(Material.TRIPWIRE_HOOK),
+					configLoad.getString("Menu.Weather.Item.Synchronised.Displayname"),
+					configLoad.getStringList("Menu.Weather.Item.Synchronised.Lore"),
+					new Placeholder[] { new Placeholder("%choice", synchronisedChoice) }, null, null), 4);
 
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Weather.Title")));
 			nInv.setType(InventoryType.HOPPER);

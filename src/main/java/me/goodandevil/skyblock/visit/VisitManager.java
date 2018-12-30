@@ -10,7 +10,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -18,11 +17,14 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.Level;
+import me.goodandevil.skyblock.island.IslandLevel;
+import me.goodandevil.skyblock.island.IslandLocation;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
+import me.goodandevil.skyblock.world.WorldManager;
 
 public class VisitManager {
 
@@ -45,6 +47,7 @@ public class VisitManager {
 	}
 
 	public void loadIslands() {
+		WorldManager worldManager = skyblock.getWorldManager();
 		FileManager fileManager = skyblock.getFileManager();
 
 		if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
@@ -89,12 +92,20 @@ public class VisitManager {
 							}
 
 							createIsland(islandOwnerUUID,
-									new Location[] { fileManager.getLocation(config, "Location.Normal.Island", true),
-											fileManager.getLocation(config, "Location.Nether.Island", true) },
+									new IslandLocation[] {
+											new IslandLocation(IslandWorld.Normal, null,
+													worldManager.getLocation(fileManager.getLocation(config,
+															"Location.Normal.Island", true), IslandWorld.Normal)),
+											new IslandLocation(IslandWorld.Nether, null,
+													worldManager.getLocation(fileManager.getLocation(config,
+															"Location.Nether.Island", true), IslandWorld.Nether)),
+											new IslandLocation(IslandWorld.End, null,
+													worldManager.getLocation(fileManager.getLocation(config,
+															"Location.Nether.Island", true), IslandWorld.End)) },
 									size,
 									configLoad.getStringList("Members").size()
 											+ configLoad.getStringList("Operators").size() + 1,
-									getIslandSafeLevel(islandOwnerUUID), new Level(islandOwnerUUID, skyblock),
+									getIslandSafeLevel(islandOwnerUUID), new IslandLevel(islandOwnerUUID, skyblock),
 									islandSignature, configLoad.getBoolean("Visitor.Open"));
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -105,24 +116,24 @@ public class VisitManager {
 		}
 	}
 
-	public void transfer(UUID uuid, UUID islandOwnerUUID) {
-		Visit visit = getIsland(islandOwnerUUID);
-		visit.setOwnerUUID(uuid);
-		visit.getLevel().setOwnerUUID(uuid);
+	public void transfer(UUID uuid1, UUID uuid2) {
+		Visit visit = getIsland(uuid1);
+		visit.setOwnerUUID(uuid2);
+		visit.getLevel().setOwnerUUID(uuid2);
 		visit.save();
 
 		File oldVisitDataFile = new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
-				islandOwnerUUID.toString() + ".yml");
+				uuid1.toString() + ".yml");
 		File newVisitDataFile = new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
-				uuid.toString() + ".yml");
+				uuid2.toString() + ".yml");
 
 		skyblock.getFileManager().unloadConfig(oldVisitDataFile);
 		skyblock.getFileManager().unloadConfig(newVisitDataFile);
 
 		oldVisitDataFile.renameTo(newVisitDataFile);
 
-		removeIsland(islandOwnerUUID);
-		addIsland(uuid, visit);
+		removeIsland(uuid1);
+		addIsland(uuid2, visit);
 	}
 
 	public void removeVisitors(Island island, VisitManager.Removal removal) {
@@ -206,8 +217,8 @@ public class VisitManager {
 		return visitIslands;
 	}
 
-	public void createIsland(UUID islandOwnerUUID, Location[] islandLocations, int islandSize, int islandMembers,
-			int safeLevel, Level islandLevel, List<String> islandSignature, boolean open) {
+	public void createIsland(UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize, int islandMembers,
+			int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
 		visitStorage.put(islandOwnerUUID, new Visit(skyblock, islandOwnerUUID, islandLocations, islandSize,
 				islandMembers, safeLevel, islandLevel, islandSignature, open));
 	}

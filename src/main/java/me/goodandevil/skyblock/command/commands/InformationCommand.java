@@ -19,7 +19,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.OfflinePlayer;
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class InformationCommand extends SubCommand {
@@ -79,14 +79,14 @@ public class InformationCommand extends SubCommand {
 			PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 
 			if (islandOwnerUUID == null) {
-				if (islandManager.hasIsland(player)) {
-					islandOwnerUUID = playerData.getOwner();
-				} else {
+				if (islandManager.getIsland(player) == null) {
 					messageManager.sendMessage(player,
 							configLoad.getString("Command.Island.Information.Owner.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 					return;
+				} else {
+					islandOwnerUUID = playerData.getOwner();
 				}
 			}
 

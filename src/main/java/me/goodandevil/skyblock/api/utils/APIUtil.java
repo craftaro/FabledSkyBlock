@@ -6,49 +6,51 @@ import me.goodandevil.skyblock.api.island.IslandMessage;
 import me.goodandevil.skyblock.api.island.IslandRole;
 import me.goodandevil.skyblock.api.island.IslandUpgrade;
 import me.goodandevil.skyblock.api.island.IslandWorld;
-import me.goodandevil.skyblock.island.Location.Environment;
-import me.goodandevil.skyblock.island.Location.World;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
 
 public final class APIUtil {
 
-	public static World toImplementation(IslandWorld world) {
+	public static me.goodandevil.skyblock.island.IslandWorld toImplementation(IslandWorld world) {
 		switch (world) {
 		case NETHER:
-			return World.Nether;
+			return me.goodandevil.skyblock.island.IslandWorld.Nether;
 		case OVERWORLD:
-			return World.Normal;
+			return me.goodandevil.skyblock.island.IslandWorld.Normal;
+		case END:
+			return me.goodandevil.skyblock.island.IslandWorld.End;
 		}
 
 		return null;
 	}
 
-	public static IslandWorld fromImplementation(World world) {
+	public static IslandWorld fromImplementation(me.goodandevil.skyblock.island.IslandWorld world) {
 		switch (world) {
 		case Nether:
 			return IslandWorld.NETHER;
 		case Normal:
 			return IslandWorld.OVERWORLD;
+		case End:
+			return IslandWorld.END;
 		}
 
 		return null;
 	}
 
-	public static Environment toImplementation(IslandEnvironment environment) {
+	public static me.goodandevil.skyblock.island.IslandEnvironment toImplementation(IslandEnvironment environment) {
 		switch (environment) {
 		case ISLAND:
-			return Environment.Island;
+			return me.goodandevil.skyblock.island.IslandEnvironment.Island;
 		case MAIN:
-			return Environment.Main;
+			return me.goodandevil.skyblock.island.IslandEnvironment.Main;
 		case VISITOR:
-			return Environment.Visitor;
+			return me.goodandevil.skyblock.island.IslandEnvironment.Visitor;
 		}
 
 		return null;
 	}
 
-	public static IslandEnvironment fromImplementation(Environment environment) {
+	public static IslandEnvironment fromImplementation(me.goodandevil.skyblock.island.IslandEnvironment environment) {
 		switch (environment) {
 		case Island:
 			return IslandEnvironment.ISLAND;

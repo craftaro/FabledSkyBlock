@@ -7,7 +7,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.island.Location;
 
 @SuppressWarnings("deprecation")
 public class Item implements Listener {
@@ -22,9 +21,7 @@ public class Item implements Listener {
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 
-		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| player.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+		if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
 			if (!skyblock.getIslandManager().hasPermission(player, "ItemDrop")) {
 				event.setCancelled(true);
 			}
@@ -35,9 +32,7 @@ public class Item implements Listener {
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 		Player player = event.getPlayer();
 
-		if (player.getWorld().getName().equals(skyblock.getWorldManager().getWorld(Location.World.Normal).getName())
-				|| player.getWorld().getName()
-						.equals(skyblock.getWorldManager().getWorld(Location.World.Nether).getName())) {
+		if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
 			if (!skyblock.getIslandManager().hasPermission(player, "ItemPickup")) {
 				event.setCancelled(true);
 			}

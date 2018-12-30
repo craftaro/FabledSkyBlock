@@ -85,6 +85,8 @@ public class EntityData {
 
 		this.fireTicks = fireTicks;
 		this.ticksLived = ticksLived;
+
+		this.ai = true;
 	}
 
 	public String getEntityType() {

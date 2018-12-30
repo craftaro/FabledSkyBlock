@@ -55,7 +55,8 @@ public class Ban {
 		SkyBlock skyblock = SkyBlock.getInstance();
 
 		IslandBanEvent islandBanEvent = new IslandBanEvent(
-				skyblock.getIslandManager().getIsland(islandOwnerUUID).getAPIWrapper(),
+				skyblock.getIslandManager().getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID))
+						.getAPIWrapper(),
 				Bukkit.getServer().getOfflinePlayer(issuer), Bukkit.getServer().getOfflinePlayer(banned));
 		Bukkit.getServer().getPluginManager().callEvent(islandBanEvent);
 
@@ -93,7 +94,8 @@ public class Ban {
 		configLoad.set("Bans", islandBans);
 
 		Bukkit.getServer().getPluginManager()
-				.callEvent(new IslandUnbanEvent(skyblock.getIslandManager().getIsland(islandOwnerUUID).getAPIWrapper(),
+				.callEvent(new IslandUnbanEvent(skyblock.getIslandManager()
+						.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).getAPIWrapper(),
 						Bukkit.getServer().getOfflinePlayer(uuid)));
 	}
 

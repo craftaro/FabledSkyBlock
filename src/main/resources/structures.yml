@@ -1,6 +1,9 @@
 Structures:
     Default:
-        File: "default.structure"
+        File:
+            Overworld: "default.structure"
+            Nether: "default.structure"
+            End: "default.structure"
         Name: "Default"
         Displayname: "&a&lDefault"
         Description:
