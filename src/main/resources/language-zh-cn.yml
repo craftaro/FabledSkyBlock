@@ -1,0 +1,3119 @@
+############################
+# 翻译者: LinTx
+# https://www.yinwurealm.org
+############################
+Command:
+    Island:
+        Argument:
+            Unrecognised:
+                Message: "&bSkyBlock &8| &c错误&8: &e参数错误."
+        Help:
+            Lines:
+            - "&bSkyBlock &7- &e%commands&8:"
+            - "&c&o[&f&o!&c&o] &7&o鼠标悬停在命令上查看更多信息."
+            - "&8&l* &e%commands &7- &f&o%info"
+            Word:
+                Next: "&a&l下一页"
+                Previous: "&a&l上一页"
+                Pipe: "&8|"
+            Integer:
+                Message: "&bSkyBlock &8| &c错误&8: &e请输入一个数字."
+            Page:
+                Message: "&bSkyBlock &8| &c错误&8: &e没有更多页了."
+        ControlPanel:
+            Info:
+                Message: "&f&o打开空岛控制菜单."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+        Upgrade:
+            Info:
+                Message: "&f&o打开空岛升级菜单."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Disabled:
+                Message: "&bSkyBlock &8| &c错误&8: &e没有找到SkyBlock依赖的Vault或Coins前置插件, 空岛升级已经被禁用."
+        Border:
+            Info:
+                Message: "&f&o打开空岛边界菜单."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限打开空岛边界菜单."
+            Disabled:
+                Message: "&bSkyBlock &8| &c错误&8: &e空岛边界设置已经被禁用."
+        Leaderboard:
+            Info:
+                Message: "&f&o打开空岛排名界面."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island leaderboard [<Level|Votes>]"
+            Disabled:
+                Message: "&bSkyBlock &8| &c错误&8: &e空岛排名已经被及你用."
+        Create:
+            Info:
+                Message: "&f&o打开创造空岛菜单."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你已经拥有一座空岛了."
+        Reset:
+            Info:
+                Message: "&f&o重置空岛."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限重置你的空岛."
+            Confirmation:
+                Pending:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你必须先确认之前的操作, 或者稍后再试!"
+                Confirm:
+                    Word:
+                        Confirm: "确认"
+                        Tutorial: "&7点击&f&o确认&r&7以重置你的空岛!"
+                    Message: "&bSkyBlock &8| &a信息&8: &e请在&c%time&e秒内选择是否确认重置你的空岛."
+        Delete:
+            Info:
+                Message: "&f&o删除空岛."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限删除你的空岛."
+            Confirmation:
+                Pending:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你必须先确认或取消之前的操作, 或者稍后再试!"
+                Confirm:
+                    Word:
+                        Confirm: "确认"
+                        Tutorial: "&7点击&f&o确认&r&7以删除你的空岛!"
+                    Message: "&bSkyBlock &8| &a信息&8: &e请在&c%time&e秒内选择是否确认删除你的空岛.   %confirm"
+        Teleport:
+            Info:
+                Message: "&f&o传送到你的空岛."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island teleport [<player>]"
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限传送到其他玩家的空岛."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Teleported:
+                Yourself:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你传送到了你的空岛上."
+                Other:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你传送到了&a%player&e的空岛上."
+            Island:
+                None:
+                    Message: "&bSkyBlock &8| &c错误&8: &e这名玩家没有空岛."
+                Closed:
+                    Message: "&bSkyBlock &8| &c错误&8: &e这名玩家的空岛不对游客开放."
+        SetSpawn:
+            Info:
+                Message: "&f&o设置空岛传送点, 或游客的传送点."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island setspawn <Main|Visitor>"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Role:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的用户组不允许设置%spawn传送点."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限设置%spawn传送点."
+            Island:
+                Message: "&bSkyBlock &8| &c错误&8: &e你必须站在你的空岛上才能设置%spawn传送点."
+            Spawn:
+                Message: "&bSkyBlock &8| &c错误&8: &e传送点类型错误."
+            Protection:
+                Block:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你必须站在一个方块上才能设置传送点."
+                Ground:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你必须站在地上才能设置传送点."
+                Liquid:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你不能站在水或岩浆中设置传送点."
+                Portal:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你不能站在门中设置传送点."
+                Centre:
+                    Message: "&bSkyBlock &8| &c错误&8: &e为了传送安全, 你必须站在方块中间才能设置传送点."
+            Set:
+                Message: "&bSkyBlock &8| &a信息&8: &e%spawn传送点已设置."
+        Invite:
+            Info:
+                Message: "&f&o邀请玩家加入你的空岛."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island invite <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限邀请玩家加入你的空岛."
+            Capacity:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的空岛成员数量已满, 无法继续邀请岛员."
+            Offline:
+                Message: "&bSkyBlock &8| &c错误&8: &e玩家未找到."
+            Yourself:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能邀请你自己."
+            Member:
+                Message: "&bSkyBlock &8| &c错误&8: &e这名玩家已经是其他空岛的成员了."
+            Already:
+                Other:
+                    Message: "&bSkyBlock &8| &c错误&8: &e这名玩家正在处理其他空岛的邀请."
+                Own:
+                    Message: "&bSkyBlock &8| &c错误&8: &e已经向这名玩家发送过邀请了."
+            Invited:
+                Word:
+                    Second: "秒"
+                    Minute: "分"
+                    Cancel: "取消"
+                    Accept: "接受"
+                    Deny: "拒绝"
+                    Resend: "重新发送"
+                    Tutorial: "&7点击&f&o%action&r&7邀请!"
+                Sender:
+                    Sent:
+                        Message: "&bSkyBlock &8| &a信息&8: &e你已经向&d%player&e发送了加入空岛的邀请. 他有&c%time&e处理邀请.   %cancel"
+                    Expired:
+                        Message: "&bSkyBlock &8| &a信息&8: &c%player&e在指定的时间内没有响应你的邀请."
+                    Disconnected:
+                        Message: "&bSkyBlock &8| &a信息&8: &e&c%player &e掉线了, 未能响应你的邀请."
+                Target:
+                    Received:
+                        Message: "&bSkyBlock &8| &a信息&8: &d%player&e邀请你加入他的空岛. 你有&c%time &e处理这个邀请.    "
+                    Expired:
+                        Message: "&bSkyBlock &8| &a信息&8: &e你没有即使处理&c%player&e邀请你加入他的空岛的请求."
+        Accept:
+            Info:
+                Message: "&f&o接受加入空岛邀请."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island accept <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你必须离开现在的空岛才能加入其他空岛."
+            Invite:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有收到加入空岛的邀请."
+            Invited:
+                Message: "&bSkyBlock &8| &c错误&8: &e这名玩家没有邀请你加入他的空岛."
+            Capacity:
+                Broadcast:
+                    Message: "&bSkyBlock &8| &a信息&8: &d%player&e邀请你加入他的空岛的请求已经自动取消, 因为对方的空岛成员已经达到上限."
+            Accepted:
+                Target:
+                    Message: "&bSkyBlock &8| &a信息&8: &d%player&e接受了你的邀请."
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你接受了&d%player&e的邀请."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &a信息&8: &6%player&e加入了你的空岛!"
+        Deny:
+            Info:
+                Message: "&f&o拒绝加入空岛."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island deny <player>"
+            Invited:
+                Message: "&bSkyBlock &8| &c错误&8: &e这名玩家没有邀请你加入他的空岛."
+            Denied:
+                Target:
+                    Message: "&bSkyBlock &8| &a信息&8: &c%player&e拒绝了你的邀请."
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你拒绝了&c%player&e的邀请."
+        Cancel:
+            Info:
+                Message: "&f&o取消邀请."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island cancel <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行这条命令."
+            Offline:
+                Message: "&bSkyBlock &8| &c错误&8: &e找不到该玩家."
+            Member:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家已经是空岛成员了."
+            Invited:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有邀请该玩家加入你的空岛."
+            Cancelled:
+                Message: "&bSkyBlock &8| &a信息&8: &e你已经取消了对&c%player&e发出的邀请."
+        Leave:
+            Info:
+                Message: "&f&o退出空岛."
+            Member:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛成员."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能退出自己的空岛."
+            Left:
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经退出了这个空岛."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &a信息&8: &c%player&e退出了你的空岛."
+        Promote:
+            Info:
+                Message: "&f&o设置空岛管理员."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island promote <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限设置空岛管理员."
+            Member:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家不是空岛成员."
+            Operator:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家已经是空岛管理员了."
+            Promoted:
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经将&d%player&设置为空岛&d管理员&e."
+                Target:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经成为空岛&d管理员&e."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &a信息&8: &d%player&e成为了空岛&d管理员&e."
+        Demote:
+            Info:
+                Message: "&f&o取消空岛管理员."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island demote <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限取消空岛管理员."
+            Member:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家不是空岛成员."
+            Role:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家不是空岛管理员."
+            Demoted:
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经将&d%player&e降级为&d岛员&e."
+                Target:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经被降级为&d岛员&e."
+        Vote:
+            Info:
+                Message: "添加/删除空岛投票."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island vote <player>"
+            Disabled:
+                Message: "&bSkyBlock &8| &c错误&8: &e空岛投票已经禁用."
+            Island:
+                None:
+                    Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有创建或加入空岛."
+                Unloaded:
+                    Message: "&bSkyBlock &8| &c错误&8: &e该玩家不在线."
+                Closed:
+                    Message: "&bSkyBlock &8| &c错误&8: &e投票已经关闭, 无法继续投票."
+                Member:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你不能给自己所属的空岛投票."
+                Location:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你必须在空岛上才能投票."
+            Vote:
+                Added:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经成功为&a%player&e的空岛&a&l投了一票&e."
+                Removed:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你&c&l撤销&e了给&a%player&e的空岛投的票."
+        Kick:
+            Info:
+                Message: "&f&o把岛员或访客踢出空岛."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island kick <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Permission:
+                Visit:
+                    Open:
+                        Message: "&bSkyBlock &8| &c错误&8: &e你没有权限踢出岛员或访客."
+                    Closed:
+                        Message: "&bSkyBlock &8| &c错误&8: &e你没有权限踢出岛员."
+            Occupant:
+                Visit:
+                    Open:
+                        Message: "&bSkyBlock &8| &c错误&8: &e该玩家不是你的岛员或访客."
+                    Closed:
+                        Message: "&bSkyBlock &8| &c错误&8: &e该玩家不是空岛成员."
+            Yourself:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能踢出你自己."
+            Cooped:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能踢出嘉宾."
+            Role:
+                Operator:
+                    Message: "&bSkyBlock &8| &c错误&8: &e该玩家的用户组和你一样, 你不能踢出他."
+                Owner:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你不能踢出空岛主人."
+            Kicked:
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你将&c%player&e踢出了空岛."
+                Target:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你被踢出了空岛."
+        Ban:
+            Info:
+                Message: "&f&o禁止一名玩家进入你的空岛."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island ban <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Disabled:
+                Message: "&bSkyBlock &8| &c错误&8: &e禁止玩家进入功能已经禁用."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限禁止岛员进入."
+            Found:
+                Message: "&bSkyBlock &8| &c错误&8: &e找不到该玩家."
+            Yourself:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能禁止你自己."
+            Member:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能禁止岛员进入空岛."
+            Already:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家已经被禁止进入空岛了."
+            Banned:
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你禁止了&c%player&e进入你的空岛."
+                Target:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你被禁止进入这个空岛."
+        Unban:
+            Info:
+                Message: "&f&o解除被禁止进入空岛的玩家."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island unban <player>"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Disabled:
+                Message: "&bSkyBlock &8| &c错误&8: &e禁止玩家进入功能已经禁用."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限解禁岛员."
+            Found:
+                Message: "&bSkyBlock &8| &c错误&8: &e找不到该玩家."
+            Yourself:
+                Message: "&bSkyBlock &8| &c错误&8: &e你是空岛成员, 没有被禁止进入空岛."
+            Member:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家是空岛成员, 没有被禁止进入空岛."
+            Banned:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有被禁止进入空岛."
+            Unbanned:
+                Message: "&bSkyBlock &8| &a信息&8: &e你已经解除了&c%player&e的禁止进入空岛限制."
+        Bans:
+            Info:
+                Message: "&f&o打开空岛禁入菜单."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限打开进入列表."
+            Bans:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的空岛没有禁止任何玩家进入."
+        Biome:
+            Info:
+                Message: "&f&o打开生物群系菜单."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限改变生物群系."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+        Weather:
+            Info:
+                Message: "&f&o打开空岛天气菜单."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限修改空岛天气."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+        Rollback:
+            Info:
+                Message: "&f&o打开空岛快照菜单."
+            Role:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限打开空岛快照菜单."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+        Level:
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island level [<player>]"
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限打开空岛等级菜单."
+            Info:
+                Message: "&f&o打开空岛等级菜单."
+            Processing:
+                Message: "&bSkyBlock &8| &a信息&8: &7&o正在统计空岛等级... 请稍候!"
+            Loading:
+                Message: "&bSkyBlock &8| &a信息&8: &7&o正在加载空岛方块... 请稍候!"
+            Owner:
+                Yourself:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+                Other:
+                    Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有加入或创建空岛."
+            Level:
+                Message: "&bSkyBlock &8| &a信息&8: &d%player&e的空岛等级为&6%level&e."
+            Materials:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的空岛没有任何方块被计算进空岛等级."
+            Cooldown:
+                Word:
+                    Hour: "小时"
+                    Minute: "分钟"
+                    Second: "秒"
+                Message: "&bSkyBlock &8| &c错误&8: &c&o%time&e之后才能再次计算空岛等级."
+        Value:
+            Info:
+                Message: "&f&o查看手上拿着的方块价值(空岛等级点)."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有查看方块价值的权限."
+            Hand:
+                Message: "&bSkyBlock &8| &c错误&8: &e你必须在手上拿着需要查看价值的物品."
+            None:
+                Message: "&bSkyBlock &8| &c错误&8: &e无法获知这个物品的价值."
+            Value:
+                Message: "&bSkyBlock &8| &a信息&8: &e'&d%material&e'价值&d%points&e点, 并且有&d%level&e等级加成."
+        Settings:
+            Info:
+                Message: "&f&o打开空岛设置菜单."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Role:
+                Message: "&bSkyBlock &8| &c错误&8: &e你所属的用户组无法修改空岛设置."
+            Permission:
+                Default:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限查看或修改空岛设置."
+                Access:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限查看空岛设置."
+                Change:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限修改空岛设置."
+        Information:
+            Info:
+                Message: "&f&o打开空岛信息菜单."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island information [<player>]"
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限查看其他玩家的空岛信息."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Island:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有创建或加入空岛."
+        Coop:
+            Info:
+                Message: "&f&o打开嘉宾菜单或者添加/删除嘉宾."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限这样做."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island coop [<player>]"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Disabled:
+                Message: "&bSkyBlock &8| &c错误&8: &e空岛嘉宾系统已经关闭."
+            Found:
+                Message: "&bSkyBlock &8| &c错误&8: &e找不到该玩家."
+            Yourself:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能把你自己添加为嘉宾."
+            Member:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能把空岛成员添加为嘉宾."
+            Banned:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能把禁止进入的玩家设置为嘉宾."
+            Added:
+                Message: "&bSkyBlock &8| &a信息&8: &e你将&d%player&e设置为嘉宾."
+            Removed:
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你把&d%player&e从嘉宾名单中删除了."
+                Target:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你不再是某个空岛的嘉宾了."
+        Members:
+            Info:
+                Message: "&f&o打开空岛成员菜单."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+        Ownership:
+            Info:
+                Message: "&f&o打开空岛所有权菜单."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island ownership / (<player> / <password>)"
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Member:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家不是空岛成员."
+            Yourself:
+                Message: "&bSkyBlock &8| &c错误&8: &e你已经是空岛主人了, 不能把空岛给自己."
+            Confirmation:
+                Pending:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你必须先确认或取消之前的操作, 或者稍后再试!"
+                Confirm:
+                    Word:
+                        Confirm: "确认"
+                        Tutorial: "&7点击&f&o确认&r&7转让所有权!"
+                    Message: "&bSkyBlock &8| &a信息&8: &e你将要把你的空岛转让给&d%player&e. 请在有&c%time&e秒内确认.   %confirm"
+            Password:
+                Unset:
+                    Message: "&bSkyBlock &8| &c错误&8: &e空岛主人没有设置密码."
+                Incorrect:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你输入的密码不正确."
+            Assigned:
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经转让了你的空岛."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &a信息&8: &e空岛已经转让给&a%player&e!"
+            Cooldown:
+                Word:
+                    Hour: "小时"
+                    Minute: "分钟"
+                    Second: "秒"
+                Message: "&bSkyBlock &8| &c错误&8: &c&o%time&e后才能转让空岛."
+        Confirmation:
+            Info:
+                Message: "&f&o确认永久性操作."
+            Pending:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有等待处理的操作."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你无法确认这个操作, 因为你不是空岛的主人."
+            Specified:
+                Message: "&bSkyBlock &8| &c错误&8: &e必须输入操作原因."
+            Role:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能处理这个操作, 因为你已经不是空岛的主人了."
+            Ownership:
+                Member:
+                    Message: "&bSkyBlock &8| &c错误&8: &e空岛所有权只能转让给岛员."
+                Assigned:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你成为了空岛的主人."
+            Deletion:
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你永久的失去了你的空岛."
+                Open:
+                    Message: "&bSkyBlock &8| &c错误&8: &e删除空岛前必须将空岛关闭."
+                Spawn:
+                    Message: "&bSkyBlock &8| &c错误&8: &e删除空岛前你必须转移传送点."
+                Money:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有足够的钱删除空岛. 删除空岛需要&c%cost&e."
+                Broadcast:
+                    Message: "&bSkyBlock &8| &a信息&8: &e空岛主人删除了空岛."
+            Confirmed:
+                Message: "&bSkyBlock &8| &a信息&8: &e你已经确认了这个操作."
+        Chat:
+            Info:
+                Message: "&f&o切换聊天方式为私聊信息."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Team:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能切换空岛聊天方式, 因为你的空岛不是一个团队型空岛."
+            Offline:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不能切换空岛聊天方式, 因为没有岛员在线."
+            Toggled:
+                Message: "&bSkyBlock &8| &a信息&8: &e你已经切换了空岛聊天方式, 聊天信息只有岛员可以看到."
+            Untoggled:
+                Message: "&bSkyBlock &8| &a信息&8: &e你已经切换了空岛聊天方式, 现在所有人都可以看到岛员的聊天了."
+        Visitors:
+            Info:
+                Message: "&f&o打开访客菜单."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Closed:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的空岛已经关闭, 无法打开访客菜单."
+            Visitors:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的空岛上没有访客."
+        KickAll:
+            Info:
+                Message: "&f&o踢出所有空岛访客."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+            Role:
+                Message: "&bSkyBlock &8| &c错误&8: &e你所属的用户组不能踢出所有访客."
+            Closed:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的空岛已经关闭, 无法踢出所有访客."
+            Visitors:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的空岛上没有访客."
+            Kicked:
+                Target:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你被踢出了这个空岛."
+                Sender:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你将访客&c%visitors&e踢出了空岛."
+        Current:
+            Info:
+                Message: "&f&o显示当前所在的空岛."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island current <player>"
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限查看其他玩家所在空岛."
+            Offline:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家不在线."
+            Island:
+                Owner:
+                    Yourself:
+                        Message: "&bSkyBlock &8| &a信息&8: &e你现在在&d%player&e的空岛."
+                    Other:
+                        Message: "&bSkyBlock &8| &a信息&8: &a%target&e在&d%owner&e的空岛上."
+                None:
+                    Yourself:
+                        Message: "&bSkyBlock &8| &a信息&8: &e你不在任何空岛上."
+                    Other:
+                        Message: "&bSkyBlock &8| &a信息&8: &e该玩家不在任何空岛上."
+        Visit:
+            Info:
+                Message: "&f&o打开开放岛屿列表."
+            Invalid:
+                Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island visit [<player>]"
+        Open:
+            Info:
+                Message: "&f&o向访客开放你的空岛."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家不是空岛主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限开放空岛."
+            Already:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的空岛已经是开放的了."
+            Opened:
+                Message: "&bSkyBlock &8| &a信息&8: &e你向访客开放了你的空岛."
+        Close:
+            Info:
+                Message: "&f&o禁止访客访问你的空岛."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家不是空岛主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限关闭空岛."
+            Already:
+                Message: "&bSkyBlock &8| &c错误&8: &e你的空岛已经是关闭的了."
+            Closed:
+                Message: "&bSkyBlock &8| &a信息&8: &e你禁止了访客访问你的空岛."
+        Public:
+            Info:
+                Message: "&f&o设置你的空岛为私人的或公开的."
+            Owner:
+                Message: "&bSkyBlock &8| &c错误&8: &e该玩家不是空岛主人."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限设置空岛为私人的或公开的."
+            Public:
+                Message: "&bSkyBlock &8| &a信息&8: &e你的空岛现在是&a公开&e的."
+            Private:
+                Message: "&bSkyBlock &8| &a信息&8: &e你的空岛现在是&c私人&e的."
+        Admin:
+            Help:
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+            Create:
+                Info:
+                    Message: "&f&o管理创建空岛结构."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+            Upgrade:
+                Info:
+                    Message: "&f&o管理空岛升级菜单."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Disabled:
+                    Message: "&bSkyBlock &8| &c错误&8: &e升级系统已经禁用."
+            Generator:
+                Info:
+                    Message: "&f&o管理刷石机矿物."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Disabled:
+                    Message: "&bSkyBlock &8| &c错误&8: &e刷石机刷出矿物已经禁用."
+            Level:
+                Info:
+                    Message: "&f&o修改方块价值."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+            Settings:
+                Info:
+                    Message: "&f&o更改新创建空岛的默认设置."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+            Structure:
+                Info:
+                    Message: "&f&o创建空岛结构."
+                Tool:
+                    Info:
+                        Message: "&f&o给予玩家结构工具物品."
+                    Permission:
+                        Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                    Inventory:
+                        Message: "&bSkyBlock &8| &c错误&8: &e你的背包中已经有结构工具."
+                    Equiped:
+                        Message: "&bSkyBlock &8| &a信息&8: &e你获得了结构工具."
+                Save:
+                    Info:
+                        Message: "&f&o保存所选结构."
+                    Permission:
+                        Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                    Invalid:
+                        Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island admin structure save <name>"
+                    Position:
+                        Message: "&bSkyBlock &8| &c错误&8: &e请使用结构工具选择一个区域."
+                    Complete:
+                        Message: "&bSkyBlock &8| &c错误&8: &e请使用结构工具分别用鼠标左右键点击两个点来选择一个区域."
+                    Selection:
+                        World:
+                            Message: "&bSkyBlock &8| &c错误&8: &e两个点必须在同一个世界."
+                    Player:
+                        World:
+                            Message: "&bSkyBlock &8| &c错误&8: &e你必须和选定的位置在同一个世界."
+                        Area:
+                            Message: "&bSkyBlock &8| &c错误&8: &e你必须站在所选区域内."
+                    Saved:
+                        Successful:
+                            Message: "&bSkyBlock &8| &a信息&8: &e已经存在名为'&d%name&e'的结构!"
+                        Failed:
+                            Message: "&bSkyBlock &8| &c错误&8: &e保存结构时出错."
+            SetSpawn:
+                Info:
+                    Message: "&f&o将世界传送点设置在你的位置."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Set:
+                    Message: "&bSkyBlock &8| &a信息&8: &e世界传送点已经成功设置在当前位置."
+            SetHologram:
+                Info:
+                    Message: "&f&o在当前位置设置浮空字."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Invalid:
+                    Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island admin sethologram <Level|Votes>"
+                Set:
+                    Message: "&bSkyBlock &8| &a信息&8: '&b%type&e'浮空字已经设置在当前位置."
+            RemoveHologram:
+                Info:
+                    Message: "&f&o删除浮空字."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Invalid:
+                    Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island admin removehologram <Level|Votes>"
+                Set:
+                    Message: "&bSkyBlock &8| &c错误&8: &e当前位置没有浮空字."
+                Removed:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经删除了'&b%type&e'浮空字."
+            SetSize:
+                Info:
+                    Message: "&f&o设置玩家空岛大小."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Invalid:
+                    Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island admin setsize <player> <size>"
+                Numerical:
+                    Message: "&bSkyBlock &8| &c错误&8: &e空岛大小必须是一个数字."
+                Size:
+                    Greater:
+                        Message: "&bSkyBlock &8| &c错误&8: &e空岛大小必须大于50."
+                    Less:
+                        Message: "&bSkyBlock &8| &c错误&8: &e空岛大小必须小于1000."
+                Island:
+                    Owner:
+                        Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有加入或创建空岛."
+                    Data:
+                        Message: "&bSkyBlock &8| &c错误&8: &e没有找到该玩家的空岛数据."
+                Set:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你将&d%player&e的空岛大小设置为&d%size&e."
+            AddUpgrade:
+                Info:
+                    Message: "&f&o升级玩家空岛项目."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Invalid:
+                    Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island admin addupgrade <player> <upgrade>"
+                Island:
+                    Owner:
+                        Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有加入或创建空岛."
+                    Data:
+                        Message: "&bSkyBlock &8| &c错误&8: &e没有找到该玩家的空岛数据."
+                Upgrade:
+                    Exist:
+                        Message: "&bSkyBlock &8| &c错误&8: &e升级项不存在."
+                    Already:
+                        Message: "&bSkyBlock &8| &c错误&8: &e该玩家的空岛已经升级过该升级项了."
+                Added:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经为&d%player&a&l设置了升级项'&d%upgrade&e'."
+            RemoveUpgrade:
+                Info:
+                    Message: "&f&o取消玩家空岛升级项目."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Invalid:
+                    Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island admin removeupgrade <player> <upgrade>"
+                Island:
+                    Owner:
+                        Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有加入或创建空岛."
+                    Data:
+                        Message: "&bSkyBlock &8| &c错误&8: &e没有找到该玩家的空岛数据."
+                Upgrade:
+                    Exist:
+                        Message: "&bSkyBlock &8| &c错误&8: &e该升级项不存在."
+                    Missing:
+                        Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有升级过该升级项."
+                Removed:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你为&d%player&c&l取消了&e升级项'&d%upgrade&e'的升级."
+            Delete:
+                Info:
+                    Message: "&f&o删除玩家空岛."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Invalid:
+                    Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island admin delete <player_name>"
+                Owner:
+                    Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有加入或创建空岛."
+                Spawn:
+                    Message: "&bSkyBlock &8| &c错误&8: &e该空岛设置了主传送点, 因此无法删除这个空岛."
+                Deleted:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你删除了&c%player的&e空岛."
+            Owner:
+                Info:
+                    Message: "&f&o查找玩家的空岛."
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Invalid:
+                    Message: "&bSkyBlock &8| &c错误&8: &e无效命令, 命令格式: /island admin owner <player_name>"
+                Island:
+                    None:
+                        Message: "&bSkyBlock &8| &c错误&8: &e该玩家没有加入或创建空岛."
+                    Member:
+                        Message: "&bSkyBlock &8| &a信息&8: &d%player是&d%owner&e的空岛的成员."
+                    Owner:
+                        Message: "&bSkyBlock &8| &a信息&8: &d%player&e是空岛主人."
+            Reload:
+                Info:
+                    Message: "&f&o重新加载所有配置文件."  
+                Permission:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限执行该命令."
+                Reloaded:
+                    Message: "&bSkyBlock &8| &a信息&8: &e已经重新加载所有配置文件."
+Island:
+    Creator:
+        Selector:
+            Created:
+                Message: "&bSkyBlock &8| &a信息&8: &e你现在是这座空岛的主人了."
+            None:
+                Message: "&bSkyBlock &8| &c错误&8: &e没有可用的空岛结构."
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有使用这个空岛结构的权限."
+            File:
+                Overworld:
+                    Message: "&bSkyBlock &8| &c错误&8: &e主世界结构不存在."
+                Nether:
+                    Message: "&bSkyBlock &8| &c错误&8: &e地狱结构不存在."
+            Cooldown:
+                Word:
+                    Minute: "分钟"
+                    Second: "秒"
+                Message: "&bSkyBlock &8| &c错误&8: &c&o%time&e后你才可以创建空岛."
+        Error:
+            Message: "&bSkyBlock &8| &c错误&8: &e必须先设置主世界传送点才能创建岛屿, 请使用'&f&o/island admin setspawn&e设置主世界传送点'."
+    Upgrade:
+        Disabled:
+            Message: "&bSkyBlock &8| &c错误&8: &e空岛升级系统已经关闭, 无法升级."
+        Owner:
+            Message: "&bSkyBlock &8| &c错误&8: &e你不是空岛的主人."
+        Exist:
+            Message: "&bSkyBlock &8| &c错误&8: &e不存在的升级项."
+        Money:
+            Message: "&bSkyBlock &8| &c错误&8: &e你没有足够的钱购买这个升级项."
+        Bought:
+            Message: "&bSkyBlock &8| &a信息&8: &e你购买了升级项'%upgrade&e'."
+        Claimed:
+            Message: "&bSkyBlock &8| &c错误&8: &e你已经升级过这个项目了, 请勿重复购买."
+    Biome:
+        Cooldown:
+            Word:
+                Minute: "分钟"
+                Second: "秒"
+            Message: "&bSkyBlock &8| &c错误&8: &c&o%time&e后才能修改生物群系."
+    Information:
+        Island:
+            Message: "&bSkyBlock &8| &c错误&8: &e指定的玩家没有空岛."
+        Visitors:
+            Message: "&bSkyBlock &8| &c错误&8: &e指定的空岛上没有访客."
+        Closed:
+            Message: "&bSkyBlock &8| &c错误&8: &e指定的空岛禁止访客进入."
+    Settings:
+        Permission:
+            Message: "&bSkyBlock &8| &c错误&8: &e你没有权限在这个空岛上这样做."
+        Visitor:
+            Welcome:
+                Disabled:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限这样做."
+            Signature:
+                Disabled:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你没有权限这样做."
+    Portal:
+        Destination:
+            Message: "&bSkyBlock &8| &c错误&8: &e这个传送门没有目的地."
+    World:
+        Word:
+            Nether: "nether"
+            End: "end"
+        Message: "&bSkyBlock &8| &a信息&8: &e没有开启地狱, 你已经被传送出了地狱."
+    WorldBorder:
+        Outside:
+            Message: "&bSkyBlock &8| &c错误&8: &e你到达了世界边界."
+        Disappeared:
+            Message: "&bSkyBlock &8| &c错误&8: &e你所在的空岛消失了."
+    Visit:
+        Already:
+            Message: "&bSkyBlock &8| &c错误&8: &e你已经在这个空岛上了."
+        Exist:
+            Message: "&bSkyBlock &8| &c错误&8: &e这个空岛不存在了."
+        Closed:
+            Menu:
+                Message: "&bSkyBlock &8| &c错误&8: &e这个空岛关闭了访客进入."
+            Island:
+                Message: "&bSkyBlock &8| &a信息&8: &e你所在的这个空岛关闭了访客进入."
+            Plugin:
+                Message: "&bSkyBlock &8| &c错误&8: &e这个空岛关闭了访客进入, 传送失败."
+        Banned:
+            Island:
+                Message: "&bSkyBlock &8| &a信息&8: &e你被禁止进入这个空岛."
+            Teleport:
+                Message: "&bSkyBlock &8| &c错误&8: &e你被禁止进入这个空岛, 传送失败."
+        Teleported:
+            Message: "&bSkyBlock &8| &a信息&8: &e你传送到了&a%player&e的空岛."
+        Unloaded:
+            Message: "&bSkyBlock &8| &a信息&8: &e空岛没有在线岛员, 你被踢出了空岛."
+        Deleted:
+            Message: "&bSkyBlock &8| &a信息&8: &e空岛主人删除了空岛, 你被踢出了空岛."
+        Vote:
+            Island:
+                Message: "&bSkyBlock &8| &c错误&8: &e你必须站在所要投票的岛上."
+            Added:
+                Message: "&bSkyBlock &8| &a信息&8: &e你给&a%player&e的空岛&a&l投了一票&e."
+            Removed:
+                Message: "&bSkyBlock &8| &a信息&8: &e你&c&l取消了&e给&a%player&e的空岛的投票."
+    Structure:
+        Tool:
+            Position:
+                Message: "&bSkyBlock &8| &a信息&8: &e已选择坐标&b%position&e!"
+            Material:
+                Message: "&bSkyBlock &8| &c错误&8: &e在配置文件中找不到结构工具."
+            Item:
+                Displayname: "&b结构工具"
+                Lore:
+                - "&7选择2点确定一个区域"
+    Chat:
+        Format:
+            Role:
+                Member: "&a[成员]"
+                Operator: "&b[管理员]"
+                Owner: "&c[岛主]"
+            Message: "&8[&bSkyBlock &8| &dChat&8] %role &e%player&8: &f%message"
+        Untoggled:
+            Message: "&bSkyBlock &8| &a信息&8: &e空岛所有成员都已经下线, 空岛聊天已经切换到公开聊天, 现在所有玩家都可以看到空岛成员发送的聊天信息."
+    Coop:
+        Removed:
+            Owner:
+                Message: "&bSkyBlock &8| &a信息&8: &e空岛主人已经下线, 你被移出了空岛."
+            Operator:
+                Message: "&bSkyBlock &8| &a信息&8: &e空岛主人和所有管理员都已经下线, 你被移出了空岛."
+    Admin:
+        Creator:
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限这么做."
+            Already:
+                Message: "&bSkyBlock &8| &c错误&8: &e已经存在同名的空岛结构文件."
+            Exist:
+                Message: "&bSkyBlock &8| &c错误&8: &e空岛结构不存在."
+            Selected:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有选择任何结构."
+            Numerical:
+                Message: "&bSkyBlock &8| &c错误&8: &e你必须输入一个数字."
+            File:
+                Message: "&bSkyBlock &8| &c错误&8: &e结构目录中不存在该文件."
+            Characters:
+                Message: "&bSkyBlock &8| &c错误&8: &e结构名只能包含字母和数字."
+            Item:
+                Added:
+                    Message: "&bSkyBlock &8| &a信息&8: &e选择一个你背包中的物品."
+                Removed:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你已经从选择器中删除了该物品."
+                Cancelled:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你取消了物品选择."
+            Created:
+                Message: "&bSkyBlock &8| &a信息&8: &e你已经创建了一个名为'&d%structure&e'的结构."
+            Removed:
+                Message: "&bSkyBlock &8| &a信息&8: &e你删除了'&d%structure&e'结构."
+        Upgrade:
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限这么做."
+            Numerical:
+                Message: "&bSkyBlock &8| &c错误&8: &e你必须输入一个数字."
+            Tier:
+                Exist:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你已经升级过这个升级项了."
+                Limit:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你已经达到这个升级项的最高等级."
+                Selected:
+                    Message: "&bSkyBlock &8| &c错误&8: &e所选升级项已删除, 操作失败."
+                Size:
+                    Message: "&bSkyBlock &8| &c错误&8: &e空岛大小必须小于1000."
+        Generator:
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限这么做."
+            Disabled:
+                Message: "&bSkyBlock &8| &c错误&8: &e刷石机产生矿石已经禁用, 操作失败."
+            Already:
+                Message: "&bSkyBlock &8| &c错误&8: &e刷石机矿石生成器名称已存在."
+            Exist:
+                Message: "&bSkyBlock &8| &c错误&8: &e刷石机矿石生成器不存在."
+            Selected:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有选择任何刷石机矿石生成器."
+            Characters:
+                Message: "&bSkyBlock &8| &c错误&8: &e刷石机矿石生成器名称只能包含字母和数字."
+            Chance:
+                Numerical:
+                    Message: "&bSkyBlock &8| &c错误&8: &e你必须输入一个数字."
+                Over:
+                    Message: "&bSkyBlock &8| &c错误&8: &e所有方块的概率综合超过了100, 操作失败."
+            Material:
+                Limit:
+                    Message: "&bSkyBlock &8| &c错误&8: &e刷石机矿石生成器数量达到上限."
+                Already:
+                    Message: "&bSkyBlock &8| &c错误&8: &e该方块已经在这个刷石机矿石生成器中了."
+                Added:
+                    Message: "&bSkyBlock &8| &a信息&8: &e你将'&d%material&e'添加进了刷石机矿石生成器'&d%generator&e'."
+            Created:
+                Message: "&bSkyBlock &8| &a信息&8: &e你创建了刷石机矿石生成器'&d%generator&e'."
+            Removed:
+                Message: "&bSkyBlock &8| &a信息&8: &e你删除了刷石机矿石生成器'&d%generator&e'."
+        Levelling:
+            Permission:
+                Message: "&bSkyBlock &8| &c错误&8: &e你没有权限这么做."
+            Already:
+                Message: "&bSkyBlock &8| &c错误&8: &e该方块已经添加过了."
+            Exist:
+                Message: "&bSkyBlock &8| &c错误&8: &e该方块尚未添加."
+            Numerical:
+                Message: "&bSkyBlock &8| &c错误&8: &e请输入一个数值."
+            Added:
+                Message: "&bSkyBlock &8| &a信息&8: &e你添加了方酷开'&d%material&e'."
+            Removed:
+                Message: "&bSkyBlock &8| &a信息&8: &e你删除了方块'&d%material&e'."
+            Points:
+                Message: "&bSkyBlock &8| &a信息&8: &e你设置了方块'&d%material&e'的价值点数为'&6%points&e'."
+            Division:
+                Message: "&bSkyBlock &8| &a信息&8: &e你设置了每空岛等级为'&f%division&e'价值点."
+Placeholder:
+    skyblock_leaderboard_level:
+        Empty:
+            Message: "&f&o无人认领的"
+        Non-empty:
+            Message: "&f[%position] %player [%level]"
+    skyblock_leaderboard_votes:
+        Empty:
+            Message: "&f&o无人认领的"
+        Non-empty:
+            Message: "&f[%position] %player [%votes]"
+    skyblock_island_size:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_radius:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_level:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_level_formatted:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_points:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_role:
+        Empty:
+            Message: "&f&o无"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_owner:
+        Empty:
+            Message: "&f&o无"
+        Non-empty:
+            Yourself:
+                Message: "&f你"
+            Other:
+                Message: "&f%placeholder"
+    skyblock_island_biome:
+        Empty:
+            Message: "&f&o无"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_time:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_weather:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_bans:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_members_total:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_members:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_operators:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_coops:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_coops_total:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_visitors:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    skyblock_island_invites:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+Hologram:
+    Leaderboard:
+        Level:
+            Header: "&b&lSkyBlock &8&l| &e&l空岛等级TOP10"
+            Claimed: "&8* &f&o[%position] &a%player &7- &6%level"
+            Unclaimed: "&8* &f&o[%position] &7&o无人认领的位置"
+            Footer: "&ewww.yinwurealm.org"
+        Votes:
+            Header: "&b&lSkyBlock &8&l| &e&l空岛投票TOP10"
+            Claimed: "&8* &f&o[%position] &a%player &7- &6%票"
+            Unclaimed: "&8* &f&o[%position] &7&o无人认领的位置"
+            Footer: "&ewww.yinwurealm.org"
+Scoreboard:
+    Tutorial:
+        Displayname: "&b&lSkyBlock"
+        Displaylines:
+        - ""
+        - "&b空岛信息&f:"
+        - "&c你没有空岛"
+        - " &8- &7/island create"
+        - ""
+        - ""
+        - "&ewww.yinwurealm.org"
+    Island:
+        Solo:
+            Displayname: "&b&lSkyBlock"
+            Occupied:
+                Displaylines:
+                - ""
+                - "&b空岛信息&f:"
+                - " &8- &7等级&8: &f%island_level"
+                - " &8- &7访客数&8: &f%island_visitors"
+                - " &8- &7空岛大小&8: &f%island_size&7x&f%island_size"
+                - ""
+                - "&ewww.yinwurealm.org"
+            Empty:
+                Displaylines:
+                - ""
+                - "&b空岛信息&f:"
+                - " &8- &7等级&8: &f%island_level"
+                - " &8- &7空岛大小&8: &f%island_size&7x&f%island_size"
+                - ""
+                - "&ewww.yinwurealm.org"
+        Team:
+            Word:
+                Owner: "所有者"
+                Operator: "管理员"
+                Member: "成员"
+            Displayname: "&b&lSkyBlock"
+            Occupied:
+                Displaylines:
+                - ""
+                - "&b空岛信息&f:"
+                - " &8- &7用户组&8: &f%island_role"
+                - " &8- &7成员数&8: &f%island_members"
+                - " &8- &7等级&8: &f%island_level"
+                - " &8- &7访客数&8: &f%island_visitors"
+                - " &8- &7空岛大小&8: &f%island_size&7x&f%island_size"
+                - ""
+                - "&ewww.yinwurealm.org"
+            Empty:
+                Displaylines:
+                - ""
+                - "&b空岛信息&f:"
+                - " &8- &7身份&8: &f%island_role"
+                - " &8- &7成员数&8: &f%island_members"
+                - " &8- &7等级&8: &f%island_level"
+                - " &8- &7空岛大小&8: &f%island_size&7x&f%island_size"
+                - ""
+                - "&ewww.yinwurealm.org"
+Menu:
+    Creator:
+        Selector:
+            Title: "&8创建空岛"
+            Item:
+                Island:
+                    Word:
+                        Empty: "&f&o无"
+                    Displayname: "%displayname &a"
+                    Lore:
+                    - "&7描述&8:"
+                    - "%description"
+                    - ""
+                    - "&e点击创建空岛!"
+    ControlPanel:
+        Title: "&8空岛控制面板"
+        Item:
+            Teleport:
+                Displayname: "&a传送"
+                Lore:
+                - "&7[&f!&7] 传送到你的空岛传送点."
+                - ""
+                - "&e点击传送!"
+            Barrier:
+                Displayname: "&c空岛控制面板"
+            Level:
+                Displayname: "&a等级"
+                Lore:
+                - "&7[&f!&7] 通过扩大你的空岛, 并放置稀有方块来升级."
+                - ""
+                - "&e点击计算空岛等级!"
+            Settings:
+                Displayname: "&a设置"
+                Lore:
+                - "&7[&f!&7] 管理你的空岛设置, 并给予其他人权限."
+                - ""
+                - "&e点击查看!"
+            Members:
+                Displayname: "&a空岛成员"
+                Lore:
+                - "&7[&f!&7] 查看空岛成员和他们的统计数据."
+                - ""
+                - "&e点击查看!"
+            Biome:
+                Displayname: "&a生物群系"
+                Lore:
+                - "&7[&f!&7] 为你的空岛选择一个你需要的生物群系."
+                - ""
+                - "&e点击查看!"
+            Weather:
+                Displayname: "&a天气和时间"
+                Lore:
+                - "&7[&f!&7] 设置你的空岛上的天气和时间."
+                - ""
+                - "&e点击查看!"
+            Bans:
+                Displayname: "&a禁入玩家"
+                Lore:
+                - "&7[&f!&7] 查看你禁止进入空岛的玩家."
+                - ""
+                - "&e点击查看!"
+            Visitors:
+                Displayname: "&a访客"
+                Lore:
+                - "&7[&f!&7] 查看你空岛上的访客, 和他们的逗留时间."
+                - ""
+                - "&e点击查看!"
+    Upgrade:
+        Title: "&8升级空岛"
+        Item:
+            Word:
+                Enable: "启用"
+                Disable: "禁用"
+            Speed:
+                Displayname: "&b速度"
+                Claimable:
+                    Lore:
+                    - "&7给予空岛玩家 [速度 II] 效果."
+                    - ""
+                    - "&7速度&8: &fII"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &6&l可购买"
+                    - ""
+                    - "&e点击解锁!"
+                Unclaimable:
+                    Lore:
+                    - "&7给予空岛玩家 [速度 II] 效果."
+                    - ""
+                    - "&7速度&8: &fII"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &c&l锁定"
+                    - ""
+                    - "&c你没有足够的金钱!"
+                Claimed:
+                    Lore:
+                    - "&7给予空岛玩家 [速度 II] 效果."
+                    - ""
+                    - "&7速度&8: &fII"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &a&l已解锁"
+                    - ""
+                    - "&e点击%status!"
+            Jump:
+                Displayname: "&b跳跃"
+                Claimable:
+                    Lore:
+                    - "&7给予空岛玩家 [跳跃提升 II] 效果."
+                    - ""
+                    - "&7跳跃提升&8: &fII"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &6&l可购买"
+                    - ""
+                    - "&e点击解锁!"
+                Unclaimable:
+                    Lore:
+                    - "&7给予空岛玩家 [跳跃提升 II] 效果."
+                    - ""
+                    - "&7跳跃提升&8: &fII"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &c&l锁定"
+                    - ""
+                    - "&c你没有足够的金钱!"
+                Claimed:
+                    Lore:
+                    - "&7给予空岛玩家 [跳跃提升 II] 效果."
+                    - ""
+                    - "&7跳跃提升&8: &fII"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &a&l已解锁"
+                    - ""
+                    - "&e点击%status!"
+            Crop:
+                Displayname: "&b作物生长"
+                Claimable:
+                    Lore:
+                    - "&7空岛作物2倍生长速度."
+                    - ""
+                    - "&7生长速度&8: &f2x"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &6&l可购买"
+                    - ""
+                    - "&e点击解锁!"
+                Unclaimable:
+                    Lore:
+                    - "&7空岛作物2倍生长速度."
+                    - ""
+                    - "&7生长速度&8: &f2x"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &c&l锁定"
+                    - ""
+                    - "&c你没有足够的金钱!"
+                Claimed:
+                    Lore:
+                    - "&7空岛作物2倍生长速度."
+                    - ""
+                    - "&7生长速度&8: &f2x"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &a&l已解锁"
+                    - ""
+                    - "&e点击%status!"
+            Fly:
+                Displayname: "&b飞行"
+                Claimable:
+                    Lore:
+                    - "&7使玩家可以在你的空岛飞行."
+                    - ""
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &6&l可购买"
+                    - ""
+                    - "&e点击解锁!"
+                Unclaimable:
+                    Lore:
+                    - "&7使玩家可以在你的空岛飞行."
+                    - ""
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &c&l锁定"
+                    - ""
+                    - "&c你没有足够的金钱!"
+                Claimed:
+                    Lore:
+                    - "&7使玩家可以在你的空岛飞行."
+                    - ""
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &a&l已解锁"
+                    - ""
+                    - "&e点击%status!"
+            Drops:
+                Displayname: "&b战利品掉落"
+                Claimable:
+                    Lore:
+                    - "&7使战利品掉落提升为2倍."
+                    - ""
+                    - "&7倍率&8: &f2x"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &6&l可购买"
+                    - ""
+                    - "&e点击解锁!"
+                Unclaimable:
+                    Lore:
+                    - "&7使战利品掉落提升为2倍."
+                    - ""
+                    - "&7倍率&8: &f2x"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &c&l锁定"
+                    - ""
+                    - "&c你没有足够的金钱!"
+                Claimed:
+                    Lore:
+                    - "&7使战利品掉落提升为2倍."
+                    - ""
+                    - "&7倍率&8: &f2x"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &a&l已解锁"
+                    - ""
+                    - "&e点击%status!"
+            Size:
+                Displayname: "&b空岛大小 [第 #%tier 层]"
+                Claimable:
+                    Lore:
+                    - "&7增加空岛边界大小."
+                    - ""
+                    - "&7边界&8: &f%sizex%size"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &6&l可解锁"
+                    - ""
+                    - "&e点击解锁!"
+                Unclaimable:
+                    Lore:
+                    - "&7增加空岛边界大小."
+                    - ""
+                    - "&7边界&8: &f%sizex%size"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &c&l锁定"
+                    - ""
+                    - "&c你没有足够的金钱!"
+                Claimed:
+                    Lore:
+                    - "&7增加空岛边界大小."
+                    - ""
+                    - "&7边界&8: &f%sizex%size"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &a&l已解锁"
+                    - ""
+                    - "&c你已经解锁了这项升级!"
+            Spawner:
+                Displayname: "&b刷怪箱速度"
+                Claimable:
+                    Lore:
+                    - "&7提高刷怪箱刷怪速度为2倍."
+                    - ""
+                    - "&7速度&8: &f2x"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &6&l可解锁"
+                    - ""
+                    - "&e点击解锁!"
+                Unclaimable:
+                    Lore:
+                    - "&7提高刷怪箱刷怪速度为2倍."
+                    - ""
+                    - "&7速度&8: &f2x"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &c&l锁定"
+                    - ""
+                    - "&c你没有足够的金钱!"
+                Claimed:
+                    Lore:
+                    - "&7提高刷怪箱刷怪速度为2倍."
+                    - ""
+                    - "&7速度&8: &f2x"
+                    - "&7价格&8: &f$%cost"
+                    - ""
+                    - "&7状态&8: &a&l已解锁"
+                    - ""
+                    - "&e点击%status!"
+    Leaderboard:
+        Browse:
+            Title: "&8选择要查看的排行榜"
+            Item:
+                Leaderboard:
+                    Displayname: "&a空岛%leaderboard排行"
+                    Lore:
+                    - "&7查看空岛排行TOP10."
+                    - ""
+                    - "&e点击查看排行榜!"
+                Exit:
+                    Displayname: "&c退出"
+        Leaderboard:
+            Title: "&8%leaderboard空岛排行"
+            Item:
+                Exit:
+                    Displayname: "&c退出"
+                Return:
+                    Displayname: "&c返回"
+                Island:
+                    Word:
+                        Empty: "&f&o无"
+                    Displayname: "&a&l第 %position 名"
+                    Level:
+                        Lore:
+                        - "&7所有者&8: &f%owner"
+                        - "&7等级&8: &f%level"
+                        - "&7成员数&8: &f%members"
+                        - ""
+                        - "&7签名&8:"
+                        - "%signature"
+                    Votes:
+                        Lore:
+                        - "&7所有者&8: &f%owner"
+                        - "&7票数&8: &f%votes"
+                        - ""
+                        - "&7签名&8:"
+                        - "%signature"
+                Empty:
+                    Displayname: "&a&l第 %position 名"
+                    Lore:
+                    - "&f&o无"
+    Border:
+        Title: "&8空岛边界"
+        Item:
+            Word:
+                Enable: "启用"
+                Disable: "禁用"
+                Blue: "&b蓝色"
+                Green: "&a绿色"
+                Red: "&c红色"
+            Exit:
+                Displayname: "&c退出"
+            Toggle:
+                Displayname: "&a边界显示"
+                Lore:
+                - "&7决定你的空岛边界是否可见."
+                - ""
+                - "&e点击%toggle!"
+            Color:
+                Displayname: "%color边界"
+                Selected:
+                    Lore:
+                    - "&7你的空岛边界颜色为%color."
+                    - ""
+                    - "&e[已选定]"
+                Unselected:
+                    Lore:
+                    - "&7设置你的空岛边界颜色为%color."
+                    - ""
+                    - "&e点击选择!"
+    Biome:
+        Title: "&8选择生物群系"
+        Item:
+            Info:
+                Displayname: "&b当前生物群系"
+                Lore:
+                - "&7群系&8: &e%biome_type"
+            Barrier:
+                Displayname: "&c选择一个生物群系 >"
+            Biome:
+                Current:
+                    Displayname: "&a&m生物群系: &e&m%biome_type"
+                    Lore:
+                    - "&c当前已选择"
+                Select:
+                    Displayname: "&a生物群系: &e%biome_type"
+                    Lore:
+                    - "&7点击选择!"
+    Weather:
+        Title: "&8空岛天气和时间"
+        Item:
+            Info:
+                Displayname: "&b天气和时间信息"
+                Synchronised:
+                    Enabled: "&a是"
+                    Disabled: "&c否"
+                Time:
+                    Dawn: "早上"
+                    Day: "白天"
+                    Noon: "正午"
+                    Dusk: "下午"
+                    Night: "晚上"
+                    Midnight: "午夜"
+                Lore:
+                - "&7与主世界同步&8: %synchronised"
+                - "&7天气&8: &6%weather"
+                - "&7时间&8: &6%time &o(%time_name)"
+            Barrier:
+                Displayname: "&c空岛天气和时间选项 >"
+            Time:
+                Displayname: "&a时间"
+                Choice:
+                    Dawn: "早上"
+                    Day: "白天"
+                    Noon: "正午"
+                    Dusk: "下午"
+                    Night: "晚上"
+                    Midnight: "午夜"
+                Lore:
+                - "&7下一项&8: &b%choice"
+                - ""
+                - "&e点击切换!"
+            Weather:
+                Displayname: "&a天气"
+                Choice:
+                    Clear: "晴天"
+                    Downfall: "雨天"
+                Lore:
+                - "&7下一项&8: &b%choice"
+                - ""
+                - "&e点击切换!"
+            Synchronised:
+                Displayname: "&a与主世界同步"
+                Choice:
+                    Enable: "开启"
+                    Disable: "关闭"
+                Lore:
+                - "&7开启时天气和时间与主世界同步."
+                - "&7关闭时应用自定义天气和时间."
+                - ""
+                - "&e点击%choice!"
+    Rollback:
+        Title: "&8空岛快照"
+        Item:   
+            Info:
+                Displayname: "&b快照信息"
+            Barrier:
+                Displayname: "&c空岛快照选项 >"
+            Save:
+                Displayname: "&a保存快照"
+                Lore:
+                - "&7将空岛主岛和地狱保存为快照."
+                - ""
+                - "&e点击保存快照!"
+            Load:
+                Displayname: "&a加载快照"
+                Lore:
+                - "&7加载保存的快照."
+                - ""
+                - "&c&o警告: 你将无法恢复空岛到现在的状态."
+                - ""
+                - "&e点击加载快照!"
+            Reset:
+                Displayname: "&a重置"
+                Lore:
+                - "&7将空岛重置回初始状态."
+                - ""
+                - "&c&o警告: 你将无法恢复空岛到现在的状态."
+                - ""
+                - "&e点击重置空岛!"
+    Levelling:
+        Title: "&8空岛等级"
+        Item:
+            Exit:
+                Displayname: "&c退出"
+            Previous:
+                Displayname: "&a< 上一页"
+            Next:
+                Displayname: "&a下一页 >"
+            Barrier:
+                Displayname: "&c下方是空岛上被计算的方块"
+            Rescan:
+                Displayname: "&a重新扫描空岛方块"
+                Lore:
+                - "&7点击重新扫描空岛所有方块并计算等级."
+                - ""
+                - "&c警告: 每次扫描都需要一段时间间隔!"
+            Statistics:
+                Displayname: "&3&n方块统计"
+                Lore:
+                - "&b等级:"
+                - "&e%level"
+                - ""
+                - "&b价值点数:"
+                - "&e%level_points"
+            Nothing:
+                Displayname: "&c&o这里没有任何东西..."
+            Material:
+                Displayname: "&7%material &8(&e+%points 价值点&8)"
+    Settings:
+        Categories:
+            Title: "&8空岛设置 - 分类"
+            Item:
+                Exit:
+                    Displayname: "&c退出"
+                Coop:
+                    Displayname: "&a嘉宾设置"
+                    Lore:
+                    - "&7设置空岛嘉宾的权限."
+                    - ""
+                    - "&e点击进入设置!"
+                Visitor:
+                    Displayname: "&a访客设置"
+                    Lore:
+                    - "&7设置空岛访客的权限."
+                    - ""
+                    - "&e点击进入设置!"
+                Member:
+                    Displayname: "&a成员设置"
+                    Lore:
+                    - "&7设置空岛成员的权限."
+                    - ""
+                    - "&e点击进入设置!"
+                Operator:
+                    Displayname: "&a管理员设置"
+                    Lore:
+                    - "&7设置空岛管理员的权限."
+                    - ""
+                    - "&e点击进入设置!"
+                Owner:
+                    Displayname: "&a空岛设置"
+                    Lore:
+                    - "&7设置空岛的权限."
+                    - ""
+                    - "&e点击进入设置!"
+        Visitor:
+            Title: "&8访客设置"
+            Item:
+                Return:
+                    Displayname: "&c返回"
+                Statistics:
+                    Displayname: "&a空岛访客设置"
+                    Vote:
+                        Enabled:
+                            Open:
+                                Lore:
+                                - "&7空岛访客总数&8: &e%visits"
+                                - "&7空岛票数&8: &e%votes"
+                                - ""
+                                - "&7当前访客数&8: &a%visitors"
+                                - ""
+                                - "&e点击禁止访客进入!"
+                            Closed:
+                                Lore:
+                                - "&7空岛访客总数&8: &e%visits"
+                                - "&7空岛票数&8: &e%votes"
+                                - ""
+                                - "&a点击开放访客进入!"
+                        Disabled:
+                            Open:
+                                Lore:
+                                - "&7空岛访客总数&8: &e%visits"
+                                - ""
+                                - "&7当前访客总数&8: &a%visitors"
+                                - ""
+                                - "&e点击禁止访客进入!"
+                            Closed:
+                                Lore:
+                                - "&7空岛访客总数&8: &e%visits"
+                                - ""
+                                - "&a点击开放访客进入!"
+                Signature:
+                    Displayname: "&b空岛签名"
+                    Lore:
+                    - "&7设置一个自定义签名."
+                    - "&7可以在各种菜单中显示."
+                    - ""
+                    - "&e点击打开设置界面!"
+                Welcome:
+                    Displayname: "&b空岛欢迎信息"
+                    Lore:
+                    - "&7设置一条欢迎信息."
+                    - "&7访客进入空岛时显示."
+                    - ""
+                    - "&e点击打开设置界面!"
+            Panel:
+                Signature:
+                    Title: "&8设置签名"
+                    Item:
+                        Return:
+                            Displayname: "&c返回"
+                        Message:
+                            Displayname: "&b签名&f:"
+                            Word:
+                                Empty: "&7&o无"
+                        Line:
+                            Add:
+                                Displayname: "&a增加一行"
+                                More:
+                                    Lore:
+                                    - ""
+                                    - "&7点击增加一行!"
+                                Limit:
+                                    Lore:
+                                    - ""
+                                    - "&c签名行数达到上限!"
+                                Word:
+                                    Enter: "输入这行签名的内容"
+                            Remove:
+                                Displayname: "&c删除一行"
+                                Lines:
+                                    Lore:
+                                    - ""
+                                    - "&7点击删除最下面一行!"
+                                None:
+                                    Lore:
+                                    - ""
+                                    - "&c没有任何内容可以删除!"
+                Welcome:
+                    Title: "&8设置欢迎信息"
+                    Item:
+                        Return:
+                            Displayname: "&c返回"
+                        Message:
+                            Displayname: "&b欢迎信息&f:"
+                            Word:
+                                Empty: "&7&o无"
+                        Line:
+                            Add:
+                                Displayname: "&a增加一行"
+                                More:
+                                    Lore:
+                                    - ""
+                                    - "&7点击增加一行!"
+                                Limit:
+                                    Lore:
+                                    - ""
+                                    - "&c欢迎信息行数达到上限!"
+                                Word:
+                                    Enter: "输入这行欢迎信息的内容"
+                            Remove:
+                                Displayname: "&c删除一行"
+                                Lines:
+                                    Lore:
+                                    - ""
+                                    - "&7点击删除最下面一行!"
+                                None:
+                                    Lore:
+                                    - ""
+                                    - "&c没有任何内容可以删除!"
+        Member:
+            Title: "&8成员设置"
+            Item:
+                Return:
+                    Displayname: "&c返回"
+        Operator:
+            Title: "&8管理员设置"
+            Item:
+                Return:
+                    Displayname: "&c返回"
+                Setting:
+                    Status:
+                        Enabled:
+                            Lore:
+                            - "&7状态&8: &a开启"
+                        Disabled:
+                            Lore:
+                            - "&7状态&8: &c关闭"
+                    Invite:
+                        Displayname: "&a邀请玩家加入空岛"
+                    Kick:
+                        Displayname: "&a踢出成员或访客"
+                    Ban:
+                        Displayname: "&a禁止访客进入"
+                    Unban:
+                        Displayname: "&a解除访客进入限制"
+                    Visitor:
+                        Displayname: "&a修改访客设置"
+                    Member:
+                        Displayname: "&a修改成员设置"
+                    Island:
+                        Displayname: "&a修改空岛设置"
+                    Coop:
+                        Displayname: "&a修改嘉宾设置"
+                    CoopPlayers:
+                        Displayname: "&a嘉宾"
+                    MainSpawn:
+                        Displayname: "&a设置空岛传送点"
+                    VisitorSpawn:
+                        Displayname: "&a设置访客传送点"
+                    Border:
+                        Displayname: "&a设置边界"
+                    Biome:
+                        Displayname: "&a设置生物群系"
+                    Weather:
+                        Displayname: "&a设置天气和时间"
+        Coop:
+            Title: "&8嘉宾设置"
+            Item:
+                Return:
+                    Displayname: "&c返回"
+        Owner:
+            Title: "&8空岛设置"
+            Item:
+                Return:
+                    Displayname: "&c返回"
+                Setting:
+                    Status:
+                        Enabled:
+                            Lore:
+                            - "&7状态&8: &a开启"
+                        Disabled:
+                            Lore:
+                            - "&7状态&8: &c禁止"
+                    NaturalMobSpawning:
+                        Displayname: "&a自然刷新怪物"
+                    MobGriefing:
+                        Displayname: "&a怪物破坏方块"
+                    PvP:
+                        Displayname: "&aPvP"
+                    Explosions:
+                        Displayname: "&a爆炸破坏方块"
+                    FireSpread:
+                        Displayname: "&a火焰蔓延"
+                    LeafDecay:
+                        Displayname: "&a树叶凋零"
+                    KeepItemsOnDeath:
+                        Displayname: "&a死亡不掉落"
+                    Damage:
+                        Displayname: "&a受到伤害"
+                    Hunger:
+                        Displayname: "&a饥饿"
+        Default:
+            Item:
+                Setting:
+                    Status:
+                        Enabled:
+                            Lore:
+                            - "&7状态&8: &a开启"
+                        Disabled:
+                            Lore:
+                            - "&7状态&8: &c禁止"
+                    Destroy:
+                        Displayname: "&a破坏方块"
+                    Place:
+                        Displayname: "&a放置方块"
+                    Anvil:
+                        Displayname: "&a使用铁砧"
+                    ArmorStandUse:
+                        Displayname: "&a使用盔甲架"
+                    Beacon:
+                        Displayname: "&a使用信标"
+                    Bed:
+                        Displayname: "&a使用床"
+                    AnimalBreeding:
+                        Displayname: "&a繁殖动物"
+                    Brewing:
+                        Displayname: "&a使用酿造台"
+                    Bucket:
+                        Displayname: "&a使用桶"
+                    WaterCollection:
+                        Displayname: "&a收集水"
+                    Storage:
+                        Displayname: "&a使用容器"
+                    Workbench:
+                        Displayname: "&a使用工作台"
+                    Crop:
+                        Displayname: "&a践踏农作物"
+                    Door:
+                        Displayname: "&a使用门"
+                    Gate:
+                        Displayname: "&a使用活板门"
+                    Projectile:
+                        Displayname: "&a发射弹药"
+                    Enchant:
+                        Displayname: "&a使用附魔台"
+                    Fire:
+                        Displayname: "&a扑灭火"
+                    Furnace:
+                        Displayname: "&a使用熔炉"
+                    HorseInventory:
+                        Displayname: "&a使用马的箱子"
+                    MobRiding:
+                        Displayname: "&a骑乘怪物"
+                    MobHurting:
+                        Displayname: "&a伤害怪物"
+                    MobTaming:
+                        Displayname: "&a驯服怪物"
+                    Leash:
+                        Displayname: "&a使用栓绳"
+                    LeverButton:
+                        Displayname: "&a使用拉杆/按钮"
+                    Milking:
+                        Displayname: "&a挤牛奶"
+                    Jukebox:
+                        Displayname: "&a使用唱片机"
+                    PressurePlate:
+                        Displayname: "&a激活压力板"
+                    Redstone:
+                        Displayname: "&a使用红石"
+                    Shearing:
+                        Displayname: "&a剪羊毛"
+                    Trading:
+                        Displayname: "&a村民交易"
+                    ItemDrop:
+                        Displayname: "&a掉落物品"
+                    ItemPickup:
+                        Displayname: "&a拾取物品"
+                    Fishing:
+                        Displayname: "&a钓鱼"
+                    DropperDispenser:
+                        Displayname: "&a使用投掷器/发射器"
+                    SpawnEgg:
+                        Displayname: "&a投掷鸡蛋"
+                    HangingDestroy:
+                        Displayname: "&a破坏展示框"
+                    Cake:
+                        Displayname: "&a吃蛋糕"
+                    DragonEggUse:
+                        Displayname: "&a使用龙蛋"
+                    MinecartBoat:
+                        Displayname: "&a使用矿车/船"
+                    Portal:
+                        Displayname: "&a使用传送门"
+                    Hopper:
+                        Displayname: "&a使用漏斗"
+                    EntityPlacement:
+                        Displayname: "&a放置实体"
+                    ExperienceOrbPickup:
+                        Displayname: "&a拾取经验球"
+    Information:
+        Categories:
+            Title: "&8空岛信息"
+            Item:
+                Exit:
+                    Displayname: "&c退出"
+                Members:
+                    Displayname: "&a成员"
+                    Lore:
+                    - "&7查看空岛成员和他们的身份."
+                    - ""
+                    - "&e点击查看!"
+                Visitors:
+                    Displayname: "&aVisitors"
+                    Lore:
+                    - "&7查看空岛当前的访客."
+                    - ""
+                    - "&e点击查看!"
+                Information:
+                    Displayname: "&a信息"
+                    Vote:
+                        Word:
+                            Empty: "&f&o无"
+                            Safe: "&a[安全]"
+                            Unsafe: "&c[不安全]"
+                        Enabled:
+                            Signature:
+                                Word:
+                                    Add: "添加"
+                                    Remove: "删除"
+                                Enabled:
+                                    Lore:
+                                    - "&7所有者&8: &f%owner"
+                                    - ""
+                                    - "&7签名&8:"
+                                    - "%signature"
+                                    - ""
+                                    - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7等级&8: &b%level"
+                                    - "&7成员数&8: &e%members"
+                                    - "&7访客数&8: &e%visits"
+                                    - "&7投票数&8: &6%votes"
+                                    - ""
+                                    - "&7安全区&8: %safety"
+                                Disabled:
+                                    Lore:
+                                    - "&7所有者&8: &f%owner"
+                                    - ""
+                                    - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7等级&8: &b%level"
+                                    - "&7成员数&8: &e%members"
+                                    - "&7访客数&8: &e%visits"
+                                    - "&7投票数&8: &6%votes"
+                                    - ""
+                                    - "&7安全区&8: %safety"
+                        Disabled:
+                            Signature:
+                                Enabled:
+                                    Lore:
+                                    - "&7所有者&8: &f%owner"
+                                    - ""
+                                    - "&7签名&8:"
+                                    - "%signature"
+                                    - ""
+                                    - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7等级&8: &b%level"
+                                    - "&7成员数&8: &e%members"
+                                    - "&7访客数&8: &e%visits"
+                                    - ""
+                                    - "&7安全区&8: %safety"
+                                Disabled:
+                                    Lore:
+                                    - "&7所有者&8: &f%owner"
+                                    - ""
+                                    - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7等级&8: &b%level"
+                                    - "&7成员数&8: &e%members"
+                                    - "&7访客数&8: &e%visits"
+                                    - ""
+                                    - "&7安全区&8: %safety"
+        Members:
+            Title: "&8空岛信息 - 成员"
+            Item:
+                Return:
+                    Displayname: "&c返回"
+                Previous:
+                    Displayname: "&a< 上一页"
+                Next:
+                    Displayname: "&a下一页 >"
+                Barrier:
+                    Displayname: "&c下方是空岛成员"    
+                Statistics:
+                    Displayname: "&3&n统计信息"
+                    Lore:
+                    - "&b空岛总成员数:"
+                    - "&e%island_members/%island_capacity"
+                    - ""
+                    - "&b成员数:"
+                    - "&e%members"
+                    - ""
+                    - "&b管理员数:"
+                    - "&e%operators"
+                Member:
+                    Word:
+                        Member: "&a成员"
+                        Operator: "&b管理员"
+                        Owner: "&6所有者"
+                    Displayname: "&b%player"
+                    Lore:
+                    - "&7身份&8:"
+                    - "%role"
+        Visitors:
+            Title: "&8空岛信息 - 访客"
+            Item:
+                Return:
+                    Displayname: "&c返回"
+                Previous:
+                    Displayname: "&a< 上一页"
+                Next:
+                    Displayname: "&a下一页 >"
+                Barrier:
+                    Displayname: "&c下方是空岛访客"    
+                Statistics:
+                    Displayname: "&3&n统计信息"
+                    Lore:
+                    - "&b空岛访客数:"
+                    - "&e%island_visitors"
+                Visitor:
+                    Displayname: "&b%player"
+    Coop:
+        Title: "&8空岛嘉宾"
+        Item:
+            Word:
+                Enter: "请输入一个玩家名"
+            Exit:
+                Displayname: "&c退出"
+            Previous:
+                Displayname: "&a< 上一页"
+            Next:
+                Displayname: "&a下一页 >"
+            Barrier:
+                Displayname: "&c下方是嘉宾"
+            Information:
+                Displayname: "&b信息"
+                Lore:
+                - "&7允许某些玩家在空岛所有者或管理员在线的情况下"
+                - "&7进入你的空岛, 即使你关闭了游客进入."
+                - ""
+                - "&e点击添加玩家!"
+            Nothing:
+                Displayname: "&c没有任何嘉宾."
+            Coop:
+                Displayname: "&a%player"
+                Lore:
+                - ""
+                - "&e点击移除该玩家!"
+    Members:
+        Title: "&8空岛成员"
+        Item:
+            Exit:
+                Displayname: "&c退出"
+            Previous:
+                Displayname: "&a< 上一页"
+            Next:
+                Displayname: "&a下一页 >"
+            Barrier:
+                Displayname: "&c下方是空岛成员"
+            Type:
+                Displayname: "&a查看类型"
+                Lore:
+                - "&7当前类型&8: &b%type"
+                - ""
+                - "&bDefault&7: 显示所有空岛成员."
+                - "&bMembers&7: 仅显示空岛成员."
+                - "&bOperators&7: 仅显示空岛管理员."
+                - "&bOwner&7: 仅显示空岛所有者."
+                - ""
+                - "&e点击在所有类型之间切换."
+            Statistics:
+                Displayname: "&3&n空岛成员统计信息"
+                Lore:
+                - "&b空岛总成员数:"
+                - "&e%island_members/%island_capacity"
+                - ""
+                - "&b成员数:"
+                - "&e%members"
+                - ""
+                - "&b管理员数:"
+                - "&e%operators"
+            Sort:
+                Displayname: "&a更改排序"
+                Lore:
+                - "&7当前排序&8: &b%sort"
+                - ""
+                - "&bDefault&7: 按身份从高到低排列."
+                - "&bPlaytime&7: 按游戏时间排列."
+                - "&bMember Since&7: 按加入时间排序."
+                - "&bLast Online&7: 按最后登录时间排列."
+                - ""
+                - "&e点击在所有类型之间切换."
+            Nothing:
+                Displayname: "&c&o这里没有任何成员..."
+            Member:
+                Displayname: "&b%player"
+                Word:
+                    Days: "天"
+                    Hours: "小时"
+                    Minutes: "分钟"
+                    Seconds: "秒"
+                    Click: "点击"
+                    Left-Click: "单击左键"
+                    Right-Click: "单击右键"
+                Role:
+                    Word:
+                        Member: "&a成员"
+                        Operator: "&b管理员"
+                        Owner: "&6所有者"
+                    Lore:
+                    - "&7身份&8:"
+                    - "%role"
+                Playtime:
+                    Lore:
+                    - "&7游戏时间&8:"
+                    - "&d%playtime"
+                Since:
+                    Lore:
+                    - "&7加入时间&8:"
+                    - "&a%since前"
+                LastOnline:
+                    Lore:
+                    - "&7最后登录&8:"
+                    - "&c%last_online"
+                Action:
+                    Word:
+                        Promote: "升级"
+                        Demote: "降级"
+                        Kick: "踢出"
+                    Lore: "&e%click以%action玩家!"
+    Ownership:
+        Title: "&8空岛所有权"
+        Item:
+            Exit:
+                Displayname: "&c退出"
+            Original:
+                Displayname: "&b原所有者"
+                Lore:
+                - "&7玩家&8: &e%player"
+            Barrier:
+                Displayname: "&c空岛所有权选项 >"
+            Assign:
+                Word:
+                    Enter: "输入一个玩家名"
+                Displayname: "&a钦定&a&m特首&a所有者"
+                Lore:
+                - "&7钦定一个空岛成员成为&m特首&7所有者."
+                - ""
+                - "&e点击输入玩家名!"
+            Password:
+                Displayname: "&a所有权密码"
+                Unset:
+                    Lore:
+                    - "&7设置一个密码."
+                    - "&7任何成员都可以使用这个密码成为所有者."
+                    - ""
+                    - "&7密码&8:"
+                    - "&c&o未设置"
+                    - ""
+                    - "&e点击设置密码!"
+                Visible:
+                    Lore:
+                    - "&7设置一个密码."
+                    - "&7任何成员都可以使用这个密码成为所有者."
+                    - ""
+                    - "&7密码&8:"
+                    - "&f&o%password"
+                    - ""
+                    - "&e单击左键设置密码!"
+                    - "&e单击中键设置密码!"
+                    - "&e单击右键设置密码!"
+                Hidden:
+                    Word:
+                        Enter: "输入密码"
+                    Lore:
+                    - "&7设置一个密码."
+                    - "&7任何成员都可以使用这个密码成为所有者."
+                    - ""
+                    - "&7密码&8:"
+                    - "&f&o隐藏"
+                    - ""
+                    - "&e单击左键设置密码!"
+                    - "&e单击中键设置密码!"
+                    - "&e单击右键设置密码!"
+    Visit:
+        Title: "&8访问空岛"
+        Item:
+            Exit:
+                Displayname: "&c退出"
+            Previous:
+                Displayname: "&a< 上一页"
+            Next:
+                Displayname: "&a下一页 >"
+            Barrier:
+                Displayname: "&c下方是开放的空岛"
+            Type:
+                Displayname: "&a更改类型"
+                Lore:
+                - "&7当前类型&8: &b%type"
+                - ""
+                - "&bDefault&7: 显示所有开放空岛."
+                - "&bSolo&7: 仅显示单人空岛."
+                - "&bTeam&7: 仅显示团队空岛."
+                - ""
+                - "&e点击在所有类型中切换."
+            Statistics:
+                Displayname: "&b空岛统计信息"
+                Lore:
+                - "&7开放空岛数&8: &f%islands_open&7/&f%islands"
+            Sort:
+                Displayname: "&a更改排序"
+                Lore:
+                - "&7当前排序&8: &b%sort"
+                - ""
+                - "&bDefault&7: 随机排序."
+                - "&bPlayers&7: 按玩家数从多到少排序."
+                - "&bLevel&7: 按空岛等级从高到低排序."
+                - "&bMembers&7: 按空岛成员从多到少排序."
+                - "&bVisits&7: 按访客数从多到少排序."
+                - "&bVotes&7: 按投票数从高到低排序."
+                - ""
+                - "&e点击在所有排序类型中切换."
+            Nothing:
+                Displayname: "&c&o没有找到任何空岛..."
+            Island:
+                Displayname: "&a%player"
+                Vote:
+                    Word:
+                        Empty: "&f&o无"
+                        Safe: "&a[安全]"
+                        Unsafe: "&c[不安全]"
+                    Enabled:
+                        Signature:
+                            Word:
+                                Add: "添加"
+                                Remove: "删除"
+                            Enabled:
+                                Member:
+                                    Lore:
+                                    - "&7签名&8:"
+                                    - "%signature"
+                                    - ""
+                                    - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7等级&8: &b%level"
+                                    - "&7成员数&8: &e%members"
+                                    - "&7访客数&8: &e%visits"
+                                    - "&7投票数&8: &6%votes"
+                                    - ""
+                                    - "&7安全区&8: %safety"
+                                    - ""
+                                    - "&e点击访问这个空岛!"
+                                Visitor:
+                                    Lore:
+                                    - "&7签名&8:"
+                                    - "%signature"
+                                    - ""
+                                    - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7等级&8: &b%level"
+                                    - "&7成员数&8: &e%members"
+                                    - "&7访客数&8: &e%visits"
+                                    - "&7投票数&8: &6%votes"
+                                    - ""
+                                    - "&7安全区&8: %safety"
+                                    - ""
+                                    - "&e左键点击访问这个空岛!"
+                                    - "&e右键单击%action投票!"
+                            Disabled:
+                                Member:
+                                    Lore:
+                                    - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7等级&8: &b%level"
+                                    - "&7成员数&8: &e%members"
+                                    - "&7访客数&8: &e%visits"
+                                    - "&7投票数&8: &6%votes"
+                                    - ""
+                                    - "&7安全区&8: %safety"
+                                    - ""
+                                    - "&e点击访问这个空岛!"
+                                Visitor:
+                                    Lore:
+                                    - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                    - ""
+                                    - "&7等级&8: &b%level"
+                                    - "&7成员数&8: &e%members"
+                                    - "&7访客数&8: &e%visits"
+                                    - "&7投票数&8: &6%votes"
+                                    - ""
+                                    - "&7安全区&8: %safety"
+                                    - ""
+                                    - "&e左键点击访问这个空岛!"
+                                    - "&e右键单击%action投票!"
+                    Disabled:
+                        Signature:
+                            Enabled:
+                                Lore:
+                                - "&7签名&8:"
+                                - "%signature"
+                                - ""
+                                - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                - ""
+                                - "&7等级&8: &b%level"
+                                - "&7成员数&8: &e%members"
+                                - "&7访客数&8: &e%visits"
+                                - ""
+                                - "&7安全区&8: %safety"
+                                - ""
+                                - "&e点击访问这个空岛!"
+                            Disabled:
+                                Lore:
+                                - "&7空岛玩家数&8: &f%players&7/&f%player_capacity"
+                                - ""
+                                - "&7等级&8: &b%level"
+                                - "&7成员数&8: &e%members"
+                                - "&7访客数&8: &e%visits"
+                                - ""
+                                - "&7安全区&8: %safety"
+                                - ""
+                                - "&e点击访问这个空岛!"
+    Visitors:
+        Title: "&8空岛访客"
+        Item:
+            Exit:
+                Displayname: "&c退出"
+            Previous:
+                Displayname: "&a< 上一页"
+            Next:
+                Displayname: "&a下一页 >"
+            Barrier:
+                Displayname: "&c下方是空岛访客"
+            Statistics:
+                Displayname: "&b空岛访客"
+                Lore:
+                - "&7访客数&8: &f%visitors"
+            Nothing:
+                Displayname: "&c你的空岛上没有任何访客."
+            Visitor:
+                Displayname: "&a%player"
+                Word:
+                    Days: "天"
+                    Hours: "小时"
+                    Minutes: "分钟"
+                    Seconds: "秒"
+                Kick:
+                    Permission:
+                        Ban:
+                            Permission:
+                                Lore:
+                                - "&7逗留时间&8:"
+                                - "&d%time"
+                                - ""
+                                - "&e左键单击踢出玩家!"
+                                - "&e右键单击禁止玩家进入!"
+                            NoPermission:
+                                Lore:
+                                - "&7逗留时间&8:"
+                                - "&d%time"
+                                - ""
+                                - "&e点击踢出玩家!"
+                    NoPermission:
+                        Ban:
+                            Permission:
+                                Lore:
+                                - "&7逗留时间&8:"
+                                - "&d%time"
+                                - ""
+                                - "&e点击禁止玩家进入!"
+                            NoPermission:
+                                Lore:
+                                - "&7逗留时间&8:"
+                                - "&d%time"
+    Bans:
+        Title: "&8空岛禁止进入玩家"
+        Item:
+            Word:
+                Enter: "输入一个玩家名"
+            Exit:
+                Displayname: "&c退出"
+            Previous:
+                Displayname: "&a< 上一页"
+            Next:
+                Displayname: "&a下一页 >"
+            Barrier:
+                Displayname: "&c下方是被禁止进入的玩家"
+            Information:
+                Displayname: "&b信息"
+                Lore:
+                - "&7禁止某些玩家进入你的空岛."
+                - ""
+                - "&e点击禁止一个玩家!"
+            Nothing:
+                Displayname: "&c没有任何被禁止进入的玩家."
+            Ban:
+                Displayname: "&a%player"
+                Lore:
+                - ""
+                - "&e点击解除禁止进入!"
+    Admin:
+        Creator:
+            Title: "&8结构编辑器"
+            Browse:
+                Item:
+                    Exit:
+                        Displayname: "&c退出"
+                    Previous:
+                        Displayname: "&a< 上一页"
+                    Next:
+                        Displayname: "&a下一页 >"
+                    Barrier:
+                        Displayname: "&c下方是结构"
+                    Nothing:
+                        Displayname: "&c&o没有任何结构..."
+                    Information:
+                        Word:
+                            Enter: "输入结构名"
+                        Displayname: "&b信息"
+                        Lore:
+                        - "&7结构数&8: &f%structures"
+                        - ""
+                        - "&e点击创建一个结构!"
+                    Structure:
+                        Displayname: "&a%structure"
+                        Lore:
+                        - "&e左键单击查看选项!"
+                        - "&e右键单击删除结构!"
+            Options:
+                Item:
+                    Return:
+                        Displayname: "&c返回"
+                    Word:
+                        Unset: "&f&o取消设置"
+                    Displayname:
+                        Word:
+                            Enter: "输入显示名称"
+                        Displayname: "&a显示名称"
+                        Lore:
+                        - "&7显示名称&8:"
+                        - "&f&o%displayname"
+                        - ""
+                        - "&e单击设置显示名称!"
+                    Description:
+                        Word:
+                            Enter: "输入新的一行内容"
+                        Displayname: "&a描述"
+                        Unset:
+                            Lore:
+                            - "&7描述&8:"
+                            - "%description"
+                            - ""
+                            - "&e点击增加一行!"
+                        Set:
+                            Lore:
+                            - "&7描述&8:"
+                            - "%description"
+                            - ""
+                            - "&e左键单击增加一行!"
+                            - "&e右键单击删除一行!"
+                    Permission:
+                        Displayname: "&a权限"
+                        Enable:
+                            Lore:
+                            - "&7权限&8:"
+                            - "&f&o%permission"
+                            - ""
+                            - "&e点击启用!"
+                        Disable:
+                            Lore:
+                            - "&7权限&8:"
+                            - "&f&o%permission"
+                            - ""
+                            - "&e点击禁用!"
+                    File:
+                        Word:
+                            Enter: "输入文件名"
+                        Displayname: "&a结构文件"
+                        Lore:
+                        - "&7主世界文件&8:"
+                        - "&f&o%overworld_file"
+                        - ""
+                        - "&7地狱文件&8:"
+                        - "&f&o%nether_file"
+                        - ""
+                        - "&7末地文件&8:"
+                        - "&f&o%end_file"
+                        - ""
+                        - "&c[!] 结构文件必须设置所有世界."
+                        - ""
+                        - "&e左键单击设置主世界文件!"
+                        - "&e中键单击设置地狱文件!"
+                        - "&e右键单击设置末地文件!"
+                    Item:
+                        Displayname: "&a物品"
+                        Lore:
+                        - "&7材料&8:"
+                        - "&f&o%material"
+                        - ""
+                        - "&c[!] 单击选择背包中物品, 或者再次单击取消."
+                        - ""
+                        - "&e单击设置物品!"
+                    Commands:
+                        Word:
+                            Enter: "输入命令"
+                        Displayname: "&a命令"
+                        Unset:
+                            Lore:
+                            - "&7命令&8:"
+                            - "%commands"
+                            - ""
+                            - "&c[!] 创建空岛时执行的命令."
+                            - ""
+                            - "&c[!] 使用%player代表玩家名."
+                            - ""
+                            - "&e点击添加一条命令!"
+                        Set:
+                            Lore:
+                            - "&7命令&8:"
+                            - "%commands"
+                            - ""
+                            - "&c[!] 创建空岛时执行的命令."
+                            - ""
+                            - "&c[!] 使用%player代表玩家名."
+                            - ""
+                            - "&e左键单击添加一条命令!"
+                            - "&e右键单击删除一条命令!"
+                    DeletionCost:
+                        Word:
+                            Enter: "输入价格"
+                        Displayname: "&a删除空岛花费的金钱."
+                        Lore:
+                        - "&7价格&8: &f%cost"
+                        - ""
+                        - "&c[!] 不设置删除需要金钱时请输入 0.0."
+                        - ""
+                        - "&e点击设置价格!"
+        Upgrade:
+            Upgrades:
+                Title: "&8升级项目编辑器"
+                Item:
+                    Word:
+                        Enable: "启用"
+                        Disable: "禁用"
+                        Enter: "输入价格"
+                    Exit:
+                        Displayname: "&c退出"
+                    Speed:
+                        Displayname: "&a速度"
+                        Lore:
+                        - "&7给予空岛玩家 [速度 II] 效果."
+                        - ""
+                        - "&7价格&8: &f$%cost"
+                        - ""
+                        - "&e左键单击%status!"
+                        - "&e右键单击设置价格!"
+                    Crop:
+                        Displayname: "&a作物生长"
+                        Lore:
+                        - "&7空岛作物2倍生长速度."
+                        - ""
+                        - "&7价格&8: &f$%cost"
+                        - ""
+                        - "&e左键单击%status!"
+                        - "&e右键单击设置价格!"
+                    Jump:
+                        Displayname: "&a跳跃提升"
+                        Lore:
+                        - "&7给予空岛玩家 [跳跃提升 II] 效果."
+                        - ""
+                        - "&7价格&8: &f$%cost"
+                        - ""
+                        - "&e左键单击%status!"
+                        - "&e右键单击设置价格!"
+                    Fly:
+                        Displayname: "&a飞行"
+                        Lore:
+                        - "&7使玩家可以在你的空岛飞行."
+                        - ""
+                        - "&7价格&8: &f$%cost"
+                        - ""
+                        - "&e左键单击%status!"
+                        - "&e右键单击设置价格!"
+                    Drops:
+                        Displayname: "&a战利品掉落"
+                        Lore:
+                        - "&7使战利品掉落提升为2倍."
+                        - ""
+                        - "&7价格&8: &f$%cost"
+                        - ""
+                        - "&e左键单击%status!"
+                        - "&e右键单击设置价格!"
+                    Size:
+                        Displayname: "&a空岛边界大小"
+                        Lore:
+                        - "&7增加空岛边界大小."
+                        - ""
+                        - "&7层级数&8: &f%tiers"
+                        - ""
+                        - "&e点击管理层级!"
+                    Spawner:
+                        Displayname: "&a刷怪箱速度"
+                        Lore:
+                        - "&7提高刷怪箱刷怪速度为2倍."
+                        - ""
+                        - "&7价格&8: &f$%cost"
+                        - ""
+                        - "&e左键单击%status!"
+                        - "&e右键单击设置价格!"
+            Size:
+                Title: "&8升级项目编辑器 - 空岛边界大小"
+                Item:
+                    Word:
+                        Size:
+                            Enter: "输入大小"
+                        Cost:
+                            Enter: "输入价格"
+                    Return:
+                        Displayname: "&c返回"
+                    Barrier:
+                        Displayname: "&c层级"
+                    Information:
+                        Displayname: "&a信息"
+                        Lore:
+                        - "&7创建一个层级并设置价格."
+                        - ""
+                        - "&e点击创建一个层级!"
+                    Tier:
+                        Displayname: "&b第 #%tier 层"
+                        Lore:
+                        - "&7大小&8: &f%size"
+                        - "&7价格&8: &f$%cost"
+                        - ""
+                        - "&e左键单击设置大小!"
+                        - "&e中键单机删除!"
+                        - "&e右键单击设置价格!"
+        Generator:
+            Title: "&8刷石机矿物编辑器"
+            Browse:
+                Item:
+                    Exit:
+                        Displayname: "&c退出"
+                    Previous:
+                        Displayname: "&a< 上一页"
+                    Next:
+                        Displayname: "&a下一页 >"
+                    Barrier:
+                        Displayname: "&c下方是刷石机出矿配置"
+                    Nothing:
+                        Displayname: "&c&o没有任何配置..."
+                    Information:
+                        Word:
+                            Enter: "输入名称"
+                        Displayname: "&b信息"
+                        Lore:
+                        - "&7配置数&8: &f%generators"
+                        - ""
+                        - "&e点击创建配置!"
+                    Generator:
+                        Displayname: "&a%generator"
+                        Lore:
+                        - "&e左键单击管理配置!"
+                        - "&e右键单击删除配置!"
+            Generator:
+                Item:
+                    Return:
+                        Displayname: "&c返回"
+                    Barrier:
+                        Displayname: "&c下方是材料"
+                    Information:
+                        Displayname: "&b信息"
+                        Permission:
+                            Enable:
+                                Lore:
+                                - "&7名称&8: &f%name"
+                                - "&7权限&8:"
+                                - "&f&o%permission"
+                                - ""
+                                - "&e点击启用权限!"
+                            Disable:
+                                Lore:
+                                - "&7名称&8: &f%name"
+                                - "&7权限&8:"
+                                - "&f&o%permission"
+                                - ""
+                                - "&e点击禁用权限!"
+                    Nothing:
+                        Displayname: "&c&o这里没有任何材料..."
+                    Material:
+                        Word:
+                            Enter: "输入几率"
+                        Displayname: "&a%material"
+                        Lore:
+                        - "&7几率&8: &f%chance"
+                        - ""
+                        - "&e左键单击修改几率!"
+                        - "&e右键单击删除材料!"
+        Levelling:
+            Title: "&8等级编辑器"
+            Item:
+                Exit:
+                    Displayname: "&c退出"
+                Previous:
+                    Displayname: "&a< 上一页"
+                Next:
+                    Displayname: "&a下一页 >"
+                Barrier:
+                    Displayname: "&c下方是等级材料"
+                Nothing:
+                    Displayname: "&c&o这里没有任何东西..."
+                Information:
+                    Word:
+                        Enter: "输入升级点数"
+                    Displayname: "&b信息"
+                    Lore:
+                    - "&7材料数&8: &f%materials"
+                    - "&7升级点数&8: &f%division"
+                    - ""
+                    - "&e点击设置升级点数!"
+                Material:
+                    Word:
+                        Enter: "点击输入价值点"
+                    Displayname: "&a%material"
+                    Lore:
+                    - "&7价值点&8: &6%points"
+                    - ""
+                    - "&e左键单击修改价值点!"
+                    - "&e右键单击删除材料!"
+        Settings:
+            Categories:
+                Title: "&8设置编辑器 - 类别"
+                Item:
+                    Exit:
+                        Displayname: "&c退出"
+                    Visitor:
+                        Displayname: "&a访客设置"
+                        Lore:
+                        - "&7设置空岛创建后的访客的权限."
+                        - ""
+                        - "&e点击修改!"
+                    Member:
+                        Displayname: "&a成员设置"
+                        Lore:
+                        - "&7设置空岛创建后的成员的权限."
+                        - ""
+                        - "&e点击修改!"
+                    Operator:
+                        Displayname: "&a管理员设置"
+                        Lore:
+                        - "&7设置空岛创建后的管理员的权限."
+                        - ""
+                        - "&e点击修改!"
+                    Coop:
+                        Displayname: "&a嘉宾设置"
+                        Lore:
+                        - "&7设置空岛创建后的嘉宾的权限."
+                        - ""
+                        - "&e点击修改!"
+                    Owner:
+                        Displayname: "&a空岛设置"
+                        Lore:
+                        - "&7设置空岛创建后的默认权限."
+                        - ""
+                        - "&e点击修改!"
+            Visitor:
+                Title: "&8设置编辑器 - 访客"
+                Item:
+                    Return:
+                        Displayname: "&c返回"
+            Member:
+                Title: "&8设置编辑器 - 成员"
+                Item:
+                    Return:
+                        Displayname: "&c返回"
+            Coop:
+                Title: "&8设置编辑器 - 嘉宾"
+                Item:
+                    Return:
+                        Displayname: "&c返回"
+            Operator:
+                Title: "&8设置编辑器 - 管理员"
+                Item:
+                    Return:
+                        Displayname: "&c返回"
+                    Setting:
+                        Status:
+                            Enabled:
+                                Lore:
+                                - "&7状态&8: &a开启"
+                            Disabled:
+                                Lore:
+                                - "&7状态&8: &c关闭"
+                        Invite:
+                            Displayname: "&a邀请玩家加入空岛"
+                        Kick:
+                            Displayname: "&a踢出成员或访客"
+                        Ban:
+                            Displayname: "&a禁止访客进入"
+                        Unban:
+                            Displayname: "&a解除访客进入限制"
+                        Visitor:
+                            Displayname: "&a修改访客设置"
+                        Member:
+                            Displayname: "&a修改成员设置"
+                        Coop:
+                            Displayname: "&a修改嘉宾设置"
+                        CoopPlayers:
+                            Displayname: "&a嘉宾"
+                        Island:
+                            Displayname: "&a修改空岛设置"
+                        MainSpawn:
+                            Displayname: "&a设置空岛传送点"
+                        VisitorSpawn:
+                            Displayname: "&a设置访客传送点"
+                        Border:
+                            Displayname: "&a设置边界"
+                        Biome:
+                            Displayname: "&a设置生物群系"
+                        Weather:
+                            Displayname: "&a设置天气和时间"
+            Owner:
+                Title: "&8设置编辑器 - 空岛"
+                Item:
+                    Return:
+                        Displayname: "&c返回"
+                    Setting:
+                        Status:
+                            Enabled:
+                                Lore:
+                                - "&7Status&8: &a开启"
+                            Disabled:
+                                Lore:
+                                - "&7Status&8: &c禁止"
+                        NaturalMobSpawning:
+                            Displayname: "&a自然刷新怪物"
+                        MobGriefing:
+                            Displayname: "&a怪物破坏方块"
+                        PvP:
+                            Displayname: "&aPvP"
+                        Explosions:
+                            Displayname: "&a爆炸破坏方块"
+                        FireSpread:
+                            Displayname: "&a火焰蔓延"
+                        LeafDecay:
+                            Displayname: "&a树叶凋零"
+                        KeepItemsOnDeath:
+                            Displayname: "&a死亡不掉落"
+                        Damage:
+                            Displayname: "&a受到伤害"
+                        Hunger:
+                            Displayname: "&a饥饿"
+            Default:
+                Item:
+                    Setting:
+                        Status:
+                            Enabled:
+                                Lore:
+                                - "&7状态&8: &a启用"
+                            Disabled:
+                                Lore:
+                                - "&7专题太&8: &c禁止"
+                        Destroy:
+                            Displayname: "&a破坏方块"
+                        Place:
+                            Displayname: "&a放置方块"
+                        Anvil:
+                            Displayname: "&a使用铁砧"
+                        ArmorStandUse:
+                            Displayname: "&a使用盔甲架"
+                        Beacon:
+                            Displayname: "&a使用信标"
+                        Bed:
+                            Displayname: "&a使用床"
+                        AnimalBreeding:
+                            Displayname: "&a繁殖动物"
+                        Brewing:
+                            Displayname: "&a使用酿造台"
+                        Bucket:
+                            Displayname: "&a使用桶"
+                        WaterCollection:
+                            Displayname: "&a收集水"
+                        Storage:
+                            Displayname: "&a使用容器"
+                        Workbench:
+                            Displayname: "&a使用工作台"
+                        Crop:
+                            Displayname: "&a践踏农作物"
+                        Door:
+                            Displayname: "&a使用门"
+                        Gate:
+                            Displayname: "&a使用活板门"
+                        Projectile:
+                            Displayname: "&a发射弹药"
+                        Enchant:
+                            Displayname: "&a使用附魔台"
+                        Fire:
+                            Displayname: "&a扑灭火"
+                        Furnace:
+                            Displayname: "&a使用熔炉"
+                        HorseInventory:
+                            Displayname: "&a使用马的箱子"
+                        MobRiding:
+                            Displayname: "&a骑乘怪物"
+                        MobHurting:
+                            Displayname: "&a伤害怪物"
+                        MobTaming:
+                            Displayname: "&a驯服怪物"
+                        Leash:
+                            Displayname: "&a使用栓绳"
+                        LeverButton:
+                            Displayname: "&a使用拉杆/按钮"
+                        Milking:
+                            Displayname: "&a挤牛奶"
+                        Jukebox:
+                            Displayname: "&a使用唱片机"
+                        PressurePlate:
+                            Displayname: "&a激活压力板"
+                        Redstone:
+                            Displayname: "&a使用红石"
+                        Shearing:
+                            Displayname: "&a剪羊毛"
+                        Trading:
+                            Displayname: "&a村民交易"
+                        ItemDrop:
+                            Displayname: "&a掉落物品"
+                        ItemPickup:
+                            Displayname: "&a拾取物品"
+                        Fishing:
+                            Displayname: "&a钓鱼"
+                        DropperDispenser:
+                            Displayname: "&a使用投掷器/发射器"
+                        SpawnEgg:
+                            Displayname: "&a投掷鸡蛋"
+                        HangingDestroy:
+                            Displayname: "&a破坏展示框"
+                        Cake:
+                            Displayname: "&a吃蛋糕"
+                        DragonEggUse:
+                            Displayname: "&a使用龙蛋"
+                        MinecartBoat:
+                            Displayname: "&a使用矿车/船"
+                        Portal:
+                            Displayname: "&a使用传送门"
+                        Hopper:
+                            Displayname: "&a使用漏斗"
+                        EntityPlacement:
+                            Displayname: "&a放置实体"
+                        ExperienceOrbPickup:
+                            Displayname: "&a拾取经验球"
