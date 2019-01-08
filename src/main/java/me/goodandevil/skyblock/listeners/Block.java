@@ -73,7 +73,6 @@ public class Block implements Listener {
 							if (NMSUtil.getVersionNumber() < 13) {
 								BlockFace[] blockFaces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST,
 										BlockFace.SOUTH, BlockFace.WEST };
-
 								for (BlockFace blockFaceList : blockFaces) {
 									if (event.getBlock().getRelative(blockFaceList)
 											.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial()
@@ -84,7 +83,6 @@ public class Block implements Listener {
 									}
 								}
 							}
-
 							playerDataManager.getPlayerData(player)
 									.setGenerator(new GeneratorLocation(world, block, liquid));
 
@@ -261,10 +259,8 @@ public class Block implements Listener {
 					for (Player all : Bukkit.getOnlinePlayers()) {
 						if (playerDataManager.hasPlayerData(all)) {
 							PlayerData playerData = playerDataManager.getPlayerData(all);
-
 							if (playerData.getGenerator() != null) {
 								GeneratorLocation generatorLocation = playerData.getGenerator();
-
 								if (generatorLocation.getWorld() == worldManager.getIslandWorld(block.getWorld())) {
 									if (location.getBlockX() == generatorLocation.getBlockX()
 											&& location.getBlockY() == generatorLocation.getBlockY()
@@ -272,7 +268,6 @@ public class Block implements Listener {
 										event.setCancelled(true);
 										generatorManager.generateBlock(all, block);
 										playerData.setGenerator(null);
-
 										return;
 									}
 								}

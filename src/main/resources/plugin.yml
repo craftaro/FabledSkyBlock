@@ -4,6 +4,7 @@ version: 59
 api-version: 1.13
 description: A unique SkyBlock plugin
 author: GoodAndEvil
+authors: [GoodAndEvil, Tabuu]
 softdepend: [PlaceholderAPI, MVdWPlaceholderAPI, Vault, Coins, LeaderHeads]
 loadbefore: [Multiverse-Core]
 commands:

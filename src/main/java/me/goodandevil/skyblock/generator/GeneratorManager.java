@@ -70,7 +70,43 @@ public class GeneratorManager {
 		generatorStorage.clear();
 	}
 
+	private boolean isFlowingTowardsBlock(Block from){
+		if(!from.isLiquid())
+			return false;
+
+		if(isWater(from) && isFlowingBlock(from))
+			return true;
+
+		return false;
+	}
+
+	private boolean isLava(Block block){
+		return block.getType().equals(Materials.LAVA.parseMaterial()) || block.getType().equals(Materials.LEGACY_STATIONARY_LAVA.parseMaterial());
+	}
+
+	private boolean isWater(Block block){
+		return block.getType().equals(Materials.WATER.parseMaterial()) || block.getType().equals(Materials.LEGACY_STATIONARY_WATER.parseMaterial());
+	}
+
 	public boolean isGenerator(Block block) {
+		BlockFace[] blockFaces = new BlockFace[]{BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+
+		for(BlockFace blockFace1 : blockFaces){
+			for(BlockFace blockFace2 : blockFaces){
+				if(blockFace1.equals(blockFace2))
+					continue;
+
+				Block from1 = block.getRelative(blockFace1);
+				Block from2 = block.getRelative(blockFace2);
+				if(isLava(from1) && isWater(from2) && isFlowingTowardsBlock(from2))
+					return true;
+			}
+		}
+
+		return false;
+
+		//region GoodAndEvil his old code (garbage)
+		/*
 		if (block.getRelative(BlockFace.UP).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial()
 				&& block.getRelative(BlockFace.UP).getType() != Materials.WATER.parseMaterial()) {
 			Block flowBlock = null;
@@ -182,23 +218,23 @@ public class GeneratorManager {
 		}
 
 		return true;
+		*/
+		//endregion
 	}
 
 	@SuppressWarnings("deprecation")
-	private boolean isFlowingBlock(Block block) {
-		if (NMSUtil.getVersionNumber() > 12) {
-			if (block.getState().getBlockData() instanceof Levelled) {
-				if (((Levelled) block.getState().getBlockData()).getLevel() != 0) {
-					return true;
-				}
-			}
-		} else {
-			if (block.getData() != 0) {
-				return true;
-			}
+	private int getLiquidLevel(Block block){
+		if (NMSUtil.getVersionNumber() > 12 && block.getState().getBlockData() instanceof Levelled) {
+			Levelled levelled = (Levelled) block.getState().getBlockData();
+			return levelled.getLevel();
 		}
+		else {
+			return block.getData();
+		}
+	}
 
-		return false;
+	private boolean isFlowingBlock(Block block) {
+		return getLiquidLevel(block) != 0;
 	}
 
 	@SuppressWarnings("deprecation")
