@@ -8,5 +8,5 @@ build:
   artifacts:
     name: "Skyblock"
     paths:
-    - "/builds/Songoda/Skyblock/target/*.jar"
+    - "/builds/Songoda/SkyBlock/target/*.jar"
 #    - "/builds/Songoda/EpicAnchors/Read_this_before_your_first_use.txt"
