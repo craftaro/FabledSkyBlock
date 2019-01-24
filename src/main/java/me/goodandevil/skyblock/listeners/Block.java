@@ -49,7 +49,7 @@ public class Block implements Listener {
 
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         Island island = islandManager.getIslandAtLocation(block.getLocation());
-        
+
         if (island == null) {
             event.setCancelled(true);
             return;
@@ -211,17 +211,17 @@ public class Block implements Listener {
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         if (!skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) return;
 
-            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                    .getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
-                for (org.bukkit.block.Block blockList : event.getBlocks()) {
-                    if (blockList.getType() == Materials.PISTON.parseMaterial()
-                            || blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
-                        event.setCancelled(true);
+        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
+            for (org.bukkit.block.Block blockList : event.getBlocks()) {
+                if (blockList.getType() == Materials.PISTON.parseMaterial()
+                        || blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
+                    event.setCancelled(true);
 
-                        break;
-                    }
+                    break;
                 }
             }
+        }
     }
 
     @EventHandler
@@ -232,34 +232,35 @@ public class Block implements Listener {
         GeneratorManager generatorManager = skyblock.getGeneratorManager();
         WorldManager worldManager = skyblock.getWorldManager();
 
-        if (worldManager.isIslandWorld(block.getWorld())) {
-            if (block.getType() == Material.ICE || block.getType() == Material.SNOW) {
-                if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                        .getFileConfiguration().getBoolean("Island.Weather.IceAndSnow")) {
-                    event.setCancelled(true);
-                }
-            } else {
-                if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
-                    org.bukkit.Location location = event.getBlock().getLocation();
+        if (!worldManager.isIslandWorld(block.getWorld())) return;
 
-                    for (Player all : Bukkit.getOnlinePlayers()) {
-                        if (playerDataManager.hasPlayerData(all)) {
-                            PlayerData playerData = playerDataManager.getPlayerData(all);
-                            if (playerData.getGenerator() != null) {
-                                GeneratorLocation generatorLocation = playerData.getGenerator();
-                                if (generatorLocation.getWorld() == worldManager.getIslandWorld(block.getWorld())) {
-                                    if (location.getBlockX() == generatorLocation.getBlockX()
-                                            && location.getBlockY() == generatorLocation.getBlockY()
-                                            && location.getBlockZ() == generatorLocation.getBlockZ()) {
-                                        event.setCancelled(true);
-                                        generatorManager.generateBlock(all, block);
-                                        playerData.setGenerator(null);
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
+        if (block.getType() == Material.ICE || block.getType() == Material.SNOW) {
+            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                    .getFileConfiguration().getBoolean("Island.Weather.IceAndSnow")) {
+                event.setCancelled(true);
+            }
+            return;
+        }
+
+        if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
+            org.bukkit.Location location = event.getBlock().getLocation();
+
+            for (Player all : Bukkit.getOnlinePlayers()) {
+                if (!playerDataManager.hasPlayerData(all)) continue;
+                PlayerData playerData = playerDataManager.getPlayerData(all);
+
+                if (playerData.getGenerator() == null) continue;
+                GeneratorLocation generatorLocation = playerData.getGenerator();
+
+                if (generatorLocation.getWorld() != worldManager.getIslandWorld(block.getWorld())) continue;
+
+                if (location.getBlockX() == generatorLocation.getBlockX()
+                        && location.getBlockY() == generatorLocation.getBlockY()
+                        && location.getBlockZ() == generatorLocation.getBlockZ()) {
+                    event.setCancelled(true);
+                    generatorManager.generateBlock(all, block);
+                    playerData.setGenerator(null);
+                    return;
                 }
             }
         }
