@@ -49,6 +49,11 @@ public class Block implements Listener {
 
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         Island island = islandManager.getIslandAtLocation(block.getLocation());
+        
+        if (island == null) {
+            event.setCancelled(true);
+            return;
+        }
 
         if (!islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
             event.setCancelled(true);
@@ -124,8 +129,14 @@ public class Block implements Listener {
         WorldManager worldManager = skyblock.getWorldManager();
 
         if (!worldManager.isIslandWorld(block.getWorld())) return;
+
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         Island island = islandManager.getIslandAtLocation(block.getLocation());
+
+        if (island == null) {
+            event.setCancelled(true);
+            return;
+        }
 
         if (!islandManager.hasPermission(player, block.getLocation(), "Place")) {
             event.setCancelled(true);
@@ -198,7 +209,8 @@ public class Block implements Listener {
 
     @EventHandler
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-        if (skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) {
+        if (!skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) return;
+
             if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                     .getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
                 for (org.bukkit.block.Block blockList : event.getBlocks()) {
@@ -210,7 +222,6 @@ public class Block implements Listener {
                     }
                 }
             }
-        }
     }
 
     @EventHandler
@@ -333,40 +344,40 @@ public class Block implements Listener {
 
         IslandManager islandManager = skyblock.getIslandManager();
 
-        if (skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
-            Island island = islandManager.getIslandAtLocation(block.getLocation());
+        if (!skyblock.getWorldManager().isIslandWorld(block.getWorld())) return;
 
-            if (island != null) {
-                List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
+        Island island = islandManager.getIslandAtLocation(block.getLocation());
 
-                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-                        && island.isUpgrade(Upgrade.Type.Crop)) {
-                    if (NMSUtil.getVersionNumber() > 12) {
-                        try {
-                            Object blockData = block.getClass().getMethod("getBlockData").invoke(block);
+        if (island == null) return;
 
-                            if (blockData instanceof org.bukkit.block.data.Ageable) {
-                                org.bukkit.block.data.Ageable ageable = (org.bukkit.block.data.Ageable) blockData;
-                                ageable.setAge(ageable.getAge() + 1);
-                                block.getClass()
-                                        .getMethod("setBlockData", Class.forName("org.bukkit.block.data.BlockData"))
-                                        .invoke(block, ageable);
-                            }
-                        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                                | NoSuchMethodException | SecurityException | ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        if (block.getState().getData() instanceof Crops) {
-                            try {
-                                block.getClass().getMethod("setData", byte.class).invoke(block,
-                                        (byte) (block.getData() + 1));
-                                block.getState().update();
-                            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                                    | NoSuchMethodException | SecurityException e) {
-                                e.printStackTrace();
-                            }
-                        }
+        List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
+
+        if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
+                && island.isUpgrade(Upgrade.Type.Crop)) {
+            if (NMSUtil.getVersionNumber() > 12) {
+                try {
+                    Object blockData = block.getClass().getMethod("getBlockData").invoke(block);
+
+                    if (blockData instanceof org.bukkit.block.data.Ageable) {
+                        org.bukkit.block.data.Ageable ageable = (org.bukkit.block.data.Ageable) blockData;
+                        ageable.setAge(ageable.getAge() + 1);
+                        block.getClass()
+                                .getMethod("setBlockData", Class.forName("org.bukkit.block.data.BlockData"))
+                                .invoke(block, ageable);
+                    }
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                        | NoSuchMethodException | SecurityException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                if (block.getState().getData() instanceof Crops) {
+                    try {
+                        block.getClass().getMethod("setData", byte.class).invoke(block,
+                                (byte) (block.getData() + 1));
+                        block.getState().update();
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                            | NoSuchMethodException | SecurityException e) {
+                        e.printStackTrace();
                     }
                 }
             }
