@@ -59,8 +59,8 @@ public class ReloadCommand extends SubCommand {
 			player = (Player) sender;
 		}
 
-		if (player == null || player.hasPermission("skyblock.admin.reload") || player.hasPermission("skyblock.admin.*")
-				|| player.hasPermission("skyblock.*")) {
+		if (player == null || player.hasPermission("fabledskyblock.admin.reload") || player.hasPermission("fabledskyblock.admin.*")
+				|| player.hasPermission("fabledskyblock.*")) {
 			Map<String, Config> configs = fileManager.getConfigs();
 
 			for (int i = 0; i < configs.size(); i++) {

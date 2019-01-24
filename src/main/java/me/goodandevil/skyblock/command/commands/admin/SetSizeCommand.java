@@ -61,8 +61,8 @@ public class SetSizeCommand extends SubCommand {
 			player = (Player) sender;
 		}
 
-		if (player == null || player.hasPermission("skyblock.admin.setsize") || player.hasPermission("skyblock.admin.*")
-				|| player.hasPermission("skyblock.*")) {
+		if (player == null || player.hasPermission("fabledskyblock.admin.setsize") || player.hasPermission("fabledskyblock.admin.*")
+				|| player.hasPermission("fabledskyblock.*")) {
 			if (args.length == 2) {
 				if (args[1].matches("[0-9]+")) {
 					Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);

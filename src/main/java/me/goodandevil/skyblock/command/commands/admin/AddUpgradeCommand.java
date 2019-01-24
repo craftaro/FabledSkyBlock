@@ -61,8 +61,8 @@ public class AddUpgradeCommand extends SubCommand {
 			player = (Player) sender;
 		}
 
-		if (player == null || player.hasPermission("skyblock.admin.addupgrade")
-				|| player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+		if (player == null || player.hasPermission("fabledskyblock.admin.addupgrade")
+				|| player.hasPermission("fabledskyblock.admin.*") || player.hasPermission("fabledskyblock.*")) {
 			if (args.length == 2) {
 				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 				UUID islandOwnerUUID;

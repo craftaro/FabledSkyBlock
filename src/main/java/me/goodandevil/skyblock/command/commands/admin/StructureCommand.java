@@ -103,9 +103,9 @@ public class StructureCommand extends SubCommand {
 			return;
 		} else {
 			if (args[0].equalsIgnoreCase("tool")) {
-				if (player.hasPermission("skyblock.admin.structure.tool")
-						|| player.hasPermission("skyblock.admin.structure.*")
-						|| player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+				if (player.hasPermission("fabledskyblock.admin.structure.tool")
+						|| player.hasPermission("fabledskyblock.admin.structure.*")
+						|| player.hasPermission("fabledskyblock.admin.*") || player.hasPermission("fabledskyblock.*")) {
 					try {
 						ItemStack is = StructureUtil.getTool();
 
@@ -142,9 +142,9 @@ public class StructureCommand extends SubCommand {
 
 				return;
 			} else if (args[0].equalsIgnoreCase("save")) {
-				if (player.hasPermission("skyblock.admin.structure.save")
-						|| player.hasPermission("skyblock.admin.structure.*")
-						|| player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+				if (player.hasPermission("fabledskyblock.admin.structure.save")
+						|| player.hasPermission("fabledskyblock.admin.structure.*")
+						|| player.hasPermission("fabledskyblock.admin.*") || player.hasPermission("fabledskyblock.*")) {
 					if (args.length == 2) {
 						PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 

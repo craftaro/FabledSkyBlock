@@ -109,7 +109,7 @@ public class Biome {
 							event.setWillClose(false);
 							event.setWillDestroy(false);
 						} else {
-							if (cooldownManager.hasPlayer(CooldownType.Biome, player) && !player.hasPermission("skyblockearth.bypass.cooldown")) {
+							if (cooldownManager.hasPlayer(CooldownType.Biome, player) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
 								CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome,
 										player);
 								Cooldown cooldown = cooldownPlayer.getCooldown();

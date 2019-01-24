@@ -176,9 +176,9 @@ public class Visit {
 									}
 								}
 
-								if (isCoopPlayer || player.hasPermission("skyblock.bypass")
-										|| player.hasPermission("skyblock.bypass.*")
-										|| player.hasPermission("skyblock.*") || visit.isOpen()) {
+								if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass")
+										|| player.hasPermission("fabledskyblock.bypass.*")
+										|| player.hasPermission("fabledskyblock.*") || visit.isOpen()) {
 									if (!islandManager.containsIsland(targetPlayerUUID)) {
 										islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
 									}

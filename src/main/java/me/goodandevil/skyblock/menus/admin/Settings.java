@@ -52,8 +52,8 @@ public class Settings {
 			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					if (!(player.hasPermission("skyblock.admin.settings") || player.hasPermission("skyblock.admin.*")
-							|| player.hasPermission("skyblock.*"))) {
+					if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
+							|| player.hasPermission("fabledskyblock.*"))) {
 						messageManager.sendMessage(player,
 								configLoad.getString("Island.Admin.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -175,8 +175,8 @@ public class Settings {
 			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					if (!(player.hasPermission("skyblock.admin.settings") || player.hasPermission("skyblock.admin.*")
-							|| player.hasPermission("skyblock.*"))) {
+					if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
+							|| player.hasPermission("fabledskyblock.*"))) {
 						messageManager.sendMessage(player,
 								configLoad.getString("Island.Admin.Settings.Permission.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);

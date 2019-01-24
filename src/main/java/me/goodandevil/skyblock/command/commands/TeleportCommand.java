@@ -45,7 +45,7 @@ public class TeleportCommand extends SubCommand {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		if (args.length == 1) {
-			if (player.hasPermission("skyblock.teleport") || player.hasPermission("skyblock.*")) {
+			if (player.hasPermission("fabledskyblock.teleport") || player.hasPermission("fabledskyblock.*")) {
 				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 				UUID islandOwnerUUID = null;
 				String targetPlayerName;
@@ -77,8 +77,8 @@ public class TeleportCommand extends SubCommand {
 							}
 						}
 
-						if (isCoopPlayer || player.hasPermission("skyblock.bypass")
-								|| player.hasPermission("skyblock.bypass.*") || player.hasPermission("skyblock.*")
+						if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass")
+								|| player.hasPermission("fabledskyblock.bypass.*") || player.hasPermission("fabledskyblock.*")
 								|| visit.isOpen()) {
 							if (!islandManager.containsIsland(islandOwnerUUID)) {
 								islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));

@@ -39,7 +39,7 @@ public class MVdWPlaceholder {
 		List<Leaderboard> leaderboardLevelPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Level);
 		List<Leaderboard> leaderboardVotesPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Votes);
 
-		PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_islands", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(skyblock, "fabledskyblock_islands", new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
 				return "" + skyblock.getVisitManager().getIslands().size();
@@ -47,12 +47,12 @@ public class MVdWPlaceholder {
 		});
 
 		for (int i = 0; i < 10; i++) {
-			PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_leaderboard_votes_" + (i + 1),
+			PlaceholderAPI.registerPlaceholder(skyblock, "fabledskyblock_leaderboard_votes_" + (i + 1),
 					new PlaceholderReplacer() {
 						@Override
 						public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
 							int index = Integer
-									.valueOf(event.getPlaceholder().replace("skyblock_leaderboard_votes_", ""));
+									.valueOf(event.getPlaceholder().replace("fabledskyblock_leaderboard_votes_", ""));
 
 							if (index < leaderboardVotesPlayers.size()) {
 								Leaderboard leaderboard = leaderboardVotesPlayers.get(index);
@@ -68,23 +68,23 @@ public class MVdWPlaceholder {
 								}
 
 								return ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Placeholder.skyblock_leaderboard_votes.Non-empty.Message")
+										configLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Non-empty.Message")
 												.replace("%position", "" + (index + 1))
 												.replace("%player", islandOwnerName).replace("%votes",
 														NumberUtil.formatNumberByDecimal(visit.getVoters().size())));
 							}
 
 							return ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Placeholder.skyblock_leaderboard_votes.Empty.Message"));
+									configLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Empty.Message"));
 						}
 					});
 
-			PlaceholderAPI.registerPlaceholder(skyblock, "skyblock_leaderboard_level_" + (i + 1),
+			PlaceholderAPI.registerPlaceholder(skyblock, "fabledskyblock_leaderboard_level_" + (i + 1),
 					new PlaceholderReplacer() {
 						@Override
 						public String onPlaceholderReplace(PlaceholderReplaceEvent event) {
 							int index = Integer
-									.valueOf(event.getPlaceholder().replace("skyblock_leaderboard_level_", ""));
+									.valueOf(event.getPlaceholder().replace("fabledskyblock_leaderboard_level_", ""));
 
 							if (index < leaderboardLevelPlayers.size()) {
 								Leaderboard leaderboard = leaderboardLevelPlayers.get(index);
@@ -101,14 +101,14 @@ public class MVdWPlaceholder {
 								}
 
 								return ChatColor.translateAlternateColorCodes('&', configLoad
-										.getString("Placeholder.skyblock_leaderboard_level.Non-empty.Message")
+										.getString("Placeholder.fabledskyblock_leaderboard_level.Non-empty.Message")
 										.replace("%position", "" + (index + 1)).replace("%player", islandOwnerName)
 										.replace("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))
 										.replace("%points", NumberUtil.formatNumberByDecimal(level.getPoints())));
 							}
 
 							return ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Placeholder.skyblock_leaderboard_level.Empty.Message"));
+									configLoad.getString("Placeholder.fabledskyblock_leaderboard_level.Empty.Message"));
 						}
 					});
 		}

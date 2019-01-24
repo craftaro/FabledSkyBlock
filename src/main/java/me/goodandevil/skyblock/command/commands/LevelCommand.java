@@ -52,7 +52,7 @@ public class LevelCommand extends SubCommand {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		if (args.length == 1) {
-			if (player.hasPermission("skyblock.level") || player.hasPermission("skyblock.*")) {
+			if (player.hasPermission("fabledskyblock.level") || player.hasPermission("fabledskyblock.*")) {
 				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 				UUID islandOwnerUUID = null;
 				String targetPlayerName;

@@ -28,7 +28,7 @@ public class EZPlaceholder extends PlaceholderExpansion {
 	}
 
 	public String getIdentifier() {
-		return "skyblock";
+		return "fabledskyblock";
 	}
 
 	public String getPlugin() {
@@ -72,13 +72,13 @@ public class EZPlaceholder extends PlaceholderExpansion {
 						}
 
 						return ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Placeholder.skyblock_leaderboard_votes.Non-empty.Message")
+								configLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Non-empty.Message")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
 										.replace("%votes", NumberUtil.formatNumberByDecimal(visit.getVoters().size())));
 					}
 
 					return ChatColor.translateAlternateColorCodes('&',
-							configLoad.getString("Placeholder.skyblock_leaderboard_votes.Empty.Message"));
+							configLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Empty.Message"));
 				} else if (identifier.equalsIgnoreCase("leaderboard_level_" + (i + 1))) {
 					if (i < leaderboardLevelPlayers.size()) {
 						Leaderboard leaderboard = leaderboardLevelPlayers.get(i);
@@ -95,14 +95,14 @@ public class EZPlaceholder extends PlaceholderExpansion {
 						}
 
 						return ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Placeholder.skyblock_leaderboard_level.Non-empty.Message")
+								configLoad.getString("Placeholder.fabledskyblock_leaderboard_level.Non-empty.Message")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
 										.replace("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))
 										.replace("%points", NumberUtil.formatNumberByDecimal(level.getPoints())));
 					}
 
 					return ChatColor.translateAlternateColorCodes('&',
-							configLoad.getString("Placeholder.skyblock_leaderboard_level.Empty.Message"));
+							configLoad.getString("Placeholder.fabledskyblock_leaderboard_level.Empty.Message"));
 				}
 			}
 		}
@@ -111,6 +111,6 @@ public class EZPlaceholder extends PlaceholderExpansion {
 			return "";
 		}
 
-		return placeholderManager.getPlaceholder(player, "skyblock_" + identifier);
+		return placeholderManager.getPlaceholder(player, "fabledskyblock_" + identifier);
 	}
 }

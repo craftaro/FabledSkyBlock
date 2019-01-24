@@ -42,7 +42,7 @@ public class ValueCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (player.hasPermission("skyblock.value") || player.hasPermission("skyblock.*")) {
+		if (player.hasPermission("fabledskyblock.value") || player.hasPermission("fabledskyblock.*")) {
 			if (player.getItemInHand() == null) {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.Hand.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);

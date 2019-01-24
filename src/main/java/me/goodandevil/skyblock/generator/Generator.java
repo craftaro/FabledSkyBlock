@@ -35,7 +35,7 @@ public class Generator {
 	}
 
 	public String getPermission() {
-		return "skyblock.generator." + name.toLowerCase().replace(" ", "_");
+		return "fabledskyblock.generator." + name.toLowerCase().replace(" ", "_");
 	}
 
 	public void setPermission(boolean permission) {

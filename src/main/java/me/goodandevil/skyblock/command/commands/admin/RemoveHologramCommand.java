@@ -57,8 +57,8 @@ public class RemoveHologramCommand extends SubCommand {
 			player = (Player) sender;
 		}
 
-		if (player == null || player.hasPermission("skyblock.admin.removehologram")
-				|| player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+		if (player == null || player.hasPermission("fabledskyblock.admin.removehologram")
+				|| player.hasPermission("fabledskyblock.admin.*") || player.hasPermission("fabledskyblock.*")) {
 			if (args.length == 1) {
 				HologramType hologramType = null;
 

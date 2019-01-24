@@ -1056,47 +1056,47 @@ Island:
             Division:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the points division to '&f%division&e'."
 Placeholder:
-    skyblock_leaderboard_level:
+    fabledskyblock_leaderboard_level:
         Empty:
             Message: "&f&oUnclaimed"
         Non-empty:
             Message: "&f[%position] %player [%level]"
-    skyblock_leaderboard_votes:
+    fabledskyblock_leaderboard_votes:
         Empty:
             Message: "&f&oUnclaimed"
         Non-empty:
             Message: "&f[%position] %player [%votes]"
-    skyblock_island_size:
+    fabledskyblock_island_size:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_radius:
+    fabledskyblock_island_radius:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_level:
+    fabledskyblock_island_level:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_level_formatted:
+    fabledskyblock_island_level_formatted:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_points:
+    fabledskyblock_island_points:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_role:
+    fabledskyblock_island_role:
         Empty:
             Message: "&f&oNone"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_owner:
+    fabledskyblock_island_owner:
         Empty:
             Message: "&f&oNone"
         Non-empty:
@@ -1104,57 +1104,57 @@ Placeholder:
                 Message: "&fYou"
             Other:
                 Message: "&f%placeholder"
-    skyblock_island_biome:
+    fabledskyblock_island_biome:
         Empty:
             Message: "&f&oNone"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_time:
+    fabledskyblock_island_time:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_weather:
+    fabledskyblock_island_weather:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_bans:
+    fabledskyblock_island_bans:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_members_total:
+    fabledskyblock_island_members_total:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_members:
+    fabledskyblock_island_members:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_operators:
+    fabledskyblock_island_operators:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_coops:
+    fabledskyblock_island_coops:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_coops_total:
+    fabledskyblock_island_coops_total:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_visitors:
+    fabledskyblock_island_visitors:
         Empty:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
-    skyblock_island_invites:
+    fabledskyblock_island_invites:
         Empty:
             Message: "&c0"
         Non-empty:

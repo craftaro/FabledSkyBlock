@@ -279,8 +279,8 @@ public class Creator implements Listener {
 
 				PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 
-				if (!(player.hasPermission("skyblock.admin.create") || player.hasPermission("skyblock.admin.*")
-						|| player.hasPermission("skyblock.*"))) {
+				if (!(player.hasPermission("fabledskyblock.admin.create") || player.hasPermission("fabledskyblock.admin.*")
+						|| player.hasPermission("fabledskyblock.*"))) {
 					messageManager.sendMessage(player, configLoad.getString("Island.Admin.Creator.Permission.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
@@ -325,9 +325,9 @@ public class Creator implements Listener {
 
 					AnvilGUI gui = new AnvilGUI(player, event1 -> {
 						if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-							if (!(player.hasPermission("skyblock.admin.creator")
-									|| player.hasPermission("skyblock.admin.*")
-									|| player.hasPermission("skyblock.*"))) {
+							if (!(player.hasPermission("fabledskyblock.admin.creator")
+									|| player.hasPermission("fabledskyblock.admin.*")
+									|| player.hasPermission("fabledskyblock.*"))) {
 								messageManager.sendMessage(player,
 										configLoad.getString("Island.Admin.Creator.Permission.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -422,9 +422,9 @@ public class Creator implements Listener {
 
 							AnvilGUI gui = new AnvilGUI(player, event1 -> {
 								if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-									if (!(player.hasPermission("skyblock.admin.creator")
-											|| player.hasPermission("skyblock.admin.*")
-											|| player.hasPermission("skyblock.*"))) {
+									if (!(player.hasPermission("fabledskyblock.admin.creator")
+											|| player.hasPermission("fabledskyblock.admin.*")
+											|| player.hasPermission("fabledskyblock.*"))) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -593,9 +593,9 @@ public class Creator implements Listener {
 
 							AnvilGUI gui = new AnvilGUI(player, event1 -> {
 								if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-									if (!(player.hasPermission("skyblock.admin.creator")
-											|| player.hasPermission("skyblock.admin.*")
-											|| player.hasPermission("skyblock.*"))) {
+									if (!(player.hasPermission("fabledskyblock.admin.creator")
+											|| player.hasPermission("fabledskyblock.admin.*")
+											|| player.hasPermission("fabledskyblock.*"))) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -763,9 +763,9 @@ public class Creator implements Listener {
 
 							AnvilGUI gui = new AnvilGUI(player, event1 -> {
 								if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-									if (!(player.hasPermission("skyblock.admin.creator")
-											|| player.hasPermission("skyblock.admin.*")
-											|| player.hasPermission("skyblock.*"))) {
+									if (!(player.hasPermission("fabledskyblock.admin.creator")
+											|| player.hasPermission("fabledskyblock.admin.*")
+											|| player.hasPermission("fabledskyblock.*"))) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -970,9 +970,9 @@ public class Creator implements Listener {
 
 								AnvilGUI gui = new AnvilGUI(player, event1 -> {
 									if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-										if (!(player.hasPermission("skyblock.admin.creator")
-												|| player.hasPermission("skyblock.admin.*")
-												|| player.hasPermission("skyblock.*"))) {
+										if (!(player.hasPermission("fabledskyblock.admin.creator")
+												|| player.hasPermission("fabledskyblock.admin.*")
+												|| player.hasPermission("fabledskyblock.*"))) {
 											messageManager.sendMessage(player,
 													configLoad.getString("Island.Admin.Creator.Permission.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -1221,9 +1221,9 @@ public class Creator implements Listener {
 
 							AnvilGUI gui = new AnvilGUI(player, event1 -> {
 								if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-									if (!(player.hasPermission("skyblock.admin.creator")
-											|| player.hasPermission("skyblock.admin.*")
-											|| player.hasPermission("skyblock.*"))) {
+									if (!(player.hasPermission("fabledskyblock.admin.creator")
+											|| player.hasPermission("fabledskyblock.admin.*")
+											|| player.hasPermission("fabledskyblock.*"))) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);

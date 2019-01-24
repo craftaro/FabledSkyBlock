@@ -86,7 +86,7 @@ public class Structure implements me.goodandevil.skyblock.api.structure.Structur
 	}
 
 	public String getPermission() {
-		return "skyblock.island." + name.toLowerCase().replace(" ", "_");
+		return "fabledskyblock.island." + name.toLowerCase().replace(" ", "_");
 	}
 
 	public void setPermission(boolean permission) {

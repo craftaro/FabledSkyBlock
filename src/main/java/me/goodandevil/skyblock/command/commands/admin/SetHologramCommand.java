@@ -40,8 +40,8 @@ public class SetHologramCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (player.hasPermission("skyblock.admin.sethologram") || player.hasPermission("skyblock.admin.*")
-				|| player.hasPermission("skyblock.*")) {
+		if (player.hasPermission("fabledskyblock.admin.sethologram") || player.hasPermission("fabledskyblock.admin.*")
+				|| player.hasPermission("fabledskyblock.*")) {
 			if (args.length == 1) {
 				HologramType hologramType = null;
 

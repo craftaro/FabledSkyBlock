@@ -203,8 +203,8 @@ public class Generator implements Listener {
 
 				PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 
-				if (!(player.hasPermission("skyblock.admin.generator") || player.hasPermission("skyblock.admin.*")
-						|| player.hasPermission("skyblock.*"))) {
+				if (!(player.hasPermission("fabledskyblock.admin.generator") || player.hasPermission("fabledskyblock.admin.*")
+						|| player.hasPermission("fabledskyblock.*"))) {
 					messageManager.sendMessage(player,
 							configLoad.getString("Island.Admin.Generator.Permission.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -261,9 +261,9 @@ public class Generator implements Listener {
 
 					AnvilGUI gui = new AnvilGUI(player, event1 -> {
 						if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-							if (!(player.hasPermission("skyblock.admin.generator")
-									|| player.hasPermission("skyblock.admin.*")
-									|| player.hasPermission("skyblock.*"))) {
+							if (!(player.hasPermission("fabledskyblock.admin.generator")
+									|| player.hasPermission("fabledskyblock.admin.*")
+									|| player.hasPermission("fabledskyblock.*"))) {
 								messageManager.sendMessage(player,
 										configLoad.getString("Island.Admin.Generator.Permission.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -471,9 +471,9 @@ public class Generator implements Listener {
 
 										AnvilGUI gui = new AnvilGUI(player, event1 -> {
 											if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-												if (!(player.hasPermission("skyblock.admin.generator")
-														|| player.hasPermission("skyblock.admin.*")
-														|| player.hasPermission("skyblock.*"))) {
+												if (!(player.hasPermission("fabledskyblock.admin.generator")
+														|| player.hasPermission("fabledskyblock.admin.*")
+														|| player.hasPermission("fabledskyblock.*"))) {
 													messageManager.sendMessage(player, configLoad
 															.getString("Island.Admin.Generator.Permission.Message"));
 													soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),

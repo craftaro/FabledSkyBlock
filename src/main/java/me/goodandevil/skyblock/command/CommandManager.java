@@ -286,8 +286,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 						return;
 					} else if (args[0].equalsIgnoreCase("admin")) {
 						if (args.length == 1 || (args.length >= 2 && args[1].equalsIgnoreCase("help"))) {
-							if (player == null || player.hasPermission("skyblock.admin")
-									|| player.hasPermission("skyblock.admin.*") || player.hasPermission("skyblock.*")) {
+							if (player == null || player.hasPermission("fabledskyblock.admin")
+									|| player.hasPermission("fabledskyblock.admin.*") || player.hasPermission("fabledskyblock.*")) {
 								if (player == null) {
 									sendConsoleHelpCommands(sender);
 								} else {
@@ -371,8 +371,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 						commandAliases.add(subCommandList.getName());
 					}
 				} else {
-					if (sender.hasPermission("skyblock.admin") || sender.hasPermission("skyblock.admin.*")
-							|| sender.hasPermission("skyblock.*")) {
+					if (sender.hasPermission("fabledskyblock.admin") || sender.hasPermission("fabledskyblock.admin.*")
+							|| sender.hasPermission("fabledskyblock.*")) {
 						if ("admin".contains(args[0].toLowerCase())) {
 							commandAliases.add("admin");
 						}
@@ -385,8 +385,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					}
 				}
 			} else if (args.length == 2) {
-				if (sender.hasPermission("skyblock.admin") || sender.hasPermission("skyblock.admin.*")
-						|| sender.hasPermission("skyblock.*")) {
+				if (sender.hasPermission("fabledskyblock.admin") || sender.hasPermission("fabledskyblock.admin.*")
+						|| sender.hasPermission("fabledskyblock.*")) {
 					if (args[0].equalsIgnoreCase("admin")) {
 						if (args[1] == null || args[1].isEmpty()) {
 							for (SubCommand subCommandList : subCommands.get(Type.Admin)) {
@@ -408,8 +408,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					commandAliases.addAll(arguments);
 				}
 			} else if (args.length == 3) {
-				if (sender.hasPermission("skyblock.admin") || sender.hasPermission("skyblock.admin.*")
-						|| sender.hasPermission("skyblock.*")) {
+				if (sender.hasPermission("fabledskyblock.admin") || sender.hasPermission("fabledskyblock.admin.*")
+						|| sender.hasPermission("fabledskyblock.*")) {
 					if (args[0].equalsIgnoreCase("admin")) {
 						List<String> arguments = getArguments(Type.Admin, args[1], args[2]);
 

@@ -67,183 +67,183 @@ public class PlaceholderManager {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (placeholder.equalsIgnoreCase("skyblock_island_size")) {
+		if (placeholder.equalsIgnoreCase("fabledskyblock_island_size")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_size.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_size.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_size.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_size.Non-empty.Message")
 								.replace("%placeholder", "" + island.getSize()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_radius")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_radius")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_radius.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_radius.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_radius.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_radius.Non-empty.Message")
 								.replace("%placeholder", "" + island.getRadius()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_level")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_level")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_level.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_level.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_level.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_level.Non-empty.Message")
 								.replace("%placeholder", "" + island.getLevel().getLevel()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_level_formatted")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_level_formatted")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_level_formatted.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_level_formatted.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_level_formatted.Non-empty.Message").replace(
+						configLoad.getString("Placeholder.fabledskyblock_island_level_formatted.Non-empty.Message").replace(
 								"%placeholder", "" + NumberUtil.formatNumberBySuffix(island.getLevel().getLevel())));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_points")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_points")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_points.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_points.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_points.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_points.Non-empty.Message")
 								.replace("%placeholder", "" + island.getLevel().getPoints()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_role")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_role")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_role.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_role.Empty.Message"));
 			} else {
 				for (IslandRole roleList : IslandRole.values()) {
 					if (island.hasRole(roleList, player.getUniqueId())) {
 						return ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Placeholder.skyblock_island_role.Non-empty.Message")
+								configLoad.getString("Placeholder.fabledskyblock_island_role.Non-empty.Message")
 										.replace("%placeholder", roleList.name()));
 					}
 				}
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_owner")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_owner")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_owner.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_owner.Empty.Message"));
 			} else {
 				UUID islandOwnerUUID = island.getOwnerUUID();
 				Player targetPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
 
 				if (targetPlayer == null) {
 					return ChatColor.translateAlternateColorCodes('&',
-							configLoad.getString("Placeholder.skyblock_island_owner.Non-empty.Other.Message").replace(
+							configLoad.getString("Placeholder.fabledskyblock_island_owner.Non-empty.Other.Message").replace(
 									"%placeholder", Bukkit.getServer().getOfflinePlayer(islandOwnerUUID).getName()));
 				} else {
 					if (targetPlayer.getName().equals(player.getName())) {
 						return ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Placeholder.skyblock_island_owner.Non-empty.Yourself.Message")
+								configLoad.getString("Placeholder.fabledskyblock_island_owner.Non-empty.Yourself.Message")
 										.replace("%placeholder", targetPlayer.getName()));
 					} else {
 						return ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Placeholder.skyblock_island_owner.Non-empty.Other.Message")
+								configLoad.getString("Placeholder.fabledskyblock_island_owner.Non-empty.Other.Message")
 										.replace("%placeholder", targetPlayer.getName()));
 					}
 				}
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_biome")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_biome")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_biome.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_biome.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_biome.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_biome.Non-empty.Message")
 								.replace("%placeholder", island.getBiomeName()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_time")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_time")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_time.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_time.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_time.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_time.Non-empty.Message")
 								.replace("%placeholder", "" + island.getTime()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_weather")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_weather")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_weather.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_weather.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_weather.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_weather.Non-empty.Message")
 								.replace("%placeholder", "" + island.getWeatherName()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_bans")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_bans")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_bans.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_bans.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_bans.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_bans.Non-empty.Message")
 								.replace("%placeholder", "" + island.getBan().getBans().size()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_members_total")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_members_total")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_members_total.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_members_total.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_members_total.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_members_total.Non-empty.Message")
 								.replace("%placeholder", "" + (island.getRole(IslandRole.Member).size()
 										+ island.getRole(IslandRole.Operator).size() + 1)));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_members")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_members")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_members.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_members.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_members.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_members.Non-empty.Message")
 								.replace("%placeholder", "" + island.getRole(IslandRole.Member).size()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_operators")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_operators")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_operators.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_operators.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_operators.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_operators.Non-empty.Message")
 								.replace("%placeholder", "" + island.getRole(IslandRole.Operator).size()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_coops")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_coops")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_coops.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_coops.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_coops.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_coops.Non-empty.Message")
 								.replace("%placeholder", "" + islandManager.getCoopPlayersAtIsland(island).size()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_coops_total")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_coops_total")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_coops_total.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_coops_total.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_coops_total.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_coops_total.Non-empty.Message")
 								.replace("%placeholder", "" + island.getCoopPlayers().size()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_visitors")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_visitors")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_visitors.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_visitors.Empty.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_visitors.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_visitors.Non-empty.Message")
 								.replace("%placeholder", "" + islandManager.getVisitorsAtIsland(island).size()));
 			}
-		} else if (placeholder.equalsIgnoreCase("skyblock_island_invites")) {
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_invites")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_invites.Empty.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_invites.Empty.Message"));
 			} else {
 				Map<UUID, Invite> invites = skyblock.getInviteManager().getInvites();
 				int invitedPlayers = 0;
@@ -258,7 +258,7 @@ public class PlaceholderManager {
 				}
 
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.skyblock_island_invites.Non-empty.Message")
+						configLoad.getString("Placeholder.fabledskyblock_island_invites.Non-empty.Message")
 								.replace("%placeholder", "" + invitedPlayers));
 			}
 		}
@@ -268,24 +268,24 @@ public class PlaceholderManager {
 
 	public List<String> getPlaceholders() {
 		List<String> placeholders = new ArrayList<>();
-		placeholders.add("skyblock_island_size");
-		placeholders.add("skyblock_island_radius");
-		placeholders.add("skyblock_island_level");
-		placeholders.add("skyblock_island_level_formatted");
-		placeholders.add("skyblock_island_points");
-		placeholders.add("skyblock_island_role");
-		placeholders.add("skyblock_island_owner");
-		placeholders.add("skyblock_island_biome");
-		placeholders.add("skyblock_island_time");
-		placeholders.add("skyblock_island_weather");
-		placeholders.add("skyblock_island_bans");
-		placeholders.add("skyblock_island_members_total");
-		placeholders.add("skyblock_island_members");
-		placeholders.add("skyblock_island_operators");
-		placeholders.add("skyblock_island_coops");
-		placeholders.add("skyblock_island_coops_total");
-		placeholders.add("skyblock_island_visitors");
-		placeholders.add("skyblock_island_invites");
+		placeholders.add("fabledskyblock_island_size");
+		placeholders.add("fabledskyblock_island_radius");
+		placeholders.add("fabledskyblock_island_level");
+		placeholders.add("fabledskyblock_island_level_formatted");
+		placeholders.add("fabledskyblock_island_points");
+		placeholders.add("fabledskyblock_island_role");
+		placeholders.add("fabledskyblock_island_owner");
+		placeholders.add("fabledskyblock_island_biome");
+		placeholders.add("fabledskyblock_island_time");
+		placeholders.add("fabledskyblock_island_weather");
+		placeholders.add("fabledskyblock_island_bans");
+		placeholders.add("fabledskyblock_island_members_total");
+		placeholders.add("fabledskyblock_island_members");
+		placeholders.add("fabledskyblock_island_operators");
+		placeholders.add("fabledskyblock_island_coops");
+		placeholders.add("fabledskyblock_island_coops_total");
+		placeholders.add("fabledskyblock_island_visitors");
+		placeholders.add("fabledskyblock_island_invites");
 
 		return placeholders;
 	}

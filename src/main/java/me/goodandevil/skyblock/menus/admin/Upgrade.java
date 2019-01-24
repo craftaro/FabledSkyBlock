@@ -66,8 +66,8 @@ public class Upgrade {
 				nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						if (!(player.hasPermission("skyblock.admin.upgrade") || player.hasPermission("skyblock.admin.*")
-								|| player.hasPermission("skyblock.*"))) {
+						if (!(player.hasPermission("fabledskyblock.admin.upgrade") || player.hasPermission("fabledskyblock.admin.*")
+								|| player.hasPermission("fabledskyblock.*"))) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Admin.Upgrade.Permission.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -161,9 +161,9 @@ public class Upgrade {
 									public void run() {
 										AnvilGUI gui = new AnvilGUI(player, event1 -> {
 											if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-												if (!(player.hasPermission("skyblock.admin.upgrade")
-														|| player.hasPermission("skyblock.admin.*")
-														|| player.hasPermission("skyblock.*"))) {
+												if (!(player.hasPermission("fabledskyblock.admin.upgrade")
+														|| player.hasPermission("fabledskyblock.admin.*")
+														|| player.hasPermission("fabledskyblock.*"))) {
 													messageManager.sendMessage(player, configLoad
 															.getString("Island.Admin.Upgrade.Permission.Message"));
 													soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
@@ -364,8 +364,8 @@ public class Upgrade {
 				nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						if (!(player.hasPermission("skyblock.admin.upgrade") || player.hasPermission("skyblock.admin.*")
-								|| player.hasPermission("skyblock.*"))) {
+						if (!(player.hasPermission("fabledskyblock.admin.upgrade") || player.hasPermission("fabledskyblock.admin.*")
+								|| player.hasPermission("fabledskyblock.*"))) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Admin.Upgrade.Permission.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -544,9 +544,9 @@ public class Upgrade {
 													public void run() {
 														AnvilGUI gui = new AnvilGUI(player, event1 -> {
 															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																if (!(player.hasPermission("skyblock.admin.upgrade")
-																		|| player.hasPermission("skyblock.admin.*")
-																		|| player.hasPermission("skyblock.*"))) {
+																if (!(player.hasPermission("fabledskyblock.admin.upgrade")
+																		|| player.hasPermission("fabledskyblock.admin.*")
+																		|| player.hasPermission("fabledskyblock.*"))) {
 																	messageManager.sendMessage(player,
 																			configLoad.getString(
 																					"Island.Admin.Upgrade.Permission.Message"));
@@ -680,9 +680,9 @@ public class Upgrade {
 													public void run() {
 														AnvilGUI gui = new AnvilGUI(player, event1 -> {
 															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																if (!(player.hasPermission("skyblock.admin.upgrade")
-																		|| player.hasPermission("skyblock.admin.*")
-																		|| player.hasPermission("skyblock.*"))) {
+																if (!(player.hasPermission("fabledskyblock.admin.upgrade")
+																		|| player.hasPermission("fabledskyblock.admin.*")
+																		|| player.hasPermission("fabledskyblock.*"))) {
 																	messageManager.sendMessage(player,
 																			configLoad.getString(
 																					"Island.Admin.Upgrade.Permission.Message"));

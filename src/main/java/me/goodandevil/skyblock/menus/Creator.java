@@ -61,8 +61,8 @@ public class Creator {
 			}
 
 			if (structureList.isPermission()) {
-				if (!player.hasPermission(structureList.getPermission()) && !player.hasPermission("skyblock.island.*")
-						&& !player.hasPermission("skyblock.*")) {
+				if (!player.hasPermission(structureList.getPermission()) && !player.hasPermission("fabledskyblock.island.*")
+						&& !player.hasPermission("fabledskyblock.*")) {
 					continue;
 				}
 			}
@@ -116,8 +116,8 @@ public class Creator {
 								if (structureList.isPermission() && structureList.getPermission() != null
 										&& !structureList.getPermission().isEmpty()) {
 									if (!player.hasPermission(structureList.getPermission())
-											&& !player.hasPermission("skyblock.island.*")
-											&& !player.hasPermission("skyblock.*")) {
+											&& !player.hasPermission("fabledskyblock.island.*")
+											&& !player.hasPermission("fabledskyblock.*")) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Creator.Selector.Permission.Message"));
 										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
