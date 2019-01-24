@@ -575,7 +575,7 @@ public class IslandManager {
 		boolean unloadIsland = true;
 
 		for (Player all : Bukkit.getOnlinePlayers()) {
-			if (player.getUniqueId() != null && all.getUniqueId().equals(player.getUniqueId())) {
+			if(all == null || (player != null && player.getUniqueId().equals(all.getUniqueId()))){
 				continue;
 			}
 
@@ -637,7 +637,7 @@ public class IslandManager {
 			if (nonIslandMembers <= 0) {
 				if (island.isOpen()) {
 					return;
-				} else {
+				} else if (player != null) {
 					removeCoopPlayers(island, player.getUniqueId());
 				}
 			} else {
@@ -935,18 +935,18 @@ public class IslandManager {
 	 * public boolean hasIsland(org.bukkit.OfflinePlayer offlinePlayer) { if
 	 * (offlinePlayer.isOnline()) { PlayerDataManager playerDataManager =
 	 * skyblock.getPlayerDataManager();
-	 * 
+	 *
 	 * Player player = offlinePlayer.getPlayer();
-	 * 
+	 *
 	 * if (playerDataManager.hasPlayerData(player)) { PlayerData playerData =
 	 * playerDataManager.getPlayerData(player);
-	 * 
+	 *
 	 * if (playerData.getOwner() != null &&
 	 * islandStorage.containsKey(playerData.getOwner())) { return true; } } }
-	 * 
+	 *
 	 * if (!isIslandExist(offlinePlayer.getUniqueId())) { return new
 	 * OfflinePlayer(offlinePlayer.getUniqueId()).getOwner() != null; }
-	 * 
+	 *
 	 * return false; }
 	 */
 
@@ -959,15 +959,10 @@ public class IslandManager {
 	}
 
 	public boolean hasPermission(Player player, org.bukkit.Location location, String setting) {
-		Island island = getIsland(player);
+		Island island = getIslandAtLocation(location);
 
-		if (island != null) {
-			if (isLocationAtIsland(island, location)) {
-				if (island.hasRole(IslandRole.Member, player.getUniqueId())) {
-					if (!island.getSetting(IslandRole.Member, setting).getStatus()) {
-						return false;
-					}
-				}
+		if(island == null)
+			return true;
 
 		if(player.hasPermission("fabledskyblock.bypass." + setting.toLowerCase()))
 			return true;
