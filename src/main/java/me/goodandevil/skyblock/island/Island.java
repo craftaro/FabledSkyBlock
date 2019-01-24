@@ -469,6 +469,14 @@ public class Island {
 		return islandRoles;
 	}
 
+	public IslandRole getRole(OfflinePlayer player){
+		for (IslandRole role : IslandRole.values())
+			if(getRole(role).contains(player.getUniqueId()))
+				return role;
+
+		return IslandRole.Visitor;
+	}
+
 	public boolean setRole(IslandRole role, UUID uuid) {
 		if (!(role == IslandRole.Visitor || role == IslandRole.Coop || role == IslandRole.Owner)) {
 			if (!hasRole(role, uuid)) {
@@ -594,7 +602,7 @@ public class Island {
 			}
 		}
 
-		return null;
+		return new IslandSetting(setting, true); //TODO: Default setting value
 	}
 
 	public List<IslandSetting> getSettings(IslandRole role) {

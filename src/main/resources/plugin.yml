@@ -1,6 +1,6 @@
-name: SkyBlock
+name: FabledSkyBlock
 main: me.goodandevil.skyblock.SkyBlock
-version: 59
+version: 62
 api-version: 1.13
 description: A unique SkyBlock plugin
 author: GoodAndEvil
@@ -11,3 +11,6 @@ commands:
     island:
         description: Island command
         aliases: [is]
+
+    skyblock:
+        description: Skyblock info command.

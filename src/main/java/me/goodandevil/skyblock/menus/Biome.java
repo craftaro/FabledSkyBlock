@@ -109,7 +109,7 @@ public class Biome {
 							event.setWillClose(false);
 							event.setWillDestroy(false);
 						} else {
-							if (cooldownManager.hasPlayer(CooldownType.Biome, player)) {
+							if (cooldownManager.hasPlayer(CooldownType.Biome, player) && !player.hasPermission("skyblockearth.bypass.cooldown")) {
 								CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome,
 										player);
 								Cooldown cooldown = cooldownPlayer.getCooldown();
@@ -139,7 +139,6 @@ public class Biome {
 
 								return;
 							}
-
 							org.bukkit.block.Biome selectedBiomeType = null;
 
 							if (is.getType() == Materials.SUNFLOWER.parseMaterial()) {
@@ -158,13 +157,8 @@ public class Biome {
 								selectedBiomeType = Biomes.ROOFED_FOREST.bukkitBiome();
 							}
 
-							if (!player.hasPermission("skyblock.bypass.cooldown")
-									&& !player.hasPermission("skyblock.bypass.*")
-									&& !player.hasPermission("skyblock.*")) {
-								cooldownManager.createPlayer(CooldownType.Biome, player);
-								biomeManager.setBiome(island, selectedBiomeType);
-							}
-
+							cooldownManager.createPlayer(CooldownType.Biome, player);
+							biomeManager.setBiome(island, selectedBiomeType);
 							island.setBiome(selectedBiomeType);
 							island.save();
 

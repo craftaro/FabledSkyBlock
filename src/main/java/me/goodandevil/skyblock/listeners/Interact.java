@@ -5,16 +5,17 @@ import java.util.Set;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -26,6 +27,7 @@ import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.plugin.RegisteredListener;
 
 public class Interact implements Listener {
 
@@ -588,7 +590,17 @@ public class Interact implements Listener {
 						return;
 					}
 				}
-			} else if (entity.getType() == EntityType.COW || entity.getType() == EntityType.MUSHROOM_COW) {
+			}
+			else if (entity.getType().equals(EntityType.ITEM_FRAME)){
+				if (!skyblock.getIslandManager().hasPermission(player, entity.getLocation(), "Storage")) {
+					event.setCancelled(true);
+					skyblock.getMessageManager().sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+				}
+			}
+			else if (entity.getType() == EntityType.COW || entity.getType() == EntityType.MUSHROOM_COW) {
 				if (is.getType() == Material.BUCKET) {
 					if (!islandManager.hasPermission(player, entity.getLocation(), "Milking")) {
 						event.setCancelled(true);
@@ -612,7 +624,20 @@ public class Interact implements Listener {
 
 					return;
 				}
-			} else if (entity.getType() == EntityType.MINECART || entity.getType() == EntityType.BOAT) {
+			}
+			else if(entity instanceof StorageMinecart){
+				if (!islandManager.hasPermission(player, entity.getLocation(), "Storage")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
+			}
+			else if (entity.getType() == EntityType.MINECART || entity.getType() == EntityType.BOAT) {
 				if (!islandManager.hasPermission(player, entity.getLocation(), "MinecartBoat")) {
 					event.setCancelled(true);
 
@@ -710,15 +735,48 @@ public class Interact implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
-		if (!(event.getRightClicked() instanceof ArmorStand)) {
+	public void onPlayerDamageVehicle(VehicleDamageEvent event){
+		if(!(event.getAttacker() instanceof Player))
 			return;
-		}
 
+		Player player = (Player) event.getAttacker();
+
+		if (!skyblock.getIslandManager().hasPermission(player, event.getVehicle().getLocation(), "MobHurting")) {
+			event.setCancelled(true);
+
+			skyblock.getMessageManager().sendMessage(player,
+					skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+							.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+			skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerDestroyVehicle(VehicleDestroyEvent event){
+		if(!(event.getAttacker() instanceof Player))
+			return;
+
+		Player player = (Player) event.getAttacker();
+
+		if (!skyblock.getIslandManager().hasPermission(player, event.getVehicle().getLocation(), "MobHurting")) {
+			event.setCancelled(true);
+
+			skyblock.getMessageManager().sendMessage(player,
+					skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+							.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+			skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
 		org.bukkit.entity.Entity entity = event.getRightClicked();
 
-		if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
+		if (!skyblock.getWorldManager().isIslandWorld(entity.getWorld()))
+			return;
+
+		if (entity instanceof ArmorStand){
 			if (!skyblock.getIslandManager().hasPermission(player, entity.getLocation(), "ArmorStandUse")) {
 				event.setCancelled(true);
 
@@ -728,5 +786,6 @@ public class Interact implements Listener {
 				skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 		}
+
 	}
 }

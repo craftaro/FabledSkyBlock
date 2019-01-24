@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandManager;
 import org.bukkit.Bukkit;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -33,6 +35,7 @@ public class LeaderboardManager {
 
 	public void resetLeaderboard() {
 		VisitManager visitManager = skyblock.getVisitManager();
+		visitManager.loadIslands();
 
 		List<LeaderboardPlayer> islandLevels = new ArrayList<>();
 		List<LeaderboardPlayer> islandVotes = new ArrayList<>();
@@ -44,29 +47,18 @@ public class LeaderboardManager {
 			islandVotes.add(new LeaderboardPlayer(ownerUUID, visit.getVoters().size()));
 		}
 
-		islandLevels.sort(new Comparator<LeaderboardPlayer>() {
-			@Override
-			public int compare(LeaderboardPlayer leaderboardPlayer1, LeaderboardPlayer leaderboardPlayer2) {
-				return Integer.valueOf(leaderboardPlayer2.getValue()).compareTo(leaderboardPlayer1.getValue());
-			}
-		});
-
-		islandVotes.sort(new Comparator<LeaderboardPlayer>() {
-			@Override
-			public int compare(LeaderboardPlayer leaderboardPlayer1, LeaderboardPlayer leaderboardPlayer2) {
-				return Integer.valueOf(leaderboardPlayer2.getValue()).compareTo(leaderboardPlayer1.getValue());
-			}
-		});
+		islandLevels.sort(Comparator.comparingInt(LeaderboardPlayer::getValue).reversed());
+		islandVotes.sort(Comparator.comparingInt(LeaderboardPlayer::getValue).reversed());
 
 		for (int i = 0; i < 10; i++) {
-			if (islandLevels.size() != 0 && i <= islandLevels.size() - 1) {
-				leaderboardStorage.add(new Leaderboard(Leaderboard.Type.Level,
-						visitManager.getIsland((UUID) islandLevels.get(i).getUUID()), i));
+			if (!islandVotes.isEmpty() && i < islandVotes.size()) {
+				Leaderboard leaderboard = new Leaderboard(Leaderboard.Type.Votes, visitManager.getIsland(islandVotes.get(i).getUUID()), i);
+				leaderboardStorage.add(leaderboard);
 			}
 
-			if (islandVotes.size() != 0 && i <= islandVotes.size() - 1) {
-				leaderboardStorage.add(new Leaderboard(Leaderboard.Type.Votes,
-						visitManager.getIsland((UUID) islandVotes.get(i).getUUID()), i));
+			if (!islandLevels.isEmpty() && i < islandLevels.size()) {
+				Leaderboard leaderboard = new Leaderboard(Leaderboard.Type.Level, visitManager.getIsland(islandLevels.get(i).getUUID()), i);
+				leaderboardStorage.add(leaderboard);
 			}
 		}
 	}

@@ -189,12 +189,18 @@ public class Move implements Listener {
 								}
 							}
 						} else {
+							Config config = skyblock.getFileManager()
+									.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+							FileConfiguration configLoad = config.getFileConfiguration();
+
 							if (LocationUtil.isLocationAtLocationRadius(to,
 									island.getLocation(world, IslandEnvironment.Island), island.getRadius() + 2)) {
-								player.teleport(player.getLocation()
-										.add(from.toVector().subtract(to.toVector()).normalize().multiply(2.0D)));
-								player.setFallDistance(0.0F);
-								soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+								if(!configLoad.getBoolean("Island.WorldBorder.Enable")){
+									player.teleport(player.getLocation()
+											.add(from.toVector().subtract(to.toVector()).normalize().multiply(2.0D)));
+									player.setFallDistance(0.0F);
+									soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+								}
 							} else {
 								if (island.getVisit().isVisitor(player.getUniqueId())) {
 									player.teleport(island.getLocation(world, IslandEnvironment.Visitor));

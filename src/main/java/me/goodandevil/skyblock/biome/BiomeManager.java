@@ -1,6 +1,7 @@
 package me.goodandevil.skyblock.biome;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -28,46 +29,45 @@ public class BiomeManager {
 		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
 			@Override
 			public void run() {
+				List<Chunk> chunks = new ArrayList<>();
 				Location location = island.getLocation(IslandWorld.Normal, IslandEnvironment.Island);
+				int radius = (int) Math.ceil(island.getRadius());
 
-				for (Location locationList : LocationUtil.getLocations(
-						new Location(location.getWorld(), location.getBlockX() - island.getRadius(), 0,
-								location.getBlockZ() - island.getRadius()),
-						new Location(location.getWorld(), location.getBlockX() + island.getRadius(), 0,
-								location.getBlockZ() + island.getRadius()))) {
-					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							location.getWorld().setBiome(locationList.getBlockX(), locationList.getBlockZ(), biome);
-						}
-					});
+				for(int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x++){
+					for(int z = location.getBlockX() - radius; z < location.getBlockX() + radius; z++){
+						location.getWorld().setBiome(x, z, biome);
+						Chunk chunk = location.getWorld().getChunkAt(x >> 4, z >> 4);
+						if(!chunks.contains(chunk))
+							chunks.add(chunk);
+					}
 				}
+
+				for(Chunk chunk : chunks)
+					updateBiome(island, chunk);
 			}
 		});
 	}
 
-	public void updateBiome(Island island, List<Chunk> chunks) {
+	public void updateBiome(Island island, Chunk chunk) {
 		Class<?> packetPlayOutMapChunkClass = NMSUtil.getNMSClass("PacketPlayOutMapChunk");
 		Class<?> chunkClass = NMSUtil.getNMSClass("Chunk");
 
 		for (Player all : skyblock.getIslandManager().getPlayersAtIsland(island, IslandWorld.Normal)) {
-			for (Chunk chunkList : chunks) {
-				try {
-					if (NMSUtil.getVersionNumber() < 10) {
-						NMSUtil.sendPacket(all,
-								packetPlayOutMapChunkClass.getConstructor(chunkClass, boolean.class, int.class)
-										.newInstance(all.getLocation().getChunk().getClass().getMethod("getHandle")
-												.invoke(chunkList), true, 20));
-					} else {
-						NMSUtil.sendPacket(all,
-								packetPlayOutMapChunkClass.getConstructor(chunkClass, int.class).newInstance(all
-										.getLocation().getChunk().getClass().getMethod("getHandle").invoke(chunkList),
-										65535));
-					}
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					e.printStackTrace();
+			try {
+				if (NMSUtil.getVersionNumber() < 10) {
+					NMSUtil.sendPacket(all,
+							packetPlayOutMapChunkClass.getConstructor(chunkClass, boolean.class, int.class)
+									.newInstance(all.getLocation().getChunk().getClass().getMethod("getHandle")
+											.invoke(chunk), true, 20));
+				} else {
+					NMSUtil.sendPacket(all,
+							packetPlayOutMapChunkClass.getConstructor(chunkClass, int.class).newInstance(all
+											.getLocation().getChunk().getClass().getMethod("getHandle").invoke(chunk),
+									65535));
 				}
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
 			}
 		}
 	}

@@ -969,26 +969,19 @@ public class IslandManager {
 					}
 				}
 
-				return true;
-			}
-		}
+		if(player.hasPermission("skyblockearth.bypass." + setting.toLowerCase()))
+			return true;
 
-		island = getIslandAtLocation(location);
+		if(island.getSetting(island.getRole(player), setting).getStatus())
+			return true;
 
-		if (island != null) {
-			if (player.hasPermission("skyblock.bypass." + setting.toLowerCase())
-					|| player.hasPermission("skyblock.bypass.*") || player.hasPermission("skyblock.*")) {
-				return true;
-			} else if (island.isCoopPlayer(player.getUniqueId())) {
-				if (!island.getSetting(IslandRole.Coop, setting).getStatus()) {
-					return false;
-				}
-			} else if (!island.getSetting(IslandRole.Visitor, setting).getStatus()) {
-				return false;
-			}
-		}
+		if(island.isCoopPlayer(player.getUniqueId()) && island.getSetting(IslandRole.Coop, setting).getStatus())
+			return true;
 
-		return true;
+		if(island.getSetting(IslandRole.Visitor, setting).getStatus())
+			return true;
+
+		return false;
 	}
 
 	public boolean hasSetting(org.bukkit.Location location, IslandRole role, String setting) {

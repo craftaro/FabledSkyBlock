@@ -2,6 +2,10 @@ package me.goodandevil.skyblock;
 
 import java.io.File;
 
+import me.goodandevil.skyblock.command.commands.SkyBlockCommand;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -85,6 +89,12 @@ public class SkyBlock extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		ConsoleCommandSender console = Bukkit.getConsoleSender();
+		console.sendMessage(formatText("&a============================="));
+		console.sendMessage(formatText("&7FabledSkyBlock " + this.getDescription().getVersion() + " by &5Songoda <3&7!"));
+		console.sendMessage(formatText("&7Action: &aEnabling&7..."));
+		console.sendMessage(formatText("&a============================="));
+
 		instance = this;
 
 		fileManager = new FileManager(this);
@@ -151,11 +161,19 @@ public class SkyBlock extends JavaPlugin {
 		pluginManager.registerEvents(new Generator(), this);
 		pluginManager.registerEvents(new Creator(), this);
 
+		this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
+
 		SkyBlockAPI.setImplementation(instance);
 	}
 
 	@Override
 	public void onDisable() {
+		ConsoleCommandSender console = Bukkit.getConsoleSender();
+		console.sendMessage(formatText("&a============================="));
+		console.sendMessage(formatText("&7FabledSkyBlock " + this.getDescription().getVersion() + " by &5Songoda <3&7!"));
+		console.sendMessage(formatText("&7Action: &cDisabling&7..."));
+		console.sendMessage(formatText("&a============================="));
+
 		if (this.userCacheManager != null) {
 			this.userCacheManager.onDisable();
 		}
@@ -185,6 +203,10 @@ public class SkyBlock extends JavaPlugin {
 		}
 
 		HandlerList.unregisterAll(this);
+	}
+
+	private String formatText(String string){
+		return ChatColor.translateAlternateColorCodes('&', string);
 	}
 
 	public static SkyBlock getInstance() {

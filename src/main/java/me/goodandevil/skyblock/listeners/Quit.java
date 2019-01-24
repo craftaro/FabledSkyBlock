@@ -99,7 +99,7 @@ public class Quit implements Listener {
 			}
 		}
 
-		if (playerData.getIsland() != null && islandManager.containsIsland(playerData.getIsland())) {
+		if (playerData != null && playerData.getIsland() != null && islandManager.containsIsland(playerData.getIsland())) {
 			island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(playerData.getIsland()));
 
 			if (!island.hasRole(IslandRole.Member, player.getUniqueId())
