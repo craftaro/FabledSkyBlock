@@ -37,6 +37,9 @@ public final class WorldBorder {
 
 	public static void send(Player player, Color color, double size, Location centerLocation) {
 		try {
+			size = size - 1.5;
+			centerLocation = centerLocation.clone();
+			centerLocation.add(.5, 0, .5);
 			Object worldBorder = worldBorderClass.getConstructor().newInstance();
 
 			if (NMSUtil.getVersionNumber() < 9) {
@@ -63,9 +66,9 @@ public final class WorldBorder {
 					double.class, long.class);
 
 			if (color == Color.Green) {
-				transitionSizeBetween.invoke(worldBorder, size - 0.2D, size - 0.1D + 0.1D, 20000000L);
+				transitionSizeBetween.invoke(worldBorder, size, size, 20000000L);
 			} else if (color == Color.Red) {
-				transitionSizeBetween.invoke(worldBorder, size, size - 1.0D, 20000000L);
+				transitionSizeBetween.invoke(worldBorder, size, size, 20000000L);
 			}
 
 			@SuppressWarnings({ "unchecked", "rawtypes" })
