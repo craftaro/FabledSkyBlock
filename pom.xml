@@ -2,7 +2,7 @@
     <groupId>com.songoda</groupId>
     <artifactId>FabledSkyBlock</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>62</version>
+    <version>maven-version-number</version>
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>

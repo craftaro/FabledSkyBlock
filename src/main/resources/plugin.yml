@@ -1,6 +1,6 @@
 name: FabledSkyBlock
 main: me.goodandevil.skyblock.SkyBlock
-version: 63
+version: maven-version-number
 api-version: 1.13
 description: A unique SkyBlock plugin
 author: Songoda
