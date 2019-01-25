@@ -37,7 +37,7 @@ public final class WorldBorder {
 
 	public static void send(Player player, Color color, double size, Location centerLocation) {
 		try {
-			size = size - 1.5;
+			size = size - 2.5;
 			centerLocation = centerLocation.clone();
 			centerLocation.add(.5, 0, .5);
 			Object worldBorder = worldBorderClass.getConstructor().newInstance();

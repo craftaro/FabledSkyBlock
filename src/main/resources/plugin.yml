@@ -3,8 +3,7 @@ main: me.goodandevil.skyblock.SkyBlock
 version: 63
 api-version: 1.13
 description: A unique SkyBlock plugin
-author: GoodAndEvil
-authors: [GoodAndEvil, Tabuu]
+author: Songoda
 softdepend: [PlaceholderAPI, MVdWPlaceholderAPI, Vault, Coins, LeaderHeads]
 loadbefore: [Multiverse-Core]
 commands:
