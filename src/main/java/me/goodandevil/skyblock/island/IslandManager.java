@@ -1381,6 +1381,7 @@ public class IslandManager {
 	}
 
 	public boolean isLocationAtIsland(Island island, org.bukkit.Location location, IslandWorld world) {
+
 		if (LocationUtil.isLocationAtLocationRadius(location, island.getLocation(world, IslandEnvironment.Island),
 				island.getRadius())) {
 			return true;

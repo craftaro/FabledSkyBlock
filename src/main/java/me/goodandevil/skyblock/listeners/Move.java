@@ -104,6 +104,7 @@ public class Move implements Listener {
 					Island island = islandManager
 							.getIsland(Bukkit.getServer().getOfflinePlayer(playerData.getIsland()));
 
+
 					if (island != null) {
 						if (islandManager.isLocationAtIsland(island, to)) {
 							Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));

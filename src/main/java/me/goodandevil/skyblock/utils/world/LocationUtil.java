@@ -50,8 +50,8 @@ public final class LocationUtil {
 			return false;
 		}
 
-		double x = Math.abs(location1.getX() - location2.getX());
-		double z = Math.abs(location1.getZ() - location2.getZ());
+		double x = Math.abs(location1.getX() - location2.getX()) - 1;
+		double z = Math.abs(location1.getZ() - location2.getZ()) - 1;
 
 		return x < radius && z < radius;
 	}
