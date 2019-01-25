@@ -111,6 +111,7 @@ public class LevellingManager {
 
 										if (blockMaterial != org.bukkit.Material.AIR) {
 											for (Material materialList : materialStorage) {
+												if (materialList == null) continue;
 												ItemStack is = materialList.getItemStack();
 
 												if (blockMaterial == materialList.getItemStack().getType()) {
