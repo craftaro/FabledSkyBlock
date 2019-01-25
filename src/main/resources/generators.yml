@@ -6,12 +6,12 @@ Generators:
             COBBLESTONE:
                 Chance: 60
             COAL_ORE:
-                Chance: 15
+                Chance: 14.5
             IRON_ORE:
-                Chance: 10
+                Chance: 9.5
             GOLD_ORE:
                 Chance: 8
             EMERALD_ORE:
-                Chance: 5
+                Chance: 5.5
             DIAMOND_ORE:
-                Chance: 2
+                Chance: 2.5

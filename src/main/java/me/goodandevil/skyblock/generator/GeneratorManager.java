@@ -1,13 +1,10 @@
 package me.goodandevil.skyblock.generator;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
+import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.utils.version.Materials;
+import me.goodandevil.skyblock.utils.version.NMSUtil;
+import me.goodandevil.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,95 +14,92 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.utils.version.Materials;
-import me.goodandevil.skyblock.utils.version.NMSUtil;
-import me.goodandevil.skyblock.utils.version.Sounds;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 public class GeneratorManager {
 
-	private final SkyBlock skyblock;
-	private List<Generator> generatorStorage = new ArrayList<>();
+    private final SkyBlock skyblock;
+    private List<Generator> generatorStorage = new ArrayList<>();
 
-	public GeneratorManager(SkyBlock skyblock) {
-		this.skyblock = skyblock;
-		registerGenerators();
-	}
+    public GeneratorManager(SkyBlock skyblock) {
+        this.skyblock = skyblock;
+        registerGenerators();
+    }
 
-	public void registerGenerators() {
-		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
-		FileConfiguration configLoad = config.getFileConfiguration();
+    public void registerGenerators() {
+        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (configLoad.getString("Generators") != null) {
-			Materials[] oreMaterials = new Materials[] { Materials.COAL, Materials.CHARCOAL, Materials.DIAMOND,
-					Materials.IRON_INGOT, Materials.GOLD_INGOT, Materials.EMERALD };
-			Random rnd = new Random();
+        if (configLoad.getString("Generators") == null) return;
 
-			for (String generatorList : configLoad.getConfigurationSection("Generators").getKeys(false)) {
-				if (configLoad.getString("Generators." + generatorList + ".Name") != null) {
-					List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
+        Materials[] oreMaterials = new Materials[]{Materials.COAL, Materials.CHARCOAL, Materials.DIAMOND,
+                Materials.IRON_INGOT, Materials.GOLD_INGOT, Materials.EMERALD};
+        Random rnd = new Random();
 
-					if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
-						for (String materialList : configLoad
-								.getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
-							Materials materials = Materials.fromString(materialList);
+        for (String generatorList : configLoad.getConfigurationSection("Generators").getKeys(false)) {
+            if (configLoad.getString("Generators." + generatorList + ".Name") == null) continue;
+            List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
 
-							if (materials != null) {
-								generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getInt(
-										"Generators." + generatorList + ".Materials." + materialList + ".Chance")));
-							}
-						}
-					}
+            if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
+                for (String materialList : configLoad
+                        .getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
+                    Materials materials = Materials.fromString(materialList);
 
-					generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
-							oreMaterials[rnd.nextInt(oreMaterials.length)], generatorMaterials,
-							configLoad.getBoolean("Generators." + generatorList + ".Permission")));
-				}
-			}
-		}
-	}
+                    if (materials != null) {
+                        generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getInt(
+                                "Generators." + generatorList + ".Materials." + materialList + ".Chance")));
+                    }
+                }
+            }
 
-	public void unregisterGenerators() {
-		generatorStorage.clear();
-	}
+            generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
+                    oreMaterials[rnd.nextInt(oreMaterials.length)], generatorMaterials,
+                    configLoad.getBoolean("Generators." + generatorList + ".Permission")));
+        }
+    }
 
-	private boolean isFlowingTowardsBlock(Block from){
-		if(!from.isLiquid())
-			return false;
+    public void unregisterGenerators() {
+        generatorStorage.clear();
+    }
 
-		if(isWater(from) && isFlowingBlock(from))
-			return true;
+    private boolean isFlowingTowardsBlock(Block from) {
+        if (!from.isLiquid())
+            return false;
 
-		return false;
-	}
+        if (isWater(from) && isFlowingBlock(from))
+            return true;
 
-	private boolean isLava(Block block){
-		return block.getType().equals(Materials.LAVA.parseMaterial()) || block.getType().equals(Materials.LEGACY_STATIONARY_LAVA.parseMaterial());
-	}
+        return false;
+    }
 
-	private boolean isWater(Block block){
-		return block.getType().equals(Materials.WATER.parseMaterial()) || block.getType().equals(Materials.LEGACY_STATIONARY_WATER.parseMaterial());
-	}
+    private boolean isLava(Block block) {
+        return block.getType().equals(Materials.LAVA.parseMaterial()) || block.getType().equals(Materials.LEGACY_STATIONARY_LAVA.parseMaterial());
+    }
 
-	public boolean isGenerator(Block block) {
-		BlockFace[] blockFaces = new BlockFace[]{BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+    private boolean isWater(Block block) {
+        return block.getType().equals(Materials.WATER.parseMaterial()) || block.getType().equals(Materials.LEGACY_STATIONARY_WATER.parseMaterial());
+    }
 
-		for(BlockFace blockFace1 : blockFaces){
-			for(BlockFace blockFace2 : blockFaces){
-				if(blockFace1.equals(blockFace2))
-					continue;
+    public boolean isGenerator(Block block) {
+        BlockFace[] blockFaces = new BlockFace[]{BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 
-				Block from1 = block.getRelative(blockFace1);
-				Block from2 = block.getRelative(blockFace2);
-				if(isLava(from1) && isWater(from2) && isFlowingTowardsBlock(from2))
-					return true;
-			}
-		}
+        for (BlockFace blockFace1 : blockFaces) {
+            for (BlockFace blockFace2 : blockFaces) {
+                if (blockFace1.equals(blockFace2))
+                    continue;
 
-		return false;
+                Block from1 = block.getRelative(blockFace1);
+                Block from2 = block.getRelative(blockFace2);
+                if (isLava(from1) && isWater(from2) && isFlowingTowardsBlock(from2))
+                    return true;
+            }
+        }
 
-		//region GoodAndEvil his old code (garbage)
+        return false;
+
+        //region GoodAndEvil his old code (garbage)
 		/*
 		if (block.getRelative(BlockFace.UP).getType() != Materials.LEGACY_STATIONARY_WATER.getPostMaterial()
 				&& block.getRelative(BlockFace.UP).getType() != Materials.WATER.parseMaterial()) {
@@ -219,137 +213,136 @@ public class GeneratorManager {
 
 		return true;
 		*/
-		//endregion
-	}
+        //endregion
+    }
 
-	@SuppressWarnings("deprecation")
-	private int getLiquidLevel(Block block){
-		if (NMSUtil.getVersionNumber() > 12 && block.getState().getBlockData() instanceof Levelled) {
-			Levelled levelled = (Levelled) block.getState().getBlockData();
-			return levelled.getLevel();
-		}
-		else {
-			return block.getData();
-		}
-	}
+    @SuppressWarnings("deprecation")
+    private int getLiquidLevel(Block block) {
+        if (NMSUtil.getVersionNumber() > 12 && block.getState().getBlockData() instanceof Levelled) {
+            Levelled levelled = (Levelled) block.getState().getBlockData();
+            return levelled.getLevel();
+        } else {
+            return block.getData();
+        }
+    }
 
-	private boolean isFlowingBlock(Block block) {
-		return getLiquidLevel(block) != 0;
-	}
+    private boolean isFlowingBlock(Block block) {
+        return getLiquidLevel(block) != 0;
+    }
 
-	@SuppressWarnings("deprecation")
-	public void generateBlock(Player player, Block block) {
-		block.setType(Material.AIR);
+    @SuppressWarnings("deprecation")
+    public void generateBlock(Player player, Block block) {
+        block.setType(Material.AIR);
 
-		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				for (int i = generatorStorage.size() - 1; i >= 0; i--) {
-					Generator generator = generatorStorage.get(i);
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
+            @Override
+            public void run() {
+                for (int i = generatorStorage.size() - 1; i >= 0; i--) {
+                    Generator generator = generatorStorage.get(i);
 
-					if (generator.isPermission()) {
-						if (!player.hasPermission(generator.getPermission())
-								&& !player.hasPermission("fabledskyblock.generator.*")
-								&& !player.hasPermission("fabledskyblock.*")) {
-							continue;
-						}
-					}
+                    if (generator.isPermission()) {
+                        if (!player.hasPermission(generator.getPermission())
+                                && !player.hasPermission("fabledskyblock.generator.*")
+                                && !player.hasPermission("fabledskyblock.*")) {
+                            continue;
+                        }
+                    }
 
-					Materials materials = getRandomMaterials(generator);
+                    Materials materials = getRandomMaterials(generator);
 
-					if (materials != null) {
-						Bukkit.getScheduler().runTask(skyblock, new Runnable() {
-							public void run() {
-								skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(),
-										1.0F, 10.0F);
+                    if (materials != null) {
+                        Bukkit.getScheduler().runTask(skyblock, new Runnable() {
+                            public void run() {
+                                skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(),
+                                        1.0F, 10.0F);
 
-								if (NMSUtil.getVersionNumber() > 12) {
-									block.setType(materials.parseMaterial());
-								} else {
-									ItemStack is = materials.parseItem();
-									block.setType(is.getType());
+                                if (NMSUtil.getVersionNumber() > 12) {
+                                    block.setType(materials.parseMaterial());
+                                } else {
+                                    ItemStack is = materials.parseItem();
+                                    block.setType(is.getType());
 
-									try {
-										block.getClass().getMethod("setData", byte.class).invoke(block,
-												(byte) is.getDurability());
-									} catch (IllegalAccessException | IllegalArgumentException
-											| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-										e.printStackTrace();
-									}
-								}
-							}
-						});
-					}
+                                    try {
+                                        block.getClass().getMethod("setData", byte.class).invoke(block,
+                                                (byte) is.getDurability());
+                                    } catch (IllegalAccessException | IllegalArgumentException
+                                            | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+                    }
 
-					return;
-				}
+                    return;
+                }
 
-				Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-					@Override
-					public void run() {
-						block.setType(Material.COBBLESTONE);
-					}
-				});
-			}
-		});
-	}
+                Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+                    @Override
+                    public void run() {
+                        block.setType(Material.COBBLESTONE);
+                    }
+                });
+            }
+        });
+    }
 
-	public Materials getRandomMaterials(Generator generator) {
-		if (generator.getGeneratorMaterials() != null && generator.getGeneratorMaterials().size() != 0) {
-			Map<Integer, Integer> chances = new HashMap<>();
+    public Materials getRandomMaterials(Generator generator) {
+        if (generator.getGeneratorMaterials() != null && generator.getGeneratorMaterials().size() != 0) {
+            Map<Integer, Integer> chances = new HashMap<>();
 
-			for (int index = 0; index < generator.getGeneratorMaterials().size(); index++) {
-				GeneratorMaterial generatorMaterial = generator.getGeneratorMaterials().get(index);
+            for (int index = 0; index < generator.getGeneratorMaterials().size(); index++) {
+                GeneratorMaterial generatorMaterial = generator.getGeneratorMaterials().get(index);
 
-				for (int i = 0; i < generatorMaterial.getChance(); i++) {
-					chances.put(chances.size() + 1, index);
-				}
-			}
+                for (int i = 0; i < generatorMaterial.getChance(); i++) {
+                    chances.put(chances.size() + 1, index);
+                }
+            }
 
-			if (chances.size() != 0) {
-				int rndNum = new Random().nextInt(chances.size());
+            if (chances.size() != 0) {
+                int rndNum = new Random().nextInt(chances.size());
 
-				if (rndNum != 0) {
-					return generator.getGeneratorMaterials().get(chances.get(rndNum)).getMaterials();
-				}
-			}
-		}
+                if (rndNum != 0) {
+                    return generator.getGeneratorMaterials().get(chances.get(rndNum)).getMaterials();
+                }
+            }
+        }
 
-		return Materials.COBBLESTONE;
-	}
+        return Materials.COBBLESTONE;
+    }
 
-	public void addGenerator(String name, List<GeneratorMaterial> generatorMaterials, boolean permission) {
-		Materials[] oreMaterials = new Materials[] { Materials.COAL, Materials.CHARCOAL, Materials.DIAMOND,
-				Materials.IRON_INGOT, Materials.GOLD_INGOT, Materials.EMERALD };
-		generatorStorage.add(new Generator(name, oreMaterials[new Random().nextInt(oreMaterials.length)],
-				generatorMaterials, permission));
-	}
+    public void addGenerator(String name, List<GeneratorMaterial> generatorMaterials, boolean permission) {
+        Materials[] oreMaterials = new Materials[]{Materials.COAL, Materials.CHARCOAL, Materials.DIAMOND,
+                Materials.IRON_INGOT, Materials.GOLD_INGOT, Materials.EMERALD};
+        generatorStorage.add(new Generator(name, oreMaterials[new Random().nextInt(oreMaterials.length)],
+                generatorMaterials, permission));
+    }
 
-	public void removeGenerator(Generator generator) {
-		generatorStorage.remove(generator);
-	}
+    public void removeGenerator(Generator generator) {
+        generatorStorage.remove(generator);
+    }
 
-	public Generator getGenerator(String name) {
-		for (Generator generatorList : generatorStorage) {
-			if (generatorList.getName().equalsIgnoreCase(name)) {
-				return generatorList;
-			}
-		}
+    public Generator getGenerator(String name) {
+        for (Generator generatorList : generatorStorage) {
+            if (generatorList.getName().equalsIgnoreCase(name)) {
+                return generatorList;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public boolean containsGenerator(String name) {
-		for (Generator generatorList : generatorStorage) {
-			if (generatorList.getName().equalsIgnoreCase(name)) {
-				return true;
-			}
-		}
+    public boolean containsGenerator(String name) {
+        for (Generator generatorList : generatorStorage) {
+            if (generatorList.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public List<Generator> getGenerators() {
-		return generatorStorage;
-	}
+    public List<Generator> getGenerators() {
+        return generatorStorage;
+    }
 }

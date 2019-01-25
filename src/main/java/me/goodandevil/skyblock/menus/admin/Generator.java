@@ -502,7 +502,7 @@ public class Generator implements Listener {
 															1.0F, 1.0F);
 												} else {
 													int materialChance = Integer.valueOf(event1.getName());
-													int totalMaterialChance = materialChance;
+													double totalMaterialChance = materialChance;
 
 													for (GeneratorMaterial generatorMaterialList1 : generator
 															.getGeneratorMaterials()) {

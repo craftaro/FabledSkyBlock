@@ -5,7 +5,7 @@ import me.goodandevil.skyblock.utils.version.Materials;
 public class GeneratorMaterial {
 
 	private Materials materials;
-	private int chance;
+	private double chance;
 
 	public GeneratorMaterial(Materials materials, int chance) {
 		this.materials = materials;
@@ -16,11 +16,11 @@ public class GeneratorMaterial {
 		return materials;
 	}
 
-	public int getChance() {
+	public double getChance() {
 		return chance;
 	}
 
-	public void setChance(int chance) {
+	public void setChance(double chance) {
 		this.chance = chance;
 	}
 }
