@@ -920,6 +920,8 @@ Island:
     Portal:
         Destination:
             Message: "&bSkyBlock &8| &cError&8: &eThere is no destination to travel to going through that portal."
+        Stuck:
+            Message: "&bSkyBlock &8| &cError&8: &eYou have been teleported to safety from your stuck position."
     World:
         Word:
             Nether: "nether"

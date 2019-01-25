@@ -789,7 +789,7 @@ public class Island {
 							"%cost%", String.valueOf(price)));
 
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-			player.setVelocity(player.getLocation().getDirection().multiply(-.25));
+			player.setVelocity(player.getLocation().getDirection().multiply(-.50));
 		}
 		return unlocked;
 	}

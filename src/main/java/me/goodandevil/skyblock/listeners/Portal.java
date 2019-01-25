@@ -21,10 +21,15 @@ import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Portal implements Listener {
 
     private final SkyBlock skyblock;
+
+    private Map<UUID, Tick> tickCounter = new HashMap<>();
 
     public Portal(SkyBlock skyblock) {
         this.skyblock = skyblock;
@@ -78,6 +83,7 @@ public class Portal implements Listener {
         Island island = islandManager.getIslandAtLocation(player.getLocation());
 
         if (island == null) return;
+
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -102,6 +108,31 @@ public class Portal implements Listener {
                 spawnEnvironment = IslandEnvironment.Visitor;
         }
 
+        Tick tick;
+        if (!tickCounter.containsKey(player.getUniqueId())) {
+            tick = tickCounter.put(player.getUniqueId(), new Tick());
+        } else {
+            tick = tickCounter.get(player.getUniqueId());
+
+            tick.setTick(tick.getTick() + 1);
+
+            if (System.currentTimeMillis() - tick.getLast() < 1000) {
+                return;
+            } else if (System.currentTimeMillis() - tick.getLast() >= 1000) {
+                tick.setLast(System.currentTimeMillis());
+            }
+            if (tick.getTick() >= 300) {
+                messageManager.sendMessage(player,
+                        fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
+                                .getString("Island.Portal.Stuck.Message"));
+                soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                LocationUtil.teleportPlayerToSpawn(player);
+                return;
+            }
+        }
+
+        if (tick == null) return;
+
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
         IslandWorld toWorld = IslandWorld.Normal;
 
@@ -116,6 +147,7 @@ public class Portal implements Listener {
                         player.teleport(island.getLocation(toWorld, spawnEnvironment));
                         soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
                         player.setFallDistance(0.0F);
+                    tick.setTick(1);
                 }
                 break;
 
@@ -124,6 +156,7 @@ public class Portal implements Listener {
                     player.teleport(island.getLocation(toWorld, spawnEnvironment));
                     soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
                     player.setFallDistance(0.0F);
+                    tick.setTick(1);
                 }
                 break;
 
@@ -131,8 +164,31 @@ public class Portal implements Listener {
                 player.teleport(island.getLocation(toWorld, spawnEnvironment));
                 soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
                 player.setFallDistance(0.0F);
+                tick.setTick(1);
                 break;
         }
 
+    }
+
+    public class Tick {
+        private int tick = 1;
+        private long last = System.currentTimeMillis() - 1001;
+
+        public int getTick() {
+            if (System.currentTimeMillis() - last >= 1500) tick = 0;
+            return tick;
+        }
+
+        public void setTick(int tick) {
+            this.tick = tick;
+        }
+
+        public long getLast() {
+            return last;
+        }
+
+        public void setLast(long last) {
+            this.last = last;
+        }
     }
 }
