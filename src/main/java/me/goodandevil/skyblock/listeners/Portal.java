@@ -134,8 +134,6 @@ public class Portal implements Listener {
 
         if (tick == null) return;
 
-        Bukkit.broadcastMessage("hit");
-
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
         IslandWorld toWorld = IslandWorld.Normal;
 
