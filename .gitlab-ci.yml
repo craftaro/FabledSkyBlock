@@ -10,13 +10,10 @@ build:
   stage: build
   image: maven:3.5.3-jdk-8
   script:
+    - mvn clean package
     - find $path/ -type f -name "*.xml" -print0 | xargs -0 sed -i -e s/maven-version-number/$version/g
-    - mvn clean package
     - find $path/ -type f -name "*.yml" -print0 | xargs -0 sed -i -e s/maven-version-number/$version/g
-    - mvn clean package
-    - find $path/$name-Plugin/ -depth -path '*original*' -delete
-    - mv -v $path/$name-Plugin/target/*.jar $path
   artifacts:
     name: $name-$version
     paths:
-    - "$path/*.jar"
+    - "/builds/Songoda/SkyBlock/target/*.jar"
