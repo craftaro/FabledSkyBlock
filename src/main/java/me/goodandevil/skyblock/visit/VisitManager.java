@@ -54,7 +54,8 @@ public class VisitManager {
 				.getBoolean("Island.Visitor.Unload")) {
 			File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 
-			if (configFile.exists()) {
+			if (!configFile.exists()) return;
+
 				for (File fileList : configFile.listFiles()) {
 					if (fileList != null && fileList.getName().contains(".yml") && fileList.getName().length() > 35) {
 						try {
@@ -112,7 +113,6 @@ public class VisitManager {
 						}
 					}
 				}
-			}
 		}
 	}
 

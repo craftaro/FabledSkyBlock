@@ -3,15 +3,11 @@ package me.goodandevil.skyblock.island;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
+import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.utils.version.Sounds;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -39,6 +35,7 @@ import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.StringUtil;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.visit.Visit;
+import org.bukkit.util.Vector;
 
 public class Island {
 
@@ -159,7 +156,6 @@ public class Island {
 				islandSettings.put(roleList, settings);
 			}
 		} else {
-			configFile = config.getFile();
 			FileConfiguration configLoad = config.getFileConfiguration();
 
 			configLoad.set("Visitor.Open", mainConfigLoad.getBoolean("Island.Visitor.Open"));
@@ -765,6 +761,37 @@ public class Island {
 		}
 
 		getLevel().save();
+	}
+
+	public boolean isRegionUnlocked(Player player, String type) {
+		FileManager fileManager = skyblock.getFileManager();
+		SoundManager soundManager = skyblock.getSoundManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+		FileConfiguration configLoad = config.getFileConfiguration();
+		Config islandData = fileManager
+				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
+						uuid.toString() + ".yml"));
+		FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
+		double price = configLoad.getDouble("Island.World." + type + ".UnlockPrice");
+
+		boolean unlocked =
+						configLoadIslandData.getBoolean("Unlocked." + type);
+		if (price == -1) {
+			configLoadIslandData.set("Unlocked." + type, true);
+			unlocked = true;
+		}
+
+		if (!unlocked) {
+			messageManager.sendMessage(player,
+					fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
+							.getString("Island.Unlock." + type + ".Message").replace(
+							"%cost%", String.valueOf(price)));
+
+			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			player.setVelocity(player.getLocation().getDirection().multiply(-.25));
+		}
+		return unlocked;
 	}
 
 	public me.goodandevil.skyblock.api.island.Island getAPIWrapper() {

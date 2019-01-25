@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import me.goodandevil.skyblock.command.commands.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -18,44 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.commands.AcceptCommand;
-import me.goodandevil.skyblock.command.commands.BanCommand;
-import me.goodandevil.skyblock.command.commands.BansCommand;
-import me.goodandevil.skyblock.command.commands.BiomeCommand;
-import me.goodandevil.skyblock.command.commands.BorderCommand;
-import me.goodandevil.skyblock.command.commands.CancelCommand;
-import me.goodandevil.skyblock.command.commands.ChatCommand;
-import me.goodandevil.skyblock.command.commands.CloseCommand;
-import me.goodandevil.skyblock.command.commands.ConfirmCommand;
-import me.goodandevil.skyblock.command.commands.ControlPanelCommand;
-import me.goodandevil.skyblock.command.commands.CoopCommand;
-import me.goodandevil.skyblock.command.commands.CreateCommand;
-import me.goodandevil.skyblock.command.commands.CurrentCommand;
-import me.goodandevil.skyblock.command.commands.DeleteCommand;
-import me.goodandevil.skyblock.command.commands.DemoteCommand;
-import me.goodandevil.skyblock.command.commands.DenyCommand;
-import me.goodandevil.skyblock.command.commands.InformationCommand;
-import me.goodandevil.skyblock.command.commands.InviteCommand;
-import me.goodandevil.skyblock.command.commands.KickAllCommand;
-import me.goodandevil.skyblock.command.commands.KickCommand;
-import me.goodandevil.skyblock.command.commands.LeaderboardCommand;
-import me.goodandevil.skyblock.command.commands.LeaveCommand;
-import me.goodandevil.skyblock.command.commands.LevelCommand;
-import me.goodandevil.skyblock.command.commands.MembersCommand;
-import me.goodandevil.skyblock.command.commands.OpenCommand;
-import me.goodandevil.skyblock.command.commands.OwnerCommand;
-import me.goodandevil.skyblock.command.commands.PromoteCommand;
-import me.goodandevil.skyblock.command.commands.PublicCommand;
-import me.goodandevil.skyblock.command.commands.SetSpawnCommand;
-import me.goodandevil.skyblock.command.commands.SettingsCommand;
-import me.goodandevil.skyblock.command.commands.TeleportCommand;
-import me.goodandevil.skyblock.command.commands.UnbanCommand;
-import me.goodandevil.skyblock.command.commands.UpgradeCommand;
-import me.goodandevil.skyblock.command.commands.ValueCommand;
-import me.goodandevil.skyblock.command.commands.VisitCommand;
-import me.goodandevil.skyblock.command.commands.VisitorsCommand;
-import me.goodandevil.skyblock.command.commands.VoteCommand;
-import me.goodandevil.skyblock.command.commands.WeatherCommand;
 import me.goodandevil.skyblock.command.commands.admin.AddUpgradeCommand;
 import me.goodandevil.skyblock.command.commands.admin.GeneratorCommand;
 import me.goodandevil.skyblock.command.commands.admin.ReloadCommand;
@@ -143,6 +106,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 				configLoad.getString("Command.Island.Biome.Info.Message"))));
 		subCommands.add(new WeatherCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
 				configLoad.getString("Command.Island.Weather.Info.Message"))));
+		subCommands.add(new UnlockCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
+				configLoad.getString("Command.Island.Unlock.Info.Message"))));
 		// subCommands.add(new
 		// RollbackCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
 		// configLoad.getString("Command.Island.Rollback.Info.Message"))));

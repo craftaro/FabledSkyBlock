@@ -16,6 +16,19 @@ Command:
                 Message: "&bSkyBlock &8| &cError&8: &ePlease provide a numerical value."
             Page:
                 Message: "&bSkyBlock &8| &cError&8: &eThere are not that many pages."
+        Unlock:
+            Owner:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
+            Finish:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou have successfully unlocked '&7The %type%&e'."
+            Unlocked:
+                Message: "&bSkyBlock &8| &cError&8: &eYou already unlocked '&7The %type%&e'."
+            Money:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have enough money to unlock that. The cost to unlock is &c$%cost%&e."
+            Info:
+                Message: "&f&oUnlocks either the nether or the end."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island unlock [<Nether|End>]"
         ControlPanel:
             Info:
                 Message: "&f&oOpens the Island Control Panel menu."
@@ -863,6 +876,11 @@ Island:
                 Message: "&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore creating an Island."
         Error:
             Message: "&bSkyBlock &8| &cError&8: &eThe main spawn point must be set before you are able to create an island by performing the command '&f&o/island admin setspawn&e'."
+    Unlock:
+        Nether:
+            Message: "&bSkyBlock &8| &cError&8: &eYou need to pay to unlock the nether. To do that use &7/island unlock nether&e This will cost '&7$%cost%&e'."
+        End:
+            Message: "&bSkyBlock &8| &cError&8: &eYou need to pay to unlock the end. To do that use &7/island unlock end&e This will cost '&7$%cost%&e'."
     Upgrade:
         Disabled:
             Message: "&bSkyBlock &8| &cError&8: &eYou cannot do that because Island Upgrades have been disabled."
@@ -873,7 +891,7 @@ Island:
         Money:
             Message: "&bSkyBlock &8| &cError&8: &eYou don't have enough money for that upgrade."
         Bought:
-            Message: "&bSkyBlock &8| &aInfo&8: &eYou have bought the upgrade '%upgrade&e'."
+            Message: "&bSkyBlock &8| &aInfo&8: &eYou have bought the upgrade '&7%upgrade&e'."
         Claimed:
             Message: "&bSkyBlock &8| &cError&8: &eYou have already claimed that upgrade."
     Biome:
