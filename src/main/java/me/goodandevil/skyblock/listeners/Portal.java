@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.io.File;
@@ -63,6 +64,21 @@ public class Portal implements Listener {
     }
 
     @EventHandler
+    public void OnEntityPortalTeleport(EntityPortalEvent event) {
+        if (!(event.getEntity() instanceof Player))
+            return;
+
+        Player player = (Player) event.getEntity();
+
+        WorldManager worldManager = skyblock.getWorldManager();
+
+        if (!worldManager.isIslandWorld(player.getWorld()))
+            return;
+
+        event.useTravelAgent(false);
+    }
+
+    @EventHandler
     public void onEntityPortalEnter(EntityPortalEnterEvent event) {
         if (!(event.getEntity() instanceof Player))
             return;
@@ -76,9 +92,8 @@ public class Portal implements Listener {
         WorldManager worldManager = skyblock.getWorldManager();
         FileManager fileManager = skyblock.getFileManager();
 
-        if (!worldManager.isIslandWorld(player.getWorld())) {
+        if (!worldManager.isIslandWorld(player.getWorld()))
             return;
-        }
 
         Island island = islandManager.getIslandAtLocation(player.getLocation());
 
@@ -144,9 +159,9 @@ public class Portal implements Listener {
         switch (toWorld) {
             case Nether:
                 if (configLoad.getBoolean("Island.World.Nether.Enable") && island.isRegionUnlocked(player, "Nether")) {
-                        player.teleport(island.getLocation(toWorld, spawnEnvironment));
-                        soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-                        player.setFallDistance(0.0F);
+                    player.teleport(island.getLocation(toWorld, spawnEnvironment));
+                    soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                    player.setFallDistance(0.0F);
                     tick.setTick(1);
                 }
                 break;
