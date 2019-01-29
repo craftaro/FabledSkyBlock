@@ -150,13 +150,7 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.WorldBorder.Block")) {
-            if (block.getType() == Materials.PISTON.parseMaterial()
-                    || block.getType() == Materials.STICKY_PISTON.parseMaterial()) {
-                if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
-                        island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 12.0D)) {
-                    event.setCancelled(true);
-                }
-            } else if (block.getType() == Material.DISPENSER) {
+            if (block.getType() == Material.DISPENSER) {
                 if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
                         island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
                     event.setCancelled(true);
@@ -194,6 +188,19 @@ public class Block implements Listener {
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         if (!skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) return;
 
+        IslandManager islandManager = skyblock.getIslandManager();
+        WorldManager worldManager = skyblock.getWorldManager();
+
+        Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+        IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
+
+        for (org.bukkit.block.Block block : event.getBlocks()) {
+            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
+                    island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+                event.setCancelled(true);
+            }
+        }
+
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Extend")) {
             for (org.bukkit.block.Block blockList : event.getBlocks()) {
@@ -210,6 +217,19 @@ public class Block implements Listener {
     @EventHandler
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         if (!skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) return;
+
+        IslandManager islandManager = skyblock.getIslandManager();
+        WorldManager worldManager = skyblock.getWorldManager();
+
+        Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+        IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
+
+        for (org.bukkit.block.Block block : event.getBlocks()) {
+            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
+                    island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+                event.setCancelled(true);
+            }
+        }
 
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
