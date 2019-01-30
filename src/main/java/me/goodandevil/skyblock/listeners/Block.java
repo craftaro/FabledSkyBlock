@@ -105,6 +105,8 @@ public class Block implements Listener {
         @SuppressWarnings("deprecation")
         Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
+        Bukkit.broadcastMessage("testt");
+
         if (materials == null) return;
 
         IslandLevel level = island.getLevel();
@@ -169,7 +171,8 @@ public class Block implements Listener {
             }
         }
 
-        if (event.isCancelled() || configLoad.getBoolean("Island.Block.Level.Enable")) return;
+        if (event.isCancelled() || !configLoad.getBoolean("Island.Block.Level.Enable")) return;
+
         @SuppressWarnings("deprecation")
         Materials materials = Materials.getMaterials(block.getType(), block.getData());
 

@@ -198,7 +198,7 @@ Island:
         Level:
             # When enabled, any changes to a block will be made to the levelling materials
             # calculated for an island.
-            Enable: false
+            Enable: true
         Piston:
             # Prevent Piston blocks being retracted or extended when connected to a circuit
             # [!] Prevents Pistons extending out of Island border bug
