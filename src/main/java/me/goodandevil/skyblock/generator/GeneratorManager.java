@@ -11,7 +11,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -231,59 +230,33 @@ public class GeneratorManager {
     }
 
     @SuppressWarnings("deprecation")
-    public void generateBlock(Player player, Block block) {
+    public void generateBlock(Generator generator, Block block) {
         block.setType(Material.AIR);
 
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-            @Override
-            public void run() {
-                for (int i = generatorStorage.size() - 1; i >= 0; i--) {
-                    Generator generator = generatorStorage.get(i);
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
 
-                    if (generator.isPermission()) {
-                        if (!player.hasPermission(generator.getPermission())
-                                && !player.hasPermission("fabledskyblock.generator.*")
-                                && !player.hasPermission("fabledskyblock.*")) {
-                            continue;
-                        }
+            Materials materials = getRandomMaterials(generator);
+
+            if (materials == null) return;
+            Bukkit.getScheduler().runTask(skyblock, () -> {
+                skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(),
+                        1.0F, 10.0F);
+
+                if (NMSUtil.getVersionNumber() > 12) {
+                    block.setType(materials.parseMaterial());
+                } else {
+                    ItemStack is = materials.parseItem();
+                    block.setType(is.getType());
+
+                    try {
+                        block.getClass().getMethod("setData", byte.class).invoke(block,
+                                (byte) is.getDurability());
+                    } catch (IllegalAccessException | IllegalArgumentException
+                            | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                        e.printStackTrace();
                     }
-
-                    Materials materials = getRandomMaterials(generator);
-
-                    if (materials != null) {
-                        Bukkit.getScheduler().runTask(skyblock, new Runnable() {
-                            public void run() {
-                                skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(),
-                                        1.0F, 10.0F);
-
-                                if (NMSUtil.getVersionNumber() > 12) {
-                                    block.setType(materials.parseMaterial());
-                                } else {
-                                    ItemStack is = materials.parseItem();
-                                    block.setType(is.getType());
-
-                                    try {
-                                        block.getClass().getMethod("setData", byte.class).invoke(block,
-                                                (byte) is.getDurability());
-                                    } catch (IllegalAccessException | IllegalArgumentException
-                                            | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        });
-                    }
-
-                    return;
                 }
-
-                Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-                    @Override
-                    public void run() {
-                        block.setType(Material.COBBLESTONE);
-                    }
-                });
-            }
+            });
         });
     }
 
@@ -340,6 +313,10 @@ public class GeneratorManager {
         }
 
         return false;
+    }
+
+    public List<Generator> getGeneratorStorage() {
+        return generatorStorage;
     }
 
     public List<Generator> getGenerators() {

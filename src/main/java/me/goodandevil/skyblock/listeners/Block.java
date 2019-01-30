@@ -2,6 +2,7 @@ package me.goodandevil.skyblock.listeners;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.generator.Generator;
 import me.goodandevil.skyblock.generator.GeneratorLocation;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.island.*;
@@ -251,6 +252,7 @@ public class Block implements Listener {
     public void onBlockForm(BlockFormEvent event) {
         org.bukkit.block.Block block = event.getBlock();
 
+        IslandManager islandManager = skyblock.getIslandManager();
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         GeneratorManager generatorManager = skyblock.getGeneratorManager();
         WorldManager worldManager = skyblock.getWorldManager();
@@ -266,67 +268,26 @@ public class Block implements Listener {
         }
 
         if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
-            org.bukkit.Location location = event.getBlock().getLocation();
+            Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+            IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
 
             for (Player all : Bukkit.getOnlinePlayers()) {
-                if (!playerDataManager.hasPlayerData(all)) continue;
-                PlayerData playerData = playerDataManager.getPlayerData(all);
+                if (!LocationUtil.isLocationAtLocationRadius(all.getLocation(),
+                        island.getLocation(world, IslandEnvironment.Island), island.getRadius())) continue;
 
-                if (playerData.getGenerator() == null) continue;
-                GeneratorLocation generatorLocation = playerData.getGenerator();
+                int i = generatorManager.getGeneratorStorage().size() - 1;
+                Generator generator = generatorManager.getGeneratorStorage().get(i);
 
-                if (generatorLocation.getWorld() != worldManager.getIslandWorld(block.getWorld())) continue;
-
-                if (location.getBlockX() == generatorLocation.getBlockX()
-                        && location.getBlockY() == generatorLocation.getBlockY()
-                        && location.getBlockZ() == generatorLocation.getBlockZ()) {
-                    event.setCancelled(true);
-                    generatorManager.generateBlock(all, block);
-                    playerData.setGenerator(null);
-                    return;
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onBlockFromTo(BlockFromToEvent event) {
-        org.bukkit.block.Block block = event.getBlock();
-
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        GeneratorManager generatorManager = skyblock.getGeneratorManager();
-        WorldManager worldManager = skyblock.getWorldManager();
-
-        if (NMSUtil.getVersionNumber() < 13) {
-            if (worldManager.isIslandWorld(block.getWorld())) {
-                if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
-                    org.bukkit.Location location = block.getLocation();
-
-                    for (Player all : Bukkit.getOnlinePlayers()) {
-                        if (playerDataManager.hasPlayerData(all)) {
-                            PlayerData playerData = playerDataManager.getPlayerData(all);
-
-                            if (playerData.getGenerator() != null) {
-                                GeneratorLocation generatorLocation = playerData.getGenerator();
-
-                                if (generatorLocation.getWorld() == worldManager.getIslandWorld(block.getWorld())) {
-                                    if (location.getBlockX() == generatorLocation.getLiquidX()
-                                            && location.getBlockY() == generatorLocation.getLiquidY()
-                                            && location.getBlockZ() == generatorLocation.getLiquidZ()) {
-                                        event.setCancelled(true);
-                                        generatorManager.generateBlock(all,
-                                                new org.bukkit.Location(location.getWorld(),
-                                                        generatorLocation.getBlockX(), generatorLocation.getBlockY(),
-                                                        generatorLocation.getBlockZ()).getBlock());
-                                        playerData.setGenerator(null);
-
-                                        return;
-                                    }
-                                }
-                            }
-                        }
+                if (generator.isPermission()) {
+                    if (!all.hasPermission(generator.getPermission())
+                            && !all.hasPermission("fabledskyblock.generator.*")
+                            && !all.hasPermission("fabledskyblock.*")) {
+                        continue;
                     }
                 }
+
+                generatorManager.generateBlock(generator, block);
+                return;
             }
         }
     }
