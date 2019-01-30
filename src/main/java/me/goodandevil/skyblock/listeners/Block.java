@@ -198,10 +198,20 @@ public class Block implements Listener {
         Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
 
+        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
+
         for (org.bukkit.block.Block block : event.getBlocks()) {
             if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
                     island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
                 event.setCancelled(true);
+            } else if (LocationUtil.isLocationLocation(block.getLocation(),
+                    island.getLocation(world, IslandEnvironment.Main)
+                            .clone()
+                            .subtract(0.0D, 1.0D, 0.0D))) {
+                if (configLoad.getBoolean("Island.Spawn.Protection")) {
+                    event.setCancelled(true);
+                }
             }
         }
 
@@ -228,10 +238,20 @@ public class Block implements Listener {
         Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
 
+        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
+
         for (org.bukkit.block.Block block : event.getBlocks()) {
             if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
                     island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
                 event.setCancelled(true);
+            } else if (LocationUtil.isLocationLocation(block.getLocation(),
+                    island.getLocation(world, IslandEnvironment.Main)
+                            .clone()
+                            .subtract(0.0D, 1.0D, 0.0D))) {
+                if (configLoad.getBoolean("Island.Spawn.Protection")) {
+                    event.setCancelled(true);
+                }
             }
         }
 
@@ -253,7 +273,6 @@ public class Block implements Listener {
         org.bukkit.block.Block block = event.getBlock();
 
         IslandManager islandManager = skyblock.getIslandManager();
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         GeneratorManager generatorManager = skyblock.getGeneratorManager();
         WorldManager worldManager = skyblock.getWorldManager();
 
