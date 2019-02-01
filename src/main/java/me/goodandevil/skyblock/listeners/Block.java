@@ -312,6 +312,10 @@ public class Block implements Listener {
             return;
         }
 
+
+        Material material = event.getBlock().getType();
+        if (material != Material.WATER && material != Material.LAVA) return;
+
         if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
             Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
             IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());

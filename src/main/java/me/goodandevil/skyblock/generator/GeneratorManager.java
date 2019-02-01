@@ -47,7 +47,7 @@ public class GeneratorManager {
                     Materials materials = Materials.fromString(materialList);
 
                     if (materials != null) {
-                        generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getInt(
+                        generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getDouble(
                                 "Generators." + generatorList + ".Materials." + materialList + ".Chance")));
                     }
                 }

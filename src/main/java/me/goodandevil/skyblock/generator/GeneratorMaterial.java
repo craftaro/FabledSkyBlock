@@ -7,7 +7,7 @@ public class GeneratorMaterial {
 	private Materials materials;
 	private double chance;
 
-	public GeneratorMaterial(Materials materials, int chance) {
+	public GeneratorMaterial(Materials materials, double chance) {
 		this.materials = materials;
 		this.chance = chance;
 	}
