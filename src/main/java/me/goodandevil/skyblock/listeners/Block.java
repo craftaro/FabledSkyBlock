@@ -186,6 +186,34 @@ public class Block implements Listener {
         level.setMaterialAmount(materials.name(), materialAmount + 1);
     }
 
+
+    @EventHandler
+    public void onBlockFromTo(BlockFromToEvent event) {
+        if (!skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) return;
+
+        IslandManager islandManager = skyblock.getIslandManager();
+        WorldManager worldManager = skyblock.getWorldManager();
+
+        Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+        IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
+
+        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
+
+        org.bukkit.block.Block block = event.getToBlock();
+            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
+                    island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 1.0D)) {
+                event.setCancelled(true);
+            } else if (LocationUtil.isLocationLocation(block.getLocation(),
+                    island.getLocation(world, IslandEnvironment.Main)
+                            .clone()
+                            .subtract(0.0D, 1.0D, 0.0D))) {
+                if (configLoad.getBoolean("Island.Spawn.Protection")) {
+                    event.setCancelled(true);
+                }
+            }
+    }
+
     @EventHandler
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         if (!skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) return;
