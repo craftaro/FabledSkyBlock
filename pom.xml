@@ -40,7 +40,7 @@
             <version>LATEST</version>
         </dependency>
         <dependency>
-        	<groupId>net.nifheim.beelzubu</groupId>
+        	<groupId>net.nifheim.beelzebu</groupId>
         	<artifactId>coins</artifactId>
         	<version>2.3.2</version>
         </dependency>
