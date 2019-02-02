@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import me.goodandevil.skyblock.command.commands.SkyBlockCommand;
 import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.levelling.Material;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
 import org.bukkit.Bukkit;
@@ -235,6 +234,7 @@ public class SkyBlock extends JavaPlugin {
 			FileManager.Config config = fileManager.getConfig(new File(configFile, file.getName()));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			ConfigurationSection cs = configLoad.getConfigurationSection("Stackables");
+			if (cs == null) return;
 			for (String uuid : cs.getKeys(false)) {
 				ConfigurationSection section = configLoad.getConfigurationSection("Stackables." + uuid);
 				Location location = (Location)section.get("Location");
