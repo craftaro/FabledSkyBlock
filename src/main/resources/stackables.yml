@@ -1,4 +1,4 @@
-Stackable:
-  - DIAMOND
-  - GOLD
-  - IRON
+Stackables:
+  - DIAMOND_BLOCK
+  - IRON_BLOCK
+  - GOLD_BLOCK

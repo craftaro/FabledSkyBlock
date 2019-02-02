@@ -258,3 +258,5 @@ Island:
         Enable: true
     Generator:
         Enable: true
+    Stackable:
+        Enable: true
