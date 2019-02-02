@@ -229,6 +229,7 @@ public class SkyBlock extends JavaPlugin {
 		//Load Stackables
 		String path = getDataFolder().toString() + "/island-data";
 		File[] files = new File(path).listFiles();
+		if (files == null) return;
 		for (File file : files) {
 			File configFile = new File(path);
 			FileManager.Config config = fileManager.getConfig(new File(configFile, file.getName()));
