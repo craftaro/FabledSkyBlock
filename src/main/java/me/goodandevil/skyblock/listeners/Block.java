@@ -73,12 +73,14 @@ public class Block implements Listener {
             if (stackableManager != null
                     && stackableManager.isStacked(block.getLocation())) {
                 Stackable stackable = stackableManager.getStack(block.getLocation(), block.getType());
-                stackable.takeOne();
-                if (stackable.getSize() <= 1) {
-                    stackableManager.removeStack(stackable);
+                if (stackable != null) {
+                    stackable.takeOne();
+                    if (stackable.getSize() <= 1) {
+                        stackableManager.removeStack(stackable);
+                    }
+                    event.setCancelled(true);
+                    block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(block.getType()));
                 }
-                event.setCancelled(true);
-                block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5,1,.5), new ItemStack(block.getType()));
             }
 
         if (generatorManager != null
@@ -290,6 +292,9 @@ public class Block implements Listener {
         for (org.bukkit.block.Block block : event.getBlocks()) {
             if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
                     island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+                event.setCancelled(true);
+            } else if (skyblock.getStackableManager() != null
+                    && skyblock.getStackableManager().isStacked(block.getLocation())) {
                 event.setCancelled(true);
             } else if (LocationUtil.isLocationLocation(block.getLocation(),
                     island.getLocation(world, IslandEnvironment.Main)
