@@ -3,15 +3,19 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.Set;
 
+import me.goodandevil.skyblock.stackable.Stackable;
+import me.goodandevil.skyblock.stackable.StackableManager;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
@@ -27,7 +31,6 @@ import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import org.bukkit.plugin.RegisteredListener;
 
 public class Interact implements Listener {
 
@@ -50,8 +53,23 @@ public class Interact implements Listener {
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
+		StackableManager stackableManager = skyblock.getStackableManager();
 
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if (stackableManager != null
+					&& stackableManager.getStackableMaterials().contains(event.getMaterial())
+					&& event.getClickedBlock().getType() == event.getMaterial()
+					&& !player.isSneaking()) {
+				Location location = event.getClickedBlock().getLocation();
+				if (stackableManager.isStacked(location)) {
+					Stackable stackable = stackableManager.getStack(location, event.getMaterial());
+					stackable.addOne();
+				} else {
+					stackableManager.addStack(new Stackable(location, event.getMaterial()));
+				}
+				event.setCancelled(true);
+				InventoryUtil.takeItem(player, 1);
+			}
 			if (block.getType() == Material.ANVIL) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Anvil")) {
 					event.setCancelled(true);
@@ -767,6 +785,15 @@ public class Interact implements Listener {
 			skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
+
+
+	@EventHandler(ignoreCancelled = true)
+	public void PlayerInteractEvent(PlayerArmorStandManipulateEvent event) {
+		if (skyblock.getStackableManager() != null && skyblock.getStackableManager().isStacked(event.getRightClicked().getLocation().getBlock().getLocation())) {
+			event.setCancelled(true);
+		}
+	}
+
 
 	@EventHandler
 	public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {

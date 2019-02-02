@@ -6,6 +6,8 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.island.IslandWorld;
+import me.goodandevil.skyblock.stackable.Stackable;
+import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -42,6 +44,7 @@ public class LevellingManager {
 
     public void calculatePoints(Player player, Island island) {
         WorldManager worldManager = skyblock.getWorldManager();
+        StackableManager stackableManager = skyblock.getStackableManager();
 
         Chunk chunk = new Chunk(skyblock, island);
         chunk.prepare();
@@ -133,6 +136,13 @@ public class LevellingManager {
                                             if (epicSpawners.getSpawnerManager().isSpawner(location)) {
                                                 amount = epicSpawners.getSpawnerManager()
                                                         .getSpawnerFromWorld(location).getSpawnerDataCount();
+                                            }
+                                        } else if (stackableManager.getStackableMaterials().contains(blockMaterial)) {
+                                            World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
+                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
+                                            if (stackableManager.isStacked(location)) {
+                                                Stackable stackable = stackableManager.getStack(location, blockMaterial);
+                                                amount = stackable.getSize();
                                             }
                                         }
 

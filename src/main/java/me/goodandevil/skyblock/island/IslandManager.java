@@ -173,29 +173,26 @@ public class IslandManager {
             banManager.createIsland(island.getOwnerUUID());
         }
 
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-            @Override
-            public void run() {
-                Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = config.getFileConfiguration();
 
-                int minimumSize = configLoad.getInt("Island.Size.Minimum");
-                int maximumSize = configLoad.getInt("Island.Size.Maximum");
+            int minimumSize = configLoad.getInt("Island.Size.Minimum");
+            int maximumSize = configLoad.getInt("Island.Size.Maximum");
 
-                if (minimumSize < 0 || minimumSize > 1000) {
-                    minimumSize = 50;
-                }
+            if (minimumSize < 0 || minimumSize > 1000) {
+                minimumSize = 50;
+            }
 
-                if (maximumSize < 0 || maximumSize > 1000) {
-                    maximumSize = 100;
-                }
+            if (maximumSize < 0 || maximumSize > 1000) {
+                maximumSize = 100;
+            }
 
-                for (int i = maximumSize; i > minimumSize; i--) {
-                    if (player.hasPermission("fabledskyblock.size." + i) || player.hasPermission("fabledskyblock.*")) {
-                        island.setSize(i);
+            for (int i = maximumSize; i > minimumSize; i--) {
+                if (player.hasPermission("fabledskyblock.size." + i) || player.hasPermission("fabledskyblock.*")) {
+                    island.setSize(i);
 
-                        break;
-                    }
+                    break;
                 }
             }
         });
@@ -226,31 +223,23 @@ public class IslandManager {
             scoreboard.run();
         }
 
-        Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-            @Override
-            public void run() {
-                if (structure.getCommands() != null) {
-                    for (String commandList : structure.getCommands()) {
-                        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(),
-                                commandList.replace("%player", player.getName()));
-                    }
+        Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+            if (structure.getCommands() != null) {
+                for (String commandList : structure.getCommands()) {
+                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(),
+                            commandList.replace("%player", player.getName()));
                 }
-
-                player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
-                player.setFallDistance(0.0F);
             }
+
+            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+            player.setFallDistance(0.0F);
         });
 
         if (NMSUtil.getVersionNumber() < 13) {
-            Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-                @Override
-                public void run() {
-                    skyblock.getBiomeManager()
-                            .setBiome(island, Biome.valueOf(fileManager
-                                    .getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                                    .getString("Island.Biome.Default.Type").toUpperCase()));
-                }
-            }, 20L);
+            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getBiomeManager()
+                    .setBiome(island, Biome.valueOf(fileManager
+                            .getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                            .getString("Island.Biome.Default.Type").toUpperCase())), 20L);
         }
 
         return true;

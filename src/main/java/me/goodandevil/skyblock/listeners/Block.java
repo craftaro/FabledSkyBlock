@@ -8,6 +8,8 @@ import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.island.*;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
+import me.goodandevil.skyblock.stackable.Stackable;
+import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
@@ -15,6 +17,7 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,6 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Crops;
 
 import java.io.File;
@@ -44,6 +48,7 @@ public class Block implements Listener {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         GeneratorManager generatorManager = skyblock.getGeneratorManager();
         IslandManager islandManager = skyblock.getIslandManager();
+        StackableManager stackableManager = skyblock.getStackableManager();
         WorldManager worldManager = skyblock.getWorldManager();
 
         if (!worldManager.isIslandWorld(block.getWorld())) return;
@@ -64,6 +69,17 @@ public class Block implements Listener {
             skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
             return;
         }
+
+            if (stackableManager != null
+                    && stackableManager.isStacked(block.getLocation())) {
+                Stackable stackable = stackableManager.getStack(block.getLocation(), block.getType());
+                stackable.takeOne();
+                if (stackable.getSize() <= 1) {
+                    stackableManager.removeStack(stackable);
+                }
+                event.setCancelled(true);
+                block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5,1,.5), new ItemStack(block.getType()));
+            }
 
         if (generatorManager != null
                 && generatorManager.isGenerator(block)
@@ -128,6 +144,7 @@ public class Block implements Listener {
 
         IslandManager islandManager = skyblock.getIslandManager();
         WorldManager worldManager = skyblock.getWorldManager();
+        StackableManager stackableManager = skyblock.getStackableManager();
 
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
@@ -230,6 +247,9 @@ public class Block implements Listener {
         for (org.bukkit.block.Block block : event.getBlocks()) {
             if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
                     island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+                event.setCancelled(true);
+            } else if (skyblock.getStackableManager() != null
+                    && skyblock.getStackableManager().isStacked(block.getLocation())) {
                 event.setCancelled(true);
             } else if (LocationUtil.isLocationLocation(block.getLocation(),
                     island.getLocation(world, IslandEnvironment.Main)

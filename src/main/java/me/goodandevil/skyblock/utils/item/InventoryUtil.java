@@ -2,7 +2,9 @@ package me.goodandevil.skyblock.utils.item;
 
 import java.util.Map;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
@@ -73,5 +75,16 @@ public class InventoryUtil {
 		}
 
 		return true;
+	}
+	public static void takeItem(Player player, int amount) {
+		if (player.getGameMode() == GameMode.CREATIVE) return;
+
+		ItemStack item = player.getInventory().getItemInHand();
+		if (item == null) return;
+
+		int result = item.getAmount() - amount;
+		item.setAmount(result);
+
+		player.setItemInHand(result > 0 ? item : null);
 	}
 }

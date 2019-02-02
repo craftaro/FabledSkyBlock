@@ -1,11 +1,20 @@
 package me.goodandevil.skyblock;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 import me.goodandevil.skyblock.command.commands.SkyBlockCommand;
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.levelling.Material;
+import me.goodandevil.skyblock.stackable.Stackable;
+import me.goodandevil.skyblock.stackable.StackableManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -79,6 +88,7 @@ public class SkyBlock extends JavaPlugin {
 	private LevellingManager levellingManager;
 	private CommandManager commandManager;
 	private StructureManager structureManager;
+	private StackableManager stackableManager;
 	private SoundManager soundManager;
 	private GeneratorManager generatorManager;
 	private LeaderboardManager leaderboardManager;
@@ -124,6 +134,11 @@ public class SkyBlock extends JavaPlugin {
 			generatorManager = new GeneratorManager(this);
 		}
 
+		if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
+				.getBoolean("Island.Stackable.Enable")) {
+			stackableManager = new StackableManager(this);
+		}
+
 		leaderboardManager = new LeaderboardManager(this);
 
 		placeholderManager = new PlaceholderManager(this);
@@ -164,6 +179,9 @@ public class SkyBlock extends JavaPlugin {
 		this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
 
 		SkyBlockAPI.setImplementation(instance);
+
+		this.loadFromFile();
+		Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveToFile, 5000L, 5000L);
 	}
 
 	@Override
@@ -202,7 +220,49 @@ public class SkyBlock extends JavaPlugin {
 			this.hologramManager.onDisable();
 		}
 
+		this.saveToFile();
+
 		HandlerList.unregisterAll(this);
+	}
+
+	private void loadFromFile() {
+		//Load Stackables
+		String path = getDataFolder().toString() + "/island-data";
+		File[] files = new File(path).listFiles();
+		for (File file : files) {
+			File configFile = new File(path);
+			FileManager.Config config = fileManager.getConfig(new File(configFile, file.getName()));
+			FileConfiguration configLoad = config.getFileConfiguration();
+			ConfigurationSection cs = configLoad.getConfigurationSection("Stackables");
+			for (String uuid : cs.getKeys(false)) {
+				ConfigurationSection section = configLoad.getConfigurationSection("Stackables." + uuid);
+				Location location = (Location)section.get("Location");
+				org.bukkit.Material material = org.bukkit.Material.valueOf(section.getString("Material"));
+				int size = section.getInt("Size");
+				stackableManager.addStack(new Stackable(UUID.fromString(uuid), location, material, size));
+			}
+		}
+	}
+
+	private void saveToFile() {
+		//Save Stackables
+		for (Island island : islandManager.getIslands().values()) {
+			File configFile = new File(getDataFolder().toString() + "/island-data");
+			FileManager.Config config = fileManager.getConfig(new File(configFile, island.getOwnerUUID() + ".yml"));
+			FileConfiguration configLoad = config.getFileConfiguration();
+			configLoad.set("Stackables", null);
+
+			for (Stackable stackable : stackableManager.getStacks().values()) {
+				if (island != stackable.getIsland()) continue;
+				ConfigurationSection section = configLoad.createSection("Stackables." + stackable.getUuid().toString());
+				section.set("Location", stackable.getLocation());
+				section.set("Material", stackable.getMaterial().name());
+				section.set("Size", stackable.getSize());
+			}
+			try {
+				config.getFileConfiguration().save(config.getFile());
+			} catch (IOException ignored) {}
+		}
 	}
 
 	private String formatText(String string){
@@ -307,6 +367,10 @@ public class SkyBlock extends JavaPlugin {
 
 	public HologramManager getHologramManager() {
 		return hologramManager;
+	}
+
+	public StackableManager getStackableManager() {
+		return stackableManager;
 	}
 
 	@Override

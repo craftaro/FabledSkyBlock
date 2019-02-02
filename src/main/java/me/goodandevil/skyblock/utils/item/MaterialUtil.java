@@ -15,8 +15,6 @@ public class MaterialUtil {
 			material = Material.GRASS;
 		} else if (material == Materials.LEGACY_NETHER_WARTS.getPostMaterial()) {
 			material = Materials.LEGACY_NETHER_STALK.getPostMaterial();
-		} else if (material == Material.REDSTONE_WIRE) {
-			material = Material.REDSTONE;
 		} else if (material == Materials.LEGACY_SIGN_POST.getPostMaterial() || material == Material.WALL_SIGN) {
 			material = Material.SIGN;
 		} else if (material == Materials.LEGACY_SUGAR_CANE_BLOCK.getPostMaterial()) {

@@ -37,22 +37,19 @@ public class HologramManager {
 
 		FileManager fileManager = skyblock.getFileManager();
 
-		Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				removeWorldHolograms();
+		Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+			removeWorldHolograms();
 
-				for (HologramType hologramTypeList : HologramType.values()) {
-					if (hologramTypeList == HologramType.Level || hologramTypeList == HologramType.Votes) {
-						if (hologramTypeList == HologramType.Votes) {
-							if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
-								continue;
-							}
+			for (HologramType hologramTypeList : HologramType.values()) {
+				if (hologramTypeList == HologramType.Level || hologramTypeList == HologramType.Votes) {
+					if (hologramTypeList == HologramType.Votes) {
+						if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+								.getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+							continue;
 						}
-
-						spawnHologram(hologramTypeList);
 					}
+
+					spawnHologram(hologramTypeList);
 				}
 			}
 		}, 200L);

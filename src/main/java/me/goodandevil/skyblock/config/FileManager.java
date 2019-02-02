@@ -57,6 +57,7 @@ public class FileManager {
 		configFiles.put("settings.yml", new File(skyblock.getDataFolder(), "settings.yml"));
 		configFiles.put("upgrades.yml", new File(skyblock.getDataFolder(), "upgrades.yml"));
 		configFiles.put("generators.yml", new File(skyblock.getDataFolder(), "generators.yml"));
+		configFiles.put("stackables.yml", new File(skyblock.getDataFolder(), "stackables.yml"));
 		configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
 		configFiles.put("structures/default.structure",
 				new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
