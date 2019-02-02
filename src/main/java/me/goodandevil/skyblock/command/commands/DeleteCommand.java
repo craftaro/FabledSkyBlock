@@ -162,7 +162,7 @@ public class DeleteCommand extends SubCommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] { "remove", "disband" };
+		return new String[] { "remove", "disband", "reset", "restart" };
 	}
 
 	@Override
