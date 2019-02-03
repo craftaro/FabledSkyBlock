@@ -20,7 +20,7 @@
     <repositories>
         <repository>
             <id>private</id>
-            <url>http://repo.songoda.com/repository/private</url>
+            <url>http://repo.songoda.com/artifactory/private/</url></url>
         </repository>
     </repositories>
     <dependencies>
