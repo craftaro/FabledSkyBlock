@@ -234,7 +234,7 @@ public class SkyBlock extends JavaPlugin {
 			FileManager.Config config = fileManager.getConfig(new File(configFile, file.getName()));
 			FileConfiguration configLoad = config.getFileConfiguration();
 			ConfigurationSection cs = configLoad.getConfigurationSection("Stackables");
-			if (cs == null) return;
+			if (cs == null || cs.getKeys(false) == null) return;
 			for (String uuid : cs.getKeys(false)) {
 				ConfigurationSection section = configLoad.getConfigurationSection("Stackables." + uuid);
 				Location location = (Location)section.get("Location");
