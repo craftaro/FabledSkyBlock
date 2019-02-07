@@ -16,6 +16,25 @@ Command:
                 Message: "&bSkyBlock &8| &cError&8: &ePlease provide a numerical value."
             Page:
                 Message: "&bSkyBlock &8| &cError&8: &eThere are not that many pages."
+        Bank:
+            Info:
+                Message: "&f&oAllows you to access your islands bank."
+            Unknown:
+                Message: "&bSkyBlock &8| &cError&8: &eYou are not currently on an island."
+            Perm:
+                Message: "&bSkyBlock &8| &cError&8: &eYou do not have permission to access this islands bank."
+            Balance:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYour islands balance is '&7$%balance%&e'."
+            Deposit:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou successfully deposited '&7$%amount%&e'."
+            Withdraw:
+                Message: "&bSkyBlock &8| &aInfo&8: &eYou successfully withdrew '&7$%amount%&e'."
+            Short:
+                Message: "&bSkyBlock &8| &cError&8: &eYou don't have enough money to do that."
+            Short2:
+                Message: "&bSkyBlock &8| &cError&8: &eThere is not enough money to withdraw."
+            Invalid:
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island bank [<Deposit|Withdraw|Balance>]"
         Unlock:
             Owner:
                 Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."

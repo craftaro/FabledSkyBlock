@@ -1148,27 +1148,19 @@ public class IslandManager {
                 || island.hasRole(IslandRole.Operator, player.getUniqueId())) {
             if (player.hasPermission("fabledskyblock.fly") || player.hasPermission("fabledskyblock.fly")
                     || player.hasPermission("fabledskyblock.*")) {
-                Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-                    @Override
-                    public void run() {
-                        player.setAllowFlight(true);
-                        player.setFlying(true);
-                    }
+                Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+                    player.setAllowFlight(true);
+                    player.setFlying(true);
                 });
             }
-        } else {
-            if (player.hasPermission("fabledskyblock.fly") || player.hasPermission("fabledskyblock.*")) {
-                Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-
-                    @Override
-                    public void run() {
-                        player.setAllowFlight(true);
-                        player.setFlying(true);
-                    }
-
-                });
-            }
+            return;
         }
+            if (player.hasPermission("fabledskyblock.fly") || player.hasPermission("fabledskyblock.*")) {
+                Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+                    player.setAllowFlight(true);
+                    player.setFlying(true);
+                });
+            }
     }
 
     public void removeUpgrades(Player player, boolean bypassIsland) {

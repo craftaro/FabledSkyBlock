@@ -293,9 +293,12 @@ public class Block implements Listener {
             if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
                     island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
                 event.setCancelled(true);
-            } else if (skyblock.getStackableManager() != null
-                    && skyblock.getStackableManager().isStacked(block.getLocation())) {
-                event.setCancelled(true);
+            } else if (skyblock.getStackableManager() != null) {
+                    if (skyblock.getStackableManager().isStacked(block.getLocation())) {
+                        event.setCancelled(true);
+                        return;
+                    }
+
             } else if (LocationUtil.isLocationLocation(block.getLocation(),
                     island.getLocation(world, IslandEnvironment.Main)
                             .clone()
@@ -341,6 +344,8 @@ public class Block implements Listener {
         Material material = event.getBlock().getType();
         if (material != Material.WATER && material != Material.LAVA) return;
 
+        if (event.getNewState().getType() != Material.COBBLESTONE) return;
+
         if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
             Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
             IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
@@ -360,6 +365,7 @@ public class Block implements Listener {
                     }
                 }
 
+                event.setCancelled(true);
                 generatorManager.generateBlock(generator, block);
                 return;
             }

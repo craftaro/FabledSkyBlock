@@ -20,7 +20,7 @@
     <repositories>
         <repository>
             <id>private</id>
-            <url>http://repo.songoda.com/repository/private</url>
+            <url>http://repo.songoda.com/artifactory/private/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
         	<groupId>net.nifheim.beelzebu</groupId>
-        	<artifactId>coins</artifactId>
+        	<artifactId>Coins</artifactId>
         	<version>2.3.2</version>
         </dependency>
         <dependency>

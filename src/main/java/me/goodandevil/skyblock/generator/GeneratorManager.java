@@ -5,7 +5,6 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -233,31 +232,27 @@ public class GeneratorManager {
     public void generateBlock(Generator generator, Block block) {
         block.setType(Material.AIR);
 
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
 
-            Materials materials = getRandomMaterials(generator);
+        Materials materials = getRandomMaterials(generator);
 
-            if (materials == null) return;
-            Bukkit.getScheduler().runTask(skyblock, () -> {
-                skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(),
-                        1.0F, 10.0F);
+        if (materials == null) return;
+        skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(),
+                1.0F, 10.0F);
 
-                if (NMSUtil.getVersionNumber() > 12) {
-                    block.setType(materials.parseMaterial());
-                } else {
-                    ItemStack is = materials.parseItem();
-                    block.setType(is.getType());
+        if (NMSUtil.getVersionNumber() > 12) {
+            block.setType(materials.parseMaterial());
+        } else {
+            ItemStack is = materials.parseItem();
+            block.setType(is.getType());
 
-                    try {
-                        block.getClass().getMethod("setData", byte.class).invoke(block,
-                                (byte) is.getDurability());
-                    } catch (IllegalAccessException | IllegalArgumentException
-                            | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        });
+            try {
+                block.getClass().getMethod("setData", byte.class).invoke(block,
+                        (byte) is.getDurability());
+            } catch (IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Materials getRandomMaterials(Generator generator) {

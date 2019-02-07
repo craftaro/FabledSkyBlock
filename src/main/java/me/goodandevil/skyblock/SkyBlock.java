@@ -253,6 +253,7 @@ public class SkyBlock extends JavaPlugin {
 			FileConfiguration configLoad = config.getFileConfiguration();
 			configLoad.set("Stackables", null);
 
+			if (stackableManager.getStacks() == null) return;
 			for (Stackable stackable : stackableManager.getStacks().values()) {
 				if (island != stackable.getIsland()) continue;
 				ConfigurationSection section = configLoad.createSection("Stackables." + stackable.getUuid().toString());

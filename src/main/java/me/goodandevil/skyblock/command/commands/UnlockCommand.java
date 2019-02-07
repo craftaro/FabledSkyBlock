@@ -58,6 +58,7 @@ public class UnlockCommand extends SubCommand {
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Owner.Message"));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            return;
         }
 
         Config islandData = fileManager

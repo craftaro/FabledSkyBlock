@@ -102,6 +102,7 @@ public class Move implements Listener {
 
 
                 if (island != null) {
+                    islandManager.removeUpgrades(player, false);
                     if (islandManager.isLocationAtIsland(island, to)) {
                         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
                         FileConfiguration configLoad = config.getFileConfiguration();
@@ -122,6 +123,7 @@ public class Move implements Listener {
 
                         if (configLoad.getBoolean("Island.World." + world.name() + ".Liquid.Enable")) {
                             if (to.getY() <= configLoad.getInt("Island.World." + world.name() + ".Liquid.Height")) {
+                                if (!configLoad.getBoolean("Island.Liquid.Teleport.Enable")) return;
                                 if (keepItemsOnDeath) {
                                     player.setFallDistance(0.0F);
 

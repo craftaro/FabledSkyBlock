@@ -60,6 +60,16 @@ public class EconomyManager {
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerWithdrawMoneyEvent(player, money));
 	}
 
+	public void deposit(Player player, double money) {
+		if (economy != null) {
+			economy.depositPlayer(player, money);
+		} else if (economyPlugin == EconomyPlugin.Coins) {
+			CoinsAPI.addCoins(player.getUniqueId(), money);
+		}
+
+		Bukkit.getServer().getPluginManager().callEvent(new PlayerWithdrawMoneyEvent(player, money));
+	}
+
 	public boolean isEconomy() {
 		if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null
 				&& Bukkit.getServer().getPluginManager().getPlugin("Coins") == null) {

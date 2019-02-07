@@ -108,6 +108,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 				configLoad.getString("Command.Island.Weather.Info.Message"))));
 		subCommands.add(new UnlockCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
 				configLoad.getString("Command.Island.Unlock.Info.Message"))));
+		subCommands.add(new BankCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
+				configLoad.getString("Command.Island.Bank.Info.Message"))));
 		// subCommands.add(new
 		// RollbackCommand(skyblock).setInfo(ChatColor.translateAlternateColorCodes('&',
 		// configLoad.getString("Command.Island.Rollback.Info.Message"))));

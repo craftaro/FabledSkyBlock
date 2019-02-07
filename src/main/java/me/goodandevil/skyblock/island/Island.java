@@ -609,6 +609,32 @@ public class Island {
 		return null;
 	}
 
+	public double getBankBalance() {
+		return skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().getDouble("Bank.Balance");
+	}
+
+	public void addToBank(double value) {
+		value = value + getBankBalance();
+		skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().set("Bank.Balance", value);
+	}
+
+	public void removeFromBank(double value) {
+		value = getBankBalance() - value;
+		skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().set("Bank.Balance", value);
+	}
+
+	public boolean isOpen() {
+		return skyblock.getFileManager().getConfig(
+				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
+				.getFileConfiguration().getBoolean("Visitor.Open");
+	}
+
 	public void setOpen(boolean open) {
 		IslandOpenEvent islandOpenEvent = new IslandOpenEvent(getAPIWrapper(), open);
 		Bukkit.getServer().getPluginManager().callEvent(islandOpenEvent);
@@ -619,12 +645,6 @@ public class Island {
 					.getFileConfiguration().set("Visitor.Open", open);
 			getVisit().setOpen(open);
 		}
-	}
-
-	public boolean isOpen() {
-		return skyblock.getFileManager().getConfig(
-				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"))
-				.getFileConfiguration().getBoolean("Visitor.Open");
 	}
 
 	public List<String> getMessage(IslandMessage message) {

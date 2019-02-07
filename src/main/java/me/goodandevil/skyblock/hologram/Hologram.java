@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.hologram;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.goodandevil.skyblock.utils.version.NMSUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -27,7 +28,10 @@ public class Hologram {
 	public void addLine(String text) {
 		ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(
 				location.clone().add(0.0D, getHeight() + getHeightIncrement(), 0.0D), EntityType.ARMOR_STAND);
+		int NMSVersion = NMSUtil.getVersionNumber();
 		as.setVisible(false);
+		if (NMSVersion > 8)
+			as.setMarker(false);
 		as.setGravity(false);
 		as.setCustomName(ChatColor.translateAlternateColorCodes('&', text));
 		as.setCustomNameVisible(true);
