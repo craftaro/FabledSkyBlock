@@ -212,3 +212,12 @@ gradle-app.setting
 
 ### Gradle Patch ###
 **/build/
+\.idea/compiler\.xml
+
+\.idea/misc\.xml
+
+\.idea/modules\.xml
+
+\.idea/vcs\.xml
+
+FabledSkyBlock\.iml
