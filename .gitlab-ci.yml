@@ -10,9 +10,10 @@ build:
   stage: build
   image: maven:3.5.3-jdk-8
   script:
-    - mvn clean package
     - find $path/ -type f -name "*.xml" -print0 | xargs -0 sed -i -e s/maven-version-number/$version/g
+    - mvn clean package
     - find $path/ -type f -name "*.yml" -print0 | xargs -0 sed -i -e s/maven-version-number/$version/g
+    - mvn clean package
   artifacts:
     name: $name-$version
     paths:
