@@ -66,9 +66,9 @@ public final class WorldBorder {
 					double.class, long.class);
 
 			if (color == Color.Green) {
-				transitionSizeBetween.invoke(worldBorder, size, size, 20000000L);
+				transitionSizeBetween.invoke(worldBorder, size - 0.1D, size, 20000000L);
 			} else if (color == Color.Red) {
-				transitionSizeBetween.invoke(worldBorder, size, size, 20000000L);
+				transitionSizeBetween.invoke(worldBorder, size, size - 1.0D, 20000000L);
 			}
 
 			@SuppressWarnings({ "unchecked", "rawtypes" })

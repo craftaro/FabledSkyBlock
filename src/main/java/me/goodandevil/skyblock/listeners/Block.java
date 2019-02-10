@@ -219,6 +219,8 @@ public class Block implements Listener {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
+        if (island == null) return;
+
         org.bukkit.block.Block block = event.getToBlock();
             if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
                     island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 1.0D)) {

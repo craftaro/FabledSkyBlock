@@ -30,8 +30,6 @@ public class Stackable {
     private Material material;
     private Integer size = 2;
 
-    private UUID dropEntity;
-
 
     public Stackable(Location location, Material material) {
         this.island = SkyBlock.getInstance().getIslandManager().getIslandAtLocation(location);
@@ -73,10 +71,6 @@ public class Stackable {
 
     public void setMaterial(Material material) {
         this.material = material;
-    }
-
-    public UUID getDropEntity() {
-        return dropEntity;
     }
 
     public Integer getSize() {
