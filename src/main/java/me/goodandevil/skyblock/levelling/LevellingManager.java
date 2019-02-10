@@ -117,7 +117,12 @@ public class LevellingManager {
 
                                     for (Material materialList : materialStorage) {
                                         if (materialList == null) continue;
-                                        ItemStack is = materialList.getItemStack();
+                                        ItemStack is;
+                                        try {
+                                            is = materialList.getItemStack();
+                                        } catch (Exception ignored) {
+                                            continue;
+                                        }
 
                                         if (blockMaterial != materialList.getItemStack().getType()) continue;
                                         if (NMSVersion < 13) {
