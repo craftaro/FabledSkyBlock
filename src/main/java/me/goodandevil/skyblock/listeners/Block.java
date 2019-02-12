@@ -5,8 +5,12 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.Generator;
 import me.goodandevil.skyblock.generator.GeneratorLocation;
 import me.goodandevil.skyblock.generator.GeneratorManager;
-import me.goodandevil.skyblock.island.*;
-import me.goodandevil.skyblock.playerdata.PlayerData;
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
+import me.goodandevil.skyblock.island.IslandLevel;
+import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
@@ -17,7 +21,6 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -146,8 +149,6 @@ public class Block implements Listener {
 
         IslandManager islandManager = skyblock.getIslandManager();
         WorldManager worldManager = skyblock.getWorldManager();
-        StackableManager stackableManager = skyblock.getStackableManager();
-
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
@@ -344,9 +345,12 @@ public class Block implements Listener {
 
 
         Material material = event.getBlock().getType();
-        if (material != Material.WATER && material != Material.LAVA) return;
+        if (material != Material.WATER && material != Material.LAVA)
+        	return;
 
-        if (event.getNewState().getType() != Material.COBBLESTONE) return;
+        Material type = event.getNewState().getType();
+        if (type != Material.COBBLESTONE && type != Material.STONE)
+        	return;
 
         if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
             Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
