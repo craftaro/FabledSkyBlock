@@ -2,8 +2,8 @@ package me.goodandevil.skyblock.stackable;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -94,14 +95,18 @@ public class Stackable {
         SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
     }
 
-    void updateDisplay() {
+    private void updateDisplay() {
         removeDisplay();
-        Location dropLocation = location.clone().add(.5,.55,.5);
+        Location dropLocation = location.clone().add(.5,1,.5);
 
         ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(dropLocation, EntityType.ARMOR_STAND);
         as.setVisible(false);
         as.setGravity(false);
         as.setSmall(true);
+        if (NMSUtil.getVersionNumber() > 8) {
+            as.setMarker(true);
+        }
+        as.setBasePlate(true);
         as.setHelmet(new ItemStack(material));
         as.setCustomName(WordUtils.capitalize(material.name().toLowerCase()).replace("_", " ") + "s: " + size);
         as.setCustomNameVisible(true);

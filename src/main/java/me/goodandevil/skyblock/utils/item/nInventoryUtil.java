@@ -219,7 +219,7 @@ public class nInventoryUtil {
 		}
 
 		public void setItemMeta() {
-			ItemMeta im = is.getItemMeta();
+			ItemMeta im = is.hasItemMeta() ? is.getItemMeta() : Bukkit.getItemFactory().getItemMeta(is.getType());
 			im.setDisplayName(itemDisplayname);
 			im.setLore(itemLore);
 
