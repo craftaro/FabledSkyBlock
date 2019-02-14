@@ -244,6 +244,8 @@ public class Block implements Listener {
         WorldManager worldManager = skyblock.getWorldManager();
 
         Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+        if (island == null) return;
+
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
 
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
