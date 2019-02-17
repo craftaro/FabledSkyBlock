@@ -3,6 +3,9 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.Set;
 
+import me.goodandevil.skyblock.config.FileManager;
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
 import org.bukkit.Bukkit;
@@ -10,6 +13,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
@@ -69,6 +73,25 @@ public class Interact implements Listener {
 				}
 				event.setCancelled(true);
 				InventoryUtil.takeItem(player, 1);
+
+				FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+				FileConfiguration configLoad = config.getFileConfiguration();
+				if (!configLoad.getBoolean("Island.Block.Level.Enable")) return;
+
+				Island island = islandManager.getIslandAtLocation(block.getLocation());
+
+				Materials materials = Materials.getMaterials(block.getType(), block.getData());
+
+				if (materials == null) return;
+				int materialAmount = 0;
+				IslandLevel level = island.getLevel();
+
+				if (level.hasMaterial(materials.name())) {
+					materialAmount = level.getMaterialAmount(materials.name());
+				}
+
+				level.setMaterialAmount(materials.name(), materialAmount + 1);
+
 			}
 			if (block.getType() == Material.ANVIL) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Anvil")) {

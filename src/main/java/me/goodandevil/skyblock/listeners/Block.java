@@ -81,6 +81,24 @@ public class Block implements Listener {
                     if (stackable.getSize() <= 1) {
                         stackableManager.removeStack(stackable);
                     }
+
+                    Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                    FileConfiguration configLoad = config.getFileConfiguration();
+                    
+                    if (configLoad.getBoolean("Island.Block.Level.Enable")) {
+                        Materials materials = Materials.getMaterials(block.getType(), block.getData());
+
+                        if (materials == null) return;
+                        int materialAmount = 0;
+                        IslandLevel level = island.getLevel();
+
+                        if (level.hasMaterial(materials.name())) {
+                            materialAmount = level.getMaterialAmount(materials.name());
+                        }
+
+                        level.setMaterialAmount(materials.name(), materialAmount + 1);
+                    }
+
                     event.setCancelled(true);
                     block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(block.getType()));
                 }
