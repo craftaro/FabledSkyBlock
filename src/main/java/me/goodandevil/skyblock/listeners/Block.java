@@ -33,6 +33,9 @@ import org.bukkit.material.Crops;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Block implements Listener {
@@ -129,21 +132,23 @@ public class Block implements Listener {
                             if (!LocationUtil.isLocationAtLocationRadius(all.getLocation(),
                                     island.getLocation(world, IslandEnvironment.Island), island.getRadius())) continue;
 
-                            int i = generatorManager.getGeneratorStorage().size() - 1;
-                            Generator generator = generatorManager.getGeneratorStorage().get(i);
+                            List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
+                            Collections.reverse(generators);
+                            for (Generator generator : generators) {
 
-                            if (generator.isPermission()) {
-                                if (!all.hasPermission(generator.getPermission())
-                                        && !all.hasPermission("fabledskyblock.generator.*")
-                                        && !all.hasPermission("fabledskyblock.*")) {
-                                    continue;
+                                if (generator.isPermission()) {
+                                    if (!all.hasPermission(generator.getPermission())
+                                            && !all.hasPermission("fabledskyblock.generator.*")
+                                            && !all.hasPermission("fabledskyblock.*")) {
+                                        continue;
+                                    }
                                 }
-                            }
 
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
-                                generatorManager.generateBlock(generator, block);
-                            }, 10L);
-                            return;
+                                Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
+                                    generatorManager.generateBlock(generator, block);
+                                }, 10L);
+                                return;
+                            }
                         }
 
                         break;
