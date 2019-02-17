@@ -237,6 +237,7 @@ public class SkyBlock extends JavaPlugin {
 				Location location = (Location)section.get("Location");
 				org.bukkit.Material material = org.bukkit.Material.valueOf(section.getString("Material"));
 				int size = section.getInt("Size");
+				if (size == 0) return;
 				stackableManager.addStack(new Stackable(UUID.fromString(uuid), location, material, size));
 			}
 		}
