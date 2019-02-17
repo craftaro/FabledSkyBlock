@@ -28,7 +28,7 @@ public class BiomeManager {
         int radius = (int) Math.ceil(island.getRadius());
 
         for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x++) {
-            for (int z = location.getBlockX() - radius; z < location.getBlockX() + radius; z++) {
+            for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z++) {
                 location.getWorld().setBiome(x, z, biome);
                 Chunk chunk = location.getWorld().getChunkAt(x >> 4, z >> 4);
                 if (!chunks.contains(chunk))
