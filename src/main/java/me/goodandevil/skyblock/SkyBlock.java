@@ -180,7 +180,6 @@ public class SkyBlock extends JavaPlugin {
 		SkyBlockAPI.setImplementation(instance);
 
 		this.loadFromFile();
-		Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveToFile, 5000L, 5000L);
 	}
 
 	@Override
@@ -219,8 +218,6 @@ public class SkyBlock extends JavaPlugin {
 			this.hologramManager.onDisable();
 		}
 
-		this.saveToFile();
-
 		HandlerList.unregisterAll(this);
 	}
 
@@ -242,28 +239,6 @@ public class SkyBlock extends JavaPlugin {
 				int size = section.getInt("Size");
 				stackableManager.addStack(new Stackable(UUID.fromString(uuid), location, material, size));
 			}
-		}
-	}
-
-	private void saveToFile() {
-		//Save Stackables
-		for (Island island : islandManager.getIslands().values()) {
-			File configFile = new File(getDataFolder().toString() + "/island-data");
-			FileManager.Config config = fileManager.getConfig(new File(configFile, island.getOwnerUUID() + ".yml"));
-			FileConfiguration configLoad = config.getFileConfiguration();
-			configLoad.set("Stackables", null);
-
-			if (stackableManager.getStacks() == null) return;
-			for (Stackable stackable : stackableManager.getStacks().values()) {
-				if (island != stackable.getIsland()) continue;
-				ConfigurationSection section = configLoad.createSection("Stackables." + stackable.getUuid().toString());
-				section.set("Location", stackable.getLocation());
-				section.set("Material", stackable.getMaterial().name());
-				section.set("Size", stackable.getSize());
-			}
-			try {
-				config.getFileConfiguration().save(config.getFile());
-			} catch (IOException ignored) {}
 		}
 	}
 
