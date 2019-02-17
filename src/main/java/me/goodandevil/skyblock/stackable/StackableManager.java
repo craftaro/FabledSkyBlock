@@ -6,6 +6,7 @@ import me.goodandevil.skyblock.listeners.Entity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Item;
 
@@ -69,6 +70,7 @@ public class StackableManager {
     }
 
     public void removeStack(Stackable stackable) {
+        stackable.setSize(0);
         stackable.removeDisplay();
         stacks.remove(stackable.getLocation());
     }

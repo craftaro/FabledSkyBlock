@@ -179,7 +179,7 @@ public class SkyBlock extends JavaPlugin {
 
 		SkyBlockAPI.setImplementation(instance);
 
-		this.loadFromFile();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::loadFromFile, 5L);
 	}
 
 	@Override

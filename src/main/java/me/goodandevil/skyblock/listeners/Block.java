@@ -84,19 +84,25 @@ public class Block implements Listener {
 
                     Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
                     FileConfiguration configLoad = config.getFileConfiguration();
-                    
+
                     if (configLoad.getBoolean("Island.Block.Level.Enable")) {
                         Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
-                        if (materials == null) return;
-                        int materialAmount = 0;
-                        IslandLevel level = island.getLevel();
+                        if (materials != null) {
 
-                        if (level.hasMaterial(materials.name())) {
-                            materialAmount = level.getMaterialAmount(materials.name());
+                            IslandLevel level = island.getLevel();
+
+                            if (level.hasMaterial(materials.name())) {
+
+                                int materialAmount = level.getMaterialAmount(materials.name());
+
+                                if (materialAmount - 1 <= 0) {
+                                    level.removeMaterial(materials.name());
+                                } else {
+                                    level.setMaterialAmount(materials.name(), materialAmount - 1);
+                                }
+                            }
                         }
-
-                        level.setMaterialAmount(materials.name(), materialAmount + 1);
                     }
 
                     event.setCancelled(true);

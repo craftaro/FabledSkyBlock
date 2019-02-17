@@ -29,7 +29,6 @@ import java.util.UUID;
 public class Stackable {
 
     private UUID uuid;
-    private Island island;
 
     private Location location;
     private Material material;
@@ -37,7 +36,6 @@ public class Stackable {
 
 
     public Stackable(Location location, Material material) {
-        this.island = SkyBlock.getInstance().getIslandManager().getIslandAtLocation(location);
         this.uuid = UUID.randomUUID();
         this.location = location;
         this.material = material;
@@ -47,21 +45,15 @@ public class Stackable {
     }
 
     public Stackable(UUID uuid, Location location, Material material, int size) {
-        this.island = SkyBlock.getInstance().getIslandManager().getIslandAtLocation(location);
         this.uuid = uuid;
         this.location = location;
         this.material = material;
         this.size = size;
         updateDisplay();
-        save();
     }
 
     public UUID getUuid() {
         return uuid;
-    }
-
-    public Island getIsland() {
-        return island;
     }
 
     public Location getLocation() {
@@ -88,6 +80,7 @@ public class Stackable {
     public void setSize(Integer size) {
         this.size = size;
         updateDisplay();
+        save();
     }
 
     public void addOne() {
@@ -131,7 +124,8 @@ public class Stackable {
 
     private void save() {
         File configFile = new File(SkyBlock.getInstance().getDataFolder().toString() + "/island-data");
-        FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(configFile, island.getOwnerUUID() + ".yml"));
+        FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(configFile,
+                SkyBlock.getInstance().getIslandManager().getIslandAtLocation(location).getOwnerUUID() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         ConfigurationSection section = configLoad.createSection("Stackables." + getUuid().toString());
