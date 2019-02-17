@@ -413,20 +413,22 @@ public class Block implements Listener {
                 if (!LocationUtil.isLocationAtLocationRadius(all.getLocation(),
                         island.getLocation(world, IslandEnvironment.Island), island.getRadius())) continue;
 
-                int i = generatorManager.getGeneratorStorage().size() - 1;
-                Generator generator = generatorManager.getGeneratorStorage().get(i);
+                List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
+                Collections.reverse(generators);
+                for (Generator generator : generators) {
 
-                if (generator.isPermission()) {
-                    if (!all.hasPermission(generator.getPermission())
-                            && !all.hasPermission("fabledskyblock.generator.*")
-                            && !all.hasPermission("fabledskyblock.*")) {
-                        continue;
+                    if (generator.isPermission()) {
+                        if (!all.hasPermission(generator.getPermission())
+                                && !all.hasPermission("fabledskyblock.generator.*")
+                                && !all.hasPermission("fabledskyblock.*")) {
+                            continue;
+                        }
                     }
-                }
 
-                event.setCancelled(true);
-                generatorManager.generateBlock(generator, block);
-                return;
+                    event.setCancelled(true);
+                    generatorManager.generateBlock(generator, block);
+                    return;
+                }
             }
         }
     }
