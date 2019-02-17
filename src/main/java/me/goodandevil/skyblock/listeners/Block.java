@@ -124,6 +124,28 @@ public class Block implements Listener {
                             || event.getBlock().getRelative(blockFaceList).getType() == Materials.LAVA
                             .parseMaterial()) {
                         liquid = event.getBlock().getRelative(blockFaceList);
+
+                        for (Player all : Bukkit.getOnlinePlayers()) {
+                            if (!LocationUtil.isLocationAtLocationRadius(all.getLocation(),
+                                    island.getLocation(world, IslandEnvironment.Island), island.getRadius())) continue;
+
+                            int i = generatorManager.getGeneratorStorage().size() - 1;
+                            Generator generator = generatorManager.getGeneratorStorage().get(i);
+
+                            if (generator.isPermission()) {
+                                if (!all.hasPermission(generator.getPermission())
+                                        && !all.hasPermission("fabledskyblock.generator.*")
+                                        && !all.hasPermission("fabledskyblock.*")) {
+                                    continue;
+                                }
+                            }
+
+                            Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
+                                generatorManager.generateBlock(generator, block);
+                            }, 10L);
+                            return;
+                        }
+
                         break;
                     }
                 }

@@ -5,6 +5,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -231,7 +232,6 @@ public class GeneratorManager {
     @SuppressWarnings("deprecation")
     public void generateBlock(Generator generator, Block block) {
         block.setType(Material.AIR);
-
 
         Materials materials = getRandomMaterials(generator);
 
