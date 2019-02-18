@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -64,6 +65,9 @@ public class Interact implements Listener {
 					&& stackableManager.getStackableMaterials().contains(event.getMaterial())
 					&& event.getClickedBlock().getType() == event.getMaterial()
 					&& !player.isSneaking()) {
+                if (NMSUtil.getVersionNumber() > 8) {
+                    if (event.getHand() == EquipmentSlot.OFF_HAND) return;
+                }
 				Location location = event.getClickedBlock().getLocation();
 				if (stackableManager.isStacked(location)) {
 					Stackable stackable = stackableManager.getStack(location, event.getMaterial());
