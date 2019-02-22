@@ -33,6 +33,8 @@ Command:
                 Message: "&bSkyBlock &8| &cError&8: &eYou don't have enough money to do that."
             Short2:
                 Message: "&bSkyBlock &8| &cError&8: &eThere is not enough money to withdraw."
+            Short3:
+                Message: "&bSkyBlock &8| &cError&8: &eYou did not specify an amount."
             Invalid:
                 Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island bank [<Deposit|Withdraw|Balance>]"
         Unlock:

@@ -72,7 +72,13 @@ public class BankCommand extends SubCommand {
                         "%balance%", String.valueOf(balance)));
                 return;
             case "Deposit": {
-                double amt = Long.parseLong(args[1]);
+                if (args.length == 1) {
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short3.Message"));
+                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    return;
+                }
+                
+                double amt = Double.parseDouble(args[1]);
 
                 if (!economyManager.hasBalance(player, amt)) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short.Message"));
@@ -86,7 +92,13 @@ public class BankCommand extends SubCommand {
                 return;
             }
             case "Withdraw": {
-                double amt = Long.parseLong(args[1]);
+                if (args.length == 1) {
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short3.Message"));
+                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    return;
+                }
+                
+                double amt = Double.parseDouble(args[1]);
 
                 if (amt > balance) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short2.Message"));
