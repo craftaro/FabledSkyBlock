@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -46,15 +47,15 @@ public class Chunk {
 	}
 
 	private void prepareChunkSnapshots() {
-		for (IslandWorld worldList : IslandWorld.values()) {
-			if (worldList == IslandWorld.Normal
-					|| (worldList == IslandWorld.Nether
-							&& skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.World.Nether.Enable"))
-					|| (worldList == IslandWorld.End
-							&& skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-									.getFileConfiguration().getBoolean("Island.World.End.Enable"))) {
-				Location islandLocation = island.getLocation(worldList, IslandEnvironment.Island);
+	    FileConfiguration config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
+	    FileConfiguration islandData = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml")).getFileConfiguration();
+	    boolean hasNormal = true;
+	    boolean hasNether = config.getBoolean("Island.World.Nether.Enable") && islandData.getBoolean("Unlocked.Nether", false);
+	    boolean hasEnd = config.getBoolean("Island.World.End.Enable") && islandData.getBoolean("Unlocked.End", false);
+	    
+		for (IslandWorld iWorld : IslandWorld.values()) {
+			if ((iWorld == IslandWorld.Normal && hasNormal) || (iWorld == IslandWorld.Nether && hasNether) || (iWorld == IslandWorld.End && hasEnd)) {
+				Location islandLocation = island.getLocation(iWorld, IslandEnvironment.Island);
 
 				Location minLocation = new Location(islandLocation.getWorld(),
 						islandLocation.getBlockX() - island.getRadius(), 0,
