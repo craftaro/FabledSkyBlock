@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.menus.admin;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -55,6 +57,16 @@ public class Levelling implements Listener {
 		PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 
 		List<me.goodandevil.skyblock.levelling.Material> levellingMaterials = levellingManager.getMaterials();
+		
+		// Filter out materials that won't be displayed in the GUI properly
+        Inventory testInventory = Bukkit.createInventory(null, 9);
+        levellingMaterials = levellingMaterials.stream().filter(x -> {
+            ItemStack itemStack = new ItemStack(MaterialUtil.correctMaterial(x.getItemStack().getType()), 1, x.getItemStack().getDurability());
+            if (itemStack == null || itemStack.getItemMeta() == null) return false;
+            testInventory.clear();
+            testInventory.setItem(0, itemStack);
+            return testInventory.getItem(0) != null;
+        }).collect(Collectors.toList());
 
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
@@ -315,7 +327,7 @@ public class Levelling implements Listener {
 											messageManager.sendMessage(player,
 													configLoad.getString("Island.Admin.Levelling.Permission.Message"));
 											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-										} else if (levellingManager.containsMaterials(materials)) {
+										} else if (levellingManager.containsMaterial(materials)) {
 											if (event1.getName().matches("[0-9]+")) {
 												int materialPoints = Integer.valueOf(event1.getName());
 												materialList.setPoints(materialPoints);
@@ -427,7 +439,7 @@ public class Levelling implements Listener {
 					materials = Materials.fromString(event.getCurrentItem().getType().name());
 				}
 
-				if (levellingManager.containsMaterials(materials)) {
+				if (levellingManager.containsMaterial(materials)) {
 					messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Already.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 

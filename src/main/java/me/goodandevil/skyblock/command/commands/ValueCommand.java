@@ -56,7 +56,7 @@ public class ValueCommand extends SubCommand {
 					materials = Materials.fromString(player.getItemInHand().getType().name());
 				}
 
-				if (materials != null && levellingManager.containsMaterials(materials)) {
+				if (materials != null && levellingManager.containsMaterial(materials)) {
 					Material material = levellingManager.getMaterial(materials);
 					double level = (double) material.getPoints()
 							/ (double) fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))

@@ -1,5 +1,23 @@
 package me.goodandevil.skyblock.levelling;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChunkSnapshot;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.event.island.IslandLevelChangeEvent;
 import me.goodandevil.skyblock.config.FileManager.Config;
@@ -12,23 +30,6 @@ import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.world.WorldManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 
 public class LevellingManager {
 
@@ -194,17 +195,17 @@ public class LevellingManager {
     public void registerMaterials() {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-
+        
         if (configLoad.getString("Materials") != null) {
-            for (String materialList : configLoad.getConfigurationSection("Materials").getKeys(false)) {
+            for (String materialKey : configLoad.getConfigurationSection("Materials").getKeys(false)) {
                 try {
-                    Materials materials = Materials.fromString(materialList);
-
-                    if (!containsMaterials(materials)) {
-                        addMaterial(materials, configLoad.getInt("Materials." + materialList + ".Points"));
+                    Materials material = Materials.fromString(materialKey);
+                    
+                    if (!containsMaterial(material)) {
+                        addMaterial(material, configLoad.getInt("Materials." + materialKey + ".Points"));
                     }
                 } catch (Exception e) {
-                    Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: The material '" + materialList
+                    Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: The material '" + materialKey
                             + "' is not a Material type. Make sure the material name is a 1.13 material name. Please correct this in the 'levelling.yml' file.");
                 }
             }
@@ -223,7 +224,7 @@ public class LevellingManager {
         materialStorage.remove(material);
     }
 
-    public boolean containsMaterials(Materials materials) {
+    public boolean containsMaterial(Materials materials) {
         for (Material materialList : materialStorage) {
             if (materialList.getMaterials().name().equals(materials.name())) {
                 return true;
