@@ -115,82 +115,62 @@ public class InviteCommand extends SubCommand {
 								timeMessage = respondTime / 60 + " "
 										+ configLoad.getString("Command.Island.Invite.Invited.Word.Minute");
 							}
-
-							if (cancellationMessage.contains("%cancel")) {
-								String[] cancellationMessages = cancellationMessage.split("%cancel");
-
-								if (cancellationMessages.length == 0) {
-									player.spigot().sendMessage(new ChatComponent(configLoad
-											.getString("Command.Island.Invite.Invited.Word.Cancel").toUpperCase(), true,
-											ChatColor.RED,
-											new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-													"/island cancel " + targetPlayer.getName()),
-											new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
-													ChatColor.translateAlternateColorCodes('&', configLoad
-															.getString("Command.Island.Invite.Invited.Word.Tutorial")
-															.replace("%action", configLoad.getString(
-																	"Command.Island.Invite.Invited.Word.Cancel"))))
-																			.create())).getTextComponent());
-								} else {
-									ChatComponent chatComponent = new ChatComponent("", false, null, null, null);
-
-									for (int i = 0; i < cancellationMessages.length; i++) {
-										String message = cancellationMessages[i];
-
-										if (message.contains("\n") || message.contains("\\n")) {
-											message = message.replace("\\n", "\n");
-
-											for (String messageList : message.split("\n")) {
-												chatComponent
-														.addExtra(new ChatComponent(
-																messageManager.replaceMessage(player,
-																		messageList
-																				.replace("%player",
-																						targetPlayer.getName())
-																				.replace("%time", timeMessage)),
-																false, null, null, null));
-
-												chatComponent.addExtra(
-														new TextComponent(ComponentSerializer.parse("{text: \"\n\"}")));
-											}
-										} else {
-											chatComponent
-													.addExtra(
-															new ChatComponent(
-																	messageManager
-																			.replaceMessage(
-																					player, message
-																							.replace("%player",
-																									targetPlayer
-																											.getName())
-																							.replace("%time",
-																									timeMessage)),
-																	false, null, null, null));
-										}
-
-										if (cancellationMessages.length == 1 || i + 1 != cancellationMessages.length) {
-											chatComponent.addExtra(new ChatComponent(
-													configLoad.getString("Command.Island.Invite.Invited.Word.Cancel")
-															.toUpperCase(),
-													true, ChatColor.RED,
-													new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-															"/island cancel " + targetPlayer.getName()),
-													new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
-															ChatColor.translateAlternateColorCodes('&', configLoad
-																	.getString(
-																			"Command.Island.Invite.Invited.Word.Tutorial")
-																	.replace("%action", configLoad.getString(
-																			"Command.Island.Invite.Invited.Word.Cancel"))))
-																					.create())));
-										}
-									}
-
-									player.spigot().sendMessage(chatComponent.getTextComponent());
-								}
+							
+							// TODO: Use this same logic wherever a clickable placeholder has to be replaced at
+							String placeholderName = "%cancel";
+							if (cancellationMessage.contains(placeholderName)) {
+	                            if (cancellationMessage.equals(placeholderName)) {
+	                                player.spigot().sendMessage(new ChatComponent(configLoad
+                                            .getString("Command.Island.Invite.Invited.Word.Cancel").toUpperCase(), true,
+                                            ChatColor.RED,
+                                            new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                                                    "/island cancel " + targetPlayer.getName()),
+                                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+                                                    ChatColor.translateAlternateColorCodes('&', configLoad
+                                                            .getString("Command.Island.Invite.Invited.Word.Tutorial")
+                                                            .replace("%action", configLoad.getString(
+                                                                    "Command.Island.Invite.Invited.Word.Cancel"))))
+                                                                            .create())).getTextComponent());
+	                            } else {
+	                                ChatComponent chatComponent = new ChatComponent("", false, null, null, null);
+	                                
+	                                String[] messagePieces = cancellationMessage.replace("\\n", "\n").split("\n");
+	                                for (int i = 0; i < messagePieces.length; i++) {
+	                                    String piece = messagePieces[i].replace("%player", targetPlayer.getName()).replace("%time", timeMessage);
+	                                    
+	                                    if (piece.contains(placeholderName)) {
+	                                        String before = piece.substring(0, piece.indexOf(placeholderName));
+	                                        String after = piece.substring(piece.indexOf(placeholderName) + placeholderName.length());
+	                                        
+	                                        chatComponent.addExtraChatComponent(new ChatComponent(before, false, null, null, null));
+	                                        
+	                                        chatComponent.addExtraChatComponent(new ChatComponent(
+                                                    configLoad.getString("Command.Island.Invite.Invited.Word.Cancel").toUpperCase(),
+                                                    true, ChatColor.RED,
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                                                            "/island cancel " + targetPlayer.getName()),
+                                                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+                                                            ChatColor.translateAlternateColorCodes('&', configLoad
+                                                                    .getString("Command.Island.Invite.Invited.Word.Tutorial")
+                                                                    .replace("%action", configLoad.getString(
+                                                                            "Command.Island.Invite.Invited.Word.Cancel"))))
+                                                                                    .create())));
+	                                        
+	                                        chatComponent.addExtraChatComponent(new ChatComponent(after, false, null, null, null));
+	                                    } else {
+	                                        chatComponent.addExtraChatComponent(new ChatComponent(piece, false, null, null, null));
+	                                    }
+	                                    
+	                                    if (i != messagePieces.length - 1)
+	                                        chatComponent.addExtra(new TextComponent(ComponentSerializer.parse("{text: \"\n\"}")));
+	                                }
+	                                
+	                                player.spigot().sendMessage(chatComponent.getTextComponent());
+	                            }
 							} else {
-								messageManager.sendMessage(player, cancellationMessage
-										.replace("%player", targetPlayer.getName()).replace("%time", timeMessage));
-							}
+                                messageManager.sendMessage(player, cancellationMessage
+                                        .replace("%player", targetPlayer.getName()).replace("%time", timeMessage));
+                            }
 
 							String invitationMessage = configLoad
 									.getString("Command.Island.Invite.Invited.Target.Received.Message");
@@ -301,6 +281,6 @@ public class InviteCommand extends SubCommand {
 
 	@Override
 	public Type getType() {
-		return CommandManager.Type.Default;
-	}
+        return CommandManager.Type.Default;
+    }
 }
