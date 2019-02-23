@@ -1,5 +1,33 @@
 package me.goodandevil.skyblock.listeners;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockFormEvent;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Crops;
+
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.Generator;
@@ -20,23 +48,6 @@ import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.world.WorldManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Crops;
-
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class Block implements Listener {
 
@@ -408,19 +419,25 @@ public class Block implements Listener {
         if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
             Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
             IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
-
-            for (Player all : Bukkit.getOnlinePlayers()) {
-                if (!LocationUtil.isLocationAtLocationRadius(all.getLocation(),
-                        island.getLocation(world, IslandEnvironment.Island), island.getRadius())) continue;
-
-                List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
-                Collections.reverse(generators);
-                for (Generator generator : generators) {
-
+            
+            List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
+            Collections.reverse(generators); // Use the highest generator available
+            
+            // Filter players on the island
+            Set<Player> possiblePlayers = new HashSet<>();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
+                    possiblePlayers.add(player);
+                }
+            }     
+            
+            // Find highest generator available
+            for (Generator generator : generators) {
+                for (Player player : possiblePlayers) {
                     if (generator.isPermission()) {
-                        if (!all.hasPermission(generator.getPermission())
-                                && !all.hasPermission("fabledskyblock.generator.*")
-                                && !all.hasPermission("fabledskyblock.*")) {
+                        if (!player.hasPermission(generator.getPermission())
+                                && !player.hasPermission("fabledskyblock.generator.*")
+                                && !player.hasPermission("fabledskyblock.*")) {
                             continue;
                         }
                     }
