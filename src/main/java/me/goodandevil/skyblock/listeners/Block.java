@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +30,6 @@ import org.bukkit.material.Crops;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.Generator;
-import me.goodandevil.skyblock.generator.GeneratorLocation;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandEnvironment;
@@ -39,7 +37,6 @@ import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.island.IslandWorld;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
@@ -62,8 +59,6 @@ public class Block implements Listener {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlock();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        GeneratorManager generatorManager = skyblock.getGeneratorManager();
         IslandManager islandManager = skyblock.getIslandManager();
         StackableManager stackableManager = skyblock.getStackableManager();
         WorldManager worldManager = skyblock.getWorldManager();
@@ -87,89 +82,41 @@ public class Block implements Listener {
             return;
         }
 
-            if (stackableManager != null
-                    && stackableManager.isStacked(block.getLocation())) {
-                Stackable stackable = stackableManager.getStack(block.getLocation(), block.getType());
-                if (stackable != null) {
-                    stackable.takeOne();
-                    if (stackable.getSize() <= 1) {
-                        stackableManager.removeStack(stackable);
-                    }
+        if (stackableManager != null
+                && stackableManager.isStacked(block.getLocation())) {
+            Stackable stackable = stackableManager.getStack(block.getLocation(), block.getType());
+            if (stackable != null) {
+                stackable.takeOne();
+                if (stackable.getSize() <= 1) {
+                    stackableManager.removeStack(stackable);
+                }
 
-                    Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                    FileConfiguration configLoad = config.getFileConfiguration();
+                Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                FileConfiguration configLoad = config.getFileConfiguration();
 
-                    if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-                        Materials materials = Materials.getMaterials(block.getType(), block.getData());
+                if (configLoad.getBoolean("Island.Block.Level.Enable")) {
+                    Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
-                        if (materials != null) {
+                    if (materials != null) {
 
-                            IslandLevel level = island.getLevel();
+                        IslandLevel level = island.getLevel();
 
-                            if (level.hasMaterial(materials.name())) {
+                        if (level.hasMaterial(materials.name())) {
 
-                                int materialAmount = level.getMaterialAmount(materials.name());
+                            int materialAmount = level.getMaterialAmount(materials.name());
 
-                                if (materialAmount - 1 <= 0) {
-                                    level.removeMaterial(materials.name());
-                                } else {
-                                    level.setMaterialAmount(materials.name(), materialAmount - 1);
-                                }
+                            if (materialAmount - 1 <= 0) {
+                                level.removeMaterial(materials.name());
+                            } else {
+                                level.setMaterialAmount(materials.name(), materialAmount - 1);
                             }
                         }
                     }
-
-                    event.setCancelled(true);
-                    block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(block.getType()));
                 }
+
+                event.setCancelled(true);
+                block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(block.getType()));
             }
-
-        if (generatorManager != null
-                && generatorManager.isGenerator(block)
-                && playerDataManager.hasPlayerData(player)) {
-            org.bukkit.block.Block liquid = null;
-
-            if (NMSUtil.getVersionNumber() < 13) {
-                BlockFace[] blockFaces = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST,
-                        BlockFace.SOUTH, BlockFace.WEST};
-                for (BlockFace blockFaceList : blockFaces) {
-                    if (event.getBlock().getRelative(blockFaceList)
-                            .getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial()
-                            || event.getBlock().getRelative(blockFaceList).getType() == Materials.LAVA
-                            .parseMaterial()) {
-                        liquid = event.getBlock().getRelative(blockFaceList);
-
-                        for (Player all : Bukkit.getOnlinePlayers()) {
-                            if (!LocationUtil.isLocationAtLocationRadius(all.getLocation(),
-                                    island.getLocation(world, IslandEnvironment.Island), island.getRadius())) continue;
-
-                            List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
-                            Collections.reverse(generators);
-                            for (Generator generator : generators) {
-
-                                if (generator.isPermission()) {
-                                    if (!all.hasPermission(generator.getPermission())
-                                            && !all.hasPermission("fabledskyblock.generator.*")
-                                            && !all.hasPermission("fabledskyblock.*")) {
-                                        continue;
-                                    }
-                                }
-
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
-                                    generatorManager.generateBlock(generator, block);
-                                }, 10L);
-                                return;
-                            }
-                        }
-
-                        break;
-                    }
-                }
-            }
-            playerDataManager.getPlayerData(player)
-                    .setGenerator(new GeneratorLocation(world, block, liquid));
-
-            return;
         }
 
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
@@ -285,17 +232,17 @@ public class Block implements Listener {
         if (island == null) return;
 
         org.bukkit.block.Block block = event.getToBlock();
-            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
-                    island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 1.0D)) {
+        if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
+                island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 1.0D)) {
+            event.setCancelled(true);
+        } else if (LocationUtil.isLocationLocation(block.getLocation(),
+                island.getLocation(world, IslandEnvironment.Main)
+                        .clone()
+                        .subtract(0.0D, 1.0D, 0.0D))) {
+            if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
-            } else if (LocationUtil.isLocationLocation(block.getLocation(),
-                    island.getLocation(world, IslandEnvironment.Main)
-                            .clone()
-                            .subtract(0.0D, 1.0D, 0.0D))) {
-                if (configLoad.getBoolean("Island.Spawn.Protection")) {
-                    event.setCancelled(true);
-                }
             }
+        }
     }
 
     @EventHandler
@@ -407,9 +354,11 @@ public class Block implements Listener {
             return;
         }
 
-
         Material material = event.getBlock().getType();
-        if (material != Material.WATER && material != Material.LAVA)
+        if (material != Materials.WATER.parseMaterial() && 
+            material != Materials.LEGACY_STATIONARY_WATER.parseMaterial() && 
+            material != Materials.LAVA.parseMaterial() &&
+            material != Materials.LEGACY_STATIONARY_LAVA.parseMaterial())
         	return;
 
         Material type = event.getNewState().getType();

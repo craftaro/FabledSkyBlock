@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
-import me.goodandevil.skyblock.generator.GeneratorLocation;
 import me.goodandevil.skyblock.utils.structure.Area;
 
 public class PlayerData {
@@ -34,8 +33,6 @@ public class PlayerData {
 	private boolean chat;
 
 	private Object viewer;
-
-	private GeneratorLocation generatorLocation;
 
 	public PlayerData(Player player) {
 		uuid = player.getUniqueId();
@@ -184,14 +181,6 @@ public class PlayerData {
 
 	public void setViewer(Object viewer) {
 		this.viewer = viewer;
-	}
-
-	public GeneratorLocation getGenerator() {
-		return generatorLocation;
-	}
-
-	public void setGenerator(GeneratorLocation generatorLocation) {
-		this.generatorLocation = generatorLocation;
 	}
 
 	public void save() {
