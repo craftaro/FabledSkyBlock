@@ -143,7 +143,7 @@ public class LevellingManager {
                                                 amount = epicSpawners.getSpawnerManager()
                                                         .getSpawnerFromWorld(location).getSpawnerDataCount();
                                             }
-                                        } else if (stackableManager.getStackableMaterials().contains(blockMaterial)) {
+                                        } else if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial)) {
                                             World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
                                             Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
                                             if (stackableManager.isStacked(location)) {
