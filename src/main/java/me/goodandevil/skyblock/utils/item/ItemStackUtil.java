@@ -8,8 +8,10 @@ import java.io.DataOutputStream;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 
 public final class ItemStackUtil {
@@ -38,10 +40,22 @@ public final class ItemStackUtil {
 
 			itemStack = (ItemStack) NMSUtil.getCraftClass("inventory.CraftItemStack")
 					.getMethod("asBukkitCopy", NMSItemStackClass).invoke(null, craftItemStack);
+			
+			// TODO: This method of serialization has some issues. Not all the names are the same between versions
+			// Make an exception for reeds/melon, they NEED to load in the island chest
+			// This code is here SPECIFICALLY to get the default.structure to load properly in all versions
+			// Other structures people make NEED to be saved from the version that they will be using so everything loads properly
+			if (itemStack.getType() == Material.AIR) {
+			    if (NBTTagCompound.toString().equals("{id:\"minecraft:sugar_cane\",Count:1b}")) {
+			        itemStack = new ItemStack(Materials.SUGAR_CANE.parseMaterial(), 1);
+			    } else if (NBTTagCompound.toString().equals("{id:\"minecraft:melon_slice\",Count:1b}")) {
+			        itemStack = new ItemStack(Materials.MELON_SLICE.parseMaterial(), 1);
+			    }
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		return itemStack;
 	}
 
