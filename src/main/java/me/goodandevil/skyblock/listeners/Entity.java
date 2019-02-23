@@ -1,9 +1,54 @@
 package me.goodandevil.skyblock.listeners;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Hanging;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
+import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.*;
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
+import me.goodandevil.skyblock.island.IslandLevel;
+import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
@@ -12,31 +57,12 @@ import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.world.WorldManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.*;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.*;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.hanging.HangingBreakEvent;
-import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
-import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 public class Entity implements Listener {
 
     private final SkyBlock skyblock;
+    
+    private Set<UUID> preventFireTicks = new HashSet<>();
 
     public Entity(SkyBlock skyblock) {
         this.skyblock = skyblock;
@@ -87,6 +113,12 @@ public class Entity implements Listener {
             } else if (!configLoad.getBoolean("Island.Damage.Enable")) {
                 event.setCancelled(true);
             }
+        }
+        
+        // Fix a bug in spigot where arrows with flame still apply flame even if the event is cancelled
+        if (preventFireTicks.contains(player.getUniqueId()) && event.getCause() == DamageCause.FIRE_TICK) {
+            player.setFireTicks(0);
+            event.setCancelled(true);
         }
     }
 
@@ -193,6 +225,19 @@ public class Entity implements Listener {
                 if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "Explosions")) {
                     event.setCancelled(true);
                 }
+            }
+        }
+        
+        // Fix a bug in spigot where arrows with flame still apply flame even if the event is cancelled
+        if (event.isCancelled() && event.getEntity() != null && event.getDamager() instanceof Arrow && ((Arrow)event.getDamager()).getShooter() instanceof Player) {
+            Arrow arrow = (Arrow) event.getDamager();
+            if (arrow.getFireTicks() != 0) {
+                preventFireTicks.add(event.getEntity().getUniqueId());
+                new BukkitRunnable() {
+                    public void run() {
+                        preventFireTicks.remove(event.getEntity().getUniqueId());
+                    }
+                }.runTaskLater(SkyBlock.getInstance(), 5L);
             }
         }
     }
