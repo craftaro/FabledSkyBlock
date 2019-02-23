@@ -34,7 +34,6 @@ public class Stackable {
     private Material material;
     private Integer size = 2;
 
-
     public Stackable(Location location, Material material) {
         this.uuid = UUID.randomUUID();
         this.location = location;
@@ -127,10 +126,14 @@ public class Stackable {
         FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(configFile,
                 SkyBlock.getInstance().getIslandManager().getIslandAtLocation(location).getOwnerUUID() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-
-        ConfigurationSection section = configLoad.createSection("Stackables." + getUuid().toString());
-        section.set("Location", getLocation());
-        section.set("Material", getMaterial().name());
-        section.set("Size", getSize());
+        
+        if (getSize() == 0) {
+            configLoad.set("Stackables." + getUuid().toString(), null);
+        } else {
+            ConfigurationSection section = configLoad.createSection("Stackables." + getUuid().toString());
+            section.set("Location", getLocation());
+            section.set("Material", getMaterial().name());
+            section.set("Size", getSize());
+        }
     }
 }

@@ -1,17 +1,20 @@
 package me.goodandevil.skyblock.stackable;
 
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.config.FileManager;
-import me.goodandevil.skyblock.listeners.Entity;
-import org.bukkit.Bukkit;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Item;
 
-import java.io.File;
-import java.util.*;
+import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.config.FileManager;
 
 public class StackableManager {
 
@@ -37,6 +40,28 @@ public class StackableManager {
             try {
                 this.stackableMaterials.add(Material.valueOf(stackableStr));
             } catch (Exception ignored) {}
+        }
+    }
+    
+    public void loadSavedStackables() {
+        FileManager fileManager = SkyBlock.getInstance().getFileManager();
+        String path = SkyBlock.getInstance().getDataFolder().toString() + "/island-data";
+        File[] files = new File(path).listFiles();
+        if (files == null) return;
+        for (File file : files) {
+            File configFile = new File(path);
+            FileManager.Config config = fileManager.getConfig(new File(configFile, file.getName()));
+            FileConfiguration configLoad = config.getFileConfiguration();
+            ConfigurationSection cs = configLoad.getConfigurationSection("Stackables");
+            if (cs == null || cs.getKeys(false) == null) continue;
+            for (String uuid : cs.getKeys(false)) {
+                ConfigurationSection section = configLoad.getConfigurationSection("Stackables." + uuid);
+                Location location = (Location)section.get("Location");
+                org.bukkit.Material material = org.bukkit.Material.valueOf(section.getString("Material"));
+                int size = section.getInt("Size");
+                if (size == 0) continue;
+                this.addStack(new Stackable(UUID.fromString(uuid), location, material, size));
+            }
         }
     }
 

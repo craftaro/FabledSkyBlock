@@ -1,19 +1,10 @@
 package me.goodandevil.skyblock;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
 
-import me.goodandevil.skyblock.command.commands.SkyBlockCommand;
-import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.stackable.Stackable;
-import me.goodandevil.skyblock.stackable.StackableManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -23,6 +14,7 @@ import me.goodandevil.skyblock.api.SkyBlockAPI;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.command.CommandManager;
+import me.goodandevil.skyblock.command.commands.SkyBlockCommand;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.confirmation.ConfirmationTask;
 import me.goodandevil.skyblock.cooldown.CooldownManager;
@@ -60,6 +52,7 @@ import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.playtime.PlaytimeTask;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.structure.StructureManager;
 import me.goodandevil.skyblock.upgrade.UpgradeManager;
 import me.goodandevil.skyblock.usercache.UserCacheManager;
@@ -136,6 +129,7 @@ public class SkyBlock extends JavaPlugin {
 		if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Stackable.Enable")) {
 			stackableManager = new StackableManager(this);
+			stackableManager.loadSavedStackables();
 		}
 
 		leaderboardManager = new LeaderboardManager(this);
@@ -178,8 +172,6 @@ public class SkyBlock extends JavaPlugin {
 		this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
 
 		SkyBlockAPI.setImplementation(instance);
-
-		Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::loadFromFile, 5L);
 	}
 
 	@Override
@@ -219,28 +211,6 @@ public class SkyBlock extends JavaPlugin {
 		}
 
 		HandlerList.unregisterAll(this);
-	}
-
-	private void loadFromFile() {
-		//Load Stackables
-		String path = getDataFolder().toString() + "/island-data";
-		File[] files = new File(path).listFiles();
-		if (files == null) return;
-		for (File file : files) {
-			File configFile = new File(path);
-			FileManager.Config config = fileManager.getConfig(new File(configFile, file.getName()));
-			FileConfiguration configLoad = config.getFileConfiguration();
-			ConfigurationSection cs = configLoad.getConfigurationSection("Stackables");
-			if (cs == null || cs.getKeys(false) == null) return;
-			for (String uuid : cs.getKeys(false)) {
-				ConfigurationSection section = configLoad.getConfigurationSection("Stackables." + uuid);
-				Location location = (Location)section.get("Location");
-				org.bukkit.Material material = org.bukkit.Material.valueOf(section.getString("Material"));
-				int size = section.getInt("Size");
-				if (size == 0) return;
-				stackableManager.addStack(new Stackable(UUID.fromString(uuid), location, material, size));
-			}
-		}
 	}
 
 	private String formatText(String string){
