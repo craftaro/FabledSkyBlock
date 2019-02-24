@@ -118,7 +118,7 @@ public class Block implements Listener {
                 block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(block.getType()));
             }
         }
-
+        
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -220,6 +220,7 @@ public class Block implements Listener {
     public void onBlockFromTo(BlockFromToEvent event) {
         if (!skyblock.getWorldManager().isIslandWorld(event.getBlock().getWorld())) return;
 
+        GeneratorManager generatorManager = skyblock.getGeneratorManager();
         IslandManager islandManager = skyblock.getIslandManager();
         WorldManager worldManager = skyblock.getWorldManager();
 
@@ -230,8 +231,43 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (island == null) return;
-
+        
         org.bukkit.block.Block block = event.getToBlock();
+        
+        if (NMSUtil.getVersionNumber() < 12) {
+            if (generatorManager != null && generatorManager.getGenerators().size() > 0 && generatorManager.isGenerator(block)) {
+                List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
+                Collections.reverse(generators); // Use the highest generator available
+                
+                // Filter players on the island
+                Set<Player> possiblePlayers = new HashSet<>();
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (LocationUtil.isLocationAtLocationRadius(p.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
+                        possiblePlayers.add(p);
+                    }
+                }
+                
+                // Find highest generator available
+                for (Generator generator : generators) {
+                    for (Player p : possiblePlayers) {
+                        if (generator.isPermission()) {
+                            if (!p.hasPermission(generator.getPermission())
+                                    && !p.hasPermission("fabledskyblock.generator.*")
+                                    && !p.hasPermission("fabledskyblock.*")) {
+                                continue;
+                            }
+                        }
+
+                        event.setCancelled(true);
+                        generatorManager.generateBlock(generator, block);
+                        return;
+                    }
+                }
+            }
+
+            return;
+        }
+
         if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
                 island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 1.0D)) {
             event.setCancelled(true);
