@@ -471,6 +471,7 @@ public class Entity implements Listener {
     public void onEntityExplode(EntityExplodeEvent event) {
         org.bukkit.entity.Entity entity = event.getEntity();
 
+        WorldManager worldManager = skyblock.getWorldManager();
         IslandManager islandManager = skyblock.getIslandManager();
 
         if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
@@ -500,6 +501,19 @@ public class Entity implements Listener {
                                         level.setMaterialAmount(materials.name(), materialAmount - 1);
                                     }
                                 }
+                            }
+                        }
+                    }
+                    
+                    if (SkyBlock.getInstance().getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+                        IslandWorld world = worldManager.getIslandWorld(event.getEntity().getWorld());
+                        for (org.bukkit.block.Block block : event.blockList()) {
+                            if (LocationUtil.isLocationLocation(block.getLocation(),
+                                    island.getLocation(world, IslandEnvironment.Main)
+                                            .clone()
+                                            .subtract(0.0D, 1.0D, 0.0D))) {
+                                event.blockList().remove(block);
+                                break;
                             }
                         }
                     }
