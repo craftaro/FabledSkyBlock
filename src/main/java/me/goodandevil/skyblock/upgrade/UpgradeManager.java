@@ -3,14 +3,21 @@ package me.goodandevil.skyblock.upgrade;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandManager;
 
 public class UpgradeManager {
 
@@ -55,6 +62,9 @@ public class UpgradeManager {
 
 			upgradeStorage.put(Upgrade.Type.Size, upgrades);
 		}
+		
+		// Task for applying the speed & jump boost upgrades if the player is on an island that has them
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(SkyBlock.getInstance(), this::applyUpgrades, 5L, 20L);
 	}
 
 	public List<Upgrade> getUpgrades(Upgrade.Type type) {
@@ -138,5 +148,49 @@ public class UpgradeManager {
 		}
 
 		return false;
+	}
+	
+	private void applyUpgrades() {
+        IslandManager islandManager = skyblock.getIslandManager();
+        UpgradeManager upgradeManager = skyblock.getUpgradeManager();
+	    
+	    for (Player player : Bukkit.getOnlinePlayers()) {
+	        Island island = islandManager.getIslandAtLocation(player.getLocation());
+	        if (island == null) continue;
+	        
+	        // Apply potion effect upgrades
+	        Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
+	        PotionEffect speed = null, jump = null;
+	        for (PotionEffect potionEffect : potionEffects) {
+	            if (potionEffect.getType().equals(PotionEffectType.SPEED)) {
+	                speed = potionEffect;
+	            } else if (potionEffect.getType().equals(PotionEffectType.JUMP)) {
+	                jump = potionEffect;
+	            }
+	            if (speed != null && jump != null) break;
+	        }
+	        
+	        // Speed
+	        List<Upgrade> speedUpgrades = upgradeManager.getUpgrades(Upgrade.Type.Speed);
+	        if (speedUpgrades != null && speedUpgrades.size() > 0 && speedUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Speed)) {
+	            if (speed == null) {
+	                speed = new PotionEffect(PotionEffectType.SPEED, 60, 1);
+	            } else if (speed.getAmplifier() == 1 && speed.getDuration() < 60) {
+                    speed = new PotionEffect(PotionEffectType.SPEED, speed.getDuration() + 21, 1);
+                }
+	            player.addPotionEffect(speed, true);
+	        }
+
+	        // Jump boost
+	        List<Upgrade> jumpUpgrades = upgradeManager.getUpgrades(Upgrade.Type.Jump);
+	        if (jumpUpgrades != null && jumpUpgrades.size() > 0 && jumpUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Jump)) {
+                if (jump == null) {
+                    jump = new PotionEffect(PotionEffectType.JUMP, 60, 1);
+                } else if (jump.getAmplifier() == 1 && jump.getDuration() < 60) {
+                    jump = new PotionEffect(PotionEffectType.JUMP, jump.getDuration() + 21, 1);
+                }
+                player.addPotionEffect(jump, true);
+	        }
+	    }
 	}
 }

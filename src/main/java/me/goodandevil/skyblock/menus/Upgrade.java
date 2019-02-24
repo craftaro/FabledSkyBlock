@@ -111,11 +111,6 @@ public class Upgrade {
 									} else {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed,
 												true);
-
-										for (Player all : islandManager.getPlayersAtIsland(island)) {
-											all.addPotionEffect(
-													new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
-										}
 									}
 
 									soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -143,11 +138,6 @@ public class Upgrade {
 											economyManager.withdraw(player, upgrade.getCost());
 											island.setUpgrade(player,
 													me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed, true);
-
-											for (Player all : islandManager.getPlayersAtIsland(island)) {
-												all.addPotionEffect(
-														new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
-											}
 
 											Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
 													new Runnable() {
@@ -186,11 +176,6 @@ public class Upgrade {
 									} else {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump,
 												true);
-
-										for (Player all : islandManager.getPlayersAtIsland(island)) {
-											all.addPotionEffect(
-													new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
-										}
 									}
 
 									soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -218,11 +203,6 @@ public class Upgrade {
 											economyManager.withdraw(player, upgrade.getCost());
 											island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump,
 													true);
-
-											for (Player all : islandManager.getPlayersAtIsland(island)) {
-												all.addPotionEffect(
-														new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
-											}
 
 											Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
 													new Runnable() {

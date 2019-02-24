@@ -1,8 +1,35 @@
 package me.goodandevil.skyblock.island;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.IllegalPluginAccessException;
+
 import com.google.common.base.Preconditions;
+
 import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.api.event.island.*;
+import me.goodandevil.skyblock.api.event.island.IslandCreateEvent;
+import me.goodandevil.skyblock.api.event.island.IslandDeleteEvent;
+import me.goodandevil.skyblock.api.event.island.IslandLoadEvent;
+import me.goodandevil.skyblock.api.event.island.IslandOwnershipTransferEvent;
+import me.goodandevil.skyblock.api.event.island.IslandUnloadEvent;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
@@ -30,23 +57,6 @@ import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
 import me.goodandevil.skyblock.visit.VisitManager;
 import me.goodandevil.skyblock.world.WorldManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.IllegalPluginAccessException;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 
 public class IslandManager {
 
@@ -1102,35 +1112,8 @@ public class IslandManager {
     public void giveUpgrades(Player player, Island island) {
         UpgradeManager upgradeManager = skyblock.getUpgradeManager();
 
-        List<Upgrade> upgrades = upgradeManager.getUpgrades(Upgrade.Type.Speed);
-
-        if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-                && island.isUpgrade(Upgrade.Type.Speed)) {
-            Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-                @Override
-                public void run() {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
-                }
-            });
-        }
-
-        upgrades = upgradeManager.getUpgrades(Upgrade.Type.Jump);
-
-        if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-                && island.isUpgrade(Upgrade.Type.Jump)) {
-            Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-
-                @Override
-                public void run() {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1));
-                }
-            });
-        }
-
-        upgrades = upgradeManager.getUpgrades(Upgrade.Type.Fly);
-
-        if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-                && island.isUpgrade(Upgrade.Type.Fly)) {
+        List<Upgrade> flyUpgrades = upgradeManager.getUpgrades(Upgrade.Type.Fly);
+        if (flyUpgrades != null && flyUpgrades.size() > 0 && flyUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Fly)) {
             Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
                 @Override
                 public void run() {
@@ -1180,9 +1163,6 @@ public class IslandManager {
                 }
             }
         }
-
-        player.removePotionEffect(PotionEffectType.SPEED);
-        player.removePotionEffect(PotionEffectType.JUMP);
 
         if (player.getGameMode() != GameMode.CREATIVE) {
             player.setFlying(false);

@@ -401,8 +401,8 @@ public class Block implements Listener {
         if (type != Material.COBBLESTONE && type != Material.STONE)
         	return;
 
-        if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
-            Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+        Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+        if (generatorManager != null && generatorManager.getGenerators().size() > 0 && island != null) {
             IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
             
             List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
