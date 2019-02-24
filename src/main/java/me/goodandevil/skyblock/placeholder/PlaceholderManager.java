@@ -261,6 +261,15 @@ public class PlaceholderManager {
 						configLoad.getString("Placeholder.fabledskyblock_island_invites.Non-empty.Message")
 								.replace("%placeholder", "" + invitedPlayers));
 			}
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_bank_balance")) {
+		    if (island == null) {
+		        return ChatColor.translateAlternateColorCodes('&',
+                        configLoad.getString("Placeholder.fabledskyblock_island_bank_balance.Empty.Message"));
+		    } else {
+		        return ChatColor.translateAlternateColorCodes('&',
+                        configLoad.getString("Placeholder.fabledskyblock_island_bank_balance.Non-empty.Message"))
+		                .replace("%placeholder", "" + island.getBankBalance());
+		    }
 		}
 
 		return "";

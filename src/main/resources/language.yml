@@ -1200,6 +1200,11 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+    fabledskyblock_island_bank_balance:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
 Hologram:
     Leaderboard:
         Level:
