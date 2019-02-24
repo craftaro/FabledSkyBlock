@@ -30,13 +30,17 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -311,7 +315,49 @@ public class Entity implements Listener {
             }
         }
     }
+    
+    @EventHandler
+    public void onHangingInteract(PlayerInteractEntityEvent event) {
+        if (!(event.getRightClicked() instanceof Hanging)) {
+            return;
+        }
+        
+        Player player = event.getPlayer();
+        Hanging hanging = (Hanging) event.getRightClicked();
+        
+        if (skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) {
+            if (!skyblock.getIslandManager().hasPermission(player, hanging.getLocation(), "HangingDestroy")) {
+                event.setCancelled(true);
 
+                skyblock.getMessageManager().sendMessage(player,
+                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.Settings.Permission.Message"));
+                skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+            }
+        }
+    }
+    
+    @EventHandler
+    public void onHangingRemoveItem(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player && event.getEntity() instanceof Hanging)) {
+            return;
+        }
+        
+        Player player = (Player) event.getDamager();
+        Hanging hanging = (Hanging) event.getEntity();
+        
+        if (skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) {
+            if (!skyblock.getIslandManager().hasPermission(player, hanging.getLocation(), "HangingDestroy")) {
+                event.setCancelled(true);
+
+                skyblock.getMessageManager().sendMessage(player,
+                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.Settings.Permission.Message"));
+                skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+            }
+        }
+    }
+    
     @EventHandler
     public void onEntityTaming(EntityTameEvent event) {
         if (!(event.getOwner() instanceof Player)) {
