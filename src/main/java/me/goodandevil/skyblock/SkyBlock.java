@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.goodandevil.skyblock.api.SkyBlockAPI;
 import me.goodandevil.skyblock.ban.BanManager;
@@ -129,7 +130,11 @@ public class SkyBlock extends JavaPlugin {
 		if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Stackable.Enable")) {
 			stackableManager = new StackableManager(this);
-			stackableManager.loadSavedStackables();
+			new BukkitRunnable() {
+			    public void run() {
+			        stackableManager.loadSavedStackables();
+			    }
+			}.runTaskLater(this, 5L);
 		}
 
 		leaderboardManager = new LeaderboardManager(this);
