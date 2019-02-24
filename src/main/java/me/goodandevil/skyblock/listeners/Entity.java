@@ -345,7 +345,7 @@ public class Entity implements Listener {
 
         Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
 
-        if (!skyblock.getWorldManager().isIslandWorld(entity.getWorld())) return;
+        if (island == null || !skyblock.getWorldManager().isIslandWorld(entity.getWorld())) return;
 
         if (event.isCancelled()) return;
 
