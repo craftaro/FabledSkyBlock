@@ -1,6 +1,7 @@
 package me.goodandevil.skyblock.menus;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -10,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,8 +35,6 @@ import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.item.MaterialUtil;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
-import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
-import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
@@ -192,7 +192,31 @@ public class Levelling {
 			Island island = islandManager.getIsland(player);
 			IslandLevel level = island.getLevel();
 
-			Map<String, Integer> islandMaterials = level.getMaterials();
+			Map<String, Integer> testIslandMaterials = level.getMaterials();
+			Map<String, Integer> islandMaterials = new HashMap<>();
+			
+			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+			
+			// Filter out ItemStacks that can't be displayed in the inventory
+			Inventory testInventory = Bukkit.createInventory(null, 9);
+			for (String materialName : testIslandMaterials.keySet()) {
+			    if (mainConfig.getFileConfiguration().getString("Materials." + materialName + ".Points") == null)
+			        continue;
+                if (mainConfig.getFileConfiguration().getInt("Materials." + materialName + ".Points") <= 0)
+                    continue;
+			    
+			    Materials materials = Materials.fromString(materialName);
+                ItemStack is = materials.parseItem();
+                is.setAmount(testIslandMaterials.get(materialName));
+                is.setType(MaterialUtil.correctMaterial(is.getType()));
+                
+                if (is == null || is.getItemMeta() == null) continue;
+                testInventory.clear();
+                testInventory.setItem(0, is);
+                if (testInventory.getItem(0) != null) {
+                    islandMaterials.put(materialName, testIslandMaterials.get(materialName));
+                }
+			}
 
 			int playerMenuPage = playerData.getPage(), nextEndIndex = islandMaterials.size() - playerMenuPage * 36;
 
@@ -237,8 +261,6 @@ public class Levelling {
 				int index = playerMenuPage * 36 - 36,
 						endIndex = index >= islandMaterials.size() ? islandMaterials.size() - 1 : index + 36,
 						inventorySlot = 17;
-
-				Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
 
 				for (; index < endIndex; index++) {
 					if (islandMaterials.size() > index) {
