@@ -50,11 +50,11 @@ public class nInventoryUtil {
 					}
 
 					if (inv != null && event.getInventory().equals(inv)) {
+					    event.setCancelled(true);
+					    
 						if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
 							return;
 						}
-
-						event.setCancelled(true);
 
 						ClickEvent clickEvent = new ClickEvent(event.getClick(), event.getSlot(),
 								event.getCurrentItem());
