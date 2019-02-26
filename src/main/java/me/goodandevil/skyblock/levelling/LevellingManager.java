@@ -200,6 +200,7 @@ public class LevellingManager {
             for (String materialKey : configLoad.getConfigurationSection("Materials").getKeys(false)) {
                 try {
                     Materials material = Materials.fromString(materialKey);
+                    if (!material.isAvailable()) continue;
                     
                     if (!containsMaterial(material)) {
                         addMaterial(material, configLoad.getInt("Materials." + materialKey + ".Points"));
