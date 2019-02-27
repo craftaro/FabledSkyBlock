@@ -31,9 +31,8 @@ import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
-import me.goodandevil.skyblock.utils.version.Biomes;
 import me.goodandevil.skyblock.utils.version.Materials;
-import me.goodandevil.skyblock.utils.version.NMSUtil;
+import me.goodandevil.skyblock.utils.version.SBiome;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class Biome {
@@ -102,6 +101,10 @@ public class Biome {
 
 						event.setWillClose(false);
 						event.setWillDestroy(false);
+					} else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                                    configLoad.getString("Menu.Biome.Item.Exit.Displayname"))))) {
+                        soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						if (is.getItemMeta().hasEnchant(Enchantment.THORNS)) {
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -110,8 +113,7 @@ public class Biome {
 							event.setWillDestroy(false);
 						} else {
 							if (cooldownManager.hasPlayer(CooldownType.Biome, player) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
-								CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome,
-										player);
+								CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome, player);
 								Cooldown cooldown = cooldownPlayer.getCooldown();
 
 								if (cooldown.getTime() < 60) {
@@ -139,27 +141,13 @@ public class Biome {
 
 								return;
 							}
-							org.bukkit.block.Biome selectedBiomeType = null;
-
-							if (is.getType() == Materials.SUNFLOWER.parseMaterial()) {
-								selectedBiomeType = org.bukkit.block.Biome.PLAINS;
-							} else if (is.getType() == Materials.FERN.parseMaterial()) {
-								selectedBiomeType = org.bukkit.block.Biome.FOREST;
-							} else if (is.getType() == Materials.LILY_PAD.parseMaterial()) {
-								selectedBiomeType = Biomes.SWAMPLAMD.bukkitBiome();
-							} else if (is.getType() == Material.DEAD_BUSH) {
-								selectedBiomeType = org.bukkit.block.Biome.DESERT;
-							} else if (is.getType() == Materials.SNOWBALL.parseMaterial()) {
-								selectedBiomeType = Biomes.COLD_BEACH.bukkitBiome();
-							} else if (is.getType() == Material.VINE) {
-								selectedBiomeType = org.bukkit.block.Biome.JUNGLE;
-							} else if (is.getType() == Materials.DARK_OAK_SAPLING.parseMaterial()) {
-								selectedBiomeType = Biomes.ROOFED_FOREST.bukkitBiome();
-							}
+							
+							@SuppressWarnings("deprecation")
+							SBiome selectedBiomeType = SBiome.getFromGuiIcon(is.getType(), is.getData().getData());
 
 							cooldownManager.createPlayer(CooldownType.Biome, player);
-							biomeManager.setBiome(island, selectedBiomeType);
-							island.setBiome(selectedBiomeType);
+							biomeManager.setBiome(island, selectedBiomeType.getBiome());
+							island.setBiome(selectedBiomeType.getBiome());
 							island.save();
 
 							soundManager.playSound(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island),
@@ -181,179 +169,52 @@ public class Biome {
 			});
 
 			Island island = islandManager.getIsland(player);
+			org.bukkit.block.Biome islandBiome = island.getBiome();
 			String islandBiomeName = island.getBiomeName();
 
-			int NMSVersion = NMSUtil.getVersionNumber();
-
-			nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG, 1),
+			nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG),
 					ChatColor.translateAlternateColorCodes('&',
 							configLoad.getString("Menu.Biome.Item.Info.Displayname")),
 					configLoad.getStringList("Menu.Biome.Item.Info.Lore"),
-					new Placeholder[] { new Placeholder("%biome_type", islandBiomeName) }, null, null), 0);
-			nInv.addItem(
-					nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+					new Placeholder[] { new Placeholder("%biome_type", islandBiomeName) }, null, null), 4);
+			
+			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+                            configLoad.getString("Menu.Biome.Item.Exit.Displayname"), null, null, null, null),
+                    0, 8);
+			
+			nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Biome.Item.Barrier.Displayname")),
 							null, null, null, null),
-					1);
+					9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-			if (islandBiomeName.equals("Plains")) {
-				nInv.addItem(
-						nInv.createItem(Materials.SUNFLOWER.parseItem(),
-								ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Biome.Item.Biome.Current.Displayname")
-												.replace("%biome_type", islandBiomeName)),
-								configLoad.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
-								new Enchantment[] { Enchantment.THORNS }, new ItemFlag[] { ItemFlag.HIDE_ENCHANTS }),
-						2);
-			} else {
-				nInv.addItem(nInv.createItem(Materials.SUNFLOWER.parseItem(),
-						ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname").replace("%biome_type",
-										"Plains")),
-						configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null), 2);
-			}
-
-			if (islandBiomeName.equals("Forest")) {
-				nInv.addItem(
-						nInv.createItem(Materials.FERN.parseItem(),
-								ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Biome.Item.Biome.Current.Displayname")
-												.replace("%biome_type", islandBiomeName)),
-								configLoad.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
-								new Enchantment[] { Enchantment.THORNS }, new ItemFlag[] { ItemFlag.HIDE_ENCHANTS }),
-						3);
-			} else {
-				nInv.addItem(nInv.createItem(Materials.FERN.parseItem(),
-						ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname").replace("%biome_type",
-										"Forest")),
-						configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null), 3);
-			}
-
-			if (islandBiomeName.equals("Swampland") || islandBiomeName.equals("Swamp")) {
-				nInv.addItem(
-						nInv.createItem(Materials.LILY_PAD.parseItem(),
-								ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Biome.Item.Biome.Current.Displayname")
-												.replace("%biome_type", islandBiomeName)),
-								configLoad.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
-								new Enchantment[] { Enchantment.THORNS }, new ItemFlag[] { ItemFlag.HIDE_ENCHANTS }),
-						4);
-			} else {
-				if (NMSVersion < 13) {
-					nInv.addItem(
-							nInv.createItem(Materials.LILY_PAD.parseItem(),
-									ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname")
-													.replace("%biome_type", "Swampland")),
-									configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null),
-							4);
-				} else {
-					nInv.addItem(
-							nInv.createItem(Materials.LILY_PAD.parseItem(),
-									ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname")
-													.replace("%biome_type", "Swamp")),
-									configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null),
-							4);
-				}
-			}
-
-			if (islandBiomeName.equals("Desert")) {
-				nInv.addItem(
-						nInv.createItem(new ItemStack(Material.DEAD_BUSH, 1),
-								ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Biome.Item.Biome.Current.Displayname")
-												.replace("%biome_type", islandBiomeName)),
-								configLoad.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
-								new Enchantment[] { Enchantment.THORNS }, new ItemFlag[] { ItemFlag.HIDE_ENCHANTS }),
-						5);
-			} else {
-				nInv.addItem(nInv.createItem(new ItemStack(Material.DEAD_BUSH, 1),
-						ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname").replace("%biome_type",
-										"Desert")),
-						configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null), 5);
-			}
-
-			if (islandBiomeName.equals("Cold Beach") || islandBiomeName.equals("Snowy Beach")) {
-				nInv.addItem(
-						nInv.createItem(Materials.SNOWBALL.parseItem(),
-								ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Biome.Item.Biome.Current.Displayname")
-												.replace("%biome_type", islandBiomeName)),
-								configLoad.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
-								new Enchantment[] { Enchantment.THORNS }, new ItemFlag[] { ItemFlag.HIDE_ENCHANTS }),
-						6);
-			} else {
-				if (NMSVersion < 13) {
-					nInv.addItem(
-							nInv.createItem(Materials.SNOWBALL.parseItem(),
-									ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname")
-													.replace("%biome_type", "Cold Beach")),
-									configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null),
-							6);
-				} else {
-					nInv.addItem(
-							nInv.createItem(Materials.SNOWBALL.parseItem(),
-									ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname")
-													.replace("%biome_type", "Snowy Beach")),
-									configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null),
-							6);
-				}
-			}
-
-			if (islandBiomeName.equals("Jungle")) {
-				nInv.addItem(
-						nInv.createItem(new ItemStack(Material.VINE, 1),
-								ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Biome.Item.Biome.Current.Displayname")
-												.replace("%biome_type", islandBiomeName)),
-								configLoad.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
-								new Enchantment[] { Enchantment.THORNS }, new ItemFlag[] { ItemFlag.HIDE_ENCHANTS }),
-						7);
-			} else {
-				nInv.addItem(nInv.createItem(new ItemStack(Material.VINE, 1),
-						ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname").replace("%biome_type",
-										"Jungle")),
-						configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null), 7);
-			}
-
-			if (islandBiomeName.equals("Roofed Forest") || islandBiomeName.equals("Dark Forest")) {
-				nInv.addItem(
-						nInv.createItem(Materials.DARK_OAK_SAPLING.parseItem(),
-								ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Biome.Item.Biome.Current.Displayname")
-												.replace("%biome_type", islandBiomeName)),
-								configLoad.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
-								new Enchantment[] { Enchantment.THORNS }, new ItemFlag[] { ItemFlag.HIDE_ENCHANTS }),
-						8);
-			} else {
-				if (NMSVersion < 13) {
-					nInv.addItem(
-							nInv.createItem(Materials.DARK_OAK_SAPLING.parseItem(),
-									ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname")
-													.replace("%biome_type", "Roofed Forest")),
-									configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null),
-							8);
-				} else {
-					nInv.addItem(
-							nInv.createItem(Materials.DARK_OAK_SAPLING.parseItem(),
-									ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname")
-													.replace("%biome_type", "Dark Forest")),
-									configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null),
-							8);
-				}
+			int slotIndex = 18;
+			for (SBiome biome : SBiome.values()) {
+			    if (!biome.isAvailable()) 
+			        continue;
+			    
+			    if (islandBiome.equals(biome.getBiome())) {
+			        nInv.addItem(nInv.createItem(biome.getGuiIcon(),
+                            ChatColor.translateAlternateColorCodes('&',
+                                    configLoad.getString("Menu.Biome.Item.Biome.Current.Displayname")
+                                        .replace("%biome_type", biome.getFormattedBiomeName())),
+                            configLoad.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
+                            new Enchantment[] { Enchantment.THORNS }, new ItemFlag[] { ItemFlag.HIDE_ENCHANTS }), 
+			            slotIndex);
+			    } else {
+			        nInv.addItem(nInv.createItem(biome.getGuiIcon(),
+	                        ChatColor.translateAlternateColorCodes('&',
+	                                configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname")
+	                                    .replace("%biome_type", biome.getFormattedBiomeName())),
+	                        configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null), 
+			            slotIndex);
+			    }
+			    
+			    slotIndex++;
 			}
 
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Biome.Title")));
-			nInv.setRows(1);
+			nInv.setRows(4);
 
 			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
 				@Override

@@ -3,11 +3,15 @@ package me.goodandevil.skyblock.island;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
-import me.goodandevil.skyblock.message.MessageManager;
-import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.version.Sounds;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -30,12 +34,13 @@ import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.ban.Ban;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
+import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
-import me.goodandevil.skyblock.utils.StringUtil;
+import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.visit.Visit;
-import org.bukkit.util.Vector;
 
 public class Island {
 
@@ -353,8 +358,7 @@ public class Island {
 	}
 
 	public String getBiomeName() {
-		return StringUtil
-				.capatilizeUppercaseLetters(WordUtils.capitalize(getBiome().name().toLowerCase()).replace("_", " "));
+		return WordUtils.capitalizeFully(getBiome().name().replace("_", " "));
 	}
 
 	public void setBiome(Biome biome) {

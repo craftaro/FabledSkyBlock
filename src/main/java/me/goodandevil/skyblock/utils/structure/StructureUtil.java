@@ -148,7 +148,8 @@ public final class StructureUtil {
 						blockLocation.add(blockRotationLocation);
 						BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);
 					} catch (Exception e) {
-						e.printStackTrace();
+					    SkyBlock.getInstance().getLogger().warning("Unable to convert BlockData to Block for type {" + blockDataList.getMaterial() + 
+					            ":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile() + "}");
 					}
 				}
 			});
@@ -171,7 +172,8 @@ public final class StructureUtil {
 						blockLocation.add(blockRotationLocation);
 						EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
 					} catch (Exception e) {
-						e.printStackTrace();
+					    SkyBlock.getInstance().getLogger().warning("Unable to convert EntityData to Entity for type {" + entityDataList.getEntityType() + 
+					            "} in structure {" + structure.getStructureFile() + "}");
 					}
 				}
 			});

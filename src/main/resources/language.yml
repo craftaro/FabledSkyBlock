@@ -1706,12 +1706,14 @@ Menu:
     Biome:
         Title: "&8Select a Biome"
         Item:
+            Exit:
+                Displayname: "&cExit Biome Selection"
             Info:
                 Displayname: "&bCurrent Biome"
                 Lore:
                 - "&7Type&8: &e%biome_type"
             Barrier:
-                Displayname: "&cSelect a Biome >"
+                Displayname: "&cSelect a Biome"
             Biome:
                 Current:
                     Displayname: "&a&mBiome: &e&m%biome_type"

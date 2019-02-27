@@ -109,7 +109,7 @@ public class Levelling {
 						Island island = islandManager.getIsland(player);
 						OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
 
-						if (cooldownManager.hasPlayer(CooldownType.Levelling, offlinePlayer)) {
+						if (cooldownManager.hasPlayer(CooldownType.Levelling, offlinePlayer) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
 							CooldownPlayer cooldownPlayer = cooldownManager
 									.getCooldownPlayer(CooldownType.Levelling, offlinePlayer);
 							Cooldown cooldown = cooldownPlayer.getCooldown();
