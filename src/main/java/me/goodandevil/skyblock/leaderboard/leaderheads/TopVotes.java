@@ -22,7 +22,7 @@ public class TopVotes extends DataCollector {
 	private final SkyBlock skyblock;
 
 	public TopVotes(SkyBlock skyblock) {
-		super("topvotes", "SkyBlock", BoardType.DEFAULT, "&bTop Votes", "topvotes",
+		super("topvotes", skyblock.getDescription().getName(), BoardType.DEFAULT, "&bTop Votes", "topvotes",
 				Arrays.asList(ChatColor.DARK_GRAY + "-=+=-", ChatColor.AQUA + "{name}",
 						ChatColor.WHITE + "{amount} Votes", ChatColor.DARK_GRAY + "-=+=-"),
 				true, UUID.class);

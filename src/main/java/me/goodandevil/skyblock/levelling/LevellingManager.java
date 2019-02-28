@@ -127,7 +127,7 @@ public class LevellingManager {
 
                                         if (blockMaterial != materialList.getItemStack().getType()) continue;
                                         if (NMSVersion < 13) {
-                                            if (!(blockData == is.getDurability())) {
+                                            if (blockData != is.getData().getData()) {
                                                 continue;
                                             }
                                         }
