@@ -915,6 +915,11 @@ Island:
             Message: "&bSkyBlock &8| &aInfo&8: &eYou have bought the upgrade '&7%upgrade&e'."
         Claimed:
             Message: "&bSkyBlock &8| &cError&8: &eYou have already claimed that upgrade."
+    SpawnProtection:
+        Break:
+            Message: "&bSkyBlock &8| &cError&8: &eYou cannot break the spawn point of the island."
+        Place: 
+            Message: "&bSkyBlock &8| &cError&8: &eYou cannot obstruct the spawn point of the island."
     Biome:
         Cooldown:
             Word:

@@ -128,6 +128,10 @@ public class Block implements Listener {
                         .subtract(0.0D, 1.0D, 0.0D))) {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
+                skyblock.getMessageManager().sendMessage(player,
+                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.SpawnProtection.Break.Message"));
+                skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
             }
         }
 
@@ -196,6 +200,10 @@ public class Block implements Listener {
                 island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
+                skyblock.getMessageManager().sendMessage(player,
+                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
+                skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
             }
         }
 
