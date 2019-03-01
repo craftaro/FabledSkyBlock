@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -86,7 +87,24 @@ public class Block implements Listener {
                 && stackableManager.isStacked(block.getLocation())) {
             Stackable stackable = stackableManager.getStack(block.getLocation(), block.getType());
             if (stackable != null) {
-                stackable.takeOne();
+                int droppedAmount = 0;
+                if (event.getPlayer().isSneaking()) {
+                    Location dropLoc = event.getBlock().getLocation().clone().add(0.5, 0.5, 0.5);
+                    int count = stackable.getSize();
+                    droppedAmount = count;
+                    while (count > 64) {
+                        dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(event.getBlock().getType(), 64));
+                        count -= 64;
+                    }
+                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(event.getBlock().getType(), count));
+                    block.setType(Material.AIR);
+                    stackable.setSize(0);
+                } else {
+                    block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(block.getType()));
+                    stackable.takeOne();
+                    droppedAmount = 1;
+                }
+                
                 if (stackable.getSize() <= 1) {
                     stackableManager.removeStack(stackable);
                 }
@@ -105,17 +123,16 @@ public class Block implements Listener {
 
                             int materialAmount = level.getMaterialAmount(materials.name());
 
-                            if (materialAmount - 1 <= 0) {
+                            if (materialAmount - droppedAmount <= 0) {
                                 level.removeMaterial(materials.name());
                             } else {
-                                level.setMaterialAmount(materials.name(), materialAmount - 1);
+                                level.setMaterialAmount(materials.name(), materialAmount - droppedAmount);
                             }
                         }
                     }
                 }
 
                 event.setCancelled(true);
-                block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(block.getType()));
             }
         }
         
