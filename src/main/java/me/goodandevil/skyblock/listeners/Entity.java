@@ -436,7 +436,6 @@ public class Entity implements Listener {
                         if (fallingBlock.getMaterial().name().endsWith("ANVIL")) {
                             data = (byte) Math.ceil(data / 4);
                         }
-                        Bukkit.broadcastMessage(((byte)getBlockDataMethod.invoke(fallingBlock)) + "");
                         fallingBlock.getWorld().dropItemNaturally(fallingBlock.getLocation(), new ItemStack(fallingBlock.getMaterial(), 1, (byte) data));
                     } catch (Exception ignored) { }
                 }
