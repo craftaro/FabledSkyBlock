@@ -1530,7 +1530,7 @@ Menu:
                 Claimable:
                     Lore:
                     - "&7Increases loot drops two times"
-                    - "&7the speed at your Island."
+                    - "&7the amount at your Island."
                     - ""
                     - "&7Drops&8: &f2x"
                     - "&7Cost&8: &f$%cost"
@@ -1541,7 +1541,7 @@ Menu:
                 Unclaimable:
                     Lore:
                     - "&7Increases loot drops two times"
-                    - "&7the speed at your Island."
+                    - "&7the amount at your Island."
                     - ""
                     - "&7Drops&8: &f2x"
                     - "&7Cost&8: &f$%cost"
@@ -1552,7 +1552,7 @@ Menu:
                 Claimed:
                     Lore:
                     - "&7Increases loot drops two times"
-                    - "&7the speed at your Island."
+                    - "&7the amount at your Island."
                     - ""
                     - "&7Drops&8: &f2x"
                     - "&7Cost&8: &f$%cost"

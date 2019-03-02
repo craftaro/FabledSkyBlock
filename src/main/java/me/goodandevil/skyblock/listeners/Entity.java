@@ -2,20 +2,24 @@ package me.goodandevil.skyblock.listeners;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Donkey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Hanging;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -395,6 +399,7 @@ public class Entity implements Listener {
     }
 
     @EventHandler
+    @SuppressWarnings("deprecation")
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         org.bukkit.entity.Entity entity = event.getEntity();
 
@@ -420,7 +425,22 @@ public class Entity implements Listener {
                     island.getLocation(world, IslandEnvironment.Main)
                             .clone())
                 && configLoad.getBoolean("Island.Spawn.Protection")) {
-            event.getEntity().remove();
+            FallingBlock fallingBlock = (FallingBlock) event.getEntity();
+            if (fallingBlock.getDropItem()) {
+                if (NMSUtil.getVersionNumber() > 12) {
+                    fallingBlock.getWorld().dropItemNaturally(fallingBlock.getLocation(), new ItemStack(fallingBlock.getBlockData().getMaterial(), 1));
+                } else {
+                    try {
+                        Method getBlockDataMethod = FallingBlock.class.getMethod("getBlockData");
+                        byte data = (byte) getBlockDataMethod.invoke(fallingBlock);
+                        if (fallingBlock.getMaterial().name().endsWith("ANVIL")) {
+                            data = (byte) Math.ceil(data / 4);
+                        }
+                        Bukkit.broadcastMessage(((byte)getBlockDataMethod.invoke(fallingBlock)) + "");
+                        fallingBlock.getWorld().dropItemNaturally(fallingBlock.getLocation(), new ItemStack(fallingBlock.getMaterial(), 1, (byte) data));
+                    } catch (Exception ignored) { }
+                }
+            }
             event.setCancelled(true);
         }
 
@@ -435,7 +455,6 @@ public class Entity implements Listener {
                 .getFileConfiguration().getBoolean("Island.Block.Level.Enable")) return;
         org.bukkit.block.Block block = event.getBlock();
 
-        @SuppressWarnings("deprecation")
         Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
         if (materials != null) {
@@ -538,12 +557,16 @@ public class Entity implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDeath(EntityDeathEvent event) {
-        if (event.getEntity() instanceof Player) {
-            return;
-        }
-
         LivingEntity livingEntity = event.getEntity();
 
+        // Certain entities shouldn't drop twice the amount
+        if (livingEntity instanceof Player || 
+            livingEntity instanceof ArmorStand || 
+            livingEntity instanceof Horse || 
+            livingEntity instanceof Donkey) {
+            return;
+        }
+        
         if (livingEntity.hasMetadata("SkyBlock")) {
             return;
         }
