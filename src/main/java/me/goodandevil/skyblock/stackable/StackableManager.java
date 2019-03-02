@@ -96,7 +96,6 @@ public class StackableManager {
 
     public void removeStack(Stackable stackable) {
         stackable.setSize(0);
-        stackable.removeDisplay();
         stacks.remove(stackable.getLocation());
     }
 }

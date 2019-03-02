@@ -55,6 +55,7 @@ public class Block implements Listener {
         this.skyblock = skyblock;
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
@@ -87,20 +88,23 @@ public class Block implements Listener {
                 && stackableManager.isStacked(block.getLocation())) {
             Stackable stackable = stackableManager.getStack(block.getLocation(), block.getType());
             if (stackable != null) {
+                Material material = block.getType();
+                byte data = block.getData();
+                
                 int droppedAmount = 0;
                 if (event.getPlayer().isSneaking()) {
                     Location dropLoc = event.getBlock().getLocation().clone().add(0.5, 0.5, 0.5);
                     int count = stackable.getSize();
                     droppedAmount = count;
                     while (count > 64) {
-                        dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(event.getBlock().getType(), 64));
+                        dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material, 64, data));
                         count -= 64;
                     }
-                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(event.getBlock().getType(), count));
+                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material, count, block.getData()));
                     block.setType(Material.AIR);
                     stackable.setSize(0);
                 } else {
-                    block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(block.getType()));
+                    block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(material, 1, data));
                     stackable.takeOne();
                     droppedAmount = 1;
                 }
@@ -113,14 +117,11 @@ public class Block implements Listener {
                 FileConfiguration configLoad = config.getFileConfiguration();
 
                 if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-                    Materials materials = Materials.getMaterials(block.getType(), block.getData());
-
+                    Materials materials = Materials.getMaterials(material, data);
                     if (materials != null) {
-
                         IslandLevel level = island.getLevel();
 
                         if (level.hasMaterial(materials.name())) {
-
                             int materialAmount = level.getMaterialAmount(materials.name());
 
                             if (materialAmount - droppedAmount <= 0) {
@@ -154,7 +155,6 @@ public class Block implements Listener {
 
         if (event.isCancelled() || !configLoad.getBoolean("Island.Block.Level.Enable")) return;
 
-        @SuppressWarnings("deprecation")
         Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
         if (materials == null) return;

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,14 +26,15 @@ public class Stackable {
     private Location location;
     private Material material;
     private Integer size = 2;
+    private ArmorStand display;
 
     public Stackable(Location location, Material material) {
         this.uuid = UUID.randomUUID();
         this.location = location;
         this.material = material;
-        updateDisplay();
+        this.updateDisplay();
         SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-        save();
+        this.save();
     }
 
     public Stackable(UUID uuid, Location location, Material material, int size) {
@@ -40,7 +42,7 @@ public class Stackable {
         this.location = location;
         this.material = material;
         this.size = size;
-        updateDisplay();
+        this.updateDisplay();
     }
 
     public UUID getUuid() {
@@ -61,7 +63,7 @@ public class Stackable {
 
     public void setMaterial(Material material) {
         this.material = material;
-        save();
+        this.save();
     }
 
     public Integer getSize() {
@@ -70,29 +72,43 @@ public class Stackable {
 
     public void setSize(Integer size) {
         this.size = size;
-        updateDisplay();
-        save();
+        this.updateDisplay();
+        this.save();
     }
 
     public void addOne() {
         this.size ++;
-        updateDisplay();
+        this.updateDisplay();
         SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
-        save();
+        this.save();
     }
 
     public void takeOne() {
         this.size --;
-        updateDisplay();
+        this.updateDisplay();
         SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
-        save();
+        this.save();
     }
 
     private void updateDisplay() {
-        removeDisplay();
-        Location dropLocation = location.clone().add(.5,1,.5);
-
-        ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(dropLocation, EntityType.ARMOR_STAND);
+        if (this.size > 1) {
+            if (this.display != null) {
+                this.display.setCustomName(WordUtils.capitalize(material.name().toLowerCase()).replace("_", " ") + "s: " + size);
+            } else {
+                if (!this.findExistingDisplay()) {
+                    this.createDisplay();
+                }
+                this.updateDisplay();
+            }
+        } else {
+            this.removeDisplay();
+        }
+    }
+    
+    private void createDisplay() {
+        Location initialLocation = location.clone().add(0.5, -1, 0.5);
+        Location dropLocation = location.clone().add(0.5, 1, 0.5);
+        ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(initialLocation, EntityType.ARMOR_STAND);
         as.setVisible(false);
         as.setGravity(false);
         as.setSmall(true);
@@ -103,13 +119,25 @@ public class Stackable {
         as.setHelmet(new ItemStack(material));
         as.setCustomName(WordUtils.capitalize(material.name().toLowerCase()).replace("_", " ") + "s: " + size);
         as.setCustomNameVisible(true);
-
+        this.display = as;
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
+            this.display.teleport(dropLocation);
+        });
+    }
+    
+    private boolean findExistingDisplay() {
+        for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.1, 0.5, 0.1)) {
+            if (entity instanceof ArmorStand) {
+                this.display = (ArmorStand) entity;
+                return true;
+            }
+        }
+        return false;
     }
 
-    void removeDisplay() {
-        for (Entity entity : location.getWorld().getNearbyEntities(getLocation().add(.5,.55,.5), .1,.5,.1)) {
-            if (entity.getType() != EntityType.ARMOR_STAND) continue;
-            entity.remove();
+    private void removeDisplay() {
+        if (this.display != null) {
+            this.display.remove();
         }
     }
 
