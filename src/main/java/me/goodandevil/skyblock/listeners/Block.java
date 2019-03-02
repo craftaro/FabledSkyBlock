@@ -264,10 +264,11 @@ public class Block implements Listener {
                 List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
                 Collections.reverse(generators); // Use the highest generator available
                 
-                // Filter players on the island
+                // Filter valid players on the island
                 Set<Player> possiblePlayers = new HashSet<>();
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (LocationUtil.isLocationAtLocationRadius(p.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
+                    boolean isMember = island.hasRole(IslandRole.Owner, p.getUniqueId()) || island.hasRole(IslandRole.Member, p.getUniqueId()) || island.hasRole(IslandRole.Coop, p.getUniqueId());
+                    if (isMember && LocationUtil.isLocationAtLocationRadius(p.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
                         possiblePlayers.add(p);
                     }
                 }
@@ -435,13 +436,14 @@ public class Block implements Listener {
             List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
             Collections.reverse(generators); // Use the highest generator available
             
-            // Filter players on the island
+            // Filter valid players on the island
             Set<Player> possiblePlayers = new HashSet<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
+                boolean isMember = island.hasRole(IslandRole.Owner, player.getUniqueId()) || island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Coop, player.getUniqueId());
+                if (isMember && LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
                     possiblePlayers.add(player);
                 }
-            }     
+            }
             
             // Find highest generator available
             for (Generator generator : generators) {
