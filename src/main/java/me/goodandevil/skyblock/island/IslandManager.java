@@ -1113,7 +1113,7 @@ public class IslandManager {
         UpgradeManager upgradeManager = skyblock.getUpgradeManager();
 
         List<Upgrade> flyUpgrades = upgradeManager.getUpgrades(Upgrade.Type.Fly);
-        if (flyUpgrades != null && flyUpgrades.size() > 0 && flyUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Fly)) {
+        if (flyUpgrades != null && flyUpgrades.size() > 0 && flyUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Fly) && player.getGameMode() != GameMode.CREATIVE) {
             Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
                 @Override
                 public void run() {

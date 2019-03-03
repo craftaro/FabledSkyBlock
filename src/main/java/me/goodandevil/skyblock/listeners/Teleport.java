@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -53,14 +54,7 @@ public class Teleport implements Listener {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
         
-        // Needs to be called after the teleport occurs otherwise the player location hasn't updated yet
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                islandManager.removeUpgrades(player, false);
-            }
-        }.runTaskLater(SkyBlock.getInstance(), 1);
-
+        islandManager.removeUpgrades(player, true);
         islandManager.loadPlayer(player);
 
         if (worldManager.isIslandWorld(player.getWorld())) {
@@ -94,7 +88,6 @@ public class Teleport implements Listener {
             
             if (island != null) {
                 islandManager.giveUpgrades(player, island);
-                islandManager.giveFly(player, island);
                 if (!island.getOwnerUUID().equals(playerData.getOwner())) {
                     if (!player.hasPermission("fabledskyblock.bypass") && !player.hasPermission("fabledskyblock.bypass.*")
                             && !player.hasPermission("fabledskyblock.*")) {
@@ -114,7 +107,7 @@ public class Teleport implements Listener {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Island.Visit.Banned.Teleport.Message"));
                             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
+                            
                             return;
                         }
                     }
