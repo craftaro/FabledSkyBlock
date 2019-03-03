@@ -3,7 +3,6 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -161,7 +160,8 @@ public class Interact implements Listener {
 				}
 			} else if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST
 					|| (NMSUtil.getVersionNumber() > 9
-							&& (block.getType() == Materials.BLACK_SHULKER_BOX.parseMaterial()
+							&& (block.getType() == Materials.SHULKER_BOX.parseMaterial()
+							        || block.getType() == Materials.BLACK_SHULKER_BOX.parseMaterial()
 									|| block.getType() == Materials.BLUE_SHULKER_BOX.parseMaterial()
 									|| block.getType() == Materials.BROWN_SHULKER_BOX.parseMaterial()
 									|| block.getType() == Materials.CYAN_SHULKER_BOX.parseMaterial()
