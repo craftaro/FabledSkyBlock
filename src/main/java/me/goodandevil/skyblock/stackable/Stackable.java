@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.UUID;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -92,23 +91,26 @@ public class Stackable {
 
     private void updateDisplay() {
         if (this.size > 1) {
-            if (this.display != null) {
-                this.display.setCustomName(WordUtils.capitalize(material.name().toLowerCase()).replace("_", " ") + "s: " + size);
-            } else {
-                if (!this.findExistingDisplay()) {
-                    this.createDisplay();
-                }
-                this.updateDisplay();
+            if (this.display == null && !this.findExistingDisplay()) {
+                this.createDisplay();
             }
+            
+            if (this.display.isDead()) {
+                this.createDisplay();
+            }
+            
+            this.display.setCustomName(WordUtils.capitalize(material.name().toLowerCase()).replace("_", " ") + "s: " + size);
+            this.display.setCustomNameVisible(true);
         } else {
             this.removeDisplay();
         }
     }
     
     private void createDisplay() {
-        Location initialLocation = location.clone().add(0.5, -1, 0.5);
+        this.removeDisplay();
+        
         Location dropLocation = location.clone().add(0.5, 1, 0.5);
-        ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(initialLocation, EntityType.ARMOR_STAND);
+        ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(dropLocation, EntityType.ARMOR_STAND);
         as.setVisible(false);
         as.setGravity(false);
         as.setSmall(true);
@@ -120,14 +122,11 @@ public class Stackable {
         as.setCustomName(WordUtils.capitalize(material.name().toLowerCase()).replace("_", " ") + "s: " + size);
         as.setCustomNameVisible(true);
         this.display = as;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
-            this.display.teleport(dropLocation);
-        });
     }
     
     private boolean findExistingDisplay() {
         for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.1, 0.5, 0.1)) {
-            if (entity instanceof ArmorStand) {
+            if (entity instanceof ArmorStand && !entity.isDead()) {
                 this.display = (ArmorStand) entity;
                 return true;
             }
