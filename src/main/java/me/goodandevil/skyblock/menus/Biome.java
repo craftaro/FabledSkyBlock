@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.biome.BiomeManager;
-import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.cooldown.Cooldown;
 import me.goodandevil.skyblock.cooldown.CooldownManager;
 import me.goodandevil.skyblock.cooldown.CooldownPlayer;
@@ -58,8 +57,7 @@ public class Biome {
 		SoundManager soundManager = skyblock.getSoundManager();
 
 		if (playerDataManager.hasPlayerData(player)) {
-			Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-			FileConfiguration configLoad = config.getFileConfiguration();
+			FileConfiguration langConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
 
 			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
 				@Override
@@ -68,7 +66,7 @@ public class Biome {
 
 					if (island == null) {
 						messageManager.sendMessage(player,
-								config.getFileConfiguration().getString("Command.Island.Biome.Owner.Message"));
+						        langConfig.getString("Command.Island.Biome.Owner.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 
@@ -77,7 +75,7 @@ public class Biome {
 							&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
 							|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
 						messageManager.sendMessage(player,
-								config.getFileConfiguration().getString("Command.Island.Biome.Permission.Message"));
+						        langConfig.getString("Command.Island.Biome.Permission.Message"));
 						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 						player.closeInventory();
 
@@ -88,7 +86,7 @@ public class Biome {
 
 					if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
 							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Biome.Item.Info.Displayname"))))) {
+									langConfig.getString("Menu.Biome.Item.Info.Displayname"))))) {
 						soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
 
 						event.setWillClose(false);
@@ -96,14 +94,14 @@ public class Biome {
 					} else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
 							&& (is.hasItemMeta())
 							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Biome.Item.Barrier.Displayname"))))) {
+									langConfig.getString("Menu.Biome.Item.Barrier.Displayname"))))) {
 						soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
 
 						event.setWillClose(false);
 						event.setWillDestroy(false);
 					} else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-                                    configLoad.getString("Menu.Biome.Item.Exit.Displayname"))))) {
+                                    langConfig.getString("Menu.Biome.Item.Exit.Displayname"))))) {
                         soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
 					} else {
 						if (is.getItemMeta().hasEnchant(Enchantment.THORNS)) {
@@ -118,20 +116,18 @@ public class Biome {
 
 								if (cooldown.getTime() < 60) {
 									messageManager.sendMessage(player,
-											config.getFileConfiguration().getString("Island.Biome.Cooldown.Message")
+									        langConfig.getString("Island.Biome.Cooldown.Message")
 													.replace("%time",
-															cooldown.getTime() + " " + config.getFileConfiguration()
+															cooldown.getTime() + " " + langConfig
 																	.getString("Island.Biome.Cooldown.Word.Second")));
 								} else {
 									long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
 									messageManager.sendMessage(player,
-											config.getFileConfiguration().getString("Island.Biome.Cooldown.Message")
+									        langConfig.getString("Island.Biome.Cooldown.Message")
 													.replace("%time", durationTime[2] + " "
-															+ config.getFileConfiguration().getString(
-																	"Island.Biome.Cooldown.Word.Minute")
+															+ langConfig.getString("Island.Biome.Cooldown.Word.Minute")
 															+ " " + durationTime[3] + " "
-															+ config.getFileConfiguration()
-																	.getString("Island.Biome.Cooldown.Word.Second")));
+															+ langConfig.getString("Island.Biome.Cooldown.Word.Second")));
 								}
 
 								soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
@@ -174,46 +170,57 @@ public class Biome {
 
 			nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG),
 					ChatColor.translateAlternateColorCodes('&',
-							configLoad.getString("Menu.Biome.Item.Info.Displayname")),
-					configLoad.getStringList("Menu.Biome.Item.Info.Lore"),
+							langConfig.getString("Menu.Biome.Item.Info.Displayname")),
+					langConfig.getStringList("Menu.Biome.Item.Info.Lore"),
 					new Placeholder[] { new Placeholder("%biome_type", islandBiomeName) }, null, null), 4);
 			
 			nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
-                            configLoad.getString("Menu.Biome.Item.Exit.Displayname"), null, null, null, null),
+                            langConfig.getString("Menu.Biome.Item.Exit.Displayname"), null, null, null, null),
                     0, 8);
 			
 			nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 							ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Biome.Item.Barrier.Displayname")),
+									langConfig.getString("Menu.Biome.Item.Barrier.Displayname")),
 							null, null, null, null),
 					9, 10, 11, 12, 13, 14, 15, 16, 17);
+			
+			FileConfiguration settings = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
+			
+			boolean allowNetherBiome = settings.getBoolean("Island.Biome.AllowOtherWorldlyBiomes.Nether");
+			boolean allowEndBiome = settings.getBoolean("Island.Biome.AllowOtherWorldlyBiomes.End");
 
 			int slotIndex = 18;
 			for (SBiome biome : SBiome.values()) {
 			    if (!biome.isAvailable()) 
 			        continue;
 			    
+			    if (!allowNetherBiome && biome.equals(SBiome.NETHER))
+			        continue;
+			    
+			    if (!allowEndBiome && (biome.equals(SBiome.THE_END) || biome.equals(SBiome.THE_VOID)))
+			        continue;
+			    
 			    if (islandBiome.equals(biome.getBiome())) {
 			        nInv.addItem(nInv.createItem(biome.getGuiIcon(),
                             ChatColor.translateAlternateColorCodes('&',
-                                    configLoad.getString("Menu.Biome.Item.Biome.Current.Displayname")
+                                    langConfig.getString("Menu.Biome.Item.Biome.Current.Displayname")
                                         .replace("%biome_type", biome.getFormattedBiomeName())),
-                            configLoad.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
+                            langConfig.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
                             new Enchantment[] { Enchantment.THORNS }, new ItemFlag[] { ItemFlag.HIDE_ENCHANTS }), 
 			            slotIndex);
 			    } else {
 			        nInv.addItem(nInv.createItem(biome.getGuiIcon(),
 	                        ChatColor.translateAlternateColorCodes('&',
-	                                configLoad.getString("Menu.Biome.Item.Biome.Select.Displayname")
+	                                langConfig.getString("Menu.Biome.Item.Biome.Select.Displayname")
 	                                    .replace("%biome_type", biome.getFormattedBiomeName())),
-	                        configLoad.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null), 
+	                        langConfig.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null), 
 			            slotIndex);
 			    }
 			    
 			    slotIndex++;
 			}
 
-			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Biome.Title")));
+			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', langConfig.getString("Menu.Biome.Title")));
 			nInv.setRows(4);
 
 			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {

@@ -51,6 +51,7 @@ import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
+import me.goodandevil.skyblock.utils.version.SBiome;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
@@ -244,13 +245,20 @@ public class IslandManager {
             player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
             player.setFallDistance(0.0F);
         });
-
-        if (NMSUtil.getVersionNumber() < 13) {
-            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getBiomeManager()
-                    .setBiome(island, Biome.valueOf(fileManager
-                            .getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                            .getString("Island.Biome.Default.Type").toUpperCase())), 20L);
+        
+        String biomeName = fileManager
+                .getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                .getString("Island.Biome.Default.Type").toUpperCase();
+        SBiome sBiome;
+        try {
+            sBiome = SBiome.valueOf(biomeName);
+        } catch (Exception ex) {
+            sBiome = SBiome.PLAINS;
         }
+        Biome biome = sBiome.getBiome();
+        
+        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getBiomeManager()
+                .setBiome(island, biome), 20L);
 
         return true;
     }
@@ -876,6 +884,9 @@ public class IslandManager {
 
     public Island getIsland(org.bukkit.OfflinePlayer offlinePlayer) {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+        
+        // TODO: Find out how this can be fixed without this, for some reason IslandManager tries to load PlayerDataManager before it's even loaded
+        if (playerDataManager == null) return null; 
 
         if (islandStorage.containsKey(offlinePlayer.getUniqueId())) {
             return islandStorage.get(offlinePlayer.getUniqueId());

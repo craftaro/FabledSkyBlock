@@ -91,7 +91,6 @@ public class Stackable {
 
     private void updateDisplay() {
         if (this.size > 1) {
-            this.findExistingDisplay();
             this.removeDisplay();
             this.createDisplay();
             this.display.setCustomName(WordUtils.capitalize(material.name().toLowerCase()).replace("_", " ") + "s: " + size);
@@ -118,20 +117,17 @@ public class Stackable {
         as.setCustomNameVisible(true);
         this.display = as;
     }
-    
-    private boolean findExistingDisplay() {
-        for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.1, 0.5, 0.1)) {
-            if (entity instanceof ArmorStand && entity.isValid()) {
-                this.display = (ArmorStand) entity;
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void removeDisplay() {
         if (this.display != null) {
             this.display.remove();
+        }
+        
+        // Find any stragglers
+        for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.1, 0.5, 0.1)) {
+            if (entity instanceof ArmorStand && entity.isValid()) {
+                entity.remove();
+            }
         }
     }
 

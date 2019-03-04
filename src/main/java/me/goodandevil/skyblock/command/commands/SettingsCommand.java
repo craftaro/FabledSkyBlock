@@ -56,7 +56,7 @@ public class SettingsCommand extends SubCommand {
 				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Role.Message"));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Role.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

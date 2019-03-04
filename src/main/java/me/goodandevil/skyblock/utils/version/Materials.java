@@ -918,6 +918,7 @@ public enum Materials {
         if (isNewVersion()) {
             return new ItemStack(mat);
         }
+        if (mat == null) return null;
         return new ItemStack(mat, 1, (byte) data);
     }
 

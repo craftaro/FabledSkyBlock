@@ -96,7 +96,6 @@ public class SkyBlock extends JavaPlugin {
 		console.sendMessage(formatText("&a============================="));
 		console.sendMessage(formatText("&7FabledSkyBlock " + this.getDescription().getVersion() + " by &5Songoda <3&7!"));
 		console.sendMessage(formatText("&7Action: &aEnabling&7..."));
-		console.sendMessage(formatText("&a============================="));
 
 		instance = this;
 
@@ -177,6 +176,8 @@ public class SkyBlock extends JavaPlugin {
 		this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
 
 		SkyBlockAPI.setImplementation(instance);
+		
+		console.sendMessage(formatText("&a============================="));
 	}
 
 	@Override

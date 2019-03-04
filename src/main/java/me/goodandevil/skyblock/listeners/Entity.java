@@ -561,8 +561,7 @@ public class Entity implements Listener {
         // Certain entities shouldn't drop twice the amount
         if (livingEntity instanceof Player || 
             livingEntity instanceof ArmorStand || 
-            livingEntity instanceof Horse || 
-            livingEntity instanceof Donkey) {
+            livingEntity instanceof Horse) {
             return;
         }
         

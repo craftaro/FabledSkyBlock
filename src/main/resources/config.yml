@@ -131,12 +131,18 @@ Island:
     Biome:
         # Default Biome set when a player creates an Island
         # Biomes Available:
-        # PLAINS | FOREST | SWAMPLAND | DESERT | COLD_BEACH
-        # JUNGLE | ROOFED_JUNGLE
+        #   BADLANDS | COLD_OCEAN | DARK_FOREST | DESERT | FOREST | JUNGLE
+        #   MOUNTAINS | MUSHROOM_FIELDS | NETHER | PLAINS | RIVER | SAVANNA
+        #   SNOWY_BEACH | SWAMP | TAIGA | THE_END | THE_VOID | WARM_OCEAN
+        # Notice: Only use biomes available in your server version!
         Default:
             Type: Plains
         Cooldown:
             Time: 900
+        # If the Nether/End biomes should be allowed in the overworld
+        AllowOtherWorldlyBiomes:
+            Nether: true
+            End: true
     Weather:
         Default:
             # The weather and time will operate the same weather and time as the world.

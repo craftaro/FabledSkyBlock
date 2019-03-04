@@ -267,7 +267,10 @@ public class Block implements Listener {
                 // Filter valid players on the island
                 Set<Player> possiblePlayers = new HashSet<>();
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    boolean isMember = island.hasRole(IslandRole.Owner, p.getUniqueId()) || island.hasRole(IslandRole.Member, p.getUniqueId()) || island.hasRole(IslandRole.Coop, p.getUniqueId());
+                    boolean isMember = island.hasRole(IslandRole.Owner, p.getUniqueId()) || 
+                                       island.hasRole(IslandRole.Member, p.getUniqueId()) ||    
+                                       island.hasRole(IslandRole.Coop, p.getUniqueId()) ||
+                                       island.hasRole(IslandRole.Operator, p.getUniqueId());
                     if (isMember && LocationUtil.isLocationAtLocationRadius(p.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
                         possiblePlayers.add(p);
                     }
@@ -439,7 +442,10 @@ public class Block implements Listener {
             // Filter valid players on the island
             Set<Player> possiblePlayers = new HashSet<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                boolean isMember = island.hasRole(IslandRole.Owner, player.getUniqueId()) || island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Coop, player.getUniqueId());
+                boolean isMember = island.hasRole(IslandRole.Owner, player.getUniqueId()) || 
+                                   island.hasRole(IslandRole.Member, player.getUniqueId()) || 
+                                   island.hasRole(IslandRole.Coop, player.getUniqueId()) ||
+                                   island.hasRole(IslandRole.Operator, player.getUniqueId());
                 if (isMember && LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
                     possiblePlayers.add(player);
                 }

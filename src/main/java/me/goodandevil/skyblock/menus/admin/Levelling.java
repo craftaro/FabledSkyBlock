@@ -61,6 +61,8 @@ public class Levelling implements Listener {
 		// Filter out materials that won't be displayed in the GUI properly
         Inventory testInventory = Bukkit.createInventory(null, 9);
         levellingMaterials = levellingMaterials.stream().filter(x -> {
+            if (!x.getMaterials().isAvailable()) return false;
+            if (x.getItemStack() == null) return false;
             ItemStack itemStack = new ItemStack(MaterialUtil.correctMaterial(x.getItemStack().getType()), 1, x.getItemStack().getDurability());
             if (itemStack == null || itemStack.getItemMeta() == null) return false;
             testInventory.clear();
