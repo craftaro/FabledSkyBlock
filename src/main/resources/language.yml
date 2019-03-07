@@ -1594,7 +1594,7 @@ Menu:
                     - ""
                     - "&7Status&8: &a&lCLAIMED"
                     - ""
-                    - "&cYou have unlocked ths upgrade!"
+                    - "&cYou have unlocked this upgrade!"
             Spawner:
                 Displayname: "&bSpawer Boost"
                 Claimable:

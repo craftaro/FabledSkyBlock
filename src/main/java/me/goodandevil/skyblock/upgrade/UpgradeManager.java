@@ -49,10 +49,6 @@ public class UpgradeManager {
 
 				upgrades.add(new Upgrade(configLoad.getDouble("Upgrades.Size." + tierList + ".Cost"),
 						configLoad.getInt("Upgrades.Size." + tierList + ".Value")));
-
-				if (upgrades.size() == 5) {
-					break;
-				}
 			}
 
 			upgradeStorage.put(Upgrade.Type.Size, upgrades);
@@ -71,7 +67,7 @@ public class UpgradeManager {
 	}
 
 	public void addUpgrade(Upgrade.Type type, int value) {
-		List<Upgrade> upgrades = new ArrayList<Upgrade>();
+		List<Upgrade> upgrades = new ArrayList<>();
 
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "upgrades.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
@@ -80,10 +76,6 @@ public class UpgradeManager {
 			for (String tierList : configLoad.getConfigurationSection("Upgrades.Size").getKeys(false)) {
 				upgrades.add(new Upgrade(configLoad.getDouble("Upgrades.Size." + tierList + ".Cost"),
 						configLoad.getInt("Upgrades.Size." + tierList + ".Value")));
-
-				if (upgrades.size() == 4) {
-					break;
-				}
 			}
 		}
 
