@@ -1,17 +1,5 @@
 package me.goodandevil.skyblock.listeners;
 
-import java.io.File;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.event.player.PlayerIslandEnterEvent;
 import me.goodandevil.skyblock.api.event.player.PlayerIslandExitEvent;
@@ -29,6 +17,17 @@ import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.visit.Visit;
 import me.goodandevil.skyblock.world.WorldManager;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
+import java.io.File;
+import java.util.UUID;
 
 public class Teleport implements Listener {
 
@@ -51,8 +50,8 @@ public class Teleport implements Listener {
 
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-        
-        islandManager.removeUpgrades(player, true);
+
+        Bukkit.getScheduler().runTaskLater(skyblock, () -> islandManager.updateFlight(player), 1L);
         islandManager.loadPlayer(player);
 
         if (worldManager.isIslandWorld(player.getWorld())) {
@@ -85,7 +84,6 @@ public class Teleport implements Listener {
             Island island = islandManager.getIslandAtLocation(event.getTo());
             
             if (island != null) {
-                islandManager.giveUpgrades(player, island);
                 if (!island.getOwnerUUID().equals(playerData.getOwner())) {
                     if (!player.hasPermission("fabledskyblock.bypass") && !player.hasPermission("fabledskyblock.bypass.*")
                             && !player.hasPermission("fabledskyblock.*")) {

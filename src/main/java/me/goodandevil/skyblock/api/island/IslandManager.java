@@ -1,18 +1,16 @@
 package me.goodandevil.skyblock.api.island;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
+import com.google.common.base.Preconditions;
+import me.goodandevil.skyblock.api.structure.Structure;
+import me.goodandevil.skyblock.api.utils.APIUtil;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import com.google.common.base.Preconditions;
-
-import me.goodandevil.skyblock.api.structure.Structure;
-import me.goodandevil.skyblock.api.utils.APIUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class IslandManager {
 
@@ -134,31 +132,58 @@ public class IslandManager {
 
 	/**
 	 * Gives the Island Upgrades to a player
+	 *
+	 * @deprecated use {@link #updateFlight(Player)} instead
 	 */
+	@Deprecated
 	public void giveUgrades(Player player, Island island) {
 		Preconditions.checkArgument(player != null, "Cannot give upgrades to null player");
 		Preconditions.checkArgument(island != null, "Cannot give upgrades to null island");
 
-		this.islandManager.giveUpgrades(player, island.getIsland());
+		this.islandManager.updateFlight(player);
 	}
 
 	/**
 	 * Gives Fly to a player if they have permission at an Island
+	 *
+	 * @deprecated use {@link #updateFlight(Player)} instead
 	 */
+	@Deprecated
 	public void giveFly(Player player, Island island) {
 		Preconditions.checkArgument(player != null, "Cannot give upgrades to null player");
 		Preconditions.checkArgument(island != null, "Cannot give upgrades to null island");
 
-		this.islandManager.giveFly(player, island.getIsland());
+		this.islandManager.updateFlight(player);
 	}
 
 	/**
 	 * Removes the Island Upgrades from a player
+	 *
+	 * @deprecated use {@link #updateFlight(Player)} instead
 	 */
+	@Deprecated
 	public void removeUpgrades(Player player) {
 		Preconditions.checkArgument(player != null, "Cannot remove upgrades to null player");
 
-		this.islandManager.removeUpgrades(player, false);
+		this.islandManager.updateFlight(player);
+	}
+
+	/**
+	 * Updates the flight of a player based on their permissions and current island upgrades
+	 */
+	public void updateFlight(Player player) {
+		Preconditions.checkArgument(player != null, "Cannot update flight of a null player");
+
+		this.islandManager.updateFlight(player);
+	}
+
+	/**
+	 * Updates the flight of all players on an island based on their permissions and island upgrades
+	 */
+	public void updateFlightAtIsland(Island island) {
+		Preconditions.checkArgument(island != null, "Cannot update flight of a null island");
+
+		this.islandManager.updateFlightAtIsland(island.getIsland());
 	}
 
 	/**

@@ -1,22 +1,5 @@
 package me.goodandevil.skyblock.menus;
 
-import java.io.File;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
-
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.event.island.IslandUpgradeEvent;
 import me.goodandevil.skyblock.api.utils.APIUtil;
@@ -37,6 +20,21 @@ import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
+
+import java.io.File;
+import java.util.List;
 
 public class Upgrade {
 
@@ -294,20 +292,10 @@ public class Upgrade {
 							if (island.hasUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly)) {
 								if (island.isUpgrade(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly)) {
 									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly, false);
-
-									for (Player all : islandManager.getPlayersAtIsland(island)) {
-										if (all.getGameMode() != GameMode.CREATIVE) {
-											all.setFlying(false);
-											all.setAllowFlight(false);
-										}
-									}
+									islandManager.updateFlightAtIsland(island);
 								} else {
 									island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly, true);
-
-									for (Player all : islandManager.getPlayersAtIsland(island)) {
-										all.setAllowFlight(true);
-										all.setFlying(true);
-									}
+									islandManager.updateFlightAtIsland(island);
 								}
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -335,10 +323,7 @@ public class Upgrade {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly,
 												true);
 
-										for (Player all : islandManager.getPlayersAtIsland(island)) {
-											all.setAllowFlight(true);
-											all.setFlying(true);
-										}
+										islandManager.updateFlightAtIsland(island);
 
 										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
 												new Runnable() {

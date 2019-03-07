@@ -1,29 +1,12 @@
 package me.goodandevil.skyblock.playerdata;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandLocation;
-import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.island.IslandWorld;
+import me.goodandevil.skyblock.island.*;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.Scoreboard;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
@@ -31,6 +14,17 @@ import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.visit.Visit;
 import me.goodandevil.skyblock.world.WorldManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerDataManager {
 
@@ -182,8 +176,7 @@ public class PlayerDataManager {
 								}
 							}
 
-							islandManager.giveUpgrades(player, island);
-							islandManager.giveFly(player, island);
+							islandManager.updateFlight(player);
 
 							return;
 						} else if (island.isOpen() || island.isCoopPlayer(player.getUniqueId())) {
@@ -205,8 +198,7 @@ public class PlayerDataManager {
 								}
 							}
 
-							islandManager.giveUpgrades(player, island);
-							islandManager.giveFly(player, island);
+							islandManager.updateFlight(player);
 
 							ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
 
@@ -305,20 +297,17 @@ public class PlayerDataManager {
 									PlayerData playerData = getPlayerData(player);
 									playerData.setIsland(visitIslandList);
 
-									if (island != null) {
-										if (world == IslandWorld.Normal) {
-											if (!island.isWeatherSynchronized()) {
-												player.setPlayerTime(island.getTime(), fileManager
-														.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-														.getFileConfiguration()
-														.getBoolean("Island.Weather.Time.Cycle"));
-												player.setPlayerWeather(island.getWeather());
-											}
+									if (world == IslandWorld.Normal) {
+										if (!island.isWeatherSynchronized()) {
+											player.setPlayerTime(island.getTime(), fileManager
+													.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+													.getFileConfiguration()
+													.getBoolean("Island.Weather.Time.Cycle"));
+											player.setPlayerWeather(island.getWeather());
 										}
-
-										islandManager.giveUpgrades(player, island);
-										islandManager.giveFly(player, island);
 									}
+
+									islandManager.updateFlight(player);
 
 									return;
 								} else {
@@ -336,8 +325,6 @@ public class PlayerDataManager {
 						return;
 					}
 				}
-
-				return;
 			}
 		}
 	}

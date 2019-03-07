@@ -1,8 +1,10 @@
 package me.goodandevil.skyblock.listeners;
 
-import java.io.File;
-import java.util.logging.Level;
-
+import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.config.FileManager;
+import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.*;
+import me.goodandevil.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,15 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.config.FileManager;
-import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandEnvironment;
-import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.island.IslandWorld;
-import me.goodandevil.skyblock.world.WorldManager;
+import java.io.File;
+import java.util.logging.Level;
 
 public class Respawn implements Listener {
 
@@ -61,8 +56,7 @@ public class Respawn implements Listener {
 							.callEvent(new PlayerTeleportEvent(player, playerLocation, islandLocation));
 					event.setRespawnLocation(islandLocation);
 
-					islandManager.giveUpgrades(player, island);
-					islandManager.giveFly(player, island);
+					islandManager.updateFlight(player);
 
 					return;
 				}

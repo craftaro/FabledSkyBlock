@@ -1,35 +1,8 @@
 package me.goodandevil.skyblock.island;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.IllegalPluginAccessException;
-
 import com.google.common.base.Preconditions;
-
 import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.api.event.island.IslandCreateEvent;
-import me.goodandevil.skyblock.api.event.island.IslandDeleteEvent;
-import me.goodandevil.skyblock.api.event.island.IslandLoadEvent;
-import me.goodandevil.skyblock.api.event.island.IslandOwnershipTransferEvent;
-import me.goodandevil.skyblock.api.event.island.IslandUnloadEvent;
+import me.goodandevil.skyblock.api.event.island.*;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
@@ -58,6 +31,21 @@ import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
 import me.goodandevil.skyblock.visit.VisitManager;
 import me.goodandevil.skyblock.world.WorldManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.IllegalPluginAccessException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class IslandManager {
 
@@ -245,7 +233,7 @@ public class IslandManager {
             player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
             player.setFallDistance(0.0F);
         });
-        
+
         String biomeName = fileManager
                 .getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getString("Island.Biome.Default.Type").toUpperCase();
@@ -256,7 +244,7 @@ public class IslandManager {
             sBiome = SBiome.PLAINS;
         }
         Biome biome = sBiome.getBiome();
-        
+
         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getBiomeManager()
                 .setBiome(island, biome), 20L);
 
@@ -720,12 +708,7 @@ public class IslandManager {
 
         if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Spawn.Protection")) {
-            Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-                @Override
-                public void run() {
-                    islandLocation.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().setType(Material.STONE);
-                }
-            });
+            Bukkit.getServer().getScheduler().runTask(skyblock, () -> islandLocation.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().setType(Material.STONE));
         }
 
         try {
@@ -832,12 +815,9 @@ public class IslandManager {
                 }
             }
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-                @Override
-                public void run() {
-                    player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-                    player.setFallDistance(0.0F);
-                }
+            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+                player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+                player.setFallDistance(0.0F);
             });
 
             List<String> islandWelcomeMessage = island.getMessage(IslandMessage.Welcome);
@@ -884,9 +864,9 @@ public class IslandManager {
 
     public Island getIsland(org.bukkit.OfflinePlayer offlinePlayer) {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        
+
         // TODO: Find out how this can be fixed without this, for some reason IslandManager tries to load PlayerDataManager before it's even loaded
-        if (playerDataManager == null) return null; 
+        if (playerDataManager == null) return null;
 
         if (islandStorage.containsKey(offlinePlayer.getUniqueId())) {
             return islandStorage.get(offlinePlayer.getUniqueId());
@@ -976,14 +956,10 @@ public class IslandManager {
 
     public boolean hasSetting(org.bukkit.Location location, IslandRole role, String setting) {
         Island island = getIslandAtLocation(location);
+        if (island == null)
+            return false;
 
-        if (island != null) {
-            if (island.getSetting(role, setting).getStatus()) {
-                return true;
-            }
-        }
-
-        return false;
+        return island.getSetting(role, setting).getStatus();
     }
 
     public void removeSpawnProtection(org.bukkit.Location location) {
@@ -1078,106 +1054,72 @@ public class IslandManager {
     public void loadPlayer(Player player) {
         WorldManager worldManager = skyblock.getWorldManager();
 
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-            @Override
-            public void run() {
-                if (worldManager.isIslandWorld(player.getWorld())) {
-                    IslandWorld world = worldManager.getIslandWorld(player.getWorld());
-                    Island island = getIslandAtLocation(player.getLocation());
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+            if (worldManager.isIslandWorld(player.getWorld())) {
+                IslandWorld world = worldManager.getIslandWorld(player.getWorld());
+                Island island = getIslandAtLocation(player.getLocation());
 
-                    if (island != null) {
-                        Config config = skyblock.getFileManager()
-                                .getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                        FileConfiguration configLoad = config.getFileConfiguration();
+                if (island != null) {
+                    Config config = skyblock.getFileManager()
+                            .getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                    FileConfiguration configLoad = config.getFileConfiguration();
 
-                        if (!island.isWeatherSynchronized()) {
-                            player.setPlayerTime(island.getTime(), configLoad.getBoolean("Island.Weather.Time.Cycle"));
-                            player.setPlayerWeather(island.getWeather());
+                    if (!island.isWeatherSynchronized()) {
+                        player.setPlayerTime(island.getTime(), configLoad.getBoolean("Island.Weather.Time.Cycle"));
+                        player.setPlayerWeather(island.getWeather());
+                    }
+
+                    updateFlight(player);
+
+                    if (world == IslandWorld.Nether) {
+                        if (NMSUtil.getVersionNumber() < 13) {
+                            return;
                         }
+                    }
 
-                        giveUpgrades(player, island);
-                        giveFly(player, island);
-
-                        if (world == IslandWorld.Nether) {
-                            if (NMSUtil.getVersionNumber() < 13) {
-                                return;
-                            }
-                        }
-
-                        if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
-                            WorldBorder.send(player, island.getBorderColor(), island.getSize() + 2.5,
-                                    island.getLocation(worldManager.getIslandWorld(player.getWorld()),
-                                            IslandEnvironment.Island));
-                        } else {
-                            WorldBorder.send(player, null, 1.4999992E7D,
-                                    new org.bukkit.Location(player.getWorld(), 0, 0, 0));
-                        }
-
-                        return;
+                    if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
+                        WorldBorder.send(player, island.getBorderColor(), island.getSize() + 2.5,
+                                island.getLocation(worldManager.getIslandWorld(player.getWorld()),
+                                        IslandEnvironment.Island));
+                    } else {
+                        WorldBorder.send(player, null, 1.4999992E7D,
+                                new org.bukkit.Location(player.getWorld(), 0, 0, 0));
                     }
                 }
             }
         });
     }
 
-    public void giveUpgrades(Player player, Island island) {
-        UpgradeManager upgradeManager = skyblock.getUpgradeManager();
+    public void updateFlightAtIsland(Island island) {
+        for (Player player : getPlayersAtIsland(island))
+            this.updateFlight(player);
+    }
 
+    public void updateFlight(Player player) {
+        if (player.getGameMode() == GameMode.CREATIVE)
+            return;
+
+        Island island = getIslandAtLocation(player.getLocation());
+
+        UpgradeManager upgradeManager = skyblock.getUpgradeManager();
         List<Upgrade> flyUpgrades = upgradeManager.getUpgrades(Upgrade.Type.Fly);
-        if (flyUpgrades != null && flyUpgrades.size() > 0 && flyUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Fly) && player.getGameMode() != GameMode.CREATIVE) {
-            Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-                @Override
-                public void run() {
-                    player.setAllowFlight(true);
-                    player.setFlying(true);
-                }
+        boolean isFlyUpgradeEnabled = flyUpgrades != null && flyUpgrades.size() > 0 && flyUpgrades.get(0).isEnabled();
+        boolean setPlayerFlying = false;
+        if (isFlyUpgradeEnabled) {
+            boolean upgradeEnabled = island != null && island.isUpgrade(Upgrade.Type.Fly);
+            setPlayerFlying = upgradeEnabled;
+            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+                player.setAllowFlight(upgradeEnabled);
             });
         }
 
-    }
-
-    public void giveFly(Player player, Island island) {
-        if (island.hasRole(IslandRole.Member, player.getUniqueId())
-                || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                || island.hasRole(IslandRole.Operator, player.getUniqueId())) {
-            if (player.hasPermission("fabledskyblock.fly") || player.hasPermission("fabledskyblock.fly")
-                    || player.hasPermission("fabledskyblock.*")) {
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                    player.setAllowFlight(true);
-                    player.setFlying(true);
-                });
-            }
-            return;
-        }
-            if (player.hasPermission("fabledskyblock.fly") || player.hasPermission("fabledskyblock.*")) {
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                    player.setAllowFlight(true);
-                    player.setFlying(true);
-                });
-            }
-    }
-
-    public void removeUpgrades(Player player, boolean bypassIsland) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-
-        if (!bypassIsland && playerDataManager.hasPlayerData(player)) {
-            PlayerData playerData = playerDataManager.getPlayerData(player);
-
-            if (playerData.getIsland() != null) {
-                org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(playerData.getIsland());
-                Island island = getIsland(offlinePlayer);
-
-                if (island != null) {
-                    if (isPlayerAtIsland(island, player)) {
-                        return;
-                    }
-                }
-            }
-        }
-
-        if (player.getGameMode() != GameMode.CREATIVE) {
-            player.setFlying(false);
-            player.setAllowFlight(false);
+        boolean hasFlyPermission = player.hasPermission("fabledskyblock.fly") || player.hasPermission("fabledskyblock.*");
+        if (hasFlyPermission && island != null && !setPlayerFlying) {
+            WorldManager worldManager = skyblock.getWorldManager();
+            boolean canFlyInWorld = worldManager.isIslandWorld(player.getWorld());
+            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+                player.setAllowFlight(canFlyInWorld);
+            });
         }
     }
 
@@ -1294,7 +1236,7 @@ public class IslandManager {
     }
 
     public List<Island> getCoopIslands(Player player) {
-        List<Island> islands = new ArrayList<Island>();
+        List<Island> islands = new ArrayList<>();
 
         for (UUID islandList : getIslands().keySet()) {
             Island island = getIslands().get(islandList);
@@ -1338,12 +1280,6 @@ public class IslandManager {
     }
 
     public boolean isLocationAtIsland(Island island, org.bukkit.Location location, IslandWorld world) {
-
-        if (LocationUtil.isLocationAtLocationRadius(location, island.getLocation(world, IslandEnvironment.Island),
-                island.getRadius())) {
-            return true;
-        }
-
-        return false;
+        return LocationUtil.isLocationAtLocationRadius(location, island.getLocation(world, IslandEnvironment.Island), island.getRadius());
     }
 }

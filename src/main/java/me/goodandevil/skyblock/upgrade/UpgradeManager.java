@@ -1,23 +1,18 @@
 package me.goodandevil.skyblock.upgrade;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandManager;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class UpgradeManager {
 
