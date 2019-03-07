@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
         	<groupId>net.nifheim.beelzebu</groupId>
-        	<artifactId>Coins</artifactId>
+        	<artifactId>coins</artifactId>
         	<version>2.3.2</version>
         </dependency>
         <dependency>
