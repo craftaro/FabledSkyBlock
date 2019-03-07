@@ -1,4 +1,6 @@
+
 # Created by https://www.gitignore.io/api/java,maven,gradle,eclipse,netbeans,intellij
+# Edit at https://www.gitignore.io/?templates=java,maven,gradle,eclipse,netbeans,intellij
 
 ### Eclipse ###
 
@@ -187,7 +189,9 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 ### NetBeans ###
-nbproject/private/
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
 build/
 nbbuild/
 dist/
@@ -196,7 +200,6 @@ nbdist/
 
 ### Gradle ###
 .gradle
-/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -212,12 +215,8 @@ gradle-app.setting
 
 ### Gradle Patch ###
 **/build/
-\.idea/compiler\.xml
 
-\.idea/misc\.xml
+# End of https://www.gitignore.io/api/java,maven,gradle,eclipse,netbeans,intellij
 
-\.idea/modules\.xml
-
-\.idea/vcs\.xml
-
-FabledSkyBlock\.iml
+.idea/
+FabledSkyBlock.iml

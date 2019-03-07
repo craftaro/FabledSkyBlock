@@ -32,12 +32,12 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>LATEST</version>
+            <version>2.9.2</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl</groupId>
             <artifactId>vault</artifactId>
-            <version>LATEST</version>
+            <version>1.7.1</version>
         </dependency>
         <dependency>
         	<groupId>net.nifheim.beelzebu</groupId>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.songoda</groupId>
             <artifactId>epicspawners</artifactId>
-            <version>LATEST</version>
+            <version>5.7.1</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
