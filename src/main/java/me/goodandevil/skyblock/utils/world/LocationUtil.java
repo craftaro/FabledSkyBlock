@@ -1,27 +1,22 @@
 package me.goodandevil.skyblock.utils.world;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
-
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.math.VectorUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
+import org.bukkit.*;
+import org.bukkit.World.Environment;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
 
 public final class LocationUtil {
 
@@ -42,6 +37,16 @@ public final class LocationUtil {
 		}
 
 		return false;
+	}
+
+	public static boolean isLocationAffectingLocation(Location location1, Location location2) {
+		Location headHeight = location2.clone().add(0, 1, 0);
+		Location feetHeight = location2.clone();
+		Location groundHeight = location2.clone().add(0, -1, 0);
+
+		return isLocationLocation(headHeight, location1)
+				|| isLocationLocation(feetHeight, location1)
+				|| isLocationLocation(groundHeight, location1);
 	}
 
 	public static boolean isLocationAtLocationRadius(Location location1, Location location2, double radius) {

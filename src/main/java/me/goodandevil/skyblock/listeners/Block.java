@@ -1,43 +1,10 @@
 package me.goodandevil.skyblock.listeners;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockFormEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Crops;
-
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.Generator;
 import me.goodandevil.skyblock.generator.GeneratorManager;
-import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandEnvironment;
-import me.goodandevil.skyblock.island.IslandLevel;
-import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.island.IslandWorld;
+import me.goodandevil.skyblock.island.*;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
@@ -46,6 +13,23 @@ import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.world.WorldManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.*;
+import org.bukkit.event.world.PortalCreateEvent;
+import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Crops;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 public class Block implements Listener {
 
@@ -209,18 +193,15 @@ public class Block implements Listener {
             }
         }
 
-        if (LocationUtil.isLocationLocation(block.getLocation(),
-                island.getLocation(world, IslandEnvironment.Main))
-                || LocationUtil.isLocationLocation(block.getLocation(),
-                island.getLocation(world, IslandEnvironment.Main).clone().add(0.0D, 1.0D, 0.0D))
-                || LocationUtil.isLocationLocation(block.getLocation(),
-                island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
+        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
-                event.setCancelled(true);
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                 .getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
                 skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+                event.setCancelled(true);
+                return;
             }
         }
 
@@ -258,6 +239,15 @@ public class Block implements Listener {
         if (island == null) return;
         
         org.bukkit.block.Block block = event.getToBlock();
+
+        // Protect spawn location and outside of border
+        if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 1.0D)) {
+            event.setCancelled(true);
+            return;
+        } else if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main)) && configLoad.getBoolean("Island.Spawn.Protection")) {
+            event.setCancelled(true);
+            return;
+        }
         
         if (NMSUtil.getVersionNumber() < 12) {
             if (generatorManager != null && generatorManager.getGenerators().size() > 0 && generatorManager.isGenerator(block)) {
@@ -293,20 +283,6 @@ public class Block implements Listener {
                     }
                 }
             }
-
-            return;
-        }
-
-        if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
-                island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 1.0D)) {
-            event.setCancelled(true);
-        } else if (LocationUtil.isLocationLocation(block.getLocation(),
-                island.getLocation(world, IslandEnvironment.Main)
-                        .clone()
-                        .subtract(0.0D, 1.0D, 0.0D))) {
-            if (configLoad.getBoolean("Island.Spawn.Protection")) {
-                event.setCancelled(true);
-            }
         }
     }
 
@@ -326,30 +302,34 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
-                    island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
                 event.setCancelled(true);
-            } else if (skyblock.getStackableManager() != null
-                    && skyblock.getStackableManager().isStacked(block.getLocation())) {
+                return;
+            }
+
+            if (skyblock.getStackableManager() != null && skyblock.getStackableManager().isStacked(block.getLocation())) {
                 event.setCancelled(true);
-            } else if (LocationUtil.isLocationLocation(block.getLocation(),
-                    island.getLocation(world, IslandEnvironment.Main)
-                            .clone()
-                            .subtract(0.0D, 1.0D, 0.0D))) {
-                if (configLoad.getBoolean("Island.Spawn.Protection")) {
+                return;
+            }
+
+            if (configLoad.getBoolean("Island.Spawn.Protection")) {
+                // Check exact block
+                if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
                     event.setCancelled(true);
+                    return;
+                }
+
+                // Check block in direction
+                if (LocationUtil.isLocationAffectingLocation(block.getRelative(event.getDirection()).getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+                    event.setCancelled(true);
+                    return;
                 }
             }
-        }
 
-        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Extend")) {
-            for (org.bukkit.block.Block blockList : event.getBlocks()) {
-                if (blockList.getType() == Materials.PISTON.parseMaterial()
-                        || blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
+            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Extend")) {
+                if (block.getType() == Materials.PISTON.parseMaterial() || block.getType() == Materials.STICKY_PISTON.parseMaterial()) {
                     event.setCancelled(true);
-
-                    break;
+                    return;
                 }
             }
         }
@@ -371,33 +351,25 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
-                    island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
                 event.setCancelled(true);
-            } else if (skyblock.getStackableManager() != null) {
-                    if (skyblock.getStackableManager().isStacked(block.getLocation())) {
-                        event.setCancelled(true);
-                        return;
-                    }
-
-            } else if (LocationUtil.isLocationLocation(block.getLocation(),
-                    island.getLocation(world, IslandEnvironment.Main)
-                            .clone()
-                            .subtract(0.0D, 1.0D, 0.0D))) {
-                if (configLoad.getBoolean("Island.Spawn.Protection")) {
-                    event.setCancelled(true);
-                }
+                return;
             }
-        }
 
-        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
-            for (org.bukkit.block.Block blockList : event.getBlocks()) {
-                if (blockList.getType() == Materials.PISTON.parseMaterial()
-                        || blockList.getType() == Materials.STICKY_PISTON.parseMaterial()) {
+            if (skyblock.getStackableManager() != null && skyblock.getStackableManager().isStacked(block.getLocation())) {
+                event.setCancelled(true);
+                return;
+            }
+
+            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main)) && configLoad.getBoolean("Island.Spawn.Protection")) {
+                event.setCancelled(true);
+                return;
+            }
+
+            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
+                if (block.getType() == Materials.PISTON.parseMaterial() || block.getType() == Materials.STICKY_PISTON.parseMaterial()) {
                     event.setCancelled(true);
-
-                    break;
+                    return;
                 }
             }
         }
@@ -413,12 +385,24 @@ public class Block implements Listener {
 
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
+        Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+        if (island == null) return;
+
+        // Check ice/snow forming
         if (block.getType() == Material.ICE || block.getType() == Material.SNOW) {
-            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                    .getFileConfiguration().getBoolean("Island.Weather.IceAndSnow")) {
+            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.IceAndSnow")) {
                 event.setCancelled(true);
             }
             return;
+        }
+
+        // Check spawn block protection
+        IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
+        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+            if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+                event.setCancelled(true);
+                return;
+            }
         }
 
         Material material = event.getBlock().getType();
@@ -432,10 +416,7 @@ public class Block implements Listener {
         if (type != Material.COBBLESTONE && type != Material.STONE)
         	return;
 
-        Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
-        if (generatorManager != null && generatorManager.getGenerators().size() > 0 && island != null) {
-            IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
-            
+        if (generatorManager != null && generatorManager.getGenerators().size() > 0) {
             List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
             Collections.reverse(generators); // Use the highest generator available
             
@@ -505,6 +486,7 @@ public class Block implements Listener {
     public void onBlockGrow(BlockGrowEvent event) {
         org.bukkit.block.Block block = event.getBlock();
 
+        WorldManager worldManager = skyblock.getWorldManager();
         IslandManager islandManager = skyblock.getIslandManager();
 
         if (!skyblock.getWorldManager().isIslandWorld(block.getWorld())) return;
@@ -512,6 +494,15 @@ public class Block implements Listener {
         Island island = islandManager.getIslandAtLocation(block.getLocation());
 
         if (island == null) return;
+
+        // Check spawn block protection
+        IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
+        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+            if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+                event.setCancelled(true);
+                return;
+            }
+        }
 
         List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
 
@@ -555,6 +546,85 @@ public class Block implements Listener {
             if (!skyblock.getIslandManager().hasSetting(block.getLocation(), IslandRole.Owner, "LeafDecay")) {
                 event.setCancelled(false);
             }
+        }
+    }
+
+    @EventHandler
+    public void onStructureCreate(StructureGrowEvent event) {
+        Bukkit.broadcastMessage(event.getEventName());
+        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = skyblock.getIslandManager();
+
+        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+            return;
+
+        if (event.getBlocks().isEmpty())
+            return;
+
+        Island island = islandManager.getIslandAtLocation(event.getLocation());
+        if (island == null)
+            return;
+
+        // Check spawn block protection
+        IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
+        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
+
+        for (org.bukkit.block.BlockState block : event.getBlocks()) {
+            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPortalCreate(PortalCreateEvent event) {
+        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = skyblock.getIslandManager();
+
+        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+            return;
+
+        if (event.getBlocks().isEmpty())
+            return;
+
+        Island island = islandManager.getIslandAtLocation(event.getBlocks().get(0).getLocation());
+        if (island == null)
+            return;
+
+        // Check spawn block protection
+        IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
+        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
+
+        for (org.bukkit.block.Block block : event.getBlocks()) {
+            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDispenserDispenseBlock(BlockDispenseEvent event) {
+        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = skyblock.getIslandManager();
+
+        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+            return;
+
+        BlockFace dispenserDirection = ((org.bukkit.material.Dispenser) event.getBlock().getState().getData()).getFacing();
+        org.bukkit.block.Block placeLocation = event.getBlock().getRelative(dispenserDirection);
+
+        Island island = islandManager.getIslandAtLocation(placeLocation.getLocation());
+        if (island == null)
+            return;
+
+        // Check spawn block protection
+        IslandWorld world = worldManager.getIslandWorld(placeLocation.getWorld());
+        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
+
+        if (LocationUtil.isLocationAffectingLocation(placeLocation.getLocation(), islandLocation)) {
+            event.setCancelled(true);
         }
     }
 }
