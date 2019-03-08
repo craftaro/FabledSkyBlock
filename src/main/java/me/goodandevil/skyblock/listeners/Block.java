@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
@@ -551,7 +552,6 @@ public class Block implements Listener {
 
     @EventHandler
     public void onStructureCreate(StructureGrowEvent event) {
-        Bukkit.broadcastMessage(event.getEventName());
         WorldManager worldManager = skyblock.getWorldManager();
         IslandManager islandManager = skyblock.getIslandManager();
 
@@ -597,6 +597,33 @@ public class Block implements Listener {
         Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
+            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityCreatePortal(EntityCreatePortalEvent event) {
+        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = skyblock.getIslandManager();
+
+        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+            return;
+
+        if (event.getBlocks().isEmpty())
+            return;
+
+        Island island = islandManager.getIslandAtLocation(event.getBlocks().get(0).getLocation());
+        if (island == null)
+            return;
+
+        // Check spawn block protection
+        IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
+        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
+
+        for (org.bukkit.block.BlockState block : event.getBlocks()) {
             if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
                 event.setCancelled(true);
                 return;
