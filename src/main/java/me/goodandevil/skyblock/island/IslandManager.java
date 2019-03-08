@@ -1078,7 +1078,7 @@ public class IslandManager {
                     }
 
                     if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
-                        WorldBorder.send(player, island.getBorderColor(), island.getSize() + 2.5,
+                        WorldBorder.send(player, island.getBorderColor(), island.getSize(),
                                 island.getLocation(worldManager.getIslandWorld(player.getWorld()),
                                         IslandEnvironment.Island));
                     } else {
@@ -1215,7 +1215,7 @@ public class IslandManager {
                     }
 
                     for (Player all : getPlayersAtIsland(island)) {
-                        WorldBorder.send(all, island.getBorderColor(), island.getSize() + 2.5, island
+                        WorldBorder.send(all, island.getBorderColor(), island.getSize(), island
                                 .getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island));
                     }
                 }

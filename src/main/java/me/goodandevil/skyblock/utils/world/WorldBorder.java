@@ -1,13 +1,12 @@
 package me.goodandevil.skyblock.utils.world;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
+import me.goodandevil.skyblock.utils.version.NMSUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.utils.version.NMSUtil;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public final class WorldBorder {
 
@@ -37,7 +36,9 @@ public final class WorldBorder {
 
 	public static void send(Player player, Color color, double size, Location centerLocation) {
 		try {
-			size = size - 2.5;
+			// Adjust border size to fit around whole-blocks, odd numbers only!
+			size += size % 2 == 0 ? 1 : 0;
+
 			centerLocation = centerLocation.clone();
 			centerLocation.add(.5, 0, .5);
 			Object worldBorder = worldBorderClass.getConstructor().newInstance();
