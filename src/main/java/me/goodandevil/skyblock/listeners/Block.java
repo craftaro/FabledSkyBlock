@@ -194,8 +194,25 @@ public class Block implements Listener {
             }
         }
 
-        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
-            if (configLoad.getBoolean("Island.Spawn.Protection")) {
+        // Check spawn protection
+        if (configLoad.getBoolean("Island.Spawn.Protection")) {
+            boolean isObstructing = false;
+            // Directly on the block
+            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+                isObstructing = true;
+            }
+
+            // Specific check for beds
+            if (block.getType().name().equals("BED") || block.getType().name().contains("_BED")) {
+                BlockFace bedDirection = ((org.bukkit.material.Bed) event.getBlock().getState().getData()).getFacing();
+                org.bukkit.block.Block bedBlock = block.getRelative(bedDirection);
+                if (LocationUtil.isLocationAffectingLocation(bedBlock.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+                    isObstructing = true;
+
+                }
+            }
+
+            if (isObstructing) {
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                 .getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));

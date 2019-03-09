@@ -397,6 +397,16 @@ public class Entity implements Listener {
 
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
 
+        org.bukkit.block.Block block = event.getBlock();
+
+        // Check spawn block falling, this can be a bit glitchy, but it's better than nothing
+        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
+        if (LocationUtil.isLocationLocation(block.getLocation(), islandLocation.clone().subtract(0, 1, 0)) &&
+                skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+            event.setCancelled(true);
+            return;
+        }
+
         if ((event.getEntityType() == EntityType.FALLING_BLOCK) && LocationUtil.isLocationLocation(event.getBlock().getLocation(),
                     island.getLocation(world, IslandEnvironment.Main)
                             .clone())
@@ -410,7 +420,7 @@ public class Entity implements Listener {
                         Method getBlockDataMethod = FallingBlock.class.getMethod("getBlockData");
                         byte data = (byte) getBlockDataMethod.invoke(fallingBlock);
                         if (fallingBlock.getMaterial().name().endsWith("ANVIL")) {
-                            data = (byte) Math.ceil(data / 4);
+                            data = (byte) Math.ceil(data / 4.0);
                         }
                         fallingBlock.getWorld().dropItemNaturally(fallingBlock.getLocation(), new ItemStack(fallingBlock.getMaterial(), 1, (byte) data));
                     } catch (Exception ignored) { }
@@ -422,21 +432,19 @@ public class Entity implements Listener {
         if (entity instanceof FallingBlock)
             return;
 
+        // Check entities interacting with spawn
+        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation) &&
+                skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "MobGriefing")) {
             event.setCancelled(true);
         }
 
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Block.Level.Enable")) return;
-        org.bukkit.block.Block block = event.getBlock();
-
-        // Check spawn block protection
-        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
-        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation) &&
-                skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
-            event.setCancelled(true);
-            return;
-        }
 
         Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
