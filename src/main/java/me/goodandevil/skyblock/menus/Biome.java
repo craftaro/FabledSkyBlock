@@ -1,27 +1,12 @@
 package me.goodandevil.skyblock.menus;
 
-import java.io.File;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.biome.BiomeManager;
 import me.goodandevil.skyblock.cooldown.Cooldown;
 import me.goodandevil.skyblock.cooldown.CooldownManager;
 import me.goodandevil.skyblock.cooldown.CooldownPlayer;
 import me.goodandevil.skyblock.cooldown.CooldownType;
-import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandEnvironment;
-import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.island.IslandWorld;
+import me.goodandevil.skyblock.island.*;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
@@ -33,6 +18,16 @@ import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.SBiome;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+
+import java.io.File;
 
 public class Biome {
 
@@ -199,6 +194,9 @@ public class Biome {
 			    
 			    if (!allowEndBiome && (biome.equals(SBiome.THE_END) || biome.equals(SBiome.THE_VOID)))
 			        continue;
+
+			    if (!player.hasPermission("fabledskyblock.biome.*") && !player.hasPermission("fabledskyblock.biome." + biome.name().toLowerCase()))
+			    	continue;
 			    
 			    if (islandBiome.equals(biome.getBiome())) {
 			        nInv.addItem(nInv.createItem(biome.getGuiIcon(),

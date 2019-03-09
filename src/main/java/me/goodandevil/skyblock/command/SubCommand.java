@@ -15,6 +15,8 @@ public abstract class SubCommand {
 
 	public abstract SubCommand setInfo(String info);
 
+	// TODO: public abstract boolean hasPermission(CommandSender sender);
+
 	public abstract String[] getAliases();
 
 	public abstract String[] getArguments();
