@@ -556,6 +556,11 @@ public class Entity implements Listener {
             livingEntity instanceof Horse) {
             return;
         }
+
+        if (NMSUtil.getVersionNumber() > 8) {
+            if (livingEntity instanceof Donkey || livingEntity instanceof Mule)
+                return;
+        }
         
         if (livingEntity.hasMetadata("SkyBlock")) {
             return;
@@ -574,8 +579,7 @@ public class Entity implements Listener {
                     List<ItemStack> entityDrops = event.getDrops();
 
                     if (entityDrops != null) {
-                        for (int i = 0; i < entityDrops.size(); i++) {
-                            ItemStack is = entityDrops.get(i);
+                        for (ItemStack is : entityDrops) {
                             is.setAmount(is.getAmount() * 2);
                         }
                     }

@@ -46,7 +46,7 @@ public class BiomeManager {
 
         for (Player all : skyblock.getIslandManager().getPlayersAtIsland(island, IslandWorld.Normal)) {
             try {
-                if (NMSUtil.getVersionNumber() < 10) {
+                if (NMSUtil.getVersionNumber() < 9) {
                     NMSUtil.sendPacket(all,
                             packetPlayOutMapChunkClass.getConstructor(chunkClass, boolean.class, int.class)
                                     .newInstance(all.getLocation().getChunk().getClass().getMethod("getHandle")

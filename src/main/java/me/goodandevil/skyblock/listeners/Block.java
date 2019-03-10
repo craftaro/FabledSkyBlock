@@ -351,6 +351,13 @@ public class Block implements Listener {
                 }
             }
         }
+
+        // Check piston head
+        if (configLoad.getBoolean("Island.Spawn.Protection")) {
+            if (LocationUtil.isLocationAffectingLocation(event.getBlock().getRelative(event.getDirection()).getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler

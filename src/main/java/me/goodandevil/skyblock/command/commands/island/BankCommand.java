@@ -30,7 +30,7 @@ public class BankCommand extends SubCommand {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Disabled")) {
+        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Disabled.Message"));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
             return;
