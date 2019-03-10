@@ -4,7 +4,7 @@ stages:
 variables:
     name: "FabledSkyBlock"
     path: "/builds/Songoda/SkyBlock/"
-    version: "Build-70"
+    version: "Build-71"
 
 build:
   stage: build
