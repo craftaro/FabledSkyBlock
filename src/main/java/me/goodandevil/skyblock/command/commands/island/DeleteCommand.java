@@ -1,15 +1,6 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
@@ -21,13 +12,17 @@ import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
 import me.goodandevil.skyblock.utils.version.Sounds;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class DeleteCommand extends SubCommand {
 
@@ -142,8 +137,8 @@ public class DeleteCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Delete.Info.Message";
 	}
 
 	@Override
@@ -154,10 +149,5 @@ public class DeleteCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Default;
 	}
 }

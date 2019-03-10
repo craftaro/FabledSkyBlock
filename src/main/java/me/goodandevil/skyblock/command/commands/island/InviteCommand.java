@@ -1,18 +1,8 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.event.island.IslandInviteEvent;
 import me.goodandevil.skyblock.api.invite.IslandInvitation;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.invite.Invite;
@@ -23,13 +13,18 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.ChatComponent;
 import me.goodandevil.skyblock.utils.version.Sounds;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class InviteCommand extends SubCommand {
 
@@ -251,8 +246,8 @@ public class InviteCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Invite.Info.Message";
 	}
 
 	@Override
@@ -264,9 +259,4 @@ public class InviteCommand extends SubCommand {
 	public String[] getArguments() {
 		return new String[0];
 	}
-
-	@Override
-	public Type getType() {
-        return CommandManager.Type.Default;
-    }
 }

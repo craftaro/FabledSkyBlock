@@ -1,19 +1,6 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
@@ -31,6 +18,15 @@ import me.goodandevil.skyblock.structure.StructureManager;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.util.UUID;
 
 public class ConfirmCommand extends SubCommand {
 
@@ -207,8 +203,8 @@ public class ConfirmCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Confirmation.Info.Message";
 	}
 
 	@Override
@@ -219,10 +215,5 @@ public class ConfirmCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Default;
 	}
 }

@@ -1,15 +1,6 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
@@ -17,6 +8,11 @@ import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class PublicCommand extends SubCommand {
 
@@ -65,8 +61,8 @@ public class PublicCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Public.Info.Message";
 	}
 
 	@Override
@@ -77,10 +73,5 @@ public class PublicCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Default;
 	}
 }

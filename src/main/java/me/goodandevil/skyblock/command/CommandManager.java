@@ -136,11 +136,22 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					}
 
 					SubCommand subCommand;
+					boolean isAdmin;
 
 					if (args[0].equalsIgnoreCase("help")) {
 						if (player == null) {
 							sendConsoleHelpCommands(sender);
 						} else {
+							boolean canUseHelp = player.hasPermission("fabledskyblock.*")
+									|| player.hasPermission("fabledskyblock.island.*")
+									|| player.hasPermission("fabledskyblock.island.help");
+
+							if (!canUseHelp) {
+								messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Admin.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+								return;
+							}
+
 							int page = -1;
 
 							if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
@@ -167,63 +178,76 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					} else if (args[0].equalsIgnoreCase("admin")) {
 						if (args.length == 1 || args[1].equalsIgnoreCase("help")) {
 							if (player == null) {
-								if (player == null) {
-									sendConsoleHelpCommands(sender);
-								} else {
-									int page = -1;
+								sendConsoleHelpCommands(sender);
+							} else {
+								boolean canUseHelp = player.hasPermission("fabledskyblock.*")
+										|| player.hasPermission("fabledskyblock.admin.*")
+										|| player.hasPermission("fabledskyblock.admin.help");
 
-									if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-											.getFileConfiguration().getBoolean("Command.Help.List")) {
-										page = 1;
+								if (!canUseHelp) {
+									messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Admin.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+									return;
+								}
 
-										if (args.length == 3) {
-											if (args[2].matches("[0-9]+")) {
-												page = Integer.valueOf(args[2]);
-											} else {
-												messageManager.sendMessage(player,
-														configLoad.getString("Command.Island.Help.Integer.Message"));
-												soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-														1.0F);
+								int page = -1;
 
-												return;
-											}
+								if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+										.getFileConfiguration().getBoolean("Command.Help.List")) {
+									page = 1;
+
+									if (args.length == 3) {
+										if (args[2].matches("[0-9]+")) {
+											page = Integer.valueOf(args[2]);
+										} else {
+											messageManager.sendMessage(player,
+													configLoad.getString("Command.Island.Help.Integer.Message"));
+											soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+													1.0F);
+
+											return;
 										}
 									}
-
-									sendPlayerAdminHelpCommands(player, page);
 								}
-							} else {
-								messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Help.Permission.Message"));
-								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+								sendPlayerAdminHelpCommands(player, page);
 							}
 
 							return;
 						}
 
 						subCommand = getAdminSubCommand(args[1]);
+						isAdmin = true;
 					} else {
 						subCommand = getIslandSubCommand(args[0]);
+						isAdmin = false;
 					}
 
 					if (subCommand == null) {
-						messageManager.sendMessage(sender,
-								configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
+						messageManager.sendMessage(sender, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
 						soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-					} else {
-						List<String> arguments = new ArrayList<>();
-						arguments.addAll(Arrays.asList(args));
-						arguments.remove(args[0]);
+						return;
+					}
 
-						if (adminCommands.contains(subCommand)) {
-							arguments.remove(args[1]);
-						}
+					if (!subCommand.hasPermission(player, isAdmin)) {
+						messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied." + (isAdmin ? "Admin" : "Island") + ".Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						return;
+					}
 
-						if (sender instanceof Player) {
-							subCommand.onCommandByPlayer(player, arguments.toArray(new String[0]));
-						} else if (sender instanceof ConsoleCommandSender) {
-							subCommand.onCommandByConsole((ConsoleCommandSender) sender,
-									arguments.toArray(new String[0]));
-						}
+					List<String> arguments = new ArrayList<>();
+					arguments.addAll(Arrays.asList(args));
+					arguments.remove(args[0]);
+
+					if (adminCommands.contains(subCommand)) {
+						arguments.remove(args[1]);
+					}
+
+					if (sender instanceof Player) {
+						subCommand.onCommandByPlayer(player, arguments.toArray(new String[0]));
+					} else if (sender instanceof ConsoleCommandSender) {
+						subCommand.onCommandByConsole((ConsoleCommandSender) sender,
+								arguments.toArray(new String[0]));
 					}
 				}
 			}.runTaskAsynchronously(skyblock);
@@ -390,19 +414,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 				if (page == -1) {
 					for (SubCommand subCommand : subCommands) {
-						String commandAliases = "";
+						StringBuilder commandAliases = new StringBuilder();
 
 						if (showAlises) {
-							for (int i1 = 0; i1 < subCommand.getAliases().length; i1++) {
-								if (i1 == 0) {
-									commandAliases = "/";
-								}
-
-								if (i1 == subCommand.getAliases().length - 1) {
-									commandAliases = commandAliases + subCommand.getAliases()[i1];
-								} else {
-									commandAliases = commandAliases + subCommand.getAliases()[i1] + "/";
-								}
+							for (int i = 0; i < subCommand.getAliases().length; i++) {
+								commandAliases.append("/").append(subCommand.getAliases()[i]);
 							}
 						}
 
@@ -420,19 +436,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					for (; index < endIndex; index++) {
 						if (subCommands.size() > index) {
 							SubCommand subCommandFromIndex = subCommands.get(index);
-							String commandAliases = "";
+							StringBuilder commandAliases = new StringBuilder();
 
 							if (showAlises) {
 								for (int i = 0; i < subCommandFromIndex.getAliases().length; i++) {
-									if (i == 0) {
-										commandAliases = "/";
-									}
-
-									if (i == subCommandFromIndex.getAliases().length) {
-										commandAliases = commandAliases + subCommandFromIndex.getAliases()[i];
-									} else {
-										commandAliases = commandAliases + subCommandFromIndex.getAliases()[i] + "/";
-									}
+									commandAliases.append("/").append(subCommandFromIndex.getAliases()[i]);
 								}
 							}
 

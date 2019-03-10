@@ -1,17 +1,6 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.confirmation.Confirmation;
@@ -30,13 +19,19 @@ import me.goodandevil.skyblock.utils.ChatComponent;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.util.UUID;
 
 public class OwnerCommand extends SubCommand {
 
@@ -262,8 +257,8 @@ public class OwnerCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Ownership.Info.Message";
 	}
 
 	@Override
@@ -274,10 +269,5 @@ public class OwnerCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Default;
 	}
 }

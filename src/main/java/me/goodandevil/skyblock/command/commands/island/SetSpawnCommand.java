@@ -1,7 +1,14 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-
+import me.goodandevil.skyblock.command.SubCommand;
+import me.goodandevil.skyblock.config.FileManager;
+import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.*;
+import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.utils.version.Materials;
+import me.goodandevil.skyblock.utils.version.Sounds;
+import me.goodandevil.skyblock.utils.world.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
@@ -10,22 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
-import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
-import me.goodandevil.skyblock.config.FileManager;
-import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandEnvironment;
-import me.goodandevil.skyblock.island.IslandManager;
-import me.goodandevil.skyblock.island.IslandRole;
-import me.goodandevil.skyblock.island.IslandWorld;
-import me.goodandevil.skyblock.message.MessageManager;
-import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.version.Materials;
-import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
+import java.io.File;
 
 public class SetSpawnCommand extends SubCommand {
 
@@ -176,8 +168,8 @@ public class SetSpawnCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.SetSpawn.Info.Message";
 	}
 
 	@Override
@@ -188,10 +180,5 @@ public class SetSpawnCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[] { "main", "visitor" };
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Default;
 	}
 }

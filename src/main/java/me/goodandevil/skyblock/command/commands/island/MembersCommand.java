@@ -1,18 +1,14 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.menus.Members;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class MembersCommand extends SubCommand {
 
@@ -47,8 +43,8 @@ public class MembersCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Members.Info.Message";
 	}
 
 	@Override
@@ -59,10 +55,5 @@ public class MembersCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Default;
 	}
 }

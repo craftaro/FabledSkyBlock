@@ -1,16 +1,6 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-
-import org.apache.commons.lang3.text.WordUtils;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.levelling.LevellingManager;
@@ -21,6 +11,12 @@ import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.apache.commons.lang3.text.WordUtils;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class ValueCommand extends SubCommand {
 
@@ -84,8 +80,8 @@ public class ValueCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Value.Info.Message";
 	}
 
 	@Override
@@ -96,10 +92,5 @@ public class ValueCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Default;
 	}
 }

@@ -1,7 +1,5 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
@@ -12,7 +10,6 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -95,8 +92,8 @@ public class UnlockCommand extends SubCommand {
     }
 
     @Override
-    public String getInfo() {
-        return info;
+    public String getInfoMessagePath() {
+        return "Command.Island.Unlock.Info.Message";
     }
 
     @Override
@@ -107,10 +104,5 @@ public class UnlockCommand extends SubCommand {
     @Override
     public String[] getArguments() {
         return new String[0];
-    }
-
-    @Override
-    public Type getType() {
-        return Type.Default;
     }
 }

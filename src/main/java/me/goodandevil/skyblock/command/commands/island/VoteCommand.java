@@ -1,17 +1,6 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
@@ -24,6 +13,13 @@ import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.visit.VisitManager;
+import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.util.UUID;
 
 public class VoteCommand extends SubCommand {
 
@@ -133,8 +129,8 @@ public class VoteCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Vote.Info.Message";
 	}
 
 	@Override
@@ -145,10 +141,5 @@ public class VoteCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Default;
 	}
 }

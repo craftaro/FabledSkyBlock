@@ -1,21 +1,16 @@
 package me.goodandevil.skyblock.command.commands.island;
 
-import java.io.File;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.menus.Visit;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class VisitCommand extends SubCommand {
 
@@ -57,8 +52,8 @@ public class VisitCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return this.info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Visit.Info.Message";
 	}
 
 	@Override
@@ -69,10 +64,5 @@ public class VisitCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Default;
 	}
 }

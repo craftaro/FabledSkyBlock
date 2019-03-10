@@ -1,15 +1,6 @@
 package me.goodandevil.skyblock.command.commands.admin;
 
-import java.io.File;
-
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.menus.admin.Upgrade;
@@ -17,6 +8,11 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class UpgradeCommand extends SubCommand {
 
@@ -30,11 +26,7 @@ public class UpgradeCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (!(player.hasPermission("fabledskyblock.admin.upgrade") || player.hasPermission("fabledskyblock.admin.*")
-				|| player.hasPermission("fabledskyblock.*"))) {
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Upgrade.Permission.Message"));
-			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-		} else if (skyblock.getUpgradeManager() == null) {
+		if (skyblock.getUpgradeManager() == null) {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Upgrade.Disabled.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		} else {
@@ -58,8 +50,8 @@ public class UpgradeCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Admin.Upgrade.Info.Message";
 	}
 
 	@Override
@@ -70,10 +62,5 @@ public class UpgradeCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Admin;
 	}
 }

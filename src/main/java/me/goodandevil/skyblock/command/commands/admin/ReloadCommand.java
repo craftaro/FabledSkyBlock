@@ -1,18 +1,6 @@
 package me.goodandevil.skyblock.command.commands.admin;
 
-import java.io.File;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
-import me.goodandevil.skyblock.command.CommandManager.Type;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.GeneratorManager;
@@ -24,6 +12,14 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.util.Map;
 
 public class ReloadCommand extends SubCommand {
 
@@ -46,73 +42,61 @@ public class ReloadCommand extends SubCommand {
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		Player player = null;
+		Map<String, Config> configs = fileManager.getConfigs();
 
-		if (sender instanceof Player) {
-			player = (Player) sender;
+		for (int i = 0; i < configs.size(); i++) {
+			String configFileName = (String) configs.keySet().toArray()[i];
+			Config configFileConfig = configs.get(configFileName);
+			String configFilePath = configFileName.replace(configFileConfig.getFile().getName(), "");
+
+			if (configFilePath.equals(skyblock.getDataFolder().toString() + "\\")
+					|| configFilePath.equals(skyblock.getDataFolder().toString() + "/")) {
+				configFileConfig.loadFile();
+			}
 		}
 
-		if (player == null || player.hasPermission("fabledskyblock.admin.reload") || player.hasPermission("fabledskyblock.admin.*")
-				|| player.hasPermission("fabledskyblock.*")) {
-			Map<String, Config> configs = fileManager.getConfigs();
+		Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+		FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();
 
-			for (int i = 0; i < configs.size(); i++) {
-				String configFileName = (String) configs.keySet().toArray()[i];
-				Config configFileConfig = configs.get(configFileName);
-				String configFilePath = configFileName.replace(configFileConfig.getFile().getName(), "");
-
-				if (configFilePath.equals(skyblock.getDataFolder().toString() + "\\")
-						|| configFilePath.equals(skyblock.getDataFolder().toString() + "/")) {
-					configFileConfig.loadFile();
-				}
+		if (skyblock.getScoreboardManager() == null) {
+			if (mainConfigLoad.getBoolean("Island.Scoreboard.Enable")) {
+				skyblock.setScoreboardManager(new ScoreboardManager(skyblock));
 			}
-
-			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-			FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();
-
-			if (skyblock.getScoreboardManager() == null) {
-				if (mainConfigLoad.getBoolean("Island.Scoreboard.Enable")) {
-					skyblock.setScoreboardManager(new ScoreboardManager(skyblock));
-				}
-			} else {
-				skyblock.getScoreboardManager().resendScoreboard();
-			}
-
-			if (skyblock.getGeneratorManager() == null) {
-				if (mainConfigLoad.getBoolean("Island.Generator.Enable")) {
-					skyblock.setGeneratorManager(new GeneratorManager(skyblock));
-				}
-			} else {
-				GeneratorManager generatorManager = skyblock.getGeneratorManager();
-				generatorManager.unregisterGenerators();
-				generatorManager.registerGenerators();
-			}
-
-			LevellingManager levellingManager = skyblock.getLevellingManager();
-			levellingManager.unregisterMaterials();
-			levellingManager.registerMaterials();
-
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					for (HologramType hologramTypeList : HologramType.values()) {
-						Hologram hologram = hologramManager.getHologram(hologramTypeList);
-
-						if (hologram != null) {
-							hologramManager.removeHologram(hologram);
-						}
-
-						hologramManager.spawnHologram(hologramTypeList);
-					}
-				}
-			});
-
-			messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
-			soundManager.playSound(sender, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Reload.Permission.Message"));
-			soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			skyblock.getScoreboardManager().resendScoreboard();
 		}
+
+		if (skyblock.getGeneratorManager() == null) {
+			if (mainConfigLoad.getBoolean("Island.Generator.Enable")) {
+				skyblock.setGeneratorManager(new GeneratorManager(skyblock));
+			}
+		} else {
+			GeneratorManager generatorManager = skyblock.getGeneratorManager();
+			generatorManager.unregisterGenerators();
+			generatorManager.registerGenerators();
+		}
+
+		LevellingManager levellingManager = skyblock.getLevellingManager();
+		levellingManager.unregisterMaterials();
+		levellingManager.registerMaterials();
+
+		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+			@Override
+			public void run() {
+				for (HologramType hologramTypeList : HologramType.values()) {
+					Hologram hologram = hologramManager.getHologram(hologramTypeList);
+
+					if (hologram != null) {
+						hologramManager.removeHologram(hologram);
+					}
+
+					hologramManager.spawnHologram(hologramTypeList);
+				}
+			}
+		});
+
+		messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
+		soundManager.playSound(sender, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
 	}
 
 	@Override
@@ -121,8 +105,8 @@ public class ReloadCommand extends SubCommand {
 	}
 
 	@Override
-	public String getInfo() {
-		return info;
+	public String getInfoMessagePath() {
+		return "Command.Island.Admin.Reload.Info.Message";
 	}
 
 	@Override
@@ -133,10 +117,5 @@ public class ReloadCommand extends SubCommand {
 	@Override
 	public String[] getArguments() {
 		return new String[0];
-	}
-
-	@Override
-	public Type getType() {
-		return CommandManager.Type.Admin;
 	}
 }
