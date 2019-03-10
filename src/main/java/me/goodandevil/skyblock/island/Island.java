@@ -1,17 +1,19 @@
 package me.goodandevil.skyblock.island;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.*;
+import me.goodandevil.skyblock.api.utils.APIUtil;
+import me.goodandevil.skyblock.ban.Ban;
+import me.goodandevil.skyblock.config.FileManager;
+import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.playerdata.PlayerData;
+import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.upgrade.Upgrade;
+import me.goodandevil.skyblock.utils.NumberUtil;
+import me.goodandevil.skyblock.utils.version.Sounds;
+import me.goodandevil.skyblock.utils.world.WorldBorder;
+import me.goodandevil.skyblock.visit.Visit;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,26 +23,10 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.api.event.island.IslandBiomeChangeEvent;
-import me.goodandevil.skyblock.api.event.island.IslandLocationChangeEvent;
-import me.goodandevil.skyblock.api.event.island.IslandMessageChangeEvent;
-import me.goodandevil.skyblock.api.event.island.IslandOpenEvent;
-import me.goodandevil.skyblock.api.event.island.IslandPasswordChangeEvent;
-import me.goodandevil.skyblock.api.event.island.IslandRoleChangeEvent;
-import me.goodandevil.skyblock.api.event.island.IslandUpgradeEvent;
-import me.goodandevil.skyblock.api.event.island.IslandWeatherChangeEvent;
-import me.goodandevil.skyblock.api.utils.APIUtil;
-import me.goodandevil.skyblock.ban.Ban;
-import me.goodandevil.skyblock.config.FileManager;
-import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.message.MessageManager;
-import me.goodandevil.skyblock.playerdata.PlayerData;
-import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.upgrade.Upgrade;
-import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.WorldBorder;
-import me.goodandevil.skyblock.visit.Visit;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Island {
 
@@ -810,7 +796,7 @@ public class Island {
 			messageManager.sendMessage(player,
 					fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
 							.getString("Island.Unlock." + type + ".Message").replace(
-							"%cost%", String.valueOf(price)));
+							"%cost%", NumberUtil.formatNumberByDecimal(price)));
 
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 			player.setVelocity(player.getLocation().getDirection().multiply(-.50));

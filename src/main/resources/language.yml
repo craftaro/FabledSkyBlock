@@ -1,9 +1,9 @@
 Command:
     PermissionDenied:
         Island:
-            Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command"
+            Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
         Admin:
-            Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command"
+            Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
     Island:
         Argument:
             Unrecognised:
@@ -24,12 +24,14 @@ Command:
         Bank:
             Info:
                 Message: "&f&oAllows you to access your islands bank."
+            Disabled:
+                Message: '&bSkyBlock &8| &cError&8: &eThe bank has been disabled by a server administrator.'
             Unknown:
                 Message: "&bSkyBlock &8| &cError&8: &eYou are not currently on an island."
             Perm:
                 Message: "&bSkyBlock &8| &cError&8: &eYou do not have permission to access this islands bank."
             Balance:
-                Message: "&bSkyBlock &8| &aInfo&8: &eYour islands balance is '&7$%balance%&e'."
+                Message: "&bSkyBlock &8| &aInfo&8: &eYour island's balance is '&7$%balance%&e'."
             Deposit:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYou successfully deposited '&7$%amount%&e'."
             Withdraw:
@@ -40,6 +42,12 @@ Command:
                 Message: "&bSkyBlock &8| &cError&8: &eThere is not enough money to withdraw."
             Short3:
                 Message: "&bSkyBlock &8| &cError&8: &eYou did not specify an amount."
+            Short4:
+                Message: "&bSkyBlock &8| &cError&8: &eThe amount you specified is invalid."
+            Short5:
+                Message: "&bSkyBlock &8| &cError&8: &eThe amount you specified is negative, it must be positive."
+            Short6:
+                Message: "&bSkyBlock &8| &cError&8: &eYou must specify an amount that does not contain a decimal."
             Invalid:
                 Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island bank [<Deposit|Withdraw|Balance>]"
         Unlock:

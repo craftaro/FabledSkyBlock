@@ -256,6 +256,9 @@ Island:
         # end world rather than the island world.
         # [!] Recommend to keep this enabled to prevent performance drop with chunk loading.
         Island: true
+    Bank:
+        Enable: true
+        AllowDecimals: true
     Admin:
         Structure:
             # Item Material used to select positions for a structure.

@@ -1,5 +1,6 @@
 package me.goodandevil.skyblock.utils;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 public final class NumberUtil {
@@ -9,7 +10,7 @@ public final class NumberUtil {
 	}
 
 	public static String formatNumberByDecimal(double number) {
-		String withoutDecimal = String.valueOf(number), withDecimal = "";
+		String withoutDecimal = new DecimalFormat("0.#").format(number), withDecimal = "";
 
 		if (withoutDecimal.contains(".")) {
 			withDecimal = "." + withoutDecimal.split("\\.")[1];

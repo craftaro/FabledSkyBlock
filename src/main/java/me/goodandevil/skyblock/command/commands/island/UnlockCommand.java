@@ -8,6 +8,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.ConsoleCommandSender;
@@ -68,7 +69,7 @@ public class UnlockCommand extends SubCommand {
 
         if (!economyManager.hasBalance(player, price)) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Money.Message").replace(
-                    "%cost%", String.valueOf(price)));
+                    "%cost%", NumberUtil.formatNumberByDecimal(price)));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
             return;
         }

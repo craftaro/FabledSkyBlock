@@ -9,8 +9,8 @@ import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
+import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -30,13 +30,17 @@ public class BankCommand extends SubCommand {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
+        if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Disabled")) {
+            messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Disabled.Message"));
+            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            return;
+        }
+
         if (args.length == 0) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Invalid.Message"));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
             return;
         }
-
-        String action = WordUtils.capitalize(args[0].toLowerCase());
 
         Island island = islandManager.getIslandAtLocation(player.getLocation());
 
@@ -56,20 +60,45 @@ public class BankCommand extends SubCommand {
 
         double balance = island.getBankBalance();
 
-        switch (action) {
-            case "Balance":
-            case "Bal":
+        switch (args[0].toLowerCase()) {
+            case "balance":
+            case "bal":
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Balance.Message").replace(
-                        "%balance%", String.valueOf(balance)));
+                        "%balance%", NumberUtil.formatNumberByDecimal(balance)));
                 return;
-            case "Deposit": {
+            case "deposit": {
                 if (args.length == 1) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short3.Message"));
                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
                     return;
                 }
-                
-                double amt = Double.parseDouble(args[1]);
+
+                // Parse the amount of money
+                double amt;
+                try {
+                    amt = Double.parseDouble(args[1]);
+
+                    // Make sure the amount is positive
+                    if (amt <= 0) {
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short5.Message"));
+                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        return;
+                    }
+
+                    // If decimals aren't allowed, check for them
+                    if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+                        int intAmt = (int) amt;
+                        if (intAmt != amt) {
+                            messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short6.Message"));
+                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            return;
+                        }
+                    }
+                } catch (NumberFormatException ex) {
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short4.Message"));
+                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    return;
+                }
 
                 if (!economyManager.hasBalance(player, amt)) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short.Message"));
@@ -79,17 +108,42 @@ public class BankCommand extends SubCommand {
                 economyManager.withdraw(player, amt);
                 island.addToBank(amt);
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Deposit.Message").replace(
-                        "%amount%", String.valueOf(amt)));
+                        "%amount%", NumberUtil.formatNumberByDecimal(amt)));
                 return;
             }
-            case "Withdraw": {
+            case "withdraw": {
                 if (args.length == 1) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short3.Message"));
                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
                     return;
                 }
-                
-                double amt = Double.parseDouble(args[1]);
+
+                // Parse the amount of money
+                double amt;
+                try {
+                    amt = Double.parseDouble(args[1]);
+
+                    // Make sure the amount is positive
+                    if (amt <= 0) {
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short5.Message"));
+                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        return;
+                    }
+
+                    // If decimals aren't allowed, check for them
+                    if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+                        int intAmt = (int) amt;
+                        if (intAmt != amt) {
+                            messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short6.Message"));
+                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            return;
+                        }
+                    }
+                } catch (NumberFormatException ex) {
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short4.Message"));
+                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    return;
+                }
 
                 if (amt > balance) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short2.Message"));
@@ -98,7 +152,7 @@ public class BankCommand extends SubCommand {
                 economyManager.deposit(player, amt);
                 island.removeFromBank(amt);
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Withdraw.Message").replace(
-                        "%amount%", String.valueOf(amt)));
+                        "%amount%", NumberUtil.formatNumberByDecimal(amt)));
                 return;
             }
         }

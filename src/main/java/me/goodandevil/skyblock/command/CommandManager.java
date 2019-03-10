@@ -127,6 +127,16 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 							if (skyblock.getIslandManager().getIsland(player) == null) {
 								Bukkit.getServer().getScheduler().runTask(skyblock, () -> Bukkit.getServer().dispatchCommand(sender, "island create"));
 							} else {
+								boolean canUseControlPanel = player.hasPermission("fabledskyblock.*")
+										|| player.hasPermission("fabledskyblock.island.*")
+										|| player.hasPermission("fabledskyblock.island.controlpanel");
+
+								if (!canUseControlPanel) {
+									messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Island.Message"));
+									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+									return;
+								}
+
 								ControlPanel.getInstance().open(player);
 								soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 							}
@@ -147,7 +157,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 									|| player.hasPermission("fabledskyblock.island.help");
 
 							if (!canUseHelp) {
-								messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Admin.Message"));
+								messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Island.Message"));
 								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 								return;
 							}
