@@ -18,13 +18,6 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class LevelCommand extends SubCommand {
 
-	private final SkyBlock skyblock;
-	private String info;
-
-	public LevelCommand(SkyBlock skyblock) {
-		this.skyblock = skyblock;
-	}
-
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -57,13 +50,6 @@ public class LevelCommand extends SubCommand {
 	@Override
 	public String getInfo() {
 		return info;
-	}
-
-	@Override
-	public SubCommand setInfo(String info) {
-		this.info = info;
-
-		return this;
 	}
 
 	@Override

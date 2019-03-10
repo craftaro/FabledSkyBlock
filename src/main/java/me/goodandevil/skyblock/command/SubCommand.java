@@ -1,25 +1,44 @@
 package me.goodandevil.skyblock.command;
 
+import me.goodandevil.skyblock.SkyBlock;
+import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
+
+import java.io.File;
 
 public abstract class SubCommand {
 
-	public abstract void onCommandByPlayer(Player player, String[] args);
+    protected final SkyBlock skyblock;
+    protected final String info;
 
-	public abstract void onCommandByConsole(ConsoleCommandSender sender, String[] args);
+    public SubCommand() {
+        this.skyblock = SkyBlock.getInstance();
+        this.info = ChatColor.translateAlternateColorCodes('&', this.skyblock.getFileManager().getConfig(new File(this.skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString(this.getInfoMessagePath()));
+    }
 
-	public abstract String getName();
+    public abstract void onCommandByPlayer(Player player, String[] args);
 
-	public abstract String getInfo();
+    public abstract void onCommandByConsole(ConsoleCommandSender sender, String[] args);
 
-	public abstract SubCommand setInfo(String info);
+    public abstract String getName();
 
-	// TODO: public abstract boolean hasPermission(CommandSender sender);
+    public abstract String getInfoMessagePath();
 
-	public abstract String[] getAliases();
+    public abstract String[] getAliases();
 
-	public abstract String[] getArguments();
+    public abstract String[] getArguments();
 
-	public abstract CommandManager.Type getType();
+    public String getInfo() { return this.info; }
+
+    public boolean hasPermission(Permissible toCheck, boolean isAdmin) {
+        if (toCheck.hasPermission("fabledskyblock.*"))
+            return true;
+
+        return isAdmin
+                ? toCheck.hasPermission("fabledskyblock.admin.*") || toCheck.hasPermission("fabledskyblock.admin." + this.getName())
+                : toCheck.hasPermission("fabledskyblock.island.*") || toCheck.hasPermission("fabledskyblock.island." + this.getName());
+    }
+
 }

@@ -23,13 +23,6 @@ import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class OwnerCommand extends SubCommand {
 
-	private final SkyBlock skyblock;
-	private String info;
-
-	public OwnerCommand(SkyBlock skyblock) {
-		this.skyblock = skyblock;
-	}
-
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		onCommand(player, args);
@@ -114,13 +107,6 @@ public class OwnerCommand extends SubCommand {
 	@Override
 	public String getInfo() {
 		return info;
-	}
-
-	@Override
-	public SubCommand setInfo(String info) {
-		this.info = info;
-
-		return this;
 	}
 
 	@Override

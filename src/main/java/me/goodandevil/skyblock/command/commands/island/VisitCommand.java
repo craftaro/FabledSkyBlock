@@ -1,41 +1,47 @@
-package me.goodandevil.skyblock.command.commands.admin;
+package me.goodandevil.skyblock.command.commands.island;
 
 import java.io.File;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
-import me.goodandevil.skyblock.config.FileManager;
-import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.menus.Visit;
 import me.goodandevil.skyblock.message.MessageManager;
+import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
-public class SetSpawnCommand extends SubCommand {
+public class VisitCommand extends SubCommand {
 
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
-		FileManager fileManager = skyblock.getFileManager();
 
-		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-		FileConfiguration configLoad = config.getFileConfiguration();
+		if (args.length == 0) {
+			PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+			playerData.setType(Visit.Type.Default);
+			playerData.setSort(Visit.Sort.Default);
 
-		if (player.hasPermission("fabledskyblock.admin.setspawn") || player.hasPermission("fabledskyblock.admin.*")
-				|| player.hasPermission("fabledskyblock.*")) {
-			fileManager.setLocation(fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")),
-					"Location.Spawn", player.getLocation(), true);
-			messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSpawn.Set.Message"));
-			soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+			Visit.getInstance().open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
+			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+		} else if (args.length == 1) {
+			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
+				@Override
+				public void run() {
+					Bukkit.getServer().dispatchCommand(player, "island teleport " + args[0]);
+				}
+			});
 		} else {
 			messageManager.sendMessage(player,
-					configLoad.getString("Command.Island.Admin.SetSpawn.Permission.Message"));
+					skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+							.getFileConfiguration().getString("Command.Island.Visit.Invalid.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
@@ -47,17 +53,17 @@ public class SetSpawnCommand extends SubCommand {
 
 	@Override
 	public String getName() {
-		return "setspawn";
+		return "visit";
 	}
 
 	@Override
 	public String getInfo() {
-		return info;
+		return this.info;
 	}
 
 	@Override
 	public String[] getAliases() {
-		return new String[0];
+		return new String[] { "warps", "explore" };
 	}
 
 	@Override
@@ -67,6 +73,6 @@ public class SetSpawnCommand extends SubCommand {
 
 	@Override
 	public Type getType() {
-		return CommandManager.Type.Admin;
+		return CommandManager.Type.Default;
 	}
 }

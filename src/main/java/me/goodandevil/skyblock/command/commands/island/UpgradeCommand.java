@@ -1,4 +1,4 @@
-package me.goodandevil.skyblock.command.commands.admin;
+package me.goodandevil.skyblock.command.commands.island;
 
 import java.io.File;
 
@@ -10,36 +10,36 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
-import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.menus.admin.Creator;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
+import me.goodandevil.skyblock.menus.Upgrade;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
-public class CreateCommand extends SubCommand {
+public class UpgradeCommand extends SubCommand {
 
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
-		FileManager fileManager = skyblock.getFileManager();
 
-		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (player.hasPermission("fabledskyblock.admin.create") || player.hasPermission("fabledskyblock.admin.*")
-				|| player.hasPermission("fabledskyblock.*")) {
-			if (playerDataManager.hasPlayerData(player)) {
-				playerDataManager.getPlayerData(player).setViewer(null);
+		if (skyblock.getIslandManager().getIsland(player) == null) {
+			skyblock.getMessageManager().sendMessage(player,
+					configLoad.getString("Command.Island.Upgrade.Owner.Message"));
+			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else {
+			if (!skyblock.getEconomyManager().isEconomy()) {
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Upgrade.Disabled.Message"));
+				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+				return;
 			}
 
-			Creator.getInstance().open(player);
+			Upgrade.getInstance().open(player);
 			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
-		} else {
-			skyblock.getMessageManager().sendMessage(player,
-					configLoad.getString("Command.Island.Admin.Create.Permission.Message"));
-			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 
@@ -50,7 +50,7 @@ public class CreateCommand extends SubCommand {
 
 	@Override
 	public String getName() {
-		return "create";
+		return "upgrade";
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class CreateCommand extends SubCommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[0];
+		return new String[] { "upgrades" };
 	}
 
 	@Override
@@ -70,6 +70,6 @@ public class CreateCommand extends SubCommand {
 
 	@Override
 	public Type getType() {
-		return CommandManager.Type.Admin;
+		return CommandManager.Type.Default;
 	}
 }

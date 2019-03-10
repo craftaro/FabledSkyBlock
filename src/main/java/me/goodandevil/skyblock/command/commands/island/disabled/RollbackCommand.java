@@ -1,4 +1,4 @@
-package me.goodandevil.skyblock.command.commands.admin;
+package me.goodandevil.skyblock.command.commands.island.disabled;
 
 import java.io.File;
 
@@ -10,35 +10,36 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.command.CommandManager;
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.command.CommandManager.Type;
-import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
-import me.goodandevil.skyblock.menus.admin.Creator;
-import me.goodandevil.skyblock.playerdata.PlayerDataManager;
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.menus.Rollback;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
-public class CreateCommand extends SubCommand {
+public class RollbackCommand extends SubCommand {
 
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
-		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+		MessageManager messageManager = skyblock.getMessageManager();
+		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
-		FileManager fileManager = skyblock.getFileManager();
 
-		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (player.hasPermission("fabledskyblock.admin.create") || player.hasPermission("fabledskyblock.admin.*")
-				|| player.hasPermission("fabledskyblock.*")) {
-			if (playerDataManager.hasPlayerData(player)) {
-				playerDataManager.getPlayerData(player).setViewer(null);
-			}
+		Island island = islandManager.getIsland(player);
 
-			Creator.getInstance().open(player);
+		if (island == null) {
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Rollback.Owner.Message"));
+			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+		} else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+			Rollback.getInstance().open(player);
 			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			skyblock.getMessageManager().sendMessage(player,
-					configLoad.getString("Command.Island.Admin.Create.Permission.Message"));
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Rollback.Role.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
@@ -50,7 +51,7 @@ public class CreateCommand extends SubCommand {
 
 	@Override
 	public String getName() {
-		return "create";
+		return "rollback";
 	}
 
 	@Override
@@ -70,6 +71,6 @@ public class CreateCommand extends SubCommand {
 
 	@Override
 	public Type getType() {
-		return CommandManager.Type.Admin;
+		return CommandManager.Type.Default;
 	}
 }

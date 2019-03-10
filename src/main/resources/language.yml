@@ -1,4 +1,9 @@
 Command:
+    PermissionDenied:
+        Island:
+            Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command"
+        Admin:
+            Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command"
     Island:
         Argument:
             Unrecognised:
@@ -688,46 +693,31 @@ Command:
             Private:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYour Island is now &cPrivate&e."
         Admin:
-            Help:
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
             Create:
                 Info:
                     Message: "&f&oManage Structures for the Island Creator menu."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
             Upgrade:
                 Info:
                     Message: "&f&oManager Upgrades for the Island Upgrade menu."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Disabled:
                     Message: "&bSkyBlock &8| &cError&8: &eYou cannot peform that command because upgrades have been disabled."
             Generator:
                 Info:
                     Message: "&f&oManager generators for cobblestone generators."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Disabled:
                     Message: "&bSkyBlock &8| &cError&8: &eYou cannot peform that command because the generator has been disabled."
             Level:
                 Info:
                     Message: "&f&oChange Island level materials and points."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
             Settings:
                 Info:
                     Message: "&f&oChange the default settings for when an Island is created."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
             Structure:
                 Info:
                     Message: "&f&oCreate structures for Islands."
                 Tool:
                     Info:
                         Message: "&f&oGives the player the Structure tool item."
-                    Permission:
-                        Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                     Inventory:
                         Message: "&bSkyBlock &8| &cError&8: &eYou already have the Structure tool in your Inventory."
                     Equiped:
@@ -735,8 +725,6 @@ Command:
                 Save:
                     Info:
                         Message: "&f&oSaves a selected Structure."
-                    Permission:
-                        Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                     Invalid:
                         Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin structure save <name>"
                     Position:
@@ -759,15 +747,11 @@ Command:
             SetSpawn:
                 Info:
                     Message: "&f&oSets the spawn point to your location."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Set:
                     Message: "&bSkyBlock &8| &aInfo&8: &eThe spawn point has been set to your location."
             SetHologram:
                 Info:
                     Message: "&f&oSets the location of a hologram."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
                     Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin sethologram <Level|Votes>"
                 Set:
@@ -775,8 +759,6 @@ Command:
             RemoveHologram:
                 Info:
                     Message: "&f&oRemoves an existing hologram."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
                     Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin removehologram <Level|Votes>"
                 Set:
@@ -786,8 +768,6 @@ Command:
             SetSize:
                 Info:
                     Message: "&f&oSets the size of a players Island."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
                     Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player> <size>"
                 Numerical:
@@ -807,8 +787,6 @@ Command:
             AddUpgrade:
                 Info:
                     Message: "&f&oAdd an upgrade to a players Island."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
                     Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin addupgrade <player> <upgrade>"
                 Island:
@@ -826,8 +804,6 @@ Command:
             RemoveUpgrade:
                 Info:
                     Message: "&f&oRemoves an upgrade from a players Island."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
                     Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin removeupgrade <player> <upgrade>"
                 Island:
@@ -845,8 +821,6 @@ Command:
             Delete:
                 Info:
                     Message: "&f&oDelete a players Island permanently."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
                     Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin delete <player_name>"
                 Owner:
@@ -858,8 +832,6 @@ Command:
             Owner:
                 Info:
                     Message: "&f&oGet the owner of a player's Island."
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
                 Invalid:
                     Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin owner <player_name>"
                 Island:
@@ -871,9 +843,7 @@ Command:
                         Message: "&bSkyBlock &8| &aInfo&8: &eThe player &d%player &eis an Island owner."
             Reload:
                 Info:
-                    Message: "&f&oReload all loaded files."  
-                Permission:
-                    Message: "&bSkyBlock &8| &cError&8: &eYou don't have permission to perform that command."
+                    Message: "&f&oReload all loaded files."
                 Reloaded:
                     Message: "&bSkyBlock &8| &aInfo&8: &eAll loaded files have been reloaded."
 Island:
@@ -3190,8 +3160,6 @@ Menu:
                             Displayname: "&aSet Biome"
                         Weather:
                             Displayname: "&aSet Weather"
-                        CoopPlayers:
-                            Displayname: "&aCoop Players"
             Owner:
                 Title: "&8Settings Editor - Island"
                 Item:

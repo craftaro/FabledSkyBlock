@@ -1,16 +1,5 @@
 package me.goodandevil.skyblock;
 
-import java.io.File;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.event.HandlerList;
-import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.goodandevil.skyblock.api.SkyBlockAPI;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.biome.BiomeManager;
@@ -26,23 +15,7 @@ import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.levelling.LevellingManager;
-import me.goodandevil.skyblock.listeners.Block;
-import me.goodandevil.skyblock.listeners.Bucket;
-import me.goodandevil.skyblock.listeners.Chat;
-import me.goodandevil.skyblock.listeners.Death;
-import me.goodandevil.skyblock.listeners.Entity;
-import me.goodandevil.skyblock.listeners.Food;
-import me.goodandevil.skyblock.listeners.Interact;
-import me.goodandevil.skyblock.listeners.Inventory;
-import me.goodandevil.skyblock.listeners.Item;
-import me.goodandevil.skyblock.listeners.Join;
-import me.goodandevil.skyblock.listeners.Move;
-import me.goodandevil.skyblock.listeners.Portal;
-import me.goodandevil.skyblock.listeners.Projectile;
-import me.goodandevil.skyblock.listeners.Quit;
-import me.goodandevil.skyblock.listeners.Respawn;
-import me.goodandevil.skyblock.listeners.Spawner;
-import me.goodandevil.skyblock.listeners.Teleport;
+import me.goodandevil.skyblock.listeners.*;
 import me.goodandevil.skyblock.menus.Rollback;
 import me.goodandevil.skyblock.menus.admin.Creator;
 import me.goodandevil.skyblock.menus.admin.Generator;
@@ -61,6 +34,16 @@ import me.goodandevil.skyblock.visit.VisitManager;
 import me.goodandevil.skyblock.visit.VisitTask;
 import me.goodandevil.skyblock.world.WorldManager;
 import me.goodandevil.skyblock.world.generator.VoidGenerator;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.event.HandlerList;
+import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.io.File;
 
 public class SkyBlock extends JavaPlugin {
 
@@ -96,6 +79,7 @@ public class SkyBlock extends JavaPlugin {
 		console.sendMessage(formatText("&a============================="));
 		console.sendMessage(formatText("&7FabledSkyBlock " + this.getDescription().getVersion() + " by &5Songoda <3&7!"));
 		console.sendMessage(formatText("&7Action: &aEnabling&7..."));
+		console.sendMessage(formatText("&a============================="));
 
 		instance = this;
 
@@ -176,8 +160,6 @@ public class SkyBlock extends JavaPlugin {
 		this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
 
 		SkyBlockAPI.setImplementation(instance);
-		
-		console.sendMessage(formatText("&a============================="));
 	}
 
 	@Override

@@ -28,13 +28,6 @@ import me.goodandevil.skyblock.utils.world.LocationUtil;
 
 public class DeleteCommand extends SubCommand {
 
-	private final SkyBlock skyblock;
-	private String info;
-
-	public DeleteCommand(SkyBlock skyblock) {
-		this.skyblock = skyblock;
-	}
-
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
 		onCommand(player, args);
@@ -129,13 +122,6 @@ public class DeleteCommand extends SubCommand {
 	@Override
 	public String getInfo() {
 		return info;
-	}
-
-	@Override
-	public SubCommand setInfo(String info) {
-		this.info = info;
-
-		return this;
 	}
 
 	@Override
