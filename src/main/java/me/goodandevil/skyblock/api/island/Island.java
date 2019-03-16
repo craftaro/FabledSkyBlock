@@ -30,6 +30,13 @@ public class Island {
 	}
 
 	/**
+	 * @return The Island UUID
+	 */
+	public UUID getIslandUUID() {
+		return this.handle.getIslandUUID();
+	}
+
+	/**
 	 * @return The Island owner UUID
 	 */
 	public UUID getOwnerUUID() {
