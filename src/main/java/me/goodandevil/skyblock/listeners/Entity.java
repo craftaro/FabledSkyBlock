@@ -470,7 +470,7 @@ public class Entity implements Listener {
             } else {
                 try {
                     materials = Materials.requestMaterials(event.getTo().name(),
-                            (byte) event.getClass().getMethod("getData", byte.class).invoke(event));
+                            (byte) event.getClass().getMethod("getData").invoke(event));
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
                         | NoSuchMethodException | SecurityException e) {
                     e.printStackTrace();
