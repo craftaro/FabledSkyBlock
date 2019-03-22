@@ -347,6 +347,21 @@ public class IslandManager {
 	}
 
 	/**
+	 * Gets an Island by its UUID
+	 * Returns null if an Island with the given UUID does not exist
+	 *
+	 * @param islandUUID The UUID of the Island
+	 * @return The Island with the given UUID, or null if one was not found
+	 */
+	public Island getIslandByUUID(UUID islandUUID) {
+		Preconditions.checkArgument(islandUUID != null, "Cannot get island with a null UUID");
+
+		me.goodandevil.skyblock.island.Island island = this.islandManager.getIslandByUUID(islandUUID);
+
+		return island != null ? island.getAPIWrapper() : null;
+	}
+
+	/**
 	 * @return A List of loaded Islands
 	 */
 	public List<Island> getIslands() {

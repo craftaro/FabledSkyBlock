@@ -893,6 +893,15 @@ public class IslandManager {
         return null;
     }
 
+    public Island getIslandByUUID(UUID islandUUID) {
+        for (Island island : islandStorage.values()) {
+            if (island.getIslandUUID().equals(islandUUID)) {
+                return island;
+            }
+        }
+        return null;
+    }
+
     public void removeIsland(UUID islandOwnerUUID) {
         islandStorage.remove(islandOwnerUUID);
     }
