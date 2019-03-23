@@ -89,7 +89,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 				new me.goodandevil.skyblock.command.commands.admin.GeneratorCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.LevelCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.OwnerCommand(),
-				new me.goodandevil.skyblock.command.commands.admin.ReloadCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.RemoveHologramCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.RemoveUpgradeCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.SetHologramCommand(),
@@ -239,14 +238,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 						return;
 					}
 
-					if (!subCommand.hasPermission(player, isAdmin)) {
-						messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied." + (isAdmin ? "Admin" : "Island") + ".Message"));
-						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					if (!subCommand.hasPermission(sender, isAdmin)) {
+						messageManager.sendMessage(sender, configLoad.getString("Command.PermissionDenied." + (isAdmin ? "Admin" : "Island") + ".Message"));
+						soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 						return;
 					}
 
-					List<String> arguments = new ArrayList<>();
-					arguments.addAll(Arrays.asList(args));
+					List<String> arguments = new ArrayList<>(Arrays.asList(args));
 					arguments.remove(args[0]);
 
 					if (adminCommands.contains(subCommand)) {

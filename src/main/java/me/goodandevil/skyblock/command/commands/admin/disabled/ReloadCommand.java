@@ -1,4 +1,4 @@
-package me.goodandevil.skyblock.command.commands.admin;
+package me.goodandevil.skyblock.command.commands.admin.disabled;
 
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.config.FileManager;
