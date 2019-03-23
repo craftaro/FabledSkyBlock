@@ -452,7 +452,7 @@ public class Entity implements Listener {
             IslandLevel level = island.getLevel();
 
             if (level.hasMaterial(materials.name())) {
-                int materialAmount = level.getMaterialAmount(materials.name());
+                long materialAmount = level.getMaterialAmount(materials.name());
 
                 if (materialAmount - 1 <= 0) {
                     level.removeMaterial(materials.name());
@@ -478,7 +478,7 @@ public class Entity implements Listener {
             }
 
             if (materials != null) {
-                int materialAmount = 0;
+                long materialAmount = 0;
                 IslandLevel level = island.getLevel();
 
                 if (level.hasMaterial(materials.name())) {
@@ -517,7 +517,7 @@ public class Entity implements Listener {
                                 IslandLevel level = island.getLevel();
 
                                 if (level.hasMaterial(materials.name())) {
-                                    int materialAmount = level.getMaterialAmount(materials.name());
+                                    long materialAmount = level.getMaterialAmount(materials.name());
 
                                     if (materialAmount - 1 <= 0) {
                                         level.removeMaterial(materials.name());

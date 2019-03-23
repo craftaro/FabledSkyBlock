@@ -5,9 +5,9 @@ import java.util.UUID;
 public class LeaderboardPlayer {
 
 	private UUID uuid;
-	private int value;
+	private long value;
 
-	public LeaderboardPlayer(UUID uuid, int value) {
+	public LeaderboardPlayer(UUID uuid, long value) {
 		this.uuid = uuid;
 		this.value = value;
 	}
@@ -16,7 +16,7 @@ public class LeaderboardPlayer {
 		return uuid;
 	}
 
-	public int getValue() {
+	public long getValue() {
 		return value;
 	}
 }

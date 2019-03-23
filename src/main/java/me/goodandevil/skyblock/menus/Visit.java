@@ -349,7 +349,7 @@ public class Visit {
 
 						return Integer.valueOf(playersAtIsland2).compareTo(playersAtIsland1);
 					} else if (sort == Visit.Sort.Level) {
-						return Integer.valueOf(visit2.getLevel().getLevel()).compareTo(visit1.getLevel().getLevel());
+						return Long.valueOf(visit2.getLevel().getLevel()).compareTo(visit1.getLevel().getLevel());
 					} else if (sort == Visit.Sort.Members) {
 						return Integer.valueOf(visit2.getMembers()).compareTo(visit1.getMembers());
 					} else if (sort == Visit.Sort.Visits) {

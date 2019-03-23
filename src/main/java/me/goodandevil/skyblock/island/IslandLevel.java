@@ -17,10 +17,10 @@ public class IslandLevel {
 
 	private UUID ownerUUID;
 
-	private int lastCalculatedLevel = 0;
-	private int lastCalculatedPoints = 0;
+	private long lastCalculatedLevel = 0;
+	private long lastCalculatedPoints = 0;
 
-	private Map<String, Integer> materials;
+	private Map<String, Long> materials;
 
 	public IslandLevel(UUID ownerUUID, SkyBlock skyblock) {
 		this.skyblock = skyblock;
@@ -30,12 +30,12 @@ public class IslandLevel {
 				new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		Map<String, Integer> materials = new HashMap<>();
+		Map<String, Long> materials = new HashMap<>();
 
 		if (configLoad.getString("Levelling.Materials") != null) {
 			for (String materialList : configLoad.getConfigurationSection("Levelling.Materials").getKeys(false)) {
 				if (configLoad.getString("Levelling.Materials." + materialList + ".Amount") != null) {
-					materials.put(materialList, configLoad.getInt("Levelling.Materials." + materialList + ".Amount"));
+					materials.put(materialList, configLoad.getLong("Levelling.Materials." + materialList + ".Amount"));
 				}
 			}
 		}
@@ -47,17 +47,17 @@ public class IslandLevel {
 		this.ownerUUID = ownerUUID;
 	}
 
-	public int getPoints() {
+	public long getPoints() {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		int pointsEarned = 0;
+		long pointsEarned = 0;
 
 		for (String materialList : this.materials.keySet()) {
-			int materialAmount = this.materials.get(materialList);
+			long materialAmount = this.materials.get(materialList);
 
 			if (configLoad.getString("Materials." + materialList + ".Points") != null) {
-				int pointsRequired = config.getFileConfiguration().getInt("Materials." + materialList + ".Points");
+				long pointsRequired = config.getFileConfiguration().getLong("Materials." + materialList + ".Points");
 
 				if (pointsRequired != 0) {
 					pointsEarned = pointsEarned + (materialAmount * pointsRequired);
@@ -68,17 +68,17 @@ public class IslandLevel {
 		return pointsEarned;
 	}
 
-	public int getMaterialPoints(String material) {
+	public long getMaterialPoints(String material) {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		int pointsEarned = 0;
+		long pointsEarned = 0;
 
 		if (this.materials.containsKey(material)) {
-			int materialAmount = this.materials.get(material);
+			long materialAmount = this.materials.get(material);
 
 			if (configLoad.getString("Materials." + materials + ".Points") != null) {
-				int pointsRequired = config.getFileConfiguration().getInt("Materials." + materials + ".Points");
+				long pointsRequired = config.getFileConfiguration().getLong("Materials." + materials + ".Points");
 
 				if (pointsRequired != 0) {
 					pointsEarned = materialAmount * pointsRequired;
@@ -89,9 +89,9 @@ public class IslandLevel {
 		return pointsEarned;
 	}
 
-	public int getLevel() {
-		int division = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-				.getFileConfiguration().getInt("Island.Levelling.Division");
+	public long getLevel() {
+		long division = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+				.getFileConfiguration().getLong("Island.Levelling.Division");
 
 		if (division == 0) {
 			division = 1;
@@ -100,7 +100,7 @@ public class IslandLevel {
 		return getPoints() / division;
 	}
 
-	public void setMaterialAmount(String material, int amount) {
+	public void setMaterialAmount(String material, long amount) {
 		skyblock.getFileManager()
 				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"),
 						ownerUUID.toString() + ".yml"))
@@ -109,7 +109,7 @@ public class IslandLevel {
 		this.materials.put(material, amount);
 	}
 
-	public int getMaterialAmount(String material) {
+	public long getMaterialAmount(String material) {
 		if (this.materials.containsKey(material)) {
 			return this.materials.get(material);
 		}
@@ -126,7 +126,7 @@ public class IslandLevel {
 		this.materials.remove(material);
 	}
 
-	public void setMaterials(Map<String, Integer> materials) {
+	public void setMaterials(Map<String, Long> materials) {
 		Config config = skyblock.getFileManager().getConfig(
 				new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
@@ -152,23 +152,23 @@ public class IslandLevel {
 		return true;
 	}
 
-	public Map<String, Integer> getMaterials() {
+	public Map<String, Long> getMaterials() {
 		return this.materials;
 	}
 
-	public void setLastCalculatedPoints(int lastCalculatedPoints) {
+	public void setLastCalculatedPoints(long lastCalculatedPoints) {
 		this.lastCalculatedPoints = lastCalculatedPoints;
 	}
 
-	public int getLastCalculatedPoints() {
+	public long getLastCalculatedPoints() {
 		return this.lastCalculatedPoints;
 	}
 
-	public void setLastCalculatedLevel(int lastCalculatedLevel) {
+	public void setLastCalculatedLevel(long lastCalculatedLevel) {
 		this.lastCalculatedLevel = lastCalculatedLevel;
 	}
 
-	public int getLastCalculatedLevel() {
+	public long getLastCalculatedLevel() {
 		return this.lastCalculatedLevel;
 	}
 

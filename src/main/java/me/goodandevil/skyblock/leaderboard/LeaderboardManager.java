@@ -47,8 +47,8 @@ public class LeaderboardManager {
 			islandVotes.add(new LeaderboardPlayer(ownerUUID, visit.getVoters().size()));
 		}
 
-		islandLevels.sort(Comparator.comparingInt(LeaderboardPlayer::getValue).reversed());
-		islandVotes.sort(Comparator.comparingInt(LeaderboardPlayer::getValue).reversed());
+		islandLevels.sort(Comparator.comparingLong(LeaderboardPlayer::getValue).reversed());
+		islandVotes.sort(Comparator.comparingLong(LeaderboardPlayer::getValue).reversed());
 
 		for (int i = 0; i < 10; i++) {
 			if (!islandVotes.isEmpty() && i < islandVotes.size()) {

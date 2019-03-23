@@ -7,9 +7,9 @@ import me.goodandevil.skyblock.utils.version.Materials;
 public class LevellingMaterial {
 
 	private Materials materials;
-	private int points;
+	private long points;
 
-	public LevellingMaterial(Materials materials, int points) {
+	public LevellingMaterial(Materials materials, long points) {
 		this.materials = materials;
 		this.points = points;
 	}
@@ -18,11 +18,11 @@ public class LevellingMaterial {
 		return materials;
 	}
 
-	public void setPoints(int points) {
+	public void setPoints(long points) {
 		this.points = points;
 	}
 
-	public int getPoints() {
+	public long getPoints() {
 		return points;
 	}
 

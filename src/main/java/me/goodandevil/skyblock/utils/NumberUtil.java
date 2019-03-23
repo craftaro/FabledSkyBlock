@@ -5,7 +5,7 @@ import java.util.Date;
 
 public final class NumberUtil {
 
-	public static String formatNumber(int number) {
+	public static String formatNumber(long number) {
 		return String.format("%,d", number);
 	}
 
@@ -21,12 +21,12 @@ public final class NumberUtil {
 			withDecimal = "";
 		}
 
-		int itemCostWithoutDecimalValue = Integer.valueOf(withoutDecimal);
+		long itemCostWithoutDecimalValue = Long.valueOf(withoutDecimal);
 
 		return formatNumber(itemCostWithoutDecimalValue) + withDecimal;
 	}
 
-	public static String formatNumberBySuffix(int number) {
+	public static String formatNumberBySuffix(long number) {
 		if (number < 1000) {
 			return "" + number;
 		}

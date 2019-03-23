@@ -17,28 +17,28 @@ public class IslandLevel {
 	/**
 	 * @return Points of the Island from gathered materials
 	 */
-	public int getPoints() {
+	public long getPoints() {
 		return this.handle.getIsland().getLevel().getPoints();
 	}
 
 	/**
 	 * @return Level of the Island from points
 	 */
-	public int getLevel() {
+	public long getLevel() {
 		return this.handle.getIsland().getLevel().getLevel();
 	}
 
 	/**
 	 * @return Last calculated points of the Island
 	 */
-	public int getLastCalculatedPoints() {
+	public long getLastCalculatedPoints() {
 		return this.handle.getIsland().getLevel().getLastCalculatedPoints();
 	}
 
 	/**
 	 * @return Last calculated level of the Island
 	 */
-	public int getLastCalculatedLevel() {
+	public long getLastCalculatedLevel() {
 		return this.handle.getIsland().getLevel().getLastCalculatedLevel();
 	}
 
@@ -62,7 +62,7 @@ public class IslandLevel {
 	/**
 	 * @return The amount of a Material from the Island
 	 */
-	public int getMaterialAmount(Material material) {
+	public long getMaterialAmount(Material material) {
 		Preconditions.checkArgument(material != null, "Cannot get material amount to null material");
 
 		Materials materials = Materials.fromString(material.name());
@@ -78,7 +78,7 @@ public class IslandLevel {
 	/**
 	 * @return The amount of a Material from the Island
 	 */
-	public int getMaterialAmount(Material material, byte data) {
+	public long getMaterialAmount(Material material, byte data) {
 		Preconditions.checkArgument(material != null, "Cannot get material amount to null material");
 
 		Materials materials = Materials.requestMaterials(material.name(), data);
@@ -94,7 +94,7 @@ public class IslandLevel {
 	/**
 	 * @return The points earned for a Material from the Island
 	 */
-	public int getMaterialPoints(Material material) {
+	public long getMaterialPoints(Material material) {
 		Preconditions.checkArgument(material != null, "Cannot get material points to null material");
 		return this.handle.getIsland().getLevel().getMaterialPoints(Materials.fromString(material.name()).name());
 	}
@@ -102,7 +102,7 @@ public class IslandLevel {
 	/**
 	 * @return The points earned for a Material from the Island
 	 */
-	public int getMaterialPoints(Material material, byte data) {
+	public long getMaterialPoints(Material material, byte data) {
 		Preconditions.checkArgument(material != null, "Cannot get material points to null material");
 		return this.handle.getIsland().getLevel()
 				.getMaterialPoints(Materials.requestMaterials(material.name(), data).name());

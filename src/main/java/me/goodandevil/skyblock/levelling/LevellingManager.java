@@ -66,7 +66,7 @@ public class LevellingManager {
                     }
                 }
 
-                Map<LevellingData, Integer> levellingData = new HashMap<>();
+                Map<LevellingData, Long> levellingData = new HashMap<>();
 
                 for (ChunkSnapshot chunkSnapshotList : chunk.getChunkSnapshots()) {
                     for (int x = 0; x < 16; x++) {
@@ -109,7 +109,7 @@ public class LevellingManager {
                                     if (blockMaterial == org.bukkit.Material.AIR)
                                         continue;
 
-                                    int amount = 1;
+                                    long amount = 1;
                                     if (blockMaterial == Materials.SPAWNER.parseMaterial()
                                             && Bukkit.getPluginManager().isPluginEnabled("EpicSpawners")) {
                                         World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
@@ -130,8 +130,8 @@ public class LevellingManager {
                                     }
 
                                     LevellingData data = new LevellingData(blockMaterial, (byte)blockData);
-                                    Integer totalAmountInteger = levellingData.get(data);
-                                    int totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
+                                    Long totalAmountInteger = levellingData.get(data);
+                                    long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
                                     levellingData.put(data, totalAmount);
                                 } catch (IllegalAccessException | IllegalArgumentException
                                         | InvocationTargetException | NoSuchMethodException | SecurityException e) {
@@ -142,9 +142,9 @@ public class LevellingManager {
                     }
                 }
 
-                Map<String, Integer> materials = new HashMap<>();
+                Map<String, Long> materials = new HashMap<>();
                 for (LevellingData data : levellingData.keySet()) {
-                    int amount = levellingData.get(data);
+                    long amount = levellingData.get(data);
                     if (data.getMaterials() != null) {
                         materials.put(data.getMaterials().name(), amount);
                     }
@@ -185,7 +185,7 @@ public class LevellingManager {
                     if (!material.isAvailable() || material.getPostItem() == null) continue;
                     
                     if (!containsMaterial(material)) {
-                        addMaterial(material, configLoad.getInt("Materials." + materialKey + ".Points"));
+                        addMaterial(material, configLoad.getLong("Materials." + materialKey + ".Points"));
                     }
                 } catch (Exception e) {
                     Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: The material '" + materialKey
@@ -199,7 +199,7 @@ public class LevellingManager {
         materialStorage.clear();
     }
 
-    public void addMaterial(Materials materials, int points) {
+    public void addMaterial(Materials materials, long points) {
         materialStorage.add(new LevellingMaterial(materials, points));
     }
 

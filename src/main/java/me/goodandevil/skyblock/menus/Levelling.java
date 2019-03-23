@@ -193,8 +193,8 @@ public class Levelling {
 			Island island = islandManager.getIsland(player);
 			IslandLevel level = island.getLevel();
 
-			Map<String, Integer> testIslandMaterials = level.getMaterials();
-			Map<String, Integer> islandMaterials = new HashMap<>();
+			Map<String, Long> testIslandMaterials = level.getMaterials();
+			Map<String, Long> islandMaterials = new HashMap<>();
 			
 			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
 			Config settingsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
@@ -210,7 +210,7 @@ public class Levelling {
 
 			    Materials materials = Materials.fromString(materialName);
                 ItemStack is = materials.parseItem();
-                is.setAmount(Math.min(testIslandMaterials.get(materialName), 64));
+                is.setAmount(Math.min(Math.toIntExact(testIslandMaterials.get(materialName)), 64));
                 is.setType(MaterialUtil.correctMaterial(is.getType()));
 
                 if (is == null || is.getItemMeta() == null) continue;
@@ -271,7 +271,7 @@ public class Levelling {
 						Materials materials = Materials.fromString(material);
 
 						if (materials != null) {
-							int materialAmount = islandMaterials.get(material);
+							long materialAmount = islandMaterials.get(material);
 
 							if (mainConfig.getFileConfiguration().getString("Materials." + material + ".Points") != null) {
 								int pointsMultiplier = mainConfig.getFileConfiguration().getInt("Materials." + material + ".Points");
@@ -279,10 +279,10 @@ public class Levelling {
 								if (settingsConfig.getFileConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") || pointsMultiplier != 0) {
 									inventorySlot++;
 
-									int pointsEarned = materialAmount * pointsMultiplier;
+									long pointsEarned = materialAmount * pointsMultiplier;
 
 									ItemStack is = materials.parseItem();
-									is.setAmount(Math.min(materialAmount, 64));
+									is.setAmount(Math.min(Math.toIntExact(materialAmount), 64));
 									is.setType(MaterialUtil.correctMaterial(is.getType()));
 
 									List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");

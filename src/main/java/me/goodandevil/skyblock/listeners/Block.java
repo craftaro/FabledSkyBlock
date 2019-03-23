@@ -107,7 +107,7 @@ public class Block implements Listener {
                         IslandLevel level = island.getLevel();
 
                         if (level.hasMaterial(materials.name())) {
-                            int materialAmount = level.getMaterialAmount(materials.name());
+                            long materialAmount = level.getMaterialAmount(materials.name());
 
                             if (materialAmount - droppedAmount <= 0) {
                                 level.removeMaterial(materials.name());
@@ -148,7 +148,7 @@ public class Block implements Listener {
 
         if (!level.hasMaterial(materials.name())) return;
 
-        int materialAmount = level.getMaterialAmount(materials.name());
+        long materialAmount = level.getMaterialAmount(materials.name());
 
         if (materialAmount - 1 <= 0) {
             level.removeMaterial(materials.name());
@@ -229,7 +229,7 @@ public class Block implements Listener {
         Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
         if (materials == null) return;
-        int materialAmount = 0;
+        long materialAmount = 0;
         IslandLevel level = island.getLevel();
 
         if (level.hasMaterial(materials.name())) {

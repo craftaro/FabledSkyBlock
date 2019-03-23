@@ -88,7 +88,7 @@ public class Interact implements Listener {
 				Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
 				if (materials == null) return;
-				int materialAmount = 0;
+				long materialAmount = 0;
 				IslandLevel level = island.getLevel();
 
 				if (level.hasMaterial(materials.name())) {
