@@ -194,7 +194,7 @@ public class Levelling {
 			IslandLevel level = island.getLevel();
 
 			Map<String, Integer> testIslandMaterials = level.getMaterials();
-			Map<String, Integer> islandMaterials = level.getMaterials();
+			Map<String, Integer> islandMaterials = new HashMap<>();
 			
 			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
 			Config settingsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
@@ -204,8 +204,9 @@ public class Levelling {
 			for (String materialName : testIslandMaterials.keySet()) {
 			    if (mainConfig.getFileConfiguration().getString("Materials." + materialName + ".Points") == null)
 			        continue;
-                if (mainConfig.getFileConfiguration().getInt("Materials." + materialName + ".Points") <= 0)
-                    continue;
+			    if (!settingsConfig.getFileConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") &&
+						mainConfig.getFileConfiguration().getInt("Materials." + materialName + ".Points") <= 0)
+			    	continue;
 
 			    Materials materials = Materials.fromString(materialName);
                 ItemStack is = materials.parseItem();
@@ -281,17 +282,20 @@ public class Levelling {
 									int pointsEarned = materialAmount * pointsMultiplier;
 
 									ItemStack is = materials.parseItem();
-									is.setAmount(materialAmount);
+									is.setAmount(Math.min(materialAmount, 64));
 									is.setType(MaterialUtil.correctMaterial(is.getType()));
 
-									System.out.println(MaterialUtil.correctMaterial(is.getType()).name() + " | " + material);
-
 									List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");
-									lore.replaceAll(x -> x.replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)));
+									lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
+											.replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
+											.replace("%material",
+													WordUtils.capitalize(material.toLowerCase().replace("_", " ")
+															.replace("item", "").replace("block", ""))));
 
 									nInv.addItem(nInv.createItem(is, configLoad
 													.getString("Menu.Levelling.Item.Material.Displayname")
 													.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
+													.replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
 													.replace("%material",
 															WordUtils.capitalize(material.toLowerCase().replace("_", " ")
 																	.replace("item", "").replace("block", ""))),

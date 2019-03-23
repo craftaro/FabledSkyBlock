@@ -145,7 +145,9 @@ public class LevellingManager {
                 Map<String, Integer> materials = new HashMap<>();
                 for (LevellingData data : levellingData.keySet()) {
                     int amount = levellingData.get(data);
-                    materials.put(data.getMaterials().name(), amount);
+                    if (data.getMaterials() != null) {
+                        materials.put(data.getMaterials().name(), amount);
+                    }
                 }
 
                 if (materials.size() == 0) {

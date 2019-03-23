@@ -166,6 +166,50 @@ public class Leaderboard {
 								}
 							}
 
+							int clickedSlot = event.getSlot();
+							int leaderboardPosition = -1;
+
+							if (clickedSlot == 13) {
+								leaderboardPosition = 0;
+							} else if (clickedSlot == 21) {
+								leaderboardPosition = 1;
+							} else if (clickedSlot == 22) {
+								leaderboardPosition = 2;
+							} else if (clickedSlot == 23) {
+								leaderboardPosition = 3;
+							} else if (clickedSlot == 29) {
+								leaderboardPosition = 4;
+							} else if (clickedSlot == 31) {
+								leaderboardPosition = 5;
+							} else if (clickedSlot == 33) {
+								leaderboardPosition = 6;
+							} else if (clickedSlot == 37) {
+								leaderboardPosition = 7;
+							} else if (clickedSlot == 40) {
+								leaderboardPosition = 8;
+							} else if (clickedSlot == 43) {
+								leaderboardPosition = 9;
+							}
+
+							if (leaderboardPosition != -1) {
+								List<me.goodandevil.skyblock.leaderboard.Leaderboard> leaderboardIslands = skyblock
+										.getLeaderboardManager().getLeaderboard(
+												me.goodandevil.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
+
+								if (leaderboardIslands.size() > leaderboardPosition) {
+									me.goodandevil.skyblock.leaderboard.Leaderboard leaderboard = leaderboardIslands.get(leaderboardPosition);
+									me.goodandevil.skyblock.visit.Visit visit = leaderboard.getVisit();
+
+									OfflinePlayer offlinePlayer = new OfflinePlayer(visit.getOwnerUUID());
+									Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> Bukkit.dispatchCommand(player, "island teleport " + offlinePlayer.getName()));
+								}
+
+								event.setWillClose(false);
+								event.setWillDestroy(false);
+
+								return;
+							}
+
 							soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
 
 							event.setWillClose(false);
