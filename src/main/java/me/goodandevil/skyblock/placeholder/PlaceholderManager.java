@@ -69,7 +69,15 @@ public class PlaceholderManager {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (placeholder.equalsIgnoreCase("fabledskyblock_island_size")) {
+		if (placeholder.equalsIgnoreCase("fabledskyblock_island_exists")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_exists.False.Message"));
+			} else {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_exists.True.Message"));
+			}
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_size")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
 						configLoad.getString("Placeholder.fabledskyblock_island_size.Empty.Message"));

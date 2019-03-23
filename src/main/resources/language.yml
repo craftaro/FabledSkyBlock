@@ -1090,6 +1090,11 @@ Placeholder:
             Message: "&f&oUnclaimed"
         Non-empty:
             Message: "&f[%position] %player [%votes]"
+    fabledskyblock_island_exists:
+        True:
+            Message: "&atrue"
+        False:
+            Message: "&cfalse"
     fabledskyblock_island_size:
         Empty:
             Message: "&c0"
