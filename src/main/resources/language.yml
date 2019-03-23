@@ -1091,9 +1091,9 @@ Placeholder:
         Non-empty:
             Message: "&f[%position] %player [%votes]"
     fabledskyblock_island_exists:
-        True:
+        Exists:
             Message: "&atrue"
-        False:
+        Not-exists:
             Message: "&cfalse"
     fabledskyblock_island_size:
         Empty:

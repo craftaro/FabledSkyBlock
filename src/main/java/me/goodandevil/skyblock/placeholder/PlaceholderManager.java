@@ -72,10 +72,10 @@ public class PlaceholderManager {
 		if (placeholder.equalsIgnoreCase("fabledskyblock_island_exists")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.fabledskyblock_island_exists.False.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_exists.Not-exists.Message"));
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
-						configLoad.getString("Placeholder.fabledskyblock_island_exists.True.Message"));
+						configLoad.getString("Placeholder.fabledskyblock_island_exists.Exists.Message"));
 			}
 		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_size")) {
 			if (island == null) {

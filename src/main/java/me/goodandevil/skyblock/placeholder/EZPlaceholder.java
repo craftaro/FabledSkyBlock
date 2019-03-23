@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.placeholder;
 import java.io.File;
 import java.util.List;
 
+import me.clip.placeholderapi.events.ExpansionUnregisterEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,13 +19,16 @@ import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.visit.Visit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-public class EZPlaceholder extends PlaceholderExpansion {
+public class EZPlaceholder extends PlaceholderExpansion implements Listener {
 
 	private final SkyBlock skyblock;
 
 	public EZPlaceholder(SkyBlock skyblock) {
 		this.skyblock = skyblock;
+		Bukkit.getPluginManager().registerEvents(this, skyblock);
 	}
 
 	public String getIdentifier() {
@@ -112,5 +116,15 @@ public class EZPlaceholder extends PlaceholderExpansion {
 		}
 
 		return placeholderManager.getPlaceholder(player, "fabledskyblock_" + identifier);
+	}
+
+	/**
+	 * If a player uses '/papi reload' then we need to reload this expansion
+	 */
+	@EventHandler
+	public void onExpansionUnregister(ExpansionUnregisterEvent event) {
+		if (event.getExpansion() instanceof EZPlaceholder) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, this::register, 20L);
+		}
 	}
 }
