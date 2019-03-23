@@ -289,16 +289,14 @@ public class Levelling {
 									lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
 											.replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
 											.replace("%material",
-													WordUtils.capitalize(material.toLowerCase().replace("_", " ")
-															.replace("item", "").replace("block", ""))));
+													WordUtils.capitalize(material.toLowerCase().replace("_", " ")).trim()));
 
 									nInv.addItem(nInv.createItem(is, configLoad
 													.getString("Menu.Levelling.Item.Material.Displayname")
 													.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
 													.replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
 													.replace("%material",
-															WordUtils.capitalize(material.toLowerCase().replace("_", " ")
-																	.replace("item", "").replace("block", ""))),
+															WordUtils.capitalize(material.toLowerCase().replace("_", " ")).trim()),
 											lore, null, null, null), inventorySlot);
 								}
 							}
