@@ -1115,6 +1115,11 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+    fabledskyblock_island_votes:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
     fabledskyblock_island_role:
         Empty:
             Message: "&f&oNone"

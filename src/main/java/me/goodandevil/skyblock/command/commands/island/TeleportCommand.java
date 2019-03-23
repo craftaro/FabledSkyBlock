@@ -34,71 +34,64 @@ public class TeleportCommand extends SubCommand {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		if (args.length == 1) {
-			if (player.hasPermission("fabledskyblock.teleport") || player.hasPermission("fabledskyblock.*")) {
-				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
-				UUID islandOwnerUUID = null;
-				String targetPlayerName;
+			Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+			UUID islandOwnerUUID = null;
+			String targetPlayerName;
 
-				if (targetPlayer == null) {
-					OfflinePlayer targetOfflinePlayer = new OfflinePlayer(args[0]);
-					islandOwnerUUID = targetOfflinePlayer.getOwner();
-					targetPlayerName = targetOfflinePlayer.getName();
-				} else {
-					islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
-					targetPlayerName = targetPlayer.getName();
-				}
+			if (targetPlayer == null) {
+				OfflinePlayer targetOfflinePlayer = new OfflinePlayer(args[0]);
+				islandOwnerUUID = targetOfflinePlayer.getOwner();
+				targetPlayerName = targetOfflinePlayer.getName();
+			} else {
+				islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
+				targetPlayerName = targetPlayer.getName();
+			}
 
-				if (islandOwnerUUID == null) {
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Teleport.Island.None.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			if (islandOwnerUUID == null) {
+				messageManager.sendMessage(player,
+						configLoad.getString("Command.Island.Teleport.Island.None.Message"));
+				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-					return;
-				} else if (!islandOwnerUUID.equals(playerDataManager.getPlayerData(player).getOwner())) {
-					if (visitManager.hasIsland(islandOwnerUUID)) {
-						me.goodandevil.skyblock.visit.Visit visit = visitManager.getIsland(islandOwnerUUID);
-						boolean isCoopPlayer = false;
+				return;
+			} else if (!islandOwnerUUID.equals(playerDataManager.getPlayerData(player).getOwner())) {
+				if (visitManager.hasIsland(islandOwnerUUID)) {
+					me.goodandevil.skyblock.visit.Visit visit = visitManager.getIsland(islandOwnerUUID);
+					boolean isCoopPlayer = false;
 
-						if (islandManager.containsIsland(islandOwnerUUID)) {
-							if (islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID))
-									.isCoopPlayer(player.getUniqueId())) {
-								isCoopPlayer = true;
-							}
+					if (islandManager.containsIsland(islandOwnerUUID)) {
+						if (islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID))
+								.isCoopPlayer(player.getUniqueId())) {
+							isCoopPlayer = true;
 						}
-
-						if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass")
-								|| player.hasPermission("fabledskyblock.bypass.*") || player.hasPermission("fabledskyblock.*")
-								|| visit.isOpen()) {
-							if (!islandManager.containsIsland(islandOwnerUUID)) {
-								islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
-							}
-
-							islandManager.visitIsland(player,
-									islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)));
-
-							messageManager.sendMessage(player,
-									configLoad.getString("Command.Island.Teleport.Teleported.Other.Message")
-											.replace("%player", targetPlayerName));
-							soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-
-							return;
-						} else {
-							messageManager.sendMessage(player,
-									configLoad.getString("Command.Island.Teleport.Island.Closed.Message"));
-							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-						}
-
-						return;
 					}
 
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Teleport.Island.None.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass")
+							|| player.hasPermission("fabledskyblock.bypass.*") || player.hasPermission("fabledskyblock.*")
+							|| visit.isOpen()) {
+						if (!islandManager.containsIsland(islandOwnerUUID)) {
+							islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
+						}
+
+						islandManager.visitIsland(player,
+								islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)));
+
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.Teleport.Teleported.Other.Message")
+										.replace("%player", targetPlayerName));
+						soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+
+						return;
+					} else {
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.Teleport.Island.Closed.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					}
 
 					return;
 				}
-			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Permission.Message"));
+
+				messageManager.sendMessage(player,
+						configLoad.getString("Command.Island.Teleport.Island.None.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 				return;

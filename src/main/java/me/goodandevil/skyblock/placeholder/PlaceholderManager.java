@@ -1,24 +1,25 @@
 package me.goodandevil.skyblock.placeholder;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.invite.Invite;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.leaderboard.Leaderboard;
 import me.goodandevil.skyblock.utils.NumberUtil;
+import me.goodandevil.skyblock.visit.VisitManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlaceholderManager {
 
@@ -61,6 +62,7 @@ public class PlaceholderManager {
 
 	public String getPlaceholder(Player player, String placeholder) {
 		IslandManager islandManager = skyblock.getIslandManager();
+		VisitManager visitManager = skyblock.getVisitManager();
 
 		Island island = islandManager.getIsland(player);
 
@@ -111,6 +113,15 @@ public class PlaceholderManager {
 				return ChatColor.translateAlternateColorCodes('&',
 						configLoad.getString("Placeholder.fabledskyblock_island_points.Non-empty.Message")
 								.replace("%placeholder", "" + island.getLevel().getPoints()));
+			}
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_votes")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_votes.Empty.Message"));
+			} else {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_votes.Non-empty.Message")
+								.replace("%placeholder", "" + visitManager.getIslands().get(player.getUniqueId()).getVoters().size()));
 			}
 		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_role")) {
 			if (island == null) {
