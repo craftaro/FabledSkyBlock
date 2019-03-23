@@ -23,6 +23,8 @@ public class MaterialUtil {
 			material = Material.TRIPWIRE_HOOK;
 		} else if (material == Material.FLOWER_POT) {
 			material = Materials.LEGACY_FLOWER_POT_ITEM.getPostMaterial();
+		} else if (material.name().startsWith("POTTED_")) {
+			material = Material.FLOWER_POT;
 		} else if (material == Materials.LEGACY_IRON_DOOR_BLOCK.getPostMaterial()) {
 			material = Material.IRON_DOOR;
 		} else if (material == Material.CAULDRON) {

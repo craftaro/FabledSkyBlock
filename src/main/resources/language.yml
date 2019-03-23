@@ -1842,6 +1842,8 @@ Menu:
                 Displayname: "&c&oNothing to see here..."
             Material:
                 Displayname: "&7%material &8(&e+%points Points&8)"
+                Lore:
+                - "&8(&e%blocks Blocks&8)"
     Settings:
         Categories:
             Title: "&8Settings - Categories"

@@ -1,23 +1,5 @@
 package me.goodandevil.skyblock.levelling;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.event.island.IslandLevelChangeEvent;
 import me.goodandevil.skyblock.config.FileManager.Config;
@@ -30,12 +12,22 @@ import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.world.WorldManager;
+import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.logging.Level;
 
 public class LevellingManager {
 
     private final SkyBlock skyblock;
 
-    private List<Material> materialStorage = new ArrayList<>();
+    private List<LevellingMaterial> materialStorage = new ArrayList<>();
 
     public LevellingManager(SkyBlock skyblock) {
         this.skyblock = skyblock;
@@ -59,8 +51,6 @@ public class LevellingManager {
                 if (!chunk.isComplete()) return;
                 cancel();
 
-                Map<String, Integer> materials = new HashMap<>();
-
                 Method getBlockTypeMethod = null;
                 Method getBlockTypeIdMethod = null;
                 Method getBlockTypeDataMethod = null;
@@ -75,6 +65,8 @@ public class LevellingManager {
                         worldMaxHeight = world.getMaxHeight();
                     }
                 }
+
+                Map<LevellingData, Integer> levellingData = new HashMap<>();
 
                 for (ChunkSnapshot chunkSnapshotList : chunk.getChunkSnapshots()) {
                     for (int x = 0; x < 16; x++) {
@@ -114,51 +106,33 @@ public class LevellingManager {
                                         blockData = (int) getBlockTypeDataMethod.invoke(chunkSnapshotList, x, y, z);
                                     }
 
-                                    if (blockMaterial == org.bukkit.Material.AIR) continue;
+                                    if (blockMaterial == org.bukkit.Material.AIR)
+                                        continue;
 
-                                    for (Material materialList : materialStorage) {
-                                        if (materialList == null) continue;
-                                        ItemStack is;
-                                        try {
-                                            is = materialList.getItemStack();
-                                        } catch (Exception ignored) {
-                                            continue;
+                                    int amount = 1;
+                                    if (blockMaterial == Materials.SPAWNER.parseMaterial()
+                                            && Bukkit.getPluginManager().isPluginEnabled("EpicSpawners")) {
+                                        World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
+                                        com.songoda.epicspawners.api.EpicSpawners epicSpawners =
+                                                com.songoda.epicspawners.api.EpicSpawnersAPI.getImplementation();
+                                        Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
+                                        if (epicSpawners.getSpawnerManager().isSpawner(location)) {
+                                            amount = epicSpawners.getSpawnerManager()
+                                                    .getSpawnerFromWorld(location).getSpawnerDataCount();
                                         }
-
-                                        if (blockMaterial != materialList.getItemStack().getType()) continue;
-                                        if (NMSVersion < 13) {
-                                            if (blockData != is.getData().getData()) {
-                                                continue;
-                                            }
-                                        }
-
-                                        int amount = 1;
-                                        if (blockMaterial == Materials.SPAWNER.parseMaterial()
-                                                && Bukkit.getPluginManager().isPluginEnabled("EpicSpawners")) {
-                                            World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                            com.songoda.epicspawners.api.EpicSpawners epicSpawners =
-                                                    com.songoda.epicspawners.api.EpicSpawnersAPI.getImplementation();
-                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
-                                            if (epicSpawners.getSpawnerManager().isSpawner(location)) {
-                                                amount = epicSpawners.getSpawnerManager()
-                                                        .getSpawnerFromWorld(location).getSpawnerDataCount();
-                                            }
-                                        } else if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial)) {
-                                            World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
-                                            if (stackableManager.isStacked(location)) {
-                                                Stackable stackable = stackableManager.getStack(location, blockMaterial);
-                                                amount = stackable.getSize();
-                                            }
-                                        }
-
-                                        if (materials.containsKey(materialList.getMaterials().name())) {
-                                            materials.put(materialList.getMaterials().name(),
-                                                    materials.get(materialList.getMaterials().name()) + amount);
-                                        } else {
-                                            materials.put(materialList.getMaterials().name(), amount);
+                                    } else if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial)) {
+                                        World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
+                                        Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
+                                        if (stackableManager.isStacked(location)) {
+                                            Stackable stackable = stackableManager.getStack(location, blockMaterial);
+                                            amount = stackable.getSize();
                                         }
                                     }
+
+                                    LevellingData data = new LevellingData(blockMaterial, (byte)blockData);
+                                    Integer totalAmountInteger = levellingData.get(data);
+                                    int totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
+                                    levellingData.put(data, totalAmount);
                                 } catch (IllegalAccessException | IllegalArgumentException
                                         | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                                     e.printStackTrace();
@@ -166,6 +140,12 @@ public class LevellingManager {
                             }
                         }
                     }
+                }
+
+                Map<String, Integer> materials = new HashMap<>();
+                for (LevellingData data : levellingData.keySet()) {
+                    int amount = levellingData.get(data);
+                    materials.put(data.getMaterials().name(), amount);
                 }
 
                 if (materials.size() == 0) {
@@ -218,15 +198,15 @@ public class LevellingManager {
     }
 
     public void addMaterial(Materials materials, int points) {
-        materialStorage.add(new Material(materials, points));
+        materialStorage.add(new LevellingMaterial(materials, points));
     }
 
-    public void removeMaterial(Material material) {
+    public void removeMaterial(LevellingMaterial material) {
         materialStorage.remove(material);
     }
 
     public boolean containsMaterial(Materials materials) {
-        for (Material materialList : materialStorage) {
+        for (LevellingMaterial materialList : materialStorage) {
             if (materialList.getMaterials().name().equals(materials.name())) {
                 return true;
             }
@@ -235,8 +215,8 @@ public class LevellingManager {
         return false;
     }
 
-    public Material getMaterial(Materials materials) {
-        for (Material materialList : materialStorage) {
+    public LevellingMaterial getMaterial(Materials materials) {
+        for (LevellingMaterial materialList : materialStorage) {
             if (materialList.getMaterials().name().equals(materials.name())) {
                 return materialList;
             }
@@ -245,7 +225,40 @@ public class LevellingManager {
         return null;
     }
 
-    public List<Material> getMaterials() {
+    public List<LevellingMaterial> getMaterials() {
         return materialStorage;
+    }
+
+    private class LevellingData {
+        private final Material material;
+        private final byte data;
+
+        private LevellingData(Material material, byte data) {
+            this.material = material;
+            this.data = data;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof LevellingData)) return false;
+            LevellingData data = (LevellingData)obj;
+            if (this == obj) return true;
+            return this.material == data.material && this.data == data.data;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(this.material, this.data);
+        }
+
+        private Materials getMaterials() {
+            if (NMSUtil.getVersionNumber() > 12) {
+                try {
+                    return Materials.fromString(material.name());
+                } catch (Exception ignored) {}
+            }
+
+            return Materials.getMaterials(this.material, this.data);
+        }
     }
 }

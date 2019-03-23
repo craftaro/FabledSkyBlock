@@ -738,6 +738,9 @@ public class IslandManager {
 
         setNextAvailableLocation(world, islandLocation);
         saveNextAvailableLocation(world);
+
+        // Recalculate island level
+        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().calculatePoints(null, island), 20L);
     }
 
     public Set<UUID> getVisitorsAtIsland(Island island) {

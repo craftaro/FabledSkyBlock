@@ -162,6 +162,8 @@ Island:
             # time cycle or be fixed.
             Cycle: false
     Levelling:
+        # Include Points: 0 in the '/is level' GUI
+        IncludeEmptyPointsInList: true
         # Island Level Points divided by value
         Division: 100
         Cooldown:

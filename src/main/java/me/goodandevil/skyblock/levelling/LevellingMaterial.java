@@ -4,12 +4,12 @@ import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.utils.version.Materials;
 
-public class Material {
+public class LevellingMaterial {
 
 	private Materials materials;
 	private int points;
 
-	public Material(Materials materials, int points) {
+	public LevellingMaterial(Materials materials, int points) {
 		this.materials = materials;
 		this.points = points;
 	}

@@ -2,6 +2,7 @@ package me.goodandevil.skyblock.menus;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -193,9 +194,10 @@ public class Levelling {
 			IslandLevel level = island.getLevel();
 
 			Map<String, Integer> testIslandMaterials = level.getMaterials();
-			Map<String, Integer> islandMaterials = new HashMap<>();
+			Map<String, Integer> islandMaterials = level.getMaterials();
 			
 			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+			Config settingsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 			
 			// Filter out ItemStacks that can't be displayed in the inventory
 			Inventory testInventory = Bukkit.createInventory(null, 9);
@@ -204,12 +206,12 @@ public class Levelling {
 			        continue;
                 if (mainConfig.getFileConfiguration().getInt("Materials." + materialName + ".Points") <= 0)
                     continue;
-			    
+
 			    Materials materials = Materials.fromString(materialName);
                 ItemStack is = materials.parseItem();
-                is.setAmount(testIslandMaterials.get(materialName));
+                is.setAmount(Math.min(testIslandMaterials.get(materialName), 64));
                 is.setType(MaterialUtil.correctMaterial(is.getType()));
-                
+
                 if (is == null || is.getItemMeta() == null) continue;
                 testInventory.clear();
                 testInventory.setItem(0, is);
@@ -270,27 +272,30 @@ public class Levelling {
 						if (materials != null) {
 							int materialAmount = islandMaterials.get(material);
 
-							if (mainConfig.getFileConfiguration()
-									.getString("Materials." + material + ".Points") != null) {
-								int pointsRequired = mainConfig.getFileConfiguration()
-										.getInt("Materials." + material + ".Points");
+							if (mainConfig.getFileConfiguration().getString("Materials." + material + ".Points") != null) {
+								int pointsMultiplier = mainConfig.getFileConfiguration().getInt("Materials." + material + ".Points");
 
-								if (pointsRequired != 0) {
+								if (settingsConfig.getFileConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") || pointsMultiplier != 0) {
 									inventorySlot++;
 
-									int pointsEarned = materialAmount * pointsRequired;
+									int pointsEarned = materialAmount * pointsMultiplier;
 
 									ItemStack is = materials.parseItem();
 									is.setAmount(materialAmount);
 									is.setType(MaterialUtil.correctMaterial(is.getType()));
 
+									System.out.println(MaterialUtil.correctMaterial(is.getType()).name() + " | " + material);
+
+									List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");
+									lore.replaceAll(x -> x.replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)));
+
 									nInv.addItem(nInv.createItem(is, configLoad
-											.getString("Menu.Levelling.Item.Material.Displayname")
-											.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
-											.replace("%material",
-													WordUtils.capitalize(material.toLowerCase().replace("_", " ")
-															.replace("item", "").replace("block", ""))),
-											null, null, null, null), inventorySlot);
+													.getString("Menu.Levelling.Item.Material.Displayname")
+													.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
+													.replace("%material",
+															WordUtils.capitalize(material.toLowerCase().replace("_", " ")
+																	.replace("item", "").replace("block", ""))),
+											lore, null, null, null), inventorySlot);
 								}
 							}
 						}

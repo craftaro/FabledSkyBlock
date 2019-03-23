@@ -4,7 +4,7 @@ import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.levelling.LevellingManager;
-import me.goodandevil.skyblock.levelling.Material;
+import me.goodandevil.skyblock.levelling.LevellingMaterial;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -46,7 +46,7 @@ public class ValueCommand extends SubCommand {
 				}
 
 				if (materials != null && levellingManager.containsMaterial(materials)) {
-					Material material = levellingManager.getMaterial(materials);
+					LevellingMaterial material = levellingManager.getMaterial(materials);
 					double level = (double) material.getPoints()
 							/ (double) fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 									.getFileConfiguration().getInt("Island.Levelling.Division");

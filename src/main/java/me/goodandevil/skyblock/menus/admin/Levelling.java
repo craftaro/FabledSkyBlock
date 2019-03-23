@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import me.goodandevil.skyblock.levelling.LevellingMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -56,7 +57,7 @@ public class Levelling implements Listener {
 
 		PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 
-		List<me.goodandevil.skyblock.levelling.Material> levellingMaterials = levellingManager.getMaterials();
+		List<LevellingMaterial> levellingMaterials = levellingManager.getMaterials();
 		
 		// Filter out materials that won't be displayed in the GUI properly
         Inventory testInventory = Bukkit.createInventory(null, 9);
@@ -121,7 +122,7 @@ public class Levelling implements Listener {
 				if (levellingMaterials.size() > index) {
 					inventorySlot++;
 
-					me.goodandevil.skyblock.levelling.Material material = levellingMaterials.get(index);
+					LevellingMaterial material = levellingMaterials.get(index);
 					nInv.addItem(
 							nInv.createItem(
 									new ItemStack(MaterialUtil.correctMaterial(material.getItemStack().getType()), 1,
@@ -311,7 +312,7 @@ public class Levelling implements Listener {
 				}
 
 				if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
-					for (me.goodandevil.skyblock.levelling.Material materialList : levellingManager.getMaterials()) {
+					for (LevellingMaterial materialList : levellingManager.getMaterials()) {
 						Materials materials = materialList.getMaterials();
 
 						if (event.getCurrentItem().getType() == MaterialUtil.correctMaterial(materials.parseMaterial())
