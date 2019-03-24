@@ -5,10 +5,10 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -230,12 +230,12 @@ public class GeneratorManager {
     }
 
     @SuppressWarnings("deprecation")
-    public void generateBlock(Generator generator, Block block) {
+    public BlockState generateBlock(Generator generator, Block block) {
         block.setType(Material.AIR);
 
         Materials materials = getRandomMaterials(generator);
 
-        if (materials == null) return;
+        if (materials == null) return block.getState();
         skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(),
                 1.0F, 10.0F);
 
@@ -253,6 +253,8 @@ public class GeneratorManager {
                 e.printStackTrace();
             }
         }
+
+        return block.getState();
     }
 
     public Materials getRandomMaterials(Generator generator) {

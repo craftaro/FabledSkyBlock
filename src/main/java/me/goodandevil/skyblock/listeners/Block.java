@@ -295,8 +295,10 @@ public class Block implements Listener {
                             }
                         }
 
-                        event.setCancelled(true);
-                        generatorManager.generateBlock(generator, block);
+                        org.bukkit.block.BlockState genState = generatorManager.generateBlock(generator, block);
+                        event.getToBlock().getState().setType(genState.getType());
+                        event.getToBlock().getState().setData(genState.getData());
+
                         return;
                     }
                 }
@@ -468,8 +470,10 @@ public class Block implements Listener {
                         }
                     }
 
-                    event.setCancelled(true);
-                    generatorManager.generateBlock(generator, block);
+                    org.bukkit.block.BlockState genState = generatorManager.generateBlock(generator, block);
+                    event.getNewState().setType(genState.getType());
+                    event.getNewState().setData(genState.getData());
+
                     return;
                 }
             }
