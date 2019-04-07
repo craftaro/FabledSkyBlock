@@ -65,7 +65,7 @@ public class CloseCommand extends SubCommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[0];
+		return new String[] { "lock" };
 	}
 
 	@Override

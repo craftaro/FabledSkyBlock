@@ -7,7 +7,10 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.leaderboard.Leaderboard;
+import me.goodandevil.skyblock.levelling.LevellingManager;
+import me.goodandevil.skyblock.levelling.LevellingMaterial;
 import me.goodandevil.skyblock.utils.NumberUtil;
+import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.visit.VisitManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,6 +66,7 @@ public class PlaceholderManager {
 	public String getPlaceholder(Player player, String placeholder) {
 		IslandManager islandManager = skyblock.getIslandManager();
 		VisitManager visitManager = skyblock.getVisitManager();
+		LevellingManager levellingManager = skyblock.getLevellingManager();
 
 		Island island = islandManager.getIsland(player);
 
@@ -76,6 +80,19 @@ public class PlaceholderManager {
 			} else {
 				return ChatColor.translateAlternateColorCodes('&',
 						configLoad.getString("Placeholder.fabledskyblock_island_exists.Exists.Message"));
+			}
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_isopen")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_isopen.Empty.Message"));
+			} else {
+				if (island.isOpen()) {
+					return ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Placeholder.fabledskyblock_island_isopen.Open.Message"));
+				} else {
+					return ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Placeholder.fabledskyblock_island_isopen.Closed.Message"));
+				}
 			}
 		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_size")) {
 			if (island == null) {
@@ -289,6 +306,52 @@ public class PlaceholderManager {
                         configLoad.getString("Placeholder.fabledskyblock_island_bank_balance.Non-empty.Message"))
 		                .replace("%placeholder", "" + island.getBankBalance());
 		    }
+		} else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_level_block_count_")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Empty.Message"));
+			} else {
+				String materialName = placeholder.replace("fabledskyblock_island_level_block_count_", "").toUpperCase();
+				Materials materials = Materials.fromString(materialName);
+				if (materials == null) {
+					return ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Invalid.Message"));
+				} else {
+					long blockCount = island.getLevel().getMaterialAmount(materials.name());
+					return ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Non-empty.Message")
+									.replace("%placeholder", NumberUtil.formatNumberByDecimal(blockCount)));
+				}
+			}
+		} else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_level_block_points_")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Empty.Message"));
+			} else {
+				String materialName = placeholder.replace("fabledskyblock_island_level_block_points_", "").toUpperCase();
+				Materials materials = Materials.fromString(materialName);
+				if (materials == null) {
+					return ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Invalid.Message"));
+				} else {
+					long blockPoints = island.getLevel().getMaterialPoints(materials.name());
+					return ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Non-empty.Message")
+									.replace("%placeholder", NumberUtil.formatNumberByDecimal(blockPoints)));
+				}
+			}
+		} else if (placeholder.toLowerCase().startsWith("fabledskyblock_level_block_value_")) {
+			String materialName = placeholder.replace("fabledskyblock_level_block_value_", "").toUpperCase();
+			Materials materials = Materials.fromString(materialName);
+			if (materials == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_level_block_value.Invalid.Message"));
+			} else {
+				long blockValue = levellingManager.getMaterial(materials).getPoints();
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_level_block_value.Non-empty.Message")
+								.replace("%placeholder", NumberUtil.formatNumberByDecimal(blockValue)));
+			}
 		}
 
 		return "";

@@ -248,6 +248,8 @@ public class Entity implements Listener {
             return;
         
         StackableManager stackableManager = SkyBlock.getInstance().getStackableManager();
+        if (stackableManager == null)
+            return;
         
         ArmorStand armorStand = event.getRightClicked();
         for (Location stackLocation : stackableManager.getStacks().keySet()) {

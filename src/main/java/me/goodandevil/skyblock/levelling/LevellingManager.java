@@ -45,7 +45,6 @@ public class LevellingManager {
         int NMSVersion = NMSUtil.getVersionNumber();
 
         new BukkitRunnable() {
-            @SuppressWarnings("deprecation")
             @Override
             public void run() {
                 if (!chunk.isComplete()) return;

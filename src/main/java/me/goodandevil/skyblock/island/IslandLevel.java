@@ -77,8 +77,8 @@ public class IslandLevel {
 		if (this.materials.containsKey(material)) {
 			long materialAmount = this.materials.get(material);
 
-			if (configLoad.getString("Materials." + materials + ".Points") != null) {
-				long pointsRequired = config.getFileConfiguration().getLong("Materials." + materials + ".Points");
+			if (configLoad.getString("Materials." + material + ".Points") != null) {
+				long pointsRequired = configLoad.getLong("Materials." + material + ".Points");
 
 				if (pointsRequired != 0) {
 					pointsEarned = materialAmount * pointsRequired;
