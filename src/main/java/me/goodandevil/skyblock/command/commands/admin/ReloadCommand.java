@@ -1,4 +1,4 @@
-package me.goodandevil.skyblock.command.commands.admin.disabled;
+package me.goodandevil.skyblock.command.commands.admin;
 
 import me.goodandevil.skyblock.command.SubCommand;
 import me.goodandevil.skyblock.config.FileManager;
@@ -38,6 +38,12 @@ public class ReloadCommand extends SubCommand {
 		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
+
+		messageManager.sendMessage(sender, "&cPlease note that this command is not supported and may" +
+				"cause issues that will make the status of the plugin unrecoverable. " +
+				"If you encounter any issues please stop your server, edit the configuration files, " +
+				"and then start your server again. This command does NOT reload all the plugin files, only " +
+				"the config.yml, language.yml, generators.yml, and levelling.yml.");
 
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();

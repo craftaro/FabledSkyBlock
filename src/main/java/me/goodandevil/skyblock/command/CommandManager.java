@@ -91,6 +91,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 				new me.goodandevil.skyblock.command.commands.admin.OwnerCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.RemoveHologramCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.RemoveUpgradeCommand(),
+				new me.goodandevil.skyblock.command.commands.admin.ReloadCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.SetHologramCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.SetSizeCommand(),
 				new me.goodandevil.skyblock.command.commands.admin.SetSpawnCommand(),

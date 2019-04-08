@@ -34,26 +34,18 @@ public class InformationCommand extends SubCommand {
 			UUID islandOwnerUUID = null;
 
 			if (args.length == 1) {
-				if (player.hasPermission("fabledskyblock.information") || player.hasPermission("fabledskyblock.*")) {
-					Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
-					if (targetPlayer == null) {
-						OfflinePlayer targetOfflinePlayer = new OfflinePlayer(args[0]);
-						islandOwnerUUID = targetOfflinePlayer.getOwner();
-					} else {
-						islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
-					}
-
-					if (islandOwnerUUID == null) {
-						messageManager.sendMessage(player,
-								configLoad.getString("Command.Island.Information.Island.Message"));
-						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-						return;
-					}
+				if (targetPlayer == null) {
+					OfflinePlayer targetOfflinePlayer = new OfflinePlayer(args[0]);
+					islandOwnerUUID = targetOfflinePlayer.getOwner();
 				} else {
+					islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
+				}
+
+				if (islandOwnerUUID == null) {
 					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Information.Permission.Message"));
+							configLoad.getString("Command.Island.Information.Island.Message"));
 					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 					return;

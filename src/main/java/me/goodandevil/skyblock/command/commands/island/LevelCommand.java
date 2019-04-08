@@ -41,47 +41,40 @@ public class LevelCommand extends SubCommand {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		if (args.length == 1) {
-			if (player.hasPermission("fabledskyblock.level") || player.hasPermission("fabledskyblock.*")) {
-				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
-				UUID islandOwnerUUID = null;
-				String targetPlayerName;
+			Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+			UUID islandOwnerUUID = null;
+			String targetPlayerName;
 
-				if (targetPlayer == null) {
-					OfflinePlayer targetOfflinePlayer = new OfflinePlayer(args[0]);
-					islandOwnerUUID = targetOfflinePlayer.getOwner();
-					targetPlayerName = targetOfflinePlayer.getName();
-				} else {
-					islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
-					targetPlayerName = targetPlayer.getName();
-				}
-
-				if (islandOwnerUUID == null) {
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Level.Owner.Other.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-					return;
-				} else if (!islandOwnerUUID.equals(playerDataManager.getPlayerData(player).getOwner())) {
-					if (visitManager.hasIsland(islandOwnerUUID)) {
-						me.goodandevil.skyblock.visit.Visit visit = visitManager.getIsland(islandOwnerUUID);
-
-						messageManager.sendMessage(player,
-								configLoad.getString("Command.Island.Level.Level.Message")
-										.replace("%player", targetPlayerName).replace("%level",
-												"" + NumberUtil.formatNumberByDecimal(visit.getLevel().getLevel())));
-						soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
-
-						return;
-					}
-
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Level.Owner.Other.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-					return;
-				}
+			if (targetPlayer == null) {
+				OfflinePlayer targetOfflinePlayer = new OfflinePlayer(args[0]);
+				islandOwnerUUID = targetOfflinePlayer.getOwner();
+				targetPlayerName = targetOfflinePlayer.getName();
 			} else {
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Permission.Message"));
+				islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
+				targetPlayerName = targetPlayer.getName();
+			}
+
+			if (islandOwnerUUID == null) {
+				messageManager.sendMessage(player,
+						configLoad.getString("Command.Island.Level.Owner.Other.Message"));
+				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+				return;
+			} else if (!islandOwnerUUID.equals(playerDataManager.getPlayerData(player).getOwner())) {
+				if (visitManager.hasIsland(islandOwnerUUID)) {
+					me.goodandevil.skyblock.visit.Visit visit = visitManager.getIsland(islandOwnerUUID);
+
+					messageManager.sendMessage(player,
+							configLoad.getString("Command.Island.Level.Level.Message")
+									.replace("%player", targetPlayerName).replace("%level",
+									"" + NumberUtil.formatNumberByDecimal(visit.getLevel().getLevel())));
+					soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
+
+				messageManager.sendMessage(player,
+						configLoad.getString("Command.Island.Level.Owner.Other.Message"));
 				soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 				return;
