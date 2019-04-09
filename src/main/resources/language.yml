@@ -1205,6 +1205,16 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+    fabledskyblock_island_leaderboard_level_rank:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
+    fabledskyblock_island_leaderboard_votes_rank:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
     fabledskyblock_island_level_block_count:
         Empty:
             Message: "&c0"

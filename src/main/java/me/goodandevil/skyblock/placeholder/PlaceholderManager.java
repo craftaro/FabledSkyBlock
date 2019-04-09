@@ -7,6 +7,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
 import me.goodandevil.skyblock.leaderboard.Leaderboard;
+import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.levelling.LevellingMaterial;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -306,6 +307,28 @@ public class PlaceholderManager {
                         configLoad.getString("Placeholder.fabledskyblock_island_bank_balance.Non-empty.Message"))
 		                .replace("%placeholder", "" + island.getBankBalance());
 		    }
+		} else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_level_rank")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Empty.Message"));
+			} else {
+				LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+				int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Level);
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Non-empty.Message")
+								.replace("%placeholder", "" + rank));
+			}
+		} else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_votes_rank")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Empty.Message"));
+			} else {
+				LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+				int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Votes);
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Non-empty.Message")
+								.replace("%placeholder", "" + rank));
+			}
 		} else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_level_block_count_")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
