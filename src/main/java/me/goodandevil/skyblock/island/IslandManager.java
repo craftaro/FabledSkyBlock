@@ -34,6 +34,7 @@ import me.goodandevil.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -540,6 +541,37 @@ public class IslandManager {
         return null;
     }
 
+    public void loadIslandAtLocation(Location location) {
+        FileManager fileManager = skyblock.getFileManager();
+        File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
+
+        if (!configFile.exists()) return;
+
+        for (File fileList : configFile.listFiles()) {
+            if (fileList != null && fileList.getName().contains(".yml") && fileList.getName().length() > 35) {
+                try {
+                    Config config = new FileManager.Config(fileManager, fileList);
+                    FileConfiguration configLoad = config.getFileConfiguration();
+
+                    int size = 100;
+                    if (configLoad.getString("Size") != null) {
+                        size = configLoad.getInt("Size");
+                    }
+
+                    Location islandLocation = fileManager.getLocation(config, "Location.Normal.Island", false);
+
+                    if (LocationUtil.isLocationAtLocationRadius(location, islandLocation, size)) {
+                        UUID islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
+                        this.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public void unloadIsland(Island island, org.bukkit.OfflinePlayer player) {
         ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
         FileManager fileManager = skyblock.getFileManager();
@@ -739,8 +771,8 @@ public class IslandManager {
         setNextAvailableLocation(world, islandLocation);
         saveNextAvailableLocation(world);
 
-        // Recalculate island level
-        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().calculatePoints(null, island), 20L);
+        // Recalculate island level after 5 seconds
+        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().calculatePoints(null, island), 100L);
     }
 
     public Set<UUID> getVisitorsAtIsland(Island island) {

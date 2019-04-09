@@ -3,9 +3,12 @@ package me.goodandevil.skyblock.utils.world;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.utils.math.VectorUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
+import me.goodandevil.skyblock.world.WorldManager;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
@@ -187,6 +190,8 @@ public final class LocationUtil {
 	public static void teleportPlayerToSpawn(Player player) {
 		SkyBlock skyblock = SkyBlock.getInstance();
 
+		IslandManager islandManager = skyblock.getIslandManager();
+		WorldManager worldManager = skyblock.getWorldManager();
 		FileManager fileManager = skyblock.getFileManager();
 
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
@@ -203,12 +208,17 @@ public final class LocationUtil {
 				return;
 			}
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					player.teleport(spawnLocation);
-					player.setFallDistance(0.0F);
+			// If the spawn point is at an island, load that island
+			if (worldManager.isIslandWorld(spawnLocation.getWorld())) {
+				Island island = islandManager.getIslandAtLocation(spawnLocation);
+				if (island == null) {
+					islandManager.loadIslandAtLocation(spawnLocation);
 				}
+			}
+
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+				player.teleport(spawnLocation);
+				player.setFallDistance(0.0F);
 			});
 		}
 	}
