@@ -13,7 +13,9 @@ import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.world.WorldManager;
 import org.bukkit.*;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -65,6 +67,9 @@ public class LevellingManager {
                     }
                 }
 
+                boolean isEpicSpawnersEnabled = Bukkit.getPluginManager().isPluginEnabled("EpicSpawners");
+                boolean isWildStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("WildStacker");
+
                 Map<LevellingData, Long> levellingData = new HashMap<>();
 
                 for (ChunkSnapshot chunkSnapshotList : chunk.getChunkSnapshots()) {
@@ -74,6 +79,7 @@ public class LevellingManager {
                                 try {
                                     org.bukkit.Material blockMaterial = org.bukkit.Material.AIR;
                                     int blockData = 0;
+                                    EntityType spawnerType = null;
 
                                     if (NMSVersion > 12) {
                                         if (getBlockTypeMethod == null) {
@@ -109,26 +115,54 @@ public class LevellingManager {
                                         continue;
 
                                     long amount = 1;
-                                    if (blockMaterial == Materials.SPAWNER.parseMaterial()
-                                            && Bukkit.getPluginManager().isPluginEnabled("EpicSpawners")) {
+
+                                    if (blockMaterial == Materials.SPAWNER.parseMaterial()) {
                                         World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                        com.songoda.epicspawners.api.EpicSpawners epicSpawners =
-                                                com.songoda.epicspawners.api.EpicSpawnersAPI.getImplementation();
                                         Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
-                                        if (epicSpawners.getSpawnerManager().isSpawner(location)) {
-                                            amount = epicSpawners.getSpawnerManager()
-                                                    .getSpawnerFromWorld(location).getSpawnerDataCount();
+
+                                        if (isEpicSpawnersEnabled) {
+                                            com.songoda.epicspawners.api.EpicSpawners epicSpawners = com.songoda.epicspawners.api.EpicSpawnersAPI.getImplementation();
+                                            if (epicSpawners.getSpawnerManager().isSpawner(location)) {
+                                                com.songoda.epicspawners.api.spawner.Spawner spawner = epicSpawners.getSpawnerManager().getSpawnerFromWorld(location);
+                                                amount = spawner.getSpawnerDataCount();
+                                                spawnerType = spawner.getCreatureSpawner().getSpawnedType();
+                                            }
+                                        } else if (isWildStackerEnabled) {
+                                            com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
+                                            if (wildStacker.isStackedSpawner(location.getBlock())) {
+                                                com.bgsoftware.wildstacker.api.objects.StackedSpawner spawner = wildStacker.getStackedSpawner(location);
+                                                amount = spawner.getStackAmount();
+                                                spawnerType = spawner.getSpawnedType();
+                                            }
+                                        } else {
+                                            spawnerType = ((CreatureSpawner) location.getBlock().getState()).getSpawnedType();
                                         }
-                                    } else if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial)) {
-                                        World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                        Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
-                                        if (stackableManager.isStacked(location)) {
-                                            Stackable stackable = stackableManager.getStack(location, blockMaterial);
-                                            amount = stackable.getSize();
+                                    } else {
+                                        if (isWildStackerEnabled) {
+                                            World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
+                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
+                                            com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
+                                            if (wildStacker.isStackedBarrel(location.getBlock())) {
+                                                com.bgsoftware.wildstacker.api.objects.StackedBarrel barrel = wildStacker.getStackedBarrel(location.getBlock());
+                                                amount = barrel.getStackAmount();
+                                                blockMaterial = barrel.getType();
+                                                blockData = barrel.getData();
+                                                if (NMSUtil.getVersionNumber() > 12 && blockMaterial.name().startsWith("LEGACY_")) {
+                                                    blockMaterial = Material.matchMaterial(blockMaterial.name().replace("LEGACY_", ""));
+                                                    blockData = 0;
+                                                }
+                                            }
+                                        } else if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial)) {
+                                            World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
+                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
+                                            if (stackableManager.isStacked(location)) {
+                                                Stackable stackable = stackableManager.getStack(location, blockMaterial);
+                                                amount = stackable.getSize();
+                                            }
                                         }
                                     }
 
-                                    LevellingData data = new LevellingData(blockMaterial, (byte)blockData);
+                                    LevellingData data = new LevellingData(blockMaterial, (byte)blockData, spawnerType);
                                     Long totalAmountInteger = levellingData.get(data);
                                     long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
                                     levellingData.put(data, totalAmount);
@@ -233,10 +267,12 @@ public class LevellingManager {
     private class LevellingData {
         private final Material material;
         private final byte data;
+        private final EntityType spawnerType;
 
-        private LevellingData(Material material, byte data) {
+        private LevellingData(Material material, byte data, EntityType spawnerType) {
             this.material = material;
             this.data = data;
+            this.spawnerType = spawnerType;
         }
 
         @Override
@@ -244,15 +280,19 @@ public class LevellingManager {
             if (!(obj instanceof LevellingData)) return false;
             LevellingData data = (LevellingData)obj;
             if (this == obj) return true;
-            return this.material == data.material && this.data == data.data;
+            return this.material == data.material && this.data == data.data && this.spawnerType == data.spawnerType;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(this.material, this.data);
+            return Objects.hash(this.material, this.data, this.spawnerType);
         }
 
         private Materials getMaterials() {
+            if (this.spawnerType != null) {
+                return Materials.fromString("SPAWNER_" + this.spawnerType.name());
+            }
+
             if (NMSUtil.getVersionNumber() > 12) {
                 try {
                     return Materials.fromString(material.name());

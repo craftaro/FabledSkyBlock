@@ -152,6 +152,11 @@ public class SkyBlock extends JavaPlugin {
 		pluginManager.registerEvents(new Spawner(this), this);
 		pluginManager.registerEvents(new Food(this), this);
 
+		if (pluginManager.isPluginEnabled("EpicSpawners"))
+			pluginManager.registerEvents(new EpicSpawners(this), this);
+		if (pluginManager.isPluginEnabled("WildStacker"))
+			pluginManager.registerEvents(new WildStacker(this), this);
+
 		pluginManager.registerEvents(new Rollback(), this);
 		pluginManager.registerEvents(new Levelling(), this);
 		pluginManager.registerEvents(new Generator(), this);

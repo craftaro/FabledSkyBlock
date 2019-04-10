@@ -773,6 +773,11 @@ Command:
                     Message: "&bSkyBlock &8| &cError&8: &eA location for that hologram has not been set."
                 Removed:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have removed the '&b%type&e' hologram."
+            RefreshHolograms:
+                Info:
+                    Message: "&f&oRefreshes any existing holograms."
+                Refreshed:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eRefreshed holograms."
             SetSize:
                 Info:
                     Message: "&f&oSets the size of a players Island."

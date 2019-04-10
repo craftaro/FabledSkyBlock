@@ -2,8 +2,10 @@ package me.goodandevil.skyblock.menus;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
@@ -194,30 +196,34 @@ public class Levelling {
 			IslandLevel level = island.getLevel();
 
 			Map<String, Long> testIslandMaterials = level.getMaterials();
-			Map<String, Long> islandMaterials = new HashMap<>();
+			List<String> testIslandMaterialKeysOrdered = testIslandMaterials.keySet().stream().sorted().collect(Collectors.toList());
+			LinkedHashMap<String, Long> islandMaterials = new LinkedHashMap<>();
 			
 			Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
 			Config settingsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 			
 			// Filter out ItemStacks that can't be displayed in the inventory
 			Inventory testInventory = Bukkit.createInventory(null, 9);
-			for (String materialName : testIslandMaterials.keySet()) {
+			for (String materialName : testIslandMaterialKeysOrdered) {
 			    if (mainConfig.getFileConfiguration().getString("Materials." + materialName + ".Points") == null)
 			        continue;
 			    if (!settingsConfig.getFileConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") &&
 						mainConfig.getFileConfiguration().getInt("Materials." + materialName + ".Points") <= 0)
 			    	continue;
 
+			    long value = testIslandMaterials.get(materialName);
 			    Materials materials = Materials.fromString(materialName);
                 ItemStack is = materials.parseItem();
-                is.setAmount(Math.min(Math.toIntExact(testIslandMaterials.get(materialName)), 64));
+
+				if (is == null || is.getItemMeta() == null) continue;
+
+                is.setAmount(Math.min(Math.toIntExact(value), 64));
                 is.setType(MaterialUtil.correctMaterial(is.getType()));
 
-                if (is == null || is.getItemMeta() == null) continue;
                 testInventory.clear();
                 testInventory.setItem(0, is);
                 if (testInventory.getItem(0) != null) {
-                    islandMaterials.put(materialName, testIslandMaterials.get(materialName));
+                    islandMaterials.put(materialName, value);
                 }
 			}
 
@@ -285,18 +291,23 @@ public class Levelling {
 									is.setAmount(Math.min(Math.toIntExact(materialAmount), 64));
 									is.setType(MaterialUtil.correctMaterial(is.getType()));
 
+									String name;
+									if (materials.isSpawner() && materials != Materials.SPAWNER) {
+										name = "Spawner: " + WordUtils.capitalize(material.replace("SPAWNER_", "").toLowerCase().replace("_", " ")).trim();
+									} else {
+										name = WordUtils.capitalize(material.toLowerCase().replace("_", " ")).trim();
+									}
+
 									List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");
 									lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
 											.replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
-											.replace("%material",
-													WordUtils.capitalize(material.toLowerCase().replace("_", " ")).trim()));
+											.replace("%material", name));
 
 									nInv.addItem(nInv.createItem(is, configLoad
 													.getString("Menu.Levelling.Item.Material.Displayname")
 													.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
 													.replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
-													.replace("%material",
-															WordUtils.capitalize(material.toLowerCase().replace("_", " ")).trim()),
+													.replace("%material", name),
 											lore, null, null, null), inventorySlot);
 								}
 							}

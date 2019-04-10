@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public enum Materials {
@@ -767,6 +768,63 @@ public enum Materials {
     SNOW_BLOCK("SNOW_BLOCK", 0),
     SOUL_SAND("SOUL_SAND", 0),
     SPAWNER("MOB_SPAWNER", 0),
+    SPAWNER_BAT(null, -1),
+    SPAWNER_BLAZE(null, -1),
+    SPAWNER_CAVE_SPIDER(null, -1),
+    SPAWNER_CHICKEN(null, -1),
+    SPAWNER_COD(null, -1),
+    SPAWNER_COW(null, -1),
+    SPAWNER_CREEPER(null, -1),
+    SPAWNER_DOLPHIN(null, -1),
+    SPAWNER_DONKEY(null, -1),
+    SPAWNER_DROWNED(null, -1),
+    SPAWNER_ELDER_GUARDIAN(null, -1),
+    SPAWNER_ENDER_DRAGON(null, -1),
+    SPAWNER_ENDERMAN(null, -1),
+    SPAWNER_ENDERMITE(null, -1),
+    SPAWNER_EVOKER(null, -1),
+    SPAWNER_GHAST(null, -1),
+    SPAWNER_GIANT(null, -1),
+    SPAWNER_GUARDIAN(null, -1),
+    SPAWNER_HORSE(null, -1),
+    SPAWNER_HUSK(null, -1),
+    SPAWNER_ILLUSIONER(null, -1),
+    SPAWNER_IRON_GOLEM(null, -1),
+    SPAWNER_LLAMA(null, -1),
+    SPAWNER_MAGMA_CUBE(null, -1),
+    SPAWNER_MULE(null, -1),
+    SPAWNER_MUSHROOM_COW(null, -1),
+    SPAWNER_OCELOT(null, -1),
+    SPAWNER_PARROT(null, -1),
+    SPAWNER_PHANTOM(null, -1),
+    SPAWNER_PIG(null, -1),
+    SPAWNER_PIG_ZOMBIE(null, -1),
+    SPAWNER_POLAR_BEAR(null, -1),
+    SPAWNER_PUFFERFISH(null, -1),
+    SPAWNER_RABBIT(null, -1),
+    SPAWNER_SALMON(null, -1),
+    SPAWNER_SHEEP(null, -1),
+    SPAWNER_SHULKER(null, -1),
+    SPAWNER_SILVERFISH(null, -1),
+    SPAWNER_SKELETON(null, -1),
+    SPAWNER_SKELETON_HORSE(null, -1),
+    SPAWNER_SLIME(null, -1),
+    SPAWNER_SNOWMAN(null, -1),
+    SPAWNER_SPIDER(null, -1),
+    SPAWNER_SQUID(null, -1),
+    SPAWNER_STRAY(null, -1),
+    SPAWNER_TROPICAL_FISH(null, -1),
+    SPAWNER_TURTLE(null, -1),
+    SPAWNER_VEX(null, -1),
+    SPAWNER_VILLAGER(null, -1),
+    SPAWNER_VINDICATOR(null, -1),
+    SPAWNER_WITCH(null, -1),
+    SPAWNER_WITHER(null, -1),
+    SPAWNER_WITHER_SKELETON(null, -1),
+    SPAWNER_WOLF(null, -1),
+    SPAWNER_ZOMBIE(null, -1),
+    SPAWNER_ZOMBIE_HORSE(null, -1),
+    SPAWNER_ZOMBIE_VILLAGER(null, -1),
     SPECTRAL_ARROW("SPECTRAL_ARROW", 0),
     SPIDER_EYE("SPIDER_EYE", 0),
     SPIDER_SPAWN_EGG("MONSTER_EGG", 0),
@@ -942,6 +1000,14 @@ public enum Materials {
      * @return True if the Material exists
      */
     public boolean isAvailable() {
+        if (this.isSpawner() && this != Materials.SPAWNER) {
+            String spawnerType = this.name().replace("SPAWNER_", "");
+            for (EntityType entityType : EntityType.values())
+                if (entityType.name().equalsIgnoreCase(spawnerType))
+                    return true;
+            return false;
+        }
+
         return isNewVersion() || !this.is13only;
     }
 
@@ -972,6 +1038,14 @@ public enum Materials {
         }
 
         return null;
+    }
+
+    public boolean isSpawner() {
+        return this.name().startsWith("SPAWNER");
+    }
+
+    public static Materials getSpawner(EntityType spawnerType) {
+        return fromString("SPAWNER_" + spawnerType.name());
     }
 
     @SuppressWarnings("deprecation")
@@ -1066,6 +1140,9 @@ public enum Materials {
     }
     
     public Material parseMaterial() {
+        if (this.isSpawner() && this != Materials.SPAWNER)
+            return Materials.SPAWNER.parseMaterial();
+
         Material mat = Material.matchMaterial(this.toString());
 
         if (mat != null) {

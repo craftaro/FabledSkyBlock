@@ -25,7 +25,6 @@ Materials:
     ACACIA_STAIRS:
         Points: 2
     ACACIA_TRAPDOOR:
-        Points: 3
     ACACIA_WOOD:
         Points: 1
     ACTIVATOR_RAIL:
@@ -1009,6 +1008,120 @@ Materials:
     SOUL_SAND:
         Points: 1
     SPAWNER:
+        Points: 10
+    SPAWNER_BAT:
+        Points: 10
+    SPAWNER_BLAZE:
+        Points: 10
+    SPAWNER_CAVE_SPIDER:
+        Points: 10
+    SPAWNER_CHICKEN:
+        Points: 10
+    SPAWNER_COD:
+        Points: 10
+    SPAWNER_COW:
+        Points: 10
+    SPAWNER_CREEPER:
+        Points: 10
+    SPAWNER_DOLPHIN:
+        Points: 10
+    SPAWNER_DONKEY:
+        Points: 10
+    SPAWNER_DROWNED:
+        Points: 10
+    SPAWNER_ELDER_GUARDIAN:
+        Points: 10
+    SPAWNER_ENDER_DRAGON:
+        Points: 10
+    SPAWNER_ENDERMAN:
+        Points: 10
+    SPAWNER_ENDERMITE:
+        Points: 10
+    SPAWNER_EVOKER:
+        Points: 10
+    SPAWNER_GHAST:
+        Points: 10
+    SPAWNER_GIANT:
+        Points: 10
+    SPAWNER_GUARDIAN:
+        Points: 10
+    SPAWNER_HORSE:
+        Points: 10
+    SPAWNER_HUSK:
+        Points: 10
+    SPAWNER_ILLUSIONER:
+        Points: 10
+    SPAWNER_IRON_GOLEM:
+        Points: 10
+    SPAWNER_LLAMA:
+        Points: 10
+    SPAWNER_MAGMA_CUBE:
+        Points: 10
+    SPAWNER_MULE:
+        Points: 10
+    SPAWNER_MUSHROOM_COW:
+        Points: 10
+    SPAWNER_OCELOT:
+        Points: 10
+    SPAWNER_PARROT:
+        Points: 10
+    SPAWNER_PHANTOM:
+        Points: 10
+    SPAWNER_PIG:
+        Points: 10
+    SPAWNER_PIG_ZOMBIE:
+        Points: 10
+    SPAWNER_POLAR_BEAR:
+        Points: 10
+    SPAWNER_PUFFERFISH:
+        Points: 10
+    SPAWNER_RABBIT:
+        Points: 10
+    SPAWNER_SALMON:
+        Points: 10
+    SPAWNER_SHEEP:
+        Points: 10
+    SPAWNER_SHULKER:
+        Points: 10
+    SPAWNER_SILVERFISH:
+        Points: 10
+    SPAWNER_SKELETON:
+        Points: 10
+    SPAWNER_SKELETON_HORSE:
+        Points: 10
+    SPAWNER_SLIME:
+        Points: 10
+    SPAWNER_SNOWMAN:
+        Points: 10
+    SPAWNER_SPIDER:
+        Points: 10
+    SPAWNER_SQUID:
+        Points: 10
+    SPAWNER_STRAY:
+        Points: 10
+    SPAWNER_TROPICAL_FISH:
+        Points: 10
+    SPAWNER_TURTLE:
+        Points: 10
+    SPAWNER_VEX:
+        Points: 10
+    SPAWNER_VILLAGER:
+        Points: 10
+    SPAWNER_VINDICATOR:
+        Points: 10
+    SPAWNER_WITCH:
+        Points: 10
+    SPAWNER_WITHER:
+        Points: 10
+    SPAWNER_WITHER_SKELETON:
+        Points: 10
+    SPAWNER_WOLF:
+        Points: 10
+    SPAWNER_ZOMBIE:
+        Points: 10
+    SPAWNER_ZOMBIE_HORSE:
+        Points: 10
+    SPAWNER_ZOMBIE_VILLAGER:
         Points: 10
     SPONGE:
         Points: 10

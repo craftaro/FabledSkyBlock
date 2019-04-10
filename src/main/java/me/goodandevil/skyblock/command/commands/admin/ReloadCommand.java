@@ -39,8 +39,8 @@ public class ReloadCommand extends SubCommand {
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
 
-		messageManager.sendMessage(sender, "&cPlease note that this command is not supported and may" +
-				"cause issues that will make the status of the plugin unrecoverable. " +
+		messageManager.sendMessage(sender, "&cPlease note that this command is not supported and may " +
+				"cause issues that could put the plugin in an unstable state. " +
 				"If you encounter any issues please stop your server, edit the configuration files, " +
 				"and then start your server again. This command does NOT reload all the plugin files, only " +
 				"the config.yml, language.yml, generators.yml, and levelling.yml.");
@@ -86,18 +86,15 @@ public class ReloadCommand extends SubCommand {
 		levellingManager.unregisterMaterials();
 		levellingManager.registerMaterials();
 
-		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				for (HologramType hologramTypeList : HologramType.values()) {
-					Hologram hologram = hologramManager.getHologram(hologramTypeList);
+		Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+			for (HologramType hologramTypeList : HologramType.values()) {
+				Hologram hologram = hologramManager.getHologram(hologramTypeList);
 
-					if (hologram != null) {
-						hologramManager.removeHologram(hologram);
-					}
-
-					hologramManager.spawnHologram(hologramTypeList);
+				if (hologram != null) {
+					hologramManager.removeHologram(hologram);
 				}
+
+				hologramManager.spawnHologram(hologramTypeList);
 			}
 		});
 
