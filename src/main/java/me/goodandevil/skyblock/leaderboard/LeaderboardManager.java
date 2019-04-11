@@ -1,11 +1,14 @@
 package me.goodandevil.skyblock.leaderboard;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.economy.EconomyManager;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.leaderboard.leaderheads.TopBank;
 import me.goodandevil.skyblock.leaderboard.leaderheads.TopLevel;
 import me.goodandevil.skyblock.leaderboard.leaderheads.TopVotes;
 import me.goodandevil.skyblock.visit.Visit;
 import me.goodandevil.skyblock.visit.VisitManager;
+import me.goodandevil.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -33,15 +36,28 @@ public class LeaderboardManager {
 	}
 
 	public void resetLeaderboard() {
+		EconomyManager economyManager = skyblock.getEconomyManager();
 		VisitManager visitManager = skyblock.getVisitManager();
+		WorldManager worldManager = skyblock.getWorldManager();
+
 		visitManager.loadIslands();
 
 		List<LeaderboardPlayer> islandLevels = new ArrayList<>();
 		List<LeaderboardPlayer> islandBanks = new ArrayList<>();
 		List<LeaderboardPlayer> islandVotes = new ArrayList<>();
 
+		boolean enableExemptions = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+				.getFileConfiguration().getBoolean("Island.Leaderboard.Exemptions.Enable");
+
 		for (int i = 0; i < visitManager.getIslands().size(); i++) {
 			UUID ownerUUID = (UUID) visitManager.getIslands().keySet().toArray()[i];
+
+			if (enableExemptions && economyManager.hasPermission(
+					worldManager.getWorld(IslandWorld.Normal).getName(),
+					Bukkit.getOfflinePlayer(ownerUUID),
+					"fabledskyblock.island.top.exempt"))
+				continue;
+
 			Visit visit = visitManager.getIslands().get(ownerUUID);
 			islandLevels.add(new LeaderboardPlayer(ownerUUID, visit.getLevel().getLevel()));
 			islandBanks.add(new LeaderboardPlayer(ownerUUID, (long)visit.getBankBalance()));

@@ -2,13 +2,16 @@ package me.goodandevil.skyblock.economy;
 
 import me.goodandevil.skyblock.api.event.player.PlayerWithdrawMoneyEvent;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class EconomyManager {
 
-	private Economy economy;
+	private Economy economy = null;
+	private Permission permission = null;
 
 	public EconomyManager() {
 		setup();
@@ -16,10 +19,14 @@ public class EconomyManager {
 
 	public void setup() {
 		if (Bukkit.getServer().getPluginManager().getPlugin("Vault") != null) {
-			RegisteredServiceProvider<Economy> registeredServiceProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+			RegisteredServiceProvider<Economy> economyRsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
 
-			if (registeredServiceProvider != null)
-				economy = registeredServiceProvider.getProvider();
+			if (economyRsp != null)
+				economy = economyRsp.getProvider();
+
+			RegisteredServiceProvider<Permission> permissionRsp = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
+			if (permissionRsp != null)
+				permission = permissionRsp.getProvider();
 		}
 	}
 
@@ -46,7 +53,17 @@ public class EconomyManager {
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerWithdrawMoneyEvent(player, money));
 	}
 
+	public boolean hasPermission(String world, OfflinePlayer player, String perm) {
+		if (permission != null)
+			return permission.playerHas(world, player, perm);
+		return false;
+	}
+
 	public boolean isEconomy() {
-		return Bukkit.getServer().getPluginManager().getPlugin("Vault") != null;
+		return economy != null;
+	}
+
+	public boolean isPermission() {
+		return permission != null;
 	}
 }

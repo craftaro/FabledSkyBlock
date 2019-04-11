@@ -83,6 +83,9 @@ Island:
         Reset:
             # Time until Leaderboard resets
             Time: 300
+        # If users with the permission should be exempt from /is leaderboard
+        Exemptions:
+            Enable: false
     Invite:
         # Time until Island invite expires
         Time: 300

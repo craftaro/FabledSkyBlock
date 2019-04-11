@@ -86,6 +86,7 @@ public class SkyBlock extends JavaPlugin {
 		fileManager = new FileManager(this);
 		worldManager = new WorldManager(this);
 		userCacheManager = new UserCacheManager(this);
+		economyManager = new EconomyManager();
 		visitManager = new VisitManager(this);
 		banManager = new BanManager(this);
 		islandManager = new IslandManager(this);
@@ -126,7 +127,6 @@ public class SkyBlock extends JavaPlugin {
 		placeholderManager.registerPlaceholders();
 
 		messageManager = new MessageManager(this);
-		economyManager = new EconomyManager();
 		hologramManager = new HologramManager(this);
 
 		new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);

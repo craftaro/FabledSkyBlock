@@ -7,6 +7,7 @@ import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.hologram.Hologram;
 import me.goodandevil.skyblock.hologram.HologramManager;
 import me.goodandevil.skyblock.hologram.HologramType;
+import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
@@ -34,6 +35,7 @@ public class ReloadCommand extends SubCommand {
 	}
 
 	public void onCommand(CommandSender sender, String[] args) {
+		LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
 		HologramManager hologramManager = skyblock.getHologramManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
@@ -86,17 +88,11 @@ public class ReloadCommand extends SubCommand {
 		levellingManager.unregisterMaterials();
 		levellingManager.registerMaterials();
 
-		Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-			for (HologramType hologramTypeList : HologramType.values()) {
-				Hologram hologram = hologramManager.getHologram(hologramTypeList);
+		leaderboardManager.clearLeaderboard();
+		leaderboardManager.resetLeaderboard();
+		leaderboardManager.setupLeaderHeads();
 
-				if (hologram != null) {
-					hologramManager.removeHologram(hologram);
-				}
-
-				hologramManager.spawnHologram(hologramTypeList);
-			}
-		});
+		hologramManager.resetHologram();
 
 		messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
 		soundManager.playSound(sender, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
