@@ -88,7 +88,7 @@ Command:
             Info:
                 Message: "&f&oOpens the Leaderboard menu of the top 10 Islands."
             Invalid:
-                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island leaderboard [<Level|Votes>]"
+                Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island leaderboard [<Level|Bank|Votes>]"
             Disabled:
                 Message: "&bSkyBlock &8| &cError&8: &eYou cannot view that leaderboard because that leaderboard is disabled."
         Create:
@@ -1104,6 +1104,11 @@ Placeholder:
             Message: "&f&oUnclaimed"
         Non-empty:
             Message: "&f[%position] %player [%level]"
+    fabledskyblock_leaderboard_bank:
+        Empty:
+            Message: "&f&oUnclaimed"
+        Non-empty:
+            Message: "&f[%position] %player [$%balance]"
     fabledskyblock_leaderboard_votes:
         Empty:
             Message: "&f&oUnclaimed"
@@ -1229,6 +1234,11 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+    fabledskyblock_island_leaderboard_bank_rank:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
     fabledskyblock_island_leaderboard_votes_rank:
         Empty:
             Message: "&c0"
@@ -1258,6 +1268,11 @@ Hologram:
         Level:
             Header: "&b&lSkyBlock &8&l| &e&lTop 10 Level"
             Claimed: "&8* &f&o[%position] &a%player &7- &6%level"
+            Unclaimed: "&8* &f&o[%position] &7&oUnclaimed Position"
+            Footer: "&ewww.example.net"
+        Bank:
+            Header: "&b&lSkyBlock &8&l| &e&lTop 10 Bank Balances"
+            Claimed: "&8* &f&o[%position] &a%player &7- &6$%balance"
             Unclaimed: "&8* &f&o[%position] &7&oUnclaimed Position"
             Footer: "&ewww.example.net"
         Votes:
@@ -1703,6 +1718,14 @@ Menu:
                         Lore:
                         - "&7Owner&8: &f%owner"
                         - "&7Level&8: &f%level"
+                        - "&7Members&8: &f%members"
+                        - ""
+                        - "&7Signature&8:"
+                        - "%signature"
+                    Bank:
+                        Lore:
+                        - "&7Owner&8: &f%owner"
+                        - "&7Balance&8: &f$%balance"
                         - "&7Members&8: &f%members"
                         - ""
                         - "&7Signature&8:"

@@ -28,7 +28,7 @@ public class Leaderboard {
 
 	public enum Type {
 
-		Level, Votes;
+		Level, Bank, Votes
 
 	}
 }

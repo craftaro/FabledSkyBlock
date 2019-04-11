@@ -55,6 +55,7 @@ public class EZPlaceholder extends PlaceholderExpansion implements Listener {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		List<Leaderboard> leaderboardLevelPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Level);
+		List<Leaderboard> leaderboardBankPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Bank);
 		List<Leaderboard> leaderboardVotesPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Votes);
 
 		if (identifier.equalsIgnoreCase("islands")) {
@@ -82,7 +83,30 @@ public class EZPlaceholder extends PlaceholderExpansion implements Listener {
 					}
 
 					return ChatColor.translateAlternateColorCodes('&',
-							configLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Empty.Message"));
+							configLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Empty.Message"));
+				} else if (identifier.equalsIgnoreCase("leaderboard_bank_" + (i + 1))) {
+					if (i < leaderboardLevelPlayers.size()) {
+						Leaderboard leaderboard = leaderboardLevelPlayers.get(i);
+						Visit visit = leaderboard.getVisit();
+						IslandLevel level = visit.getLevel();
+
+						Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
+						String islandOwnerName;
+
+						if (targetPlayer == null) {
+							islandOwnerName = new OfflinePlayer(visit.getOwnerUUID()).getName();
+						} else {
+							islandOwnerName = targetPlayer.getName();
+						}
+
+						return ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Non-empty.Message")
+										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
+										.replace("%balance", NumberUtil.formatNumberByDecimal(level.getLevel())));
+					}
+
+					return ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Empty.Message"));
 				} else if (identifier.equalsIgnoreCase("leaderboard_level_" + (i + 1))) {
 					if (i < leaderboardLevelPlayers.size()) {
 						Leaderboard leaderboard = leaderboardLevelPlayers.get(i);

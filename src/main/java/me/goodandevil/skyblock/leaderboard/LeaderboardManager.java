@@ -1,21 +1,19 @@
 package me.goodandevil.skyblock.leaderboard;
 
+import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.leaderboard.leaderheads.TopBank;
+import me.goodandevil.skyblock.leaderboard.leaderheads.TopLevel;
+import me.goodandevil.skyblock.leaderboard.leaderheads.TopVotes;
+import me.goodandevil.skyblock.visit.Visit;
+import me.goodandevil.skyblock.visit.VisitManager;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-
-import me.goodandevil.skyblock.island.Island;
-import me.goodandevil.skyblock.island.IslandManager;
-import org.bukkit.Bukkit;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.leaderboard.leaderheads.TopLevel;
-import me.goodandevil.skyblock.leaderboard.leaderheads.TopVotes;
-import me.goodandevil.skyblock.visit.Visit;
-import me.goodandevil.skyblock.visit.VisitManager;
-import org.bukkit.entity.Player;
 
 public class LeaderboardManager {
 
@@ -39,21 +37,29 @@ public class LeaderboardManager {
 		visitManager.loadIslands();
 
 		List<LeaderboardPlayer> islandLevels = new ArrayList<>();
+		List<LeaderboardPlayer> islandBanks = new ArrayList<>();
 		List<LeaderboardPlayer> islandVotes = new ArrayList<>();
 
 		for (int i = 0; i < visitManager.getIslands().size(); i++) {
 			UUID ownerUUID = (UUID) visitManager.getIslands().keySet().toArray()[i];
 			Visit visit = visitManager.getIslands().get(ownerUUID);
 			islandLevels.add(new LeaderboardPlayer(ownerUUID, visit.getLevel().getLevel()));
+			islandBanks.add(new LeaderboardPlayer(ownerUUID, (long)visit.getBankBalance()));
 			islandVotes.add(new LeaderboardPlayer(ownerUUID, visit.getVoters().size()));
 		}
 
 		islandLevels.sort(Comparator.comparingLong(LeaderboardPlayer::getValue).reversed());
+		islandBanks.sort(Comparator.comparingLong(LeaderboardPlayer::getValue).reversed());
 		islandVotes.sort(Comparator.comparingLong(LeaderboardPlayer::getValue).reversed());
 
 		for (int i = 0; i < 10; i++) {
 			if (!islandVotes.isEmpty() && i < islandVotes.size()) {
 				Leaderboard leaderboard = new Leaderboard(Leaderboard.Type.Votes, visitManager.getIsland(islandVotes.get(i).getUUID()), i);
+				leaderboardStorage.add(leaderboard);
+			}
+
+			if (!islandBanks.isEmpty() && i < islandBanks.size()) {
+				Leaderboard leaderboard = new Leaderboard(Leaderboard.Type.Bank, visitManager.getIsland(islandBanks.get(i).getUUID()), i);
 				leaderboardStorage.add(leaderboard);
 			}
 
@@ -78,6 +84,12 @@ public class LeaderboardManager {
 					leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getLevel().getLevel()));
 				}
 				break;
+			case Bank:
+				for (int i = 0; i < visitManager.getIslands().size(); i++) {
+					UUID ownerUUID = (UUID) visitManager.getIslands().keySet().toArray()[i];
+					Visit visit = visitManager.getIslands().get(ownerUUID);
+					leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, (long)visit.getBankBalance()));
+				}
 			case Votes:
 				for (int i = 0; i < visitManager.getIslands().size(); i++) {
 					UUID ownerUUID = (UUID) visitManager.getIslands().keySet().toArray()[i];
@@ -101,6 +113,7 @@ public class LeaderboardManager {
 	public void setupLeaderHeads() {
 		if (Bukkit.getServer().getPluginManager().getPlugin("LeaderHeads") != null) {
 			new TopLevel(skyblock);
+			new TopBank(skyblock);
 			new TopVotes(skyblock);
 		}
 	}

@@ -2,6 +2,6 @@ package me.goodandevil.skyblock.hologram;
 
 public enum HologramType {
 
-	Level, Votes, Stackable;
+	Level, Bank, Votes, Stackable;
 
 }

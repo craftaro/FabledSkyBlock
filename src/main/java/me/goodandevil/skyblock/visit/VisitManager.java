@@ -56,63 +56,56 @@ public class VisitManager {
 
 			if (!configFile.exists()) return;
 
-				for (File fileList : configFile.listFiles()) {
-					if (fileList != null && fileList.getName().contains(".yml") && fileList.getName().length() > 35) {
-						try {
-							Config config = new FileManager.Config(fileManager, fileList);
-							FileConfiguration configLoad = config.getFileConfiguration();
+            for (File fileList : configFile.listFiles()) {
+                if (fileList != null && fileList.getName().contains(".yml") && fileList.getName().length() > 35) {
+                    try {
+                        Config config = new FileManager.Config(fileManager, fileList);
+                        FileConfiguration configLoad = config.getFileConfiguration();
 
-							UUID islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
+                        UUID islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
 
-							if (islandOwnerUUID == null) {
-								islandOwnerUUID = UUID.fromString(fileList.getName().replaceFirst("[.][^.]+$", ""));
+                        if (islandOwnerUUID == null) {
+                            islandOwnerUUID = UUID.fromString(fileList.getName().replaceFirst("[.][^.]+$", ""));
 
-								if (islandOwnerUUID == null) {
-									continue;
-								}
-							}
+                            if (islandOwnerUUID == null) {
+                                continue;
+                            }
+                        }
 
-							List<String> islandSignature = new ArrayList<>();
+                        List<String> islandSignature = new ArrayList<>();
 
-							if (configLoad.getString("Visitor.Signature.Message") != null) {
-								islandSignature = configLoad.getStringList("Visitor.Signature.Message");
-							}
+                        if (configLoad.getString("Visitor.Signature.Message") != null) {
+                            islandSignature = configLoad.getStringList("Visitor.Signature.Message");
+                        }
 
-							int division = skyblock.getFileManager()
-									.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-									.getInt("Island.Levelling.Division");
+                        int size = 100;
 
-							if (division == 0) {
-								division = 1;
-							}
+                        if (configLoad.getString("Size") != null) {
+                            size = configLoad.getInt("Size");
+                        }
 
-							int size = 100;
-
-							if (configLoad.getString("Size") != null) {
-								size = configLoad.getInt("Size");
-							}
-
-							createIsland(islandOwnerUUID,
-									new IslandLocation[] {
-											new IslandLocation(IslandWorld.Normal, null,
-													worldManager.getLocation(fileManager.getLocation(config,
-															"Location.Normal.Island", true), IslandWorld.Normal)),
-											new IslandLocation(IslandWorld.Nether, null,
-													worldManager.getLocation(fileManager.getLocation(config,
-															"Location.Nether.Island", true), IslandWorld.Nether)),
-											new IslandLocation(IslandWorld.End, null,
-													worldManager.getLocation(fileManager.getLocation(config,
-															"Location.Nether.Island", true), IslandWorld.End)) },
-									size,
-									configLoad.getStringList("Members").size()
-											+ configLoad.getStringList("Operators").size() + 1,
-									getIslandSafeLevel(islandOwnerUUID), new IslandLevel(islandOwnerUUID, skyblock),
-									islandSignature, configLoad.getBoolean("Visitor.Open"));
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
+                        createIsland(islandOwnerUUID,
+                                new IslandLocation[] {
+                                        new IslandLocation(IslandWorld.Normal, null,
+                                                worldManager.getLocation(fileManager.getLocation(config,
+                                                        "Location.Normal.Island", true), IslandWorld.Normal)),
+                                        new IslandLocation(IslandWorld.Nether, null,
+                                                worldManager.getLocation(fileManager.getLocation(config,
+                                                        "Location.Nether.Island", true), IslandWorld.Nether)),
+                                        new IslandLocation(IslandWorld.End, null,
+                                                worldManager.getLocation(fileManager.getLocation(config,
+                                                        "Location.Nether.Island", true), IslandWorld.End)) },
+                                size,
+                                configLoad.getStringList("Members").size()
+                                        + configLoad.getStringList("Operators").size() + 1,
+                                configLoad.getDouble("Bank.Balance", 0),
+                                getIslandSafeLevel(islandOwnerUUID), new IslandLevel(islandOwnerUUID, skyblock),
+                                islandSignature, configLoad.getBoolean("Visitor.Open"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 		}
 	}
 
@@ -218,9 +211,9 @@ public class VisitManager {
 	}
 
 	public void createIsland(UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize, int islandMembers,
-			int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
+			double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
 		visitStorage.put(islandOwnerUUID, new Visit(skyblock, islandOwnerUUID, islandLocations, islandSize,
-				islandMembers, safeLevel, islandLevel, islandSignature, open));
+				islandMembers, islandBankBalance, safeLevel, islandLevel, islandSignature, open));
 	}
 
 	public void addIsland(UUID islandOwnerUUID, Visit visit) {

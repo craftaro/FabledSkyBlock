@@ -43,10 +43,16 @@ public class RemoveHologramCommand extends SubCommand {
 		if (args.length == 1) {
 			HologramType hologramType = null;
 
-			if (args[0].equalsIgnoreCase("Level")) {
-				hologramType = HologramType.Level;
-			} else if (args[0].equalsIgnoreCase("Votes")) {
-				hologramType = HologramType.Votes;
+			switch (args[0].toLowerCase()) {
+				case "level":
+					hologramType = HologramType.Level;
+					break;
+				case "bank":
+					hologramType = HologramType.Bank;
+					break;
+				case "votes":
+					hologramType = HologramType.Votes;
+					break;
 			}
 
 			if (hologramType != null) {
@@ -107,6 +113,6 @@ public class RemoveHologramCommand extends SubCommand {
 
 	@Override
 	public String[] getArguments() {
-		return new String[] { "level", "votes" };
+		return new String[] { "level", "bank", "votes" };
 	}
 }

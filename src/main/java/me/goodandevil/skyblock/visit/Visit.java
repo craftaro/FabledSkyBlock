@@ -30,6 +30,7 @@ public class Visit {
 	private int islandSize;
 	private int islandMembers;
 	private int safeLevel;
+	private double islandBankBalance;
 
 	private final IslandLevel islandLevel;
 
@@ -38,12 +39,13 @@ public class Visit {
 	private boolean open;
 
 	protected Visit(SkyBlock skyblock, UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize,
-			int islandMembers, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
+			int islandMembers, double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
 		this.skyblock = skyblock;
 		this.islandOwnerUUID = islandOwnerUUID;
 		this.islandLocations = islandLocations;
 		this.islandSize = islandSize;
 		this.islandMembers = islandMembers;
+		this.islandBankBalance = islandBankBalance;
 		this.safeLevel = safeLevel;
 		this.islandLevel = islandLevel;
 		this.islandSignature = islandSignature;
@@ -101,6 +103,10 @@ public class Visit {
 
 	public void setSize(int islandSize) {
 		this.islandSize = islandSize;
+	}
+
+	public double getBankBalance() {
+		return this.islandBankBalance;
 	}
 
 	public IslandLevel getLevel() {

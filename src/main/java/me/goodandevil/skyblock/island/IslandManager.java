@@ -165,6 +165,7 @@ public class IslandManager {
                             island.getIslandLocation(IslandWorld.End, IslandEnvironment.Island)},
                     island.getSize(),
                     island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1,
+                    island.getBankBalance(),
                     visitManager.getIslandSafeLevel(island.getOwnerUUID()), island.getLevel(),
                     island.getMessage(IslandMessage.Signature), island.isOpen());
         }
@@ -524,6 +525,7 @@ public class IslandManager {
                                     island.getIslandLocation(IslandWorld.End, IslandEnvironment.Island)},
                             island.getSize(),
                             island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1,
+                            island.getBankBalance(),
                             visitManager.getIslandSafeLevel(island.getOwnerUUID()), island.getLevel(),
                             island.getMessage(IslandMessage.Signature), island.isOpen());
                 }

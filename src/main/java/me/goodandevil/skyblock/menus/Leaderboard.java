@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.goodandevil.skyblock.utils.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -74,6 +75,14 @@ public class Leaderboard {
 																	+ ".Item.Leaderboard.Displayname")
 															.replace("%leaderboard", Viewer.Type.Level.name()))))) {
 								playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.Level));
+							} else if ((is.getType() == Material.GOLD_INGOT) && (is.hasItemMeta())
+									&& (is.getItemMeta().getDisplayName()
+									.equals(ChatColor.translateAlternateColorCodes('&',
+											configLoad
+													.getString("Menu.Leaderboard." + Viewer.Type.Browse.name()
+															+ ".Item.Leaderboard.Displayname")
+													.replace("%leaderboard", Viewer.Type.Bank.name()))))) {
+								playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.Bank));
 							} else if ((is.getType() == Material.EMERALD) && (is.hasItemMeta())
 									&& (is.getItemMeta().getDisplayName()
 											.equals(ChatColor.translateAlternateColorCodes('&',
@@ -109,6 +118,16 @@ public class Leaderboard {
 								new Placeholder[] { new Placeholder("%leaderboard", Viewer.Type.Level.name()) }, null,
 								null),
 						1);
+				nInv.addItem(
+						nInv.createItem(new ItemStack(Material.GOLD_INGOT), configLoad
+										.getString(
+												"Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
+										.replace("%leaderboard", Viewer.Type.Bank.name()),
+								configLoad.getStringList(
+										"Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
+								new Placeholder[] { new Placeholder("%leaderboard", Viewer.Type.Bank.name()) }, null,
+								null),
+						2);
 				nInv.addItem(
 						nInv.createItem(new ItemStack(Material.EMERALD), configLoad
 								.getString(
@@ -304,6 +323,7 @@ public class Leaderboard {
 											new Placeholder("%position", "" + (leaderboard.getPosition() + 1)),
 											new Placeholder("%owner", playerName),
 											new Placeholder("%level", "" + visit.getLevel().getLevel()),
+											new Placeholder("%balance", NumberUtil.formatNumberByDecimal(visit.getBankBalance())),
 											new Placeholder("%votes", "" + visit.getVoters().size()),
 											new Placeholder("%members", "" + visit.getMembers()) },
 									null, null),
@@ -354,7 +374,7 @@ public class Leaderboard {
 
 		public enum Type {
 
-			Browse, Level, Votes;
+			Browse, Level, Bank, Votes
 
 		}
 	}

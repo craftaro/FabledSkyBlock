@@ -619,17 +619,23 @@ public class Island {
 	}
 
 	public void addToBank(double value) {
-		value = value + getBankBalance();
-		skyblock.getFileManager().getConfig(
-				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
-				.getFileConfiguration().set("Bank.Balance", value);
+		FileManager fileManager = skyblock.getFileManager();
+
+		Config config = fileManager
+				.getConfig(new File(skyblock.getDataFolder().toString() + "/island-data", ownerUUID.toString() + ".yml"));
+
+		value = getBankBalance() + value;
+		config.getFileConfiguration().set("Bank.Balance", value);
+
+		try {
+			config.getFileConfiguration().save(config.getFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void removeFromBank(double value) {
-		value = getBankBalance() - value;
-		skyblock.getFileManager().getConfig(
-				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
-				.getFileConfiguration().set("Bank.Balance", value);
+		addToBank(-value);
 	}
 
 	public boolean isOpen() {

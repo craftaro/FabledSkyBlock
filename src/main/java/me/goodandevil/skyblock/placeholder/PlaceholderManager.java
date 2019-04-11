@@ -318,6 +318,17 @@ public class PlaceholderManager {
 						configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Non-empty.Message")
 								.replace("%placeholder", "" + rank));
 			}
+		} else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_bank_rank")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Empty.Message"));
+			} else {
+				LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+				int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Bank);
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Non-empty.Message")
+								.replace("%placeholder", "" + rank));
+			}
 		} else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_votes_rank")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',
