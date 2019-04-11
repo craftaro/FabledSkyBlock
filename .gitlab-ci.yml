@@ -3,7 +3,7 @@ stages:
 
 variables:
     name: "FabledSkyBlock"
-    path: "/builds/Songoda/SkyBlock/"
+    path: "/builds/$CI_PROJECT_PATH"
     version: "Build-72"
 
 build:
