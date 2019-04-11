@@ -797,6 +797,20 @@ Command:
                         Message: "&bSkyBlock &8| &cError&8: &eThe island data for that players island does not exist."
                 Set:
                     Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the player &d%player's &eIsland size to &d%size&e."
+            SetBiome:
+                Info:
+                    Message: "&f&oSets the size of a players Island."
+                Invalid:
+                    Message: "&bSkyBlock &8| &cError&8: &eInvalid: /island admin setbiome <player> <biome>"
+                InvalidBiome:
+                    Message: "&bSkyBlock &8| &cError&8: &eA biome with that name does not exist."
+                Island:
+                    Owner:
+                        Message: "&bSkyBlock &8| &cError&8: &eThat player is not a Member or owns an Island."
+                    Data:
+                        Message: "&bSkyBlock &8| &cError&8: &eThe island data for that players island does not exist."
+                Set:
+                    Message: "&bSkyBlock &8| &aInfo&8: &eYou have set the player &d%player's &eIsland biome to &d%biome&e."
             AddUpgrade:
                 Info:
                     Message: "&f&oAdd an upgrade to a players Island."
