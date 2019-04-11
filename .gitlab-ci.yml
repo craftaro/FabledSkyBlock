@@ -2,9 +2,9 @@ stages:
 - build
 
 variables:
-    name: "FabledSkyBlock"
-    path: "/builds/$CI_PROJECT_PATH"
-    version: "Build-73"
+  name: "FabledSkyBlock"
+  path: "/builds/$CI_PROJECT_PATH"
+  version: "Build-73"
 
 build:
   stage: build
@@ -18,4 +18,4 @@ build:
   artifacts:
     name: $name-$version
     paths:
-    - "$path/*.jar"
+      - "$path/*.jar"
