@@ -47,12 +47,7 @@ public class WorldManager {
 			normalWorld = WorldCreator.name(normalWorldName).type(WorldType.FLAT).environment(World.Environment.NORMAL)
 					.generator(new VoidGenerator()).createWorld();
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					registerMultiverse(normalWorldName, World.Environment.NORMAL);
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(normalWorldName, World.Environment.NORMAL));
 		}
 
 		if (netherWorld == null) {
@@ -61,12 +56,7 @@ public class WorldManager {
 			netherWorld = WorldCreator.name(netherWorldName).type(WorldType.FLAT).environment(World.Environment.NETHER)
 					.generator(new VoidGenerator()).createWorld();
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					registerMultiverse(netherWorldName, World.Environment.NETHER);
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(netherWorldName, World.Environment.NETHER));
 		}
 
 		if (endWorld == null) {
@@ -75,12 +65,7 @@ public class WorldManager {
 			endWorld = WorldCreator.name(endWorldName).type(WorldType.FLAT).environment(World.Environment.THE_END)
 					.generator(new VoidGenerator()).createWorld();
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					registerMultiverse(endWorldName, World.Environment.THE_END);
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(endWorldName, World.Environment.THE_END));
 		}
 	}
 

@@ -56,8 +56,10 @@ public final class BlockUtil {
 			blockData.setStateType(BlockStateType.BANNER.toString());
 		} else if (blockState instanceof Beacon) {
 			Beacon beacon = (Beacon) blockState;
-			blockData.setPotionEffect(
-					beacon.getPrimaryEffect().toString() + ":" + beacon.getSecondaryEffect().toString());
+			String primaryEffectName = beacon.getPrimaryEffect() != null ? beacon.getPrimaryEffect().toString() : "null";
+			String secondaryEffectName = beacon.getSecondaryEffect() != null ? beacon.getSecondaryEffect().toString() : "null";
+
+			blockData.setPotionEffect(primaryEffectName + ":" + secondaryEffectName);
 
 			for (int i = 0; i < beacon.getInventory().getSize(); i++) {
 				ItemStack is = beacon.getInventory().getItem(i);
@@ -300,8 +302,13 @@ public final class BlockUtil {
 		} else if (blockTypeState == BlockStateType.BEACON) {
 			Beacon beacon = (Beacon) block.getState();
 			String[] potionEffect = blockData.getPotionEffect().split(":");
-			beacon.setPrimaryEffect(PotionEffectType.getByName(potionEffect[0].toUpperCase()));
-			beacon.setSecondaryEffect(PotionEffectType.getByName(potionEffect[1].toUpperCase()));
+			if (!potionEffect[0].equals("null")) {
+				beacon.setPrimaryEffect(PotionEffectType.getByName(potionEffect[0].toUpperCase()));
+			}
+
+			if (!potionEffect[1].equals("null")) {
+				beacon.setSecondaryEffect(PotionEffectType.getByName(potionEffect[1].toUpperCase()));
+			}
 
 			for (Integer slotList : blockData.getInventory().keySet()) {
 				if (slotList < beacon.getInventory().getSize()) {
