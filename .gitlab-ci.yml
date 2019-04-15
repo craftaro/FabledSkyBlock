@@ -1,5 +1,8 @@
 image: gradle:alpine
 
+variables:
+  path: "/builds/$CI_PROJECT_PATH"
+
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
@@ -10,6 +13,7 @@ build:
   stage: build
   script:
     - gradle build
+    - mv $path/build/libs/*.jar $path/
   artifacts:
     paths:
-      - build/libs/*.jar
+      - $path/*.jar
