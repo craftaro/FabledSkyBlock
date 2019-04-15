@@ -458,6 +458,11 @@ Command:
                 Message: "&bSkyBlock &8| &aInfo&8: &7&oProcessing Island level request... Please wait!"
             Loading:
                 Message: "&bSkyBlock &8| &aInfo&8: &7&oLoading Island Materials... Please wait!"
+            Scanning:
+                Progress:
+                    Message: "&eScanning island level: &b%percent%"
+                Finished:
+                    Message: "&aIsland level scan complete!"
             Owner:
                 Yourself:
                     Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
