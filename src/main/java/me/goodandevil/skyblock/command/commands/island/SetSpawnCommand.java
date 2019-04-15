@@ -95,24 +95,15 @@ public class SetSpawnCommand extends SubCommand {
 									if (LocationUtil.isLocationCentreOfBlock(location)) {
 										new BukkitRunnable() {
 											public void run() {
-												if (location.getBlock().getType() != Material.AIR && location.getBlock()
-														.getType() != Materials.MOVING_PISTON.parseMaterial()) {
-													location.getWorld().dropItemNaturally(location,
-															new ItemStack(location.getBlock().getType()));
+												if (location.getBlock().getType() != Material.AIR && location.getBlock().getType() != Materials.MOVING_PISTON.parseMaterial()) {
+													location.getBlock().breakNaturally();
 												}
 
-												if (location.clone().add(0.0D, 1.0D, 0.0D).getBlock()
-														.getType() != Material.AIR
-														&& location.getBlock().getType() != Materials.MOVING_PISTON
-																.parseMaterial()) {
-													location.getWorld().dropItemNaturally(
-															location.clone().add(0.0D, 1.0D, 0.0D),
-															new ItemStack(location.clone().add(0.0D, 1.0D, 0.0D)
-																	.getBlock().getType()));
+												if (location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType() != Material.AIR && location.getBlock().getType() != Materials.MOVING_PISTON.parseMaterial()) {
+													location.clone().add(0.0D, 1.0D, 0.0D).getBlock().breakNaturally();
 												}
 
-												islandManager
-														.removeSpawnProtection(island.getLocation(world, environment));
+												islandManager.removeSpawnProtection(island.getLocation(world, environment));
 											}
 										}.runTask(skyblock);
 									} else {
