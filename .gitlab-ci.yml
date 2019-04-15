@@ -2,7 +2,6 @@ image: gradle:alpine
 
 variables:
   path: "/builds/$CI_PROJECT_PATH"
-  version: "Build-73"
 
 before_script:
   - export GRADLE_USER_HOME=$path/.gradle
@@ -13,8 +12,6 @@ stages:
 build:
   stage: build
   script:
-    - find $path/ -type f -name "*.yml" -print0 | xargs -0 sed -i -e s/gradle-version-number/$version/g
-    - find $path/ -type f -name "build.gradle" -print0 | xargs -0 sed -i -e s/gradle-version-number/$version/g
     - gradle clean build
     - mv $path/build/libs/*.jar $path/
   artifacts:
