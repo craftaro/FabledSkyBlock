@@ -12,7 +12,7 @@ stages:
 build:
   stage: build
   script:
-    - gradle build
+    - gradle assemble
     - ls -lR
     - mv $path/build/libs/*.jar $path/
   artifacts:
