@@ -42,37 +42,44 @@ public class LevellingManager {
         StackableManager stackableManager = skyblock.getStackableManager();
 
         Chunk chunk = new Chunk(skyblock, island);
-        chunk.prepare();
+        chunk.prepareInitial();
 
         int NMSVersion = NMSUtil.getVersionNumber();
+
+        int height = 0;
+
+        for (IslandWorld worldList : IslandWorld.values()) {
+            org.bukkit.World world = worldManager.getWorld(worldList);
+
+            if (height == 0 || height > world.getMaxHeight()) {
+                height = world.getMaxHeight();
+            }
+        }
+
+        int worldMaxHeight = height;
+
+        boolean isEpicSpawnersEnabled = Bukkit.getPluginManager().isPluginEnabled("EpicSpawners");
+        boolean isWildStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("WildStacker");
+
+        Map<LevellingData, Long> levellingData = new HashMap<>();
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (!chunk.isComplete()) return;
-                cancel();
+                if (!chunk.isReadyToScan()) return;
+
+                if (chunk.isFinished()) {
+                    finalizeMaterials(levellingData, player, island);
+                    cancel();
+                    return;
+                }
 
                 Method getBlockTypeMethod = null;
                 Method getBlockTypeIdMethod = null;
                 Method getBlockTypeDataMethod = null;
                 Method getMaterialMethod = null;
 
-                int worldMaxHeight = 0;
-
-                for (IslandWorld worldList : IslandWorld.values()) {
-                    org.bukkit.World world = worldManager.getWorld(worldList);
-
-                    if (worldMaxHeight == 0 || worldMaxHeight > world.getMaxHeight()) {
-                        worldMaxHeight = world.getMaxHeight();
-                    }
-                }
-
-                boolean isEpicSpawnersEnabled = Bukkit.getPluginManager().isPluginEnabled("EpicSpawners");
-                boolean isWildStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("WildStacker");
-
-                Map<LevellingData, Long> levellingData = new HashMap<>();
-
-                for (ChunkSnapshot chunkSnapshotList : chunk.getChunkSnapshots()) {
+                for (ChunkSnapshot chunkSnapshotList : chunk.getAvailableChunkSnapshots()) {
                     for (int x = 0; x < 16; x++) {
                         for (int z = 0; z < 16; z++) {
                             for (int y = 0; y < worldMaxHeight; y++) {
@@ -175,36 +182,40 @@ public class LevellingManager {
                     }
                 }
 
-                Map<String, Long> materials = new HashMap<>();
-                for (LevellingData data : levellingData.keySet()) {
-                    long amount = levellingData.get(data);
-                    if (data.getMaterials() != null) {
-                        materials.put(data.getMaterials().name(), amount);
-                    }
-                }
-
-                if (materials.size() == 0) {
-                    if (player != null) {
-                        skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager()
-                                .getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Command.Island.Level.Materials.Message"));
-                        skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-                    }
-                } else {
-                    IslandLevel level = island.getLevel();
-                    level.setLastCalculatedPoints(level.getPoints());
-                    level.setLastCalculatedLevel(level.getLevel());
-                    level.setMaterials(materials);
-
-                    Bukkit.getServer().getPluginManager().callEvent(
-                            new IslandLevelChangeEvent(island.getAPIWrapper(), island.getAPIWrapper().getLevel()));
-
-                    if (player != null) {
-                        me.goodandevil.skyblock.menus.Levelling.getInstance().open(player);
-                    }
-                }
+                chunk.prepareNextChunkSnapshots();
             }
         }.runTaskTimerAsynchronously(skyblock, 0L, 1L);
+    }
+
+    private void finalizeMaterials(Map<LevellingData, Long> levellingData, Player player, Island island) {
+        Map<String, Long> materials = new HashMap<>();
+        for (LevellingData data : levellingData.keySet()) {
+            long amount = levellingData.get(data);
+            if (data.getMaterials() != null) {
+                materials.put(data.getMaterials().name(), amount);
+            }
+        }
+
+        if (materials.size() == 0) {
+            if (player != null) {
+                skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager()
+                        .getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                        .getFileConfiguration().getString("Command.Island.Level.Materials.Message"));
+                skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+            }
+        } else {
+            IslandLevel level = island.getLevel();
+            level.setLastCalculatedPoints(level.getPoints());
+            level.setLastCalculatedLevel(level.getLevel());
+            level.setMaterials(materials);
+
+            Bukkit.getServer().getPluginManager().callEvent(
+                    new IslandLevelChangeEvent(island.getAPIWrapper(), island.getAPIWrapper().getLevel()));
+
+            if (player != null) {
+                me.goodandevil.skyblock.menus.Levelling.getInstance().open(player);
+            }
+        }
     }
 
     public void registerMaterials() {
