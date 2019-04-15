@@ -13,7 +13,7 @@ build:
   stage: build
   script:
     - gradle build
-    - mv $path/build/libs/*.jar $path/
+    - mv build/libs/*.jar $path/
   artifacts:
     paths:
       - $path/*.jar
