@@ -1,21 +1,22 @@
-stages:
-  - build
+image: gradle:alpine
 
 variables:
-  name: "FabledSkyBlock"
   path: "/builds/$CI_PROJECT_PATH"
   version: "Build-73"
 
+before_script:
+  - export GRADLE_USER_HOME=$path/.gradle
+
+stages:
+  - build
+
 build:
   stage: build
-  image: maven:3.5.3-jdk-8
   script:
-    - find $path/ -type f -name "*.xml" -print0 | xargs -0 sed -i -e s/maven-version-number/$version/g
-    - find $path/ -type f -name "*.yml" -print0 | xargs -0 sed -i -e s/maven-version-number/$version/g
-    - mvn clean package
-    - find $path/ -depth -path '*original*' -delete
-    - mv $path/target/*.jar $path/
+    - find $path/ -type f -name "*.yml" -print0 | xargs -0 sed -i -e s/gradle-version-number/$version/g
+    - find $path/ -type f -name "*.gradle" -print0 | xargs -0 sed -i -e s/gradle-version-number/$version/g
+    - gradle clean build
+    - mv $path/build/libs/*.jar $path/
   artifacts:
-    name: $name-$version
     paths:
-      - "$path/*.jar"
+      - $path/*.jar
