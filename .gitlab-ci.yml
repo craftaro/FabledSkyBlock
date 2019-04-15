@@ -14,7 +14,7 @@ build:
   stage: build
   script:
     - find $path/ -type f -name "*.yml" -print0 | xargs -0 sed -i -e s/gradle-version-number/$version/g
-    - find $path/ -type f -name "*.gradle" -print0 | xargs -0 sed -i -e s/gradle-version-number/$version/g
+    - find $path/ -type f -name "build.gradle" -print0 | xargs -0 sed -i -e s/gradle-version-number/$version/g
     - gradle clean build
     - mv $path/build/libs/*.jar $path/
   artifacts:
