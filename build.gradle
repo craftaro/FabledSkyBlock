@@ -1,0 +1,44 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+apply plugin: 'java'
+
+group 'com.songoda.fabledskyblock'
+version 'Build-73'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    maven {
+        url 'http://repo.songoda.com/artifactory/private/'
+    }
+}
+
+dependencies {
+    // PlaceholderAPI
+    implementation (group: 'be.maximvdw', name: 'placeholderapi', version: '2.5.1')
+    implementation (group: 'me.clip', name: 'placeholderapi', version: '2.9.2')
+
+    // Vault
+    implementation (group: 'net.milkbowl', name: 'vault', version: '1.7.1')
+
+    // Leaderheads
+    implementation (group: 'me.robin', name: 'leaderheads', version: '1.0')
+
+    // EpicSpawners
+    implementation (group: 'com.songoda', name: 'epicspawners', version: '5.7.1')
+	
+	// WildStacker
+	implementation (group: 'com.bgsoftware', name: 'wildstacker-api', version: 'b14')
+
+    // Spigot
+    implementation (group: 'org.spigotmc', name: 'spigot', version: '1.13.2')
+}
+
+processResources {
+	filter ReplaceTokens, tokens: ["version": project.property("version")]
+	from (sourceSets.main.resources.srcDirs) {
+		include '**/*.yml'
+	}
+}
