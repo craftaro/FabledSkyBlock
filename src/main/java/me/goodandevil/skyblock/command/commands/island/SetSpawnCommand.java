@@ -92,31 +92,20 @@ public class SetSpawnCommand extends SubCommand {
 
 									return;
 								} else {
-									if (LocationUtil.isLocationCentreOfBlock(location)) {
-										new BukkitRunnable() {
-											public void run() {
-												if (location.getBlock().getType() != Material.AIR && location.getBlock().getType() != Materials.MOVING_PISTON.parseMaterial()) {
-													location.getBlock().breakNaturally();
-												}
-
-												if (location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType() != Material.AIR && location.getBlock().getType() != Materials.MOVING_PISTON.parseMaterial()) {
-													location.clone().add(0.0D, 1.0D, 0.0D).getBlock().breakNaturally();
-												}
-
-												islandManager.removeSpawnProtection(island.getLocation(world, environment));
-											}
-										}.runTask(skyblock);
-									} else {
-										messageManager.sendMessage(player, configLoad
-												.getString("Command.Island.SetSpawn.Protection.Centre.Message"));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-										return;
+									if (location.getBlock().getType() != Material.AIR && location.getBlock().getType() != Materials.MOVING_PISTON.parseMaterial()) {
+										location.getBlock().breakNaturally();
 									}
+
+									if (location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType() != Material.AIR && location.getBlock().getType() != Materials.MOVING_PISTON.parseMaterial()) {
+										location.clone().add(0.0D, 1.0D, 0.0D).getBlock().breakNaturally();
+									}
+
+									islandManager.removeSpawnProtection(island.getLocation(world, environment));
 								}
 							}
 
-							island.setLocation(world, environment, location);
+							Location newSpawnLocation = new Location(location.getWorld(), location.getBlockX() + 0.5, location.getBlockY(), location.getBlockZ() + 0.5, location.getYaw(), location.getPitch());
+							island.setLocation(world, environment, newSpawnLocation);
 
 							messageManager.sendMessage(player,
 									configLoad.getString("Command.Island.SetSpawn.Set.Message").replace("%spawn",

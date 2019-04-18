@@ -23,16 +23,6 @@ import java.util.logging.Level;
 
 public final class LocationUtil {
 
-	public static boolean isLocationCentreOfBlock(Location location) {
-		double x = location.getX() - location.getBlockX() - 0.5D, z = location.getZ() - location.getBlockZ() - 0.5D;
-
-		if (Math.abs(x) < 0.2D && Math.abs(z) < 0.2D) {
-			return true;
-		}
-
-		return false;
-	}
-
 	public static boolean isLocationLocation(Location location1, Location location2) {
 		if (location1.getBlockX() == location2.getBlockX() && location1.getBlockY() == location2.getBlockY()
 				&& location1.getBlockZ() == location2.getBlockZ()) {
