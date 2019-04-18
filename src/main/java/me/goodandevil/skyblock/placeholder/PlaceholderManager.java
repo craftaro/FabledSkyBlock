@@ -393,11 +393,14 @@ public class PlaceholderManager {
 
 	public List<String> getPlaceholders() {
 		List<String> placeholders = new ArrayList<>();
+		placeholders.add("fabledskyblock_island_exists");
+		placeholders.add("fabledskyblock_island_isopen");
 		placeholders.add("fabledskyblock_island_size");
 		placeholders.add("fabledskyblock_island_radius");
 		placeholders.add("fabledskyblock_island_level");
 		placeholders.add("fabledskyblock_island_level_formatted");
 		placeholders.add("fabledskyblock_island_points");
+		placeholders.add("fabledskyblock_island_votes");
 		placeholders.add("fabledskyblock_island_role");
 		placeholders.add("fabledskyblock_island_owner");
 		placeholders.add("fabledskyblock_island_biome");
@@ -411,6 +414,13 @@ public class PlaceholderManager {
 		placeholders.add("fabledskyblock_island_coops_total");
 		placeholders.add("fabledskyblock_island_visitors");
 		placeholders.add("fabledskyblock_island_invites");
+		placeholders.add("fabledskyblock_island_bank_balance");
+		placeholders.add("fabledskyblock_island_leaderboard_level_rank");
+		placeholders.add("fabledskyblock_island_leaderboard_bank_rank");
+		placeholders.add("fabledskyblock_island_leaderboard_votes_rank");
+		//placeholders.add("fabledskyblock_island_level_block_count_");
+		//placeholders.add("fabledskyblock_island_level_block_points_");
+		//placeholders.add("fabledskyblock_level_block_value_");
 
 		return placeholders;
 	}
