@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import me.goodandevil.skyblock.utils.version.NMSUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -105,23 +106,27 @@ public class Chunk {
 	}
 
 	private void sendPercentMessage(int percent) {
-		String message = ChatColor.translateAlternateColorCodes('&',
-                this.skyblock.getFileManager()
-				.getConfig(new File(this.skyblock.getDataFolder(), "language.yml"))
-				.getFileConfiguration().getString("Command.Island.Level.Scanning.Progress.Message")
-				.replace("%percent", String.valueOf(percent)));
-        for (Player player : this.skyblock.getIslandManager().getPlayersAtIsland(this.island)) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-        }
+		if (NMSUtil.getVersionNumber() > 8) {
+			String message = ChatColor.translateAlternateColorCodes('&',
+					this.skyblock.getFileManager()
+							.getConfig(new File(this.skyblock.getDataFolder(), "language.yml"))
+							.getFileConfiguration().getString("Command.Island.Level.Scanning.Progress.Message")
+							.replace("%percent", String.valueOf(percent)));
+			for (Player player : this.skyblock.getIslandManager().getPlayersAtIsland(this.island)) {
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+			}
+		}
 	}
 
 	private void sendFinishedMessage() {
-		String message = ChatColor.translateAlternateColorCodes('&', this.skyblock.getFileManager()
-				.getConfig(new File(this.skyblock.getDataFolder(), "language.yml"))
-				.getFileConfiguration().getString("Command.Island.Level.Scanning.Finished.Message"));
-        for (Player player : this.skyblock.getIslandManager().getPlayersAtIsland(this.island)) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-        }
+		if (NMSUtil.getVersionNumber() > 8) {
+			String message = ChatColor.translateAlternateColorCodes('&', this.skyblock.getFileManager()
+					.getConfig(new File(this.skyblock.getDataFolder(), "language.yml"))
+					.getFileConfiguration().getString("Command.Island.Level.Scanning.Finished.Message"));
+			for (Player player : this.skyblock.getIslandManager().getPlayersAtIsland(this.island)) {
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+			}
+		}
 	}
 
 	private void getChunksToScan(IslandWorld islandWorld) {
