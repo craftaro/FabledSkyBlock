@@ -12,7 +12,7 @@ public class IslandLocationChangeEvent extends IslandEvent {
 	private final IslandLocation location;
 
 	public IslandLocationChangeEvent(Island island, IslandLocation location) {
-		super(island);
+		super(island, true);
 		this.location = location;
 	}
 

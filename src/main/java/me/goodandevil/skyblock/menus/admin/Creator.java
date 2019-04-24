@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -67,7 +68,7 @@ public class Creator implements Listener {
 					configLoad.getString("Menu.Admin.Creator.Browse.Item.Exit.Displayname"), null, null, null, null), 0,
 					8);
 			nInv.addItem(
-					nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
+					nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 							configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"),
 							configLoad.getStringList("Menu.Admin.Creator.Browse.Item.Information.Lore"),
 							new Placeholder[] { new Placeholder("%structures", "" + structures.size()) }, null, null),
@@ -273,8 +274,18 @@ public class Creator implements Listener {
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 
-			if (event.getInventory().getName().equals(
-					ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")))) {
+			String inventoryName = "";
+			if (NMSUtil.getVersionNumber() > 13) {
+				inventoryName = event.getView().getTitle();
+			} else {
+				try {
+					inventoryName = (String) Inventory.class.getMethod("getName").invoke(event.getInventory());
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			if (inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")))) {
 				event.setCancelled(true);
 
 				PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
@@ -318,7 +329,7 @@ public class Creator implements Listener {
 
 						return;
 					}
-				} else if ((event.getCurrentItem().getType() == Material.SIGN) && (is.hasItemMeta())
+				} else if ((event.getCurrentItem().getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"))))) {
 					soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -1493,7 +1504,18 @@ public class Creator implements Listener {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (event.getInventory().getName().equals(
+		String inventoryName = "";
+		if (NMSUtil.getVersionNumber() > 13) {
+			inventoryName = event.getView().getTitle();
+		} else {
+			try {
+				inventoryName = (String) Inventory.class.getMethod("getName").invoke(event.getInventory());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		if (inventoryName.equals(
 				ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")))) {
 			PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 

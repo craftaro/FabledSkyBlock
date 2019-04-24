@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.goodandevil.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -120,8 +121,18 @@ public class Rollback implements Listener {
 			Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 
-			if (event.getInventory().getName()
-					.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Rollback.Title")))) {
+			String inventoryName = "";
+			if (NMSUtil.getVersionNumber() > 13) {
+				inventoryName = event.getView().getTitle();
+			} else {
+				try {
+					inventoryName = (String) Inventory.class.getMethod("getName").invoke(event.getInventory());
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			if (inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Rollback.Title")))) {
 				event.setCancelled(true);
 
 				Island island = islandManager.getIsland(player);

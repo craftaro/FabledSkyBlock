@@ -127,7 +127,7 @@ public class Settings {
 				}
 			});
 
-			nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN),
+			nInv.addItem(nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 					configLoad.getString("Menu.Admin.Settings.Categories.Item.Visitor.Displayname"),
 					configLoad.getStringList("Menu.Admin.Settings.Categories.Item.Visitor.Lore"), null, null, null), 2);
 			nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
@@ -312,8 +312,8 @@ public class Settings {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
 							nInv.addItemStack(createItem(role, "Ban", new ItemStack(Material.IRON_AXE)), 11);
-							nInv.addItemStack(createItem(role, "Unban", Materials.ROSE_RED.parseItem()), 12);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 13);
+							nInv.addItemStack(createItem(role, "Unban", Materials.RED_DYE.parseItem()), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 13);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 14);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 15);
 							nInv.addItemStack(createItem(role, "Coop", new ItemStack(Material.NAME_TAG)), 16);
@@ -328,8 +328,8 @@ public class Settings {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
 							nInv.addItemStack(createItem(role, "Ban", new ItemStack(Material.IRON_AXE)), 11);
-							nInv.addItemStack(createItem(role, "Unban", Materials.ROSE_RED.parseItem()), 12);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 13);
+							nInv.addItemStack(createItem(role, "Unban", Materials.RED_DYE.parseItem()), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 13);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 14);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 15);
 							nInv.addItemStack(createItem(role, "Coop", new ItemStack(Material.NAME_TAG)), 16);
@@ -345,8 +345,8 @@ public class Settings {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
 							nInv.addItemStack(createItem(role, "Ban", new ItemStack(Material.IRON_AXE)), 12);
-							nInv.addItemStack(createItem(role, "Unban", Materials.ROSE_RED.parseItem()), 13);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 14);
+							nInv.addItemStack(createItem(role, "Unban", Materials.RED_DYE.parseItem()), 13);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 14);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 15);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 16);
 							nInv.addItemStack(createItem(role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
@@ -359,8 +359,8 @@ public class Settings {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
 							nInv.addItemStack(createItem(role, "Ban", new ItemStack(Material.IRON_AXE)), 12);
-							nInv.addItemStack(createItem(role, "Unban", Materials.ROSE_RED.parseItem()), 13);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 14);
+							nInv.addItemStack(createItem(role, "Unban", Materials.RED_DYE.parseItem()), 13);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 14);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 15);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 16);
 							nInv.addItemStack(createItem(role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
@@ -377,7 +377,7 @@ public class Settings {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 12);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 13);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 14);
 							nInv.addItemStack(createItem(role, "Coop", new ItemStack(Material.NAME_TAG)), 15);
@@ -391,7 +391,7 @@ public class Settings {
 						} else {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 12);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 13);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 14);
 							nInv.addItemStack(createItem(role, "Coop", new ItemStack(Material.NAME_TAG)), 15);
@@ -408,7 +408,7 @@ public class Settings {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 12);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 13);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 14);
 							nInv.addItemStack(createItem(role, "MainSpawn", new ItemStack(Material.EMERALD)), 15);
@@ -422,7 +422,7 @@ public class Settings {
 						} else {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 11);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 11);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 12);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 13);
 							nInv.addItemStack(createItem(role, "MainSpawn", new ItemStack(Material.EMERALD)), 14);
@@ -451,7 +451,7 @@ public class Settings {
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
 								nInv.addItemStack(
 										createItem(role, "KeepItemsOnDeath", new ItemStack(Material.ITEM_FRAME)), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 								nInv.addItemStack(createItem(role, "Hunger", new ItemStack(Material.COOKED_BEEF)), 17);
 							} else {
 								nInv.addItemStack(
@@ -465,7 +465,7 @@ public class Settings {
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
 								nInv.addItemStack(
 										createItem(role, "KeepItemsOnDeath", new ItemStack(Material.ITEM_FRAME)), 16);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 17);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 17);
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -508,7 +508,7 @@ public class Settings {
 								nInv.addItemStack(
 										createItem(role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)), 14);
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 								nInv.addItemStack(createItem(role, "Hunger", new ItemStack(Material.COOKED_BEEF)), 17);
 							} else {
 								nInv.addItemStack(
@@ -521,7 +521,7 @@ public class Settings {
 								nInv.addItemStack(
 										createItem(role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)), 14);
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -564,7 +564,7 @@ public class Settings {
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
 								nInv.addItemStack(
 										createItem(role, "KeepItemsOnDeath", new ItemStack(Material.ITEM_FRAME)), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 								nInv.addItemStack(createItem(role, "Hunger", new ItemStack(Material.COOKED_BEEF)), 17);
 							} else {
 								nInv.addItemStack(
@@ -578,7 +578,7 @@ public class Settings {
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
 								nInv.addItemStack(
 										createItem(role, "KeepItemsOnDeath", new ItemStack(Material.ITEM_FRAME)), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -620,7 +620,7 @@ public class Settings {
 								nInv.addItemStack(
 										createItem(role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)), 13);
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 15);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 15);
 								nInv.addItemStack(createItem(role, "Hunger", new ItemStack(Material.COOKED_BEEF)), 16);
 							} else {
 								nInv.addItemStack(
@@ -632,7 +632,7 @@ public class Settings {
 								nInv.addItemStack(
 										createItem(role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)), 14);
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {

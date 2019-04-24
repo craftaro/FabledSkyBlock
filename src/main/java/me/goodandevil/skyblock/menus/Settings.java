@@ -221,7 +221,7 @@ public class Settings {
 					}
 				});
 
-				nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN),
+				nInv.addItem(nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 						configLoad.getString("Menu.Settings.Categories.Item.Visitor.Displayname"),
 						configLoad.getStringList("Menu.Settings.Categories.Item.Visitor.Lore"), null, null, null), 2);
 				nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
@@ -533,9 +533,9 @@ public class Settings {
 										10);
 								nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)),
 										11);
-								nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()),
+								nInv.addItemStack(createItem(island, role, "Unban", Materials.RED_DYE.parseItem()),
 										12);
-								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())),
 										13);
 								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
 										14);
@@ -561,9 +561,9 @@ public class Settings {
 										10);
 								nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)),
 										11);
-								nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()),
+								nInv.addItemStack(createItem(island, role, "Unban", Materials.RED_DYE.parseItem()),
 										12);
-								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())),
 										13);
 								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
 										14);
@@ -589,9 +589,9 @@ public class Settings {
 										11);
 								nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)),
 										12);
-								nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()),
+								nInv.addItemStack(createItem(island, role, "Unban", Materials.RED_DYE.parseItem()),
 										13);
-								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())),
 										14);
 								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
 										15);
@@ -613,9 +613,9 @@ public class Settings {
 										11);
 								nInv.addItemStack(createItem(island, role, "Ban", new ItemStack(Material.IRON_AXE)),
 										12);
-								nInv.addItemStack(createItem(island, role, "Unban", Materials.ROSE_RED.parseItem()),
+								nInv.addItemStack(createItem(island, role, "Unban", Materials.RED_DYE.parseItem()),
 										13);
-								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())),
 										14);
 								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
 										15);
@@ -639,7 +639,7 @@ public class Settings {
 										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
 										11);
-								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())),
 										12);
 								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
 										13);
@@ -663,7 +663,7 @@ public class Settings {
 										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
 										11);
-								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())),
 										12);
 								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
 										13);
@@ -689,7 +689,7 @@ public class Settings {
 										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
 										11);
-								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())),
 										12);
 								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
 										13);
@@ -711,7 +711,7 @@ public class Settings {
 										createItem(island, role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
 								nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
 										10);
-								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Material.SIGN)),
+								nInv.addItemStack(createItem(island, role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())),
 										11);
 								nInv.addItemStack(createItem(island, role, "Member", new ItemStack(Material.PAINTING)),
 										12);
@@ -755,7 +755,7 @@ public class Settings {
 									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
 											new ItemStack(Material.ITEM_FRAME)), 15);
 									nInv.addItemStack(
-											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+											createItem(island, role, "Damage", Materials.RED_DYE.parseItem()), 16);
 									nInv.addItemStack(
 											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
 											17);
@@ -778,7 +778,7 @@ public class Settings {
 									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
 											new ItemStack(Material.ITEM_FRAME)), 16);
 									nInv.addItemStack(
-											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 17);
+											createItem(island, role, "Damage", Materials.RED_DYE.parseItem()), 17);
 								}
 							} else {
 								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -841,7 +841,7 @@ public class Settings {
 											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
 											15);
 									nInv.addItemStack(
-											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+											createItem(island, role, "Damage", Materials.RED_DYE.parseItem()), 16);
 									nInv.addItemStack(
 											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
 											17);
@@ -862,7 +862,7 @@ public class Settings {
 											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
 											15);
 									nInv.addItemStack(
-											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+											createItem(island, role, "Damage", Materials.RED_DYE.parseItem()), 16);
 								}
 							} else {
 								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -923,7 +923,7 @@ public class Settings {
 									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
 											new ItemStack(Material.ITEM_FRAME)), 15);
 									nInv.addItemStack(
-											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+											createItem(island, role, "Damage", Materials.RED_DYE.parseItem()), 16);
 									nInv.addItemStack(
 											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
 											17);
@@ -944,7 +944,7 @@ public class Settings {
 									nInv.addItemStack(createItem(island, role, "KeepItemsOnDeath",
 											new ItemStack(Material.ITEM_FRAME)), 15);
 									nInv.addItemStack(
-											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+											createItem(island, role, "Damage", Materials.RED_DYE.parseItem()), 16);
 								}
 							} else {
 								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -1001,7 +1001,7 @@ public class Settings {
 											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
 											14);
 									nInv.addItemStack(
-											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 15);
+											createItem(island, role, "Damage", Materials.RED_DYE.parseItem()), 15);
 									nInv.addItemStack(
 											createItem(island, role, "Hunger", new ItemStack(Material.COOKED_BEEF)),
 											16);
@@ -1020,7 +1020,7 @@ public class Settings {
 											createItem(island, role, "LeafDecay", Materials.OAK_LEAVES.parseItem()),
 											15);
 									nInv.addItemStack(
-											createItem(island, role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+											createItem(island, role, "Damage", Materials.RED_DYE.parseItem()), 16);
 								}
 							} else {
 								if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -1322,7 +1322,7 @@ public class Settings {
 						List<String> itemLore = new ArrayList<>();
 						itemLore.add(
 								configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Word.Empty"));
-						nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN),
+						nInv.addItem(nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 								configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname"),
 								itemLore, null, null, null), 2);
 						nInv.addItem(nInv.createItem(new ItemStack(Material.ARROW),
@@ -1332,7 +1332,7 @@ public class Settings {
 										"Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.None.Lore"),
 								null, null, null), 3);
 					} else {
-						nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN, welcomeMessage.size()),
+						nInv.addItem(nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial(), welcomeMessage.size()),
 								configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname"),
 								welcomeMessage, null, null, null), 2);
 						nInv.addItem(nInv.createItem(new ItemStack(Material.ARROW),
@@ -1606,7 +1606,7 @@ public class Settings {
 						List<String> itemLore = new ArrayList<>();
 						itemLore.add(
 								configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Word.Empty"));
-						nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN),
+						nInv.addItem(nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 								configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Displayname"),
 								itemLore, null, null, null), 2);
 						nInv.addItem(nInv.createItem(new ItemStack(Material.ARROW),
@@ -1616,7 +1616,7 @@ public class Settings {
 										"Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.None.Lore"),
 								null, null, null), 3);
 					} else {
-						nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN, signatureMessage.size()),
+						nInv.addItem(nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial(), signatureMessage.size()),
 								configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Displayname"),
 								signatureMessage, null, null, null), 2);
 						nInv.addItem(nInv.createItem(new ItemStack(Material.ARROW),

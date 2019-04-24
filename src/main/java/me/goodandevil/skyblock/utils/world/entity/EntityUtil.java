@@ -1,8 +1,9 @@
 package me.goodandevil.skyblock.utils.world.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import me.goodandevil.skyblock.utils.item.ItemStackUtil;
+import me.goodandevil.skyblock.utils.item.MaterialUtil;
+import me.goodandevil.skyblock.utils.version.NMSUtil;
+import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -10,7 +11,32 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Rotation;
 import org.bukkit.TreeSpecies;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Bat;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Hanging;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Llama;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Painting;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Rabbit;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Snowman;
+import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Zombie;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.inventory.EntityEquipment;
@@ -20,10 +46,8 @@ import org.bukkit.material.Colorable;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.EulerAngle;
 
-import me.goodandevil.skyblock.utils.item.ItemStackUtil;
-import me.goodandevil.skyblock.utils.item.MaterialUtil;
-import me.goodandevil.skyblock.utils.version.NMSUtil;
-import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public final class EntityUtil {
@@ -191,7 +215,6 @@ public final class EntityUtil {
 			} else if (entity instanceof Villager) {
 				Villager villager = ((Villager) entity);
 				entityData.setProfession(villager.getProfession().toString());
-				entityData.setRiches(villager.getRiches());
 
 				List<String> items = new ArrayList<>();
 
@@ -443,7 +466,6 @@ public final class EntityUtil {
 				}
 
 				villager.getInventory().setContents(items.toArray(new ItemStack[0]));
-				villager.setRiches(entityData.getRiches());
 			}
 
 			if (NMSVersion > 10) {

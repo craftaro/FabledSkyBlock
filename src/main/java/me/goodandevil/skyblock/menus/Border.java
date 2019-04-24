@@ -144,7 +144,7 @@ public class Border {
 							}
 						}, 1L);
 					}
-				} else if ((is.getType() == Materials.ROSE_RED.parseMaterial()) && (is.hasItemMeta())
+				} else if ((is.getType() == Materials.RED_DYE.parseMaterial()) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName()
 								.equals(ChatColor.translateAlternateColorCodes('&',
 										configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
@@ -225,14 +225,14 @@ public class Border {
 		}
 
 		if (borderColor == WorldBorder.Color.Red) {
-			nInv.addItem(nInv.createItem(Materials.ROSE_RED.parseItem(),
+			nInv.addItem(nInv.createItem(Materials.RED_DYE.parseItem(),
 					configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
 							configLoad.getString("Menu.Border.Item.Word.Red")),
 					configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
 					new Placeholder[] { new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Red")) },
 					null, null), 4);
 		} else {
-			nInv.addItem(nInv.createItem(Materials.ROSE_RED.parseItem(),
+			nInv.addItem(nInv.createItem(Materials.RED_DYE.parseItem(),
 					configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
 							configLoad.getString("Menu.Border.Item.Word.Red")),
 					configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),

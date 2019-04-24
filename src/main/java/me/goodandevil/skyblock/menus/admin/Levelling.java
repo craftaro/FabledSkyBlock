@@ -80,7 +80,7 @@ public class Levelling implements Listener {
 						configLoad.getString("Menu.Admin.Levelling.Item.Exit.Displayname"), null, null, null, null),
 				0, 8);
 		nInv.addItem(
-				nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
+				nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 						configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"),
 						configLoad.getStringList("Menu.Admin.Levelling.Item.Information.Lore"),
 						new Placeholder[] { new Placeholder("%materials", "" + levellingMaterials.size()),
@@ -167,8 +167,18 @@ public class Levelling implements Listener {
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 
-			if (event.getInventory().getName().equals(
-					ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Levelling.Title")))) {
+			String inventoryName = "";
+			if (NMSUtil.getVersionNumber() > 13) {
+				inventoryName = event.getView().getTitle();
+			} else {
+				try {
+					inventoryName = (String) Inventory.class.getMethod("getName").invoke(event.getInventory());
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			if (inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Levelling.Title")))) {
 				PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 
 				if (!(player.hasPermission("fabledskyblock.admin.level") || player.hasPermission("fabledskyblock.admin.*")
@@ -197,7 +207,7 @@ public class Levelling implements Listener {
 					player.closeInventory();
 
 					return;
-				} else if ((event.getCurrentItem().getType() == Material.SIGN) && (is.hasItemMeta())
+				} else if ((event.getCurrentItem().getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"))))) {
 					event.setCancelled(true);

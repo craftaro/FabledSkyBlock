@@ -29,7 +29,7 @@ public class BlockData {
 	private String commandBlockName = "";
 	private String entity = EntityType.COW.toString();
 	private String exitLocation = "";
-	private String flower = Materials.ROSE_RED.parseMaterial().toString() + ":0";
+	private String flower = Materials.RED_DYE.parseMaterial().toString() + ":0";
 	private String playing = Materials.MUSIC_DISC_CHIRP.parseMaterial().toString();
 	private String[] signLines = {};
 	private String rotateFace = BlockFace.NORTH.toString();

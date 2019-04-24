@@ -111,7 +111,7 @@ public class ControlPanel {
 							Bukkit.getServer().dispatchCommand(player, "island bans");
 						}
 					}, 1L);
-				} else if ((is.getType() == Material.SIGN) && (is.hasItemMeta())
+				} else if ((is.getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.ControlPanel.Item.Visitors.Displayname"))))) {
 					Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
@@ -148,7 +148,7 @@ public class ControlPanel {
 				configLoad.getString("Menu.ControlPanel.Item.Bans.Displayname"),
 				configLoad.getStringList("Menu.ControlPanel.Item.Bans.Lore"), null, null,
 				new ItemFlag[] { ItemFlag.HIDE_ATTRIBUTES }), 7);
-		nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN),
+		nInv.addItem(nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 				configLoad.getString("Menu.ControlPanel.Item.Visitors.Displayname"),
 				configLoad.getStringList("Menu.ControlPanel.Item.Visitors.Lore"), null, null, null), 8);
 

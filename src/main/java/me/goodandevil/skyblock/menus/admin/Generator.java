@@ -24,6 +24,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -64,7 +65,7 @@ public class Generator implements Listener {
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Exit.Displayname"), null, null, null, null),
                     0, 8);
             nInv.addItem(
-                    nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
+                    nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
                             configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Displayname"),
                             configLoad.getStringList("Menu.Admin.Generator.Browse.Item.Information.Lore"),
                             new Placeholder[]{new Placeholder("%generators", "" + generators.size())}, null, null),
@@ -191,8 +192,18 @@ public class Generator implements Listener {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (!event.getInventory().getName().equals(
-                ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Generator.Title"))))
+        String inventoryName = "";
+        if (NMSUtil.getVersionNumber() > 13) {
+            inventoryName = event.getView().getTitle();
+        } else {
+            try {
+                inventoryName = (String) Inventory.class.getMethod("getName").invoke(event.getInventory());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        if (!inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Generator.Title"))))
             return;
         event.setCancelled(true);
 
@@ -249,7 +260,7 @@ public class Generator implements Listener {
 
                 return;
             }
-        } else if ((event.getCurrentItem().getType() == Material.SIGN) && (is.hasItemMeta())
+        } else if ((event.getCurrentItem().getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
                 && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                 configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Displayname"))))) {
             soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
