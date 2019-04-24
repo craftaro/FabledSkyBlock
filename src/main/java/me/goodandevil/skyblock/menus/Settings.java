@@ -26,7 +26,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.AnvilGUI;
+import me.goodandevil.skyblock.utils.AbstractAnvilGUI;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
@@ -117,12 +117,7 @@ public class Settings {
 
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Role, IslandRole.Coop, null);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Coop, null), 1L);
 							} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
 									.equals(ChatColor.translateAlternateColorCodes('&', configLoad
 											.getString("Menu.Settings.Categories.Item.Visitor.Displayname"))))) {
@@ -140,12 +135,7 @@ public class Settings {
 
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Role, IslandRole.Visitor, null);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
 							} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
 									&& (is.getItemMeta().getDisplayName()
 											.equals(ChatColor.translateAlternateColorCodes('&', configLoad
@@ -164,12 +154,7 @@ public class Settings {
 
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Role, IslandRole.Member, null);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Member, null), 1L);
 							} else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta()) && (is.getItemMeta()
 									.getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
 											.getString("Menu.Settings.Categories.Item.Operator.Displayname"))))) {
@@ -186,12 +171,7 @@ public class Settings {
 
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Role, IslandRole.Operator, null);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Operator, null), 1L);
 							} else if ((is.getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta())
 									&& (is.getItemMeta().getDisplayName()
 											.equals(ChatColor.translateAlternateColorCodes('&', configLoad
@@ -210,12 +190,7 @@ public class Settings {
 
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Role, IslandRole.Owner, null);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Owner, null), 1L);
 							}
 						}
 					}
@@ -307,35 +282,20 @@ public class Settings {
 													"Menu.Settings." + role.name() + ".Item.Return.Displayname"))))) {
 								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Categories, null, null);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Categories, null, null), 1L);
 							} else if ((is.getType() == Material.PAPER) && (is.hasItemMeta())
 									&& (is.getItemMeta().getDisplayName()
 											.equals(ChatColor.translateAlternateColorCodes('&', configLoad
 													.getString("Menu.Settings.Visitor.Item.Signature.Displayname"))))) {
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Panel, null, Settings.Panel.Signature);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Panel, null, Panel.Signature), 1L);
 							} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
 									.equals(ChatColor.translateAlternateColorCodes('&',
 											configLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname"))))) {
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Panel, null, Settings.Panel.Welcome);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Panel, null, Panel.Welcome), 1L);
 							} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
 									.getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
 											.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
@@ -347,12 +307,7 @@ public class Settings {
 									soundManager.playSound(player, Sounds.DOOR_OPEN.bukkitSound(), 1.0F, 1.0F);
 								}
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Role, IslandRole.Visitor, null);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
 							} else if (is.hasItemMeta()) {
 								String roleName = getRoleName(role);
 
@@ -390,12 +345,7 @@ public class Settings {
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player, Settings.Type.Role, role, null);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, role, null), 1L);
 							}
 						}
 					}
@@ -1115,13 +1065,8 @@ public class Settings {
 														"Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))))) {
 									soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player, Settings.Type.Role, IslandRole.Visitor, null);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
 								} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
 										&& (is.getItemMeta().getDisplayName().equals(
 												ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -1134,13 +1079,8 @@ public class Settings {
 										soundManager.playSound(player, Sounds.DOOR_OPEN.bukkitSound(), 1.0F, 1.0F);
 									}
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player, Settings.Type.Role, IslandRole.Visitor, null);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
 								} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
 										.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
 												"Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname"))))) {
@@ -1162,114 +1102,106 @@ public class Settings {
 									} else {
 										soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														AnvilGUI gui = new AnvilGUI(player, event1 -> {
-															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																Island island1 = islandManager.getIsland(player);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> {
+													AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+														if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+															Island island1 = islandManager.getIsland(player);
 
-																if (island1 == null) {
-																	messageManager.sendMessage(player,
-																			configLoad.getString(
-																					"Command.Island.Settings.Owner.Message"));
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																			1.0F);
-																	player.closeInventory();
-
-																	event1.setWillClose(true);
-																	event1.setWillDestroy(true);
-
-																	return;
-																} else if (!(island1.hasRole(IslandRole.Operator,
-																		player.getUniqueId())
-																		|| island1.hasRole(IslandRole.Owner,
-																				player.getUniqueId()))) {
-																	messageManager.sendMessage(player, configLoad
-																			.getString("Command.Island.Role.Message"));
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																			1.0F);
-																	player.closeInventory();
-
-																	event1.setWillClose(true);
-																	event1.setWillDestroy(true);
-
-																	return;
-																} else if (!skyblock.getFileManager()
-																		.getConfig(new File(skyblock.getDataFolder(),
-																				"config.yml"))
-																		.getFileConfiguration()
-																		.getBoolean("Island.Visitor.Welcome.Enable")) {
-																	messageManager.sendMessage(player,
-																			configLoad.getString(
-																					"Island.Settings.Visitor.Welcome.Disabled.Message"));
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																			1.0F);
-
-																	event1.setWillClose(true);
-																	event1.setWillDestroy(true);
-
-																	return;
-																}
-
-																Config config1 = skyblock.getFileManager()
-																		.getConfig(new File(skyblock.getDataFolder(),
-																				"config.yml"));
-																FileConfiguration configLoad1 = config1
-																		.getFileConfiguration();
-
-																if (island1.getMessage(IslandMessage.Welcome)
-																		.size() > configLoad1
-																				.getInt("Island.Visitor.Welcome.Lines")
-																		|| event1.getName().length() > configLoad1
-																				.getInt("Island.Visitor.Welcome.Length")) {
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																			1.0F);
-																} else {
-																	List<String> welcomeMessage = island1
-																			.getMessage(IslandMessage.Welcome);
-																	welcomeMessage.add(event1.getName());
-																	island1.setMessage(IslandMessage.Welcome,
-																			player.getName(), welcomeMessage);
-																	soundManager.playSound(player,
-																			Sounds.NOTE_PLING.bukkitSound(), 1.0F,
-																			1.0F);
-																}
-
-																Bukkit.getServer().getScheduler()
-																		.runTaskLaterAsynchronously(skyblock,
-																				new Runnable() {
-																					@Override
-																					public void run() {
-																						open(player,
-																								Settings.Type.Panel,
-																								null,
-																								Settings.Panel.Welcome);
-																					}
-																				}, 1L);
+															if (island1 == null) {
+																messageManager.sendMessage(player,
+																		configLoad.getString(
+																				"Command.Island.Settings.Owner.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+																player.closeInventory();
 
 																event1.setWillClose(true);
 																event1.setWillDestroy(true);
-															} else {
-																event1.setWillClose(false);
-																event1.setWillDestroy(false);
+
+																return;
+															} else if (!(island1.hasRole(IslandRole.Operator,
+																	player.getUniqueId())
+																	|| island1.hasRole(IslandRole.Owner,
+																			player.getUniqueId()))) {
+																messageManager.sendMessage(player, configLoad
+																		.getString("Command.Island.Role.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+																player.closeInventory();
+
+																event1.setWillClose(true);
+																event1.setWillDestroy(true);
+
+																return;
+															} else if (!skyblock.getFileManager()
+																	.getConfig(new File(skyblock.getDataFolder(),
+																			"config.yml"))
+																	.getFileConfiguration()
+																	.getBoolean("Island.Visitor.Welcome.Enable")) {
+																messageManager.sendMessage(player,
+																		configLoad.getString(
+																				"Island.Settings.Visitor.Welcome.Disabled.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+
+																event1.setWillClose(true);
+																event1.setWillDestroy(true);
+
+																return;
 															}
-														});
 
-														ItemStack is = new ItemStack(Material.NAME_TAG);
-														ItemMeta im = is.getItemMeta();
-														im.setDisplayName(configLoad.getString(
-																"Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Word.Enter"));
-														is.setItemMeta(im);
+															Config config1 = skyblock.getFileManager()
+																	.getConfig(new File(skyblock.getDataFolder(),
+																			"config.yml"));
+															FileConfiguration configLoad1 = config1
+																	.getFileConfiguration();
 
-														gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
-														gui.open();
-													}
+															if (island1.getMessage(IslandMessage.Welcome)
+																	.size() > configLoad1
+																			.getInt("Island.Visitor.Welcome.Lines")
+																	|| event1.getName().length() > configLoad1
+																			.getInt("Island.Visitor.Welcome.Length")) {
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+															} else {
+																List<String> welcomeMessage = island1
+																		.getMessage(IslandMessage.Welcome);
+																welcomeMessage.add(event1.getName());
+																island1.setMessage(IslandMessage.Welcome,
+																		player.getName(), welcomeMessage);
+																soundManager.playSound(player,
+																		Sounds.NOTE_PLING.bukkitSound(), 1.0F,
+																		1.0F);
+															}
+
+															Bukkit.getServer().getScheduler()
+																	.runTaskLater(skyblock,
+																			() -> open(player,
+																					Type.Panel,
+																					null,
+																					Panel.Welcome), 1L);
+
+															event1.setWillClose(true);
+															event1.setWillDestroy(true);
+														} else {
+															event1.setWillClose(false);
+															event1.setWillDestroy(false);
+														}
+													});
+
+													ItemStack is1 = new ItemStack(Material.NAME_TAG);
+													ItemMeta im = is1.getItemMeta();
+													im.setDisplayName(configLoad.getString(
+															"Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Word.Enter"));
+													is1.setItemMeta(im);
+
+													gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is1);
+													gui.open();
 												}, 1L);
 									}
 								} else if ((is.getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta()
@@ -1289,13 +1221,8 @@ public class Settings {
 												island.getMessageAuthor(IslandMessage.Welcome), welcomeMessage);
 										soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player, Settings.Type.Panel, null, Settings.Panel.Welcome);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player, Type.Panel, null, Panel.Welcome), 1L);
 									}
 								}
 							}
@@ -1397,13 +1324,8 @@ public class Settings {
 														"Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"))))) {
 									soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player, Settings.Type.Role, IslandRole.Visitor, null);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
 								} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
 										&& (is.getItemMeta().getDisplayName().equals(
 												ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -1416,13 +1338,8 @@ public class Settings {
 										soundManager.playSound(player, Sounds.DOOR_OPEN.bukkitSound(), 1.0F, 1.0F);
 									}
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player, Settings.Type.Role, IslandRole.Visitor, null);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
 								} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
 										.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
 												"Menu.Settings.Visitor.Panel.Signature.Item.Message.Displayname"))))) {
@@ -1444,114 +1361,106 @@ public class Settings {
 									} else {
 										soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														AnvilGUI gui = new AnvilGUI(player, event1 -> {
-															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																Island island1 = islandManager.getIsland(player);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> {
+													AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+														if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+															Island island1 = islandManager.getIsland(player);
 
-																if (island1 == null) {
-																	messageManager.sendMessage(player,
-																			configLoad.getString(
-																					"Command.Island.Settings.Owner.Message"));
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																			1.0F);
-																	player.closeInventory();
-
-																	event1.setWillClose(true);
-																	event1.setWillDestroy(true);
-
-																	return;
-																} else if (!(island1.hasRole(IslandRole.Operator,
-																		player.getUniqueId())
-																		|| island1.hasRole(IslandRole.Owner,
-																				player.getUniqueId()))) {
-																	messageManager.sendMessage(player, configLoad
-																			.getString("Command.Island.Role.Message"));
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																			1.0F);
-																	player.closeInventory();
-
-																	event1.setWillClose(true);
-																	event1.setWillDestroy(true);
-
-																	return;
-																} else if (!skyblock.getFileManager()
-																		.getConfig(new File(skyblock.getDataFolder(),
-																				"config.yml"))
-																		.getFileConfiguration().getBoolean(
-																				"Island.Visitor.Signature.Enable")) {
-																	messageManager.sendMessage(player,
-																			configLoad.getString(
-																					"Island.Settings.Visitor.Signature.Disabled.Message"));
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																			1.0F);
-
-																	event1.setWillClose(true);
-																	event1.setWillDestroy(true);
-
-																	return;
-																}
-
-																Config config1 = skyblock.getFileManager()
-																		.getConfig(new File(skyblock.getDataFolder(),
-																				"config.yml"));
-																FileConfiguration configLoad1 = config1
-																		.getFileConfiguration();
-
-																if (island1.getMessage(IslandMessage.Signature)
-																		.size() > configLoad1.getInt(
-																				"Island.Visitor.Signature.Lines")
-																		|| event1.getName().length() > configLoad1
-																				.getInt("Island.Visitor.Signature.Length")) {
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																			1.0F);
-																} else {
-																	List<String> signatureMessage = island1
-																			.getMessage(IslandMessage.Signature);
-																	signatureMessage.add(event1.getName());
-																	island1.setMessage(IslandMessage.Signature,
-																			player.getName(), signatureMessage);
-																	soundManager.playSound(player,
-																			Sounds.NOTE_PLING.bukkitSound(), 1.0F,
-																			1.0F);
-																}
-
-																Bukkit.getServer().getScheduler()
-																		.runTaskLaterAsynchronously(skyblock,
-																				new Runnable() {
-																					@Override
-																					public void run() {
-																						open(player,
-																								Settings.Type.Panel,
-																								null,
-																								Settings.Panel.Signature);
-																					}
-																				}, 1L);
+															if (island1 == null) {
+																messageManager.sendMessage(player,
+																		configLoad.getString(
+																				"Command.Island.Settings.Owner.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+																player.closeInventory();
 
 																event1.setWillClose(true);
 																event1.setWillDestroy(true);
-															} else {
-																event1.setWillClose(false);
-																event1.setWillDestroy(false);
+
+																return;
+															} else if (!(island1.hasRole(IslandRole.Operator,
+																	player.getUniqueId())
+																	|| island1.hasRole(IslandRole.Owner,
+																			player.getUniqueId()))) {
+																messageManager.sendMessage(player, configLoad
+																		.getString("Command.Island.Role.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+																player.closeInventory();
+
+																event1.setWillClose(true);
+																event1.setWillDestroy(true);
+
+																return;
+															} else if (!skyblock.getFileManager()
+																	.getConfig(new File(skyblock.getDataFolder(),
+																			"config.yml"))
+																	.getFileConfiguration().getBoolean(
+																			"Island.Visitor.Signature.Enable")) {
+																messageManager.sendMessage(player,
+																		configLoad.getString(
+																				"Island.Settings.Visitor.Signature.Disabled.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+
+																event1.setWillClose(true);
+																event1.setWillDestroy(true);
+
+																return;
 															}
-														});
 
-														ItemStack is = new ItemStack(Material.NAME_TAG);
-														ItemMeta im = is.getItemMeta();
-														im.setDisplayName(configLoad.getString(
-																"Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Word.Enter"));
-														is.setItemMeta(im);
+															Config config1 = skyblock.getFileManager()
+																	.getConfig(new File(skyblock.getDataFolder(),
+																			"config.yml"));
+															FileConfiguration configLoad1 = config1
+																	.getFileConfiguration();
 
-														gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
-														gui.open();
-													}
+															if (island1.getMessage(IslandMessage.Signature)
+																	.size() > configLoad1.getInt(
+																			"Island.Visitor.Signature.Lines")
+																	|| event1.getName().length() > configLoad1
+																			.getInt("Island.Visitor.Signature.Length")) {
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+															} else {
+																List<String> signatureMessage = island1
+																		.getMessage(IslandMessage.Signature);
+																signatureMessage.add(event1.getName());
+																island1.setMessage(IslandMessage.Signature,
+																		player.getName(), signatureMessage);
+																soundManager.playSound(player,
+																		Sounds.NOTE_PLING.bukkitSound(), 1.0F,
+																		1.0F);
+															}
+
+															Bukkit.getServer().getScheduler()
+																	.runTaskLater(skyblock,
+																			() -> open(player,
+																					Type.Panel,
+																					null,
+																					Panel.Signature), 1L);
+
+															event1.setWillClose(true);
+															event1.setWillDestroy(true);
+														} else {
+															event1.setWillClose(false);
+															event1.setWillDestroy(false);
+														}
+													});
+
+													ItemStack is12 = new ItemStack(Material.NAME_TAG);
+													ItemMeta im = is12.getItemMeta();
+													im.setDisplayName(configLoad.getString(
+															"Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Word.Enter"));
+													is12.setItemMeta(im);
+
+													gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is12);
+													gui.open();
 												}, 1L);
 									}
 								} else if ((is.getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta()
@@ -1571,14 +1480,9 @@ public class Settings {
 												island.getMessageAuthor(IslandMessage.Signature), signatureMessage);
 										soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player, Settings.Type.Panel, null,
-																Settings.Panel.Signature);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player, Type.Panel, null,
+														Panel.Signature), 1L);
 									}
 								}
 							}

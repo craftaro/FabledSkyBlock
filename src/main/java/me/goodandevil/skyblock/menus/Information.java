@@ -134,13 +134,8 @@ public class Information {
 											Information.Viewer.Type.Members));
 									soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 1L);
 								} else if ((is.getType() == Materials.LEGACY_EMPTY_MAP.getPostMaterial())
 										&& (is.hasItemMeta())
 										&& (is.getItemMeta().getDisplayName().equals(
@@ -159,13 +154,8 @@ public class Information {
 											Information.Viewer.Type.Visitors));
 									soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 1L);
 								}
 							}
 						}
@@ -300,13 +290,8 @@ public class Information {
 											Information.Viewer.Type.Categories));
 									soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 1L);
 								} else if ((is.getType() == Materials.PAINTING.parseMaterial()) && (is.hasItemMeta())
 										&& (is.getItemMeta().getDisplayName().equals(
 												ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -332,26 +317,16 @@ public class Information {
 										playerData.setPage(playerData.getPage() - 1);
 										soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else if (is.getItemMeta().getDisplayName()
 											.equals(ChatColor.translateAlternateColorCodes('&', configLoad
 													.getString("Menu.Information.Members.Item.Next.Displayname")))) {
 										playerData.setPage(playerData.getPage() + 1);
 										soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else {
 										soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F,
 												1.0F);
@@ -484,13 +459,8 @@ public class Information {
 											Information.Viewer.Type.Categories));
 									soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 1L);
 								} else if ((is.getType() == Materials.PAINTING.parseMaterial()) && (is.hasItemMeta())
 										&& (is.getItemMeta().getDisplayName().equals(
 												ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -516,26 +486,16 @@ public class Information {
 										playerData.setPage(playerData.getPage() - 1);
 										soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else if (is.getItemMeta().getDisplayName()
 											.equals(ChatColor.translateAlternateColorCodes('&', configLoad
 													.getString("Menu.Information.Visitors.Item.Next.Displayname")))) {
 										playerData.setPage(playerData.getPage() + 1);
 										soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else {
 										soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F,
 												1.0F);

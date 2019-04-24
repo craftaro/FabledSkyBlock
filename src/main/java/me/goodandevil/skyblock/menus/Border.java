@@ -92,12 +92,7 @@ public class Border {
 					islandManager.updateBorder(island);
 					soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-					Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							open(player);
-						}
-					}, 1L);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 				} else if ((is.getType() == Materials.LIGHT_BLUE_DYE.parseMaterial()) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName()
 								.equals(ChatColor.translateAlternateColorCodes('&',
@@ -114,12 +109,7 @@ public class Border {
 
 						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					}
 				} else if ((is.getType() == Materials.LIME_DYE.parseMaterial()) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName()
@@ -137,12 +127,7 @@ public class Border {
 
 						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					}
 				} else if ((is.getType() == Materials.RED_DYE.parseMaterial()) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName()
@@ -160,12 +145,7 @@ public class Border {
 
 						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					}
 				}
 			}

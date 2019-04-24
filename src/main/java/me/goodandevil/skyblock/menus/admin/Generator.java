@@ -9,7 +9,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.AnvilGUI;
+import me.goodandevil.skyblock.utils.AbstractAnvilGUI;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -251,12 +251,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-                    @Override
-                    public void run() {
-                        open(player);
-                    }
-                }, 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 
                 return;
             }
@@ -265,8 +260,8 @@ public class Generator implements Listener {
                 configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Displayname"))))) {
             soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-            AnvilGUI gui = new AnvilGUI(player, event1 -> {
-                if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+            AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+                if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
                     if (!(player.hasPermission("fabledskyblock.admin.generator")
                             || player.hasPermission("fabledskyblock.admin.*")
                             || player.hasPermission("fabledskyblock.*"))) {
@@ -308,12 +303,7 @@ public class Generator implements Listener {
 
                         player.closeInventory();
 
-                        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-                            @Override
-                            public void run() {
-                                open(player);
-                            }
-                        }, 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                     }
 
                     event1.setWillClose(true);
@@ -329,7 +319,7 @@ public class Generator implements Listener {
             im.setDisplayName(configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Word.Enter"));
             is.setItemMeta(im);
 
-            gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+            gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
             gui.open();
 
             return;
@@ -345,7 +335,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, () -> open(player), 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
             } else {
                 String name = ((Generator.Viewer) playerData.getViewer()).getName();
 
@@ -377,12 +367,7 @@ public class Generator implements Listener {
 
                     player.closeInventory();
 
-                    Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-                        @Override
-                        public void run() {
-                            open(player);
-                        }
-                    }, 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                 } else {
                     playerData.setViewer(null);
 
@@ -392,12 +377,7 @@ public class Generator implements Listener {
 
                     player.closeInventory();
 
-                    Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-                        @Override
-                        public void run() {
-                            open(player);
-                        }
-                    }, 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                 }
             }
 
@@ -421,12 +401,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-                    @Override
-                    public void run() {
-                        open(player);
-                    }
-                }, 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 
                 return;
             } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
@@ -436,12 +411,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-                    @Override
-                    public void run() {
-                        open(player);
-                    }
-                }, 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 
                 return;
             }
@@ -467,8 +437,8 @@ public class Generator implements Listener {
                             if (event.getClick() == ClickType.LEFT) {
                                 soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-                                AnvilGUI gui = new AnvilGUI(player, event1 -> {
-                                    if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+                                AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+                                    if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
                                         if (!(player.hasPermission("fabledskyblock.admin.generator")
                                                 || player.hasPermission("fabledskyblock.admin.*")
                                                 || player.hasPermission("fabledskyblock.*"))) {
@@ -545,7 +515,7 @@ public class Generator implements Listener {
                                                 player.closeInventory();
 
                                                 Bukkit.getServer().getScheduler()
-                                                        .runTaskLaterAsynchronously(skyblock, () -> open(player), 1L);
+                                                        .runTaskLater(skyblock, () -> open(player), 1L);
                                             }
                                         }
 
@@ -563,7 +533,7 @@ public class Generator implements Listener {
                                         .getString("Menu.Admin.Generator.Generator.Item.Material.Word.Enter"));
                                 is.setItemMeta(im);
 
-                                gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+                                gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
                                 gui.open();
                             } else if (event.getClick() == ClickType.RIGHT) {
                                 generator.getGeneratorMaterials().remove(generatorMaterialList);
@@ -592,7 +562,7 @@ public class Generator implements Listener {
                                 soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
                                 player.closeInventory();
 
-                                Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                         () -> open(player), 1L);
                             }
 
@@ -654,7 +624,7 @@ public class Generator implements Listener {
 
                     player.closeInventory();
 
-                    Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, () -> open(player), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                 }
 
                 return;
@@ -667,7 +637,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, () -> open(player), 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
             }
 
             return;
@@ -684,7 +654,7 @@ public class Generator implements Listener {
 
                         player.closeInventory();
 
-                        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                     } else if (event.getClick() == ClickType.RIGHT) {
                         generatorManager.removeGenerator(generatorList);
 
@@ -709,7 +679,7 @@ public class Generator implements Listener {
 
                         player.closeInventory();
 
-                        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                     }
 
                     return;

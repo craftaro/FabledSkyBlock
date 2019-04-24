@@ -105,23 +105,13 @@ public class Visitors {
 								playerData.setPage(playerData.getPage() - 1);
 								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
 									'&', configLoad.getString("Menu.Visitors.Item.Next.Displayname")))) {
 								playerData.setPage(playerData.getPage() + 1);
 								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else {
 								boolean isOperator = island.hasRole(IslandRole.Operator, player.getUniqueId()),
 										isOwner = island.hasRole(IslandRole.Owner, player.getUniqueId()),
@@ -164,12 +154,7 @@ public class Visitors {
 									}
 								}
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							}
 						}
 					}

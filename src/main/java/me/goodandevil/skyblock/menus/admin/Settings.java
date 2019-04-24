@@ -72,57 +72,32 @@ public class Settings {
 									.getString("Menu.Admin.Settings.Categories.Item.Visitor.Displayname"))))) {
 						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Visitor);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Visitor), 1L);
 					} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
 							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Admin.Settings.Categories.Item.Member.Displayname"))))) {
 						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Member);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Member), 1L);
 					} else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta())
 							&& (is.getItemMeta().getDisplayName()
 									.equals(ChatColor.translateAlternateColorCodes('&', configLoad
 											.getString("Menu.Admin.Settings.Categories.Item.Operator.Displayname"))))) {
 						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Operator);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Operator), 1L);
 					} else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
 							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Admin.Settings.Categories.Item.Coop.Displayname"))))) {
 						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Coop);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Coop), 1L);
 					} else if ((is.getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta())
 							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Admin.Settings.Categories.Item.Owner.Displayname"))))) {
 						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Owner);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Owner), 1L);
 					}
 				}
 			});
@@ -201,12 +176,7 @@ public class Settings {
 									configLoad.getString("Menu.Admin.Settings.Owner.Item.Return.Displayname"))))) {
 						soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Categories, null);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Categories, null), 1L);
 					} else if (is.hasItemMeta()) {
 						String roleName = getRoleName(role);
 
@@ -225,16 +195,13 @@ public class Settings {
 									settingsConfigLoad.set("Settings." + role.name() + "." + settingList, true);
 								}
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										try {
-											Config config = skyblock.getFileManager()
-													.getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
-											config.getFileConfiguration().save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									try {
+										Config config = skyblock.getFileManager()
+												.getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
+										config.getFileConfiguration().save(config.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 
@@ -244,12 +211,7 @@ public class Settings {
 
 						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, role);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, role), 1L);
 					}
 				}
 			});

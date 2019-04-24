@@ -95,12 +95,7 @@ public class Leaderboard {
 
 							soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						}
 					}
 				});
@@ -170,13 +165,7 @@ public class Leaderboard {
 												.setViewer(new Viewer(Viewer.Type.Browse));
 										soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 									} else {
 										soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
 									}
@@ -350,12 +339,7 @@ public class Leaderboard {
 								viewer.getType().name())));
 				nInv.setRows(6);
 
-				Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-					@Override
-					public void run() {
-						nInv.open();
-					}
-				});
+				Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 			}
 		}
 	}

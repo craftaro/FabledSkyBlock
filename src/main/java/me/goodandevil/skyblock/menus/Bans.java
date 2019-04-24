@@ -23,7 +23,7 @@ import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.AnvilGUI;
+import me.goodandevil.skyblock.utils.AbstractAnvilGUI;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
@@ -100,30 +100,27 @@ public class Bans {
 										configLoad.getString("Menu.Bans.Item.Information.Displayname"))))) {
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									AnvilGUI gui = new AnvilGUI(player, event1 -> {
-										if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-											Bukkit.getServer().dispatchCommand(player,
-													"island ban " + event1.getName());
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+								AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+									if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+										Bukkit.getServer().dispatchCommand(player,
+												"island ban " + event1.getName());
 
-											event1.setWillClose(true);
-											event1.setWillDestroy(true);
-										} else {
-											event1.setWillClose(false);
-											event1.setWillDestroy(false);
-										}
-									});
+										event1.setWillClose(true);
+										event1.setWillDestroy(true);
+									} else {
+										event1.setWillClose(false);
+										event1.setWillDestroy(false);
+									}
+								});
 
-									ItemStack is = new ItemStack(Material.NAME_TAG);
-									ItemMeta im = is.getItemMeta();
-									im.setDisplayName(configLoad.getString("Menu.Bans.Item.Word.Enter"));
-									is.setItemMeta(im);
+								ItemStack is1 = new ItemStack(Material.NAME_TAG);
+								ItemMeta im = is1.getItemMeta();
+								im.setDisplayName(configLoad.getString("Menu.Bans.Item.Word.Enter"));
+								is1.setItemMeta(im);
 
-									gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
-									gui.open();
-								}
+								gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is1);
+								gui.open();
 							}, 1L);
 						} else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
 								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
@@ -138,23 +135,13 @@ public class Bans {
 								playerData.setPage(playerData.getPage() - 1);
 								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
 									'&', configLoad.getString("Menu.Bans.Item.Next.Displayname")))) {
 								playerData.setPage(playerData.getPage() + 1);
 								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else {
 								if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
 										&& island.getSetting(IslandRole.Operator, "Unban").getStatus())
@@ -162,13 +149,8 @@ public class Bans {
 									String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
 									Bukkit.getServer().dispatchCommand(player, "island unban " + playerName);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 3L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 3L);
 								} else {
 									messageManager.sendMessage(player,
 											configLoad.getString("Command.Island.Bans.Permission.Message"));

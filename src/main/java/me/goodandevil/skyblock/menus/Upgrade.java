@@ -113,13 +113,8 @@ public class Upgrade {
 
 									soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 1L);
 								} else {
 									List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager
 											.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed);
@@ -137,13 +132,8 @@ public class Upgrade {
 											island.setUpgrade(player,
 													me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed, true);
 
-											Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-													new Runnable() {
-														@Override
-														public void run() {
-															open(player);
-														}
-													}, 1L);
+											Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+													() -> open(player), 1L);
 										} else {
 											messageManager.sendMessage(player,
 													configLoad.getString("Island.Upgrade.Money.Message"));
@@ -178,13 +168,8 @@ public class Upgrade {
 
 									soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 1L);
 								} else {
 									List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager
 											.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump);
@@ -202,13 +187,8 @@ public class Upgrade {
 											island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump,
 													true);
 
-											Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-													new Runnable() {
-														@Override
-														public void run() {
-															open(player);
-														}
-													}, 1L);
+											Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+													() -> open(player), 1L);
 										} else {
 											messageManager.sendMessage(player,
 													configLoad.getString("Island.Upgrade.Money.Message"));
@@ -239,12 +219,7 @@ public class Upgrade {
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else {
 								List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager
 										.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop);
@@ -262,13 +237,8 @@ public class Upgrade {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Crop,
 												true);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Upgrade.Money.Message"));
@@ -300,12 +270,7 @@ public class Upgrade {
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else {
 								List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager
 										.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Fly);
@@ -325,13 +290,8 @@ public class Upgrade {
 
 										islandManager.updateFlightAtIsland(island);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Upgrade.Money.Message"));
@@ -362,12 +322,7 @@ public class Upgrade {
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else {
 								List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager
 										.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops);
@@ -385,13 +340,8 @@ public class Upgrade {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Drops,
 												true);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Upgrade.Money.Message"));
@@ -438,13 +388,8 @@ public class Upgrade {
 														island.getAPIWrapper(), player, APIUtil.fromImplementation(
 																me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)));
 
-												Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-														new Runnable() {
-															@Override
-															public void run() {
-																open(player);
-															}
-														}, 1L);
+												Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+														() -> open(player), 1L);
 											} else {
 												messageManager.sendMessage(player,
 														configLoad.getString("Island.Upgrade.Money.Message"));
@@ -481,12 +426,7 @@ public class Upgrade {
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else {
 								List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager
 										.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner);
@@ -504,13 +444,8 @@ public class Upgrade {
 										island.setUpgrade(player, me.goodandevil.skyblock.upgrade.Upgrade.Type.Spawner,
 												true);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Upgrade.Money.Message"));

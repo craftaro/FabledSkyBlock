@@ -148,12 +148,7 @@ public class Biome {
 								soundManager.playSound(player, Sounds.SPLASH.bukkitSound(), 1.0F, 1.0F);
 							}
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						}
 					}
 				}

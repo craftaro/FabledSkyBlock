@@ -26,7 +26,7 @@ import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.upgrade.UpgradeManager;
-import me.goodandevil.skyblock.utils.AnvilGUI;
+import me.goodandevil.skyblock.utils.AbstractAnvilGUI;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
@@ -122,12 +122,7 @@ public class Upgrade {
 
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						} else if ((is.getType() == Materials.SPAWNER.parseMaterial()) && (is.hasItemMeta())
 								&& (is.getItemMeta().getDisplayName()
 										.equals(ChatColor.translateAlternateColorCodes('&', configLoad
@@ -147,100 +142,87 @@ public class Upgrade {
 
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else if (event.getClick() == ClickType.RIGHT) {
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										AnvilGUI gui = new AnvilGUI(player, event1 -> {
-											if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-												if (!(player.hasPermission("fabledskyblock.admin.upgrade")
-														|| player.hasPermission("fabledskyblock.admin.*")
-														|| player.hasPermission("fabledskyblock.*"))) {
-													messageManager.sendMessage(player, configLoad
-															.getString("Island.Admin.Upgrade.Permission.Message"));
-													soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
-															1.0F, 1.0F);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+									AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+										if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+											if (!(player.hasPermission("fabledskyblock.admin.upgrade")
+													|| player.hasPermission("fabledskyblock.admin.*")
+													|| player.hasPermission("fabledskyblock.*"))) {
+												messageManager.sendMessage(player, configLoad
+														.getString("Island.Admin.Upgrade.Permission.Message"));
+												soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+														1.0F, 1.0F);
 
-													return;
-												} else if (!(event1.getName().matches("[0-9]+")
-														|| event1.getName().matches("([0-9]*)\\.([0-9]{1,2}$)"))) {
-													messageManager.sendMessage(player, configLoad
-															.getString("Island.Admin.Upgrade.Numerical.Message"));
-													soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
-															1.0F, 1.0F);
+												return;
+											} else if (!(event1.getName().matches("[0-9]+")
+													|| event1.getName().matches("([0-9]*)\\.([0-9]{1,2}$)"))) {
+												messageManager.sendMessage(player, configLoad
+														.getString("Island.Admin.Upgrade.Numerical.Message"));
+												soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+														1.0F, 1.0F);
 
-													event1.setWillClose(false);
-													event1.setWillDestroy(false);
-
-													return;
-												}
-
-												if (playerDataManager.hasPlayerData(player)) {
-													double upgradeCost = Double.valueOf(event1.getName());
-													me.goodandevil.skyblock.upgrade.Upgrade.Type upgradeType = ((Viewer) playerDataManager
-															.getPlayerData(player).getViewer()).getUpgrade();
-
-													me.goodandevil.skyblock.upgrade.Upgrade upgrade = upgradeManager
-															.getUpgrades(upgradeType).get(0);
-													upgrade.setCost(upgradeCost);
-													soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(),
-															1.0F, 1.0F);
-
-													Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-															new Runnable() {
-																@Override
-																public void run() {
-																	Config config = fileManager.getConfig(new File(
-																			skyblock.getDataFolder(), "upgrades.yml"));
-																	FileConfiguration configLoad = config
-																			.getFileConfiguration();
-
-																	configLoad.set(
-																			"Upgrades." + upgradeType.name() + ".Cost",
-																			upgradeCost);
-
-																	try {
-																		configLoad.save(config.getFile());
-																	} catch (IOException e) {
-																		e.printStackTrace();
-																	}
-																}
-															});
-
-													Bukkit.getServer().getScheduler()
-															.runTaskLaterAsynchronously(skyblock, new Runnable() {
-																@Override
-																public void run() {
-																	open(player);
-																}
-															}, 1L);
-												}
-
-												event1.setWillClose(true);
-												event1.setWillDestroy(true);
-											} else {
 												event1.setWillClose(false);
 												event1.setWillDestroy(false);
+
+												return;
 											}
-										});
 
-										ItemStack is = new ItemStack(Material.NAME_TAG);
-										ItemMeta im = is.getItemMeta();
-										im.setDisplayName(
-												configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Word.Enter"));
-										is.setItemMeta(im);
+											if (playerDataManager.hasPlayerData(player)) {
+												double upgradeCost = Double.valueOf(event1.getName());
+												me.goodandevil.skyblock.upgrade.Upgrade.Type upgradeType = ((Viewer) playerDataManager
+														.getPlayerData(player).getViewer()).getUpgrade();
 
-										gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
-										gui.open();
-									}
+												me.goodandevil.skyblock.upgrade.Upgrade upgrade1 = upgradeManager
+														.getUpgrades(upgradeType).get(0);
+												upgrade1.setCost(upgradeCost);
+												soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(),
+														1.0F, 1.0F);
+
+												Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
+														new Runnable() {
+															@Override
+															public void run() {
+																Config config = fileManager.getConfig(new File(
+																		skyblock.getDataFolder(), "upgrades.yml"));
+																FileConfiguration configLoad1 = config
+																		.getFileConfiguration();
+
+																configLoad1.set(
+																		"Upgrades." + upgradeType.name() + ".Cost",
+																		upgradeCost);
+
+																try {
+																	configLoad1.save(config.getFile());
+																} catch (IOException e) {
+																	e.printStackTrace();
+																}
+															}
+														});
+
+												Bukkit.getServer().getScheduler()
+														.runTaskLater(skyblock, () -> open(player), 1L);
+											}
+
+											event1.setWillClose(true);
+											event1.setWillDestroy(true);
+										} else {
+											event1.setWillClose(false);
+											event1.setWillDestroy(false);
+										}
+									});
+
+									ItemStack is1 = new ItemStack(Material.NAME_TAG);
+									ItemMeta im = is1.getItemMeta();
+									im.setDisplayName(
+											configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Word.Enter"));
+									is1.setItemMeta(im);
+
+									gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is1);
+									gui.open();
 								}, 1L);
 							} else {
 								event.setWillClose(false);
@@ -384,12 +366,7 @@ public class Upgrade {
 								playerData.setViewer(new Upgrade.Viewer(Upgrade.Viewer.Type.Upgrades, null));
 								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
 									.getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
 											.getString("Menu.Admin.Upgrade.Size.Item.Information.Displayname"))))) {
@@ -406,12 +383,142 @@ public class Upgrade {
 								} else {
 									soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													AnvilGUI gui = new AnvilGUI(player, event1 -> {
-														if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> {
+												AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+													if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+														if (playerDataManager.hasPlayerData(player)
+																&& playerDataManager
+																		.getPlayerData(player) != null) {
+															if (!event1.getName().matches("[0-9]+")) {
+																messageManager.sendMessage(player,
+																		configLoad.getString(
+																				"Island.Admin.Upgrade.Numerical.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+
+																event1.setWillClose(false);
+																event1.setWillDestroy(false);
+
+																return;
+															} else {
+																List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades1 = upgradeManager
+																		.getUpgrades(
+																				me.goodandevil.skyblock.upgrade.Upgrade.Type.Size);
+
+																if (upgrades1 != null && upgrades1.size() >= 5) {
+																	messageManager.sendMessage(player,
+																			configLoad.getString(
+																					"Island.Admin.Upgrade.Tier.Limit.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
+
+																	Bukkit.getServer().getScheduler()
+																			.runTaskLater(skyblock,
+																					() -> open(player), 1L);
+
+																	return;
+																}
+															}
+
+															int size = Integer.valueOf(event1.getName());
+
+															if (size > 1000) {
+																messageManager.sendMessage(player,
+																		configLoad.getString(
+																				"Island.Admin.Upgrade.Tier.Size.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+
+																event.setWillClose(false);
+																event.setWillDestroy(false);
+
+																return;
+															} else if (upgradeManager.hasUpgrade(
+																	me.goodandevil.skyblock.upgrade.Upgrade.Type.Size,
+																	size)) {
+																messageManager.sendMessage(player,
+																		configLoad.getString(
+																				"Island.Admin.Upgrade.Tier.Exist.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+
+																event1.setWillClose(false);
+																event1.setWillDestroy(false);
+
+																return;
+															}
+
+															soundManager.playSound(player,
+																	Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
+															upgradeManager.addUpgrade(
+																	me.goodandevil.skyblock.upgrade.Upgrade.Type.Size,
+																	size);
+
+															Bukkit.getServer().getScheduler()
+																	.runTaskLater(skyblock,
+																			() -> open(player), 1L);
+														}
+
+														event1.setWillClose(true);
+														event1.setWillDestroy(true);
+													} else {
+														event1.setWillClose(false);
+														event1.setWillDestroy(false);
+													}
+												});
+
+												ItemStack is12 = new ItemStack(Material.NAME_TAG);
+												ItemMeta im = is12.getItemMeta();
+												im.setDisplayName(configLoad
+														.getString("Menu.Admin.Upgrade.Size.Item.Word.Size.Enter"));
+												is12.setItemMeta(im);
+
+												gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is12);
+												gui.open();
+											}, 1L);
+								}
+							} else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
+									&& (is.hasItemMeta())
+									&& (is.getItemMeta().getDisplayName()
+											.equals(ChatColor.translateAlternateColorCodes('&', configLoad
+													.getString("Menu.Admin.Upgrade.Size.Item.Barrier.Displayname"))))) {
+								soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+
+								event.setWillClose(false);
+								event.setWillDestroy(false);
+							} else if ((is.getType() == Material.PAPER) && (is.hasItemMeta())) {
+								int slot = event.getSlot();
+								int tier = slot - 3;
+
+								me.goodandevil.skyblock.upgrade.Upgrade upgrade = upgradeManager
+										.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size).get(tier);
+
+								if (upgrade != null) {
+									if (event.getClick() == ClickType.LEFT) {
+										soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> {
+													AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+														if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+															if (!(player.hasPermission("fabledskyblock.admin.upgrade")
+																	|| player.hasPermission("fabledskyblock.admin.*")
+																	|| player.hasPermission("fabledskyblock.*"))) {
+																messageManager.sendMessage(player,
+																		configLoad.getString(
+																				"Island.Admin.Upgrade.Permission.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+
+																return;
+															}
+
 															if (playerDataManager.hasPlayerData(player)
 																	&& playerDataManager
 																			.getPlayerData(player) != null) {
@@ -427,30 +534,21 @@ public class Upgrade {
 																	event1.setWillDestroy(false);
 
 																	return;
-																} else {
-																	List<me.goodandevil.skyblock.upgrade.Upgrade> upgrades = upgradeManager
-																			.getUpgrades(
-																					me.goodandevil.skyblock.upgrade.Upgrade.Type.Size);
+																} else if (upgradeManager.getUpgrades(
+																		me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)
+																		.get(tier) == null) {
+																	messageManager.sendMessage(player,
+																			configLoad.getString(
+																					"Island.Admin.Upgrade.Tier.Selected.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
 
-																	if (upgrades != null && upgrades.size() >= 5) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Admin.Upgrade.Tier.Limit.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
+																	Bukkit.getServer().getScheduler()
+																			.runTaskLater(skyblock,
+																					() -> open(player), 1L);
 
-																		Bukkit.getServer().getScheduler()
-																				.runTaskLaterAsynchronously(skyblock,
-																						new Runnable() {
-																							@Override
-																							public void run() {
-																								open(player);
-																							}
-																						}, 1L);
-
-																		return;
-																	}
+																	return;
 																}
 
 																int size = Integer.valueOf(event1.getName());
@@ -477,26 +575,28 @@ public class Upgrade {
 																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
 																			1.0F);
 
-																	event1.setWillClose(false);
-																	event1.setWillDestroy(false);
+																	event.setWillClose(false);
+																	event.setWillDestroy(false);
 
 																	return;
 																}
 
 																soundManager.playSound(player,
 																		Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
-																upgradeManager.addUpgrade(
-																		me.goodandevil.skyblock.upgrade.Upgrade.Type.Size,
-																		size);
+																upgradeManager.getUpgrades(
+																		me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)
+																		.get(tier).setValue(size);
+																fileManager
+																		.getConfig(
+																				new File(skyblock.getDataFolder(),
+																						"upgrades.yml"))
+																		.getFileConfiguration()
+																		.set("Upgrades.Size." + tier + ".Value",
+																				size);
 
 																Bukkit.getServer().getScheduler()
-																		.runTaskLaterAsynchronously(skyblock,
-																				new Runnable() {
-																					@Override
-																					public void run() {
-																						open(player);
-																					}
-																				}, 1L);
+																		.runTaskLater(skyblock,
+																				() -> open(player), 1L);
 															}
 
 															event1.setWillClose(true);
@@ -507,163 +607,14 @@ public class Upgrade {
 														}
 													});
 
-													ItemStack is = new ItemStack(Material.NAME_TAG);
-													ItemMeta im = is.getItemMeta();
-													im.setDisplayName(configLoad
-															.getString("Menu.Admin.Upgrade.Size.Item.Word.Size.Enter"));
-													is.setItemMeta(im);
+													ItemStack is13 = new ItemStack(Material.NAME_TAG);
+													ItemMeta im = is13.getItemMeta();
+													im.setDisplayName(configLoad.getString(
+															"Menu.Admin.Upgrade.Size.Item.Word.Size.Enter"));
+													is13.setItemMeta(im);
 
-													gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+													gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is13);
 													gui.open();
-												}
-											}, 1L);
-								}
-							} else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
-									&& (is.hasItemMeta())
-									&& (is.getItemMeta().getDisplayName()
-											.equals(ChatColor.translateAlternateColorCodes('&', configLoad
-													.getString("Menu.Admin.Upgrade.Size.Item.Barrier.Displayname"))))) {
-								soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
-
-								event.setWillClose(false);
-								event.setWillDestroy(false);
-							} else if ((is.getType() == Material.PAPER) && (is.hasItemMeta())) {
-								int slot = event.getSlot();
-								int tier = slot - 3;
-
-								me.goodandevil.skyblock.upgrade.Upgrade upgrade = upgradeManager
-										.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Size).get(tier);
-
-								if (upgrade != null) {
-									if (event.getClick() == ClickType.LEFT) {
-										soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														AnvilGUI gui = new AnvilGUI(player, event1 -> {
-															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																if (!(player.hasPermission("fabledskyblock.admin.upgrade")
-																		|| player.hasPermission("fabledskyblock.admin.*")
-																		|| player.hasPermission("fabledskyblock.*"))) {
-																	messageManager.sendMessage(player,
-																			configLoad.getString(
-																					"Island.Admin.Upgrade.Permission.Message"));
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																			1.0F);
-
-																	return;
-																}
-
-																if (playerDataManager.hasPlayerData(player)
-																		&& playerDataManager
-																				.getPlayerData(player) != null) {
-																	if (!event1.getName().matches("[0-9]+")) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Admin.Upgrade.Numerical.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-
-																		event1.setWillClose(false);
-																		event1.setWillDestroy(false);
-
-																		return;
-																	} else if (upgradeManager.getUpgrades(
-																			me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)
-																			.get(tier) == null) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Admin.Upgrade.Tier.Selected.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-
-																		Bukkit.getServer().getScheduler()
-																				.runTaskLaterAsynchronously(skyblock,
-																						new Runnable() {
-																							@Override
-																							public void run() {
-																								open(player);
-																							}
-																						}, 1L);
-
-																		return;
-																	}
-
-																	int size = Integer.valueOf(event1.getName());
-
-																	if (size > 1000) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Admin.Upgrade.Tier.Size.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-
-																		event.setWillClose(false);
-																		event.setWillDestroy(false);
-
-																		return;
-																	} else if (upgradeManager.hasUpgrade(
-																			me.goodandevil.skyblock.upgrade.Upgrade.Type.Size,
-																			size)) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Admin.Upgrade.Tier.Exist.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-
-																		event.setWillClose(false);
-																		event.setWillDestroy(false);
-
-																		return;
-																	}
-
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
-																	upgradeManager.getUpgrades(
-																			me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)
-																			.get(tier).setValue(size);
-																	fileManager
-																			.getConfig(
-																					new File(skyblock.getDataFolder(),
-																							"upgrades.yml"))
-																			.getFileConfiguration()
-																			.set("Upgrades.Size." + tier + ".Value",
-																					size);
-
-																	Bukkit.getServer().getScheduler()
-																			.runTaskLaterAsynchronously(skyblock,
-																					new Runnable() {
-																						@Override
-																						public void run() {
-																							open(player);
-																						}
-																					}, 1L);
-																}
-
-																event1.setWillClose(true);
-																event1.setWillDestroy(true);
-															} else {
-																event1.setWillClose(false);
-																event1.setWillDestroy(false);
-															}
-														});
-
-														ItemStack is = new ItemStack(Material.NAME_TAG);
-														ItemMeta im = is.getItemMeta();
-														im.setDisplayName(configLoad.getString(
-																"Menu.Admin.Upgrade.Size.Item.Word.Size.Enter"));
-														is.setItemMeta(im);
-
-														gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
-														gui.open();
-													}
 												}, 1L);
 
 										return;
@@ -674,106 +625,93 @@ public class Upgrade {
 									} else if (event.getClick() == ClickType.RIGHT) {
 										soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														AnvilGUI gui = new AnvilGUI(player, event1 -> {
-															if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-																if (!(player.hasPermission("fabledskyblock.admin.upgrade")
-																		|| player.hasPermission("fabledskyblock.admin.*")
-																		|| player.hasPermission("fabledskyblock.*"))) {
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> {
+													AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+														if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+															if (!(player.hasPermission("fabledskyblock.admin.upgrade")
+																	|| player.hasPermission("fabledskyblock.admin.*")
+																	|| player.hasPermission("fabledskyblock.*"))) {
+																messageManager.sendMessage(player,
+																		configLoad.getString(
+																				"Island.Admin.Upgrade.Permission.Message"));
+																soundManager.playSound(player,
+																		Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																		1.0F);
+
+																return;
+															}
+
+															if (playerDataManager.hasPlayerData(player)
+																	&& playerDataManager
+																			.getPlayerData(player) != null) {
+																if (!(event1.getName().matches("[0-9]+")
+																		|| event1.getName().matches(
+																				"([0-9]*)\\.([0-9]{2}$)"))) {
 																	messageManager.sendMessage(player,
 																			configLoad.getString(
-																					"Island.Admin.Upgrade.Permission.Message"));
+																					"Island.Admin.Upgrade.Numerical.Message"));
 																	soundManager.playSound(player,
 																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
 																			1.0F);
 
+																	event1.setWillClose(false);
+																	event1.setWillDestroy(false);
+
+																	return;
+																} else if (upgradeManager.getUpgrades(
+																		me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)
+																		.get(tier) == null) {
+																	messageManager.sendMessage(player,
+																			configLoad.getString(
+																					"Island.Admin.Upgrade.Tier.Selected.Message"));
+																	soundManager.playSound(player,
+																			Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+																			1.0F);
+
+																	Bukkit.getServer().getScheduler()
+																			.runTaskLater(skyblock,
+																					() -> open(player), 1L);
+
 																	return;
 																}
 
-																if (playerDataManager.hasPlayerData(player)
-																		&& playerDataManager
-																				.getPlayerData(player) != null) {
-																	if (!(event1.getName().matches("[0-9]+")
-																			|| event1.getName().matches(
-																					"([0-9]*)\\.([0-9]{2}$)"))) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Admin.Upgrade.Numerical.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
+																double cost = Double.valueOf(event1.getName());
 
-																		event1.setWillClose(false);
-																		event1.setWillDestroy(false);
+																soundManager.playSound(player,
+																		Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
+																upgradeManager.getUpgrades(
+																		me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)
+																		.get(tier).setCost(cost);
+																fileManager
+																		.getConfig(
+																				new File(skyblock.getDataFolder(),
+																						"upgrades.yml"))
+																		.getFileConfiguration()
+																		.set("Upgrades.Size." + tier + ".Cost",
+																				cost);
 
-																		return;
-																	} else if (upgradeManager.getUpgrades(
-																			me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)
-																			.get(tier) == null) {
-																		messageManager.sendMessage(player,
-																				configLoad.getString(
-																						"Island.Admin.Upgrade.Tier.Selected.Message"));
-																		soundManager.playSound(player,
-																				Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
-																				1.0F);
-
-																		Bukkit.getServer().getScheduler()
-																				.runTaskLaterAsynchronously(skyblock,
-																						new Runnable() {
-																							@Override
-																							public void run() {
-																								open(player);
-																							}
-																						}, 1L);
-
-																		return;
-																	}
-
-																	double cost = Double.valueOf(event1.getName());
-
-																	soundManager.playSound(player,
-																			Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
-																	upgradeManager.getUpgrades(
-																			me.goodandevil.skyblock.upgrade.Upgrade.Type.Size)
-																			.get(tier).setCost(cost);
-																	fileManager
-																			.getConfig(
-																					new File(skyblock.getDataFolder(),
-																							"upgrades.yml"))
-																			.getFileConfiguration()
-																			.set("Upgrades.Size." + tier + ".Cost",
-																					cost);
-
-																	Bukkit.getServer().getScheduler()
-																			.runTaskLaterAsynchronously(skyblock,
-																					new Runnable() {
-																						@Override
-																						public void run() {
-																							open(player);
-																						}
-																					}, 1L);
-																}
-
-																event1.setWillClose(true);
-																event1.setWillDestroy(true);
-															} else {
-																event1.setWillClose(false);
-																event1.setWillDestroy(false);
+																Bukkit.getServer().getScheduler()
+																		.runTaskLater(skyblock,
+																				() -> open(player), 1L);
 															}
-														});
 
-														ItemStack is = new ItemStack(Material.NAME_TAG);
-														ItemMeta im = is.getItemMeta();
-														im.setDisplayName(configLoad.getString(
-																"Menu.Admin.Upgrade.Size.Item.Word.Cost.Enter"));
-														is.setItemMeta(im);
+															event1.setWillClose(true);
+															event1.setWillDestroy(true);
+														} else {
+															event1.setWillClose(false);
+															event1.setWillDestroy(false);
+														}
+													});
 
-														gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
-														gui.open();
-													}
+													ItemStack is14 = new ItemStack(Material.NAME_TAG);
+													ItemMeta im = is14.getItemMeta();
+													im.setDisplayName(configLoad.getString(
+															"Menu.Admin.Upgrade.Size.Item.Word.Cost.Enter"));
+													is14.setItemMeta(im);
+
+													gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is14);
+													gui.open();
 												}, 1L);
 
 										return;
@@ -785,12 +723,7 @@ public class Upgrade {
 									}
 								}
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							}
 						}
 					}

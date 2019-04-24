@@ -116,12 +116,7 @@ public class Visit {
 
 						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
 					} else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
 							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Visit.Item.Nothing.Displayname"))))) {
@@ -135,23 +130,13 @@ public class Visit {
 							playerData.setPage(playerData.getPage() - 1);
 							soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
 						} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Visit.Item.Next.Displayname")))) {
 							playerData.setPage(playerData.getPage() + 1);
 							soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
 						} else {
 							String targetPlayerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
 							UUID targetPlayerUUID;
@@ -214,14 +199,9 @@ public class Visit {
 												soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F,
 														1.0F);
 
-												Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-														new Runnable() {
-															@Override
-															public void run() {
-																open(player, (Visit.Type) playerData.getType(),
-																		(Visit.Sort) playerData.getSort());
-															}
-														}, 1L);
+												Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+														() -> open(player, (Type) playerData.getType(),
+																(Sort) playerData.getSort()), 1L);
 											} else {
 												messageManager.sendMessage(player,
 														configLoad.getString("Island.Visit.Vote.Island.Message"));
@@ -264,14 +244,9 @@ public class Visit {
 													targetPlayerName));
 									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player, (Visit.Type) playerData.getType(),
-															(Visit.Sort) playerData.getSort());
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player, (Type) playerData.getType(),
+													(Sort) playerData.getSort()), 1L);
 								}
 
 								return;
@@ -281,12 +256,7 @@ public class Visit {
 									.replace("%player", targetPlayerName));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
 						}
 					}
 				}

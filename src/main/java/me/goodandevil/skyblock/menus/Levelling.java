@@ -170,13 +170,13 @@ public class Levelling {
 							playerData1.setPage(playerData1.getPage() - 1);
 							soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, () -> open(player), 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
 								'&', configLoad.getString("Menu.Levelling.Item.Next.Displayname")))) {
 							playerData1.setPage(playerData1.getPage() + 1);
 							soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, () -> open(player), 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						} else {
 							soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
 
