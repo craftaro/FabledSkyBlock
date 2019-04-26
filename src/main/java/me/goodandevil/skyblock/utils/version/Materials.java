@@ -1240,16 +1240,11 @@ public enum Materials {
             return Materials.SPAWNER.parseMaterial();
 
         Material mat = Material.matchMaterial(this.toString());
-
-        if (mat != null) {
-            return mat;
-        }
-
-        if (old13Mat != null)
-            mat = Material.matchMaterial(old13Mat);
-
         if (mat != null)
             return mat;
+
+        if (old13Mat != null)
+            return Material.matchMaterial(old13Mat);
 
         return Material.matchMaterial(old12Mat);
     }

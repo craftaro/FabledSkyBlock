@@ -5,6 +5,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -31,21 +32,22 @@ public class GeneratorManager {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (configLoad.getString("Generators") == null) return;
+        if (configLoad.getString("Generators") == null)
+            return;
 
         Materials[] oreMaterials = new Materials[]{Materials.COAL, Materials.CHARCOAL, Materials.DIAMOND,
                 Materials.IRON_INGOT, Materials.GOLD_INGOT, Materials.EMERALD};
         Random rnd = new Random();
 
         for (String generatorList : configLoad.getConfigurationSection("Generators").getKeys(false)) {
-            if (configLoad.getString("Generators." + generatorList + ".Name") == null) continue;
+            if (configLoad.getString("Generators." + generatorList + ".Name") == null)
+                continue;
+
             List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
-
             if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
-                for (String materialList : configLoad
-                        .getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
+                for (String materialList : configLoad.getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
+                    System.out.println(materialList);
                     Materials materials = Materials.fromString(materialList);
-
                     if (materials != null) {
                         generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getDouble(
                                 "Generators." + generatorList + ".Materials." + materialList + ".Chance")));
@@ -231,13 +233,11 @@ public class GeneratorManager {
 
     @SuppressWarnings("deprecation")
     public BlockState generateBlock(Generator generator, Block block) {
-        block.setType(Material.AIR);
-
         Materials materials = getRandomMaterials(generator);
+        if (materials == null)
+            return block.getState();
 
-        if (materials == null) return block.getState();
-        skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(),
-                1.0F, 10.0F);
+        skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(), 1.0F, 10.0F);
 
         if (NMSUtil.getVersionNumber() > 12) {
             block.setType(materials.parseMaterial());
@@ -246,8 +246,7 @@ public class GeneratorManager {
             block.setType(is.getType());
 
             try {
-                block.getClass().getMethod("setData", byte.class).invoke(block,
-                        (byte) is.getDurability());
+                block.getClass().getMethod("setData", byte.class).invoke(block, (byte) is.getDurability());
             } catch (IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
@@ -259,23 +258,13 @@ public class GeneratorManager {
 
     public Materials getRandomMaterials(Generator generator) {
         if (generator.getGeneratorMaterials() != null && generator.getGeneratorMaterials().size() != 0) {
-            Map<Integer, Integer> chances = new HashMap<>();
+            List<Materials> weightedList = new ArrayList<>();
+            for (GeneratorMaterial generatorMaterial : generator.getGeneratorMaterials())
+                for (int i = 0; i < generatorMaterial.getChance() * 30; i++)
+                    weightedList.add(generatorMaterial.getMaterials());
 
-            for (int index = 0; index < generator.getGeneratorMaterials().size(); index++) {
-                GeneratorMaterial generatorMaterial = generator.getGeneratorMaterials().get(index);
-
-                for (int i = 0; i < generatorMaterial.getChance(); i++) {
-                    chances.put(chances.size() + 1, index);
-                }
-            }
-
-            if (chances.size() != 0) {
-                int rndNum = new Random().nextInt(chances.size());
-
-                if (rndNum != 0) {
-                    return generator.getGeneratorMaterials().get(chances.get(rndNum)).getMaterials();
-                }
-            }
+            int choice = new Random().nextInt(weightedList.size());
+            return weightedList.get(choice);
         }
 
         return Materials.COBBLESTONE;
