@@ -1,5 +1,7 @@
 package me.goodandevil.skyblock;
 
+import com.songoda.update.Plugin;
+import com.songoda.update.SongodaUpdate;
 import me.goodandevil.skyblock.api.SkyBlockAPI;
 import me.goodandevil.skyblock.ban.BanManager;
 import me.goodandevil.skyblock.biome.BiomeManager;
@@ -30,6 +32,7 @@ import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.structure.StructureManager;
 import me.goodandevil.skyblock.upgrade.UpgradeManager;
 import me.goodandevil.skyblock.usercache.UserCacheManager;
+import me.goodandevil.skyblock.utils.Metrics;
 import me.goodandevil.skyblock.visit.VisitManager;
 import me.goodandevil.skyblock.visit.VisitTask;
 import me.goodandevil.skyblock.world.WorldManager;
@@ -114,11 +117,7 @@ public class SkyBlock extends JavaPlugin {
 		if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Stackable.Enable")) {
 			stackableManager = new StackableManager(this);
-			new BukkitRunnable() {
-			    public void run() {
-			        stackableManager.loadSavedStackables();
-			    }
-			}.runTaskLater(this, 5L);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> stackableManager.loadSavedStackables(), 5L);
 		}
 
 		leaderboardManager = new LeaderboardManager(this);
@@ -163,6 +162,13 @@ public class SkyBlock extends JavaPlugin {
 		pluginManager.registerEvents(new Creator(), this);
 
 		this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
+
+		// bStats Metrics
+		new Metrics(this);
+
+		// Songoda Updater
+		Plugin plugin = new Plugin(this, 17);
+		SongodaUpdate.load(plugin);
 
 		SkyBlockAPI.setImplementation(instance);
 	}

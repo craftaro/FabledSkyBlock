@@ -52,8 +52,7 @@ public class LeaderboardManager {
 		for (int i = 0; i < visitManager.getIslands().size(); i++) {
 			UUID ownerUUID = (UUID) visitManager.getIslands().keySet().toArray()[i];
 
-			if (enableExemptions && economyManager.hasPermission(
-					worldManager.getWorld(IslandWorld.Normal).getName(),
+			if (enableExemptions && economyManager.hasPermission(worldManager.getWorld(IslandWorld.Normal).getName(),
 					Bukkit.getOfflinePlayer(ownerUUID),
 					"fabledskyblock.island.top.exempt"))
 				continue;

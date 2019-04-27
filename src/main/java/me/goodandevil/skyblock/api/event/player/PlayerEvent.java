@@ -15,6 +15,12 @@ public abstract class PlayerEvent extends Event {
 		this.island = island;
 	}
 
+	protected PlayerEvent(Player player, Island island, boolean async) {
+		super(async);
+		this.player = player;
+		this.island = island;
+	}
+
 	public Player getPlayer() {
 		return player;
 	}

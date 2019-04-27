@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'java'
 
 group 'com.songoda.fabledskyblock'
-version 'Build-73'
+version 'Build-74'
 
 sourceCompatibility = 1.8
 
@@ -13,6 +13,11 @@ repositories {
     maven {
         url 'http://repo.songoda.com/artifactory/private/'
     }
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
 }
 
 dependencies {
@@ -32,13 +37,29 @@ dependencies {
 	// WildStacker
 	implementation (group: 'com.bgsoftware', name: 'wildstacker-api', version: 'b14')
 
+    // Apache Commons
+    shade (group: 'org.apache.commons', name: 'commons-lang3', version: '3.0')
+    shade (group: 'commons-io', name: 'commons-io', version: '2.5')
+
+    // Songoda Updater
+    shade (group: 'com.songoda', name: 'songodaupdater', version: '1')
+
     // Spigot
-    implementation (group: 'org.spigotmc', name: 'spigot', version: '1.13.2')
+    implementation (group: 'org.spigotmc', name: 'spigot', version: '1.14')
 }
 
 processResources {
-	filter ReplaceTokens, tokens: ["version": project.property("version")]
-	from (sourceSets.main.resources.srcDirs) {
-		include '**/*.yml'
-	}
+    from (sourceSets.main.resources.srcDirs) {
+        include '**/*.yml'
+        filter ReplaceTokens, tokens: ["version": project.property("version")]
+    }
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from (project.zipTree(dep)) {
+            exclude '**/*.yml'
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
 }

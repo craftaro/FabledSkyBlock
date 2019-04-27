@@ -12,7 +12,11 @@ import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.world.WorldManager;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChunkSnapshot;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -22,7 +26,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public class LevellingManager {
@@ -62,6 +70,13 @@ public class LevellingManager {
         boolean isWildStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("WildStacker");
 
         Map<LevellingData, Long> levellingData = new HashMap<>();
+
+        List<Material> blacklistedMaterials = new ArrayList<>();
+        blacklistedMaterials.add(Materials.AIR.getPostMaterial());
+        blacklistedMaterials.add(Materials.WATER.getPostMaterial());
+        blacklistedMaterials.add(Materials.LEGACY_STATIONARY_WATER.getPostMaterial());
+        blacklistedMaterials.add(Materials.LAVA.getPostMaterial());
+        blacklistedMaterials.add(Materials.LEGACY_STATIONARY_LAVA.getPostMaterial());
 
         new BukkitRunnable() {
             @Override
@@ -118,14 +133,14 @@ public class LevellingManager {
                                         blockData = (int) getBlockTypeDataMethod.invoke(chunkSnapshotList, x, y, z);
                                     }
 
-                                    if (blockMaterial == org.bukkit.Material.AIR)
+                                    if (blacklistedMaterials.contains(blockMaterial))
                                         continue;
 
                                     long amount = 1;
 
                                     if (blockMaterial == Materials.SPAWNER.parseMaterial()) {
                                         World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                        Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
+                                        Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
 
                                         if (isEpicSpawnersEnabled) {
                                             com.songoda.epicspawners.api.EpicSpawners epicSpawners = com.songoda.epicspawners.api.EpicSpawnersAPI.getImplementation();
@@ -134,20 +149,24 @@ public class LevellingManager {
                                                 amount = spawner.getSpawnerDataCount();
                                                 spawnerType = spawner.getCreatureSpawner().getSpawnedType();
                                             }
-                                        } else if (isWildStackerEnabled) {
+                                        }
+
+                                        if (isWildStackerEnabled && spawnerType == null) {
                                             com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
                                             if (wildStacker.isStackedSpawner(location.getBlock())) {
                                                 com.bgsoftware.wildstacker.api.objects.StackedSpawner spawner = wildStacker.getStackedSpawner(location);
                                                 amount = spawner.getStackAmount();
                                                 spawnerType = spawner.getSpawnedType();
                                             }
-                                        } else {
+                                        }
+
+                                        if (spawnerType == null) {
                                             spawnerType = ((CreatureSpawner) location.getBlock().getState()).getSpawnedType();
                                         }
                                     } else {
                                         if (isWildStackerEnabled) {
                                             World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
+                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
                                             com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
                                             if (wildStacker.isStackedBarrel(location.getBlock())) {
                                                 com.bgsoftware.wildstacker.api.objects.StackedBarrel barrel = wildStacker.getStackedBarrel(location.getBlock());
@@ -159,17 +178,19 @@ public class LevellingManager {
                                                     blockData = 0;
                                                 }
                                             }
-                                        } else if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial)) {
+                                        }
+
+                                        if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial) && amount == 1) {
                                             World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x,  y, chunkSnapshotList.getZ() * 16 + z);
+                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
                                             if (stackableManager.isStacked(location)) {
                                                 Stackable stackable = stackableManager.getStack(location, blockMaterial);
-                                                amount = stackable.getSize();
+                                                amount += stackable.getSize();
                                             }
                                         }
                                     }
 
-                                    LevellingData data = new LevellingData(blockMaterial, (byte)blockData, spawnerType);
+                                    LevellingData data = new LevellingData(blockMaterial, (byte) blockData, spawnerType);
                                     Long totalAmountInteger = levellingData.get(data);
                                     long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
                                     levellingData.put(data, totalAmount);
@@ -221,13 +242,13 @@ public class LevellingManager {
     public void registerMaterials() {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-        
+
         if (configLoad.getString("Materials") != null) {
             for (String materialKey : configLoad.getConfigurationSection("Materials").getKeys(false)) {
                 try {
                     Materials material = Materials.fromString(materialKey);
                     if (!material.isAvailable() || material.getPostItem() == null) continue;
-                    
+
                     if (!containsMaterial(material)) {
                         addMaterial(material, configLoad.getLong("Materials." + materialKey + ".Points"));
                     }
@@ -289,7 +310,7 @@ public class LevellingManager {
         @Override
         public boolean equals(Object obj) {
             if (!(obj instanceof LevellingData)) return false;
-            LevellingData data = (LevellingData)obj;
+            LevellingData data = (LevellingData) obj;
             if (this == obj) return true;
             return this.material == data.material && this.data == data.data && this.spawnerType == data.spawnerType;
         }
@@ -307,7 +328,8 @@ public class LevellingManager {
             if (NMSUtil.getVersionNumber() > 12) {
                 try {
                     return Materials.fromString(material.name());
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
 
             return Materials.getMaterials(this.material, this.data);

@@ -60,15 +60,6 @@ public final class BlockUtil {
 			String secondaryEffectName = beacon.getSecondaryEffect() != null ? beacon.getSecondaryEffect().toString() : "null";
 
 			blockData.setPotionEffect(primaryEffectName + ":" + secondaryEffectName);
-
-			for (int i = 0; i < beacon.getInventory().getSize(); i++) {
-				ItemStack is = beacon.getInventory().getItem(i);
-
-				if (is != null && is.getType() != Material.AIR) {
-					blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
-				}
-			}
-
 			blockData.setStateType(BlockStateType.BEACON.toString());
 		} else if (blockState instanceof BrewingStand) {
 			BrewingStand brewingStand = (BrewingStand) blockState;
@@ -309,13 +300,6 @@ public final class BlockUtil {
 			if (!potionEffect[1].equals("null")) {
 				beacon.setSecondaryEffect(PotionEffectType.getByName(potionEffect[1].toUpperCase()));
 			}
-
-			for (Integer slotList : blockData.getInventory().keySet()) {
-				if (slotList < beacon.getInventory().getSize()) {
-					ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
-					beacon.getInventory().setItem(slotList, is);
-				}
-			}
 		} else if (blockTypeState == BlockStateType.BREWINGSTAND) {
 			BrewingStand brewingStand = (BrewingStand) block.getState();
 			brewingStand.setBrewingTime(blockData.getBrewingTime());
@@ -396,14 +380,14 @@ public final class BlockUtil {
 		} else if (blockTypeState == BlockStateType.SKULL) {
 			Skull skull = (Skull) block.getState();
 
+			skull.setRotation(BlockFace.valueOf(blockData.getRotateFace().toUpperCase()));
+			skull.setSkullType(SkullType.valueOf(blockData.getSkullType().toUpperCase()));
+
 			if (NMSVersion > 9) {
 				skull.setOwningPlayer(Bukkit.getServer().getOfflinePlayer(blockData.getSkullOwner()));
 			} else {
-				skull.setOwner(skull.getOwner());
+				skull.setOwner(blockData.getSkullOwner());
 			}
-
-			skull.setRotation(BlockFace.valueOf(blockData.getRotateFace().toUpperCase()));
-			skull.setSkullType(SkullType.valueOf(blockData.getSkullType().toUpperCase()));
 		} else {
 			if (NMSVersion > 8) {
 				if (blockTypeState == BlockStateType.ENDGATEWAY) {

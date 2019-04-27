@@ -15,8 +15,18 @@ public class MaterialUtil {
 			material = Material.GRASS;
 		} else if (material == Materials.LEGACY_NETHER_WARTS.getPostMaterial()) {
 			material = Materials.LEGACY_NETHER_STALK.getPostMaterial();
-		} else if (material == Materials.LEGACY_SIGN_POST.getPostMaterial() || material == Material.WALL_SIGN) {
-			material = Material.SIGN;
+		} else if (material == Materials.LEGACY_SIGN_POST.getPostMaterial() || material == Materials.OAK_WALL_SIGN.parseMaterial()) {
+			material = Materials.OAK_SIGN.parseMaterial();
+		} else if (material == Materials.BIRCH_WALL_SIGN.parseMaterial()) {
+			material = Materials.BIRCH_SIGN.parseMaterial();
+		} else if (material == Materials.SPRUCE_WALL_SIGN.parseMaterial()) {
+			material = Materials.SPRUCE_SIGN.parseMaterial();
+		} else if (material == Materials.JUNGLE_WALL_SIGN.parseMaterial()) {
+			material = Materials.JUNGLE_SIGN.parseMaterial();
+		} else if (material == Materials.ACACIA_WALL_SIGN.parseMaterial()) {
+			material = Materials.ACACIA_SIGN.parseMaterial();
+		} else if (material == Materials.DARK_OAK_WALL_SIGN.parseMaterial()) {
+			material = Materials.DARK_OAK_SIGN.parseMaterial();
 		} else if (material == Materials.LEGACY_SUGAR_CANE_BLOCK.getPostMaterial()) {
 			material = Material.SUGAR_CANE;
 		} else if (material == Material.TRIPWIRE) {
@@ -33,6 +43,10 @@ public class MaterialUtil {
 			material = Materials.LEGACY_BREWING_STAND.getPostMaterial();
 		} else if (material.name().equals("BED_BLOCK")) {
 			material = Materials.RED_BED.getPostMaterial();
+		} else if (material == Materials.SWEET_BERRY_BUSH.parseMaterial()) {
+			material = Materials.SWEET_BERRIES.parseMaterial();
+		} else if (material == Materials.BAMBOO_SAPLING.parseMaterial()) {
+			material = Materials.BAMBOO.parseMaterial();
 		}
 
 		return material;

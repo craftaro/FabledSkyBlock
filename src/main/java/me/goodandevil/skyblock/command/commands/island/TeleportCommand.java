@@ -113,12 +113,9 @@ public class TeleportCommand extends SubCommand {
 					configLoad.getString("Command.Island.Teleport.Teleported.Yourself.Message"));
 			soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
-					player.setFallDistance(0.0F);
-				}
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+				player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+				player.setFallDistance(0.0F);
 			});
 		}
 	}

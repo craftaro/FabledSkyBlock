@@ -12,6 +12,11 @@ public abstract class IslandEvent extends Event {
 		this.island = island;
 	}
 
+	protected IslandEvent(Island island, boolean async) {
+		super(async);
+		this.island = island;
+	}
+
 	public Island getIsland() {
 		return island;
 	}

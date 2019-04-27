@@ -472,7 +472,10 @@ public class Block implements Listener {
 
                     org.bukkit.block.BlockState genState = generatorManager.generateBlock(generator, block);
                     event.getNewState().setType(genState.getType());
-                    event.getNewState().setData(genState.getData());
+
+                    if (NMSUtil.getVersionNumber() < 13) {
+                        event.getNewState().setData(genState.getData());
+                    }
 
                     return;
                 }

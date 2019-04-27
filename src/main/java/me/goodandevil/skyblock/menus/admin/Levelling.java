@@ -27,7 +27,7 @@ import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.AnvilGUI;
+import me.goodandevil.skyblock.utils.AbstractAnvilGUI;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.item.MaterialUtil;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
@@ -80,7 +80,7 @@ public class Levelling implements Listener {
 						configLoad.getString("Menu.Admin.Levelling.Item.Exit.Displayname"), null, null, null, null),
 				0, 8);
 		nInv.addItem(
-				nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
+				nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 						configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"),
 						configLoad.getStringList("Menu.Admin.Levelling.Item.Information.Lore"),
 						new Placeholder[] { new Placeholder("%materials", "" + levellingMaterials.size()),
@@ -142,12 +142,7 @@ public class Levelling implements Listener {
 		nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Levelling.Title")));
 		nInv.setRows(6);
 
-		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				nInv.open();
-			}
-		});
+		Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -167,8 +162,18 @@ public class Levelling implements Listener {
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 
-			if (event.getInventory().getName().equals(
-					ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Levelling.Title")))) {
+			String inventoryName = "";
+			if (NMSUtil.getVersionNumber() > 13) {
+				inventoryName = event.getView().getTitle();
+			} else {
+				try {
+					inventoryName = (String) Inventory.class.getMethod("getName").invoke(event.getInventory());
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			if (inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Levelling.Title")))) {
 				PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 
 				if (!(player.hasPermission("fabledskyblock.admin.level") || player.hasPermission("fabledskyblock.admin.*")
@@ -197,14 +202,14 @@ public class Levelling implements Listener {
 					player.closeInventory();
 
 					return;
-				} else if ((event.getCurrentItem().getType() == Material.SIGN) && (is.hasItemMeta())
+				} else if ((event.getCurrentItem().getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"))))) {
 					event.setCancelled(true);
 					soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-					AnvilGUI gui = new AnvilGUI(player, event1 -> {
-						if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+					AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+						if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
 							if (!(player.hasPermission("fabledskyblock.admin.level")
 									|| player.hasPermission("fabledskyblock.admin.*")
 									|| player.hasPermission("fabledskyblock.*"))) {
@@ -219,31 +224,23 @@ public class Levelling implements Listener {
 												.replace("%division", NumberUtil.formatNumberByDecimal(pointDivision)));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										Config config = fileManager
-												.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-										FileConfiguration configLoad = config.getFileConfiguration();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									Config config12 = fileManager
+											.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+									FileConfiguration configLoad12 = config12.getFileConfiguration();
 
-										configLoad.set("Island.Levelling.Division", pointDivision);
+									configLoad12.set("Island.Levelling.Division", pointDivision);
 
-										try {
-											configLoad.save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+									try {
+										configLoad12.save(config12.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 
 								player.closeInventory();
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else {
 								messageManager.sendMessage(player,
 										configLoad.getString("Island.Admin.Levelling.Numerical.Message"));
@@ -263,7 +260,7 @@ public class Levelling implements Listener {
 					im.setDisplayName(configLoad.getString("Menu.Admin.Levelling.Item.Information.Word.Enter"));
 					is.setItemMeta(im);
 
-					gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+					gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
 					gui.open();
 
 					return;
@@ -284,12 +281,7 @@ public class Levelling implements Listener {
 						playerData.setPage(playerData.getPage() - 1);
 						soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 
 						return;
 					} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
@@ -300,12 +292,7 @@ public class Levelling implements Listener {
 						playerData.setPage(playerData.getPage() + 1);
 						soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 
 						return;
 					}
@@ -322,8 +309,8 @@ public class Levelling implements Listener {
 							if (event.getClick() == ClickType.LEFT) {
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-								AnvilGUI gui = new AnvilGUI(player, event1 -> {
-									if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+								AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+									if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
 										if (!(player.hasPermission("fabledskyblock.admin.level")
 												|| player.hasPermission("fabledskyblock.admin.*")
 												|| player.hasPermission("fabledskyblock.*"))) {
@@ -343,32 +330,24 @@ public class Levelling implements Listener {
 														1.0F);
 												player.closeInventory();
 
-												Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-														new Runnable() {
-															@Override
-															public void run() {
-																open(player);
-															}
-														}, 1L);
+												Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+														() -> open(player), 1L);
 
 												Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-														new Runnable() {
-															@Override
-															public void run() {
-																Config config = fileManager.getConfig(new File(
-																		skyblock.getDataFolder(), "levelling.yml"));
-																FileConfiguration configLoad = config
-																		.getFileConfiguration();
+														() -> {
+															Config config1 = fileManager.getConfig(new File(
+																	skyblock.getDataFolder(), "levelling.yml"));
+															FileConfiguration configLoad1 = config1
+																	.getFileConfiguration();
 
-																configLoad.set(
-																		"Materials." + materials.name() + ".Points",
-																		materialPoints);
+															configLoad1.set(
+																	"Materials." + materials.name() + ".Points",
+																	materialPoints);
 
-																try {
-																	configLoad.save(config.getFile());
-																} catch (IOException e) {
-																	e.printStackTrace();
-																}
+															try {
+																configLoad1.save(config1.getFile());
+															} catch (IOException e) {
+																e.printStackTrace();
 															}
 														});
 											} else {
@@ -397,7 +376,7 @@ public class Levelling implements Listener {
 										configLoad.getString("Menu.Admin.Levelling.Item.Material.Word.Enter"));
 								is.setItemMeta(im);
 
-								gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+								gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
 								gui.open();
 							} else if (event.getClick() == ClickType.RIGHT) {
 								levellingManager.removeMaterial(materialList);
@@ -408,20 +387,17 @@ public class Levelling implements Listener {
 												.replace("%material", materials.name()));
 								soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										Config config = fileManager
-												.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
-										FileConfiguration configLoad = config.getFileConfiguration();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									Config config13 = fileManager
+											.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+									FileConfiguration configLoad13 = config13.getFileConfiguration();
 
-										configLoad.set("Materials." + materials.name(), null);
+									configLoad13.set("Materials." + materials.name(), null);
 
-										try {
-											configLoad.save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+									try {
+										configLoad13.save(config13.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 							}
@@ -456,19 +432,16 @@ public class Levelling implements Listener {
 						.replace("%material", materials.name()));
 				soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-				Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-					@Override
-					public void run() {
-						Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
-						FileConfiguration configLoad = config.getFileConfiguration();
+				Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+					Config config14 = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+					FileConfiguration configLoad14 = config14.getFileConfiguration();
 
-						configLoad.set("Materials." + materials.name() + ".Points", 0);
+					configLoad14.set("Materials." + materials.name() + ".Points", 0);
 
-						try {
-							configLoad.save(config.getFile());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+					try {
+						configLoad14.save(config14.getFile());
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				});
 			}

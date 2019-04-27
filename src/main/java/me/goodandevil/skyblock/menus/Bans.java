@@ -23,7 +23,7 @@ import me.goodandevil.skyblock.placeholder.Placeholder;
 import me.goodandevil.skyblock.playerdata.PlayerData;
 import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
-import me.goodandevil.skyblock.utils.AnvilGUI;
+import me.goodandevil.skyblock.utils.AbstractAnvilGUI;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
@@ -60,123 +60,102 @@ public class Bans {
 			Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = languageConfig.getFileConfiguration();
 
-			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					if (playerDataManager.hasPlayerData(player)) {
-						PlayerData playerData = playerDataManager.getPlayerData(player);
-						Island island = islandManager.getIsland(player);
+			nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+				if (playerDataManager.hasPlayerData(player)) {
+					PlayerData playerData1 = playerDataManager.getPlayerData(player);
+					Island island1 = islandManager.getIsland(player);
 
-						if (island == null) {
-							messageManager.sendMessage(player,
-									configLoad.getString("Command.Island.Bans.Owner.Message"));
-							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					if (island1 == null) {
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.Bans.Owner.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-							return;
-						} else if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-								.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
-							messageManager.sendMessage(player,
-									configLoad.getString("Command.Island.Bans.Disabled.Message"));
-							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						return;
+					} else if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+							.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.Bans.Disabled.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-							return;
-						}
+						return;
+					}
 
-						ItemStack is = event.getItem();
+					ItemStack is = event.getItem();
 
-						if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Bans.Item.Barrier.Displayname"))))) {
-							soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+					if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Bans.Item.Barrier.Displayname"))))) {
+						soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
 
-							event.setWillClose(false);
-							event.setWillDestroy(false);
-						} else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Bans.Item.Exit.Displayname"))))) {
-							soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
-						} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Bans.Item.Information.Displayname"))))) {
-							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+						event.setWillClose(false);
+						event.setWillDestroy(false);
+					} else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Bans.Item.Exit.Displayname"))))) {
+						soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+					} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Bans.Item.Information.Displayname"))))) {
+						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									AnvilGUI gui = new AnvilGUI(player, event1 -> {
-										if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
-											Bukkit.getServer().dispatchCommand(player,
-													"island ban " + event1.getName());
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+							AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+								if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+									Bukkit.getServer().dispatchCommand(player,
+											"island ban " + event1.getName());
 
-											event1.setWillClose(true);
-											event1.setWillDestroy(true);
-										} else {
-											event1.setWillClose(false);
-											event1.setWillDestroy(false);
-										}
-									});
-
-									ItemStack is = new ItemStack(Material.NAME_TAG);
-									ItemMeta im = is.getItemMeta();
-									im.setDisplayName(configLoad.getString("Menu.Bans.Item.Word.Enter"));
-									is.setItemMeta(im);
-
-									gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
-									gui.open();
-								}
-							}, 1L);
-						} else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Bans.Item.Nothing.Displayname"))))) {
-							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-							event.setWillClose(false);
-							event.setWillDestroy(false);
-						} else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
-							if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Bans.Item.Previous.Displayname")))) {
-								playerData.setPage(playerData.getPage() - 1);
-								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
-
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
-							} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
-									'&', configLoad.getString("Menu.Bans.Item.Next.Displayname")))) {
-								playerData.setPage(playerData.getPage() + 1);
-								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
-
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
-							} else {
-								if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-										&& island.getSetting(IslandRole.Operator, "Unban").getStatus())
-										|| island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-									String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
-									Bukkit.getServer().dispatchCommand(player, "island unban " + playerName);
-
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 3L);
+									event1.setWillClose(true);
+									event1.setWillDestroy(true);
 								} else {
-									messageManager.sendMessage(player,
-											configLoad.getString("Command.Island.Bans.Permission.Message"));
-									soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-
-									event.setWillClose(false);
-									event.setWillDestroy(false);
+									event1.setWillClose(false);
+									event1.setWillDestroy(false);
 								}
+							});
+
+							ItemStack is1 = new ItemStack(Material.NAME_TAG);
+							ItemMeta im = is1.getItemMeta();
+							im.setDisplayName(configLoad.getString("Menu.Bans.Item.Word.Enter"));
+							is1.setItemMeta(im);
+
+							gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is1);
+							gui.open();
+						}, 1L);
+					} else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Bans.Item.Nothing.Displayname"))))) {
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+						event.setWillClose(false);
+						event.setWillDestroy(false);
+					} else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
+						if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Bans.Item.Previous.Displayname")))) {
+							playerData1.setPage(playerData1.getPage() - 1);
+							soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+						} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
+								'&', configLoad.getString("Menu.Bans.Item.Next.Displayname")))) {
+							playerData1.setPage(playerData1.getPage() + 1);
+							soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+						} else {
+							if ((island1.hasRole(IslandRole.Operator, player.getUniqueId())
+									&& island1.getSetting(IslandRole.Operator, "Unban").getStatus())
+									|| island1.hasRole(IslandRole.Owner, player.getUniqueId())) {
+								String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
+								Bukkit.getServer().dispatchCommand(player, "island unban " + playerName);
+
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+										() -> open(player), 3L);
+							} else {
+								messageManager.sendMessage(player,
+										configLoad.getString("Command.Island.Bans.Permission.Message"));
+								soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+								event.setWillClose(false);
+								event.setWillDestroy(false);
 							}
 						}
 					}
@@ -254,12 +233,7 @@ public class Bans {
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Bans.Title")));
 			nInv.setRows(6);
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					nInv.open();
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 		}
 	}
 }

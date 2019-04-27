@@ -51,7 +51,6 @@ public class EntityData {
 	private int llamaStrength;
 	private int angerLevel;
 	private int slimeSize;
-	private int riches;
 	private int age;
 
 	private boolean arms;
@@ -447,14 +446,6 @@ public class EntityData {
 
 	public void setSlimeSize(int slimeSize) {
 		this.slimeSize = slimeSize;
-	}
-
-	public int getRiches() {
-		return this.riches;
-	}
-
-	public void setRiches(int riches) {
-		this.riches = riches;
 	}
 
 	public int getAge() {

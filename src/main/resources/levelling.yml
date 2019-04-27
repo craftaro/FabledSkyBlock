@@ -25,6 +25,7 @@ Materials:
     ACACIA_STAIRS:
         Points: 2
     ACACIA_TRAPDOOR:
+        Points: 3
     ACACIA_WOOD:
         Points: 1
     ACTIVATOR_RAIL:
@@ -32,6 +33,12 @@ Materials:
     ALLIUM:
         Points: 1
     ANDESITE:
+        Points: 1
+    ANDESITE_SLAB:
+        Points: 1
+    ANDESITE_STAIRS:
+        Points: 1
+    ANDESITE_WALL:
         Points: 1
     ANVIL:
         Points: 10
@@ -43,12 +50,20 @@ Materials:
         Points: 1
     BARRIER:
         Points: 0
+    BAMBOO:
+        Points: 1
+    BAMBOO_SAPLING:
+        Points: 1
+    BARREL:
+        Points: 1
     BEACON:
         Points: 500
     BEDROCK:
         Points: 0
     BEETROOTS:
         Points: 1
+    BELL:
+        Points: 7
     BIRCH_BUTTON:
         Points: 1
     BIRCH_DOOR:
@@ -67,12 +82,16 @@ Materials:
         Points: 2
     BIRCH_SAPLING:
         Points: 1
+    BIRCH_SIGN:
+        Points: 6
     BIRCH_SLAB:
         Points: 1
     BIRCH_STAIRS:
         Points: 2
     BIRCH_TRAPDOOR:
         Points: 3
+    BIRCH_WALL_SIGN:
+        Points: 6
     BIRCH_WOOD:
         Points: 1
     BLACK_BANNER:
@@ -99,6 +118,8 @@ Materials:
         Points: 2
     BLACK_WOOL:
         Points: 2
+    BLAST_FURNACE:
+        Points: 6
     BLUE_BANNER:
         Points: 2
     BLUE_BED:
@@ -147,6 +168,8 @@ Materials:
         Points: 3
     BRICK_STAIRS:
         Points: 5
+    BRICK_WALL:
+        Points: 3
     BROWN_BANNER:
         Points: 2
     BROWN_BED:
@@ -187,10 +210,14 @@ Materials:
         Points: 1
     CACTUS:
         Points: 1
+    CAMPFIRE:
+        Points: 2
     CAKE:
         Points: 9
     CARROTS:
         Points: 1
+    CARTOGRAPHY_TABLE:
+        Points: 5
     CARVED_PUMPKIN:
         Points: 2
     CAULDRON:
@@ -239,7 +266,11 @@ Materials:
         Points: 0
     COMPARATOR:
         Points: 10
+    COMPOSTER:
+        Points: 4
     CONDUIT:
+        Points: 1
+    CORNFLOWER:
         Points: 1
     CRACKED_STONE_BRICKS:
         Points: 2
@@ -251,7 +282,11 @@ Materials:
         Points: 1
     CUT_RED_SANDSTONE:
         Points: 1
+    CUT_RED_SANDSTONE_SLAB:
+        Points: 1
     CUT_SANDSTONE:
+        Points: 1
+    CUT_SANDSTONE_SLAB:
         Points: 1
     CYAN_BANNER:
         Points: 2
@@ -299,12 +334,16 @@ Materials:
         Points: 2
     DARK_OAK_SAPLING:
         Points: 1
+    DARK_OAK_SIGN:
+        Points: 6
     DARK_OAK_SLAB:
         Points: 1
     DARK_OAK_STAIRS:
         Points: 2
     DARK_OAK_TRAPDOOR:
         Points: 3
+    DARK_OAK_WALL_SIGN:
+        Points: 6
     DARK_OAK_WOOD:
         Points: 1
     DARK_PRISMARINE:
@@ -355,6 +394,12 @@ Materials:
         Points: 1
     DIORITE:
         Points: 1
+    DIORITE_SLAB:
+        Points: 1
+    DIORITE_STAIRS:
+        Points: 1
+    DIORITE_WALL:
+        Points: 1
     DIRT:
         Points: 3
     DISPENSER:
@@ -387,6 +432,12 @@ Materials:
         Points: 1
     END_STONE:
         Points: 1
+    END_STONE_BRICK_SLAB:
+        Points: 1
+    END_STONE_BRICK_STAIRS:
+        Points: 1
+    END_STONE_BRICK_WALL:
+        Points: 1
     END_STONE_BRICKS:
         Points: 2
     FARMLAND:
@@ -403,6 +454,8 @@ Materials:
         Points: 1
     FIRE_CORAL_WALL_FAN:
         Points: 1
+    FLETCHING_TABLE:
+        Points: 4
     FLOWER_POT:
         Points: 1
     FROSTED_ICE:
@@ -420,6 +473,12 @@ Materials:
     GOLD_ORE:
         Points: 1
     GRANITE:
+        Points: 1
+    GRANITE_SLAB:
+        Points: 1
+    GRANITE_STAIRS:
+        Points: 1
+    GRANITE_WALL:
         Points: 1
     GRASS:
         Points: 4
@@ -477,6 +536,8 @@ Materials:
         Points: 2
     GREEN_WOOL:
         Points: 2
+    GRINDSTONE:
+        Points: 4
     HAY_BLOCK:
         Points: 2
     HEAVY_WEIGHTED_PRESSURE_PLATE:
@@ -517,6 +578,8 @@ Materials:
         Points: 4
     JACK_O_LANTERN:
         Points: 2
+    JIGSAW:
+        Points: 4
     JUKEBOX:
         Points: 10
     JUNGLE_BUTTON:
@@ -537,12 +600,16 @@ Materials:
         Points: 2
     JUNGLE_SAPLING:
         Points: 1
+    JUNGLE_SIGN:
+        Points: 6
     JUNGLE_SLAB:
         Points: 1
     JUNGLE_STAIRS:
         Points: 2
     JUNGLE_TRAPDOOR:
         Points: 3
+    JUNGLE_WALL_SIGN:
+        Points: 6
     JUNGLE_WOOD:
         Points: 1
     KELP:
@@ -551,14 +618,16 @@ Materials:
         Points: 1
     LADDER:
         Points: 2
+    LANTERN:
+        Points: 3
     LAPIS_BLOCK:
         Points: 10
     LAPIS_ORE:
         Points: 1
     LARGE_FERN:
         Points: 1
-    LAVA:
-        Points: 0
+    LECTERN:
+        Points: 4
     LEVER:
         Points: 1
     LIGHT_BLUE_BANNER:
@@ -613,6 +682,8 @@ Materials:
         Points: 3
     LILAC:
         Points: 1
+    LILY_OF_THE_VALLEY:
+        Points: 1
     LILY_PAD:
         Points: 5
     LIME_BANNER:
@@ -639,6 +710,8 @@ Materials:
         Points: 2
     LIME_WOOL:
         Points: 2
+    LOOM:
+        Points: 4
     MAGENTA_BANNER:
         Points: 2
     MAGENTA_BED:
@@ -671,10 +744,20 @@ Materials:
         Points: 1
     MOSSY_COBBLESTONE:
         Points: 1
+    MOSSY_COBBLESTONE_SLAB:
+        Points: 1
+    MOSSY_COBBLESTONE_STAIRS:
+        Points: 1
     MOSSY_COBBLESTONE_WALL:
         Points: 1
+    MOSSY_STONE_BRICK_SLAB:
+        Points: 1
+    MOSSY_STONE_BRICK_STAIRS:
+        Points: 1
+    MOSSY_STONE_BRICK_WALL:
+        Points: 1
     MOSSY_STONE_BRICKS:
-        Points: 2
+        Points: 1
     MOVING_PISTON:
         Points: 1
     MUSHROOM_STEM:
@@ -682,6 +765,8 @@ Materials:
     MYCELIUM:
         Points: 5
     NETHERRACK:
+        Points: 1
+    NETHER_BRICK_WALL:
         Points: 1
     NETHER_BRICKS:
         Points: 2
@@ -719,12 +804,16 @@ Materials:
         Points: 2
     OAK_SAPLING:
         Points: 1
+    OAK_SIGN:
+        Points: 6
     OAK_SLAB:
         Points: 1
     OAK_STAIRS:
         Points: 2
     OAK_TRAPDOOR:
         Points: 3
+    OAK_WALL_SIGN:
+        Points: 6
     OAK_WOOD:
         Points: 1
     OBSERVER:
@@ -803,9 +892,21 @@ Materials:
         Points: 2
     POLISHED_ANDESITE:
         Points: 1
+    POLISHED_ANDESITE_SLAB:
+        Points: 1
+    POLISHED_ANDESITE_STAIRS:
+        Points: 1
     POLISHED_DIORITE:
         Points: 1
+    POLISHED_DIORITE_SLAB:
+        Points: 1
+    POLISHED_DIORITE_STAIRS:
+        Points: 1
     POLISHED_GRANITE:
+        Points: 1
+    POLISHED_GRANITE_SLAB:
+        Points: 1
+    POLISHED_GRANITE_STAIRS:
         Points: 1
     POPPY:
         Points: 1
@@ -817,6 +918,8 @@ Materials:
         Points: 1
     POTTED_AZURE_BLUET:
         Points: 1
+    POTTED_BAMBOO:
+        Points: 1
     POTTED_BIRCH_SAPLING:
         Points: 1
     POTTED_BLUE_ORCHID:
@@ -824,6 +927,8 @@ Materials:
     POTTED_BROWN_MUSHROOM:
         Points: 1
     POTTED_CACTUS:
+        Points: 1
+    POTTED_CORNFLOWER:
         Points: 1
     POTTED_DANDELION:
         Points: 1
@@ -834,6 +939,8 @@ Materials:
     POTTED_FERN:
         Points: 1
     POTTED_JUNGLE_SAPLING:
+        Points: 1
+    POTTED_LILY_OF_THE_VALLEY:
         Points: 1
     POTTED_OAK_SAPLING:
         Points: 1
@@ -853,6 +960,8 @@ Materials:
         Points: 1
     POTTED_WHITE_TULIP:
         Points: 1
+    POTTED_WITHER_ROSE:
+        Points: 1
     POWERED_RAIL:
         Points: 2
     PRISMARINE:
@@ -867,6 +976,8 @@ Materials:
         Points: 1
     PRISMARINE_STAIRS:
         Points: 2
+    PRISMARINE_WALL:
+        Points: 1
     PUMPKIN:
         Points: 1
     PUMPKIN_STEM:
@@ -938,7 +1049,13 @@ Materials:
     RED_MUSHROOM:
         Points: 1
     RED_MUSHROOM_BLOCK:
-        Points:
+        Points: 1
+    RED_NETHER_BRICK_SLAB:
+        Points: 1
+    RED_NETHER_BRICK_STAIRS:
+        Points: 1
+    RED_NETHER_BRICK_WALL:
+        Points: 1
     RED_NETHER_BRICKS:
         Points: 2
     RED_SAND:
@@ -949,6 +1066,8 @@ Materials:
         Points: 1
     RED_SANDSTONE_STAIRS:
         Points: 2
+    RED_SANDSTONE_WALL:
+        Points: 1
     RED_SHULKER_BOX:
         Points: 11
     RED_STAINED_GLASS:
@@ -977,6 +1096,10 @@ Materials:
         Points: 1
     SANDSTONE_STAIRS:
         Points: 2
+    SANDSTONE_WALL:
+        Points: 1
+    SCAFFOLDING:
+        Points: 1
     SEAGRASS:
         Points: 1
     SEA_LANTERN:
@@ -985,21 +1108,33 @@ Materials:
         Points: 1
     SHULKER_BOX:
         Points: 10
-    SIGN:
-        Points: 6
     SKELETON_SKULL:
         Points: 10
     SKELETON_WALL_SKULL:
         Points: 10
     SLIME_BLOCK:
         Points: 10
+    SMITHING_TABLE:
+        Points: 4
+    SMOKER:
+        Points: 4
     SMOOTH_QUARTZ:
+        Points: 1
+    SMOOTH_QUARTZ_SLAB:
+        Points: 1
+    SMOOTH_QUARTZ_STAIRS:
         Points: 1
     SMOOTH_RED_SANDSTONE:
         Points: 1
     SMOOTH_SANDSTONE:
         Points: 1
+    SMOOTH_SANDSTONE_SLAB:
+        Points: 1
+    SMOOTH_SANDSTONE_STAIRS:
+        Points: 1
     SMOOTH_STONE:
+        Points: 1
+    SMOOTH_STONE_SLAB:
         Points: 1
     SNOW:
         Points: 1
@@ -1143,12 +1278,16 @@ Materials:
         Points: 2
     SPRUCE_SAPLING:
         Points: 1
+    SPRUCE_SIGN:
+        Points: 6
     SPRUCE_SLAB:
         Points: 1
     SPRUCE_STAIRS:
         Points: 2
     SPRUCE_TRAPDOOR:
         Points: 3
+    SPRUCE_WALL_SIGN:
+        Points: 6
     SPRUCE_WOOD:
         Points: 1
     STICKY_PISTON:
@@ -1161,11 +1300,17 @@ Materials:
         Points: 1
     STONE_BRICK_STAIRS:
         Points: 2
+    STONE_BRICK_WALL:
+        Points: 1
     STONE_BUTTON:
         Points: 1
+    STONECUTTER:
+        Points: 4
     STONE_PRESSURE_PLATE:
         Points: 2
     STONE_SLAB:
+        Points: 1
+    STONE_STAIRS:
         Points: 1
     STRIPPED_ACACIA_LOG:
         Points: 0
@@ -1194,6 +1339,8 @@ Materials:
     SUGAR_CANE:
         Points: 1
     SUNFLOWER:
+        Points: 1
+    SWEET_BERRY_BUSH:
         Points: 1
     TALL_GRASS:
         Points: 1
@@ -1225,12 +1372,8 @@ Materials:
         Points: 1
     VOID_AIR:
         Points: 0
-    WALL_SIGN:
-        Points: 6
     WALL_TORCH:
         Points: 1
-    WATER:
-        Points: 0
     WET_SPONGE:
         Points: 10
     WHEAT:
@@ -1261,6 +1404,8 @@ Materials:
         Points: 2
     WHITE_WOOL:
         Points: 3
+    WITHER_ROSE:
+        Points: 1
     WITHER_SKELETON_SKULL:
         Points: 10
     WITHER_SKELETON_WALL_SKULL:

@@ -50,12 +50,10 @@ public class Death implements Listener {
 			}
 
 			if (configLoad.getBoolean("Island.Death.AutoRespawn")) {
-				Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, new Runnable() {
-					public void run() {
-						player.spigot().respawn();
-						player.setFallDistance(0.0F);
-						player.setFireTicks(0);
-					}
+				Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
+					player.spigot().respawn();
+					player.setFallDistance(0.0F);
+					player.setFireTicks(0);
 				}, 1L);
 			}
 		}

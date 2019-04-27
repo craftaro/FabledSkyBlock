@@ -5,6 +5,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -53,9 +54,9 @@ public class EconomyManager {
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerWithdrawMoneyEvent(player, money));
 	}
 
-	public boolean hasPermission(String world, OfflinePlayer player, String perm) {
+	public boolean hasPermission(String world, OfflinePlayer offlinePlayer, String perm) {
 		if (permission != null)
-			return permission.playerHas(world, player, perm);
+			return permission.playerHas(world, offlinePlayer, perm);
 		return false;
 	}
 

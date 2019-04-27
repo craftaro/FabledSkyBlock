@@ -52,138 +52,120 @@ public class Weather {
 			FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 					.getFileConfiguration();
 
-			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					if (playerDataManager.hasPlayerData(player)) {
-						Island island = islandManager.getIsland(player);
+			nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+				if (playerDataManager.hasPlayerData(player)) {
+					Island island = islandManager.getIsland(player);
 
-						if (island == null) {
-							messageManager.sendMessage(player,
-									configLoad.getString("Command.Island.Weather.Owner.Message"));
-							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-							player.closeInventory();
+					if (island == null) {
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.Weather.Owner.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+						player.closeInventory();
 
-							return;
-						} else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-								&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
-								|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
-							messageManager.sendMessage(player,
-									configLoad.getString("Command.Island.Weather.Permission.Message"));
-							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-							player.closeInventory();
+						return;
+					} else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
+							&& island.getSetting(IslandRole.Operator, "Biome").getStatus())
+							|| island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+						messageManager.sendMessage(player,
+								configLoad.getString("Command.Island.Weather.Permission.Message"));
+						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+						player.closeInventory();
 
-							return;
+						return;
+					}
+
+					ItemStack is = event.getItem();
+
+					if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Weather.Item.Info.Displayname"))))) {
+						soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
+
+						event.setWillClose(false);
+						event.setWillDestroy(false);
+					} else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
+							&& (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Weather.Item.Barrier.Displayname"))))) {
+						soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+
+						event.setWillClose(false);
+						event.setWillDestroy(false);
+					} else if ((is.getType() == Materials.SUNFLOWER.parseMaterial()) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Weather.Item.Time.Displayname"))))) {
+						int islandTime = island.getTime();
+
+						if (islandTime == 0) {
+							island.setTime(1000);
+						} else if (islandTime == 1000) {
+							island.setTime(6000);
+						} else if (islandTime == 6000) {
+							island.setTime(12000);
+						} else if (islandTime == 12000) {
+							island.setTime(13000);
+						} else if (islandTime == 13000) {
+							island.setTime(18000);
+						} else if (islandTime == 18000) {
+							island.setTime(0);
 						}
 
-						ItemStack is = event.getItem();
+						if (!island.isWeatherSynchronized()) {
+							for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+								all.setPlayerTime(island.getTime(),
+										fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+												.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+							}
+						}
 
-						if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Weather.Item.Info.Displayname"))))) {
-							soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
+						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-							event.setWillClose(false);
-							event.setWillDestroy(false);
-						} else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
-								&& (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Weather.Item.Barrier.Displayname"))))) {
-							soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+					} else if ((is.getType() == Material.GHAST_TEAR) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Weather.Item.Weather.Displayname"))))) {
+						if (island.getWeather() == WeatherType.DOWNFALL) {
+							island.setWeather(WeatherType.CLEAR);
+						} else {
+							island.setWeather(WeatherType.DOWNFALL);
+						}
 
-							event.setWillClose(false);
-							event.setWillDestroy(false);
-						} else if ((is.getType() == Materials.SUNFLOWER.parseMaterial()) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Weather.Item.Time.Displayname"))))) {
+						if (!island.isWeatherSynchronized()) {
+							for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+								all.setPlayerWeather(island.getWeather());
+							}
+						}
+
+						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+					} else if ((is.getType() == Material.TRIPWIRE_HOOK) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Weather.Item.Synchronised.Displayname"))))) {
+						if (island.isWeatherSynchronized()) {
+							island.setWeatherSynchronized(false);
+
 							int islandTime = island.getTime();
+							WeatherType islandWeather = island.getWeather();
 
-							if (islandTime == 0) {
-								island.setTime(1000);
-							} else if (islandTime == 1000) {
-								island.setTime(6000);
-							} else if (islandTime == 6000) {
-								island.setTime(12000);
-							} else if (islandTime == 12000) {
-								island.setTime(13000);
-							} else if (islandTime == 13000) {
-								island.setTime(18000);
-							} else if (islandTime == 18000) {
-								island.setTime(0);
+							for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+								all.setPlayerTime(islandTime,
+										fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+												.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+								all.setPlayerWeather(islandWeather);
 							}
+						} else {
+							island.setWeatherSynchronized(true);
 
-							if (!island.isWeatherSynchronized()) {
-								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
-									all.setPlayerTime(island.getTime(),
-											fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-													.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
-								}
+							for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+								all.resetPlayerTime();
+								all.resetPlayerWeather();
 							}
-
-							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
-						} else if ((is.getType() == Material.GHAST_TEAR) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Weather.Item.Weather.Displayname"))))) {
-							if (island.getWeather() == WeatherType.DOWNFALL) {
-								island.setWeather(WeatherType.CLEAR);
-							} else {
-								island.setWeather(WeatherType.DOWNFALL);
-							}
-
-							if (!island.isWeatherSynchronized()) {
-								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
-									all.setPlayerWeather(island.getWeather());
-								}
-							}
-
-							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
-						} else if ((is.getType() == Material.TRIPWIRE_HOOK) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Weather.Item.Synchronised.Displayname"))))) {
-							if (island.isWeatherSynchronized()) {
-								island.setWeatherSynchronized(false);
-
-								int islandTime = island.getTime();
-								WeatherType islandWeather = island.getWeather();
-
-								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
-									all.setPlayerTime(islandTime,
-											fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-													.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
-									all.setPlayerWeather(islandWeather);
-								}
-							} else {
-								island.setWeatherSynchronized(true);
-
-								for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
-									all.resetPlayerTime();
-									all.resetPlayerWeather();
-								}
-							}
-
-							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
 						}
+
+						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					}
 				}
 			});
@@ -256,12 +238,7 @@ public class Weather {
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Weather.Title")));
 			nInv.setType(InventoryType.HOPPER);
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					nInv.open();
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 		}
 	}
 }

@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -28,7 +29,7 @@ import me.goodandevil.skyblock.playerdata.PlayerDataManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.structure.Structure;
 import me.goodandevil.skyblock.structure.StructureManager;
-import me.goodandevil.skyblock.utils.AnvilGUI;
+import me.goodandevil.skyblock.utils.AbstractAnvilGUI;
 import me.goodandevil.skyblock.utils.item.SkullUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -67,7 +68,7 @@ public class Creator implements Listener {
 					configLoad.getString("Menu.Admin.Creator.Browse.Item.Exit.Displayname"), null, null, null, null), 0,
 					8);
 			nInv.addItem(
-					nInv.createItem(new ItemStack(org.bukkit.Material.SIGN),
+					nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 							configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"),
 							configLoad.getStringList("Menu.Admin.Creator.Browse.Item.Information.Lore"),
 							new Placeholder[] { new Placeholder("%structures", "" + structures.size()) }, null, null),
@@ -248,12 +249,7 @@ public class Creator implements Listener {
 
 		nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")));
 
-		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				nInv.open();
-			}
-		});
+		Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -273,8 +269,18 @@ public class Creator implements Listener {
 			Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 			FileConfiguration configLoad = config.getFileConfiguration();
 
-			if (event.getInventory().getName().equals(
-					ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")))) {
+			String inventoryName = "";
+			if (NMSUtil.getVersionNumber() > 13) {
+				inventoryName = event.getView().getTitle();
+			} else {
+				try {
+					inventoryName = (String) Inventory.class.getMethod("getName").invoke(event.getInventory());
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			if (inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")))) {
 				event.setCancelled(true);
 
 				PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
@@ -309,22 +315,17 @@ public class Creator implements Listener {
 
 						player.closeInventory();
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 
 						return;
 					}
-				} else if ((event.getCurrentItem().getType() == Material.SIGN) && (is.hasItemMeta())
+				} else if ((event.getCurrentItem().getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
 						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"))))) {
 					soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-					AnvilGUI gui = new AnvilGUI(player, event1 -> {
-						if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+					AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+						if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
 							if (!(player.hasPermission("fabledskyblock.admin.creator")
 									|| player.hasPermission("fabledskyblock.admin.*")
 									|| player.hasPermission("fabledskyblock.*"))) {
@@ -348,31 +349,23 @@ public class Creator implements Listener {
 												.replace("%structure", event1.getName()));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										Config config = fileManager
-												.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-										FileConfiguration configLoad = config.getFileConfiguration();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									Config config111 = fileManager
+											.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+									FileConfiguration configLoad111 = config111.getFileConfiguration();
 
-										configLoad.set("Structures." + event1.getName() + ".Name", event1.getName());
+									configLoad111.set("Structures." + event1.getName() + ".Name", event1.getName());
 
-										try {
-											configLoad.save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+									try {
+										configLoad111.save(config111.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 
 								player.closeInventory();
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							}
 
 							event1.setWillClose(true);
@@ -388,7 +381,7 @@ public class Creator implements Listener {
 					im.setDisplayName(configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Word.Enter"));
 					is.setItemMeta(im);
 
-					gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+					gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
 					gui.open();
 
 					return;
@@ -408,20 +401,15 @@ public class Creator implements Listener {
 
 						player.closeInventory();
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					} else {
 						String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
 						if (structureManager.containsStructure(name)) {
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-							AnvilGUI gui = new AnvilGUI(player, event1 -> {
-								if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+							AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+								if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
 									if (!(player.hasPermission("fabledskyblock.admin.creator")
 											|| player.hasPermission("fabledskyblock.admin.*")
 											|| player.hasPermission("fabledskyblock.*"))) {
@@ -435,13 +423,8 @@ public class Creator implements Listener {
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else if (!structureManager.containsStructure(name)) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Exist.Message"));
@@ -449,13 +432,8 @@ public class Creator implements Listener {
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else {
 										Structure structure = structureManager.getStructure(name);
 										structure.setDisplayname(event1.getName());
@@ -463,34 +441,26 @@ public class Creator implements Listener {
 										soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
 										Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														Config config = fileManager.getConfig(
-																new File(skyblock.getDataFolder(), "structures.yml"));
-														FileConfiguration configLoad = config.getFileConfiguration();
+												() -> {
+													Config config1 = fileManager.getConfig(
+															new File(skyblock.getDataFolder(), "structures.yml"));
+													FileConfiguration configLoad1 = config1.getFileConfiguration();
 
-														configLoad.set(
-																"Structures." + structure.getName() + ".Displayname",
-																event1.getName());
+													configLoad1.set(
+															"Structures." + structure.getName() + ".Displayname",
+															event1.getName());
 
-														try {
-															configLoad.save(config.getFile());
-														} catch (IOException e) {
-															e.printStackTrace();
-														}
+													try {
+														configLoad1.save(config1.getFile());
+													} catch (IOException e) {
+														e.printStackTrace();
 													}
 												});
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									}
 
 									event1.setWillClose(true);
@@ -507,7 +477,7 @@ public class Creator implements Listener {
 									configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Word.Enter"));
 							is.setItemMeta(im);
 
-							gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+							gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
 							gui.open();
 						} else {
 							playerData.setViewer(null);
@@ -518,12 +488,7 @@ public class Creator implements Listener {
 
 							player.closeInventory();
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						}
 					}
 
@@ -538,12 +503,7 @@ public class Creator implements Listener {
 
 						player.closeInventory();
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					} else {
 						String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
@@ -555,33 +515,25 @@ public class Creator implements Listener {
 									structure.removeLine(structure.getDescription().size() - 1);
 									soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-										@Override
-										public void run() {
-											Config config = fileManager
-													.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-											FileConfiguration configLoad = config.getFileConfiguration();
+									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+										Config config12 = fileManager
+												.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+										FileConfiguration configLoad12 = config12.getFileConfiguration();
 
-											configLoad.set("Structures." + structure.getName() + ".Description",
-													structure.getDescription());
+										configLoad12.set("Structures." + structure.getName() + ".Description",
+												structure.getDescription());
 
-											try {
-												configLoad.save(config.getFile());
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
+										try {
+											configLoad12.save(config12.getFile());
+										} catch (IOException e) {
+											e.printStackTrace();
 										}
 									});
 
 									player.closeInventory();
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 1L);
 
 									return;
 								} else if (event.getClick() != ClickType.LEFT) {
@@ -591,8 +543,8 @@ public class Creator implements Listener {
 
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-							AnvilGUI gui = new AnvilGUI(player, event1 -> {
-								if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+							AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+								if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
 									if (!(player.hasPermission("fabledskyblock.admin.creator")
 											|| player.hasPermission("fabledskyblock.admin.*")
 											|| player.hasPermission("fabledskyblock.*"))) {
@@ -606,13 +558,8 @@ public class Creator implements Listener {
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else if (!structureManager.containsStructure(name)) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Exist.Message"));
@@ -620,47 +567,34 @@ public class Creator implements Listener {
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else {
 										structure.addLine(event1.getName());
 
 										soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
 										Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														Config config = fileManager.getConfig(
-																new File(skyblock.getDataFolder(), "structures.yml"));
-														FileConfiguration configLoad = config.getFileConfiguration();
+												() -> {
+													Config config13 = fileManager.getConfig(
+															new File(skyblock.getDataFolder(), "structures.yml"));
+													FileConfiguration configLoad13 = config13.getFileConfiguration();
 
-														configLoad.set(
-																"Structures." + structure.getName() + ".Description",
-																structure.getDescription());
+													configLoad13.set(
+															"Structures." + structure.getName() + ".Description",
+															structure.getDescription());
 
-														try {
-															configLoad.save(config.getFile());
-														} catch (IOException e) {
-															e.printStackTrace();
-														}
+													try {
+														configLoad13.save(config13.getFile());
+													} catch (IOException e) {
+														e.printStackTrace();
 													}
 												});
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									}
 
 									event1.setWillClose(true);
@@ -677,7 +611,7 @@ public class Creator implements Listener {
 									configLoad.getString("Menu.Admin.Creator.Options.Item.Description.Word.Enter"));
 							is.setItemMeta(im);
 
-							gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+							gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
 							gui.open();
 						} else {
 							playerData.setViewer(null);
@@ -688,12 +622,7 @@ public class Creator implements Listener {
 
 							player.closeInventory();
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						}
 					}
 
@@ -708,12 +637,7 @@ public class Creator implements Listener {
 
 						player.closeInventory();
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					} else {
 						String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
@@ -725,33 +649,25 @@ public class Creator implements Listener {
 									structure.removeCommand(structure.getCommands().size() - 1);
 									soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-										@Override
-										public void run() {
-											Config config = fileManager
-													.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-											FileConfiguration configLoad = config.getFileConfiguration();
+									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+										Config config14 = fileManager
+												.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+										FileConfiguration configLoad14 = config14.getFileConfiguration();
 
-											configLoad.set("Structures." + structure.getName() + ".Commands",
-													structure.getCommands());
+										configLoad14.set("Structures." + structure.getName() + ".Commands",
+												structure.getCommands());
 
-											try {
-												configLoad.save(config.getFile());
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
+										try {
+											configLoad14.save(config14.getFile());
+										} catch (IOException e) {
+											e.printStackTrace();
 										}
 									});
 
 									player.closeInventory();
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 1L);
 
 									return;
 								} else if (event.getClick() != ClickType.LEFT) {
@@ -761,8 +677,8 @@ public class Creator implements Listener {
 
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-							AnvilGUI gui = new AnvilGUI(player, event1 -> {
-								if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+							AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+								if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
 									if (!(player.hasPermission("fabledskyblock.admin.creator")
 											|| player.hasPermission("fabledskyblock.admin.*")
 											|| player.hasPermission("fabledskyblock.*"))) {
@@ -776,13 +692,8 @@ public class Creator implements Listener {
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else if (!structureManager.containsStructure(name)) {
 										messageManager.sendMessage(player,
 												configLoad.getString("Island.Admin.Creator.Exist.Message"));
@@ -790,47 +701,34 @@ public class Creator implements Listener {
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									} else {
 										structure.addCommand(event1.getName());
 
 										soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
 										Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														Config config = fileManager.getConfig(
-																new File(skyblock.getDataFolder(), "structures.yml"));
-														FileConfiguration configLoad = config.getFileConfiguration();
+												() -> {
+													Config config15 = fileManager.getConfig(
+															new File(skyblock.getDataFolder(), "structures.yml"));
+													FileConfiguration configLoad15 = config15.getFileConfiguration();
 
-														configLoad.set(
-																"Structures." + structure.getName() + ".Commands",
-																structure.getCommands());
+													configLoad15.set(
+															"Structures." + structure.getName() + ".Commands",
+															structure.getCommands());
 
-														try {
-															configLoad.save(config.getFile());
-														} catch (IOException e) {
-															e.printStackTrace();
-														}
+													try {
+														configLoad15.save(config15.getFile());
+													} catch (IOException e) {
+														e.printStackTrace();
 													}
 												});
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 									}
 
 									event1.setWillClose(true);
@@ -847,7 +745,7 @@ public class Creator implements Listener {
 									configLoad.getString("Menu.Admin.Creator.Options.Item.Commands.Word.Enter"));
 							is.setItemMeta(im);
 
-							gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+							gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
 							gui.open();
 						} else {
 							playerData.setViewer(null);
@@ -858,12 +756,7 @@ public class Creator implements Listener {
 
 							player.closeInventory();
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						}
 					}
 
@@ -879,12 +772,7 @@ public class Creator implements Listener {
 
 						player.closeInventory();
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					} else {
 						String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
@@ -899,32 +787,24 @@ public class Creator implements Listener {
 
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-							Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									Config config = fileManager
-											.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-									FileConfiguration configLoad = config.getFileConfiguration();
+							Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+								Config config16 = fileManager
+										.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+								FileConfiguration configLoad16 = config16.getFileConfiguration();
 
-									configLoad.set("Structures." + structure.getName() + ".Permission",
-											structure.isPermission());
+								configLoad16.set("Structures." + structure.getName() + ".Permission",
+										structure.isPermission());
 
-									try {
-										configLoad.save(config.getFile());
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
+								try {
+									configLoad16.save(config16.getFile());
+								} catch (IOException e) {
+									e.printStackTrace();
 								}
 							});
 
 							player.closeInventory();
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						} else {
 							playerData.setViewer(null);
 
@@ -934,12 +814,7 @@ public class Creator implements Listener {
 
 							player.closeInventory();
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						}
 					}
 
@@ -956,20 +831,15 @@ public class Creator implements Listener {
 
 							player.closeInventory();
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						} else {
 							String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
 							if (structureManager.containsStructure(name)) {
 								soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-								AnvilGUI gui = new AnvilGUI(player, event1 -> {
-									if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+								AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+									if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
 										if (!(player.hasPermission("fabledskyblock.admin.creator")
 												|| player.hasPermission("fabledskyblock.admin.*")
 												|| player.hasPermission("fabledskyblock.*"))) {
@@ -983,13 +853,8 @@ public class Creator implements Listener {
 
 											player.closeInventory();
 
-											Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-													new Runnable() {
-														@Override
-														public void run() {
-															open(player);
-														}
-													}, 1L);
+											Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+													() -> open(player), 1L);
 										} else if (!structureManager.containsStructure(name)) {
 											messageManager.sendMessage(player,
 													configLoad.getString("Island.Admin.Creator.Exist.Message"));
@@ -997,13 +862,8 @@ public class Creator implements Listener {
 
 											player.closeInventory();
 
-											Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-													new Runnable() {
-														@Override
-														public void run() {
-															open(player);
-														}
-													}, 1L);
+											Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+													() -> open(player), 1L);
 										} else {
 											if (fileManager.isFileExist(
 													new File(skyblock.getDataFolder().toString() + "/structures",
@@ -1016,25 +876,22 @@ public class Creator implements Listener {
 															1.0F, 1.0F);
 
 													Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-															new Runnable() {
-																@Override
-																public void run() {
-																	Config config = fileManager.getConfig(
-																			new File(skyblock.getDataFolder(),
-																					"structures.yml"));
-																	FileConfiguration configLoad = config
-																			.getFileConfiguration();
+															() -> {
+																Config config17 = fileManager.getConfig(
+																		new File(skyblock.getDataFolder(),
+																				"structures.yml"));
+																FileConfiguration configLoad17 = config17
+																		.getFileConfiguration();
 
-																	configLoad.set(
-																			"Structures." + structure.getName()
-																					+ ".File.Overworld",
-																			event1.getName());
+																configLoad17.set(
+																		"Structures." + structure.getName()
+																				+ ".File.Overworld",
+																		event1.getName());
 
-																	try {
-																		configLoad.save(config.getFile());
-																	} catch (IOException e) {
-																		e.printStackTrace();
-																	}
+																try {
+																	configLoad17.save(config17.getFile());
+																} catch (IOException e) {
+																	e.printStackTrace();
 																}
 															});
 												} else if (event.getClick() == ClickType.MIDDLE) {
@@ -1045,23 +902,20 @@ public class Creator implements Listener {
 															1.0F, 1.0F);
 
 													Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-															new Runnable() {
-																@Override
-																public void run() {
-																	Config config = fileManager.getConfig(
-																			new File(skyblock.getDataFolder(),
-																					"structures.yml"));
-																	FileConfiguration configLoad = config
-																			.getFileConfiguration();
+															() -> {
+																Config config18 = fileManager.getConfig(
+																		new File(skyblock.getDataFolder(),
+																				"structures.yml"));
+																FileConfiguration configLoad18 = config18
+																		.getFileConfiguration();
 
-																	configLoad.set("Structures." + structure.getName()
-																			+ ".File.Nether", event1.getName());
+																configLoad18.set("Structures." + structure.getName()
+																		+ ".File.Nether", event1.getName());
 
-																	try {
-																		configLoad.save(config.getFile());
-																	} catch (IOException e) {
-																		e.printStackTrace();
-																	}
+																try {
+																	configLoad18.save(config18.getFile());
+																} catch (IOException e) {
+																	e.printStackTrace();
 																}
 															});
 												} else {
@@ -1072,23 +926,20 @@ public class Creator implements Listener {
 															1.0F, 1.0F);
 
 													Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-															new Runnable() {
-																@Override
-																public void run() {
-																	Config config = fileManager.getConfig(
-																			new File(skyblock.getDataFolder(),
-																					"structures.yml"));
-																	FileConfiguration configLoad = config
-																			.getFileConfiguration();
+															() -> {
+																Config config19 = fileManager.getConfig(
+																		new File(skyblock.getDataFolder(),
+																				"structures.yml"));
+																FileConfiguration configLoad19 = config19
+																		.getFileConfiguration();
 
-																	configLoad.set("Structures." + structure.getName()
-																			+ ".File.End", event1.getName());
+																configLoad19.set("Structures." + structure.getName()
+																		+ ".File.End", event1.getName());
 
-																	try {
-																		configLoad.save(config.getFile());
-																	} catch (IOException e) {
-																		e.printStackTrace();
-																	}
+																try {
+																	configLoad19.save(config19.getFile());
+																} catch (IOException e) {
+																	e.printStackTrace();
 																}
 															});
 												}
@@ -1101,13 +952,8 @@ public class Creator implements Listener {
 
 											player.closeInventory();
 
-											Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-													new Runnable() {
-														@Override
-														public void run() {
-															open(player);
-														}
-													}, 1L);
+											Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+													() -> open(player), 1L);
 										}
 
 										event1.setWillClose(true);
@@ -1124,7 +970,7 @@ public class Creator implements Listener {
 										configLoad.getString("Menu.Admin.Creator.Options.Item.File.Word.Enter"));
 								is.setItemMeta(im);
 
-								gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+								gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
 								gui.open();
 							} else {
 								playerData.setViewer(null);
@@ -1135,12 +981,7 @@ public class Creator implements Listener {
 
 								player.closeInventory();
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							}
 						}
 					}
@@ -1156,12 +997,7 @@ public class Creator implements Listener {
 
 						player.closeInventory();
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					} else {
 						Creator.Viewer viewer = (Viewer) playerData.getViewer();
 						String name = viewer.getName();
@@ -1186,12 +1022,7 @@ public class Creator implements Listener {
 
 								player.closeInventory();
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							}
 						}
 					}
@@ -1207,20 +1038,15 @@ public class Creator implements Listener {
 
 						player.closeInventory();
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player);
-							}
-						}, 1L);
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 					} else {
 						String name = ((Creator.Viewer) playerData.getViewer()).getName();
 
 						if (structureManager.containsStructure(name)) {
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
-							AnvilGUI gui = new AnvilGUI(player, event1 -> {
-								if (event1.getSlot() == AnvilGUI.AnvilSlot.OUTPUT) {
+							AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+								if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
 									if (!(player.hasPermission("fabledskyblock.admin.creator")
 											|| player.hasPermission("fabledskyblock.admin.*")
 											|| player.hasPermission("fabledskyblock.*"))) {
@@ -1236,13 +1062,8 @@ public class Creator implements Listener {
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 
 										return;
 									} else if (!structureManager.containsStructure(name)) {
@@ -1252,13 +1073,8 @@ public class Creator implements Listener {
 
 										player.closeInventory();
 
-										Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-												new Runnable() {
-													@Override
-													public void run() {
-														open(player);
-													}
-												}, 1L);
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player), 1L);
 
 										return;
 									} else if (!(event1.getName().matches("[0-9]+")
@@ -1280,31 +1096,23 @@ public class Creator implements Listener {
 
 									soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-										@Override
-										public void run() {
-											Config config = fileManager
-													.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-											FileConfiguration configLoad = config.getFileConfiguration();
+									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+										Config config112 = fileManager
+												.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+										FileConfiguration configLoad112 = config112.getFileConfiguration();
 
-											configLoad.set("Structures." + structure.getName() + ".Deletion.Cost",
-													deletionCost);
+										configLoad112.set("Structures." + structure.getName() + ".Deletion.Cost",
+												deletionCost);
 
-											try {
-												configLoad.save(config.getFile());
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
+										try {
+											configLoad112.save(config112.getFile());
+										} catch (IOException e) {
+											e.printStackTrace();
 										}
 									});
 
-									Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock,
-											new Runnable() {
-												@Override
-												public void run() {
-													open(player);
-												}
-											}, 1L);
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player), 1L);
 								} else {
 									event1.setWillClose(false);
 									event1.setWillDestroy(false);
@@ -1317,7 +1125,7 @@ public class Creator implements Listener {
 									configLoad.getString("Menu.Admin.Creator.Options.Item.DeletionCost.Word.Enter"));
 							is.setItemMeta(im);
 
-							gui.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, is);
+							gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
 							gui.open();
 						} else {
 							playerData.setViewer(null);
@@ -1328,12 +1136,7 @@ public class Creator implements Listener {
 
 							player.closeInventory();
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						}
 					}
 
@@ -1358,21 +1161,18 @@ public class Creator implements Listener {
 							if (materials != null) {
 								structure.setMaterials(materials);
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										Config config = fileManager
-												.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-										FileConfiguration configLoad = config.getFileConfiguration();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									Config config113 = fileManager
+											.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+									FileConfiguration configLoad113 = config113.getFileConfiguration();
 
-										configLoad.set("Structures." + structure.getName() + ".Item.Material",
-												structure.getMaterials().name());
+									configLoad113.set("Structures." + structure.getName() + ".Item.Material",
+											structure.getMaterials().name());
 
-										try {
-											configLoad.save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+									try {
+										configLoad113.save(config113.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 							}
@@ -1385,12 +1185,7 @@ public class Creator implements Listener {
 
 							player.closeInventory();
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						} else {
 							playerData.setViewer(null);
 
@@ -1400,12 +1195,7 @@ public class Creator implements Listener {
 
 							player.closeInventory();
 
-							Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-								@Override
-								public void run() {
-									open(player);
-								}
-							}, 1L);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 						}
 
 						return;
@@ -1423,12 +1213,7 @@ public class Creator implements Listener {
 
 								player.closeInventory();
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							} else if (event.getClick() == ClickType.RIGHT) {
 								structureManager.removeStructure(structureList);
 
@@ -1437,31 +1222,23 @@ public class Creator implements Listener {
 												.replace("%structure", structureList.getName()));
 								soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										Config config = fileManager
-												.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-										FileConfiguration configLoad = config.getFileConfiguration();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									Config config110 = fileManager
+											.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+									FileConfiguration configLoad110 = config110.getFileConfiguration();
 
-										configLoad.set("Structures." + structureList.getName(), null);
+									configLoad110.set("Structures." + structureList.getName(), null);
 
-										try {
-											configLoad.save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+									try {
+										configLoad110.save(config110.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 
 								player.closeInventory();
 
-								Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										open(player);
-									}
-								}, 1L);
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 							}
 
 							return;
@@ -1473,12 +1250,7 @@ public class Creator implements Listener {
 
 					player.closeInventory();
 
-					Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							open(player);
-						}
-					}, 1L);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 				}
 			}
 		}
@@ -1493,8 +1265,18 @@ public class Creator implements Listener {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		if (event.getInventory().getName().equals(
-				ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")))) {
+		String inventoryName = "";
+		if (NMSUtil.getVersionNumber() > 13) {
+			inventoryName = event.getView().getTitle();
+		} else {
+			try {
+				inventoryName = (String) Inventory.class.getMethod("getName").invoke(event.getInventory());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		if (inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")))) {
 			PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 
 			if (playerDataManager.hasPlayerData(player)) {

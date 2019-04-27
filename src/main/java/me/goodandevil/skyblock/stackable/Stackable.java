@@ -3,7 +3,9 @@ package me.goodandevil.skyblock.stackable;
 import java.io.File;
 import java.util.UUID;
 
+import me.goodandevil.skyblock.utils.NumberUtil;
 import org.apache.commons.lang3.text.WordUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -45,11 +47,11 @@ public class Stackable {
     }
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public Location getLocation() {
-        return location.clone();
+        return this.location.clone();
     }
 
     public void setLocation(Location location) {
@@ -57,7 +59,7 @@ public class Stackable {
     }
 
     public Material getMaterial() {
-        return material;
+        return this.material;
     }
 
     public void setMaterial(Material material) {
@@ -66,7 +68,7 @@ public class Stackable {
     }
 
     public Integer getSize() {
-        return size;
+        return this.size;
     }
 
     public void setSize(Integer size) {
@@ -78,14 +80,14 @@ public class Stackable {
     public void addOne() {
         this.size ++;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+        SkyBlock.getInstance().getSoundManager().playSound(this.location, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
         this.save();
     }
 
     public void takeOne() {
         this.size --;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+        SkyBlock.getInstance().getSoundManager().playSound(this.location, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
         this.save();
     }
 
@@ -93,7 +95,7 @@ public class Stackable {
         if (this.size > 1) {
             this.removeDisplay();
             this.createDisplay();
-            this.display.setCustomName(WordUtils.capitalize(material.name().toLowerCase()).replace("_", " ") + "s: " + size);
+            this.display.setCustomName(this.getCustomName());
             this.display.setCustomNameVisible(true);
         } else {
             this.removeDisplay();
@@ -103,8 +105,8 @@ public class Stackable {
     private void createDisplay() {
         this.removeDisplay();
         
-        Location dropLocation = location.clone().add(0.5, 1, 0.5);
-        ArmorStand as = (ArmorStand) location.getWorld().spawnEntity(dropLocation, EntityType.ARMOR_STAND);
+        Location dropLocation = this.location.clone().add(0.5, 1, 0.5);
+        ArmorStand as = (ArmorStand) this.location.getWorld().spawnEntity(dropLocation, EntityType.ARMOR_STAND);
         as.setVisible(false);
         as.setGravity(false);
         as.setSmall(true);
@@ -112,8 +114,8 @@ public class Stackable {
             as.setMarker(true);
         }
         as.setBasePlate(true);
-        as.setHelmet(new ItemStack(material));
-        as.setCustomName(WordUtils.capitalize(material.name().toLowerCase()).replace("_", " ") + "s: " + size);
+        as.setHelmet(new ItemStack(this.material));
+        as.setCustomName(this.getCustomName());
         as.setCustomNameVisible(true);
         this.display = as;
     }
@@ -134,16 +136,24 @@ public class Stackable {
     private void save() {
         File configFile = new File(SkyBlock.getInstance().getDataFolder().toString() + "/island-data");
         FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(configFile,
-                SkyBlock.getInstance().getIslandManager().getIslandAtLocation(location).getOwnerUUID() + ".yml"));
+                SkyBlock.getInstance().getIslandManager().getIslandAtLocation(this.location).getOwnerUUID() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
         
-        if (getSize() == 0) {
-            configLoad.set("Stackables." + getUuid().toString(), null);
+        if (this.getSize() == 0) {
+            configLoad.set("Stackables." + this.getUuid().toString(), null);
         } else {
-            ConfigurationSection section = configLoad.createSection("Stackables." + getUuid().toString());
-            section.set("Location", getLocation());
-            section.set("Material", getMaterial().name());
-            section.set("Size", getSize());
+            ConfigurationSection section = configLoad.createSection("Stackables." + this.getUuid().toString());
+            section.set("Location", this.getLocation());
+            section.set("Material", this.getMaterial().name());
+            section.set("Size", this.getSize());
         }
+    }
+
+    private String getCustomName() {
+        return ChatColor.translateAlternateColorCodes('&', SkyBlock.getInstance().getFileManager()
+                .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"))
+                .getFileConfiguration().getString("Hologram.Stackable.Message"))
+                .replace("%block", WordUtils.capitalize(this.material.name().toLowerCase()).replace("_", " "))
+                .replace("%amount", NumberUtil.formatNumber(this.size));
     }
 }

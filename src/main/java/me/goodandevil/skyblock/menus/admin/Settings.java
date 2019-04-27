@@ -49,85 +49,57 @@ public class Settings {
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
 
 		if (menuType == Settings.Type.Categories) {
-			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
-							|| player.hasPermission("fabledskyblock.*"))) {
-						messageManager.sendMessage(player,
-								configLoad.getString("Island.Admin.Settings.Permission.Message"));
-						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+				if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
+						|| player.hasPermission("fabledskyblock.*"))) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Island.Admin.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-						return;
-					}
+					return;
+				}
 
-					ItemStack is = event.getItem();
+				ItemStack is = event.getItem();
 
-					if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Categories.Item.Exit.Displayname"))))) {
-						soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
-					} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
-							.equals(ChatColor.translateAlternateColorCodes('&', configLoad
-									.getString("Menu.Admin.Settings.Categories.Item.Visitor.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+				if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Categories.Item.Exit.Displayname"))))) {
+					soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+				} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
+						.equals(ChatColor.translateAlternateColorCodes('&', configLoad
+								.getString("Menu.Admin.Settings.Categories.Item.Visitor.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Visitor);
-							}
-						}, 1L);
-					} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Categories.Item.Member.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Visitor), 1L);
+				} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Categories.Item.Member.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Member);
-							}
-						}, 1L);
-					} else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName()
-									.equals(ChatColor.translateAlternateColorCodes('&', configLoad
-											.getString("Menu.Admin.Settings.Categories.Item.Operator.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Member), 1L);
+				} else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName()
+								.equals(ChatColor.translateAlternateColorCodes('&', configLoad
+										.getString("Menu.Admin.Settings.Categories.Item.Operator.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Operator);
-							}
-						}, 1L);
-					} else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Categories.Item.Coop.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Operator), 1L);
+				} else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Categories.Item.Coop.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Coop);
-							}
-						}, 1L);
-					} else if ((is.getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Categories.Item.Owner.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Coop), 1L);
+				} else if ((is.getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Categories.Item.Owner.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, me.goodandevil.skyblock.island.IslandRole.Owner);
-							}
-						}, 1L);
-					}
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Owner), 1L);
 				}
 			});
 
-			nInv.addItem(nInv.createItem(new ItemStack(Material.SIGN),
+			nInv.addItem(nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
 					configLoad.getString("Menu.Admin.Settings.Categories.Item.Visitor.Displayname"),
 					configLoad.getStringList("Menu.Admin.Settings.Categories.Item.Visitor.Lore"), null, null, null), 2);
 			nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
@@ -165,92 +137,71 @@ public class Settings {
 					configLoad.getString("Menu.Admin.Settings.Categories.Title")));
 			nInv.setRows(1);
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					nInv.open();
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 		} else if (menuType == Settings.Type.Role) {
-			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
-							|| player.hasPermission("fabledskyblock.*"))) {
-						messageManager.sendMessage(player,
-								configLoad.getString("Island.Admin.Settings.Permission.Message"));
-						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+				if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
+						|| player.hasPermission("fabledskyblock.*"))) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Island.Admin.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-						return;
-					}
+					return;
+				}
 
-					ItemStack is = event.getItem();
+				ItemStack is = event.getItem();
 
-					if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta()) && (is
-							.getItemMeta().getDisplayName()
-							.equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Visitor.Item.Return.Displayname")))
-							|| is.getItemMeta().getDisplayName()
-									.equals(ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Admin.Settings.Member.Item.Return.Displayname")))
-							|| is.getItemMeta().getDisplayName()
-									.equals(ChatColor.translateAlternateColorCodes('&',
-											configLoad
-													.getString("Menu.Admin.Settings.Operator.Item.Return.Displayname")))
-							|| is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Owner.Item.Return.Displayname"))))) {
-						soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+				if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta()) && (is
+						.getItemMeta().getDisplayName()
+						.equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Visitor.Item.Return.Displayname")))
+						|| is.getItemMeta().getDisplayName()
+								.equals(ChatColor.translateAlternateColorCodes('&',
+										configLoad.getString("Menu.Admin.Settings.Member.Item.Return.Displayname")))
+						|| is.getItemMeta().getDisplayName()
+								.equals(ChatColor.translateAlternateColorCodes('&',
+										configLoad
+												.getString("Menu.Admin.Settings.Operator.Item.Return.Displayname")))
+						|| is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Owner.Item.Return.Displayname"))))) {
+					soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Categories, null);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Categories, null), 1L);
+				} else if (is.hasItemMeta()) {
+					String roleName = getRoleName(role);
+
+					FileConfiguration settingsConfigLoad = skyblock.getFileManager()
+							.getConfig(new File(skyblock.getDataFolder(), "settings.yml")).getFileConfiguration();
+
+					for (String settingList : settingsConfigLoad.getConfigurationSection("Settings." + role.name())
+							.getKeys(false)) {
+						if (is.getItemMeta().getDisplayName()
+								.equals(ChatColor.translateAlternateColorCodes('&',
+										configLoad.getString("Menu.Admin.Settings." + roleName + ".Item.Setting."
+												+ settingList + ".Displayname")))) {
+							if (settingsConfigLoad.getBoolean("Settings." + role.name() + "." + settingList)) {
+								settingsConfigLoad.set("Settings." + role.name() + "." + settingList, false);
+							} else {
+								settingsConfigLoad.set("Settings." + role.name() + "." + settingList, true);
 							}
-						}, 1L);
-					} else if (is.hasItemMeta()) {
-						String roleName = getRoleName(role);
 
-						FileConfiguration settingsConfigLoad = skyblock.getFileManager()
-								.getConfig(new File(skyblock.getDataFolder(), "settings.yml")).getFileConfiguration();
-
-						for (String settingList : settingsConfigLoad.getConfigurationSection("Settings." + role.name())
-								.getKeys(false)) {
-							if (is.getItemMeta().getDisplayName()
-									.equals(ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Admin.Settings." + roleName + ".Item.Setting."
-													+ settingList + ".Displayname")))) {
-								if (settingsConfigLoad.getBoolean("Settings." + role.name() + "." + settingList)) {
-									settingsConfigLoad.set("Settings." + role.name() + "." + settingList, false);
-								} else {
-									settingsConfigLoad.set("Settings." + role.name() + "." + settingList, true);
+							Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+								try {
+									Config config = skyblock.getFileManager()
+											.getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
+									config.getFileConfiguration().save(config.getFile());
+								} catch (IOException e) {
+									e.printStackTrace();
 								}
+							});
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										try {
-											Config config = skyblock.getFileManager()
-													.getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
-											config.getFileConfiguration().save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
-									}
-								});
-
-								break;
-							}
+							break;
 						}
-
-						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-
-						Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								open(player, Settings.Type.Role, role);
-							}
-						}, 1L);
 					}
+
+					soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, role), 1L);
 				}
 			});
 
@@ -312,8 +263,8 @@ public class Settings {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
 							nInv.addItemStack(createItem(role, "Ban", new ItemStack(Material.IRON_AXE)), 11);
-							nInv.addItemStack(createItem(role, "Unban", Materials.ROSE_RED.parseItem()), 12);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 13);
+							nInv.addItemStack(createItem(role, "Unban", Materials.RED_DYE.parseItem()), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 13);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 14);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 15);
 							nInv.addItemStack(createItem(role, "Coop", new ItemStack(Material.NAME_TAG)), 16);
@@ -328,8 +279,8 @@ public class Settings {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
 							nInv.addItemStack(createItem(role, "Ban", new ItemStack(Material.IRON_AXE)), 11);
-							nInv.addItemStack(createItem(role, "Unban", Materials.ROSE_RED.parseItem()), 12);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 13);
+							nInv.addItemStack(createItem(role, "Unban", Materials.RED_DYE.parseItem()), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 13);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 14);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 15);
 							nInv.addItemStack(createItem(role, "Coop", new ItemStack(Material.NAME_TAG)), 16);
@@ -345,8 +296,8 @@ public class Settings {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
 							nInv.addItemStack(createItem(role, "Ban", new ItemStack(Material.IRON_AXE)), 12);
-							nInv.addItemStack(createItem(role, "Unban", Materials.ROSE_RED.parseItem()), 13);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 14);
+							nInv.addItemStack(createItem(role, "Unban", Materials.RED_DYE.parseItem()), 13);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 14);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 15);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 16);
 							nInv.addItemStack(createItem(role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
@@ -359,8 +310,8 @@ public class Settings {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
 							nInv.addItemStack(createItem(role, "Ban", new ItemStack(Material.IRON_AXE)), 12);
-							nInv.addItemStack(createItem(role, "Unban", Materials.ROSE_RED.parseItem()), 13);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 14);
+							nInv.addItemStack(createItem(role, "Unban", Materials.RED_DYE.parseItem()), 13);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 14);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 15);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 16);
 							nInv.addItemStack(createItem(role, "MainSpawn", new ItemStack(Material.EMERALD)), 20);
@@ -377,7 +328,7 @@ public class Settings {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 12);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 13);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 14);
 							nInv.addItemStack(createItem(role, "Coop", new ItemStack(Material.NAME_TAG)), 15);
@@ -391,7 +342,7 @@ public class Settings {
 						} else {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 12);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 13);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 14);
 							nInv.addItemStack(createItem(role, "Coop", new ItemStack(Material.NAME_TAG)), 15);
@@ -408,7 +359,7 @@ public class Settings {
 						if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 10);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 11);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 12);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 12);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 13);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 14);
 							nInv.addItemStack(createItem(role, "MainSpawn", new ItemStack(Material.EMERALD)), 15);
@@ -422,7 +373,7 @@ public class Settings {
 						} else {
 							nInv.addItemStack(createItem(role, "Invite", Materials.WRITABLE_BOOK.parseItem()), 9);
 							nInv.addItemStack(createItem(role, "Kick", new ItemStack(Material.IRON_DOOR)), 10);
-							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Material.SIGN)), 11);
+							nInv.addItemStack(createItem(role, "Visitor", new ItemStack(Materials.OAK_SIGN.parseMaterial())), 11);
 							nInv.addItemStack(createItem(role, "Member", new ItemStack(Material.PAINTING)), 12);
 							nInv.addItemStack(createItem(role, "Island", Materials.OAK_SAPLING.parseItem()), 13);
 							nInv.addItemStack(createItem(role, "MainSpawn", new ItemStack(Material.EMERALD)), 14);
@@ -451,7 +402,7 @@ public class Settings {
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
 								nInv.addItemStack(
 										createItem(role, "KeepItemsOnDeath", new ItemStack(Material.ITEM_FRAME)), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 								nInv.addItemStack(createItem(role, "Hunger", new ItemStack(Material.COOKED_BEEF)), 17);
 							} else {
 								nInv.addItemStack(
@@ -465,7 +416,7 @@ public class Settings {
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
 								nInv.addItemStack(
 										createItem(role, "KeepItemsOnDeath", new ItemStack(Material.ITEM_FRAME)), 16);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 17);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 17);
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -508,7 +459,7 @@ public class Settings {
 								nInv.addItemStack(
 										createItem(role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)), 14);
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 								nInv.addItemStack(createItem(role, "Hunger", new ItemStack(Material.COOKED_BEEF)), 17);
 							} else {
 								nInv.addItemStack(
@@ -521,7 +472,7 @@ public class Settings {
 								nInv.addItemStack(
 										createItem(role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)), 14);
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -564,7 +515,7 @@ public class Settings {
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
 								nInv.addItemStack(
 										createItem(role, "KeepItemsOnDeath", new ItemStack(Material.ITEM_FRAME)), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 								nInv.addItemStack(createItem(role, "Hunger", new ItemStack(Material.COOKED_BEEF)), 17);
 							} else {
 								nInv.addItemStack(
@@ -578,7 +529,7 @@ public class Settings {
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
 								nInv.addItemStack(
 										createItem(role, "KeepItemsOnDeath", new ItemStack(Material.ITEM_FRAME)), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -620,7 +571,7 @@ public class Settings {
 								nInv.addItemStack(
 										createItem(role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)), 13);
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 14);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 15);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 15);
 								nInv.addItemStack(createItem(role, "Hunger", new ItemStack(Material.COOKED_BEEF)), 16);
 							} else {
 								nInv.addItemStack(
@@ -632,7 +583,7 @@ public class Settings {
 								nInv.addItemStack(
 										createItem(role, "FireSpread", new ItemStack(Material.FLINT_AND_STEEL)), 14);
 								nInv.addItemStack(createItem(role, "LeafDecay", Materials.OAK_LEAVES.parseItem()), 15);
-								nInv.addItemStack(createItem(role, "Damage", Materials.ROSE_RED.parseItem()), 16);
+								nInv.addItemStack(createItem(role, "Damage", Materials.RED_DYE.parseItem()), 16);
 							}
 						} else {
 							if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
@@ -670,12 +621,7 @@ public class Settings {
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
 					configLoad.getString("Menu.Admin.Settings." + role.name() + ".Title")));
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					nInv.open();
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 		}
 	}
 

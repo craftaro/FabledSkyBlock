@@ -37,27 +37,27 @@ public class LeaderboardCommand extends SubCommand {
 							.setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Level));
 				}
 			} else if (args.length == 1) {
-				if (args[0].equalsIgnoreCase("level")) {
-					playerDataManager.getPlayerData(player)
-							.setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Level));
-				} else if (args[0].equalsIgnoreCase("votes")) {
-					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-							.getBoolean("Island.Visitor.Vote")) {
-						playerDataManager.getPlayerData(player)
-								.setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Votes));
-					} else {
-						messageManager.sendMessage(player,
-								configLoad.getString("Command.Island.Leaderboard.Disabled.Message"));
+				String type = args[0].toLowerCase();
+				switch (type) {
+					case "level":
+						playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Level));
+						break;
+					case "bank":
+						playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Bank));
+						break;
+					case "votes":
+						if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+							playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Votes));
+						} else {
+							messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Disabled.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+							return;
+						}
+						break;
+					default:
+						messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Invalid.Message"));
 						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
 						return;
-					}
-				} else {
-					messageManager.sendMessage(player,
-							configLoad.getString("Command.Island.Leaderboard.Invalid.Message"));
-					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-					return;
 				}
 			} else {
 				messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Invalid.Message"));
@@ -93,6 +93,6 @@ public class LeaderboardCommand extends SubCommand {
 
 	@Override
 	public String[] getArguments() {
-		return new String[] { "level", "votes" };
+		return new String[] { "level", "bank", "votes" };
 	}
 }

@@ -21,13 +21,18 @@ public enum Materials {
     ACACIA_PRESSURE_PLATE("WOOD_PLATE", 0, true),
     ACACIA_SAPLING("SAPLING", 4),
     ACACIA_SLAB("WOOD_STEP", 4),
+    ACACIA_SIGN("STONE", 0, true),
     ACACIA_STAIRS("ACACIA_STAIRS", 4),
     ACACIA_TRAPDOOR("TRAP_DOOR", 0, true),
+    ACACIA_WALL_SIGN("STONE", 0, true),
     ACACIA_WOOD("LOG_2", 0),
     ACTIVATOR_RAIL("ACTIVATOR_RAIL", 0),
     AIR("AIR", 0),
     ALLIUM("STONE", 0, true),
     ANDESITE("STONE", 5),
+    ANDESITE_SLAB("STONE", 0, true),
+    ANDESITE_STAIRS("STONE", 0, true),
+    ANDESITE_WALL("STONE", 0, true),
     ANVIL("ANVIL", 0),
     APPLE("APPLE", 0),
     ARMOR_STAND("ARMOR_STAND", 0),
@@ -36,11 +41,15 @@ public enum Materials {
     ATTACHED_PUMPKIN_STEM("PUMPKIN_STEM", 7),
     AZURE_BLUET("RED_ROSE", 3),
     BAKED_POTATO("BAKED_POTATO", 0),
+    BAMBOO("STONE", 0, true),
+    BAMBOO_SAPLING("STONE", 0, true),
+    BARREL("STONE", 0, true),
     BARRIER("BARRIER", 0),
     BAT_SPAWN_EGG("MONSTER_EGG", 0),
     BEACON("BEACON", 0),
     BEDROCK("BEDROCK", 0),
     BEEF("RAW_BEEF", 0),
+    BELL("STONE", 0, true),
     BEETROOT("BEETROOT", 0),
     BEETROOTS("BEETROOT", 0),
     BEETROOT_SEEDS("BEETROOT_SEEDS", 0),
@@ -55,15 +64,18 @@ public enum Materials {
     BIRCH_PLANKS("WOOD", 2),
     BIRCH_PRESSURE_PLATE("WOOD_PLATE", 0, true),
     BIRCH_SAPLING("SAPLING", 2),
+    BIRCH_SIGN("STONE", 0, true),
     BIRCH_SLAB("WOOD_STEP", 2),
     BIRCH_STAIRS("BIRCH_WOOD_STAIRS", 0),
     BIRCH_TRAPDOOR("TRAP_DOOR", 0, true),
+    BIRCH_WALL_SIGN("STONE", 0, true),
     BIRCH_WOOD("LOG", 2),
     BLACK_BANNER("BANNER", 0),
     BLACK_BED("BED", 15),
     BLACK_CARPET("CARPET", 15),
     BLACK_CONCRETE("CONCRETE", 15),
     BLACK_CONCRETE_POWDER("CONCRETE_POWDER", 15),
+    BLACK_DYE("STONE", 0, true),
     BLACK_GLAZED_TERRACOTTA("BLACK_GLAZED_TERRACOTTA", 0),
     BLACK_SHULKER_BOX("BLACK_SHULKER_BOX", 0),
     BLACK_STAINED_GLASS("STAINED_GLASS", 15),
@@ -71,6 +83,7 @@ public enum Materials {
     BLACK_TERRACOTTA("STAINED_CLAY", 15),
     BLACK_WALL_BANNER("WALL_BANNER", 0),
     BLACK_WOOL("WOOL", 15),
+    BLAST_FURNACE("STONE", 0, true),
     BLAZE_POWDER("BLAZE_POWDER", 0),
     BLAZE_ROD("BLAZE_ROD", 0),
     BLAZE_SPAWN_EGG("MONSTER_EGG", 0),
@@ -79,6 +92,7 @@ public enum Materials {
     BLUE_CARPET("CARPET", 11),
     BLUE_CONCRETE("CONCRETE", 11),
     BLUE_CONCRETE_POWDER("CONCRETE_POWDER", 11),
+    BLUE_DYE("STONE", 0, true),
     BLUE_GLAZED_TERRACOTTA("BLUE_GLAZED_TERRACOTTA", 0),
     BLUE_ICE("PACKED_ICE", 0, true),
     BLUE_ORCHID("RED_ROSE", 1),
@@ -107,11 +121,13 @@ public enum Materials {
     BRICKS("BRICK", 0),
     BRICK_SLAB("STEP", 4),
     BRICK_STAIRS("BRICK_STAIRS", 0),
+    BRICK_WALL("STONE", 0, true),
     BROWN_BANNER("BANNER", 3),
     BROWN_BED("BED", 12),
     BROWN_CARPET("CARPET", 12),
     BROWN_CONCRETE("CONCRETE", 12),
     BROWN_CONCRETE_POWDER("CONCRETE_POWDER", 12),
+    BROWN_DYE("STONE", 0, true),
     BROWN_GLAZED_TERRACOTTA("BROWN_GLAZED_TERRACOTTA", 0),
     BROWN_MUSHROOM("BROWN_MUSHROOM", 0),
     BROWN_MUSHROOM_BLOCK("HUGE_MUSHROOM_1", 0), // UNSURE
@@ -130,12 +146,14 @@ public enum Materials {
     DEAD_BUBBLE_CORAL_WALL_FAN("STONE", 0, true),
     BUCKET("BUCKET", 0),
     CACTUS("CACTUS", 0),
-    CACTUS_GREEN("INK_SACK", 2),
     CAKE("CAKE", 0),
+    CAMPFIRE("STONE", 0, true),
     CARROT("CARROT_ITEM", 0),
     CARROTS("CARROT", 0),
     CARROT_ON_A_STICK("CARROT_STICK", 0),
+    CARTOGRAPHY_TABLE("STONE", 0, true),
     CARVED_PUMPKIN("PUMPKIN", 0),
+    CAT_SPAWN_EGG("STONE", 0, true),
     CAULDRON("CAULDRON", 0),
     CAVE_AIR("AIR", 0, true),
     CAVE_SPIDER_SPAWN_EGG("MONSTER_EGG", 0),
@@ -178,7 +196,9 @@ public enum Materials {
     COMMAND_BLOCK_MINECART("COMMAND_MINECART", 0),
     COMPARATOR("REDSTONE_COMPARATOR", 0),
     COMPASS("COMPASS", 0),
+    COMPOSTER("STONE", 0, true),
     CONDUIT("STONE", 0, true),
+    CORNFLOWER("STONE", 0, true),
     COOKED_BEEF("COOKED_BEEF", 0),
     COOKED_CHICKEN("COOKED_CHICKEN", 0),
     COOKED_COD("COOKED_FISH", 0),
@@ -190,11 +210,15 @@ public enum Materials {
     COW_SPAWN_EGG("MONSTER_EGG", 0),
     CRACKED_STONE_BRICKS("SMOOTH_BRICK", 2),
     CRAFTING_TABLE("WORKBENCH", 0),
+    CREEPER_BANNER_PATTERN("STONE", 0, true),
     CREEPER_HEAD("SKULL", 0),
     CREEPER_SPAWN_EGG("MONSTER_EGG", 0),
     CREEPER_WALL_HEAD("SKULL", 0),
+    CROSSBOW("STONE", 0, true),
     CUT_RED_SANDSTONE("STONE", 0, true),
+    CUT_RED_SANDSTONE_SLAB("STONE", 0, true),
     CUT_SANDSTONE("STONE", 0, true),
+    CUT_SANDSTONE_SLAB("STONE", 0, true),
     CYAN_BANNER("BANNER", 6),
     CYAN_BED("BED", 9),
     CYAN_CARPET("CARPET", 9),
@@ -210,7 +234,6 @@ public enum Materials {
     CYAN_WOOL("WOOL", 9),
     DAMAGED_ANVIL("ANVIL", 2),
     DANDELION("YELLOW_FLOWER", 0),
-    DANDELION_YELLOW("INK_SACK", 11),
     DARK_OAK_BOAT("BOAT_DARK_OAK", 0),
     DARK_OAK_BUTTON("WOOD_BUTTON", 0, true),
     DARK_OAK_DOOR("DARK_OAK_DOOR", 0),
@@ -221,9 +244,11 @@ public enum Materials {
     DARK_OAK_PLANKS("WOOD", 5),
     DARK_OAK_PRESSURE_PLATE("WOOD_PLATE", 0, true),
     DARK_OAK_SAPLING("SAPLING", 5),
+    DARK_OAK_SIGN("STONE", 0, true),
     DARK_OAK_SLAB("WOOD_STEP", 0),
     DARK_OAK_STAIRS("DARK_OAK_STAIRS", 0),
     DARK_OAK_TRAPDOOR("TRAP_DOOR", 0, true),
+    DARK_OAK_WALL_SIGN("STONE", 0, true),
     DARK_OAK_WOOD("LOG_2", 1),
     DARK_PRISMARINE("PRISMARINE", 2),
     DARK_PRISMARINE_SLAB("STONE", 0, true),
@@ -253,6 +278,9 @@ public enum Materials {
     DIAMOND_SHOVEL("DIAMOND_SPADE", 0),
     DIAMOND_SWORD("DIAMOND_SWORD", 0),
     DIORITE("STONE", 3),
+    DIORITE_SLAB("STONE", 0, true),
+    DIORITE_STAIRS("STONE", 0, true),
+    DIORITE_WALL("STONE", 0, true),
     DIRT("DIRT", 0),
     DISPENSER("DISPENSER", 0),
     DOLPHIN_SPAWN_EGG("MONSTER_EGG", 0),
@@ -285,6 +313,9 @@ public enum Materials {
     END_PORTAL_FRAME("ENDER_PORTAL_FRAME", 0),
     END_ROD("END_ROD", 0),
     END_STONE("ENDER_STONE", 0),
+    END_STONE_BRICK_SLAB("STONE", 0, true),
+    END_STONE_BRICK_STAIRS("STONE", 0, true),
+    END_STONE_BRICK_WALL("STONE", 0, true),
     END_STONE_BRICKS("END_BRICKS", 0),
     EVOKER_SPAWN_EGG("MONSTER_EGG", 0),
     EXPERIENCE_BOTTLE("EXP_BOTTLE", 0),
@@ -301,6 +332,9 @@ public enum Materials {
     FIRE_CORAL_BLOCK("STONE", 0, true),
     FIRE_CORAL_FAN("STONE", 0, true),
     FIRE_CORAL_WALL_FAN("STONE", 0, true),
+    FLETCHING_TABLE("STONE", 0, true),
+    FLOWER_BANNER_PATTERN("STONE", 0, true),
+    FOX_SPAWN_EGG("STONE", 0, true),
     DEAD_FIRE_CORAL_FAN("STONE", 0, true),
     DEAD_FIRE_CORAL_WALL_FAN("STONE", 0, true),
     FISHING_ROD("FISHING_ROD", 0),
@@ -316,6 +350,7 @@ public enum Materials {
     GLASS_BOTTLE("GLASS_BOTTLE", 0),
     GLASS_PANE("THIN_GLASS", 0),
     GLISTERING_MELON_SLICE("SPECKLED_MELON", 0),
+    GLOBE_BANNER_PATTERN("STONE", 0, true),
     GLOWSTONE("GLOWSTONE", 0),
     GLOWSTONE_DUST("GLOWSTONE_DUST", 0),
     GOLDEN_APPLE("GOLDEN_APPLE", 0),
@@ -335,6 +370,9 @@ public enum Materials {
     GOLD_NUGGET("GOLD_NUGGET", 0),
     GOLD_ORE("GOLD_ORE", 0),
     GRANITE("STONE", 1),
+    GRANITE_SLAB("STONE", 0, true),
+    GRANITE_STAIRS("STONE", 0, true),
+    GRANITE_WALL("STONE", 0, true),
     GRASS("GRASS", 0),
     GRASS_BLOCK("GRASS", 0),
     GRASS_PATH("GRASS_PATH", 0),
@@ -357,6 +395,7 @@ public enum Materials {
     GREEN_CARPET("CARPET", 13),
     GREEN_CONCRETE("CONCRETE", 13),
     GREEN_CONCRETE_POWDER("CONCRETE_POWDER", 13),
+    GREEN_DYE("CACTUS_GREEN", "INK_SACK", 2),
     GREEN_GLAZED_TERRACOTTA("GREEN_GLAZED_TERRACOTTA", 0),
     GREEN_SHULKER_BOX("GREEN_SHULKER_BOX", 0),
     GREEN_STAINED_GLASS("STAINED_GLASS", 13),
@@ -364,6 +403,7 @@ public enum Materials {
     GREEN_TERRACOTTA("STAINED_CLAY", 13),
     GREEN_WALL_BANNER("WALL_BANNER", 0),
     GREEN_WOOL("WOOL", 13),
+    GRINDSTONE("STONE", 0, true),
     GUARDIAN_SPAWN_EGG("MONSTER_EGG", 0),
     GUNPOWDER("SULPHUR", 0),
     HAY_BLOCK("HAY_BLOCK", 0),
@@ -406,6 +446,7 @@ public enum Materials {
     IRON_TRAPDOOR("IRON_TRAPDOOR", 0),
     ITEM_FRAME("ITEM_FRAME", 0),
     JACK_O_LANTERN("JACK_O_LANTERN", 0),
+    JIGSAW("STONE", 0, true),
     JUKEBOX("JUKEBOX", 0),
     JUNGLE_BOAT("BOAT_JUNGLE", 0),
     JUNGLE_BUTTON("WOOD_BUTTON", 0, true),
@@ -417,14 +458,17 @@ public enum Materials {
     JUNGLE_PLANKS("WOOD", 3),
     JUNGLE_PRESSURE_PLATE("WOOD_PLATE", 0, true),
     JUNGLE_SAPLING("SAPLING", 3),
+    JUNGLE_SIGN("STONE", 0, true),
     JUNGLE_SLAB("WOOD_STEP", 3),
     JUNGLE_STAIRS("JUNGLE_WOOD_STAIRS", 0),
     JUNGLE_TRAPDOOR("TRAP_DOOR", 0, true),
+    JUNGLE_WALL_SIGN("STONE", 0, true),
     JUNGLE_WOOD("LOG", 3),
     KELP("STONE", 0, true),
     KELP_PLANT("STONE", 0, true),
     KNOWLEDGE_BOOK("KNOWLEDGE_BOOK", 0),
     LADDER("LADDER", 0),
+    LANTERN("STONE", 0, true),
     LAPIS_BLOCK("LAPIS_BLOCK", 0),
     LAPIS_LAZULI("INK_SACK", 4),
     LAPIS_ORE("LAPIS_ORE", 0),
@@ -436,7 +480,9 @@ public enum Materials {
     LEATHER_BOOTS("LEATHER_BOOTS", 0),
     LEATHER_CHESTPLATE("LEATHER_CHESTPLATE", 0),
     LEATHER_HELMET("LEATHER_HELMET", 0),
+    LEATHER_HORSE_ARMOR("STONE", 0, true),
     LEATHER_LEGGINGS("LEATHER_LEGGINGS", 0),
+    LECTERN("STONE", 0, true),
     LEGACY_BED_BLOCK("BED_BLOCK", 0),
     LEGACY_BREWING_STAND("BREWING_STAND_ITEM", 0),
     LEGACY_BURNING_FURNACE("BURNING_FURNACE", 0),
@@ -490,6 +536,7 @@ public enum Materials {
     LIGHT_WEIGHTED_PRESSURE_PLATE("GOLD_PLATE", 0),
     LILAC("DOUBLE_PLANT", 1),
     LILY_PAD("WATER_LILY", 0),
+    LILY_OF_THE_VALLEY("STONE", 0, true),
     LIME_BANNER("BANNER", 10),
     LIME_BED("BED", 5),
     LIME_CARPET("CARPET", 5),
@@ -505,6 +552,7 @@ public enum Materials {
     LIME_WOOL("WOOL", 5),
     LINGERING_POTION("LINGERING_POTION", 0),
     LLAMA_SPAWN_EGG("MONSTER_EGG", 0),
+    LOOM("STONE", 0, true),
     MAGENTA_BANNER("BANNER", 13),
     MAGENTA_BED("BED", 2),
     MAGENTA_CARPET("CARPET", 2),
@@ -528,9 +576,15 @@ public enum Materials {
     MELON_STEM("MELON_STEM", 0),
     MILK_BUCKET("MILK_BUCKET", 0),
     MINECART("MINECART", 0),
+    MOJANG_BANNER_PATTERN("STONE", 0, true),
     MOOSHROOM_SPAWN_EGG("MONSTER_EGG", 0),
     MOSSY_COBBLESTONE("MOSSY_COBBLESTONE", 0),
+    MOSSY_COBBLESTONE_SLAB("STONE", 0, true),
+    MOSSY_COBBLESTONE_STAIRS("STONE", 0, true),
     MOSSY_COBBLESTONE_WALL("COBBLE_WALL", 1),
+    MOSSY_STONE_BRICK_SLAB("STONE", 0, true),
+    MOSSY_STONE_BRICK_STAIRS("STONE", 0, true),
+    MOSSY_STONE_BRICK_WALL("STONE", 0, true),
     MOSSY_STONE_BRICKS("SMOOTH_BRICK", 1),
     MOVING_PISTON("PISTON_MOVING_PIECE", 0),
     MULE_SPAWN_EGG("MONSTER_EGG", 0),
@@ -554,6 +608,7 @@ public enum Materials {
     NAUTILUS_SHELL("STONE", 0, true),
     NETHERRACK("NETHERRACK", 0),
     NETHER_BRICK("NETHER_BRICK", 0),
+    NETHER_BRICK_WALL("STONE", 0, true),
     NETHER_BRICKS("NETHER_BRICK", 0),
     NETHER_BRICK_FENCE("NETHER_FENCE", 0),
     NETHER_BRICK_SLAB("STEP", 6),
@@ -574,9 +629,11 @@ public enum Materials {
     OAK_PLANKS("WOOD", 0),
     OAK_PRESSURE_PLATE("WOOD_PLATE", 0),
     OAK_SAPLING("SAPLING", 0),
+    OAK_SIGN("SIGN", 0),
     OAK_SLAB("WOOD_STEP", 0),
     OAK_STAIRS("WOOD_STAIRS", 0),
     OAK_TRAPDOOR("TRAP_DOOR", 0),
+    OAK_WALL_SIGN("WALL_SIGN", 0),
     OAK_WOOD("LOG", 0),
     OBSERVER("OBSERVER", 0),
     OBSIDIAN("OBSIDIAN", 0),
@@ -598,6 +655,7 @@ public enum Materials {
     OXEYE_DAISY("RED_ROSE", 8),
     PACKED_ICE("PACKED_ICE", 0),
     PAINTING("PAINTING", 0),
+    PANDA_SPAWN_EGG("STONE", 0, true),
     PAPER("PAPER", 0),
     PARROT_SPAWN_EGG("MONSTER_EGG", 0),
     PEONY("DOUBLE_PLANT", 5),
@@ -605,6 +663,7 @@ public enum Materials {
     PHANTOM_MEMBRANE("STONE", 0, true),
     PHANTOM_SPAWN_EGG("MONSTER_EGG", 0),
     PIG_SPAWN_EGG("MONSTER_EGG", 0),
+    PILLAGER_SPAWN_EGG("STONE", 0, true),
     PINK_BANNER("BANNER", 9),
     PINK_BED("BED", 6),
     PINK_CARPET("CARPET", 6),
@@ -627,8 +686,14 @@ public enum Materials {
     POISONOUS_POTATO("POISONOUS_POTATO", 0),
     POLAR_BEAR_SPAWN_EGG("MONSTER_EGG", 0),
     POLISHED_ANDESITE("STONE", 6),
+    POLISHED_ANDESITE_SLAB("STONE", 0, true),
+    POLISHED_ANDESITE_STAIRS("STONE", 0, true),
     POLISHED_DIORITE("STONE", 4),
+    POLISHED_DIORITE_SLAB("STONE", 0, true),
+    POLISHED_DIORITE_STAIRS("STONE", 0, true),
     POLISHED_GRANITE("STONE", 2),
+    POLISHED_GRANITE_SLAB("STONE", 0, true),
+    POLISHED_GRANITE_STAIRS("STONE", 0, true),
     POPPED_CHORUS_FRUIT("CHORUS_FRUIT_POPPED", 0),
     POPPY("RED_ROSE", 0),
     PORKCHOP("PORK", 0),
@@ -638,15 +703,18 @@ public enum Materials {
     POTTED_ACACIA_SAPLING("FLOWER_POT", 0, true),
     POTTED_ALLIUM("FLOWER_POT", 0, true),
     POTTED_AZURE_BLUET("FLOWER_POT", 0, true),
+    POTTED_BAMBOO("STONE", 0, true),
     POTTED_BIRCH_SAPLING("FLOWER_POT", 0, true),
     POTTED_BLUE_ORCHID("FLOWER_POT", 0, true),
     POTTED_BROWN_MUSHROOM("FLOWER_POT", 0, true),
     POTTED_CACTUS("FLOWER_POT", 0, true),
+    POTTED_CORNFLOWER("STONE", 0, true),
     POTTED_DANDELION("FLOWER_POT", 0, true),
     POTTED_DARK_OAK_SAPLING("FLOWER_POT", 0, true),
     POTTED_DEAD_BUSH("FLOWER_POT", 0, true),
     POTTED_FERN("FLOWER_POT", 0, true),
     POTTED_JUNGLE_SAPLING("FLOWER_POT", 0, true),
+    POTTED_LILY_OF_THE_VALLEY("STONE", 0, true),
     POTTED_OAK_SAPLING("FLOWER_POT", 0, true),
     POTTED_ORANGE_TULIP("FLOWER_POT", 0, true),
     POTTED_OXEYE_DAISY("FLOWER_POT", 0, true),
@@ -656,6 +724,7 @@ public enum Materials {
     POTTED_RED_TULIP("FLOWER_POT", 0, true),
     POTTED_SPRUCE_SAPLING("FLOWER_POT", 0, true),
     POTTED_WHITE_TULIP("FLOWER_POT", 0, true),
+    POTTED_WITHER_ROSE("STONE", 0, true),
     POWERED_RAIL("POWERED_RAIL", 0),
     PRISMARINE("PRISMARINE", 0),
     PRISMARINE_BRICKS("PRISMARINE", 1),
@@ -665,6 +734,7 @@ public enum Materials {
     PRISMARINE_SHARD("PRISMARINE_SHARD", 0),
     PRISMARINE_SLAB("STONE", 0, true),
     PRISMARINE_STAIRS("STONE", 0, true),
+    PRISMARINE_WALL("STONE", 0, true),
     PUFFERFISH("RAW_FISH", 3),
     PUFFERFISH_BUCKET("STONE", 0, true),
     PUFFERFISH_SPAWN_EGG("MONSTER_EGG", 0),
@@ -700,6 +770,7 @@ public enum Materials {
     RABBIT_SPAWN_EGG("MONSTER_EGG", 0),
     RABBIT_STEW("RABBIT_STEW", 0),
     RAIL("RAILS", 0),
+    RAVAGER_SPAWN_EGG("STONE", 0, true),
     REDSTONE("REDSTONE", 0),
     REDSTONE_BLOCK("REDSTONE_BLOCK", 0),
     REDSTONE_LAMP("REDSTONE_LAMP_OFF", 0),
@@ -712,14 +783,19 @@ public enum Materials {
     RED_CARPET("CARPET", 14),
     RED_CONCRETE("CONCRETE", 14),
     RED_CONCRETE_POWDER("CONCRETE_POWDER", 14),
+    RED_DYE("ROSE_RED", "INK_SACK", 1),
     RED_GLAZED_TERRACOTTA("RED_GLAZED_TERRACOTTA", 0),
     RED_MUSHROOM("RED_MUSHROOM", 0),
     RED_MUSHROOM_BLOCK("HUGE_MUSHROOM_2", 0),
+    RED_NETHER_BRICK_SLAB("STONE", 0, true),
+    RED_NETHER_BRICK_STAIRS("STONE", 0, true),
+    RED_NETHER_BRICK_WALL("STONE", 0, true),
     RED_NETHER_BRICKS("RED_NETHER_BRICK", 0),
     RED_SAND("SAND", 1),
     RED_SANDSTONE("RED_SANDSTONE", 0),
     RED_SANDSTONE_SLAB("STONE_SLAB2", 0),
     RED_SANDSTONE_STAIRS("RED_SANDSTONE_STAIRS", 0),
+    RED_SANDSTONE_WALL("STONE", 0, true),
     RED_SHULKER_BOX("RED_SHULKER_BOX", 0),
     RED_STAINED_GLASS("STAINED_GLASS", 14),
     RED_STAINED_GLASS_PANE("STAINED_GLASS_PANE", 14),
@@ -730,7 +806,6 @@ public enum Materials {
     REPEATER("DIODE", 0),
     REPEATING_COMMAND_BLOCK("COMMAND_REPEATING", 0),
     ROSE_BUSH("DOUBLE_PLANT", 4),
-    ROSE_RED("INK_SACK", 1),
     ROTTEN_FLESH("ROTTEN_FLESH", 0),
     SADDLE("SADDLE", 0),
     SALMON("RAW_FISH", 1),
@@ -740,6 +815,8 @@ public enum Materials {
     SANDSTONE("SANDSTONE", 0),
     SANDSTONE_SLAB("STEP", 1),
     SANDSTONE_STAIRS("SANDSTONE_STAIRS", 0),
+    SANDSTONE_WALL("STONE", 0, true),
+    SCAFFOLDING("STONE", 0, true),
     SCUTE("STONE", 0, true),
     SEAGRASS("STONE", 0, true),
     SEA_LANTERN("SEA_LANTERN", 0),
@@ -750,19 +827,28 @@ public enum Materials {
     SHULKER_BOX("PURPLE_SHULKER_BOX", 0),
     SHULKER_SHELL("SHULKER_SHELL", 0),
     SHULKER_SPAWN_EGG("MONSTER_EGG", 0),
-    SIGN("SIGN", 0),
     SILVERFISH_SPAWN_EGG("MONSTER_EGG", 0),
     SKELETON_HORSE_SPAWN_EGG("MONSTER_EGG", 0),
     SKELETON_SKULL("SKULL", 0),
     SKELETON_SPAWN_EGG("MONSTER_EGG", 0),
     SKELETON_WALL_SKULL("SKULL", 0),
+    SKULL_BANNER_PATTERN("STONE", 0, true),
     SLIME_BALL("SLIME_BALL", 0),
     SLIME_BLOCK("SLIME_BLOCK", 0),
     SLIME_SPAWN_EGG("MONSTER_EGG", 0),
+    SMITHING_TABLE("STONE", 0, true),
+    SMOKER("STONE", 0, true),
     SMOOTH_QUARTZ("STONE", 0, true),
+    SMOOTH_QUARTZ_SLAB("STONE", 0, true),
+    SMOOTH_QUARTZ_STAIRS("STONE", 0, true),
     SMOOTH_RED_SANDSTONE("RED_SANDSTONE", 2),
+    SMOOTH_RED_SANDSTONE_SLAB("STONE", 0, true),
+    SMOOTH_RED_SANDSTONE_STAIRS("STONE", 0, true),
     SMOOTH_SANDSTONE("SANDSTONE", 2),
+    SMOOTH_SANDSTONE_SLAB("STONE", 0, true),
+    SMOOTH_SANDSTONE_STAIRS("STONE", 0, true),
     SMOOTH_STONE("STEP", 0),
+    SMOOTH_STONE_SLAB("STONE", 0, true),
     SNOW("SNOW", 0),
     SNOWBALL("SNOW_BALL", 0),
     SNOW_BLOCK("SNOW_BLOCK", 0),
@@ -840,24 +926,29 @@ public enum Materials {
     SPRUCE_PLANKS("WOOD", 1),
     SPRUCE_PRESSURE_PLATE("WOOD_PLATE", 0, true),
     SPRUCE_SAPLING("SAPLING", 1),
+    SPRUCE_SIGN("STONE", 0, true),
     SPRUCE_SLAB("WOOD_STEP", 1),
     SPRUCE_STAIRS("SPRUCE_WOOD_STAIRS", 0),
     SPRUCE_TRAPDOOR("TRAP_DOOR", 0, true),
+    SPRUCE_WALL_SIGN("STONE", 0, true),
     SPRUCE_WOOD("LOG", 1),
     SQUID_SPAWN_EGG("MONSTER_EGG", 0),
     STICK("STICK", 0),
     STICKY_PISTON("PISTON_STICKY_BASE", 0),
     STONE("STONE", 0),
+    STONECUTTER("STONE", 0, true),
     STONE_AXE("STONE_AXE", 0),
     STONE_BRICKS("SMOOTH_BRICK", 0),
     STONE_BRICK_SLAB("STEP", 5),
     STONE_BRICK_STAIRS("SMOOTH_STAIRS", 0),
+    STONE_BRICK_WALL("STONE", 0, true),
     STONE_BUTTON("STONE_BUTTON", 0),
     STONE_HOE("STONE_HOE", 0),
     STONE_PICKAXE("STONE_PICKAXE", 0),
     STONE_PRESSURE_PLATE("STONE_PLATE", 0),
     STONE_SHOVEL("STONE_SPADE", 0),
     STONE_SLAB("STEP", 0),
+    STONE_STAIRS("STONE", 0, true),
     STONE_SWORD("STONE_SWORD", 0),
     STRAY_SPAWN_EGG("MONSTER_EGG", 0),
     STRING("STRING", 0),
@@ -878,6 +969,9 @@ public enum Materials {
     SUGAR("SUGAR", 0),
     SUGAR_CANE("SUGAR_CANE", 0),
     SUNFLOWER("DOUBLE_PLANT", 0),
+    SUSPICIOUS_STEW("STONE", 0, true),
+    SWEET_BERRIES("STONE", 0, true),
+    SWEET_BERRY_BUSH("STONE", 0, true),
     TALL_GRASS("DOUBLE_PLANT", 2),
     TALL_SEAGRASS("STONE", 0, true),
     TERRACOTTA("HARD_CLAY", 0),
@@ -886,6 +980,7 @@ public enum Materials {
     TNT_MINECART("EXPLOSIVE_MINECART", 0),
     TORCH("TORCH", 0),
     TOTEM_OF_UNDYING("TOTEM", 0),
+    TRADER_LLAMA_SPAWN_EGG("STONE", 0, true),
     TRAPPED_CHEST("TRAPPED_CHEST", 0),
     TRIDENT("STONE", 0, true),
     TRIPWIRE("TRIPWIRE", 0),
@@ -907,6 +1002,7 @@ public enum Materials {
     VOID_AIR("AIR", 0, true),
     WALL_SIGN("WALL_SIGN", 0),
     WALL_TORCH("TORCH", 1),
+    WANDERING_TRADER_SPAWN_EGG("STONE", 0, true),
     WATER("WATER", 0),
     WATER_BUCKET("WATER_BUCKET", 0),
     WET_SPONGE("SPONGE", 1),
@@ -917,6 +1013,7 @@ public enum Materials {
     WHITE_CARPET("CARPET", 0),
     WHITE_CONCRETE("CONCRETE", 0),
     WHITE_CONCRETE_POWDER("CONCRETE_POWDER", 0),
+    WHITE_DYE("STONE", 0, true),
     WHITE_GLAZED_TERRACOTTA("WHITE_GLAZED_TERRACOTTA", 0),
     WHITE_SHULKER_BOX("WHITE_SHULKER_BOX", 0),
     WHITE_STAINED_GLASS("STAINED_GLASS", 0),
@@ -926,6 +1023,7 @@ public enum Materials {
     WHITE_WALL_BANNER("WALL_BANNER", 0),
     WHITE_WOOL("WOOL", 0),
     WITCH_SPAWN_EGG("MONSTER_EGG", 0),
+    WITHER_ROSE("STONE", 0, true),
     WITHER_SKELETON_SKULL("SKULL", 0),
     WITHER_SKELETON_SPAWN_EGG("MONSTER_EGG", 0),
     WITHER_SKELETON_WALL_SKULL("SKULL", 0),
@@ -942,6 +1040,7 @@ public enum Materials {
     YELLOW_CARPET("CARPET", 4),
     YELLOW_CONCRETE("CONCRETE", 4),
     YELLOW_CONCRETE_POWDER("CONCRETE_POWDER", 4),
+    YELLOW_DYE("DANDELION_YELLOW", "INK_SACK", 11),
     YELLOW_GLAZED_TERRACOTTA("YELLOW_GLAZED_TERRACOTTA", 0),
     YELLOW_SHULKER_BOX("YELLOW_SHULKER_BOX", 0),
     YELLOW_STAINED_GLASS("STAINED_GLASS", 4),
@@ -956,18 +1055,28 @@ public enum Materials {
     ZOMBIE_VILLAGER_SPAWN_EGG("MONSTER_EGG", 0),
     ZOMBIE_WALL_HEAD("SKULL", 0);
 
-    String m;
+    String old13Mat;
+    String old12Mat;
     int data;
-    boolean is13only;
+    boolean is13Plusonly;
 
-    Materials(String m, int data) {
-        this(m, data, false);
+    Materials(String old13Mat, String old12Mat, int data) {
+        this(old13Mat, old12Mat, data, false);
+    }
+
+    Materials(String old13Mat, String old12Mat, int data, boolean is13Plusonly) {
+        this.old13Mat = old13Mat;
+        this.old12Mat = old12Mat;
+        this.data = data;
+        this.is13Plusonly = is13Plusonly;
+    }
+
+    Materials(String old12Mat, int data) {
+        this(null, old12Mat, data, false);
     }
     
-    Materials(String m, int data, boolean is13only) {
-        this.m = m;
-        this.data = data;
-        this.is13only = is13only;
+    Materials(String old12Mat, int data, boolean is13Plusonly) {
+        this(null, old12Mat, data, is13Plusonly);
     }
 
     @SuppressWarnings("deprecation")
@@ -1008,7 +1117,7 @@ public enum Materials {
             return false;
         }
 
-        return isNewVersion() || !this.is13only;
+        return isNewVersion() || !this.is13Plusonly;
     }
 
     private static HashMap<String, Materials> cachedSearch = new HashMap<>();
@@ -1021,13 +1130,13 @@ public enum Materials {
         Materials pmat = null;
 
         for (Materials mat : Materials.values()) {
-            if (name.toUpperCase().equals(mat.m)) {
+            if (name.toUpperCase().equals(mat.old12Mat)) {
                 if (pmat == null) {
                     pmat = mat;
                 }
 
                 if (((byte) mat.data) == data) {
-                    cachedSearch.put(mat.m + "," + data, mat);
+                    cachedSearch.put(mat.old12Mat + "," + data, mat);
                     return mat;
                 }
             }
@@ -1070,7 +1179,7 @@ public enum Materials {
             return Materials.valueOf(mat.toString());
         } catch (IllegalArgumentException e) {
             for (Materials xmat : Materials.values()) {
-                if (xmat.m.equals(mat.toString())) {
+                if (xmat.old12Mat.equals(mat.toString())) {
                     return xmat;
                 }
             }
@@ -1106,35 +1215,22 @@ public enum Materials {
         String[] split = type.toString().split("_");
         int length = split.length;
         switch (split[length - 1]) {
-        case "HELMET":
-            return true;
-        case "CHESTPLATE":
-            return true;
-        case "LEGGINGS":
-            return true;
-        case "BOOTS":
-            return true;
-        case "SWORD":
-            return true;
-        case "AXE":
-            return true;
-        case "PICKAXE":
-            return true;
-        case "SHOVEL":
-            return true;
-        case "HOE":
-            return true;
-        case "ELYTRA":
-            return true;
-        case "TURTLE_HELMET":
-            return true;
-        case "TRIDENT":
-            return true;
-        case "HORSE_ARMOR":
-            return true;
-        case "SHEARS":
-            return true;
-        default:
+            case "HELMET":
+            case "SHEARS":
+            case "HORSE_ARMOR":
+            case "TRIDENT":
+            case "TURTLE_HELMET":
+            case "ELYTRA":
+            case "HOE":
+            case "SHOVEL":
+            case "PICKAXE":
+            case "AXE":
+            case "SWORD":
+            case "BOOTS":
+            case "LEGGINGS":
+            case "CHESTPLATE":
+                return true;
+            default:
             return false;
         }
     }
@@ -1144,12 +1240,13 @@ public enum Materials {
             return Materials.SPAWNER.parseMaterial();
 
         Material mat = Material.matchMaterial(this.toString());
-
-        if (mat != null) {
+        if (mat != null)
             return mat;
-        }
 
-        return Material.matchMaterial(m);
+        if (old13Mat != null)
+            return Material.matchMaterial(old13Mat);
+
+        return Material.matchMaterial(old12Mat);
     }
 
     public Material getPostMaterial() {
@@ -1159,7 +1256,7 @@ public enum Materials {
             Method fromLegacy = unsafe.getClass().getMethod("fromLegacy", Material.class);
 
             if (fromLegacy != null) {
-                return (Material) fromLegacy.invoke(unsafe, Material.getMaterial("LEGACY_" + m));
+                return (Material) fromLegacy.invoke(unsafe, Material.getMaterial("LEGACY_" + old12Mat));
             }
         } catch (Exception e) {
         }
@@ -1174,7 +1271,7 @@ public enum Materials {
             Method fromLegacy = unsafe.getClass().getMethod("fromLegacy", Material.class);
 
             if (fromLegacy != null) {
-                return new ItemStack((Material) fromLegacy.invoke(unsafe, Material.getMaterial("LEGACY_" + m)));
+                return new ItemStack((Material) fromLegacy.invoke(unsafe, Material.getMaterial("LEGACY_" + old12Mat)));
             }
         } catch (Exception e) {
         }
