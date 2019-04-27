@@ -1285,6 +1285,8 @@ Hologram:
             Claimed: "&8* &f&o[%position] &a%player &7- &6%votes"
             Unclaimed: "&8* &f&o[%position] &7&oUnclaimed Position"
             Footer: "&ewww.example.net"
+    Stackable:
+        Message: "%blocks: %amount"
 Scoreboard:
     Tutorial:
         Displayname: "&b&lSkyBlock"

@@ -36,91 +36,48 @@ public class ControlPanel {
 		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
-		nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				ItemStack is = event.getItem();
+		nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+			ItemStack is = event.getItem();
 
-				if ((is.getType() == Materials.OAK_DOOR.parseMaterial()) && (is.hasItemMeta())
-						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.ControlPanel.Item.Teleport.Displayname"))))) {
-					Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							Bukkit.getServer().dispatchCommand(player, "island teleport");
-						}
-					}, 1L);
-				} else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta())
-						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"))))) {
-					skyblock.getSoundManager().playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+			if ((is.getType() == Materials.OAK_DOOR.parseMaterial()) && (is.hasItemMeta())
+					&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Menu.ControlPanel.Item.Teleport.Displayname"))))) {
+				Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island teleport"), 1L);
+			} else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta())
+					&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"))))) {
+				skyblock.getSoundManager().playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
 
-					event.setWillClose(false);
-					event.setWillDestroy(false);
-				} else if ((is.getType() == Materials.EXPERIENCE_BOTTLE.parseMaterial()) && (is.hasItemMeta())
-						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.ControlPanel.Item.Level.Displayname"))))) {
-					Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							Bukkit.getServer().dispatchCommand(player, "island level");
-						}
-					}, 1L);
-				} else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
-						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.ControlPanel.Item.Settings.Displayname"))))) {
-					Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							Bukkit.getServer().dispatchCommand(player, "island settings");
-						}
-					}, 1L);
-				} else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta())
-						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.ControlPanel.Item.Members.Displayname"))))) {
-					Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							Bukkit.getServer().dispatchCommand(player, "island members");
-						}
-					}, 1L);
-				} else if ((is.getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta())
-						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.ControlPanel.Item.Biome.Displayname"))))) {
-					Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							Bukkit.getServer().dispatchCommand(player, "island biome");
-						}
-					}, 1L);
-				} else if ((is.getType() == Materials.CLOCK.parseMaterial()) && (is.hasItemMeta())
-						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.ControlPanel.Item.Weather.Displayname"))))) {
-					Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							Bukkit.getServer().dispatchCommand(player, "island weather");
-						}
-					}, 1L);
-				} else if ((is.getType() == Material.IRON_AXE) && (is.hasItemMeta())
-						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.ControlPanel.Item.Bans.Displayname"))))) {
-					Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							Bukkit.getServer().dispatchCommand(player, "island bans");
-						}
-					}, 1L);
-				} else if ((is.getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
-						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-								configLoad.getString("Menu.ControlPanel.Item.Visitors.Displayname"))))) {
-					Bukkit.getServer().getScheduler().runTaskLater(skyblock, new Runnable() {
-						@Override
-						public void run() {
-							Bukkit.getServer().dispatchCommand(player, "island visitors");
-						}
-					}, 1L);
-				}
+				event.setWillClose(false);
+				event.setWillDestroy(false);
+			} else if ((is.getType() == Materials.EXPERIENCE_BOTTLE.parseMaterial()) && (is.hasItemMeta())
+					&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Menu.ControlPanel.Item.Level.Displayname"))))) {
+				Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island level"), 1L);
+			} else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
+					&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Menu.ControlPanel.Item.Settings.Displayname"))))) {
+				Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island settings"), 1L);
+			} else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta())
+					&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Menu.ControlPanel.Item.Members.Displayname"))))) {
+				Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island members"), 1L);
+			} else if ((is.getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta())
+					&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Menu.ControlPanel.Item.Biome.Displayname"))))) {
+				Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island biome"), 1L);
+			} else if ((is.getType() == Materials.CLOCK.parseMaterial()) && (is.hasItemMeta())
+					&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Menu.ControlPanel.Item.Weather.Displayname"))))) {
+				Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island weather"), 1L);
+			} else if ((is.getType() == Material.IRON_AXE) && (is.hasItemMeta())
+					&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Menu.ControlPanel.Item.Bans.Displayname"))))) {
+				Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island bans"), 1L);
+			} else if ((is.getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
+					&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+							configLoad.getString("Menu.ControlPanel.Item.Visitors.Displayname"))))) {
+				Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island visitors"), 1L);
 			}
 		});
 
@@ -155,11 +112,6 @@ public class ControlPanel {
 		nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.ControlPanel.Title")));
 		nInv.setRows(1);
 
-		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				nInv.open();
-			}
-		});
+		Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 	}
 }

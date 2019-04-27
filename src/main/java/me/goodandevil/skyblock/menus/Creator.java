@@ -93,110 +93,104 @@ public class Creator {
 			inventoryRows = 6;
 		}
 
-		nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (islandManager.getIsland(player) != null) {
-					messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
-					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+		nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+			if (islandManager.getIsland(player) != null) {
+				messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
+				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
-					return;
-				}
+				return;
+			}
 
-				Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-					@Override
-					public void run() {
-						ItemStack is = event.getItem();
+			Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+				ItemStack is = event.getItem();
 
-						for (Structure structureList : skyblock.getStructureManager().getStructures()) {
-							if ((is.getType() == structureList.getMaterials().parseMaterial()) && (is.hasItemMeta())
-									&& (is.getItemMeta().getDisplayName()
-											.equals(ChatColor.translateAlternateColorCodes('&', configLoad
-													.getString("Menu.Creator.Selector.Item.Island.Displayname")
-													.replace("%displayname", structureList.getDisplayname()))))) {
-								if (structureList.isPermission() && structureList.getPermission() != null
-										&& !structureList.getPermission().isEmpty()) {
-									if (!player.hasPermission(structureList.getPermission())
-											&& !player.hasPermission("fabledskyblock.island.*")
-											&& !player.hasPermission("fabledskyblock.*")) {
-										messageManager.sendMessage(player,
-												configLoad.getString("Island.Creator.Selector.Permission.Message"));
-										soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+				for (Structure structureList : skyblock.getStructureManager().getStructures()) {
+					if ((is.getType() == structureList.getMaterials().parseMaterial()) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName()
+									.equals(ChatColor.translateAlternateColorCodes('&', configLoad
+											.getString("Menu.Creator.Selector.Item.Island.Displayname")
+											.replace("%displayname", structureList.getDisplayname()))))) {
+						if (structureList.isPermission() && structureList.getPermission() != null
+								&& !structureList.getPermission().isEmpty()) {
+							if (!player.hasPermission(structureList.getPermission())
+									&& !player.hasPermission("fabledskyblock.island.*")
+									&& !player.hasPermission("fabledskyblock.*")) {
+								messageManager.sendMessage(player,
+										configLoad.getString("Island.Creator.Selector.Permission.Message"));
+								soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
-												() -> open(player), 1L);
-
-										return;
-									}
-								}
-
-								if (!fileManager.isFileExist(
-										new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-												structureList.getOverworldFile()))) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-									event.setWillClose(false);
-									event.setWillDestroy(false);
-
-									return;
-								} else if (!fileManager.isFileExist(
-										new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-												structureList.getNetherFile()))) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
-									soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
-									event.setWillClose(false);
-									event.setWillDestroy(false);
-
-									return;
-								} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-										.getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
-										&& cooldownManager.hasPlayer(CooldownType.Creation, player)) {
-									CooldownPlayer cooldownPlayer = cooldownManager
-											.getCooldownPlayer(CooldownType.Creation, player);
-									Cooldown cooldown = cooldownPlayer.getCooldown();
-
-									if (cooldown.getTime() < 60) {
-										messageManager.sendMessage(player, config.getFileConfiguration()
-												.getString("Island.Creator.Selector.Cooldown.Message")
-												.replace("%time", cooldown.getTime() + " "
-														+ config.getFileConfiguration().getString(
-																"Island.Creator.Selector.Cooldown.Word.Second")));
-									} else {
-										long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
-										messageManager.sendMessage(player, config.getFileConfiguration()
-												.getString("Island.Creator.Selector.Cooldown.Message")
-												.replace("%time", durationTime[2] + " "
-														+ config.getFileConfiguration().getString(
-																"Island.Creator.Selector.Cooldown.Word.Minute")
-														+ " " + durationTime[3] + " "
-														+ config.getFileConfiguration().getString(
-																"Island.Creator.Selector.Cooldown.Word.Second")));
-									}
-
-									soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-
-									event.setWillClose(false);
-									event.setWillDestroy(false);
-
-									return;
-								}
-
-								if (islandManager.createIsland(player, structureList)) {
-									messageManager.sendMessage(player,
-											configLoad.getString("Island.Creator.Selector.Created.Message"));
-									soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
-								}
+								Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+										() -> open(player), 1L);
 
 								return;
 							}
 						}
+
+						if (!fileManager.isFileExist(
+								new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+										structureList.getOverworldFile()))) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							event.setWillClose(false);
+							event.setWillDestroy(false);
+
+							return;
+						} else if (!fileManager.isFileExist(
+								new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+										structureList.getNetherFile()))) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							event.setWillClose(false);
+							event.setWillDestroy(false);
+
+							return;
+						} else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+								.getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
+								&& cooldownManager.hasPlayer(CooldownType.Creation, player)) {
+							CooldownPlayer cooldownPlayer = cooldownManager
+									.getCooldownPlayer(CooldownType.Creation, player);
+							Cooldown cooldown = cooldownPlayer.getCooldown();
+
+							if (cooldown.getTime() < 60) {
+								messageManager.sendMessage(player, config.getFileConfiguration()
+										.getString("Island.Creator.Selector.Cooldown.Message")
+										.replace("%time", cooldown.getTime() + " "
+												+ config.getFileConfiguration().getString(
+														"Island.Creator.Selector.Cooldown.Word.Second")));
+							} else {
+								long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
+								messageManager.sendMessage(player, config.getFileConfiguration()
+										.getString("Island.Creator.Selector.Cooldown.Message")
+										.replace("%time", durationTime[2] + " "
+												+ config.getFileConfiguration().getString(
+														"Island.Creator.Selector.Cooldown.Word.Minute")
+												+ " " + durationTime[3] + " "
+												+ config.getFileConfiguration().getString(
+														"Island.Creator.Selector.Cooldown.Word.Second")));
+							}
+
+							soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+							event.setWillClose(false);
+							event.setWillDestroy(false);
+
+							return;
+						}
+
+						if (islandManager.createIsland(player, structureList)) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Island.Creator.Selector.Created.Message"));
+							soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+						}
+
+						return;
 					}
-				});
-			}
+				}
+			});
 		});
 
 		for (int i = 0; i < availableStructures.size(); i++) {
@@ -227,11 +221,6 @@ public class Creator {
 		nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Title")));
 		nInv.setRows(inventoryRows);
 
-		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				nInv.open();
-			}
-		});
+		Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 	}
 }

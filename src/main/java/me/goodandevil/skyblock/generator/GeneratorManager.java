@@ -46,7 +46,6 @@ public class GeneratorManager {
             List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
             if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
                 for (String materialList : configLoad.getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
-                    System.out.println(materialList);
                     Materials materials = Materials.fromString(materialList);
                     if (materials != null) {
                         generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getDouble(

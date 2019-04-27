@@ -142,12 +142,7 @@ public class Levelling implements Listener {
 		nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Levelling.Title")));
 		nInv.setRows(6);
 
-		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				nInv.open();
-			}
-		});
+		Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -229,20 +224,17 @@ public class Levelling implements Listener {
 												.replace("%division", NumberUtil.formatNumberByDecimal(pointDivision)));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										Config config = fileManager
-												.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-										FileConfiguration configLoad = config.getFileConfiguration();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									Config config12 = fileManager
+											.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+									FileConfiguration configLoad12 = config12.getFileConfiguration();
 
-										configLoad.set("Island.Levelling.Division", pointDivision);
+									configLoad12.set("Island.Levelling.Division", pointDivision);
 
-										try {
-											configLoad.save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+									try {
+										configLoad12.save(config12.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 
@@ -395,20 +387,17 @@ public class Levelling implements Listener {
 												.replace("%material", materials.name()));
 								soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										Config config = fileManager
-												.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
-										FileConfiguration configLoad = config.getFileConfiguration();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									Config config13 = fileManager
+											.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+									FileConfiguration configLoad13 = config13.getFileConfiguration();
 
-										configLoad.set("Materials." + materials.name(), null);
+									configLoad13.set("Materials." + materials.name(), null);
 
-										try {
-											configLoad.save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+									try {
+										configLoad13.save(config13.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 							}
@@ -443,19 +432,16 @@ public class Levelling implements Listener {
 						.replace("%material", materials.name()));
 				soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-				Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-					@Override
-					public void run() {
-						Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
-						FileConfiguration configLoad = config.getFileConfiguration();
+				Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+					Config config14 = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+					FileConfiguration configLoad14 = config14.getFileConfiguration();
 
-						configLoad.set("Materials." + materials.name() + ".Points", 0);
+					configLoad14.set("Materials." + materials.name() + ".Points", 0);
 
-						try {
-							configLoad.save(config.getFile());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+					try {
+						configLoad14.save(config14.getFile());
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				});
 			}

@@ -249,12 +249,7 @@ public class Creator implements Listener {
 
 		nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")));
 
-		Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				nInv.open();
-			}
-		});
+		Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -354,20 +349,17 @@ public class Creator implements Listener {
 												.replace("%structure", event1.getName()));
 								soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										Config config = fileManager
-												.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-										FileConfiguration configLoad = config.getFileConfiguration();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									Config config111 = fileManager
+											.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+									FileConfiguration configLoad111 = config111.getFileConfiguration();
 
-										configLoad.set("Structures." + event1.getName() + ".Name", event1.getName());
+									configLoad111.set("Structures." + event1.getName() + ".Name", event1.getName());
 
-										try {
-											configLoad.save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+									try {
+										configLoad111.save(config111.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 
@@ -1104,21 +1096,18 @@ public class Creator implements Listener {
 
 									soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-										@Override
-										public void run() {
-											Config config = fileManager
-													.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-											FileConfiguration configLoad = config.getFileConfiguration();
+									Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+										Config config112 = fileManager
+												.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+										FileConfiguration configLoad112 = config112.getFileConfiguration();
 
-											configLoad.set("Structures." + structure.getName() + ".Deletion.Cost",
-													deletionCost);
+										configLoad112.set("Structures." + structure.getName() + ".Deletion.Cost",
+												deletionCost);
 
-											try {
-												configLoad.save(config.getFile());
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
+										try {
+											configLoad112.save(config112.getFile());
+										} catch (IOException e) {
+											e.printStackTrace();
 										}
 									});
 
@@ -1172,21 +1161,18 @@ public class Creator implements Listener {
 							if (materials != null) {
 								structure.setMaterials(materials);
 
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-									@Override
-									public void run() {
-										Config config = fileManager
-												.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
-										FileConfiguration configLoad = config.getFileConfiguration();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+									Config config113 = fileManager
+											.getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+									FileConfiguration configLoad113 = config113.getFileConfiguration();
 
-										configLoad.set("Structures." + structure.getName() + ".Item.Material",
-												structure.getMaterials().name());
+									configLoad113.set("Structures." + structure.getName() + ".Item.Material",
+											structure.getMaterials().name());
 
-										try {
-											configLoad.save(config.getFile());
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
+									try {
+										configLoad113.save(config113.getFile());
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
 								});
 							}

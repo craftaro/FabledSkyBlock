@@ -284,20 +284,17 @@ public class Generator implements Listener {
                                         .replace("%generator", event1.getName()));
                         soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-                            @Override
-                            public void run() {
-                                Config config = fileManager
-                                        .getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
-                                FileConfiguration configLoad = config.getFileConfiguration();
+                        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+                            Config config14 = fileManager
+                                    .getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
+                            FileConfiguration configLoad14 = config14.getFileConfiguration();
 
-                                configLoad.set("Generators." + event1.getName() + ".Name", event1.getName());
+                            configLoad14.set("Generators." + event1.getName() + ".Name", event1.getName());
 
-                                try {
-                                    configLoad.save(config.getFile());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                            try {
+                                configLoad14.save(config14.getFile());
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         });
 
@@ -539,23 +536,20 @@ public class Generator implements Listener {
                                 generator.getGeneratorMaterials().remove(generatorMaterialList);
 
                                 Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-                                        new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Config config = fileManager.getConfig(
-                                                        new File(skyblock.getDataFolder(), "generators.yml"));
-                                                FileConfiguration configLoad = config.getFileConfiguration();
+                                        () -> {
+                                            Config config15 = fileManager.getConfig(
+                                                    new File(skyblock.getDataFolder(), "generators.yml"));
+                                            FileConfiguration configLoad15 = config15.getFileConfiguration();
 
-                                                configLoad.set(
-                                                        "Generators." + generator.getName() + ".Materials."
-                                                                + generatorMaterialList.getMaterials().name(),
-                                                        null);
+                                            configLoad15.set(
+                                                    "Generators." + generator.getName() + ".Materials."
+                                                            + generatorMaterialList.getMaterials().name(),
+                                                    null);
 
-                                                try {
-                                                    configLoad.save(config.getFile());
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
+                                            try {
+                                                configLoad15.save(config15.getFile());
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
                                             }
                                         });
 
@@ -604,21 +598,18 @@ public class Generator implements Listener {
                                     .replace("%generator", generator.getName()));
                     soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-                    Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-                        @Override
-                        public void run() {
-                            Config config = fileManager
-                                    .getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
-                            FileConfiguration configLoad = config.getFileConfiguration();
+                    Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+                        Config config16 = fileManager
+                                .getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
+                        FileConfiguration configLoad16 = config16.getFileConfiguration();
 
-                            configLoad.set("Generators." + generator.getName() + ".Materials."
-                                    + materials.name() + ".Chance", 0);
+                        configLoad16.set("Generators." + generator.getName() + ".Materials."
+                                + materials.name() + ".Chance", 0);
 
-                            try {
-                                configLoad.save(config.getFile());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            configLoad16.save(config16.getFile());
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     });
 

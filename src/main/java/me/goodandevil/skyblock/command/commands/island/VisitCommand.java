@@ -27,12 +27,7 @@ public class VisitCommand extends SubCommand {
 			Visit.getInstance().open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
 			soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
 		} else if (args.length == 1) {
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					Bukkit.getServer().dispatchCommand(player, "island teleport " + args[0]);
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island teleport " + args[0]));
 		} else {
 			messageManager.sendMessage(player,
 					skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))

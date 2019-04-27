@@ -49,56 +49,53 @@ public class Settings {
 		FileConfiguration configLoad = languageConfig.getFileConfiguration();
 
 		if (menuType == Settings.Type.Categories) {
-			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
-							|| player.hasPermission("fabledskyblock.*"))) {
-						messageManager.sendMessage(player,
-								configLoad.getString("Island.Admin.Settings.Permission.Message"));
-						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+				if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
+						|| player.hasPermission("fabledskyblock.*"))) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Island.Admin.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-						return;
-					}
+					return;
+				}
 
-					ItemStack is = event.getItem();
+				ItemStack is = event.getItem();
 
-					if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Categories.Item.Exit.Displayname"))))) {
-						soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
-					} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
-							.equals(ChatColor.translateAlternateColorCodes('&', configLoad
-									.getString("Menu.Admin.Settings.Categories.Item.Visitor.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+				if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Categories.Item.Exit.Displayname"))))) {
+					soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+				} else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
+						.equals(ChatColor.translateAlternateColorCodes('&', configLoad
+								.getString("Menu.Admin.Settings.Categories.Item.Visitor.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Visitor), 1L);
-					} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Categories.Item.Member.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Visitor), 1L);
+				} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Categories.Item.Member.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Member), 1L);
-					} else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName()
-									.equals(ChatColor.translateAlternateColorCodes('&', configLoad
-											.getString("Menu.Admin.Settings.Categories.Item.Operator.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Member), 1L);
+				} else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName()
+								.equals(ChatColor.translateAlternateColorCodes('&', configLoad
+										.getString("Menu.Admin.Settings.Categories.Item.Operator.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Operator), 1L);
-					} else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Categories.Item.Coop.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Operator), 1L);
+				} else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Categories.Item.Coop.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Coop), 1L);
-					} else if ((is.getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta())
-							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Categories.Item.Owner.Displayname"))))) {
-						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Coop), 1L);
+				} else if ((is.getType() == Materials.OAK_SAPLING.parseMaterial()) && (is.hasItemMeta())
+						&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Categories.Item.Owner.Displayname"))))) {
+					soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Owner), 1L);
-					}
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, me.goodandevil.skyblock.island.IslandRole.Owner), 1L);
 				}
 			});
 
@@ -140,79 +137,71 @@ public class Settings {
 					configLoad.getString("Menu.Admin.Settings.Categories.Title")));
 			nInv.setRows(1);
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					nInv.open();
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 		} else if (menuType == Settings.Type.Role) {
-			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
-							|| player.hasPermission("fabledskyblock.*"))) {
-						messageManager.sendMessage(player,
-								configLoad.getString("Island.Admin.Settings.Permission.Message"));
-						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+			nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+				if (!(player.hasPermission("fabledskyblock.admin.settings") || player.hasPermission("fabledskyblock.admin.*")
+						|| player.hasPermission("fabledskyblock.*"))) {
+					messageManager.sendMessage(player,
+							configLoad.getString("Island.Admin.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-						return;
-					}
+					return;
+				}
 
-					ItemStack is = event.getItem();
+				ItemStack is = event.getItem();
 
-					if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta()) && (is
-							.getItemMeta().getDisplayName()
-							.equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Visitor.Item.Return.Displayname")))
-							|| is.getItemMeta().getDisplayName()
-									.equals(ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Admin.Settings.Member.Item.Return.Displayname")))
-							|| is.getItemMeta().getDisplayName()
-									.equals(ChatColor.translateAlternateColorCodes('&',
-											configLoad
-													.getString("Menu.Admin.Settings.Operator.Item.Return.Displayname")))
-							|| is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Admin.Settings.Owner.Item.Return.Displayname"))))) {
-						soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+				if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta()) && (is
+						.getItemMeta().getDisplayName()
+						.equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Visitor.Item.Return.Displayname")))
+						|| is.getItemMeta().getDisplayName()
+								.equals(ChatColor.translateAlternateColorCodes('&',
+										configLoad.getString("Menu.Admin.Settings.Member.Item.Return.Displayname")))
+						|| is.getItemMeta().getDisplayName()
+								.equals(ChatColor.translateAlternateColorCodes('&',
+										configLoad
+												.getString("Menu.Admin.Settings.Operator.Item.Return.Displayname")))
+						|| is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Admin.Settings.Owner.Item.Return.Displayname"))))) {
+					soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Categories, null), 1L);
-					} else if (is.hasItemMeta()) {
-						String roleName = getRoleName(role);
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Categories, null), 1L);
+				} else if (is.hasItemMeta()) {
+					String roleName = getRoleName(role);
 
-						FileConfiguration settingsConfigLoad = skyblock.getFileManager()
-								.getConfig(new File(skyblock.getDataFolder(), "settings.yml")).getFileConfiguration();
+					FileConfiguration settingsConfigLoad = skyblock.getFileManager()
+							.getConfig(new File(skyblock.getDataFolder(), "settings.yml")).getFileConfiguration();
 
-						for (String settingList : settingsConfigLoad.getConfigurationSection("Settings." + role.name())
-								.getKeys(false)) {
-							if (is.getItemMeta().getDisplayName()
-									.equals(ChatColor.translateAlternateColorCodes('&',
-											configLoad.getString("Menu.Admin.Settings." + roleName + ".Item.Setting."
-													+ settingList + ".Displayname")))) {
-								if (settingsConfigLoad.getBoolean("Settings." + role.name() + "." + settingList)) {
-									settingsConfigLoad.set("Settings." + role.name() + "." + settingList, false);
-								} else {
-									settingsConfigLoad.set("Settings." + role.name() + "." + settingList, true);
-								}
-
-								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
-									try {
-										Config config = skyblock.getFileManager()
-												.getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
-										config.getFileConfiguration().save(config.getFile());
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								});
-
-								break;
+					for (String settingList : settingsConfigLoad.getConfigurationSection("Settings." + role.name())
+							.getKeys(false)) {
+						if (is.getItemMeta().getDisplayName()
+								.equals(ChatColor.translateAlternateColorCodes('&',
+										configLoad.getString("Menu.Admin.Settings." + roleName + ".Item.Setting."
+												+ settingList + ".Displayname")))) {
+							if (settingsConfigLoad.getBoolean("Settings." + role.name() + "." + settingList)) {
+								settingsConfigLoad.set("Settings." + role.name() + "." + settingList, false);
+							} else {
+								settingsConfigLoad.set("Settings." + role.name() + "." + settingList, true);
 							}
+
+							Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+								try {
+									Config config = skyblock.getFileManager()
+											.getConfig(new File(skyblock.getDataFolder(), "settings.yml"));
+									config.getFileConfiguration().save(config.getFile());
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							});
+
+							break;
 						}
-
-						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-
-						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, role), 1L);
 					}
+
+					soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+
+					Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, role), 1L);
 				}
 			});
 
@@ -632,12 +621,7 @@ public class Settings {
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
 					configLoad.getString("Menu.Admin.Settings." + role.name() + ".Title")));
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					nInv.open();
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 		}
 	}
 

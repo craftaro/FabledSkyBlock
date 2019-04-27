@@ -244,6 +244,16 @@ public class Entity implements Listener {
     
     @EventHandler
     public void onStackableInteract(PlayerArmorStandManipulateEvent event) {
+        Player player = event.getPlayer();
+        if (!skyblock.getIslandManager().hasPermission(player, event.getRightClicked().getLocation(), "ArmorStandUse")) {
+            event.setCancelled(true);
+
+            skyblock.getMessageManager().sendMessage(player,
+                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                            .getFileConfiguration().getString("Island.Settings.Permission.Message"));
+            skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+        }
+
         if (NMSUtil.getVersionNumber() != 8)
             return;
         

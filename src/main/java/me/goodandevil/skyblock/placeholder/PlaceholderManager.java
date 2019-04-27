@@ -305,8 +305,17 @@ public class PlaceholderManager {
 		    } else {
 		        return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_island_bank_balance.Non-empty.Message"))
-		                .replace("%placeholder", "" + island.getBankBalance());
+		                .replace("%placeholder", "" + NumberUtil.formatNumberByDecimal(island.getBankBalance()));
 		    }
+		} else if (placeholder.equalsIgnoreCase("fabledskyblock_island_bank_balance_formatted")) {
+			if (island == null) {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_bank_balance_formatted.Empty.Message"));
+			} else {
+				return ChatColor.translateAlternateColorCodes('&',
+						configLoad.getString("Placeholder.fabledskyblock_island_bank_balance_formatted.Non-empty.Message"))
+						.replace("%placeholder", "" + NumberUtil.formatNumberBySuffix((long) island.getBankBalance()));
+			}
 		} else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_level_rank")) {
 			if (island == null) {
 				return ChatColor.translateAlternateColorCodes('&',

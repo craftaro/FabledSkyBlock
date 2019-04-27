@@ -63,133 +63,121 @@ public class Members {
 			FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 					.getFileConfiguration();
 
-			nInventoryUtil nInv = new nInventoryUtil(player, new ClickEventHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					if (playerDataManager.hasPlayerData(player)) {
-						PlayerData playerData = playerDataManager.getPlayerData(player);
+			nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+				if (playerDataManager.hasPlayerData(player)) {
+					PlayerData playerData = playerDataManager.getPlayerData(player);
 
-						if (playerData.getType() == null || playerData.getSort() == null) {
-							playerData.setType(Members.Type.Default);
-							playerData.setSort(Members.Sort.Default);
-						}
+					if (playerData.getType() == null || playerData.getSort() == null) {
+						playerData.setType(Type.Default);
+						playerData.setSort(Sort.Default);
+					}
 
-						ItemStack is = event.getItem();
-						Island island = islandManager.getIsland(player);
+					ItemStack is = event.getItem();
+					Island island = islandManager.getIsland(player);
 
-						if (island == null) {
-							skyblock.getMessageManager().sendMessage(player,
-									configLoad.getString("Command.Island.Members.Owner.Message"));
-							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+					if (island == null) {
+						skyblock.getMessageManager().sendMessage(player,
+								configLoad.getString("Command.Island.Members.Owner.Message"));
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-							return;
-						}
+						return;
+					}
 
-						if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Members.Item.Barrier.Displayname"))))) {
-							soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+					if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Members.Item.Barrier.Displayname"))))) {
+						soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
 
-							event.setWillClose(false);
-							event.setWillDestroy(false);
-						} else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Members.Item.Exit.Displayname"))))) {
-							soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
-						} else if ((is.getType() == Material.HOPPER) && (is.hasItemMeta())) {
-							if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Members.Item.Type.Displayname")))) {
-								Members.Type type = (Members.Type) playerData.getType();
+						event.setWillClose(false);
+						event.setWillDestroy(false);
+					} else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Members.Item.Exit.Displayname"))))) {
+						soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+					} else if ((is.getType() == Material.HOPPER) && (is.hasItemMeta())) {
+						if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Members.Item.Type.Displayname")))) {
+							Type type1 = (Type) playerData.getType();
 
-								if (type.ordinal() + 1 == Members.Type.values().length) {
-									playerData.setType(Members.Type.Default);
-								} else {
-									playerData.setType(Members.Type.values()[type.ordinal() + 1]);
-								}
-							} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
-									'&', configLoad.getString("Menu.Members.Item.Sort.Displayname")))) {
-								Members.Sort sort = (Members.Sort) playerData.getSort();
-
-								if (sort.ordinal() + 1 == Members.Sort.values().length) {
-									playerData.setSort(Members.Sort.Default);
-								} else {
-									playerData.setSort(Members.Sort.values()[sort.ordinal() + 1]);
-								}
+							if (type1.ordinal() + 1 == Type.values().length) {
+								playerData.setType(Type.Default);
+							} else {
+								playerData.setType(Type.values()[type1.ordinal() + 1]);
 							}
+						} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
+								'&', configLoad.getString("Menu.Members.Item.Sort.Displayname")))) {
+							Sort sort1 = (Sort) playerData.getSort();
 
-							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+							if (sort1.ordinal() + 1 == Sort.values().length) {
+								playerData.setSort(Sort.Default);
+							} else {
+								playerData.setSort(Sort.values()[sort1.ordinal() + 1]);
+							}
+						}
+
+						soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+
+						Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
+								(Sort) playerData.getSort()), 1L);
+					} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Members.Item.Statistics.Displayname"))))) {
+						soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+
+						event.setWillClose(false);
+						event.setWillDestroy(false);
+					} else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
+							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+									configLoad.getString("Menu.Members.Item.Nothing.Displayname"))))) {
+						soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+						event.setWillClose(false);
+						event.setWillDestroy(false);
+					} else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
+						if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+								configLoad.getString("Menu.Members.Item.Previous.Displayname")))) {
+							playerData.setPage(playerData.getPage() - 1);
+							soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
 							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
 									(Sort) playerData.getSort()), 1L);
-						} else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Members.Item.Statistics.Displayname"))))) {
-							soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+						} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
+								'&', configLoad.getString("Menu.Members.Item.Next.Displayname")))) {
+							playerData.setPage(playerData.getPage() + 1);
+							soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-							event.setWillClose(false);
-							event.setWillDestroy(false);
-						} else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
-								&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-										configLoad.getString("Menu.Members.Item.Nothing.Displayname"))))) {
-							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
+									(Sort) playerData.getSort()), 1L);
+						} else {
+							String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
+							UUID playerUUID;
 
-							event.setWillClose(false);
-							event.setWillDestroy(false);
-						} else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
-							if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-									configLoad.getString("Menu.Members.Item.Previous.Displayname")))) {
-								playerData.setPage(playerData.getPage() - 1);
-								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+							Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
 
-								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
-										(Sort) playerData.getSort()), 1L);
-							} else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
-									'&', configLoad.getString("Menu.Members.Item.Next.Displayname")))) {
-								playerData.setPage(playerData.getPage() + 1);
-								soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
-
-								Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
-										(Sort) playerData.getSort()), 1L);
+							if (targetPlayer == null) {
+								playerUUID = new OfflinePlayer(playerName).getUUID();
 							} else {
-								String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
-								UUID playerUUID;
+								playerUUID = targetPlayer.getUniqueId();
+							}
 
-								Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
-
-								if (targetPlayer == null) {
-									playerUUID = new OfflinePlayer(playerName).getUUID();
-								} else {
-									playerUUID = targetPlayer.getUniqueId();
-								}
-
-								if (!(playerUUID.equals(player.getUniqueId())
-										|| island.hasRole(IslandRole.Owner, playerUUID))) {
-									if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-										if (event.getClick() == ClickType.LEFT) {
-											if (island.hasRole(IslandRole.Member, playerUUID)) {
-												Bukkit.getServer().dispatchCommand(player,
-														"island promote " + playerName);
-											} else {
-												Bukkit.getServer().dispatchCommand(player,
-														"island demote " + playerName);
-											}
-
-											Bukkit.getServer().getScheduler().runTaskLater(skyblock,
-													() -> open(player, (Type) playerData.getType(),
-															(Sort) playerData.getSort()), 3L);
-
-											return;
-										} else if (event.getClick() == ClickType.RIGHT) {
-											Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
-
-											Bukkit.getServer().getScheduler().runTaskLater(skyblock,
-													() -> open(player, (Type) playerData.getType(),
-															(Sort) playerData.getSort()), 3L);
-
-											return;
+							if (!(playerUUID.equals(player.getUniqueId())
+									|| island.hasRole(IslandRole.Owner, playerUUID))) {
+								if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+									if (event.getClick() == ClickType.LEFT) {
+										if (island.hasRole(IslandRole.Member, playerUUID)) {
+											Bukkit.getServer().dispatchCommand(player,
+													"island promote " + playerName);
+										} else {
+											Bukkit.getServer().dispatchCommand(player,
+													"island demote " + playerName);
 										}
-									} else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
-											&& island.getSetting(IslandRole.Operator, "Kick").getStatus()) {
+
+										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+												() -> open(player, (Type) playerData.getType(),
+														(Sort) playerData.getSort()), 3L);
+
+										return;
+									} else if (event.getClick() == ClickType.RIGHT) {
 										Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
 
 										Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -198,13 +186,22 @@ public class Members {
 
 										return;
 									}
+								} else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
+										&& island.getSetting(IslandRole.Operator, "Kick").getStatus()) {
+									Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
+
+									Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+											() -> open(player, (Type) playerData.getType(),
+													(Sort) playerData.getSort()), 3L);
+
+									return;
 								}
-
-								soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
-
-								event.setWillClose(false);
-								event.setWillDestroy(false);
 							}
+
+							soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
+
+							event.setWillClose(false);
+							event.setWillDestroy(false);
 						}
 					}
 				}
@@ -588,12 +585,7 @@ public class Members {
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Members.Title")));
 			nInv.setRows(6);
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					nInv.open();
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 		}
 	}
 

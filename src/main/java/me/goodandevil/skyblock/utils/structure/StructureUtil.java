@@ -112,8 +112,7 @@ public final class StructureUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Float[] pasteStructure(Structure structure, org.bukkit.Location location, BlockDegreesType type)
-			throws Exception {
+	public static Float[] pasteStructure(Structure structure, org.bukkit.Location location, BlockDegreesType type) {
 		Storage storage = structure.getStructureStorage();
 
 		String[] originLocationPositions = null;
@@ -129,38 +128,34 @@ public final class StructureUtil {
 			pitch = Float.valueOf(originLocationPositions[5]);
 		}
 
-		List<BlockData> blockData = (List<BlockData>) new Gson().fromJson(storage.getBlocks(),
+		List<BlockData> blockData = new Gson().fromJson(storage.getBlocks(),
 				new TypeToken<List<BlockData>>() {
 				}.getType());
 
 		for (BlockData blockDataList : blockData) {
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), new Runnable() {
-				@Override
-				public void run() {
-					try {
-						org.bukkit.Location blockRotationLocation = LocationUtil
-								.rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(),
-										blockDataList.getY(), blockDataList.getZ()), type);
-						org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(),
-								location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])),
-								location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]),
-								location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
-						blockLocation.add(blockRotationLocation);
-						BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);
-					} catch (Exception e) {
-					    SkyBlock.getInstance().getLogger().warning("Unable to convert BlockData to Block for type {" + blockDataList.getMaterial() + 
-					            ":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile() + "}");
-					}
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
+				try {
+					org.bukkit.Location blockRotationLocation = LocationUtil
+							.rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(),
+									blockDataList.getY(), blockDataList.getZ()), type);
+					org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(),
+							location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])),
+							location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]),
+							location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
+					blockLocation.add(blockRotationLocation);
+					BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);
+				} catch (Exception e) {
+					SkyBlock.getInstance().getLogger().warning("Unable to convert BlockData to Block for type {" + blockDataList.getMaterial() +
+							":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile() + "}");
 				}
 			});
 		}
 
-		for (EntityData entityDataList : (List<EntityData>) new Gson().fromJson(storage.getEntities(),
-				new TypeToken<List<EntityData>>() {
-				}.getType())) {
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), new Runnable() {
-				@Override
-				public void run() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
+			for (EntityData entityDataList : (List<EntityData>) new Gson().fromJson(storage.getEntities(),
+					new TypeToken<List<EntityData>>() {
+					}.getType())) {
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
 					try {
 						org.bukkit.Location blockRotationLocation = LocationUtil
 								.rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(),
@@ -172,12 +167,12 @@ public final class StructureUtil {
 						blockLocation.add(blockRotationLocation);
 						EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
 					} catch (Exception e) {
-					    SkyBlock.getInstance().getLogger().warning("Unable to convert EntityData to Entity for type {" + entityDataList.getEntityType() + 
-					            "} in structure {" + structure.getStructureFile() + "}");
+						SkyBlock.getInstance().getLogger().warning("Unable to convert EntityData to Entity for type {" + entityDataList.getEntityType() +
+								"} in structure {" + structure.getStructureFile() + "}");
 					}
-				}
-			});
-		}
+				});
+			}
+		}, 60L);
 
 		return new Float[] { yaw, pitch };
 	}

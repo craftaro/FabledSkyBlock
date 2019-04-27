@@ -41,8 +41,11 @@ dependencies {
     shade (group: 'org.apache.commons', name: 'commons-lang3', version: '3.0')
     shade (group: 'commons-io', name: 'commons-io', version: '2.5')
 
+    // Songoda Updater
+    shade (group: 'com.songoda', name: 'songodaupdater', version: '1')
+
     // Spigot
-    implementation (group: 'org.spigotmc', name: 'spigot', version: '1.14-pre5-2')
+    implementation (group: 'org.spigotmc', name: 'spigot', version: '1.14')
 }
 
 processResources {

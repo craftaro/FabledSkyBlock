@@ -28,74 +28,71 @@ public class UserCacheManager {
 		FileManager fileManager = skyblock.getFileManager();
 		File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 
-		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				if (configFile.exists()) {
-					int usersIgnored = 0;
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+			if (configFile.exists()) {
+				int usersIgnored = 0;
 
-					Bukkit.getServer().getLogger().log(Level.INFO,
-							"SkyBlock | Info: Fetching user information from island data. This may take a while...");
+				Bukkit.getServer().getLogger().log(Level.INFO,
+						"SkyBlock | Info: Fetching user information from island data. This may take a while...");
 
-					for (File fileList : configFile.listFiles()) {
-						if (fileList != null && fileList.getName().contains(".yml")
-								&& fileList.getName().length() > 35) {
-							UUID islandOwnerUUID = null;
+				for (File fileList : configFile.listFiles()) {
+					if (fileList != null && fileList.getName().contains(".yml")
+							&& fileList.getName().length() > 35) {
+						UUID islandOwnerUUID = null;
 
-							try {
-								Config config = new FileManager.Config(fileManager, fileList);
-								FileConfiguration configLoad = config.getFileConfiguration();
+						try {
+							Config config = new Config(fileManager, fileList);
+							FileConfiguration configLoad = config.getFileConfiguration();
 
-								islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
+							islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
+
+							if (islandOwnerUUID == null) {
+								islandOwnerUUID = UUID.fromString(fileList.getName().replaceFirst("[.][^.]+$", ""));
 
 								if (islandOwnerUUID == null) {
-									islandOwnerUUID = UUID.fromString(fileList.getName().replaceFirst("[.][^.]+$", ""));
-
-									if (islandOwnerUUID == null) {
-										continue;
-									}
+									continue;
 								}
-
-								Set<UUID> islandMembers = new HashSet<UUID>();
-								islandMembers.add(islandOwnerUUID);
-
-								if (configLoad.getString("Members") != null) {
-									for (String memberList : configLoad.getStringList("Members")) {
-										islandMembers.add(UUID.fromString(memberList));
-									}
-								}
-
-								if (configLoad.getString("Operators") != null) {
-									for (String operatorList : configLoad.getStringList("Operators")) {
-										islandMembers.add(UUID.fromString(operatorList));
-									}
-								}
-
-								for (UUID islandMemberList : islandMembers) {
-									if (!hasUser(islandMemberList)) {
-										Names[] names = NameFetcher.getNames(islandMemberList);
-
-										if (names.length >= 1) {
-											addUser(islandMemberList, names[0].getName());
-										}
-									}
-								}
-							} catch (Exception e) {
-								usersIgnored++;
 							}
+
+							Set<UUID> islandMembers = new HashSet<>();
+							islandMembers.add(islandOwnerUUID);
+
+							if (configLoad.getString("Members") != null) {
+								for (String memberList : configLoad.getStringList("Members")) {
+									islandMembers.add(UUID.fromString(memberList));
+								}
+							}
+
+							if (configLoad.getString("Operators") != null) {
+								for (String operatorList : configLoad.getStringList("Operators")) {
+									islandMembers.add(UUID.fromString(operatorList));
+								}
+							}
+
+							for (UUID islandMemberList : islandMembers) {
+								if (!hasUser(islandMemberList)) {
+									Names[] names = NameFetcher.getNames(islandMemberList);
+
+									if (names.length >= 1) {
+										addUser(islandMemberList, names[0].getName());
+									}
+								}
+							}
+						} catch (Exception e) {
+							usersIgnored++;
 						}
 					}
+				}
 
-					save();
+				save();
 
-					if (usersIgnored != 0) {
-						Bukkit.getServer().getLogger().log(Level.INFO,
-								"SkyBlock | Info: Finished fetching user information from island data. There were "
-										+ usersIgnored + " users that were skipped.");
-					} else {
-						Bukkit.getServer().getLogger().log(Level.INFO,
-								"SkyBlock | Info: Finished fetching user information from island data.");
-					}
+				if (usersIgnored != 0) {
+					Bukkit.getServer().getLogger().log(Level.INFO,
+							"SkyBlock | Info: Finished fetching user information from island data. There were "
+									+ usersIgnored + " users that were skipped.");
+				} else {
+					Bukkit.getServer().getLogger().log(Level.INFO,
+							"SkyBlock | Info: Finished fetching user information from island data.");
 				}
 			}
 		});
@@ -152,12 +149,7 @@ public class UserCacheManager {
 	}
 
 	public void saveAsync() {
-		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-			@Override
-			public void run() {
-				save();
-			}
-		});
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> save());
 	}
 
 	public void save() {

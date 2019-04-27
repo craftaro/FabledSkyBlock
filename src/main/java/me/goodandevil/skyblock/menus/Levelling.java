@@ -150,17 +150,14 @@ public class Levelling {
 							return;
 						}
 
-						Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, new Runnable() {
-							@Override
-							public void run() {
-								messageManager.sendMessage(player,
-										configLoad.getString("Command.Island.Level.Processing.Message"));
-								soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+						Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+							messageManager.sendMessage(player,
+									configLoad.getString("Command.Island.Level.Processing.Message"));
+							soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 
-								cooldownManager.createPlayer(CooldownType.Levelling,
-										Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
-								levellingManager.calculatePoints(player, island);
-							}
+							cooldownManager.createPlayer(CooldownType.Levelling,
+									Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
+							levellingManager.calculatePoints(player, island);
 						});
 					} else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
 						PlayerData playerData1 = skyblock.getPlayerDataManager().getPlayerData(player);
@@ -319,12 +316,7 @@ public class Levelling {
 			nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Title")));
 			nInv.setRows(6);
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, new Runnable() {
-				@Override
-				public void run() {
-					nInv.open();
-				}
-			});
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
 		}
 	}
 }

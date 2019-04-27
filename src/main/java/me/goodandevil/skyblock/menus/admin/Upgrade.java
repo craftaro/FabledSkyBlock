@@ -181,23 +181,20 @@ public class Upgrade {
 													1.0F, 1.0F);
 
 											Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
-													new Runnable() {
-														@Override
-														public void run() {
-															Config config = fileManager.getConfig(new File(
-																	skyblock.getDataFolder(), "upgrades.yml"));
-															FileConfiguration configLoad1 = config
-																	.getFileConfiguration();
+													() -> {
+														Config config = fileManager.getConfig(new File(
+																skyblock.getDataFolder(), "upgrades.yml"));
+														FileConfiguration configLoad1 = config
+																.getFileConfiguration();
 
-															configLoad1.set(
-																	"Upgrades." + upgradeType.name() + ".Cost",
-																	upgradeCost);
+														configLoad1.set(
+																"Upgrades." + upgradeType.name() + ".Cost",
+																upgradeCost);
 
-															try {
-																configLoad1.save(config.getFile());
-															} catch (IOException e) {
-																e.printStackTrace();
-															}
+														try {
+															configLoad1.save(config.getFile());
+														} catch (IOException e) {
+															e.printStackTrace();
 														}
 													});
 
