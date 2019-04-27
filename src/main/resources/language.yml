@@ -1234,6 +1234,11 @@ Placeholder:
             Message: "&c0"
         Non-empty:
             Message: "&f%placeholder"
+    fabledskyblock_island_bank_balance_formatted:
+        Empty:
+            Message: "&c0"
+        Non-empty:
+            Message: "&f%placeholder"
     fabledskyblock_island_leaderboard_level_rank:
         Empty:
             Message: "&c0"
