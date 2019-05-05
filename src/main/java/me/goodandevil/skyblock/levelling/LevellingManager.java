@@ -185,7 +185,7 @@ public class LevellingManager {
                                             Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
                                             if (stackableManager.isStacked(location)) {
                                                 Stackable stackable = stackableManager.getStack(location, blockMaterial);
-                                                amount += stackable.getSize();
+                                                amount = stackable.getSize();
                                             }
                                         }
                                     }
@@ -322,12 +322,12 @@ public class LevellingManager {
 
         private Materials getMaterials() {
             if (this.spawnerType != null) {
-                return Materials.fromString("SPAWNER_" + this.spawnerType.name());
+                return Materials.getSpawner(this.spawnerType);
             }
 
             if (NMSUtil.getVersionNumber() > 12) {
                 try {
-                    return Materials.fromString(material.name());
+                    return Materials.fromString(this.material.name());
                 } catch (Exception ignored) {
                 }
             }

@@ -13,6 +13,7 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
@@ -47,7 +48,7 @@ public class Interact implements Listener {
 	}
 
 	@SuppressWarnings("deprecation")
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		org.bukkit.block.Block block = event.getClickedBlock();
@@ -409,7 +410,7 @@ public class Interact implements Listener {
 				}
 			}
 
-			if ((event.getItem() != null) && (event.getItem().getType() != Material.AIR)) {
+			if ((event.getItem() != null) && (event.getItem().getType() != Material.AIR) && !event.isCancelled()) {
 				if (event.getItem().getType() == Material.BUCKET || event.getItem().getType() == Material.WATER_BUCKET
 						|| event.getItem().getType() == Material.LAVA_BUCKET) {
 					if (!islandManager.hasPermission(player, block.getLocation(), "Bucket")) {
@@ -462,9 +463,7 @@ public class Interact implements Listener {
 					}
 				}
 			}
-		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK)
-
-		{
+		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			if (player.getTargetBlock((Set<Material>) null, 5).getType() == Material.FIRE) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Fire")) {
 					event.setCancelled(true);
@@ -817,7 +816,7 @@ public class Interact implements Listener {
 
 
 	@EventHandler(ignoreCancelled = true)
-	public void PlayerInteractEvent(PlayerArmorStandManipulateEvent event) {
+	public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
 		if (skyblock.getStackableManager() != null && skyblock.getStackableManager().isStacked(event.getRightClicked().getLocation().getBlock().getLocation())) {
 			event.setCancelled(true);
 		}

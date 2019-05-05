@@ -13,6 +13,7 @@ import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.world.WorldManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,6 +32,7 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -563,9 +565,10 @@ public class Entity implements Listener {
         LivingEntity livingEntity = event.getEntity();
 
         // Certain entities shouldn't drop twice the amount
-        if (livingEntity instanceof Player || 
-            livingEntity instanceof ArmorStand || 
-            livingEntity instanceof Horse) {
+        if (livingEntity instanceof Player
+                || livingEntity instanceof ArmorStand
+                || livingEntity instanceof Horse
+                || livingEntity instanceof ElderGuardian) {
             return;
         }
 
@@ -573,10 +576,19 @@ public class Entity implements Listener {
             if (livingEntity instanceof Donkey || livingEntity instanceof Mule)
                 return;
         }
-        
-        if (livingEntity.hasMetadata("SkyBlock")) {
-            return;
+
+        if (NMSUtil.getVersionNumber() > 10) {
+            if (livingEntity instanceof Evoker)
+                return;
         }
+
+        if (NMSUtil.getVersionNumber() > 13) {
+            if (livingEntity instanceof Ravager || livingEntity instanceof Illager)
+                return;
+        }
+        
+        if (livingEntity.hasMetadata("SkyBlock"))
+            return;
 
         IslandManager islandManager = skyblock.getIslandManager();
 
@@ -586,15 +598,34 @@ public class Entity implements Listener {
             if (island != null) {
                 List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
 
-                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-                        && island.isUpgrade(Upgrade.Type.Drops)) {
-                    List<ItemStack> entityDrops = event.getDrops();
+                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Drops)) {
+                    Set<ItemStack> dontMultiply = new HashSet<>();
 
-                    if (entityDrops != null) {
-                        for (ItemStack is : entityDrops) {
-                            is.setAmount(is.getAmount() * 2);
+                    if (NMSUtil.getVersionNumber() > 8) {
+                        EntityEquipment equipment = livingEntity.getEquipment();
+                        if (equipment != null) {
+                            for (ItemStack item : event.getDrops()) {
+                                if (item.equals(equipment.getHelmet())
+                                        || item.equals(equipment.getChestplate())
+                                        || item.equals(equipment.getLeggings())
+                                        || item.equals(equipment.getBoots())
+                                        || item.equals(equipment.getItemInMainHand())
+                                        || item.equals(equipment.getItemInOffHand())) {
+                                    dontMultiply.add(item);
+                                }
+                            }
+                        }
+
+                        if (livingEntity instanceof Pig) {
+                            Pig pig = (Pig) livingEntity;
+                            if (pig.hasSaddle())
+                                dontMultiply.add(new ItemStack(Material.SADDLE, 1));
                         }
                     }
+
+                    for (ItemStack is : event.getDrops())
+                        if (!dontMultiply.contains(is))
+                            is.setAmount(is.getAmount() * 2);
                 }
             }
         }
