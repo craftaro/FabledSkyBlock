@@ -17,9 +17,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityCreatePortalEvent;
@@ -157,7 +160,7 @@ public class Block implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlock();
@@ -223,12 +226,24 @@ public class Block implements Listener {
             }
         }
 
-        if (event.isCancelled() || !configLoad.getBoolean("Island.Block.Level.Enable")) return;
+        if (!configLoad.getBoolean("Island.Block.Level.Enable"))
+            return;
 
         @SuppressWarnings("deprecation")
         Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
-        if (materials == null) return;
+        if (materials.equals(Materials.SPAWNER)) {
+            if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
+                return;
+
+            CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
+            EntityType spawnerType = creatureSpawner.getSpawnedType();
+            materials = Materials.getSpawner(spawnerType);
+        }
+
+        if (materials == null)
+            return;
+
         long materialAmount = 0;
         IslandLevel level = island.getLevel();
 

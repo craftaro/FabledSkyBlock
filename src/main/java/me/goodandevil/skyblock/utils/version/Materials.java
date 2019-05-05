@@ -1243,8 +1243,11 @@ public enum Materials {
         if (mat != null)
             return mat;
 
-        if (old13Mat != null)
-            return Material.matchMaterial(old13Mat);
+        if (old13Mat != null) {
+            mat = Material.matchMaterial(old13Mat);
+            if (mat != null)
+                return mat;
+        }
 
         return Material.matchMaterial(old12Mat);
     }

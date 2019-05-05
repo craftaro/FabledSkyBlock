@@ -388,6 +388,7 @@ public final class BlockUtil {
 			} else {
 				skull.setOwner(blockData.getSkullOwner());
 			}
+			skull.update();
 		} else {
 			if (NMSVersion > 8) {
 				if (blockTypeState == BlockStateType.ENDGATEWAY) {

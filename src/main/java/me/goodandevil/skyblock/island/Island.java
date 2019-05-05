@@ -297,11 +297,11 @@ public class Island {
 	public void setLocation(IslandWorld world, IslandEnvironment environment, Location location) {
 		for (IslandLocation islandLocationList : islandLocations) {
 			if (islandLocationList.getWorld() == world && islandLocationList.getEnvironment() == environment) {
-				Bukkit.getServer().getPluginManager()
-						.callEvent(new IslandLocationChangeEvent(getAPIWrapper(),
+				Bukkit.getScheduler().runTaskAsynchronously(skyblock, () ->
+						Bukkit.getServer().getPluginManager().callEvent(new IslandLocationChangeEvent(getAPIWrapper(),
 								new me.goodandevil.skyblock.api.island.IslandLocation(
 										APIUtil.fromImplementation(environment), APIUtil.fromImplementation(world),
-										location)));
+										location))));
 
 				FileManager fileManager = skyblock.getFileManager();
 
