@@ -567,13 +567,12 @@ public class Entity implements Listener {
         // Certain entities shouldn't drop twice the amount
         if (livingEntity instanceof Player
                 || livingEntity instanceof ArmorStand
-                || livingEntity instanceof Horse
-                || livingEntity instanceof ElderGuardian) {
+                || livingEntity instanceof Horse) {
             return;
         }
 
         if (NMSUtil.getVersionNumber() > 8) {
-            if (livingEntity instanceof Donkey || livingEntity instanceof Mule)
+            if (livingEntity instanceof Donkey || livingEntity instanceof Mule || livingEntity instanceof ElderGuardian)
                 return;
         }
 
@@ -625,7 +624,7 @@ public class Entity implements Listener {
 
                     for (ItemStack is : event.getDrops())
                         if (!dontMultiply.contains(is))
-                            is.setAmount(is.getAmount() * 2);
+                            livingEntity.getWorld().dropItemNaturally(livingEntity.getLocation(), is);
                 }
             }
         }
@@ -669,8 +668,7 @@ public class Entity implements Listener {
         }
 
         if (skyblock.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
-            if (!skyblock.getIslandManager().hasSetting(livingEntity.getLocation(), IslandRole.Owner,
-                    "NaturalMobSpawning")) {
+            if (!skyblock.getIslandManager().hasSetting(livingEntity.getLocation(), IslandRole.Owner, "NaturalMobSpawning")) {
                 livingEntity.remove();
             }
         }

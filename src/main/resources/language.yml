@@ -463,6 +463,8 @@ Command:
                     Message: "&eScanning island level: &b%percent%"
                 Finished:
                     Message: "&aIsland level scan complete!"
+                NotOnIsland:
+                    Message: "&bSkyBlock &8| &cError&8: &cYou cannot initiate an island scan without being on your island."
             Owner:
                 Yourself:
                     Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
