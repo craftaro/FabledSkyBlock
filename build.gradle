@@ -37,6 +37,9 @@ dependencies {
 	// WildStacker
 	implementation (group: 'com.bgsoftware', name: 'wildstacker-api', version: 'b14')
 
+    // WorldEdit
+    implementation (group: 'com.sk89q', name: 'worldedit', version: '7.0.0')
+
     // Apache Commons
     shade (group: 'org.apache.commons', name: 'commons-lang3', version: '3.0')
     shade (group: 'commons-io', name: 'commons-io', version: '2.5')

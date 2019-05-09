@@ -85,8 +85,8 @@ public class EZPlaceholder extends PlaceholderExpansion implements Listener {
 					return ChatColor.translateAlternateColorCodes('&',
 							configLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Empty.Message"));
 				} else if (identifier.equalsIgnoreCase("leaderboard_bank_" + (i + 1))) {
-					if (i < leaderboardLevelPlayers.size()) {
-						Leaderboard leaderboard = leaderboardLevelPlayers.get(i);
+					if (i < leaderboardBankPlayers.size()) {
+						Leaderboard leaderboard = leaderboardBankPlayers.get(i);
 						Visit visit = leaderboard.getVisit();
 						IslandLevel level = visit.getLevel();
 

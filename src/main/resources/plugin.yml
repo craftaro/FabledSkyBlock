@@ -4,7 +4,7 @@ version: @version@
 api-version: 1.13
 description: A unique SkyBlock plugin
 author: Songoda
-softdepend: [PlaceholderAPI, MVdWPlaceholderAPI, Vault, LeaderHeads, EpicSpawners, WildStacker]
+softdepend: [PlaceholderAPI, MVdWPlaceholderAPI, Vault, LeaderHeads, EpicSpawners, WildStacker, WorldEdit]
 loadbefore: [Multiverse-Core]
 commands:
     island:

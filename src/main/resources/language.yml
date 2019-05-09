@@ -894,6 +894,8 @@ Island:
                     Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the overworld does not exist."
                 Nether:
                     Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the nether does not exist."
+                End:
+                    Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the end does not exist."
             Cooldown:
                 Word:
                     Minute: "minute(s)"

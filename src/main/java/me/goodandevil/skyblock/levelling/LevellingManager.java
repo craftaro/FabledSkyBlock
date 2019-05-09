@@ -52,7 +52,7 @@ public class LevellingManager {
         WorldManager worldManager = skyblock.getWorldManager();
         StackableManager stackableManager = skyblock.getStackableManager();
 
-        if (islandManager.getIslandPlayerAt(player) != island) {
+        if (player != null && islandManager.getIslandPlayerAt(player) != island) {
             String message = ChatColor.translateAlternateColorCodes('&', this.skyblock.getFileManager()
                     .getConfig(new File(this.skyblock.getDataFolder(), "language.yml"))
                     .getFileConfiguration().getString("Command.Island.Level.Scanning.NotOnIsland.Message"));

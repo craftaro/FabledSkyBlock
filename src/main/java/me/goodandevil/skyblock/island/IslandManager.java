@@ -746,21 +746,30 @@ public class IslandManager {
         }
 
         try {
-            File structureFile = null;
-
-            if (world == IslandWorld.Normal) {
-                structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-                        structure.getOverworldFile());
-            } else if (world == IslandWorld.Nether) {
-                structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-                        structure.getNetherFile());
-            } else if (world == IslandWorld.End) {
-                structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-                        structure.getEndFile());
+            String structureFileName = null;
+            switch (world) {
+                case Normal:
+                    structureFileName = structure.getOverworldFile();
+                    break;
+                case Nether:
+                    structureFileName = structure.getNetherFile();
+                    break;
+                case End:
+                    structureFileName = structure.getEndFile();
+                    break;
             }
 
-            Float[] direction = StructureUtil.pasteStructure(StructureUtil.loadStructure(structureFile),
-                    island.getLocation(world, IslandEnvironment.Island), BlockDegreesType.ROTATE_360);
+            boolean isStructureFile = structureFileName.endsWith(".structure");
+            File structureFile = new File(new File(skyblock.getDataFolder().toString() + "/" + (isStructureFile ? "structures" : "schematics")), structureFileName);
+
+            Float[] direction;
+            if (isStructureFile) {
+                direction = StructureUtil.pasteStructure(StructureUtil.loadStructure(structureFile),
+                        island.getLocation(world, IslandEnvironment.Island), BlockDegreesType.ROTATE_360);
+            } else {
+                direction = StructureUtil.pasteSchematic(structureFile, island.getLocation(world, IslandEnvironment.Island));
+            }
+
             org.bukkit.Location spawnLocation = island.getLocation(world, IslandEnvironment.Main).clone();
             spawnLocation.setYaw(direction[0]);
             spawnLocation.setPitch(direction[1]);
