@@ -154,7 +154,7 @@ public class IslandManager {
         island.setStructure(structure.getName());
         islandStorage.put(player.getUniqueId(), island);
 
-        for (IslandWorld worldList : IslandWorld.values()) {
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
             prepareIsland(island, worldList);
         }
 
@@ -513,7 +513,7 @@ public class IslandManager {
                 Island island = new Island(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                 islandStorage.put(islandOwnerUUID, island);
 
-                for (IslandWorld worldList : IslandWorld.values()) {
+                for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                     prepareIsland(island, worldList);
                 }
 
@@ -705,7 +705,7 @@ public class IslandManager {
     }
 
     public void resetIsland(Island island) {
-        for (IslandWorld worldList : IslandWorld.values()) {
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
             pasteStructure(island, worldList);
         }
     }
@@ -1049,7 +1049,7 @@ public class IslandManager {
         List<Player> playersAtIsland = new ArrayList<>();
 
         if (island != null) {
-            for (IslandWorld worldList : IslandWorld.values()) {
+            for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                 playersAtIsland.addAll(getPlayersAtIsland(island, worldList));
             }
         }
@@ -1262,7 +1262,7 @@ public class IslandManager {
         if (island.isBorder()) {
             if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                     .getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
-                for (IslandWorld worldList : IslandWorld.values()) {
+                for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                     if (worldList == IslandWorld.Nether) {
                         if (NMSUtil.getVersionNumber() < 13) {
                             continue;
@@ -1276,7 +1276,7 @@ public class IslandManager {
                 }
             }
         } else {
-            for (IslandWorld worldList : IslandWorld.values()) {
+            for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                 if (worldList == IslandWorld.Nether) {
                     if (NMSUtil.getVersionNumber() < 13) {
                         continue;
@@ -1325,7 +1325,7 @@ public class IslandManager {
     }
 
     public boolean isLocationAtIsland(Island island, org.bukkit.Location location) {
-        for (IslandWorld worldList : IslandWorld.values()) {
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
             if (isLocationAtIsland(island, location, worldList)) {
                 return true;
             }

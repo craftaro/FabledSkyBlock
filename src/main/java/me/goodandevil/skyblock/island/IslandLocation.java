@@ -20,6 +20,9 @@ public class IslandLocation {
 		this.world = world;
 		this.environment = environment;
 
+		if (location == null)
+			return;
+
 		this.x = location.getX();
 		this.y = location.getY();
 		this.z = location.getZ();

@@ -43,7 +43,7 @@ public final class LocationUtil {
 	}
 
 	public static boolean isLocationAtLocationRadius(Location location1, Location location2, double radius) {
-		if (location1 == null || location2 == null
+		if (location1 == null || location2 == null || location1.getWorld() == null || location2.getWorld() == null
 				|| !location1.getWorld().getName().equals(location2.getWorld().getName())) {
 			return false;
 		}

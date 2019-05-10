@@ -37,6 +37,9 @@ public class WorldManager {
 		String netherWorldName = configLoad.getString("Island.World.Nether.Name");
 		String endWorldName = configLoad.getString("Island.World.End.Name");
 
+		boolean netherWorldEnabled = configLoad.getBoolean("Island.World.Nether.Enable");
+		boolean endWorldEnabled = configLoad.getBoolean("Island.World.End.Enable");
+
 		normalWorld = Bukkit.getServer().getWorld(normalWorldName);
 		netherWorld = Bukkit.getServer().getWorld(netherWorldName);
 		endWorld = Bukkit.getServer().getWorld(endWorldName);
@@ -50,7 +53,7 @@ public class WorldManager {
 			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(normalWorldName, World.Environment.NORMAL));
 		}
 
-		if (netherWorld == null) {
+		if (netherWorld == null && netherWorldEnabled) {
 			Bukkit.getServer().getLogger().log(Level.INFO,
 					"SkyBlock | Info: Generating VoidWorld '" + netherWorldName + "'.");
 			netherWorld = WorldCreator.name(netherWorldName).type(WorldType.FLAT).environment(World.Environment.NETHER)
@@ -59,7 +62,7 @@ public class WorldManager {
 			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(netherWorldName, World.Environment.NETHER));
 		}
 
-		if (endWorld == null) {
+		if (endWorld == null && endWorldEnabled) {
 			Bukkit.getServer().getLogger().log(Level.INFO,
 					"SkyBlock | Info: Generating VoidWorld '" + endWorldName + "'.");
 			endWorld = WorldCreator.name(endWorldName).type(WorldType.FLAT).environment(World.Environment.THE_END)
@@ -95,26 +98,30 @@ public class WorldManager {
 			return null;
 		}
 
-		if (normalWorld.getName().equals(world.getName())) {
+		if (normalWorld != null && normalWorld.getName().equals(world.getName()))
 			return IslandWorld.Normal;
-		} else if (netherWorld.getName().equals(world.getName())) {
+
+		if (netherWorld != null && netherWorld.getName().equals(world.getName()))
 			return IslandWorld.Nether;
-		} else if (endWorld.getName().equals(world.getName())) {
+
+		if (endWorld != null && endWorld.getName().equals(world.getName()))
 			return IslandWorld.End;
-		}
 
 		return null;
 	}
 
 	public boolean isIslandWorld(World world) {
-		if (world == null) {
+		if (world == null)
 			return false;
-		}
 
-		if (normalWorld.getName().equals(world.getName()) || netherWorld.getName().equals(world.getName())
-				|| endWorld.getName().equals(world.getName())) {
+		if (normalWorld != null && normalWorld.getName().equals(world.getName()))
 			return true;
-		}
+
+		if (netherWorld != null && netherWorld.getName().equals(world.getName()))
+			return true;
+
+		if (endWorld != null && endWorld.getName().equals(world.getName()))
+			return true;
 
 		return false;
 	}

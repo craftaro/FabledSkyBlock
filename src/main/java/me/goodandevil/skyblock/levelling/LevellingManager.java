@@ -67,7 +67,7 @@ public class LevellingManager {
 
         int height = 0;
 
-        for (IslandWorld worldList : IslandWorld.values()) {
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
             org.bukkit.World world = worldManager.getWorld(worldList);
 
             if (height == 0 || height > world.getMaxHeight()) {
