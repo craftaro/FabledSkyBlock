@@ -57,6 +57,8 @@ Command:
                 Message: "&bSkyBlock &8| &aInfo&8: &eYou have successfully unlocked '&7The %type%&e'."
             Unlocked:
                 Message: "&bSkyBlock &8| &cError&8: &eYou already unlocked '&7The %type%&e'."
+            Disabled:
+                Message: "&bSkyBlock &8| &cError&8: &e'&7The %type%&e' is disabled and cannot be unlocked."
             Money:
                 Message: "&bSkyBlock &8| &cError&8: &eYou don't have enough money to unlock that. The cost to unlock is &c$%cost%&e."
             Info:
@@ -463,6 +465,8 @@ Command:
                     Message: "&eScanning island level: &b%percent%"
                 Finished:
                     Message: "&aIsland level scan complete!"
+                NotOnIsland:
+                    Message: "&bSkyBlock &8| &cError&8: &eYou cannot initiate an island level scan without being on your island."
             Owner:
                 Yourself:
                     Message: "&bSkyBlock &8| &cError&8: &eYou are not an Island owner."
@@ -892,6 +896,8 @@ Island:
                     Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the overworld does not exist."
                 Nether:
                     Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the nether does not exist."
+                End:
+                    Message: "&bSkyBlock &8| &cError&8: &eThe structure file for the end does not exist."
             Cooldown:
                 Word:
                     Minute: "minute(s)"

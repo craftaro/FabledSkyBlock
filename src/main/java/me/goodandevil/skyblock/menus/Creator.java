@@ -127,7 +127,8 @@ public class Creator {
 						}
 
 						if (!fileManager.isFileExist(
-								new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+								new File(new File(skyblock.getDataFolder().toString() + "/" +
+										(structureList.getOverworldFile().endsWith(".structure") ? "structures" : "schematics")),
 										structureList.getOverworldFile()))) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
@@ -138,10 +139,23 @@ public class Creator {
 
 							return;
 						} else if (!fileManager.isFileExist(
-								new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+								new File(new File(skyblock.getDataFolder().toString() + "/" +
+										(structureList.getNetherFile().endsWith(".structure") ? "structures" : "schematics")),
 										structureList.getNetherFile()))) {
 							messageManager.sendMessage(player,
 									configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
+							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+							event.setWillClose(false);
+							event.setWillDestroy(false);
+
+							return;
+						} else if (!fileManager.isFileExist(
+								new File(new File(skyblock.getDataFolder().toString() + "/" +
+										(structureList.getEndFile().endsWith(".structure") ? "structures" : "schematics")),
+										structureList.getEndFile()))) {
+							messageManager.sendMessage(player,
+									configLoad.getString("Island.Creator.Selector.File.End.Message"));
 							soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 							event.setWillClose(false);

@@ -865,12 +865,12 @@ public class Creator implements Listener {
 											Bukkit.getServer().getScheduler().runTaskLater(skyblock,
 													() -> open(player), 1L);
 										} else {
-											if (fileManager.isFileExist(
-													new File(skyblock.getDataFolder().toString() + "/structures",
-															event1.getName()))) {
+											String fileName = event1.getName();
+											if (fileManager.isFileExist(new File(skyblock.getDataFolder().toString() + "/structures", fileName)) ||
+													fileManager.isFileExist(new File(skyblock.getDataFolder().toString() + "/schematics", fileName))) {
 												if (event.getClick() == ClickType.LEFT) {
 													Structure structure = structureManager.getStructure(name);
-													structure.setOverworldFile(event1.getName());
+													structure.setOverworldFile(fileName);
 
 													soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(),
 															1.0F, 1.0F);
@@ -883,10 +883,7 @@ public class Creator implements Listener {
 																FileConfiguration configLoad17 = config17
 																		.getFileConfiguration();
 
-																configLoad17.set(
-																		"Structures." + structure.getName()
-																				+ ".File.Overworld",
-																		event1.getName());
+																configLoad17.set("Structures." + structure.getName() + ".File.Overworld", fileName);
 
 																try {
 																	configLoad17.save(config17.getFile());
@@ -896,7 +893,7 @@ public class Creator implements Listener {
 															});
 												} else if (event.getClick() == ClickType.MIDDLE) {
 													Structure structure = structureManager.getStructure(name);
-													structure.setNetherFile(event1.getName());
+													structure.setNetherFile(fileName);
 
 													soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(),
 															1.0F, 1.0F);
@@ -910,7 +907,7 @@ public class Creator implements Listener {
 																		.getFileConfiguration();
 
 																configLoad18.set("Structures." + structure.getName()
-																		+ ".File.Nether", event1.getName());
+																		+ ".File.Nether", fileName);
 
 																try {
 																	configLoad18.save(config18.getFile());
@@ -920,7 +917,7 @@ public class Creator implements Listener {
 															});
 												} else {
 													Structure structure = structureManager.getStructure(name);
-													structure.setEndFile(event1.getName());
+													structure.setEndFile(fileName);
 
 													soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(),
 															1.0F, 1.0F);
@@ -934,7 +931,7 @@ public class Creator implements Listener {
 																		.getFileConfiguration();
 
 																configLoad19.set("Structures." + structure.getName()
-																		+ ".File.End", event1.getName());
+																		+ ".File.End", fileName);
 
 																try {
 																	configLoad19.save(config19.getFile());

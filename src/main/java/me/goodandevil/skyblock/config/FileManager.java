@@ -49,6 +49,10 @@ public class FileManager {
 			new File(skyblock.getDataFolder().toString() + "/structures").mkdir();
 		}
 
+		if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !new File(skyblock.getDataFolder().toString() + "/schematics").exists()) {
+			new File(skyblock.getDataFolder().toString() + "/schematics").mkdir();
+		}
+
 		Map<String, File> configFiles = new LinkedHashMap<>();
 		configFiles.put("worlds.yml", new File(skyblock.getDataFolder(), "worlds.yml"));
 		configFiles.put("levelling.yml", new File(skyblock.getDataFolder(), "levelling.yml"));

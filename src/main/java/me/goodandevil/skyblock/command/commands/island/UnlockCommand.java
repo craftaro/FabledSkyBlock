@@ -44,6 +44,12 @@ public class UnlockCommand extends SubCommand {
             return;
         }
 
+        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.World." + type + ".Enable")) {
+            messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Disabled.Message").replace("%type%", type));
+            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            return;
+        }
+
         Island island = islandManager.getIsland(player);
 
         if (island == null) {

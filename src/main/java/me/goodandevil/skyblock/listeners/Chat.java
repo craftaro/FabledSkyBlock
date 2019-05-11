@@ -3,6 +3,8 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.UUID;
 
+import me.goodandevil.skyblock.config.FileManager;
+import me.goodandevil.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,6 +41,7 @@ public class Chat implements Listener {
 		PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		IslandManager islandManager = skyblock.getIslandManager();
+		FileManager fileManager = skyblock.getFileManager();
 
 		if (playerDataManager.hasPlayerData(player)) {
 			PlayerData playerData = playerDataManager.getPlayerData(player);
@@ -84,11 +87,14 @@ public class Chat implements Listener {
 				if (!islandChatEvent.isCancelled()) {
 					for (UUID islandMembersOnlineList : islandManager.getMembersOnline(island)) {
 						Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
-						targetPlayer.sendMessage(ChatColor
-								.translateAlternateColorCodes('&',
-										messageManager.replaceMessage(targetPlayer,
-												islandChatEvent.getFormat().replace("%role", islandRole)
-														.replace("%player", player.getName())))
+						String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
+								islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())))
+								.replace("%message", islandChatEvent.getMessage());
+						targetPlayer.sendMessage(message);
+					}
+
+					if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
+						messageManager.sendMessage(Bukkit.getConsoleSender(), islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())
 								.replace("%message", islandChatEvent.getMessage()));
 					}
 				}

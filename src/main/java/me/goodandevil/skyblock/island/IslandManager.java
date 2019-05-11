@@ -21,6 +21,7 @@ import me.goodandevil.skyblock.structure.StructureManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.upgrade.UpgradeManager;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
+import me.goodandevil.skyblock.utils.structure.SchematicUtil;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
@@ -154,7 +155,7 @@ public class IslandManager {
         island.setStructure(structure.getName());
         islandStorage.put(player.getUniqueId(), island);
 
-        for (IslandWorld worldList : IslandWorld.values()) {
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
             prepareIsland(island, worldList);
         }
 
@@ -513,7 +514,7 @@ public class IslandManager {
                 Island island = new Island(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                 islandStorage.put(islandOwnerUUID, island);
 
-                for (IslandWorld worldList : IslandWorld.values()) {
+                for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                     prepareIsland(island, worldList);
                 }
 
@@ -705,7 +706,7 @@ public class IslandManager {
     }
 
     public void resetIsland(Island island) {
-        for (IslandWorld worldList : IslandWorld.values()) {
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
             pasteStructure(island, worldList);
         }
     }
@@ -746,21 +747,30 @@ public class IslandManager {
         }
 
         try {
-            File structureFile = null;
-
-            if (world == IslandWorld.Normal) {
-                structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-                        structure.getOverworldFile());
-            } else if (world == IslandWorld.Nether) {
-                structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-                        structure.getNetherFile());
-            } else if (world == IslandWorld.End) {
-                structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"),
-                        structure.getEndFile());
+            String structureFileName = null;
+            switch (world) {
+                case Normal:
+                    structureFileName = structure.getOverworldFile();
+                    break;
+                case Nether:
+                    structureFileName = structure.getNetherFile();
+                    break;
+                case End:
+                    structureFileName = structure.getEndFile();
+                    break;
             }
 
-            Float[] direction = StructureUtil.pasteStructure(StructureUtil.loadStructure(structureFile),
-                    island.getLocation(world, IslandEnvironment.Island), BlockDegreesType.ROTATE_360);
+            boolean isStructureFile = structureFileName.endsWith(".structure");
+            File structureFile = new File(new File(skyblock.getDataFolder().toString() + "/" + (isStructureFile ? "structures" : "schematics")), structureFileName);
+
+            Float[] direction;
+            if (isStructureFile) {
+                direction = StructureUtil.pasteStructure(StructureUtil.loadStructure(structureFile),
+                        island.getLocation(world, IslandEnvironment.Island), BlockDegreesType.ROTATE_360);
+            } else {
+                direction = SchematicUtil.pasteSchematic(structureFile, island.getLocation(world, IslandEnvironment.Island));
+            }
+
             org.bukkit.Location spawnLocation = island.getLocation(world, IslandEnvironment.Main).clone();
             spawnLocation.setYaw(direction[0]);
             spawnLocation.setPitch(direction[1]);
@@ -1040,7 +1050,7 @@ public class IslandManager {
         List<Player> playersAtIsland = new ArrayList<>();
 
         if (island != null) {
-            for (IslandWorld worldList : IslandWorld.values()) {
+            for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                 playersAtIsland.addAll(getPlayersAtIsland(island, worldList));
             }
         }
@@ -1253,7 +1263,7 @@ public class IslandManager {
         if (island.isBorder()) {
             if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                     .getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
-                for (IslandWorld worldList : IslandWorld.values()) {
+                for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                     if (worldList == IslandWorld.Nether) {
                         if (NMSUtil.getVersionNumber() < 13) {
                             continue;
@@ -1267,7 +1277,7 @@ public class IslandManager {
                 }
             }
         } else {
-            for (IslandWorld worldList : IslandWorld.values()) {
+            for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                 if (worldList == IslandWorld.Nether) {
                     if (NMSUtil.getVersionNumber() < 13) {
                         continue;
@@ -1316,7 +1326,7 @@ public class IslandManager {
     }
 
     public boolean isLocationAtIsland(Island island, org.bukkit.Location location) {
-        for (IslandWorld worldList : IslandWorld.values()) {
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
             if (isLocationAtIsland(island, location, worldList)) {
                 return true;
             }

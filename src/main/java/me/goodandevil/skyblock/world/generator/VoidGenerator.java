@@ -28,7 +28,7 @@ public class VoidGenerator extends ChunkGenerator {
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		for (IslandWorld worldList : IslandWorld.values()) {
-			if (world.getEnvironment() == worldList.getEnvironment()) {
+			if (world.getEnvironment() == worldList.getUncheckedEnvironment()) {
 				if (configLoad.getBoolean("Island.World." + worldList.name() + ".Liquid.Enable")) {
 					if (configLoad.getBoolean("Island.World." + worldList.name() + ".Liquid.Lava")) {
 						setBlock(chunkData, Materials.LEGACY_STATIONARY_LAVA.parseMaterial(),

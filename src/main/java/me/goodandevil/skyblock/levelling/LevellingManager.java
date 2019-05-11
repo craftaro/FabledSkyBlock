@@ -5,6 +5,7 @@ import me.goodandevil.skyblock.api.event.island.IslandLevelChangeEvent;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandLevel;
+import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
@@ -13,6 +14,7 @@ import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -46,8 +48,17 @@ public class LevellingManager {
     }
 
     public void calculatePoints(Player player, Island island) {
+        IslandManager islandManager = skyblock.getIslandManager();
         WorldManager worldManager = skyblock.getWorldManager();
         StackableManager stackableManager = skyblock.getStackableManager();
+
+        if (player != null && islandManager.getIslandPlayerAt(player) != island) {
+            String message = ChatColor.translateAlternateColorCodes('&', this.skyblock.getFileManager()
+                    .getConfig(new File(this.skyblock.getDataFolder(), "language.yml"))
+                    .getFileConfiguration().getString("Command.Island.Level.Scanning.NotOnIsland.Message"));
+            player.sendMessage(message);
+            return;
+        }
 
         Chunk chunk = new Chunk(skyblock, island);
         chunk.prepareInitial();
@@ -56,7 +67,7 @@ public class LevellingManager {
 
         int height = 0;
 
-        for (IslandWorld worldList : IslandWorld.values()) {
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
             org.bukkit.World world = worldManager.getWorld(worldList);
 
             if (height == 0 || height > world.getMaxHeight()) {

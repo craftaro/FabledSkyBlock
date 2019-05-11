@@ -46,7 +46,7 @@ public class Chunk {
 			boolean hasNether = config.getBoolean("Island.World.Nether.Enable") && islandData.getBoolean("Unlocked.Nether", false);
 			boolean hasEnd = config.getBoolean("Island.World.End.Enable") && islandData.getBoolean("Unlocked.End", false);
 
-			for (IslandWorld islandWorld : IslandWorld.values()) {
+			for (IslandWorld islandWorld : IslandWorld.getIslandWorlds()) {
 				if (islandWorld == IslandWorld.Normal || (islandWorld == IslandWorld.Nether && hasNether) || (islandWorld == IslandWorld.End && hasEnd)) {
 					this.getChunksToScan(islandWorld);
 				}

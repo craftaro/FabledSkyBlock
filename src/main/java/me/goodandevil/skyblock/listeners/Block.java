@@ -231,6 +231,8 @@ public class Block implements Listener {
 
         @SuppressWarnings("deprecation")
         Materials materials = Materials.getMaterials(block.getType(), block.getData());
+        if (materials == null)
+            return;
 
         if (materials.equals(Materials.SPAWNER)) {
             if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
@@ -240,9 +242,6 @@ public class Block implements Listener {
             EntityType spawnerType = creatureSpawner.getSpawnedType();
             materials = Materials.getSpawner(spawnerType);
         }
-
-        if (materials == null)
-            return;
 
         long materialAmount = 0;
         IslandLevel level = island.getLevel();

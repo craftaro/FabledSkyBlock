@@ -64,6 +64,9 @@ Island:
     Member:
         # Max amount of players allowed to be in a team.
         Capacity: 12
+    Chat:
+        # If island chat should be output to console
+        OutputToConsole: true
     WorldBorder:
         # Generates a worldborder around Islands.
         # [!] WorldBorders will not show in Nether world due to centering bug
