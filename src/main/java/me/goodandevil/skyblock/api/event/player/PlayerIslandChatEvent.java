@@ -14,7 +14,7 @@ public class PlayerIslandChatEvent extends PlayerEvent implements Cancellable {
 	private String message, format;
 
 	public PlayerIslandChatEvent(Player player, Island island, String message, String format) {
-		super(player, island);
+		super(player, island, true);
 		this.message = message;
 		this.format = format;
 	}

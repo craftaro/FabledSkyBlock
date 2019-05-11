@@ -21,6 +21,7 @@ import me.goodandevil.skyblock.structure.StructureManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.upgrade.UpgradeManager;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
+import me.goodandevil.skyblock.utils.structure.SchematicUtil;
 import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
@@ -767,7 +768,7 @@ public class IslandManager {
                 direction = StructureUtil.pasteStructure(StructureUtil.loadStructure(structureFile),
                         island.getLocation(world, IslandEnvironment.Island), BlockDegreesType.ROTATE_360);
             } else {
-                direction = StructureUtil.pasteSchematic(structureFile, island.getLocation(world, IslandEnvironment.Island));
+                direction = SchematicUtil.pasteSchematic(structureFile, island.getLocation(world, IslandEnvironment.Island));
             }
 
             org.bukkit.Location spawnLocation = island.getLocation(world, IslandEnvironment.Main).clone();

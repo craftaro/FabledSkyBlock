@@ -657,15 +657,13 @@ public class Entity implements Listener {
             return;
         }
 
-        if (!(event.getSpawnReason() == SpawnReason.CUSTOM || event.getSpawnReason() == SpawnReason.NATURAL)) {
+        if (event.getSpawnReason() != SpawnReason.NATURAL)
             return;
-        }
 
         LivingEntity livingEntity = event.getEntity();
 
-        if (livingEntity.hasMetadata("SkyBlock")) {
+        if (livingEntity.hasMetadata("SkyBlock"))
             return;
-        }
 
         if (skyblock.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
             if (!skyblock.getIslandManager().hasSetting(livingEntity.getLocation(), IslandRole.Owner, "NaturalMobSpawning")) {

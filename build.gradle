@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'java'
 
 group 'com.songoda.fabledskyblock'
-version 'Build-74'
+version 'Build-75'
 
 sourceCompatibility = 1.8
 
@@ -23,7 +23,7 @@ configurations {
 dependencies {
     // PlaceholderAPI
     implementation (group: 'be.maximvdw', name: 'placeholderapi', version: '2.5.1')
-    implementation (group: 'me.clip', name: 'placeholderapi', version: '2.9.2')
+    implementation (group: 'me.clip', name: 'placeholderapi', version: '2.10.2')
 
     // Vault
     implementation (group: 'net.milkbowl', name: 'vault', version: '1.7.1')

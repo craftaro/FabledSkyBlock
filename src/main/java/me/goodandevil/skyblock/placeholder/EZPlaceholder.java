@@ -58,6 +58,8 @@ public class EZPlaceholder extends PlaceholderExpansion implements Listener {
 		List<Leaderboard> leaderboardBankPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Bank);
 		List<Leaderboard> leaderboardVotesPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Votes);
 
+
+
 		if (identifier.equalsIgnoreCase("islands")) {
 			return "" + skyblock.getVisitManager().getIslands().size();
 		} else {
@@ -83,12 +85,11 @@ public class EZPlaceholder extends PlaceholderExpansion implements Listener {
 					}
 
 					return ChatColor.translateAlternateColorCodes('&',
-							configLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Empty.Message"));
+							configLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Empty.Message"));
 				} else if (identifier.equalsIgnoreCase("leaderboard_bank_" + (i + 1))) {
 					if (i < leaderboardBankPlayers.size()) {
 						Leaderboard leaderboard = leaderboardBankPlayers.get(i);
 						Visit visit = leaderboard.getVisit();
-						IslandLevel level = visit.getLevel();
 
 						Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
 						String islandOwnerName;
@@ -102,7 +103,7 @@ public class EZPlaceholder extends PlaceholderExpansion implements Listener {
 						return ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Non-empty.Message")
 										.replace("%position", "" + (i + 1)).replace("%player", islandOwnerName)
-										.replace("%balance", NumberUtil.formatNumberByDecimal(level.getLevel())));
+										.replace("%balance", NumberUtil.formatNumberByDecimal(visit.getBankBalance())));
 					}
 
 					return ChatColor.translateAlternateColorCodes('&',
