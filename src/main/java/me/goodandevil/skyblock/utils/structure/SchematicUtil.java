@@ -1,15 +1,5 @@
 package me.goodandevil.skyblock.utils.structure;
 
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.function.operation.Operation;
-import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.session.ClipboardHolder;
 import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
@@ -29,16 +19,16 @@ public class SchematicUtil {
 
         Bukkit.getScheduler().runTask(SkyBlock.getInstance(), () -> {
             if (NMSUtil.getVersionNumber() > 12) { // WorldEdit 7
-                ClipboardFormat format = com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats.findByFile(schematicFile);
-                try (ClipboardReader reader = format.getReader(new FileInputStream(schematicFile))) {
-                    Clipboard clipboard = reader.read();
-                    try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(location.getWorld()), -1)) {
-                        Operation operation = new ClipboardHolder(clipboard)
+                com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat format = com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats.findByFile(schematicFile);
+                try (com.sk89q.worldedit.extent.clipboard.io.ClipboardReader reader = format.getReader(new FileInputStream(schematicFile))) {
+                    com.sk89q.worldedit.extent.clipboard.Clipboard clipboard = reader.read();
+                    try (com.sk89q.worldedit.EditSession editSession = com.sk89q.worldedit.WorldEdit.getInstance().getEditSessionFactory().getEditSession(new com.sk89q.worldedit.bukkit.BukkitWorld(location.getWorld()), -1)) {
+                        com.sk89q.worldedit.function.operation.Operation operation = new com.sk89q.worldedit.session.ClipboardHolder(clipboard)
                                 .createPaste(editSession)
-                                .to(BlockVector3.at(location.getX(), location.getY(), location.getZ()))
+                                .to(com.sk89q.worldedit.math.BlockVector3.at(location.getX(), location.getY(), location.getZ()))
                                 .ignoreAirBlocks(true)
                                 .build();
-                        Operations.complete(operation);
+                        com.sk89q.worldedit.function.operation.Operations.complete(operation);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

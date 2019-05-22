@@ -131,7 +131,7 @@ public class IslandManager {
                 Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
                 FileConfiguration configLoad = config.getFileConfiguration();
 
-                int islandHeight = configLoad.getInt("Island.World." + world.getEnvironment() + ".IslandSpawnHeight", 72);
+                int islandHeight = configLoad.getInt("Island.World." + world.name() + ".IslandSpawnHeight", 72);
 
                 return new org.bukkit.Location(skyblock.getWorldManager().getWorld(world), x, islandHeight, z);
             }

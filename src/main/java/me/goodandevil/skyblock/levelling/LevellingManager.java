@@ -30,9 +30,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 
 public class LevellingManager {
@@ -81,6 +83,7 @@ public class LevellingManager {
         boolean isWildStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("WildStacker");
 
         Map<LevellingData, Long> levellingData = new HashMap<>();
+        Set<Location> spawnerLocations = new HashSet<>(); // These have to be checked synchronously :(
 
         List<Material> blacklistedMaterials = new ArrayList<>();
         blacklistedMaterials.add(Materials.AIR.getPostMaterial());
@@ -95,7 +98,7 @@ public class LevellingManager {
                 if (!chunk.isReadyToScan()) return;
 
                 if (chunk.isFinished()) {
-                    finalizeMaterials(levellingData, player, island);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> finalizeMaterials(levellingData, spawnerLocations, player, island), 1);
                     cancel();
                     return;
                 }
@@ -164,23 +167,24 @@ public class LevellingManager {
 
                                         if (isWildStackerEnabled && spawnerType == null) {
                                             com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
-                                            if (wildStacker.isStackedSpawner(location.getBlock())) {
-                                                com.bgsoftware.wildstacker.api.objects.StackedSpawner spawner = wildStacker.getStackedSpawner(location);
+                                            com.bgsoftware.wildstacker.api.objects.StackedSpawner spawner = wildStacker.getStackedSpawner(location);
+                                            if (spawner != null) {
                                                 amount = spawner.getStackAmount();
                                                 spawnerType = spawner.getSpawnedType();
                                             }
                                         }
 
                                         if (spawnerType == null) {
-                                            spawnerType = ((CreatureSpawner) location.getBlock().getState()).getSpawnedType();
+                                            spawnerLocations.add(location);
+                                            continue;
                                         }
                                     } else {
                                         if (isWildStackerEnabled) {
                                             World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
                                             Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
                                             com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
-                                            if (wildStacker.isStackedBarrel(location.getBlock())) {
-                                                com.bgsoftware.wildstacker.api.objects.StackedBarrel barrel = wildStacker.getStackedBarrel(location.getBlock());
+                                            com.bgsoftware.wildstacker.api.objects.StackedBarrel barrel = wildStacker.getStackedBarrel(location);
+                                            if (barrel != null) {
                                                 amount = barrel.getStackAmount();
                                                 blockMaterial = barrel.getType();
                                                 blockData = barrel.getData();
@@ -196,7 +200,9 @@ public class LevellingManager {
                                             Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
                                             if (stackableManager.isStacked(location)) {
                                                 Stackable stackable = stackableManager.getStack(location, blockMaterial);
-                                                amount = stackable.getSize();
+                                                if (stackable != null) {
+                                                    amount = stackable.getSize();
+                                                }
                                             }
                                         }
                                     }
@@ -219,7 +225,20 @@ public class LevellingManager {
         }.runTaskTimerAsynchronously(skyblock, 0L, 1L);
     }
 
-    private void finalizeMaterials(Map<LevellingData, Long> levellingData, Player player, Island island) {
+    private void finalizeMaterials(Map<LevellingData, Long> levellingData, Set<Location> spawnerLocations, Player player, Island island) {
+        for (Location location : spawnerLocations) {
+            if (!(location.getBlock().getState() instanceof CreatureSpawner))
+                continue;
+
+            int amount = 1;
+            EntityType spawnerType = ((CreatureSpawner) location.getBlock().getState()).getSpawnedType();
+
+            LevellingData data = new LevellingData(Materials.SPAWNER.parseMaterial(), (byte) 0, spawnerType);
+            Long totalAmountInteger = levellingData.get(data);
+            long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
+            levellingData.put(data, totalAmount);
+        }
+
         Map<String, Long> materials = new HashMap<>();
         for (LevellingData data : levellingData.keySet()) {
             long amount = levellingData.get(data);
@@ -241,8 +260,7 @@ public class LevellingManager {
             level.setLastCalculatedLevel(level.getLevel());
             level.setMaterials(materials);
 
-            Bukkit.getServer().getPluginManager().callEvent(
-                    new IslandLevelChangeEvent(island.getAPIWrapper(), island.getAPIWrapper().getLevel()));
+            Bukkit.getServer().getPluginManager().callEvent(new IslandLevelChangeEvent(island.getAPIWrapper(), island.getAPIWrapper().getLevel()));
 
             if (player != null) {
                 me.goodandevil.skyblock.menus.Levelling.getInstance().open(player);
