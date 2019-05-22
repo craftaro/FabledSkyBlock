@@ -47,6 +47,8 @@ public class EZPlaceholder extends PlaceholderExpansion implements Listener {
 		return skyblock.getDescription().getVersion();
 	}
 
+	public boolean persist() { return true; }
+
 	public String onPlaceholderRequest(Player player, String identifier) {
 		PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
 		LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
@@ -143,13 +145,4 @@ public class EZPlaceholder extends PlaceholderExpansion implements Listener {
 		return placeholderManager.getPlaceholder(player, "fabledskyblock_" + identifier);
 	}
 
-	/**
-	 * If a player uses '/papi reload' then we need to reload this expansion
-	 */
-	@EventHandler
-	public void onExpansionUnregister(ExpansionUnregisterEvent event) {
-		if (event.getExpansion() instanceof EZPlaceholder) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, this::register, 20L);
-		}
-	}
 }

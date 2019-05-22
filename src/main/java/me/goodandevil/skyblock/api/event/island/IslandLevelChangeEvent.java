@@ -12,7 +12,7 @@ public class IslandLevelChangeEvent extends IslandEvent {
 	private final IslandLevel level;
 
 	public IslandLevelChangeEvent(Island island, IslandLevel level) {
-		super(island, true);
+		super(island);
 		this.level = level;
 	}
 

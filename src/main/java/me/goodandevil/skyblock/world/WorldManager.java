@@ -40,6 +40,10 @@ public class WorldManager {
 		boolean netherWorldEnabled = configLoad.getBoolean("Island.World.Nether.Enable");
 		boolean endWorldEnabled = configLoad.getBoolean("Island.World.End.Enable");
 
+		World.Environment normalWorldEnvironment = World.Environment.valueOf(configLoad.getString("Island.World.Normal.Environment"));
+		World.Environment netherWorldEnvironment = World.Environment.valueOf(configLoad.getString("Island.World.Nether.Environment"));
+		World.Environment endWorldEnvironment = World.Environment.valueOf(configLoad.getString("Island.World.End.Environment"));
+
 		normalWorld = Bukkit.getServer().getWorld(normalWorldName);
 		netherWorld = Bukkit.getServer().getWorld(netherWorldName);
 		endWorld = Bukkit.getServer().getWorld(endWorldName);
@@ -47,28 +51,28 @@ public class WorldManager {
 		if (normalWorld == null) {
 			Bukkit.getServer().getLogger().log(Level.INFO,
 					"SkyBlock | Info: Generating VoidWorld '" + normalWorldName + "'.");
-			normalWorld = WorldCreator.name(normalWorldName).type(WorldType.FLAT).environment(World.Environment.NORMAL)
+			normalWorld = WorldCreator.name(normalWorldName).type(WorldType.FLAT).environment(normalWorldEnvironment)
 					.generator(new VoidGenerator()).createWorld();
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(normalWorldName, World.Environment.NORMAL));
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(normalWorldName, normalWorldEnvironment));
 		}
 
 		if (netherWorld == null && netherWorldEnabled) {
 			Bukkit.getServer().getLogger().log(Level.INFO,
 					"SkyBlock | Info: Generating VoidWorld '" + netherWorldName + "'.");
-			netherWorld = WorldCreator.name(netherWorldName).type(WorldType.FLAT).environment(World.Environment.NETHER)
+			netherWorld = WorldCreator.name(netherWorldName).type(WorldType.FLAT).environment(netherWorldEnvironment)
 					.generator(new VoidGenerator()).createWorld();
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(netherWorldName, World.Environment.NETHER));
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(netherWorldName, netherWorldEnvironment));
 		}
 
 		if (endWorld == null && endWorldEnabled) {
 			Bukkit.getServer().getLogger().log(Level.INFO,
 					"SkyBlock | Info: Generating VoidWorld '" + endWorldName + "'.");
-			endWorld = WorldCreator.name(endWorldName).type(WorldType.FLAT).environment(World.Environment.THE_END)
+			endWorld = WorldCreator.name(endWorldName).type(WorldType.FLAT).environment(endWorldEnvironment)
 					.generator(new VoidGenerator()).createWorld();
 
-			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(endWorldName, World.Environment.THE_END));
+			Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(endWorldName, endWorldEnvironment));
 		}
 	}
 
