@@ -214,7 +214,8 @@ public class IslandManager {
             }
         }
 
-        Bukkit.getServer().getPluginManager().callEvent(new IslandCreateEvent(island.getAPIWrapper(), player));
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () ->
+                Bukkit.getServer().getPluginManager().callEvent(new IslandCreateEvent(island.getAPIWrapper(), player)));
 
         skyblock.getPlayerDataManager().getPlayerData(player).setIsland(player.getUniqueId());
 

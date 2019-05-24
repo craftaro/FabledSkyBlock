@@ -1130,7 +1130,7 @@ public enum Materials {
         Materials pmat = null;
 
         for (Materials mat : Materials.values()) {
-            if (name.toUpperCase().equals(mat.old12Mat)) {
+            if (name.equalsIgnoreCase(mat.old12Mat)) {
                 if (pmat == null) {
                     pmat = mat;
                 }
@@ -1179,7 +1179,7 @@ public enum Materials {
             return Materials.valueOf(mat.toString());
         } catch (IllegalArgumentException e) {
             for (Materials xmat : Materials.values()) {
-                if (xmat.old12Mat.equals(mat.toString())) {
+                if (xmat.old12Mat.equalsIgnoreCase(mat.toString())) {
                     return xmat;
                 }
             }

@@ -188,12 +188,9 @@ public class Block implements Listener {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (configLoad.getBoolean("Island.WorldBorder.Block")) {
-            if (block.getType() == Material.DISPENSER) {
-                if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
-                        island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
-                    event.setCancelled(true);
-                }
+        if (configLoad.getBoolean("Island.WorldBorder.Block") && block.getType() == Material.DISPENSER) {
+            if (!island.isLocationWithinIsland(world, block.getLocation())) {
+                event.setCancelled(true);
             }
         }
 
@@ -272,11 +269,14 @@ public class Block implements Listener {
         
         org.bukkit.block.Block block = event.getToBlock();
 
-        // Protect spawn location and outside of border
-        if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 1.0D)) {
+        // Protect outside of border
+        if (!island.isLocationWithinIsland(world, block.getLocation())) {
             event.setCancelled(true);
             return;
-        } else if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main)) && configLoad.getBoolean("Island.Spawn.Protection")) {
+        }
+
+        // Protect spawn
+        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main)) && configLoad.getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
         }
@@ -293,7 +293,7 @@ public class Block implements Listener {
                                        island.hasRole(IslandRole.Member, p.getUniqueId()) ||    
                                        island.hasRole(IslandRole.Coop, p.getUniqueId()) ||
                                        island.hasRole(IslandRole.Operator, p.getUniqueId());
-                    if (isMember && LocationUtil.isLocationAtLocationRadius(p.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
+                    if (isMember && island.isLocationWithinIsland(world, p.getLocation())) {
                         possiblePlayers.add(p);
                     }
                 }
@@ -336,7 +336,7 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+            if (!island.isLocationWithinIsland(world, block.getLocation())) {
                 event.setCancelled(true);
                 return;
             }
@@ -392,7 +392,7 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+            if (!island.isLocationWithinIsland(world, block.getLocation())) {
                 event.setCancelled(true);
                 return;
             }
@@ -468,7 +468,7 @@ public class Block implements Listener {
                                    island.hasRole(IslandRole.Member, player.getUniqueId()) || 
                                    island.hasRole(IslandRole.Coop, player.getUniqueId()) ||
                                    island.hasRole(IslandRole.Operator, player.getUniqueId());
-                if (isMember && LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
+                if (isMember && island.isLocationWithinIsland(world, player.getLocation())) {
                     possiblePlayers.add(player);
                 }
             }

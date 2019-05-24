@@ -12,6 +12,7 @@ import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.visit.Visit;
 import org.apache.commons.lang.WordUtils;
@@ -821,6 +822,14 @@ public class Island {
 			player.setVelocity(player.getLocation().getDirection().multiply(-.50));
 		}
 		return unlocked;
+	}
+
+	public boolean isLocationWithinIsland(IslandWorld world, Location location) {
+		Location islandLocation = this.getLocation(world, IslandEnvironment.Island).clone().add(0.5, 0, 0.5);
+		double size = this.getRadius();
+		size += size % 2 == 0 ? 1 : 0;
+
+		return LocationUtil.isLocationAtLocationRadius(location, islandLocation, size);
 	}
 
 	public me.goodandevil.skyblock.api.island.Island getAPIWrapper() {
