@@ -1,6 +1,7 @@
 package me.goodandevil.skyblock.utils;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 
 public final class NumberUtil {
@@ -10,14 +11,22 @@ public final class NumberUtil {
 	}
 
 	public static String formatNumberByDecimal(double number) {
-		String withoutDecimal = new DecimalFormat("0.#").format(number), withDecimal = "";
+		DecimalFormat decimalFormat = new DecimalFormat("0.#");
+		String withoutDecimal = decimalFormat.format(number), withDecimal = "";
 
-		if (withoutDecimal.contains(".")) {
-			withDecimal = "." + withoutDecimal.split("\\.")[1];
-			withoutDecimal = withoutDecimal.replace(withDecimal, "");
+		if (decimalFormat.getDecimalFormatSymbols().getDigit() == '.') {
+			if (withoutDecimal.contains(".")) {
+				withDecimal = "." + withoutDecimal.split("\\.")[1];
+				withoutDecimal = withoutDecimal.replace(withDecimal, "");
+			}
+		} else if (decimalFormat.getDecimalFormatSymbols().getDigit() == ',') {
+			if (withoutDecimal.contains(",")) {
+				withDecimal = "," + withoutDecimal.split(",")[1];
+				withoutDecimal = withoutDecimal.replace(withDecimal, "");
+			}
 		}
 
-		if (withDecimal.equals(".0")) {
+		if (withDecimal.equals(".0") || withDecimal.equals(",0")) {
 			withDecimal = "";
 		}
 
