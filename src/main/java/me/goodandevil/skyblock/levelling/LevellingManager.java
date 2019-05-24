@@ -43,6 +43,11 @@ public class LevellingManager {
 
     private List<LevellingMaterial> materialStorage = new ArrayList<>();
 
+    private Method getBlockTypeMethod = null;
+    private Method getBlockTypeIdMethod = null;
+    private Method getBlockTypeDataMethod = null;
+    private Method getMaterialMethod = null;
+
     public LevellingManager(SkyBlock skyblock) {
         this.skyblock = skyblock;
 
@@ -102,11 +107,6 @@ public class LevellingManager {
                     cancel();
                     return;
                 }
-
-                Method getBlockTypeMethod = null;
-                Method getBlockTypeIdMethod = null;
-                Method getBlockTypeDataMethod = null;
-                Method getMaterialMethod = null;
 
                 for (ChunkSnapshot chunkSnapshotList : chunk.getAvailableChunkSnapshots()) {
                     for (int x = 0; x < 16; x++) {
@@ -211,8 +211,7 @@ public class LevellingManager {
                                     Long totalAmountInteger = levellingData.get(data);
                                     long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
                                     levellingData.put(data, totalAmount);
-                                } catch (IllegalAccessException | IllegalArgumentException
-                                        | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }

@@ -12,7 +12,7 @@ public class IslandCreateEvent extends IslandEvent {
 	private final Player player;
 
 	public IslandCreateEvent(Island island, Player player) {
-		super(island, true);
+		super(island);
 		this.player = player;
 	}
 
