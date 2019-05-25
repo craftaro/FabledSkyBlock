@@ -128,10 +128,8 @@ public class Block implements Listener {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (LocationUtil.isLocationLocation(block.getLocation(),
-                island.getLocation(world, IslandEnvironment.Main)
-                        .clone()
-                        .subtract(0.0D, 1.0D, 0.0D))) {
+        if (LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))
+            || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone())) {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 skyblock.getMessageManager().sendMessage(player,

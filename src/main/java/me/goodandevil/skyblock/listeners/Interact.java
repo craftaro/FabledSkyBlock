@@ -62,6 +62,21 @@ public class Interact implements Listener {
 		SoundManager soundManager = skyblock.getSoundManager();
 		StackableManager stackableManager = skyblock.getStackableManager();
 
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+			if (block.getType() == Material.DRAGON_EGG) {
+				if (!islandManager.hasPermission(player, block.getLocation(), "DragonEggUse")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
+			}
+		}
+
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (stackableManager != null
 					&& stackableManager.getStackableMaterials().contains(event.getMaterial())
@@ -315,17 +330,6 @@ public class Interact implements Listener {
 				}
 			} else if (block.getType() == Materials.LEGACY_CAKE_BLOCK.getPostMaterial()) {
 				if (player.getFoodLevel() < 20 && !islandManager.hasPermission(player, block.getLocation(), "Cake")) {
-					event.setCancelled(true);
-
-					messageManager.sendMessage(player,
-							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
-					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-
-					return;
-				}
-			} else if (block.getType() == Material.DRAGON_EGG) {
-				if (!islandManager.hasPermission(player, block.getLocation(), "DragonEggUse")) {
 					event.setCancelled(true);
 
 					messageManager.sendMessage(player,

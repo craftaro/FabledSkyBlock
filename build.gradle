@@ -32,7 +32,7 @@ dependencies {
     implementation (group: 'me.robin', name: 'leaderheads', version: '1.0')
 
     // EpicSpawners
-    implementation (group: 'com.songoda', name: 'epicspawners', version: '5.7.1')
+    implementation (group: 'com.songoda', name: 'epicspawners', version: '6-pre4')
 	
 	// WildStacker
 	implementation (group: 'com.bgsoftware', name: 'wildstacker-api', version: 'b14')
@@ -43,6 +43,9 @@ dependencies {
     // Apache Commons
     shade (group: 'org.apache.commons', name: 'commons-lang3', version: '3.0')
     shade (group: 'commons-io', name: 'commons-io', version: '2.5')
+
+    // JetBrains Annotations
+    compile (group: 'org.jetbrains', name: 'annotations', version: '13.0')
 
     // Songoda Updater
     shade (group: 'com.songoda', name: 'songodaupdater', version: '1')

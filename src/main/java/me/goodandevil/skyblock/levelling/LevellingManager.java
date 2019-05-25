@@ -89,6 +89,7 @@ public class LevellingManager {
 
         Map<LevellingData, Long> levellingData = new HashMap<>();
         Set<Location> spawnerLocations = new HashSet<>(); // These have to be checked synchronously :(
+        Set<Location> epicSpawnerLocations = new HashSet<>();
 
         List<Material> blacklistedMaterials = new ArrayList<>();
         blacklistedMaterials.add(Materials.AIR.getPostMaterial());
@@ -103,7 +104,7 @@ public class LevellingManager {
                 if (!chunk.isReadyToScan()) return;
 
                 if (chunk.isFinished()) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> finalizeMaterials(levellingData, spawnerLocations, player, island), 1);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> finalizeMaterials(levellingData, spawnerLocations, epicSpawnerLocations, player, island), 1);
                     cancel();
                     return;
                 }
@@ -157,15 +158,16 @@ public class LevellingManager {
                                         Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
 
                                         if (isEpicSpawnersEnabled) {
-                                            com.songoda.epicspawners.api.EpicSpawners epicSpawners = com.songoda.epicspawners.api.EpicSpawnersAPI.getImplementation();
+                                            com.songoda.epicspawners.EpicSpawners epicSpawners = com.songoda.epicspawners.EpicSpawners.getInstance();
                                             if (epicSpawners.getSpawnerManager().isSpawner(location)) {
-                                                com.songoda.epicspawners.api.spawner.Spawner spawner = epicSpawners.getSpawnerManager().getSpawnerFromWorld(location);
-                                                amount = spawner.getSpawnerDataCount();
-                                                spawnerType = spawner.getCreatureSpawner().getSpawnedType();
+                                                com.songoda.epicspawners.spawners.spawner.Spawner spawner = epicSpawners.getSpawnerManager().getSpawnerFromWorld(location);
+                                                if (spawner != null)
+                                                    epicSpawnerLocations.add(location);
+                                                continue;
                                             }
                                         }
 
-                                        if (isWildStackerEnabled && spawnerType == null) {
+                                        if (isWildStackerEnabled) {
                                             com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
                                             com.bgsoftware.wildstacker.api.objects.StackedSpawner spawner = wildStacker.getStackedSpawner(location);
                                             if (spawner != null) {
@@ -224,7 +226,7 @@ public class LevellingManager {
         }.runTaskTimerAsynchronously(skyblock, 0L, 1L);
     }
 
-    private void finalizeMaterials(Map<LevellingData, Long> levellingData, Set<Location> spawnerLocations, Player player, Island island) {
+    private void finalizeMaterials(Map<LevellingData, Long> levellingData, Set<Location> spawnerLocations, Set<Location> epicSpawnerLocations, Player player, Island island) {
         for (Location location : spawnerLocations) {
             if (!(location.getBlock().getState() instanceof CreatureSpawner))
                 continue;
@@ -236,6 +238,23 @@ public class LevellingManager {
             Long totalAmountInteger = levellingData.get(data);
             long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
             levellingData.put(data, totalAmount);
+        }
+
+        for (Location location : epicSpawnerLocations) {
+            com.songoda.epicspawners.EpicSpawners epicSpawners = com.songoda.epicspawners.EpicSpawners.getInstance();
+            if (epicSpawners.getSpawnerManager().isSpawner(location)) {
+                com.songoda.epicspawners.spawners.spawner.Spawner spawner = epicSpawners.getSpawnerManager().getSpawnerFromWorld(location);
+                if (spawner == null)
+                    continue;
+
+                int amount = spawner.getFirstStack().getStackSize();
+                EntityType spawnerType = spawner.getCreatureSpawner().getSpawnedType();
+
+                LevellingData data = new LevellingData(Materials.SPAWNER.parseMaterial(), (byte) 0, spawnerType);
+                Long totalAmountInteger = levellingData.get(data);
+                long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
+                levellingData.put(data, totalAmount);
+            }
         }
 
         Map<String, Long> materials = new HashMap<>();
