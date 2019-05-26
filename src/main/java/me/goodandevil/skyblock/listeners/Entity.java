@@ -100,8 +100,8 @@ public class Entity implements Listener {
                 event.setCancelled(true);
             }
         }
-        
-        // Fix a bug in spigot where arrows with flame still apply flame even if the event is cancelled
+
+        // Fix a bug in minecraft where arrows with flame still apply fire ticks even if the shot entity isn't damaged
         if (preventFireTicks.contains(player.getUniqueId()) && event.getCause() == DamageCause.FIRE_TICK) {
             player.setFireTicks(0);
             event.setCancelled(true);
@@ -157,8 +157,7 @@ public class Entity implements Listener {
             return;
         }
 
-        if (event.getDamager() instanceof Projectile
-                && ((Projectile) event.getDamager()).getShooter() instanceof Player) {
+        if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player) {
             Player player = (Player) ((Projectile) event.getDamager()).getShooter();
             org.bukkit.entity.Entity entity = event.getEntity();
 
@@ -166,6 +165,11 @@ public class Entity implements Listener {
                 if (event.getEntity() instanceof Player) {
                     Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
                     FileConfiguration configLoad = config.getFileConfiguration();
+
+                    if (entity.getType() == EntityType.ITEM_FRAME && !islandManager.hasPermission(player, entity.getLocation(), "HangingDestroy")) {
+                        event.setCancelled(true);
+                        return;
+                    }
 
                     if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
                         if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "PvP")) {
@@ -214,7 +218,7 @@ public class Entity implements Listener {
             }
         }
         
-        // Fix a bug in spigot where arrows with flame still apply flame even if the event is cancelled
+        // Fix a bug in minecraft where arrows with flame still apply fire ticks even if the shot entity isn't damaged
         if (event.isCancelled() && event.getEntity() != null && event.getDamager() instanceof Arrow && ((Arrow)event.getDamager()).getShooter() instanceof Player) {
             Arrow arrow = (Arrow) event.getDamager();
             if (arrow.getFireTicks() != 0) {

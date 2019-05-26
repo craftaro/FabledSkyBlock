@@ -1342,6 +1342,10 @@ public class IslandManager {
     }
 
     public boolean isLocationAtIsland(Island island, org.bukkit.Location location, IslandWorld world) {
-        return LocationUtil.isLocationAtLocationRadius(location, island.getLocation(world, IslandEnvironment.Island), island.getRadius());
+        Location islandLocation = island.getLocation(world, IslandEnvironment.Island).clone().add(0.5, 0, 0.5);
+        double size = island.getRadius();
+        size += size % 2 == 0 ? 1 : 0;
+
+        return LocationUtil.isLocationAtLocationRadius(location, islandLocation, size);
     }
 }

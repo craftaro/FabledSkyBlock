@@ -824,14 +824,6 @@ public class Island {
 		return unlocked;
 	}
 
-	public boolean isLocationWithinIsland(IslandWorld world, Location location) {
-		Location islandLocation = this.getLocation(world, IslandEnvironment.Island).clone().add(0.5, 0, 0.5);
-		double size = this.getRadius();
-		size += size % 2 == 0 ? 1 : 0;
-
-		return LocationUtil.isLocationAtLocationRadius(location, islandLocation, size);
-	}
-
 	public me.goodandevil.skyblock.api.island.Island getAPIWrapper() {
 		return apiWrapper;
 	}

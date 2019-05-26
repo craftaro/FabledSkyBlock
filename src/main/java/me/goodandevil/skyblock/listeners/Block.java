@@ -17,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -187,7 +188,7 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.WorldBorder.Block") && block.getType() == Material.DISPENSER) {
-            if (!island.isLocationWithinIsland(world, block.getLocation())) {
+            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
                 event.setCancelled(true);
             }
         }
@@ -268,7 +269,7 @@ public class Block implements Listener {
         org.bukkit.block.Block block = event.getToBlock();
 
         // Protect outside of border
-        if (!island.isLocationWithinIsland(world, block.getLocation())) {
+        if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
             event.setCancelled(true);
             return;
         }
@@ -291,7 +292,7 @@ public class Block implements Listener {
                                        island.hasRole(IslandRole.Member, p.getUniqueId()) ||    
                                        island.hasRole(IslandRole.Coop, p.getUniqueId()) ||
                                        island.hasRole(IslandRole.Operator, p.getUniqueId());
-                    if (isMember && island.isLocationWithinIsland(world, p.getLocation())) {
+                    if (isMember && islandManager.isLocationAtIsland(island, p.getLocation(), world)) {
                         possiblePlayers.add(p);
                     }
                 }
@@ -334,7 +335,7 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!island.isLocationWithinIsland(world, block.getLocation())) {
+            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
                 event.setCancelled(true);
                 return;
             }
@@ -390,7 +391,7 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!island.isLocationWithinIsland(world, block.getLocation())) {
+            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
                 event.setCancelled(true);
                 return;
             }
@@ -466,7 +467,7 @@ public class Block implements Listener {
                                    island.hasRole(IslandRole.Member, player.getUniqueId()) || 
                                    island.hasRole(IslandRole.Coop, player.getUniqueId()) ||
                                    island.hasRole(IslandRole.Operator, player.getUniqueId());
-                if (isMember && island.isLocationWithinIsland(world, player.getLocation())) {
+                if (isMember && islandManager.isLocationAtIsland(island, player.getLocation(), world)) {
                     possiblePlayers.add(player);
                 }
             }
@@ -639,37 +640,26 @@ public class Block implements Listener {
         IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
         Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
 
-        for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
-                event.setCancelled(true);
-                return;
+        // PortalCreateEvent.getBlocks() changed from ArrayList<Block> to ArrayList<BlockState> in 1.14.1... why...
+        if (NMSUtil.getVersionNumber() > 13) {
+            for (BlockState block : event.getBlocks()) {
+                if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+                    event.setCancelled(true);
+                    return;
+                }
             }
-        }
-    }
-
-    @EventHandler
-    public void onEntityCreatePortal(EntityCreatePortalEvent event) {
-        WorldManager worldManager = skyblock.getWorldManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-
-        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
-            return;
-
-        if (event.getBlocks().isEmpty())
-            return;
-
-        Island island = islandManager.getIslandAtLocation(event.getBlocks().get(0).getLocation());
-        if (island == null)
-            return;
-
-        // Check spawn block protection
-        IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
-        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
-
-        for (org.bukkit.block.BlockState block : event.getBlocks()) {
-            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
-                event.setCancelled(true);
-                return;
+        } else {
+            try {
+                @SuppressWarnings("unchecked")
+                ArrayList<org.bukkit.block.Block> blocks = (ArrayList<org.bukkit.block.Block>) event.getClass().getMethod("getBlocks").invoke(event);
+                for (org.bukkit.block.Block block : blocks) {
+                    if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+            } catch (ReflectiveOperationException ex) {
+                ex.printStackTrace();
             }
         }
     }

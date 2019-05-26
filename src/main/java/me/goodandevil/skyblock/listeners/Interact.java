@@ -258,7 +258,8 @@ public class Interact implements Listener {
 					|| block.getType() == Materials.BIRCH_BUTTON.parseMaterial()
 					|| block.getType() == Materials.JUNGLE_BUTTON.parseMaterial()
 					|| block.getType() == Materials.ACACIA_BUTTON.parseMaterial()
-					|| block.getType() == Materials.DARK_OAK_BUTTON.parseMaterial()) {
+					|| block.getType() == Materials.DARK_OAK_BUTTON.parseMaterial()
+					|| block.getType() == Materials.LEVER.parseMaterial()) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "LeverButton")) {
 					event.setCancelled(true);
 
@@ -468,6 +469,7 @@ public class Interact implements Listener {
 				}
 			}
 		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+			// Note: Cast is necessary as it is ambiguous without it in 1.8
 			if (player.getTargetBlock((Set<Material>) null, 5).getType() == Material.FIRE) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Fire")) {
 					event.setCancelled(true);
@@ -479,7 +481,9 @@ public class Interact implements Listener {
 				}
 			}
 		} else if (event.getAction() == Action.PHYSICAL) {
-			if (block.getType() == Materials.FARMLAND.parseMaterial()) {
+			if (block.getType() == Materials.TURTLE_EGG.parseMaterial()) {
+				event.setCancelled(true);
+			} else if (block.getType() == Materials.FARMLAND.parseMaterial()) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Crop")) {
 					event.setCancelled(true);
 
