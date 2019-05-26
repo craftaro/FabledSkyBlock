@@ -51,7 +51,7 @@ dependencies {
     shade (group: 'com.songoda', name: 'songodaupdater', version: '1')
 
     // Spigot
-    implementation (group: 'org.spigotmc', name: 'spigot', version: '1.14')
+    implementation (group: 'org.spigotmc', name: 'spigot', version: '1.14.1')
 }
 
 processResources {
