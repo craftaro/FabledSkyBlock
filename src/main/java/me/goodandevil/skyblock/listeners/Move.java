@@ -217,7 +217,6 @@ public class Move implements Listener {
             if (player.hasPermission("fabledskyblock.bypass")) {
                 Island loadedIsland = islandManager.loadIslandAtLocation(player.getLocation());
                 if (loadedIsland != null) {
-                    Bukkit.broadcastMessage("Sidestepped normal rules for bypass user");
                     playerData.setIsland(loadedIsland.getOwnerUUID());
                     return;
                 }
