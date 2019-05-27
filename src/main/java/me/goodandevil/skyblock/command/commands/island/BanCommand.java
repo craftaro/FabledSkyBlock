@@ -7,6 +7,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
@@ -45,6 +46,9 @@ public class BanCommand extends SubCommand {
 								&& island.getSetting(IslandRole.Operator, "Ban").getStatus())) {
 					Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
+					if (targetPlayer != null && targetPlayer.hasPermission("fabledskyblock.bypass.ban"))
+						return;
+
 					UUID targetPlayerUUID = null;
 					String targetPlayerName = null;
 
@@ -52,6 +56,9 @@ public class BanCommand extends SubCommand {
 						OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
 						targetPlayerUUID = targetPlayerOffline.getUniqueId();
 						targetPlayerName = targetPlayerOffline.getName();
+
+						if (skyblock.getEconomyManager().hasPermission(skyblock.getWorldManager().getWorld(IslandWorld.Normal).getName(), Bukkit.getOfflinePlayer(targetPlayerUUID), "fabledskyblock.bypass.ban"))
+							return;
 					} else {
 						targetPlayerUUID = targetPlayer.getUniqueId();
 						targetPlayerName = targetPlayer.getName();
