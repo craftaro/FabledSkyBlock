@@ -257,6 +257,9 @@ public class IslandManager {
         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getBiomeManager()
                 .setBiome(island, biome), 20L);
 
+        // Recalculate island level after 5 seconds
+        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().calculatePoints(null, island), 100L);
+
         return true;
     }
 
@@ -685,8 +688,7 @@ public class IslandManager {
         WorldManager worldManager = skyblock.getWorldManager();
         FileManager fileManager = skyblock.getFileManager();
 
-        Config config = fileManager.getConfig(
-                new File(skyblock.getDataFolder().toString() + "/island-data", island.getOwnerUUID() + ".yml"));
+        Config config = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/island-data", island.getOwnerUUID() + ".yml"));
 
         if (config.getFileConfiguration().getString("Location." + world.name()) == null) {
             pasteStructure(island, world);
@@ -713,18 +715,22 @@ public class IslandManager {
 
     public void resetIsland(Island island) {
         for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
-            pasteStructure(island, worldList);
+            if (isIslandWorldUnlocked(island, worldList)) {
+                pasteStructure(island, worldList);
+            }
         }
     }
 
     public void pasteStructure(Island island, IslandWorld world) {
+        if (!isIslandWorldUnlocked(island, world))
+            return;
+
         StructureManager structureManager = skyblock.getStructureManager();
         FileManager fileManager = skyblock.getFileManager();
 
         Structure structure;
 
-        if (island.getStructure() != null && !island.getStructure().isEmpty()
-                && structureManager.containsStructure(island.getStructure())) {
+        if (island.getStructure() != null && !island.getStructure().isEmpty() && structureManager.containsStructure(island.getStructure())) {
             structure = structureManager.getStructure(island.getStructure());
         } else {
             structure = structureManager.getStructures().get(0);
@@ -738,17 +744,14 @@ public class IslandManager {
         for (IslandEnvironment environmentList : IslandEnvironment.values()) {
             if (environmentList == IslandEnvironment.Island) {
                 island.addLocation(world, environmentList, islandLocation);
-                fileManager.setLocation(config, "Location." + world.name() + "." + environmentList.name(),
-                        islandLocation, true);
+                fileManager.setLocation(config, "Location." + world.name() + "." + environmentList.name(), islandLocation, true);
             } else {
                 island.addLocation(world, environmentList, islandLocation.clone().add(0.5D, 0.0D, 0.5D));
-                fileManager.setLocation(config, "Location." + world.name() + ".Spawn." + environmentList.name(),
-                        islandLocation.clone().add(0.5D, 0.0D, 0.5D), true);
+                fileManager.setLocation(config, "Location." + world.name() + ".Spawn." + environmentList.name(), islandLocation.clone().add(0.5D, 0.0D, 0.5D), true);
             }
         }
 
-        if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                .getBoolean("Island.Spawn.Protection")) {
+        if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> islandLocation.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().setType(Material.STONE));
         }
 
@@ -788,9 +791,56 @@ public class IslandManager {
 
         setNextAvailableLocation(world, islandLocation);
         saveNextAvailableLocation(world);
+    }
+
+    /**
+     * Unlocks an island world and pastes the island structure there
+     *
+     * @param island The island to unlock for
+     * @param islandWorld The island world type to unlock
+     */
+    public void unlockIslandWorld(Island island, IslandWorld islandWorld) {
+        FileManager fileManager = skyblock.getFileManager();
+        Config islandData = fileManager
+                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
+                        island.getOwnerUUID().toString() + ".yml"));
+        FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
+
+        configLoadIslandData.set("Unlocked." + islandWorld.name(), true);
+
+        pasteStructure(island, islandWorld);
 
         // Recalculate island level after 5 seconds
         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().calculatePoints(null, island), 100L);
+    }
+
+    /**
+     * Checks if an island world is unlocked
+     *
+     * @param island The island to check
+     * @param islandWorld The island world to check
+     * @return true if the island world is unlocked, otherwise false
+     */
+    public boolean isIslandWorldUnlocked(Island island, IslandWorld islandWorld) {
+        if (islandWorld == IslandWorld.Normal)
+            return true;
+
+        FileManager fileManager = skyblock.getFileManager();
+        Config islandData = fileManager
+                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
+                        island.getOwnerUUID().toString() + ".yml"));
+        FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
+        boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + islandWorld.name());
+
+        if (!unlocked) {
+            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = config.getFileConfiguration();
+            double price = configLoad.getDouble("Island.World." + islandWorld.name() + ".UnlockPrice");
+            if (price == -1)
+                unlocked = true;
+        }
+
+        return unlocked;
     }
 
     public Set<UUID> getVisitorsAtIsland(Island island) {
@@ -1342,10 +1392,13 @@ public class IslandManager {
     }
 
     public boolean isLocationAtIsland(Island island, org.bukkit.Location location, IslandWorld world) {
-        Location islandLocation = island.getLocation(world, IslandEnvironment.Island).clone().add(0.5, 0, 0.5);
+        Location islandLocation = island.getLocation(world, IslandEnvironment.Island);
+        if (islandLocation == null)
+            return false;
+
         double size = island.getRadius();
         size += size % 2 == 0 ? 1 : 0;
 
-        return LocationUtil.isLocationAtLocationRadius(location, islandLocation, size);
+        return LocationUtil.isLocationAtLocationRadius(location.clone().add(0.5, 0, 0.5), islandLocation, size);
     }
 }

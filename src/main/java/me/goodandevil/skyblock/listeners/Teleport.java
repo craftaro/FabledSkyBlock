@@ -76,6 +76,11 @@ public class Teleport implements Listener {
 
                 return;
             }
+
+            if (isCause) {
+                event.setCancelled(true);
+                return;
+            }
         }
 
         if (playerDataManager.hasPlayerData(player)) {

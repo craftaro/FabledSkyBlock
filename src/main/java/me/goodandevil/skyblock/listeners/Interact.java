@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -398,6 +399,13 @@ public class Interact implements Listener {
 				if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 						.getFileConfiguration().getBoolean("Island.Block.EndFrame.Enable")
 						&& islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
+
+					if (Bukkit.getPluginManager().isPluginEnabled("EpicAnchors")) {
+						if (com.songoda.epicanchors.EpicAnchorsPlugin.getInstance().getAnchorManager().getAnchor(block.getLocation()) != null) {
+							event.setCancelled(true);
+							return;
+						}
+					}
 
 					ItemStack is = event.getPlayer().getItemInHand();
 

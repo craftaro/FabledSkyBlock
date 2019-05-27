@@ -805,8 +805,7 @@ public class Island {
 		FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
 		double price = configLoad.getDouble("Island.World." + type + ".UnlockPrice");
 
-		boolean unlocked =
-						configLoadIslandData.getBoolean("Unlocked." + type);
+		boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + type);
 		if (price == -1) {
 			configLoadIslandData.set("Unlocked." + type, true);
 			unlocked = true;
