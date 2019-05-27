@@ -167,35 +167,35 @@ public class LevellingManager {
                                             }
                                         }
 
-                                        if (isWildStackerEnabled) {
-                                            com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
-                                            com.bgsoftware.wildstacker.api.objects.StackedSpawner spawner = wildStacker.getStackedSpawner(location);
-                                            if (spawner != null) {
-                                                amount = spawner.getStackAmount();
-                                                spawnerType = spawner.getSpawnedType();
-                                            }
-                                        }
+//                                        if (isWildStackerEnabled) {
+//                                            com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
+//                                            com.bgsoftware.wildstacker.api.objects.StackedSpawner spawner = wildStacker.getStackedSpawner(location);
+//                                            if (spawner != null) {
+//                                                amount = spawner.getStackAmount();
+//                                                spawnerType = spawner.getSpawnedType();
+//                                            }
+//                                        }
 
                                         if (spawnerType == null) {
                                             spawnerLocations.add(location);
                                             continue;
                                         }
                                     } else {
-                                        if (isWildStackerEnabled) {
-                                            World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
-                                            com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
-                                            com.bgsoftware.wildstacker.api.objects.StackedBarrel barrel = wildStacker.getStackedBarrel(location);
-                                            if (barrel != null) {
-                                                amount = barrel.getStackAmount();
-                                                blockMaterial = barrel.getType();
-                                                blockData = barrel.getData();
-                                                if (NMSUtil.getVersionNumber() > 12 && blockMaterial.name().startsWith("LEGACY_")) {
-                                                    blockMaterial = Material.matchMaterial(blockMaterial.name().replace("LEGACY_", ""));
-                                                    blockData = 0;
-                                                }
-                                            }
-                                        }
+//                                        if (isWildStackerEnabled) {
+//                                            World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
+//                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
+//                                            com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
+//                                            com.bgsoftware.wildstacker.api.objects.StackedBarrel barrel = wildStacker.getStackedBarrel(location);
+//                                            if (barrel != null) {
+//                                                amount = barrel.getStackAmount();
+//                                                blockMaterial = barrel.getType();
+//                                                blockData = barrel.getData();
+//                                                if (NMSUtil.getVersionNumber() > 12 && blockMaterial.name().startsWith("LEGACY_")) {
+//                                                    blockMaterial = Material.matchMaterial(blockMaterial.name().replace("LEGACY_", ""));
+//                                                    blockData = 0;
+//                                                }
+//                                            }
+//                                        }
 
                                         if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial) && amount == 1) {
                                             World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
