@@ -45,7 +45,7 @@ public class Block implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlock();
@@ -159,7 +159,7 @@ public class Block implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlock();

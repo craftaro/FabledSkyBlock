@@ -555,11 +555,12 @@ public class IslandManager {
         return null;
     }
 
-    public void loadIslandAtLocation(Location location) {
+    public Island loadIslandAtLocation(Location location) {
         FileManager fileManager = skyblock.getFileManager();
         File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 
-        if (!configFile.exists()) return;
+        if (!configFile.exists())
+            return null;
 
         for (File fileList : configFile.listFiles()) {
             if (fileList != null && fileList.getName().contains(".yml") && fileList.getName().length() > 35) {
@@ -576,14 +577,15 @@ public class IslandManager {
 
                     if (LocationUtil.isLocationAtLocationRadius(location, islandLocation, size)) {
                         UUID islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
-                        this.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
-                        return;
+                        return this.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+
+        return null;
     }
 
     public void unloadIsland(Island island, org.bukkit.OfflinePlayer player) {

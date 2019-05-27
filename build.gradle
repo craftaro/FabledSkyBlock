@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'java'
 
 group 'com.songoda.fabledskyblock'
-version 'Build-75'
+version 'Build-76'
 
 sourceCompatibility = 1.8
 

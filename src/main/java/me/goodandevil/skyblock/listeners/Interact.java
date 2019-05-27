@@ -49,7 +49,7 @@ public class Interact implements Listener {
 	}
 
 	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		org.bukkit.block.Block block = event.getClickedBlock();
