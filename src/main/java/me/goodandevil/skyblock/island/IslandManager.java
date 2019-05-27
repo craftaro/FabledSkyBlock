@@ -258,7 +258,9 @@ public class IslandManager {
                 .setBiome(island, biome), 20L);
 
         // Recalculate island level after 5 seconds
-        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().calculatePoints(null, island), 100L);
+        if (fileManager.getConfig(new File(this.skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getBoolean("Island.Levelling.ScanAutomatically")) {
+            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().calculatePoints(null, island), 100L);
+        }
 
         return true;
     }
@@ -811,7 +813,9 @@ public class IslandManager {
         pasteStructure(island, islandWorld);
 
         // Recalculate island level after 5 seconds
-        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().calculatePoints(null, island), 100L);
+        if (fileManager.getConfig(new File(this.skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getBoolean("Island.Levelling.ScanAutomatically")) {
+            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().calculatePoints(null, island), 100L);
+        }
     }
 
     /**
