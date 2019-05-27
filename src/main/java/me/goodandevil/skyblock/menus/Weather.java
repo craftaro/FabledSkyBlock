@@ -112,9 +112,12 @@ public class Weather {
 
 						if (!island.isWeatherSynchronized()) {
 							for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+								all.resetPlayerTime();
+								all.resetPlayerWeather();
 								all.setPlayerTime(island.getTime(),
 										fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 												.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+								all.setPlayerWeather(island.getWeather());
 							}
 						}
 
@@ -132,6 +135,11 @@ public class Weather {
 
 						if (!island.isWeatherSynchronized()) {
 							for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+								all.resetPlayerTime();
+								all.resetPlayerWeather();
+								all.setPlayerTime(island.getTime(),
+										fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+												.getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
 								all.setPlayerWeather(island.getWeather());
 							}
 						}
@@ -183,25 +191,25 @@ public class Weather {
 
 			if (islandTime == 0) {
 				timeName = configLoad.getString("Menu.Weather.Item.Info.Time.Dawn");
-				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Day");
+				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Dawn");
 			} else if (islandTime == 1000) {
 				timeName = configLoad.getString("Menu.Weather.Item.Info.Time.Day");
-				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Noon");
+				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Day");
 			} else if (islandTime == 6000) {
 				timeName = configLoad.getString("Menu.Weather.Item.Info.Time.Noon");
-				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Dusk");
+				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Noon");
 			} else if (islandTime == 12000) {
 				timeName = configLoad.getString("Menu.Weather.Item.Info.Time.Dusk");
-				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Night");
+				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Dusk");
 			} else if (islandTime == 13000) {
 				timeName = configLoad.getString("Menu.Weather.Item.Info.Time.Night");
-				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Midnight");
+				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Night");
 			} else if (islandTime == 18000) {
 				timeName = configLoad.getString("Menu.Weather.Item.Info.Time.Midnight");
-				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Dawn");
+				timeChoice = configLoad.getString("Menu.Weather.Item.Time.Choice.Midnight");
 			}
 
-			if (island.getWeather() == WeatherType.CLEAR) {
+			if (island.getWeather() != WeatherType.CLEAR) {
 				weatherChoice = configLoad.getString("Menu.Weather.Item.Weather.Choice.Downfall");
 			} else {
 				weatherChoice = configLoad.getString("Menu.Weather.Item.Weather.Choice.Clear");
@@ -215,21 +223,34 @@ public class Weather {
 
 			nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG),
 					configLoad.getString("Menu.Weather.Item.Info.Displayname"),
-					configLoad.getStringList("Menu.Weather.Item.Info.Lore"),
+					configLoad.getStringList("Menu.Weather.Item.Info.Lore." + (island.isWeatherSynchronized() ? "Synchronised" : "Unsynchronised")),
 					new Placeholder[] { new Placeholder("%synchronised", weatherSynchronised),
 							new Placeholder("%time_name", timeName), new Placeholder("%time", "" + island.getTime()),
 							new Placeholder("%weather", island.getWeatherName()) },
 					null, null), 0);
 			nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
 					configLoad.getString("Menu.Weather.Item.Barrier.Displayname"), null, null, null, null), 1);
-			nInv.addItem(nInv.createItem(Materials.SUNFLOWER.parseItem(),
-					configLoad.getString("Menu.Weather.Item.Time.Displayname"),
-					configLoad.getStringList("Menu.Weather.Item.Time.Lore"),
-					new Placeholder[] { new Placeholder("%choice", timeChoice) }, null, null), 2);
-			nInv.addItem(nInv.createItem(new ItemStack(Material.GHAST_TEAR),
-					configLoad.getString("Menu.Weather.Item.Weather.Displayname"),
-					configLoad.getStringList("Menu.Weather.Item.Weather.Lore"),
-					new Placeholder[] { new Placeholder("%choice", weatherChoice) }, null, null), 3);
+
+			if (!island.isWeatherSynchronized()) {
+				nInv.addItem(nInv.createItem(Materials.SUNFLOWER.parseItem(),
+						configLoad.getString("Menu.Weather.Item.Time.Displayname"),
+						configLoad.getStringList("Menu.Weather.Item.Time.Lore"),
+						new Placeholder[] { new Placeholder("%choice", timeChoice) }, null, null), 2);
+				nInv.addItem(nInv.createItem(new ItemStack(Material.GHAST_TEAR),
+						configLoad.getString("Menu.Weather.Item.Weather.Displayname"),
+						configLoad.getStringList("Menu.Weather.Item.Weather.Lore"),
+						new Placeholder[] { new Placeholder("%choice", weatherChoice) }, null, null), 3);
+			} else {
+				nInv.addItem(nInv.createItem(Materials.BARRIER.parseItem(),
+						configLoad.getString("Menu.Weather.Item.Disabled.Time.Displayname"),
+						configLoad.getStringList("Menu.Weather.Item.Disabled.Time.Lore"),
+						new Placeholder[] { new Placeholder("%choice", timeChoice) }, null, null), 2);
+				nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER),
+						configLoad.getString("Menu.Weather.Item.Disabled.Weather.Displayname"),
+						configLoad.getStringList("Menu.Weather.Item.Disabled.Weather.Lore"),
+						new Placeholder[] { new Placeholder("%choice", weatherChoice) }, null, null), 3);
+			}
+
 			nInv.addItem(nInv.createItem(new ItemStack(Material.TRIPWIRE_HOOK),
 					configLoad.getString("Menu.Weather.Item.Synchronised.Displayname"),
 					configLoad.getStringList("Menu.Weather.Item.Synchronised.Lore"),

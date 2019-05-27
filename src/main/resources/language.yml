@@ -386,7 +386,7 @@ Command:
         Message: '&bSkyBlock &8| &cError&8: &eYou cannot kick Visitors because your Island is closed.'
       Kicked:
         Sender:
-          Message: '&bSkyBlock &8| &aInfo&8: &eYou have kicked &c%Visitors &evisitors from your Island.'
+          Message: '&bSkyBlock &8| &aInfo&8: &eYou have kicked &c%visitors &evisitors from your Island.'
         Target:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have been kicked from the Island.'
       Visitors:
@@ -476,7 +476,7 @@ Command:
           Yourself:
             Message: '&bSkyBlock &8| &aInfo&8: &eYou are at &d%player''s &eIsland.'
           Other:
-            Message: '&bSkyBlock &8| &aInfo&8: &eThe player &a%target &eis at &d%Owner''s &eIsland.'
+            Message: '&bSkyBlock &8| &aInfo&8: &eThe player &a%target &eis at &d%owner''s &eIsland.'
         None:
           Yourself:
             Message: '&bSkyBlock &8| &aInfo&8: &eYou are not at an Island.'
@@ -1141,26 +1141,26 @@ Menu:
                 - '&7Island Visits&8: &e%visits'
                 - '&7Island Votes&8: &e%votes'
                 - ''
-                - '&7Current Visitors&8: &a%Visitors'
+                - '&7Current Visitors&8: &a%visitors'
                 - ''
                 - '&eClick to close Island!'
               Closed:
                 Lore:
-                - '&7Island Visits&8: &e%Visitors'
+                - '&7Island Visits&8: &e%visitors'
                 - '&7Island Votes&8: &e%votes'
                 - ''
                 - '&aClick to open Island!'
             Disabled:
               Closed:
                 Lore:
-                - '&7Island Visits&8: &e%Visitors'
+                - '&7Island Visits&8: &e%visitors'
                 - ''
                 - '&eClick to open Island!'
               Open:
                 Lore:
                 - '&7Island Visits&8: &e%visits'
                 - ''
-                - '&7Current Visitors&8: &a%Visitors'
+                - '&7Current Visitors&8: &a%visitors'
                 - ''
                 - '&eClick to close Island!'
           Displayname: '&aIsland Visit Statistics'
@@ -1930,7 +1930,7 @@ Menu:
         - '&e%island_members/%island_capacity'
         - ''
         - '&bMembers:'
-        - '&e%Members'
+        - '&e%members'
         - ''
         - '&bOperators:'
         - '&e%operators'
@@ -2191,7 +2191,7 @@ Menu:
                 - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                 - ''
                 - '&7Level&8: &b%level'
-                - '&7Members&8: &e%Members'
+                - '&7Members&8: &e%members'
                 - '&7Visits&8: &e%visits'
                 - ''
                 - '&7Safety&8: %safety'
@@ -2202,7 +2202,7 @@ Menu:
                 - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                 - ''
                 - '&7Level&8: &b%level'
-                - '&7Members&8: &e%Members'
+                - '&7Members&8: &e%members'
                 - '&7Visits&8: &e%visits'
                 - ''
                 - '&7Safety&8: %safety'
@@ -2219,7 +2219,7 @@ Menu:
                   - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                   - ''
                   - '&7Level&8: &b%level'
-                  - '&7Members&8: &e%Members'
+                  - '&7Members&8: &e%members'
                   - '&7Visits&8: &e%visits'
                   - '&7Votes&8: &6%votes'
                   - ''
@@ -2232,7 +2232,7 @@ Menu:
                   - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                   - ''
                   - '&7Level&8: &b%level'
-                  - '&7Members&8: &e%Members'
+                  - '&7Members&8: &e%members'
                   - '&7Visits&8: &e%visits'
                   - '&7Votes&8: &6%votes'
                   - ''
@@ -2248,7 +2248,7 @@ Menu:
                   - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                   - ''
                   - '&7Level&8: &b%level'
-                  - '&7Members&8: &e%Members'
+                  - '&7Members&8: &e%members'
                   - '&7Visits&8: &e%visits'
                   - '&7Votes&8: &6%votes'
                   - ''
@@ -2264,7 +2264,7 @@ Menu:
                   - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                   - ''
                   - '&7Level&8: &b%level'
-                  - '&7Members&8: &e%Members'
+                  - '&7Members&8: &e%members'
                   - '&7Visits&8: &e%visits'
                   - '&7Votes&8: &6%votes'
                   - ''
@@ -2348,19 +2348,19 @@ Menu:
                   Remove: remove
                 Disabled:
                   Lore:
-                  - '&7Owner&8: &f%Owner'
+                  - '&7Owner&8: &f%owner'
                   - ''
                   - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                   - ''
                   - '&7Level&8: &b%level'
-                  - '&7Members&8: &e%Members'
+                  - '&7Members&8: &e%members'
                   - '&7Visits&8: &e%visits'
                   - '&7Votes&8: &6%votes'
                   - ''
                   - '&7Safety&8: %safety'
                 Enabled:
                   Lore:
-                  - '&7Owner&8: &f%Owner'
+                  - '&7Owner&8: &f%mwner'
                   - ''
                   - '&7Signature&8:'
                   - '%signature'
@@ -2368,7 +2368,7 @@ Menu:
                   - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                   - ''
                   - '&7Level&8: &b%level'
-                  - '&7Members&8: &e%Members'
+                  - '&7Members&8: &e%members'
                   - '&7Visits&8: &e%visits'
                   - '&7Votes&8: &6%votes'
                   - ''
@@ -2377,7 +2377,7 @@ Menu:
               Signature:
                 Enabled:
                   Lore:
-                  - '&7Owner&8: &f%Owner'
+                  - '&7Owner&8: &f%owner'
                   - ''
                   - '&7Signature&8:'
                   - '%signature'
@@ -2385,18 +2385,18 @@ Menu:
                   - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                   - ''
                   - '&7Level&8: &b%level'
-                  - '&7Members&8: &e%Members'
+                  - '&7Members&8: &e%members'
                   - '&7Visits&8: &e%visits'
                   - ''
                   - '&7Safety&8: %safety'
                 Disabled:
                   Lore:
-                  - '&7Owner&8: &f%Owner'
+                  - '&7Owner&8: &f%owner'
                   - ''
                   - '&7Players At Island&8: &f%players&7/&f%player_capacity'
                   - ''
                   - '&7Level&8: &b%level'
-                  - '&7Members&8: &e%Members'
+                  - '&7Members&8: &e%members'
                   - '&7Visits&8: &e%visits'
                   - ''
                   - '&7Safety&8: %safety'
@@ -2468,7 +2468,7 @@ Menu:
           - '&e%island_members/%island_capacity'
           - ''
           - '&bMembers:'
-          - '&e%Members'
+          - '&e%members'
           - ''
           - '&bOperators:'
           - '&e%operators'
@@ -2771,52 +2771,66 @@ Menu:
           Enabled: '&atrue'
           Disabled: '&cfalse'
         Time:
-          Dawn: dawn/sunrise
-          Day: day
-          Noon: midday/noon
-          Dusk: dusk/sunset
-          Night: night
-          Midnight: midnight
+          Dawn: Sunrise
+          Day: Day
+          Noon: Noon
+          Dusk: Sunset
+          Night: Night
+          Midnight: Midnight
         Lore:
-        - '&7Synchronised&8: %synchronised'
-        - '&7Weather&8: &6%weather'
-        - '&7Time&8: &6%time &o(%time_name)'
+          Synchronised:
+          - '&7Synchronized&8: %synchronised'
+          Unsynchronised:
+          - '&7Synchronized&8: %synchronised'
+          - '&7Time&8: &6%time_name'
+          - '&7Weather&8: &6%weather'
       Barrier:
         Displayname: '&cIsland Weather Options >'
+      Disabled:
+        Time:
+          Displayname: '&aTime'
+          Lore:
+            - '&cChanging time is disabled'
+            - '&cwhile synchronized.'
+        Weather:
+          Displayname: '&aWeather'
+          Lore:
+            - '&cChanging weather is disabled'
+            - '&cwhile synchronized.'
       Time:
         Displayname: '&aTime'
         Choice:
-          Dawn: dawn/sunrise
-          Day: day
-          Noon: midday/noon
-          Dusk: dusk/sunset
-          Night: night
-          Midnight: midnight
+          Dawn: Sunrise
+          Day: Day
+          Noon: Noon
+          Dusk: Sunset
+          Night: Night
+          Midnight: Midnight
         Lore:
-        - '&7Choice&8: &b%choice'
+        - '&7Currently&8: &b%choice'
         - ''
-        - '&eClick to change time!'
+        - '&eClick to change the time!'
       Weather:
         Displayname: '&aWeather'
         Choice:
-          Clear: clear
-          Downfall: downfall
+          Clear: Clear
+          Downfall: Downfall
         Lore:
         - '&7Choice&8: &b%choice'
         - ''
-        - '&eClick to change weather!'
+        - '&eClick to change the weather!'
       Synchronised:
-        Displayname: '&aSynchronised'
+        Displayname: '&aSynchronized'
         Choice:
-          Enable: Enable
-          Disable: Disable
+          Enable: enable
+          Disable: disable
         Lore:
-        - '&7When enabled, the weather'
-        - '&7and time will operate the'
-        - '&7same weather and time as'
-        - '&7the world. When disabled,'
-        - '&7the weather and time will'
-        - '&7be fixed.'
+        - '&7When enabled, the time and'
+        - '&7weather will use the same'
+        - '&7values as the server.'
+        - '&7When disabled, the time'
+        - '&7and weather will be separate'
+        - '&7for the island players.'
         - ''
         - '&eClick to %choice!'
     Title: '&8Island Weather'
@@ -2827,23 +2841,23 @@ Menu:
           Displayname: '&a&lIsland Top %position'
           Bank:
             Lore:
-            - '&7Owner&8: &f%Owner'
+            - '&7Owner&8: &f%owner'
             - '&7Balance&8: &f$%balance'
-            - '&7Members&8: &f%Members'
+            - '&7Members&8: &f%members'
             - ''
             - '&7Signature&8:'
             - '%signature'
           Level:
             Lore:
-            - '&7Owner&8: &f%Owner'
+            - '&7Owner&8: &f%owner'
             - '&7Level&8: &f%level'
-            - '&7Members&8: &f%Members'
+            - '&7Members&8: &f%members'
             - ''
             - '&7Signature&8:'
             - '%signature'
           Votes:
             Lore:
-            - '&7Owner&8: &f%Owner'
+            - '&7Owner&8: &f%owner'
             - '&7Votes&8: &f%votes'
             - ''
             - '&7Signature&8:'
@@ -2916,7 +2930,7 @@ Menu:
       Statistics:
         Displayname: '&bIsland Visitors'
         Lore:
-        - '&7Visitors&8: &f%Visitors'
+        - '&7Visitors&8: &f%visitors'
       Previous:
         Displayname: '&a< Previous Page'
       Exit:

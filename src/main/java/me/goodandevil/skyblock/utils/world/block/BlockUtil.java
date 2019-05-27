@@ -304,10 +304,12 @@ public final class BlockUtil {
 			BrewingStand brewingStand = (BrewingStand) block.getState();
 			brewingStand.setBrewingTime(blockData.getBrewingTime());
 			brewingStand.setFuelLevel(blockData.getFuelLevel());
+			brewingStand.update();
 		} else if (blockTypeState == BlockStateType.COMMANDBLOCK) {
 			CommandBlock commandBlock = (CommandBlock) block.getState();
 			commandBlock.setCommand(blockData.getCommand());
 			commandBlock.setName(blockData.getCommandBlockName());
+			commandBlock.update();
 		} else if (blockTypeState == BlockStateType.CHEST) {
 			Chest chest = (Chest) block.getState();
 
@@ -317,6 +319,8 @@ public final class BlockUtil {
 					chest.getInventory().setItem(slotList, is);
 				}
 			}
+
+			chest.update();
 		} else if (blockTypeState == BlockStateType.DISPENSER) {
 			Dispenser dispenser = (Dispenser) block.getState();
 
@@ -326,6 +330,8 @@ public final class BlockUtil {
 					dispenser.getInventory().setItem(slotList, is);
 				}
 			}
+
+			dispenser.update();
 		} else if (blockTypeState == BlockStateType.DROPPER) {
 			Dropper dropper = (Dropper) block.getState();
 
@@ -335,6 +341,8 @@ public final class BlockUtil {
 					dropper.getInventory().setItem(slotList, is);
 				}
 			}
+
+			dropper.update();
 		} else if (blockTypeState == BlockStateType.HOPPER) {
 			Hopper hopper = (Hopper) block.getState();
 
@@ -344,6 +352,8 @@ public final class BlockUtil {
 					hopper.getInventory().setItem(slotList, is);
 				}
 			}
+
+			hopper.update();
 		} else if (blockTypeState == BlockStateType.CREATURESPAWNER) {
 			CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
 
@@ -352,6 +362,7 @@ public final class BlockUtil {
 			}
 
 			creatureSpawner.setDelay(blockData.getDelay());
+			creatureSpawner.update();
 		} else if (blockTypeState == BlockStateType.FURNACE) {
 			Furnace furnace = (Furnace) block.getState();
 			furnace.setBurnTime(blockData.getBurnTime());
@@ -369,6 +380,7 @@ public final class BlockUtil {
 			if (blockData.getPlaying() != null) {
 				jukebox.setPlaying(Material.valueOf(blockData.getPlaying().toUpperCase()));
 			}
+			jukebox.update();
 		} else if (blockTypeState == BlockStateType.SIGN) {
 			Sign sign = (Sign) block.getState();
 
@@ -404,6 +416,7 @@ public final class BlockUtil {
 
 					endGateway.setExitLocation(
 							new Location(exitLocationWorld, exitLocationX, exitLocationY, exitLocationZ));
+					endGateway.update();
 				}
 
 				if (NMSVersion > 9) {
@@ -418,6 +431,7 @@ public final class BlockUtil {
 									shulkerBox.getInventory().setItem(slotList, is);
 								}
 							}
+							shulkerBox.update();
 						}
 					}
 				}
