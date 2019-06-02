@@ -85,7 +85,6 @@ public class LevellingManager {
         int worldMaxHeight = height;
 
         boolean isEpicSpawnersEnabled = Bukkit.getPluginManager().isPluginEnabled("EpicSpawners");
-        boolean isWildStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("WildStacker");
 
         Map<LevellingData, Long> levellingData = new HashMap<>();
         Set<Location> spawnerLocations = new HashSet<>(); // These have to be checked synchronously :(
@@ -109,10 +108,12 @@ public class LevellingManager {
                     return;
                 }
 
-                for (ChunkSnapshot chunkSnapshotList : chunk.getAvailableChunkSnapshots()) {
+                for (LevelChunkSnapshotWrapper chunkSnapshotList : chunk.getAvailableChunkSnapshots()) {
                     for (int x = 0; x < 16; x++) {
                         for (int z = 0; z < 16; z++) {
                             for (int y = 0; y < worldMaxHeight; y++) {
+                                ChunkSnapshot chunkSnapshot = chunkSnapshotList.getChunkSnapshot();
+
                                 try {
                                     org.bukkit.Material blockMaterial = org.bukkit.Material.AIR;
                                     int blockData = 0;
@@ -120,20 +121,20 @@ public class LevellingManager {
 
                                     if (NMSVersion > 12) {
                                         if (getBlockTypeMethod == null) {
-                                            getBlockTypeMethod = chunkSnapshotList.getClass()
+                                            getBlockTypeMethod = chunkSnapshot.getClass()
                                                     .getMethod("getBlockType", int.class, int.class, int.class);
                                         }
 
                                         blockMaterial = (org.bukkit.Material) getBlockTypeMethod
-                                                .invoke(chunkSnapshotList, x, y, z);
+                                                .invoke(chunkSnapshot, x, y, z);
                                     } else {
                                         if (getBlockTypeIdMethod == null) {
-                                            getBlockTypeIdMethod = chunkSnapshotList.getClass()
+                                            getBlockTypeIdMethod = chunkSnapshot.getClass()
                                                     .getMethod("getBlockTypeId", int.class, int.class, int.class);
                                         }
 
                                         if (getBlockTypeDataMethod == null) {
-                                            getBlockTypeDataMethod = chunkSnapshotList.getClass()
+                                            getBlockTypeDataMethod = chunkSnapshot.getClass()
                                                     .getMethod("getBlockData", int.class, int.class, int.class);
                                         }
 
@@ -144,8 +145,8 @@ public class LevellingManager {
 
                                         blockMaterial = (org.bukkit.Material) getMaterialMethod.invoke(
                                                 blockMaterial,
-                                                (int) getBlockTypeIdMethod.invoke(chunkSnapshotList, x, y, z));
-                                        blockData = (int) getBlockTypeDataMethod.invoke(chunkSnapshotList, x, y, z);
+                                                (int) getBlockTypeIdMethod.invoke(chunkSnapshot, x, y, z));
+                                        blockData = (int) getBlockTypeDataMethod.invoke(chunkSnapshot, x, y, z);
                                     }
 
                                     if (blacklistedMaterials.contains(blockMaterial))
@@ -154,8 +155,8 @@ public class LevellingManager {
                                     long amount = 1;
 
                                     if (blockMaterial == Materials.SPAWNER.parseMaterial()) {
-                                        World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                        Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
+                                        World world = Bukkit.getWorld(chunkSnapshot.getWorldName());
+                                        Location location = new Location(world, chunkSnapshot.getX() * 16 + x, y, chunkSnapshot.getZ() * 16 + z);
 
                                         if (isEpicSpawnersEnabled) {
                                             com.songoda.epicspawners.EpicSpawners epicSpawners = com.songoda.epicspawners.EpicSpawners.getInstance();
@@ -167,39 +168,37 @@ public class LevellingManager {
                                             }
                                         }
 
-//                                        if (isWildStackerEnabled) {
-//                                            com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
-//                                            com.bgsoftware.wildstacker.api.objects.StackedSpawner spawner = wildStacker.getStackedSpawner(location);
-//                                            if (spawner != null) {
-//                                                amount = spawner.getStackAmount();
-//                                                spawnerType = spawner.getSpawnedType();
-//                                            }
-//                                        }
+                                        if (chunkSnapshotList.hasWildStackerData()) {
+                                            com.bgsoftware.wildstacker.api.objects.StackedSnapshot snapshot = ((WildStackerChunkSnapshotWrapper)chunkSnapshotList).getStackedSnapshot();
+                                            if (snapshot.isStackedSpawner(location)) {
+                                                Map.Entry<Integer, EntityType> spawnerData = snapshot.getStackedSpawner(location);
+                                                amount = spawnerData.getKey();
+                                                blockData = 0;
+                                            }
+                                        }
 
                                         if (spawnerType == null) {
                                             spawnerLocations.add(location);
                                             continue;
                                         }
                                     } else {
-//                                        if (isWildStackerEnabled) {
-//                                            World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-//                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
-//                                            com.bgsoftware.wildstacker.api.handlers.SystemManager wildStacker = com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager();
-//                                            com.bgsoftware.wildstacker.api.objects.StackedBarrel barrel = wildStacker.getStackedBarrel(location);
-//                                            if (barrel != null) {
-//                                                amount = barrel.getStackAmount();
-//                                                blockMaterial = barrel.getType();
-//                                                blockData = barrel.getData();
-//                                                if (NMSUtil.getVersionNumber() > 12 && blockMaterial.name().startsWith("LEGACY_")) {
-//                                                    blockMaterial = Material.matchMaterial(blockMaterial.name().replace("LEGACY_", ""));
-//                                                    blockData = 0;
-//                                                }
-//                                            }
-//                                        }
+                                        if (chunkSnapshotList.hasWildStackerData()) {
+                                            com.bgsoftware.wildstacker.api.objects.StackedSnapshot snapshot = ((WildStackerChunkSnapshotWrapper)chunkSnapshotList).getStackedSnapshot();
+                                            World world = Bukkit.getWorld(chunkSnapshot.getWorldName());
+                                            Location location = new Location(world, chunkSnapshot.getX() * 16 + x, y, chunkSnapshot.getZ() * 16 + z);
+                                            if (snapshot.isStackedBarrel(location)) {
+                                                Map.Entry<Integer, Material> barrelData = snapshot.getStackedBarrel(location);
+                                                amount = barrelData.getKey();
+                                                blockMaterial = barrelData.getValue();
+                                                if (NMSUtil.getVersionNumber() > 12 && blockMaterial.name().startsWith("LEGACY_")) {
+                                                    blockMaterial = Material.matchMaterial(blockMaterial.name().replace("LEGACY_", ""));
+                                                }
+                                            }
+                                        }
 
                                         if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial) && amount == 1) {
-                                            World world = Bukkit.getWorld(chunkSnapshotList.getWorldName());
-                                            Location location = new Location(world, chunkSnapshotList.getX() * 16 + x, y, chunkSnapshotList.getZ() * 16 + z);
+                                            World world = Bukkit.getWorld(chunkSnapshot.getWorldName());
+                                            Location location = new Location(world, chunkSnapshot.getX() * 16 + x, y, chunkSnapshot.getZ() * 16 + z);
                                             if (stackableManager.isStacked(location)) {
                                                 Stackable stackable = stackableManager.getStack(location, blockMaterial);
                                                 if (stackable != null) {

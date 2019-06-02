@@ -91,6 +91,10 @@ public class Weather {
 
 						event.setWillClose(false);
 						event.setWillDestroy(false);
+					} else if (is.getType() == Materials.BARRIER.parseMaterial()) {
+						event.setWillClose(false);
+						event.setWillDestroy(false);
+						soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 					} else if ((is.getType() == Materials.SUNFLOWER.parseMaterial()) && (is.hasItemMeta())
 							&& (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
 									configLoad.getString("Menu.Weather.Item.Time.Displayname"))))) {

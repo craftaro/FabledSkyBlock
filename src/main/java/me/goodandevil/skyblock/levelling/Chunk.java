@@ -29,7 +29,7 @@ public class Chunk {
 
 	private int initialNumberOfChunks = -1;
 	private Set<ChunkPosition> chunkPositions = new HashSet<>();
-	private Set<ChunkSnapshot> chunkSnapshots = new HashSet<>();
+	private Set<LevelChunkSnapshotWrapper> chunkSnapshots = new HashSet<>();
 	private boolean isReady = false;
 	private boolean isFinished = false;
 
@@ -62,7 +62,7 @@ public class Chunk {
 		return this.isReady;
 	}
 
-	public Set<ChunkSnapshot> getAvailableChunkSnapshots() {
+	public Set<LevelChunkSnapshotWrapper> getAvailableChunkSnapshots() {
 		this.isReady = false;
 		return this.chunkSnapshots;
 	}
@@ -72,6 +72,8 @@ public class Chunk {
 	}
 
 	public void prepareNextChunkSnapshots() {
+		boolean isWildStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("WildStacker") && false; // TODO: Disabled for now until we figure out why it isn't working properly
+
 		Bukkit.getScheduler().runTask(this.skyblock, () -> {
 			this.chunkSnapshots.clear();
 
@@ -93,10 +95,22 @@ public class Chunk {
 				int z = chunkPosition.getZ();
 				if (!world.isChunkLoaded(x, z)) {
 					world.loadChunk(x, z);
-					this.chunkSnapshots.add(world.getChunkAt(x, z).getChunkSnapshot());
+					org.bukkit.Chunk chunk = world.getChunkAt(x, z);
+					ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot();
+					if (isWildStackerEnabled) {
+						this.chunkSnapshots.add(new WildStackerChunkSnapshotWrapper(chunkSnapshot, com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager().getStackedSnapshot(chunk, true)));
+					} else {
+						this.chunkSnapshots.add(new ChunkSnapshotWrapper(chunkSnapshot));
+					}
 					world.unloadChunk(x, z);
 				} else {
-					this.chunkSnapshots.add(world.getChunkAt(x, z).getChunkSnapshot());
+					org.bukkit.Chunk chunk = world.getChunkAt(x, z);
+					ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot();
+					if (isWildStackerEnabled) {
+						this.chunkSnapshots.add(new WildStackerChunkSnapshotWrapper(chunkSnapshot, com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager().getStackedSnapshot(chunk, true)));
+					} else {
+						this.chunkSnapshots.add(new ChunkSnapshotWrapper(chunkSnapshot));
+					}
 				}
 				it.remove();
 			}
@@ -146,29 +160,6 @@ public class Chunk {
 			for (int z = minZ; z < maxZ + 16; z += 16) {
 				this.chunkPositions.add(new ChunkPosition(world, x >> 4, z >> 4));
 			}
-		}
-	}
-
-	private class ChunkPosition {
-		private World world;
-		private int x, z;
-
-		public ChunkPosition(World world, int x, int z) {
-			this.world = world;
-			this.x = x;
-			this.z = z;
-		}
-
-		public World getWorld() {
-			return this.world;
-		}
-
-		public int getX() {
-			return this.x;
-		}
-
-		public int getZ() {
-			return this.z;
 		}
 	}
 }

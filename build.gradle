@@ -38,7 +38,7 @@ dependencies {
     implementation (group: 'com.songoda', name: 'epicanchors', version: '1.2.5')
 	
 	// WildStacker
-	implementation (group: 'com.bgsoftware', name: 'wildstacker-api', version: 'b14')
+	implementation (group: 'com.bgsoftware', name: 'wildstacker-api', version: 'b15')
 
     // WorldEdit
     implementation (group: 'com.sk89q', name: 'worldedit', version: '7.0.0')

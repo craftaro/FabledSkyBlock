@@ -651,7 +651,7 @@ public class Block implements Listener {
         } else {
             try {
                 @SuppressWarnings("unchecked")
-                ArrayList<org.bukkit.block.Block> blocks = (ArrayList<org.bukkit.block.Block>) event.getClass().getMethod("getBlocks").invoke(event);
+                List<org.bukkit.block.Block> blocks = (List<org.bukkit.block.Block>) event.getClass().getMethod("getBlocks").invoke(event);
                 for (org.bukkit.block.Block block : blocks) {
                     if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
                         event.setCancelled(true);

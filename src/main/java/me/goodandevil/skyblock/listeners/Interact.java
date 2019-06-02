@@ -90,6 +90,19 @@ public class Interact implements Listener {
 			}
 		}
 
+		if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_AIR) {
+			if (event.getItem() != null && event.getItem().getType() == Material.EGG) {
+				if (!skyblock.getIslandManager().hasPermission(player, "Projectile")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+				}
+			}
+		}
+
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (stackableManager != null
 					&& stackableManager.getStackableMaterials().contains(event.getMaterial())
@@ -553,17 +566,6 @@ public class Interact implements Listener {
 				}
 			} else if (block.getType() == Material.TRIPWIRE) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Redstone")) {
-					event.setCancelled(true);
-
-					messageManager.sendMessage(player,
-							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
-					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-				}
-			}
-		} else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_AIR) {
-			if (event.getItem() != null && event.getItem().getType() == Material.EGG) {
-				if (!skyblock.getIslandManager().hasPermission(player, "Projectile")) {
 					event.setCancelled(true);
 
 					messageManager.sendMessage(player,
