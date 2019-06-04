@@ -8,6 +8,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Beacon;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -24,6 +25,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -76,8 +78,19 @@ public class Interact implements Listener {
 
 					return;
 				}
-			} else if (block.getState() instanceof Beacon) {
+			} else if (block.getState() instanceof Beacon) { // ChunkCollectors support
 				if (!islandManager.hasPermission(player, block.getLocation(), "Beacon")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
+			} else if (block.getState() instanceof InventoryHolder || block.getState() instanceof CreatureSpawner) { // EpicHoppers/EpicSpawners support
+				if (!islandManager.hasPermission(player, block.getLocation(), "Storage")) {
 					event.setCancelled(true);
 
 					messageManager.sendMessage(player,

@@ -2360,7 +2360,7 @@ Menu:
                   - '&7Safety&8: %safety'
                 Enabled:
                   Lore:
-                  - '&7Owner&8: &f%mwner'
+                  - '&7Owner&8: &f%owner'
                   - ''
                   - '&7Signature&8:'
                   - '%signature'

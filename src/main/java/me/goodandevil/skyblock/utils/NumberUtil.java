@@ -11,28 +11,21 @@ public final class NumberUtil {
 	}
 
 	public static String formatNumberByDecimal(double number) {
-		DecimalFormat decimalFormat = new DecimalFormat("0.#");
-		String withoutDecimal = decimalFormat.format(number), withDecimal = "";
+		String withoutDecimal = new DecimalFormat("0.#").format(number).replace(",", "."), withDecimal = "";
 
-		if (decimalFormat.getDecimalFormatSymbols().getDigit() == '.') {
-			if (withoutDecimal.contains(".")) {
-				withDecimal = "." + withoutDecimal.split("\\.")[1];
-				withoutDecimal = withoutDecimal.replace(withDecimal, "");
-			}
-		} else if (decimalFormat.getDecimalFormatSymbols().getDigit() == ',') {
-			if (withoutDecimal.contains(",")) {
-				withDecimal = "," + withoutDecimal.split(",")[1];
-				withoutDecimal = withoutDecimal.replace(withDecimal, "");
-			}
+		if (withoutDecimal.contains(".")) {
+			withDecimal = "." + withoutDecimal.split("\\.")[1];
+			withoutDecimal = withoutDecimal.replace(withDecimal, "");
 		}
 
-		if (withDecimal.equals(".0") || withDecimal.equals(",0")) {
+		if (withDecimal.equals(".0")) {
 			withDecimal = "";
 		}
 
 		long itemCostWithoutDecimalValue = Long.valueOf(withoutDecimal);
 
 		return formatNumber(itemCostWithoutDecimalValue) + withDecimal;
+
 	}
 
 	public static String formatNumberBySuffix(long number) {
