@@ -39,6 +39,9 @@ public final class WorldBorder {
 			// Adjust border size to fit around whole-blocks, odd numbers only!
 			size += size % 2 == 0 ? 1 : 0;
 
+			if (centerLocation == null)
+				return;
+
 			centerLocation = centerLocation.clone();
 			centerLocation.add(.5, 0, .5);
 			Object worldBorder = worldBorderClass.getConstructor().newInstance();
