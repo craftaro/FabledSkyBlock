@@ -13,10 +13,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import java.io.File;
 
-public class UltimateStacker {
+public class UltimateStacker implements Listener {
 
     private final SkyBlock skyblock;
 
