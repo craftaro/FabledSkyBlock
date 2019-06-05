@@ -85,10 +85,12 @@ public class LevellingManager {
         int worldMaxHeight = height;
 
         boolean isEpicSpawnersEnabled = Bukkit.getPluginManager().isPluginEnabled("EpicSpawners");
+        boolean isUltimateStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("UltimateStacker");
 
         Map<LevellingData, Long> levellingData = new HashMap<>();
         Set<Location> spawnerLocations = new HashSet<>(); // These have to be checked synchronously :(
         Set<Location> epicSpawnerLocations = new HashSet<>();
+        Set<Location> ultimateStackerSpawnerLocations = new HashSet<>();
 
         List<Material> blacklistedMaterials = new ArrayList<>();
         blacklistedMaterials.add(Materials.AIR.getPostMaterial());
@@ -103,7 +105,7 @@ public class LevellingManager {
                 if (!chunk.isReadyToScan()) return;
 
                 if (chunk.isFinished()) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> finalizeMaterials(levellingData, spawnerLocations, epicSpawnerLocations, player, island), 1);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> finalizeMaterials(levellingData, spawnerLocations, epicSpawnerLocations, ultimateStackerSpawnerLocations, player, island), 1);
                     cancel();
                     return;
                 }
@@ -166,6 +168,11 @@ public class LevellingManager {
                                                     epicSpawnerLocations.add(location);
                                                 continue;
                                             }
+                                        } else if (isUltimateStackerEnabled) {
+                                            com.songoda.ultimatestacker.spawner.SpawnerStack spawnerStack = com.songoda.ultimatestacker.UltimateStacker.getInstance().getSpawnerStackManager().getSpawner(location);
+                                            if (spawnerStack != null)
+                                                ultimateStackerSpawnerLocations.add(location);
+                                            continue;
                                         }
 
                                         if (chunkSnapshotList.hasWildStackerData()) {
@@ -225,7 +232,7 @@ public class LevellingManager {
         }.runTaskTimerAsynchronously(skyblock, 0L, 1L);
     }
 
-    private void finalizeMaterials(Map<LevellingData, Long> levellingData, Set<Location> spawnerLocations, Set<Location> epicSpawnerLocations, Player player, Island island) {
+    private void finalizeMaterials(Map<LevellingData, Long> levellingData, Set<Location> spawnerLocations, Set<Location> epicSpawnerLocations, Set<Location> ultimateStackerSpawnerLocations, Player player, Island island) {
         for (Location location : spawnerLocations) {
             if (!(location.getBlock().getState() instanceof CreatureSpawner))
                 continue;
@@ -254,6 +261,20 @@ public class LevellingManager {
                 long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
                 levellingData.put(data, totalAmount);
             }
+        }
+
+        for (Location location : ultimateStackerSpawnerLocations) {
+            com.songoda.ultimatestacker.spawner.SpawnerStack spawnerStack = com.songoda.ultimatestacker.UltimateStacker.getInstance().getSpawnerStackManager().getSpawner(location);
+            if (spawnerStack == null)
+                continue;
+
+            int amount = spawnerStack.getAmount();
+            EntityType spawnerType = ((CreatureSpawner) location.getBlock().getState()).getSpawnedType();
+
+            LevellingData data = new LevellingData(Materials.SPAWNER.parseMaterial(), (byte) 0, spawnerType);
+            Long totalAmountInteger = levellingData.get(data);
+            long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
+            levellingData.put(data, totalAmount);
         }
 
         Map<String, Long> materials = new HashMap<>();
