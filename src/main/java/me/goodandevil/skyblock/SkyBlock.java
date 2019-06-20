@@ -17,6 +17,7 @@ import me.goodandevil.skyblock.invite.InviteManager;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.levelling.LevellingManager;
+import me.goodandevil.skyblock.limit.LimitManager;
 import me.goodandevil.skyblock.listeners.*;
 import me.goodandevil.skyblock.menus.Rollback;
 import me.goodandevil.skyblock.menus.admin.Creator;
@@ -61,6 +62,7 @@ public class SkyBlock extends JavaPlugin {
 	private UpgradeManager upgradeManager;
 	private PlayerDataManager playerDataManager;
 	private CooldownManager cooldownManager;
+	private LimitManager limitManager;
 	private ScoreboardManager scoreboardManager;
 	private InviteManager inviteManager;
 	private BiomeManager biomeManager;
@@ -96,6 +98,7 @@ public class SkyBlock extends JavaPlugin {
 		upgradeManager = new UpgradeManager(this);
 		playerDataManager = new PlayerDataManager(this);
 		cooldownManager = new CooldownManager(this);
+		limitManager = new LimitManager(this);
 
 		if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Scoreboard.Enable")) {
@@ -256,6 +259,10 @@ public class SkyBlock extends JavaPlugin {
 
 	public CooldownManager getCooldownManager() {
 		return cooldownManager;
+	}
+
+	public LimitManager getLimitManager() {
+		return limitManager;
 	}
 
 	public ScoreboardManager getScoreboardManager() {

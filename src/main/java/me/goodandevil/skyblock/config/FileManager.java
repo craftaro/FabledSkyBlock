@@ -54,6 +54,7 @@ public class FileManager {
 		}
 
 		Map<String, File> configFiles = new LinkedHashMap<>();
+		configFiles.put("limits.yml", new File(skyblock.getDataFolder(), "limits.yml"));
 		configFiles.put("worlds.yml", new File(skyblock.getDataFolder(), "worlds.yml"));
 		configFiles.put("levelling.yml", new File(skyblock.getDataFolder(), "levelling.yml"));
 		configFiles.put("config.yml", new File(skyblock.getDataFolder(), "config.yml"));

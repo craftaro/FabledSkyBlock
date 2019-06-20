@@ -5,14 +5,18 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.Generator;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.island.*;
+import me.goodandevil.skyblock.limit.LimitManager;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
+import me.goodandevil.skyblock.utils.NumberUtil;
+import me.goodandevil.skyblock.utils.StringUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.world.WorldManager;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -202,13 +206,11 @@ public class Block implements Listener {
             }
 
             // Specific check for beds
-            if (block.getType().name().equals("BED") || block.getType().name().contains("_BED")) {
+            if (!isObstructing && event.getBlock().getState().getData() instanceof org.bukkit.material.Bed) {
                 BlockFace bedDirection = ((org.bukkit.material.Bed) event.getBlock().getState().getData()).getFacing();
                 org.bukkit.block.Block bedBlock = block.getRelative(bedDirection);
-                if (LocationUtil.isLocationAffectingLocation(bedBlock.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+                if (LocationUtil.isLocationAffectingLocation(bedBlock.getLocation(), island.getLocation(world, IslandEnvironment.Main)))
                     isObstructing = true;
-
-                }
             }
 
             if (isObstructing) {
@@ -220,6 +222,26 @@ public class Block implements Listener {
                 event.setCancelled(true);
                 return;
             }
+        }
+
+        LimitManager limitManager = skyblock.getLimitManager();
+        if (limitManager.isBlockLimitExceeded(player, block)) {
+            Materials material;
+            if (block.getType() == Materials.SPAWNER.parseMaterial()) {
+                material = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+            } else {
+                material = Materials.getMaterials(block.getType(), block.getData());
+            }
+
+            skyblock.getMessageManager().sendMessage(player,
+                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                            .getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+                            .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " ")))
+                            .replace("%limit", NumberUtil.formatNumber(limitManager.getBlockLimit(player, block))));
+            skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+            event.setCancelled(true);
+            return;
         }
 
         if (!configLoad.getBoolean("Island.Block.Level.Enable"))
@@ -335,7 +357,7 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
+            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world) || !islandManager.isLocationAtIsland(island, block.getRelative(event.getDirection()).getLocation(), world)) {
                 event.setCancelled(true);
                 return;
             }
@@ -629,20 +651,21 @@ public class Block implements Listener {
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
             return;
 
-        if (event.getBlocks().isEmpty())
-            return;
-
-        Island island = islandManager.getIslandAtLocation(event.getBlocks().get(0).getLocation());
-        if (island == null)
-            return;
-
-        // Check spawn block protection
-        IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
-        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
-
         // PortalCreateEvent.getBlocks() changed from ArrayList<Block> to ArrayList<BlockState> in 1.14.1... why...
         if (NMSUtil.getVersionNumber() > 13) {
-            for (BlockState block : event.getBlocks()) {
+            List<BlockState> blocks = event.getBlocks();
+            if (event.getBlocks().isEmpty())
+                return;
+
+            Island island = islandManager.getIslandAtLocation(event.getBlocks().get(0).getLocation());
+            if (island == null)
+                return;
+
+            // Check spawn block protection
+            IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
+            Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
+
+            for (BlockState block : blocks) {
                 if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
                     event.setCancelled(true);
                     return;
@@ -652,6 +675,17 @@ public class Block implements Listener {
             try {
                 @SuppressWarnings("unchecked")
                 List<org.bukkit.block.Block> blocks = (List<org.bukkit.block.Block>) event.getClass().getMethod("getBlocks").invoke(event);
+                if (blocks.isEmpty())
+                    return;
+
+                Island island = islandManager.getIslandAtLocation(blocks.get(0).getLocation());
+                if (island == null)
+                    return;
+
+                // Check spawn block protection
+                IslandWorld world = worldManager.getIslandWorld(blocks.get(0).getWorld());
+                Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
+
                 for (org.bukkit.block.Block block : blocks) {
                     if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
                         event.setCancelled(true);

@@ -3178,6 +3178,10 @@ Placeholder:
     Non-empty:
       Message: '&f%placeholder'
 Island:
+  Limit:
+    Block:
+      Exceeded:
+        Message: '&bSkyBlock &8| &cError&8: &eYou''ve exceeded the limit of &b%types &eyou can place (&b%limit&e).'
   Chat:
     Format:
       Role:

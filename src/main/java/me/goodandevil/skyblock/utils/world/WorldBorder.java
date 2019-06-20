@@ -36,14 +36,12 @@ public final class WorldBorder {
 
 	public static void send(Player player, Color color, double size, Location centerLocation) {
 		try {
-			// Adjust border size to fit around whole-blocks, odd numbers only!
-			size += size % 2 == 0 ? 1 : 0;
-
-			if (centerLocation == null)
+			if (centerLocation == null || centerLocation.getWorld() == null)
 				return;
 
-			centerLocation = centerLocation.clone();
-			centerLocation.add(.5, 0, .5);
+			if (size % 2 == 1)
+				size++;
+
 			Object worldBorder = worldBorderClass.getConstructor().newInstance();
 
 			if (NMSUtil.getVersionNumber() < 9) {
@@ -58,7 +56,7 @@ public final class WorldBorder {
 			}
 
 			Method setCenter = worldBorder.getClass().getMethod("setCenter", double.class, double.class);
-			setCenter.invoke(worldBorder, centerLocation.getX(), centerLocation.getZ());
+			setCenter.invoke(worldBorder, centerLocation.getBlockX(), centerLocation.getBlockZ());
 
 			Method setSize = worldBorder.getClass().getMethod("setSize", double.class);
 			setSize.invoke(worldBorder, size);

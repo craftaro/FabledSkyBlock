@@ -3,6 +3,9 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.Set;
 
+import me.goodandevil.skyblock.limit.LimitManager;
+import me.goodandevil.skyblock.utils.NumberUtil;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -120,10 +123,31 @@ public class Interact implements Listener {
 			if (stackableManager != null
 					&& stackableManager.getStackableMaterials().contains(event.getMaterial())
 					&& event.getClickedBlock().getType() == event.getMaterial()
-					&& !player.isSneaking()) {
+					&& !player.isSneaking() && islandManager.hasPermission(player, block.getLocation(), "Place")) {
                 if (NMSUtil.getVersionNumber() > 8) {
                     if (event.getHand() == EquipmentSlot.OFF_HAND) return;
                 }
+
+				LimitManager limitManager = skyblock.getLimitManager();
+				if (limitManager.isBlockLimitExceeded(player, block)) {
+					Materials material;
+					if (block.getType() == Materials.SPAWNER.parseMaterial()) {
+						material = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+					} else {
+						material = Materials.getMaterials(block.getType(), block.getData());
+					}
+
+					skyblock.getMessageManager().sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+									.replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " ")))
+									.replace("%limit", NumberUtil.formatNumber(limitManager.getBlockLimit(player, block))));
+					skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					event.setCancelled(true);
+					return;
+				}
+
 				Location location = event.getClickedBlock().getLocation();
 				if (stackableManager.isStacked(location)) {
 					Stackable stackable = stackableManager.getStack(location, event.getMaterial());

@@ -32,6 +32,17 @@ public class ChatCommand extends SubCommand {
 
 		Island island = islandManager.getIsland(player);
 
+		PlayerData playerData = playerDataManager.getPlayerData(player);
+		if (playerData.isChat() && island != null) {
+			Bukkit.getServer().getPluginManager()
+					.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), false));
+			playerData.setChat(false);
+
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Untoggled.Message"));
+			soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+			return;
+		}
+
 		if (island == null) {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Owner.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -42,23 +53,12 @@ public class ChatCommand extends SubCommand {
 			messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Offline.Message"));
 			soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		} else {
-			PlayerData playerData = playerDataManager.getPlayerData(player);
+			Bukkit.getServer().getPluginManager()
+					.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), true));
+			playerData.setChat(true);
 
-			if (playerData.isChat()) {
-				Bukkit.getServer().getPluginManager()
-						.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), false));
-				playerData.setChat(false);
-
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Untoggled.Message"));
-				soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
-			} else {
-				Bukkit.getServer().getPluginManager()
-						.callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), true));
-				playerData.setChat(true);
-
-				messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Toggled.Message"));
-				soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
-			}
+			messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Toggled.Message"));
+			soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
 
