@@ -49,7 +49,7 @@ public class UltimateStacker implements Listener {
                         materialAmount = level.getMaterialAmount(materials.name());
                     }
 
-                    level.setMaterialAmount(materials.name(), materialAmount + event.getAmount());
+                    level.setMaterialAmount(materials.name(), materialAmount + event.getAmount() - 1); // Normal place event still goes off
                 }
             }
         });
