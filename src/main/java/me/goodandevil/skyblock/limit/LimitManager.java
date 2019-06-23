@@ -4,6 +4,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.utils.version.Materials;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,6 +26,12 @@ public class LimitManager {
     public LimitManager(SkyBlock skyblock) {
         this.skyblock = skyblock;
         this.blockLimits = new HashMap<>();
+
+        this.reload();
+    }
+
+    public void reload() {
+        this.blockLimits.clear();
 
         FileConfiguration limitsConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "limits.yml")).getFileConfiguration();
         ConfigurationSection blockLimitSection = limitsConfig.getConfigurationSection("block");
@@ -51,22 +58,14 @@ public class LimitManager {
             return -1;
 
         long limit = -1;
-        Materials material;
-        if (block.getType() == Materials.SPAWNER.parseMaterial()) {
-            material = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
-            if (this.blockLimits.containsKey(Materials.SPAWNER))
-                limit = Math.max(limit, this.blockLimits.get(Materials.SPAWNER));
-        } else {
-            material = Materials.getMaterials(block.getType(), block.getData());
-        }
+        Materials material = Materials.getMaterials(block.getType(), block.getData());
 
         if (this.blockLimits.containsKey(material))
             limit = Math.max(limit, this.blockLimits.get(material));
 
         Set<PermissionAttachmentInfo> permissions = player.getEffectivePermissions()
                 .stream()
-                .filter(x -> x.getPermission().toLowerCase().startsWith("fabledskyblock.limit.block." + material.name().toLowerCase())
-                        || (block.getType() == Materials.SPAWNER.parseMaterial() && x.getPermission().toLowerCase().startsWith("fabledskyblock.limit.block.spawner")))
+                .filter(x -> x.getPermission().toLowerCase().startsWith("fabledskyblock.limit.block." + material.name().toLowerCase()))
                 .collect(Collectors.toSet());
 
         for (PermissionAttachmentInfo permission : permissions) {
@@ -97,7 +96,12 @@ public class LimitManager {
             return false;
 
         Island island = islandManager.getIslandAtLocation(block.getLocation());
-        long totalPlaced = island.getLevel().getMaterialAmount(Materials.getMaterials(block.getType(), block.getData()).name());
+        long totalPlaced;
+        if (block.getType() == Materials.SPAWNER.parseMaterial()) {
+            totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
+        } else {
+            totalPlaced = island.getLevel().getMaterialAmount(Materials.getMaterials(block.getType(), block.getData()).name());
+        }
 
         return limit < totalPlaced + 1;
     }

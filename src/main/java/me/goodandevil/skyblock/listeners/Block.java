@@ -5,6 +5,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.Generator;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.island.*;
+import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.limit.LimitManager;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
@@ -170,12 +171,21 @@ public class Block implements Listener {
 
         IslandManager islandManager = skyblock.getIslandManager();
         WorldManager worldManager = skyblock.getWorldManager();
+        LevellingManager levellingManager = skyblock.getLevellingManager();
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         Island island = islandManager.getIslandAtLocation(block.getLocation());
 
         if (island == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (levellingManager.isIslandLevelBeingScanned(island)) {
+            skyblock.getMessageManager().sendMessage(player,
+                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                            .getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
             event.setCancelled(true);
             return;
         }
@@ -226,12 +236,7 @@ public class Block implements Listener {
 
         LimitManager limitManager = skyblock.getLimitManager();
         if (limitManager.isBlockLimitExceeded(player, block)) {
-            Materials material;
-            if (block.getType() == Materials.SPAWNER.parseMaterial()) {
-                material = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
-            } else {
-                material = Materials.getMaterials(block.getType(), block.getData());
-            }
+            Materials material = Materials.getMaterials(block.getType(), block.getData());
 
             skyblock.getMessageManager().sendMessage(player,
                     skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))

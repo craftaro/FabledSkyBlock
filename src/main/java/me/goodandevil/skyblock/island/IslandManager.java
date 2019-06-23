@@ -1226,18 +1226,18 @@ public class IslandManager {
         if (isFlyUpgradeEnabled) {
             boolean upgradeEnabled = island != null && island.isUpgrade(Upgrade.Type.Fly);
             setPlayerFlying = upgradeEnabled;
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                player.setAllowFlight(upgradeEnabled);
-            });
+            Bukkit.getServer().getScheduler().runTask(skyblock, () -> player.setAllowFlight(upgradeEnabled));
         }
 
-        boolean hasFlyPermission = player.hasPermission("fabledskyblock.fly") || player.hasPermission("fabledskyblock.*");
-        if (hasFlyPermission && island != null && !setPlayerFlying) {
+        if (island == null || setPlayerFlying)
+            return;
+
+        boolean hasGlobalFlyPermission = player.hasPermission("fabledskyblock.*") || player.hasPermission("fabledskyblock.fly.*");
+        boolean hasOwnIslandFlyPermission = player.hasPermission("fabledskyblock.fly") && island.getRole(player) != null && island.getRole(player) != IslandRole.Visitor;
+        if (hasGlobalFlyPermission || hasOwnIslandFlyPermission) {
             WorldManager worldManager = skyblock.getWorldManager();
             boolean canFlyInWorld = worldManager.isIslandWorld(player.getWorld());
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                player.setAllowFlight(canFlyInWorld);
-            });
+            Bukkit.getServer().getScheduler().runTask(skyblock, () -> player.setAllowFlight(canFlyInWorld));
         }
     }
 

@@ -82,6 +82,8 @@ Command:
           Message: '&eScanning Island level: &b%percent%'
         NotOnIsland:
           Message: '&bSkyBlock &8| &cError&8: &eYou cannot initiate an Island level scan without being on your Island.'
+        BlockPlacing:
+          Message: '&bSkyBlock &8 | &cError:&8: &eYou cannot place blocks during an Island level scan. Please wait for the scan to finish.'
       Cooldown:
         Word:
           Minute: minute(s)
@@ -2062,7 +2064,9 @@ Menu:
         - ''
         - '&cWarning: You must wait a'
         - '&chour after a rescan to'
-        - '&cperform another one!'
+        - '&cperform another one! You'
+        - '&cwill also not be able to'
+        - '&cplace blocks during the scan!'
         Displayname: '&aRescan Island Materials'
       Material:
         Displayname: '&7%material &8(&e+%points Points&8)'

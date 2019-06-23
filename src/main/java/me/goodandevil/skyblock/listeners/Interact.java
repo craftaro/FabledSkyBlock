@@ -3,6 +3,7 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.Set;
 
+import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.limit.LimitManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import org.apache.commons.lang3.text.WordUtils;
@@ -68,6 +69,13 @@ public class Interact implements Listener {
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		StackableManager stackableManager = skyblock.getStackableManager();
+		LevellingManager levellingManager = skyblock.getLevellingManager();
+
+		Island island = islandManager.getIslandAtLocation(player.getLocation());
+		if (island == null) {
+			event.setCancelled(true);
+			return;
+		}
 
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			if (block.getType() == Material.DRAGON_EGG) {
@@ -123,19 +131,23 @@ public class Interact implements Listener {
 			if (stackableManager != null
 					&& stackableManager.getStackableMaterials().contains(event.getMaterial())
 					&& event.getClickedBlock().getType() == event.getMaterial()
-					&& !player.isSneaking() && islandManager.hasPermission(player, block.getLocation(), "Place")) {
+					&& !player.isSneaking() && islandManager.hasPermission(player, block.getLocation(), "Place")
+					&& (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission") || player.hasPermission("fabledskyblock.stackable"))) {
                 if (NMSUtil.getVersionNumber() > 8) {
                     if (event.getHand() == EquipmentSlot.OFF_HAND) return;
                 }
 
+				if (levellingManager.isIslandLevelBeingScanned(island)) {
+					skyblock.getMessageManager().sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
+					event.setCancelled(true);
+					return;
+				}
+
 				LimitManager limitManager = skyblock.getLimitManager();
 				if (limitManager.isBlockLimitExceeded(player, block)) {
-					Materials material;
-					if (block.getType() == Materials.SPAWNER.parseMaterial()) {
-						material = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
-					} else {
-						material = Materials.getMaterials(block.getType(), block.getData());
-					}
+					Materials material = Materials.getMaterials(block.getType(), block.getData());
 
 					skyblock.getMessageManager().sendMessage(player,
 							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
@@ -161,8 +173,6 @@ public class Interact implements Listener {
 				FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 				FileConfiguration configLoad = config.getFileConfiguration();
 				if (!configLoad.getBoolean("Island.Block.Level.Enable")) return;
-
-				Island island = islandManager.getIslandAtLocation(block.getLocation());
 
 				Materials materials = Materials.getMaterials(block.getType(), block.getData());
 

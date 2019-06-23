@@ -41,6 +41,7 @@ public class LevellingManager {
 
     private final SkyBlock skyblock;
 
+    private Set<Island> activeIslandScans = new HashSet<>();
     private List<LevellingMaterial> materialStorage = new ArrayList<>();
 
     private Method getBlockTypeMethod = null;
@@ -66,6 +67,8 @@ public class LevellingManager {
             player.sendMessage(message);
             return;
         }
+
+        this.activeIslandScans.add(island);
 
         Chunk chunk = new Chunk(skyblock, island);
         chunk.prepareInitial();
@@ -180,7 +183,7 @@ public class LevellingManager {
                                             if (snapshot.isStackedSpawner(location)) {
                                                 Map.Entry<Integer, EntityType> spawnerData = snapshot.getStackedSpawner(location);
                                                 amount = spawnerData.getKey();
-                                                blockData = 0;
+                                                spawnerType = spawnerData.getValue();
                                             }
                                         }
 
@@ -304,6 +307,8 @@ public class LevellingManager {
                 me.goodandevil.skyblock.menus.Levelling.getInstance().open(player);
             }
         }
+
+        this.activeIslandScans.remove(island);
     }
 
     public void registerMaterials() {
@@ -321,10 +326,14 @@ public class LevellingManager {
                     }
                 } catch (Exception e) {
                     Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: The material '" + materialKey
-                            + "' is not a Material type. Make sure the material name is a 1.13 material name. Please correct this in the 'levelling.yml' file.");
+                            + "' is not a Material type. Make sure the material name is a 1.14 material name. Please correct this in the 'levelling.yml' file.");
                 }
             }
         }
+    }
+
+    public boolean isIslandLevelBeingScanned(Island island) {
+        return this.activeIslandScans.contains(island);
     }
 
     public void unregisterMaterials() {

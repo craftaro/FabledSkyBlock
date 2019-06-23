@@ -72,7 +72,7 @@ public class Chunk {
 	}
 
 	public void prepareNextChunkSnapshots() {
-		boolean isWildStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("WildStacker") && false; // TODO: Disabled for now until we figure out why it isn't working properly
+		boolean isWildStackerEnabled = Bukkit.getPluginManager().isPluginEnabled("WildStacker");
 
 		Bukkit.getScheduler().runTask(this.skyblock, () -> {
 			this.chunkSnapshots.clear();
