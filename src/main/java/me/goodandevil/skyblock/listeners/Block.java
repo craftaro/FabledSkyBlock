@@ -596,11 +596,13 @@ public class Block implements Listener {
                     e.printStackTrace();
                 }
             } else {
-                if (block.getState().getData() instanceof Crops) {
+                if (block.getState().getData() instanceof Crops
+                        || block.getType().name().equals("BEETROOT_BLOCK")
+                        || block.getType().name().equals("CARROT")
+                        || block.getType().name().equals("POTATO")
+                        || block.getType().name().equals("CROPS")) {
                     try {
-                        block.getClass().getMethod("setData", byte.class).invoke(block,
-                                (byte) (block.getData() + 1));
-                        block.getState().update();
+                        block.getClass().getMethod("setData", byte.class).invoke(block, (byte) (block.getData() + 1));
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
                             | NoSuchMethodException | SecurityException e) {
                         e.printStackTrace();
