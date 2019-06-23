@@ -166,5 +166,11 @@ public class Join implements Listener {
 			scoreboard.run();
 			scoreboardManager.storeScoreboard(player, scoreboard);
 		}
+
+		Island island = islandManager.getIslandPlayerAt(player);
+		if (island != null) {
+			islandManager.updateBorder(island);
+			islandManager.updateFlight(player);
+		}
 	}
 }

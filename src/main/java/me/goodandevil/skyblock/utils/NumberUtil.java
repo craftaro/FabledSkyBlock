@@ -1,6 +1,7 @@
 package me.goodandevil.skyblock.utils;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 
 public final class NumberUtil {
@@ -10,7 +11,7 @@ public final class NumberUtil {
 	}
 
 	public static String formatNumberByDecimal(double number) {
-		String withoutDecimal = new DecimalFormat("0.#").format(number), withDecimal = "";
+		String withoutDecimal = new DecimalFormat("0.#").format(number).replace(",", "."), withDecimal = "";
 
 		if (withoutDecimal.contains(".")) {
 			withDecimal = "." + withoutDecimal.split("\\.")[1];
@@ -24,6 +25,7 @@ public final class NumberUtil {
 		long itemCostWithoutDecimalValue = Long.valueOf(withoutDecimal);
 
 		return formatNumber(itemCostWithoutDecimalValue) + withDecimal;
+
 	}
 
 	public static String formatNumberBySuffix(long number) {

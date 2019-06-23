@@ -14,9 +14,9 @@ Island:
         # The size of an Island when created.
         # [!] Do not go over the maximum.
         # [!] Even numbers WILL create world border issues.
-        Minimum: 101
+        Minimum: 100
         # The maximum size of an Island based on the permission node 'skyblock.size.<size>'.
-        Maximum: 201
+        Maximum: 200
     Creation:
         # Rather than opening the 'Island Creator' menu. Create an island
         # as soon as a player performs the '/island' or '/island create'
@@ -38,7 +38,7 @@ Island:
         # Delete the Island world when changing the liquid option.
         # If lava disabled, the world will be a water world.
         # -1 to disable Nether and End unlock prices.
-        # Valid Enrivonments: NORMAL, NETHER, THE_END
+        # Valid Environments: NORMAL, NETHER, THE_END
         Normal:
             Name: "island_normal_world"
             IslandSpawnHeight: 72
@@ -174,6 +174,8 @@ Island:
             # time cycle or be fixed.
             Cycle: false
     Levelling:
+        # Run a scan automatically when pasting an island structure
+        ScanAutomatically: true
         # Include Points: 0 in the '/is level' GUI
         IncludeEmptyPointsInList: true
         # Island Level Points divided by value
@@ -283,3 +285,5 @@ Island:
         Enable: true
     Stackable:
         Enable: true
+        # fabledskyblock.stackables
+        RequirePermission: false

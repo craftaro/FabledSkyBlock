@@ -3,9 +3,16 @@ package me.goodandevil.skyblock.listeners;
 import java.io.File;
 import java.util.Set;
 
+import me.goodandevil.skyblock.levelling.LevellingManager;
+import me.goodandevil.skyblock.limit.LimitManager;
+import me.goodandevil.skyblock.utils.NumberUtil;
+import org.apache.commons.lang3.text.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Beacon;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -22,6 +29,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import me.goodandevil.skyblock.SkyBlock;
@@ -48,7 +56,7 @@ public class Interact implements Listener {
 	}
 
 	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		org.bukkit.block.Block block = event.getClickedBlock();
@@ -61,15 +69,97 @@ public class Interact implements Listener {
 		IslandManager islandManager = skyblock.getIslandManager();
 		SoundManager soundManager = skyblock.getSoundManager();
 		StackableManager stackableManager = skyblock.getStackableManager();
+		LevellingManager levellingManager = skyblock.getLevellingManager();
+
+		Island island = islandManager.getIslandAtLocation(player.getLocation());
+		if (island == null) {
+			event.setCancelled(true);
+			return;
+		}
+
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+			if (block.getType() == Material.DRAGON_EGG) {
+				if (!islandManager.hasPermission(player, block.getLocation(), "DragonEggUse")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
+			} else if (block.getState() instanceof Beacon) { // ChunkCollectors support
+				if (!islandManager.hasPermission(player, block.getLocation(), "Beacon")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
+			} else if (block.getState() instanceof InventoryHolder || block.getState() instanceof CreatureSpawner) { // EpicHoppers/EpicSpawners support
+				if (!islandManager.hasPermission(player, block.getLocation(), "Storage")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
+			}
+		}
+
+		if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_AIR) {
+			if (event.getItem() != null && event.getItem().getType() == Material.EGG) {
+				if (!skyblock.getIslandManager().hasPermission(player, "Projectile")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+				}
+			}
+		}
 
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (stackableManager != null
 					&& stackableManager.getStackableMaterials().contains(event.getMaterial())
 					&& event.getClickedBlock().getType() == event.getMaterial()
-					&& !player.isSneaking()) {
+					&& !player.isSneaking() && islandManager.hasPermission(player, block.getLocation(), "Place")
+					&& (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission") || player.hasPermission("fabledskyblock.stackable"))) {
                 if (NMSUtil.getVersionNumber() > 8) {
                     if (event.getHand() == EquipmentSlot.OFF_HAND) return;
                 }
+
+				if (levellingManager.isIslandLevelBeingScanned(island)) {
+					skyblock.getMessageManager().sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
+					event.setCancelled(true);
+					return;
+				}
+
+				LimitManager limitManager = skyblock.getLimitManager();
+				if (limitManager.isBlockLimitExceeded(player, block)) {
+					Materials material = Materials.getMaterials(block.getType(), block.getData());
+
+					skyblock.getMessageManager().sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+									.replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " ")))
+									.replace("%limit", NumberUtil.formatNumber(limitManager.getBlockLimit(player, block))));
+					skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					event.setCancelled(true);
+					return;
+				}
+
 				Location location = event.getClickedBlock().getLocation();
 				if (stackableManager.isStacked(location)) {
 					Stackable stackable = stackableManager.getStack(location, event.getMaterial());
@@ -83,8 +173,6 @@ public class Interact implements Listener {
 				FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 				FileConfiguration configLoad = config.getFileConfiguration();
 				if (!configLoad.getBoolean("Island.Block.Level.Enable")) return;
-
-				Island island = islandManager.getIslandAtLocation(block.getLocation());
 
 				Materials materials = Materials.getMaterials(block.getType(), block.getData());
 
@@ -100,17 +188,6 @@ public class Interact implements Listener {
 			}
 			if (block.getType() == Material.ANVIL) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Anvil")) {
-					event.setCancelled(true);
-
-					messageManager.sendMessage(player,
-							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
-					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-
-					return;
-				}
-			} else if (block.getType() == Material.BEACON) {
-				if (!islandManager.hasPermission(player, block.getLocation(), "Beacon")) {
 					event.setCancelled(true);
 
 					messageManager.sendMessage(player,
@@ -243,7 +320,8 @@ public class Interact implements Listener {
 					|| block.getType() == Materials.BIRCH_BUTTON.parseMaterial()
 					|| block.getType() == Materials.JUNGLE_BUTTON.parseMaterial()
 					|| block.getType() == Materials.ACACIA_BUTTON.parseMaterial()
-					|| block.getType() == Materials.DARK_OAK_BUTTON.parseMaterial()) {
+					|| block.getType() == Materials.DARK_OAK_BUTTON.parseMaterial()
+					|| block.getType() == Materials.LEVER.parseMaterial()) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "LeverButton")) {
 					event.setCancelled(true);
 
@@ -271,7 +349,8 @@ public class Interact implements Listener {
 					|| block.getType() == Materials.JUNGLE_TRAPDOOR.parseMaterial()
 					|| block.getType() == Materials.ACACIA_TRAPDOOR.parseMaterial()
 					|| block.getType() == Materials.DARK_OAK_TRAPDOOR.parseMaterial()
-					|| block.getType() == Material.NOTE_BLOCK || block.getType() == Material.HOPPER
+					|| block.getType() == Material.NOTE_BLOCK
+					|| block.getType() == Material.HOPPER
 					|| block.getType() == Materials.COMPARATOR.parseMaterial()
 					|| block.getType() == Materials.LEGACY_REDSTONE_COMPARATOR_OFF.parseMaterial()
 					|| block.getType() == Materials.LEGACY_REDSTONE_COMPARATOR_ON.parseMaterial()
@@ -313,8 +392,8 @@ public class Interact implements Listener {
 
 					return;
 				}
-			} else if (block.getType() == Materials.LEGACY_CAKE_BLOCK.getPostMaterial()) {
-				if (player.getFoodLevel() < 20 && !islandManager.hasPermission(player, block.getLocation(), "Cake")) {
+			} else if (block.getType() == Material.TNT) {
+				if (!islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
 					event.setCancelled(true);
 
 					messageManager.sendMessage(player,
@@ -324,8 +403,8 @@ public class Interact implements Listener {
 
 					return;
 				}
-			} else if (block.getType() == Material.DRAGON_EGG) {
-				if (!islandManager.hasPermission(player, block.getLocation(), "DragonEggUse")) {
+			} else if (block.getType() == Materials.LEGACY_CAKE_BLOCK.getPostMaterial()) {
+				if (player.getFoodLevel() < 20 && !islandManager.hasPermission(player, block.getLocation(), "Cake")) {
 					event.setCancelled(true);
 
 					messageManager.sendMessage(player,
@@ -394,6 +473,39 @@ public class Interact implements Listener {
 						.getFileConfiguration().getBoolean("Island.Block.EndFrame.Enable")
 						&& islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
 
+					if (Bukkit.getPluginManager().isPluginEnabled("EpicAnchors")) {
+						if (com.songoda.epicanchors.EpicAnchorsPlugin.getInstance().getAnchorManager().getAnchor(block.getLocation()) != null) {
+							event.setCancelled(true);
+							return;
+						}
+					}
+
+					ItemStack is = event.getPlayer().getItemInHand();
+
+					if (is == null || is.getType() == Material.AIR) {
+						block.setType(Material.AIR);
+						player.getInventory().addItem(new ItemStack(Materials.END_PORTAL_FRAME.parseMaterial(), 1));
+						player.updateInventory();
+
+						soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 10.0F, 10.0F);
+
+						event.setCancelled(true);
+
+						return;
+					}
+				}
+			} else if (block.getType() == Material.TNT) {
+				if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+						.getFileConfiguration().getBoolean("Island.Block.EndFrame.Enable")
+						&& islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
+
+					if (Bukkit.getPluginManager().isPluginEnabled("EpicAnchors")) {
+						if (com.songoda.epicanchors.EpicAnchorsPlugin.getInstance().getAnchorManager().getAnchor(block.getLocation()) != null) {
+							event.setCancelled(true);
+							return;
+						}
+					}
+
 					ItemStack is = event.getPlayer().getItemInHand();
 
 					if (is == null || is.getType() == Material.AIR) {
@@ -439,7 +551,7 @@ public class Interact implements Listener {
 							player.updateInventory();
 						}
 					}
-				} else if (event.getItem().getType() == Materials.BAT_SPAWN_EGG.parseMaterial()) {
+				} else if (event.getItem().getType().name().contains("SPAWN_EGG")) {
 					if (!islandManager.hasPermission(player, block.getLocation(), "SpawnEgg")) {
 						event.setCancelled(true);
 
@@ -464,6 +576,7 @@ public class Interact implements Listener {
 				}
 			}
 		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+			// Note: Cast is necessary as it is ambiguous without it in 1.8
 			if (player.getTargetBlock((Set<Material>) null, 5).getType() == Material.FIRE) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Fire")) {
 					event.setCancelled(true);
@@ -475,7 +588,9 @@ public class Interact implements Listener {
 				}
 			}
 		} else if (event.getAction() == Action.PHYSICAL) {
-			if (block.getType() == Materials.FARMLAND.parseMaterial()) {
+			if (block.getType() == Materials.TURTLE_EGG.parseMaterial()) {
+				event.setCancelled(true);
+			} else if (block.getType() == Materials.FARMLAND.parseMaterial()) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Crop")) {
 					event.setCancelled(true);
 
@@ -490,7 +605,9 @@ public class Interact implements Listener {
 					|| block.getType() == Materials.BIRCH_PRESSURE_PLATE.parseMaterial()
 					|| block.getType() == Materials.JUNGLE_PRESSURE_PLATE.parseMaterial()
 					|| block.getType() == Materials.ACACIA_PRESSURE_PLATE.parseMaterial()
-					|| block.getType() == Materials.DARK_OAK_PRESSURE_PLATE.parseMaterial()) {
+					|| block.getType() == Materials.DARK_OAK_PRESSURE_PLATE.parseMaterial()
+					|| block.getType() == Materials.LIGHT_WEIGHTED_PRESSURE_PLATE.parseMaterial()
+					|| block.getType() == Materials.HEAVY_WEIGHTED_PRESSURE_PLATE.parseMaterial()) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "PressurePlate")) {
 					event.setCancelled(true);
 				}
@@ -504,7 +621,6 @@ public class Interact implements Listener {
 					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
 			}
-
 		}
 	}
 
@@ -670,8 +786,7 @@ public class Interact implements Listener {
 
 					return;
 				}
-			}
-			else if(entity instanceof StorageMinecart){
+			} else if(entity instanceof StorageMinecart){
 				if (!islandManager.hasPermission(player, entity.getLocation(), "Storage")) {
 					event.setCancelled(true);
 
@@ -682,9 +797,19 @@ public class Interact implements Listener {
 
 					return;
 				}
-			}
-			else if (entity.getType() == EntityType.MINECART || entity.getType() == EntityType.BOAT) {
+			} else if (entity.getType() == EntityType.MINECART || entity.getType() == EntityType.BOAT) {
 				if (!islandManager.hasPermission(player, entity.getLocation(), "MinecartBoat")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
+			} else if (entity.getType() == EntityType.MINECART_HOPPER) {
+				if (!islandManager.hasPermission(player, entity.getLocation(), "Hopper")) {
 					event.setCancelled(true);
 
 					messageManager.sendMessage(player,

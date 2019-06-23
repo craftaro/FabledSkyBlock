@@ -31,6 +31,7 @@ import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
 import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Coop {
 
@@ -164,6 +165,7 @@ public class Coop {
 			Island island = islandManager.getIsland(player);
 
 			Set<UUID> coopPlayers = island.getCoopPlayers();
+			coopPlayers.removeIf(x -> !Bukkit.getOfflinePlayer(x).hasPlayedBefore());
 
 			int playerMenuPage = playerData.getPage(), nextEndIndex = coopPlayers.size() - playerMenuPage * 36;
 

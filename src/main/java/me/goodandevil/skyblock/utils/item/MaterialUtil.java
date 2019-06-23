@@ -30,7 +30,7 @@ public class MaterialUtil {
 		} else if (material == Materials.LEGACY_SUGAR_CANE_BLOCK.getPostMaterial()) {
 			material = Material.SUGAR_CANE;
 		} else if (material == Material.TRIPWIRE) {
-			material = Material.TRIPWIRE_HOOK;
+			material = Material.STRING;
 		} else if (material == Material.FLOWER_POT) {
 			material = Materials.LEGACY_FLOWER_POT_ITEM.getPostMaterial();
 		} else if (material.name().startsWith("POTTED_")) {

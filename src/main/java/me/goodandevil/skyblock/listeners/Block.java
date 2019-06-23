@@ -5,18 +5,24 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.Generator;
 import me.goodandevil.skyblock.generator.GeneratorManager;
 import me.goodandevil.skyblock.island.*;
+import me.goodandevil.skyblock.levelling.LevellingManager;
+import me.goodandevil.skyblock.limit.LimitManager;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
+import me.goodandevil.skyblock.utils.NumberUtil;
+import me.goodandevil.skyblock.utils.StringUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
 import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.world.WorldManager;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -44,7 +50,7 @@ public class Block implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlock();
@@ -128,10 +134,8 @@ public class Block implements Listener {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (LocationUtil.isLocationLocation(block.getLocation(),
-                island.getLocation(world, IslandEnvironment.Main)
-                        .clone()
-                        .subtract(0.0D, 1.0D, 0.0D))) {
+        if (LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))
+            || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone())) {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 skyblock.getMessageManager().sendMessage(player,
@@ -160,19 +164,28 @@ public class Block implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlock();
 
         IslandManager islandManager = skyblock.getIslandManager();
         WorldManager worldManager = skyblock.getWorldManager();
+        LevellingManager levellingManager = skyblock.getLevellingManager();
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         Island island = islandManager.getIslandAtLocation(block.getLocation());
 
         if (island == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (levellingManager.isIslandLevelBeingScanned(island)) {
+            skyblock.getMessageManager().sendMessage(player,
+                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                            .getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
             event.setCancelled(true);
             return;
         }
@@ -188,12 +201,9 @@ public class Block implements Listener {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (configLoad.getBoolean("Island.WorldBorder.Block")) {
-            if (block.getType() == Material.DISPENSER) {
-                if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(),
-                        island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
-                    event.setCancelled(true);
-                }
+        if (configLoad.getBoolean("Island.WorldBorder.Block") && block.getType() == Material.DISPENSER) {
+            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
+                event.setCancelled(true);
             }
         }
 
@@ -206,13 +216,11 @@ public class Block implements Listener {
             }
 
             // Specific check for beds
-            if (block.getType().name().equals("BED") || block.getType().name().contains("_BED")) {
+            if (!isObstructing && event.getBlock().getState().getData() instanceof org.bukkit.material.Bed) {
                 BlockFace bedDirection = ((org.bukkit.material.Bed) event.getBlock().getState().getData()).getFacing();
                 org.bukkit.block.Block bedBlock = block.getRelative(bedDirection);
-                if (LocationUtil.isLocationAffectingLocation(bedBlock.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+                if (LocationUtil.isLocationAffectingLocation(bedBlock.getLocation(), island.getLocation(world, IslandEnvironment.Main)))
                     isObstructing = true;
-
-                }
             }
 
             if (isObstructing) {
@@ -224,6 +232,21 @@ public class Block implements Listener {
                 event.setCancelled(true);
                 return;
             }
+        }
+
+        LimitManager limitManager = skyblock.getLimitManager();
+        if (limitManager.isBlockLimitExceeded(player, block)) {
+            Materials material = Materials.getMaterials(block.getType(), block.getData());
+
+            skyblock.getMessageManager().sendMessage(player,
+                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                            .getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+                            .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " ")))
+                            .replace("%limit", NumberUtil.formatNumber(limitManager.getBlockLimit(player, block))));
+            skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+            event.setCancelled(true);
+            return;
         }
 
         if (!configLoad.getBoolean("Island.Block.Level.Enable"))
@@ -272,11 +295,14 @@ public class Block implements Listener {
         
         org.bukkit.block.Block block = event.getToBlock();
 
-        // Protect spawn location and outside of border
-        if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 1.0D)) {
+        // Protect outside of border
+        if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
             event.setCancelled(true);
             return;
-        } else if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main)) && configLoad.getBoolean("Island.Spawn.Protection")) {
+        }
+
+        // Protect spawn
+        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main)) && configLoad.getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
         }
@@ -293,7 +319,7 @@ public class Block implements Listener {
                                        island.hasRole(IslandRole.Member, p.getUniqueId()) ||    
                                        island.hasRole(IslandRole.Coop, p.getUniqueId()) ||
                                        island.hasRole(IslandRole.Operator, p.getUniqueId());
-                    if (isMember && LocationUtil.isLocationAtLocationRadius(p.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
+                    if (isMember && islandManager.isLocationAtIsland(island, p.getLocation(), world)) {
                         possiblePlayers.add(p);
                     }
                 }
@@ -336,7 +362,7 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world) || !islandManager.isLocationAtIsland(island, block.getRelative(event.getDirection()).getLocation(), world)) {
                 event.setCancelled(true);
                 return;
             }
@@ -392,7 +418,7 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!LocationUtil.isLocationAtLocationRadius(block.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius() - 2.0D)) {
+            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
                 event.setCancelled(true);
                 return;
             }
@@ -468,7 +494,7 @@ public class Block implements Listener {
                                    island.hasRole(IslandRole.Member, player.getUniqueId()) || 
                                    island.hasRole(IslandRole.Coop, player.getUniqueId()) ||
                                    island.hasRole(IslandRole.Operator, player.getUniqueId());
-                if (isMember && LocationUtil.isLocationAtLocationRadius(player.getLocation(), island.getLocation(world, IslandEnvironment.Island), island.getRadius())) {
+                if (isMember && islandManager.isLocationAtIsland(island, player.getLocation(), world)) {
                     possiblePlayers.add(player);
                 }
             }
@@ -630,48 +656,49 @@ public class Block implements Listener {
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
             return;
 
-        if (event.getBlocks().isEmpty())
-            return;
-
-        Island island = islandManager.getIslandAtLocation(event.getBlocks().get(0).getLocation());
-        if (island == null)
-            return;
-
-        // Check spawn block protection
-        IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
-        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
-
-        for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
-                event.setCancelled(true);
+        // PortalCreateEvent.getBlocks() changed from ArrayList<Block> to ArrayList<BlockState> in 1.14.1... why...
+        if (NMSUtil.getVersionNumber() > 13) {
+            List<BlockState> blocks = event.getBlocks();
+            if (event.getBlocks().isEmpty())
                 return;
+
+            Island island = islandManager.getIslandAtLocation(event.getBlocks().get(0).getLocation());
+            if (island == null)
+                return;
+
+            // Check spawn block protection
+            IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
+            Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
+
+            for (BlockState block : blocks) {
+                if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+                    event.setCancelled(true);
+                    return;
+                }
             }
-        }
-    }
+        } else {
+            try {
+                @SuppressWarnings("unchecked")
+                List<org.bukkit.block.Block> blocks = (List<org.bukkit.block.Block>) event.getClass().getMethod("getBlocks").invoke(event);
+                if (blocks.isEmpty())
+                    return;
 
-    @EventHandler
-    public void onEntityCreatePortal(EntityCreatePortalEvent event) {
-        WorldManager worldManager = skyblock.getWorldManager();
-        IslandManager islandManager = skyblock.getIslandManager();
+                Island island = islandManager.getIslandAtLocation(blocks.get(0).getLocation());
+                if (island == null)
+                    return;
 
-        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
-            return;
+                // Check spawn block protection
+                IslandWorld world = worldManager.getIslandWorld(blocks.get(0).getWorld());
+                Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
 
-        if (event.getBlocks().isEmpty())
-            return;
-
-        Island island = islandManager.getIslandAtLocation(event.getBlocks().get(0).getLocation());
-        if (island == null)
-            return;
-
-        // Check spawn block protection
-        IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
-        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
-
-        for (org.bukkit.block.BlockState block : event.getBlocks()) {
-            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
-                event.setCancelled(true);
-                return;
+                for (org.bukkit.block.Block block : blocks) {
+                    if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+            } catch (ReflectiveOperationException ex) {
+                ex.printStackTrace();
             }
         }
     }

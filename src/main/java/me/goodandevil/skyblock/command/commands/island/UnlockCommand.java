@@ -6,6 +6,7 @@ import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.economy.EconomyManager;
 import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.utils.NumberUtil;
@@ -51,6 +52,7 @@ public class UnlockCommand extends SubCommand {
         }
 
         Island island = islandManager.getIsland(player);
+        IslandWorld islandWorld = IslandWorld.valueOf(type);
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Owner.Message"));
@@ -58,20 +60,14 @@ public class UnlockCommand extends SubCommand {
             return;
         }
 
-        Config islandData = fileManager
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
-                        island.getOwnerUUID().toString() + ".yml"));
-        FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
-        double price = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getDouble("Island.World." + type + ".UnlockPrice");
-        boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + type);
-
-        if (unlocked) {
-            messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Unlocked.Message").replace(
-                    "%type%", type));
+        if (islandManager.isIslandWorldUnlocked(island, islandWorld)) {
+            messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Unlocked.Message").replace("%type%", type));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
             return;
         }
+
+        double price = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getDouble("Island.World." + islandWorld.name() + ".UnlockPrice");
 
         if (!economyManager.hasBalance(player, price)) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Money.Message").replace(
@@ -81,8 +77,9 @@ public class UnlockCommand extends SubCommand {
         }
 
         soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
-        configLoadIslandData.set("Unlocked." + type, true);
         economyManager.withdraw(player, price);
+
+        islandManager.unlockIslandWorld(island, islandWorld);
 
         messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Finish.Message").replace(
                 "%type%", type));

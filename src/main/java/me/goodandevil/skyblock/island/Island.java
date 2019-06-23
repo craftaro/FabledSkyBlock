@@ -12,6 +12,7 @@ import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.visit.Visit;
 import org.apache.commons.lang.WordUtils;
@@ -804,8 +805,7 @@ public class Island {
 		FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
 		double price = configLoad.getDouble("Island.World." + type + ".UnlockPrice");
 
-		boolean unlocked =
-						configLoadIslandData.getBoolean("Unlocked." + type);
+		boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + type);
 		if (price == -1) {
 			configLoadIslandData.set("Unlocked." + type, true);
 			unlocked = true;

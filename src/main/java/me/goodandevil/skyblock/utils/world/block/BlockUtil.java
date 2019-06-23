@@ -288,8 +288,6 @@ public final class BlockUtil {
 				banner.addPattern(new Pattern(DyeColor.valueOf(pattern[1].toUpperCase()),
 						PatternType.valueOf(pattern[0].toUpperCase())));
 			}
-
-			block.getState().update();
 		} else if (blockTypeState == BlockStateType.BEACON) {
 			Beacon beacon = (Beacon) block.getState();
 			String[] potionEffect = blockData.getPotionEffect().split(":");
@@ -375,8 +373,6 @@ public final class BlockUtil {
 			for (int i = 0; i < blockData.getSignLines().length; i++) {
 				sign.setLine(i, ChatColor.translateAlternateColorCodes('&', blockData.getSignLines()[i]));
 			}
-
-			sign.update();
 		} else if (blockTypeState == BlockStateType.SKULL) {
 			Skull skull = (Skull) block.getState();
 
@@ -388,7 +384,6 @@ public final class BlockUtil {
 			} else {
 				skull.setOwner(blockData.getSkullOwner());
 			}
-			skull.update();
 		} else {
 			if (NMSVersion > 8) {
 				if (blockTypeState == BlockStateType.ENDGATEWAY) {

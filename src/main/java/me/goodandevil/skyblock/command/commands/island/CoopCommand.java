@@ -52,6 +52,11 @@ public class CoopCommand extends SubCommand {
 						OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);
 						targetPlayerUUID = offlinePlayer.getUniqueId();
 						targetPlayerName = offlinePlayer.getName();
+
+						if (targetPlayerUUID != null && !Bukkit.getOfflinePlayer(targetPlayerUUID).hasPlayedBefore()) {
+							targetPlayerUUID = null;
+							targetPlayerName = null;
+						}
 					} else {
 						targetPlayerUUID = targetPlayer.getUniqueId();
 						targetPlayerName = targetPlayer.getName();

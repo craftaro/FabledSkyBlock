@@ -54,7 +54,7 @@ public class LeaderboardManager {
 
 			if (enableExemptions && economyManager.hasPermission(worldManager.getWorld(IslandWorld.Normal).getName(),
 					Bukkit.getOfflinePlayer(ownerUUID),
-					"fabledskyblock.island.top.exempt"))
+					"fabledskyblock.top.exempt"))
 				continue;
 
 			Visit visit = visitManager.getIslands().get(ownerUUID);

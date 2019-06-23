@@ -9,6 +9,7 @@ import me.goodandevil.skyblock.hologram.HologramManager;
 import me.goodandevil.skyblock.hologram.HologramType;
 import me.goodandevil.skyblock.leaderboard.LeaderboardManager;
 import me.goodandevil.skyblock.levelling.LevellingManager;
+import me.goodandevil.skyblock.limit.LimitManager;
 import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.scoreboard.ScoreboardManager;
 import me.goodandevil.skyblock.sound.SoundManager;
@@ -39,13 +40,14 @@ public class ReloadCommand extends SubCommand {
 		HologramManager hologramManager = skyblock.getHologramManager();
 		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
+		LimitManager limitManager = skyblock.getLimitManager();
 		FileManager fileManager = skyblock.getFileManager();
 
 		messageManager.sendMessage(sender, "&cPlease note that this command is not supported and may " +
 				"cause issues that could put the plugin in an unstable state. " +
 				"If you encounter any issues please stop your server, edit the configuration files, " +
 				"and then start your server again. This command does NOT reload all the plugin files, only " +
-				"the config.yml, language.yml, generators.yml, and levelling.yml.");
+				"the config.yml, language.yml, generators.yml, levelling.yml, and limits.yml.");
 
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
@@ -93,6 +95,8 @@ public class ReloadCommand extends SubCommand {
 		leaderboardManager.setupLeaderHeads();
 
 		hologramManager.resetHologram();
+
+		limitManager.reload();
 
 		messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
 		soundManager.playSound(sender, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
