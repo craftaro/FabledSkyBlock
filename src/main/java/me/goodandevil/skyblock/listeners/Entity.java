@@ -575,7 +575,7 @@ public class Entity implements Listener {
             return;
         }
 
-        if (NMSUtil.getVersionNumber() > 8) {
+        if (NMSUtil.getVersionNumber() > 9) {
             if (livingEntity instanceof Donkey || livingEntity instanceof Mule || livingEntity instanceof ElderGuardian)
                 return;
         }
