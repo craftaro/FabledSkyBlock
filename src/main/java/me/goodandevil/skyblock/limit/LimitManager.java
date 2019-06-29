@@ -54,12 +54,17 @@ public class LimitManager {
      * @return The max number of the type of block the player can place
      */
     public long getBlockLimit(Player player, Block block) {
+        if (player == null || block == null)
+            return -1;
+
         if (player.hasPermission("fabledskyblock.limit.block.*"))
             return -1;
 
-        long limit = -1;
         Materials material = Materials.getMaterials(block.getType(), block.getData());
+        if (material == null)
+            return -1;
 
+        long limit = -1;
         if (this.blockLimits.containsKey(material))
             limit = Math.max(limit, this.blockLimits.get(material));
 

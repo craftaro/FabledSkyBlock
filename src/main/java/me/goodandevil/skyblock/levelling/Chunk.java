@@ -94,15 +94,17 @@ public class Chunk {
 				int x = chunkPosition.getX();
 				int z = chunkPosition.getZ();
 				if (!world.isChunkLoaded(x, z)) {
-					world.loadChunk(x, z);
-					org.bukkit.Chunk chunk = world.getChunkAt(x, z);
-					ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot();
-					if (isWildStackerEnabled) {
-						this.chunkSnapshots.add(new WildStackerChunkSnapshotWrapper(chunkSnapshot, com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager().getStackedSnapshot(chunk, true)));
-					} else {
-						this.chunkSnapshots.add(new ChunkSnapshotWrapper(chunkSnapshot));
+					// Try to load the chunk, but don't generate anything and ignore if we couldn't get it
+					if (world.loadChunk(x, z, false)) {
+						org.bukkit.Chunk chunk = world.getChunkAt(x, z);
+						ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot();
+						if (isWildStackerEnabled) {
+							this.chunkSnapshots.add(new WildStackerChunkSnapshotWrapper(chunkSnapshot, com.bgsoftware.wildstacker.api.WildStackerAPI.getWildStacker().getSystemManager().getStackedSnapshot(chunk, true)));
+						} else {
+							this.chunkSnapshots.add(new ChunkSnapshotWrapper(chunkSnapshot));
+						}
+						world.unloadChunk(x, z);
 					}
-					world.unloadChunk(x, z);
 				} else {
 					org.bukkit.Chunk chunk = world.getChunkAt(x, z);
 					ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot();

@@ -4,14 +4,18 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.generator.Generator;
 import me.goodandevil.skyblock.generator.GeneratorManager;
-import me.goodandevil.skyblock.island.*;
+import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
+import me.goodandevil.skyblock.island.IslandLevel;
+import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.island.IslandRole;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.levelling.LevellingManager;
 import me.goodandevil.skyblock.limit.LimitManager;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.NumberUtil;
-import me.goodandevil.skyblock.utils.StringUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
@@ -30,8 +34,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
-import org.bukkit.event.entity.EntityCreatePortalEvent;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockFormEvent;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +52,11 @@ import org.bukkit.material.Crops;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Block implements Listener {
 
@@ -596,11 +613,13 @@ public class Block implements Listener {
                     e.printStackTrace();
                 }
             } else {
-                if (block.getState().getData() instanceof Crops) {
+                if (block.getState().getData() instanceof Crops
+                        || block.getType().name().equals("BEETROOT_BLOCK")
+                        || block.getType().name().equals("CARROT")
+                        || block.getType().name().equals("POTATO")
+                        || block.getType().name().equals("CROPS")) {
                     try {
-                        block.getClass().getMethod("setData", byte.class).invoke(block,
-                                (byte) (block.getData() + 1));
-                        block.getState().update();
+                        block.getClass().getMethod("setData", byte.class).invoke(block, (byte) (block.getData() + 1));
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
                             | NoSuchMethodException | SecurityException e) {
                         e.printStackTrace();

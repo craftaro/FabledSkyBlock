@@ -473,31 +473,8 @@ public class Interact implements Listener {
 						.getFileConfiguration().getBoolean("Island.Block.EndFrame.Enable")
 						&& islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
 
-					if (Bukkit.getPluginManager().isPluginEnabled("EpicAnchors")) {
-						if (com.songoda.epicanchors.EpicAnchorsPlugin.getInstance().getAnchorManager().getAnchor(block.getLocation()) != null) {
-							event.setCancelled(true);
-							return;
-						}
-					}
-
-					ItemStack is = event.getPlayer().getItemInHand();
-
-					if (is == null || is.getType() == Material.AIR) {
-						block.setType(Material.AIR);
-						player.getInventory().addItem(new ItemStack(Materials.END_PORTAL_FRAME.parseMaterial(), 1));
-						player.updateInventory();
-
-						soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 10.0F, 10.0F);
-
-						event.setCancelled(true);
-
+					if (NMSUtil.getVersionNumber() > 8 && event.getHand() == EquipmentSlot.OFF_HAND)
 						return;
-					}
-				}
-			} else if (block.getType() == Material.TNT) {
-				if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-						.getFileConfiguration().getBoolean("Island.Block.EndFrame.Enable")
-						&& islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
 
 					if (Bukkit.getPluginManager().isPluginEnabled("EpicAnchors")) {
 						if (com.songoda.epicanchors.EpicAnchorsPlugin.getInstance().getAnchorManager().getAnchor(block.getLocation()) != null) {
@@ -509,14 +486,41 @@ public class Interact implements Listener {
 					ItemStack is = event.getPlayer().getItemInHand();
 
 					if (is == null || is.getType() == Material.AIR) {
-						block.setType(Material.AIR);
+						if (stackableManager != null && stackableManager.isStacked(block.getLocation())) {
+							Stackable stackable = stackableManager.getStack(block.getLocation(), Materials.END_PORTAL_FRAME.parseMaterial());
+							stackable.takeOne();
+
+							if (stackable.getSize() <= 1) {
+								stackableManager.removeStack(stackable);
+							}
+						} else {
+							block.setType(Material.AIR);
+						}
+
 						player.getInventory().addItem(new ItemStack(Materials.END_PORTAL_FRAME.parseMaterial(), 1));
 						player.updateInventory();
+
+						FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+						FileConfiguration configLoad = config.getFileConfiguration();
+
+						if (configLoad.getBoolean("Island.Block.Level.Enable")) {
+							Materials materials = Materials.END_PORTAL_FRAME;
+							IslandLevel level = island.getLevel();
+
+							if (level.hasMaterial(materials.name())) {
+								long materialAmount = level.getMaterialAmount(materials.name());
+
+								if (materialAmount - 1 <= 0) {
+									level.removeMaterial(materials.name());
+								} else {
+									level.setMaterialAmount(materials.name(), materialAmount - 1);
+								}
+							}
+						}
 
 						soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 10.0F, 10.0F);
 
 						event.setCancelled(true);
-
 						return;
 					}
 				}
