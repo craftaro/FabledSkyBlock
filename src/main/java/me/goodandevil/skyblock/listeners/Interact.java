@@ -46,6 +46,7 @@ import me.goodandevil.skyblock.utils.structure.StructureUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.version.NMSUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
+import org.bukkit.material.Cauldron;
 
 public class Interact implements Listener {
 
@@ -111,6 +112,17 @@ public class Interact implements Listener {
 
 					return;
 				}
+			} else if (block.getState() instanceof Cauldron) { // WildStacker stackables
+				if (!islandManager.hasPermission(player, block.getLocation(), "Place") || !islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
 			}
 		}
 
@@ -163,7 +175,8 @@ public class Interact implements Listener {
 				Location location = event.getClickedBlock().getLocation();
 				if (stackableManager.isStacked(location)) {
 					Stackable stackable = stackableManager.getStack(location, event.getMaterial());
-					stackable.addOne();
+					if (stackable != null)
+						stackable.addOne();
 				} else {
 					stackableManager.addStack(new Stackable(location, event.getMaterial()));
 				}
@@ -186,7 +199,19 @@ public class Interact implements Listener {
 
 				level.setMaterialAmount(materials.name(), materialAmount + 1);
 			}
-			if (block.getType() == Material.ANVIL) {
+
+			if (block.getType() == Materials.SWEET_BERRY_BUSH.parseMaterial()) {
+				if (!islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
+					event.setCancelled(true);
+
+					messageManager.sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+
+					return;
+				}
+			} else if (block.getType() == Material.ANVIL) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Anvil")) {
 					event.setCancelled(true);
 
