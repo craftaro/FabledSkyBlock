@@ -635,7 +635,7 @@ public class Block implements Listener {
 
         if (skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
             if (!skyblock.getIslandManager().hasSetting(block.getLocation(), IslandRole.Owner, "LeafDecay")) {
-                event.setCancelled(false);
+                event.setCancelled(true);
             }
         }
     }
