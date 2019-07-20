@@ -64,7 +64,7 @@ public class WildStacker implements Listener {
                     materialAmount = level.getMaterialAmount(materials.name());
                 }
 
-                level.setMaterialAmount(materials.name(), materialAmount + event.getBarrel().getStackAmount());
+                level.setMaterialAmount(materials.name(), materialAmount + event.getBarrel().getStackAmount() - 1); // -1 because the Interact handler will always add +1
             }
         }
     }
@@ -100,7 +100,7 @@ public class WildStacker implements Listener {
                     materialAmount = level.getMaterialAmount(materials.name());
                 }
 
-                level.setMaterialAmount(materials.name(), materialAmount + event.getTarget().getStackAmount());
+                level.setMaterialAmount(materials.name(), materialAmount + event.getTarget().getStackAmount() - 1); // -1 because the Interact handler will always add +1
             }
         }
     }
