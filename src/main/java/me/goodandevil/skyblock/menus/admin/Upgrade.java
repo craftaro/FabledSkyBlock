@@ -138,6 +138,30 @@ public class Upgrade {
 								upgrade.setEnabled(true);
 							}
 
+							if (playerDataManager.hasPlayerData(player)) {
+								me.goodandevil.skyblock.upgrade.Upgrade.Type upgradeType = ((Viewer) playerDataManager
+										.getPlayerData(player).getViewer()).getUpgrade();
+
+								boolean enabled = upgrade.isEnabled();
+								Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
+										() -> {
+											Config config = fileManager.getConfig(new File(
+													skyblock.getDataFolder(), "upgrades.yml"));
+											FileConfiguration configLoad1 = config
+													.getFileConfiguration();
+
+											configLoad1.set(
+													"Upgrades." + upgradeType.name() + ".Enable",
+													enabled);
+
+											try {
+												configLoad1.save(config.getFile());
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+										});
+							}
+
 							soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
 							Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
@@ -226,21 +250,22 @@ public class Upgrade {
 					}
 				});
 
-				ItemStack potion = new ItemStack(Material.POTION);
+				ItemStack speedPotion = new ItemStack(Material.POTION);
+				ItemStack jumpPotion = new ItemStack(Material.POTION);
 				me.goodandevil.skyblock.upgrade.Upgrade upgrade;
 
 				int NMSVersion = NMSUtil.getVersionNumber();
 
 				if (NMSVersion > 12) {
-					PotionMeta pm = (PotionMeta) potion.getItemMeta();
+					PotionMeta pm = (PotionMeta) speedPotion.getItemMeta();
 					pm.setBasePotionData(new PotionData(PotionType.SPEED));
-					potion.setItemMeta(pm);
+					speedPotion.setItemMeta(pm);
 				} else {
-					potion = new ItemStack(Material.POTION, 1, (short) 8194);
+					speedPotion = new ItemStack(Material.POTION, 1, (short) 8194);
 				}
 
 				upgrade = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Speed).get(0);
-				nInv.addItem(nInv.createItem(potion,
+				nInv.addItem(nInv.createItem(speedPotion,
 						ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Speed.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Speed.Lore"),
@@ -250,15 +275,15 @@ public class Upgrade {
 						null, new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 1);
 
 				if (NMSVersion > 12) {
-					PotionMeta pm = (PotionMeta) potion.getItemMeta();
+					PotionMeta pm = (PotionMeta) jumpPotion.getItemMeta();
 					pm.setBasePotionData(new PotionData(PotionType.JUMP));
-					potion.setItemMeta(pm);
+					jumpPotion.setItemMeta(pm);
 				} else {
-					potion = new ItemStack(Material.POTION, 1, (short) 8203);
+					jumpPotion = new ItemStack(Material.POTION, 1, (short) 8203);
 				}
 
 				upgrade = upgradeManager.getUpgrades(me.goodandevil.skyblock.upgrade.Upgrade.Type.Jump).get(0);
-				nInv.addItem(nInv.createItem(potion,
+				nInv.addItem(nInv.createItem(jumpPotion,
 						ChatColor.translateAlternateColorCodes('&',
 								configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Jump.Displayname")),
 						configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Jump.Lore"),
