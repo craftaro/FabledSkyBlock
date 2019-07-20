@@ -445,10 +445,12 @@ public class Island {
 
 	public void addCoopPlayer(UUID uuid) {
 		coopPlayers.add(uuid);
+		Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
 	}
 
 	public void removeCoopPlayer(UUID uuid) {
 		coopPlayers.remove(uuid);
+		Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
 	}
 
 	public boolean isCoopPlayer(UUID uuid) {

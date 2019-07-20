@@ -102,6 +102,12 @@ public class CoopCommand extends SubCommand {
 
 						messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Added.Message")
 								.replace("%player", targetPlayerName));
+
+						if (targetPlayer != null) {
+							messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.Coop.AddedTarget.Message")
+									.replace("%player", player.getName()));
+						}
+
 						soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 					}
 

@@ -198,6 +198,7 @@ public class Interact implements Listener {
 				}
 
 				level.setMaterialAmount(materials.name(), materialAmount + 1);
+				return;
 			}
 
 			if (block.getType() == Materials.SWEET_BERRY_BUSH.parseMaterial()) {
