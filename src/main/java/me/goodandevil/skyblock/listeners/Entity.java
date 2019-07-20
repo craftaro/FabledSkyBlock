@@ -656,7 +656,8 @@ public class Entity implements Listener {
 
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (event.getEntity() instanceof ArmorStand || event.getEntity() instanceof FallingBlock
+        if (event.getEntity() instanceof ArmorStand
+                || event.getEntity() instanceof FallingBlock
                 || event.getEntity() instanceof org.bukkit.entity.Item) {
             return;
         }
