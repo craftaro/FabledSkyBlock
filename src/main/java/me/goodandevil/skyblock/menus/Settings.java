@@ -217,7 +217,7 @@ public class Settings {
 				} else {
 					nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
 							configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"), null, null, null,
-							null), 0, 9);
+							null), 0, 8);
 					nInv.addItem(nInv.createItem(Materials.OAK_SAPLING.parseItem(),
 							configLoad.getString("Menu.Settings.Categories.Item.Owner.Displayname"),
 							configLoad.getStringList("Menu.Settings.Categories.Item.Owner.Lore"), null, null, null), 6);

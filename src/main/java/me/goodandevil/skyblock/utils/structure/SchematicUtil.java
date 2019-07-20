@@ -17,7 +17,7 @@ public class SchematicUtil {
         if (!Bukkit.getPluginManager().isPluginEnabled("WorldEdit"))
             throw new IllegalStateException("Tried to generate an island using a schematic file without WorldEdit installed!");
 
-        Bukkit.getScheduler().runTask(SkyBlock.getInstance(), () -> {
+        Runnable pasteTask = () -> {
             if (NMSUtil.getVersionNumber() > 12) { // WorldEdit 7
                 com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat format = com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats.findByFile(schematicFile);
                 try (com.sk89q.worldedit.extent.clipboard.io.ClipboardReader reader = format.getReader(new FileInputStream(schematicFile))) {
@@ -59,7 +59,13 @@ public class SchematicUtil {
                     e.printStackTrace();
                 }
             }
-        });
+        };
+
+        if (Bukkit.getPluginManager().isPluginEnabled("FastAsyncWorldEdit")) {
+            Bukkit.getScheduler().runTaskAsynchronously(SkyBlock.getInstance(), pasteTask);
+        } else {
+            Bukkit.getScheduler().runTask(SkyBlock.getInstance(), pasteTask);
+        }
 
         return new Float[] { location.getYaw(), location.getPitch() };
     }

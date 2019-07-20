@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'java'
 
 group 'com.songoda.fabledskyblock'
-version 'Build-77'
+version 'Build-78'
 
 sourceCompatibility = 1.8
 
@@ -49,9 +49,6 @@ dependencies {
     // Apache Commons
     shade (group: 'org.apache.commons', name: 'commons-lang3', version: '3.0')
     shade (group: 'commons-io', name: 'commons-io', version: '2.5')
-
-    // JetBrains Annotations
-    compile (group: 'org.jetbrains', name: 'annotations', version: '13.0')
 
     // Songoda Updater
     shade (group: 'com.songoda', name: 'songodaupdater', version: '1')

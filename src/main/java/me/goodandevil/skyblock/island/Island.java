@@ -182,7 +182,13 @@ public class Island {
 
 			save();
 
-			PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(Bukkit.getServer().getPlayer(ownerUUID));
+			Player onlinePlayer = Bukkit.getServer().getPlayer(ownerUUID);
+
+			if (!skyblock.getPlayerDataManager().hasPlayerData(onlinePlayer)) {
+				skyblock.getPlayerDataManager().createPlayerData(onlinePlayer);
+			}
+
+			PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(onlinePlayer);
 			playerData.setPlaytime(0);
 			playerData.setOwner(ownerUUID);
 			playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
@@ -439,10 +445,12 @@ public class Island {
 
 	public void addCoopPlayer(UUID uuid) {
 		coopPlayers.add(uuid);
+		Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
 	}
 
 	public void removeCoopPlayer(UUID uuid) {
 		coopPlayers.remove(uuid);
+		Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
 	}
 
 	public boolean isCoopPlayer(UUID uuid) {

@@ -1402,10 +1402,6 @@ public class IslandManager {
         if (islandLocation == null)
             return false;
 
-        double size = island.getRadius();
-        if (size % 2 == 1)
-            size++;
-
-        return LocationUtil.isLocationAtLocationRadius(location.clone().add(0.5, 0, 0.5), islandLocation, size);
+        return LocationUtil.isLocationAtLocationRadius(location.clone().add(0.5, 0, 0.5), islandLocation, island.getRadius() + 1);
     }
 }

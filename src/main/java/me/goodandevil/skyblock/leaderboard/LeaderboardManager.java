@@ -49,9 +49,7 @@ public class LeaderboardManager {
 		boolean enableExemptions = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
 				.getFileConfiguration().getBoolean("Island.Leaderboard.Exemptions.Enable");
 
-		for (int i = 0; i < visitManager.getIslands().size(); i++) {
-			UUID ownerUUID = (UUID) visitManager.getIslands().keySet().toArray()[i];
-
+		for (UUID ownerUUID : visitManager.getIslands().keySet()) {
 			if (enableExemptions && economyManager.hasPermission(worldManager.getWorld(IslandWorld.Normal).getName(),
 					Bukkit.getOfflinePlayer(ownerUUID),
 					"fabledskyblock.top.exempt"))
@@ -93,21 +91,18 @@ public class LeaderboardManager {
 
 		switch (type) {
 			case Level:
-				for (int i = 0; i < visitManager.getIslands().size(); i++) {
-					UUID ownerUUID = (UUID) visitManager.getIslands().keySet().toArray()[i];
+				for (UUID ownerUUID : visitManager.getIslands().keySet()) {
 					Visit visit = visitManager.getIslands().get(ownerUUID);
 					leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getLevel().getLevel()));
 				}
 				break;
 			case Bank:
-				for (int i = 0; i < visitManager.getIslands().size(); i++) {
-					UUID ownerUUID = (UUID) visitManager.getIslands().keySet().toArray()[i];
+				for (UUID ownerUUID : visitManager.getIslands().keySet()) {
 					Visit visit = visitManager.getIslands().get(ownerUUID);
 					leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, (long)visit.getBankBalance()));
 				}
 			case Votes:
-				for (int i = 0; i < visitManager.getIslands().size(); i++) {
-					UUID ownerUUID = (UUID) visitManager.getIslands().keySet().toArray()[i];
+				for (UUID ownerUUID : visitManager.getIslands().keySet()) {
 					Visit visit = visitManager.getIslands().get(ownerUUID);
 					leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getVoters().size()));
 				}
@@ -150,14 +145,9 @@ public class LeaderboardManager {
 	}
 
 	public Leaderboard getLeaderboardFromPosition(Leaderboard.Type type, int position) {
-		for (Leaderboard leaderboardPlayerList : leaderboardStorage) {
-			if (leaderboardPlayerList.getType() == type) {
-				if (leaderboardPlayerList.getPosition() == position) {
-					return leaderboardPlayerList;
-				}
-			}
-		}
-
+		for (Leaderboard leaderboardPlayerList : leaderboardStorage)
+			if (leaderboardPlayerList.getType() == type && leaderboardPlayerList.getPosition() == position)
+				return leaderboardPlayerList;
 		return null;
 	}
 
