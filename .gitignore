@@ -25,5 +25,5 @@ hs_err_pid*
 /.gradle/
 /.settings/
 /.idea/
-/build/
+**/build/
 /bin/
