@@ -61,7 +61,7 @@ public class SchematicUtil {
             }
         };
 
-        if (Bukkit.getPluginManager().isPluginEnabled("FastAsyncWorldEdit")) {
+        if (Bukkit.getPluginManager().isPluginEnabled("FastAsyncWorldEdit") || Bukkit.getPluginManager().isPluginEnabled("AsyncWorldEdit")) {
             Bukkit.getScheduler().runTaskAsynchronously(SkyBlock.getInstance(), pasteTask);
         } else {
             Bukkit.getScheduler().runTask(SkyBlock.getInstance(), pasteTask);

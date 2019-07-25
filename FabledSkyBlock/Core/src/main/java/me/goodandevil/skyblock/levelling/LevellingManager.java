@@ -44,7 +44,6 @@ public class LevellingManager {
     private Set<Island> activeIslandScans = new HashSet<>();
     private List<LevellingMaterial> materialStorage = new ArrayList<>();
 
-    private Method getBlockTypeMethod = null;
     private Method getBlockTypeIdMethod = null;
     private Method getBlockTypeDataMethod = null;
     private Method getMaterialMethod = null;
@@ -125,32 +124,21 @@ public class LevellingManager {
                                     EntityType spawnerType = null;
 
                                     if (NMSVersion > 12) {
-                                        if (getBlockTypeMethod == null) {
-                                            getBlockTypeMethod = chunkSnapshot.getClass()
-                                                    .getMethod("getBlockType", int.class, int.class, int.class);
-                                        }
-
-                                        blockMaterial = (org.bukkit.Material) getBlockTypeMethod
-                                                .invoke(chunkSnapshot, x, y, z);
+                                        blockMaterial = chunkSnapshot.getBlockType(x, y, z);
                                     } else {
                                         if (getBlockTypeIdMethod == null) {
-                                            getBlockTypeIdMethod = chunkSnapshot.getClass()
-                                                    .getMethod("getBlockTypeId", int.class, int.class, int.class);
+                                            getBlockTypeIdMethod = chunkSnapshot.getClass().getMethod("getBlockTypeId", int.class, int.class, int.class);
                                         }
 
                                         if (getBlockTypeDataMethod == null) {
-                                            getBlockTypeDataMethod = chunkSnapshot.getClass()
-                                                    .getMethod("getBlockData", int.class, int.class, int.class);
+                                            getBlockTypeDataMethod = chunkSnapshot.getClass().getMethod("getBlockData", int.class, int.class, int.class);
                                         }
 
                                         if (getMaterialMethod == null) {
-                                            getMaterialMethod = blockMaterial.getClass().getMethod("getMaterial",
-                                                    int.class);
+                                            getMaterialMethod = blockMaterial.getClass().getMethod("getMaterial", int.class);
                                         }
 
-                                        blockMaterial = (org.bukkit.Material) getMaterialMethod.invoke(
-                                                blockMaterial,
-                                                (int) getBlockTypeIdMethod.invoke(chunkSnapshot, x, y, z));
+                                        blockMaterial = (org.bukkit.Material) getMaterialMethod.invoke(null, (int) getBlockTypeIdMethod.invoke(chunkSnapshot, x, y, z));
                                         blockData = (int) getBlockTypeDataMethod.invoke(chunkSnapshot, x, y, z);
                                     }
 
