@@ -40,12 +40,14 @@ public class RefreshHologramsCommand extends SubCommand {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
-        leaderboardManager.clearLeaderboard();
-        leaderboardManager.resetLeaderboard();
-        leaderboardManager.setupLeaderHeads();
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+            LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+            leaderboardManager.clearLeaderboard();
+            leaderboardManager.resetLeaderboard();
+            leaderboardManager.setupLeaderHeads();
 
-        skyblock.getHologramManager().resetHologram();
+            Bukkit.getScheduler().runTask(skyblock, () -> skyblock.getHologramManager().resetHologram());
+        });
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RefreshHolograms.Refreshed.Message"));
         soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);

@@ -1,74 +1,42 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-apply plugin: 'java'
+allprojects {
+    apply plugin: 'java'
+    group = 'com.goodandevil.skyblock'
+    version = 'Build-78'
+}
 
-group 'com.songoda.fabledskyblock'
-version 'Build-78'
+subprojects {
+    sourceCompatibility = 1.8
 
-sourceCompatibility = 1.8
+    repositories {
+        mavenCentral()
+        jcenter()
 
-repositories {
-    mavenCentral()
-    jcenter()
-
-    maven {
-        url 'http://repo.songoda.com/artifactory/private/'
+        maven {
+            url = 'http://repo.songoda.com/artifactory/private'
+        }
     }
 }
 
+dependencies {
+    compile project(':FabledSkyBlock-Legacy')
+    compile project(':FabledSkyBlock-Core')
+}
+
 configurations {
-    shade
-    compile.extendsFrom shade
+    childJars
 }
 
 dependencies {
-    // PlaceholderAPI
-    implementation (group: 'be.maximvdw', name: 'placeholderapi', version: '2.5.1')
-    implementation (group: 'me.clip', name: 'placeholderapi', version: '2.10.2')
-
-    // Vault
-    implementation (group: 'net.milkbowl', name: 'vault', version: '1.7.1')
-
-    // Leaderheads
-    implementation (group: 'me.robin', name: 'leaderheads', version: '1.0')
-
-    // EpicSpawners
-    implementation (group: 'com.songoda', name: 'epicspawners', version: '6-pre4')
-
-    // EpicAnchors
-    implementation (group: 'com.songoda', name: 'epicanchors', version: '1.2.5')
-
-    // UltimateStacker
-    implementation (group: 'com.songoda', name: 'ultimatestacker', version: '1.3.1')
-	
-	// WildStacker
-	implementation (group: 'com.bgsoftware', name: 'wildstacker-api', version: 'b15')
-
-    // WorldEdit
-    implementation (group: 'com.sk89q', name: 'worldedit', version: '7.0.0')
-
-    // Apache Commons
-    shade (group: 'org.apache.commons', name: 'commons-lang3', version: '3.0')
-    shade (group: 'commons-io', name: 'commons-io', version: '2.5')
-
-    // Songoda Updater
-    shade (group: 'com.songoda', name: 'songodaupdater', version: '1')
-
-    // Spigot
-    implementation (group: 'org.spigotmc', name: 'spigot', version: '1.14.1')
-}
-
-processResources {
-    from (sourceSets.main.resources.srcDirs) {
-        include '**/*.yml'
-        filter ReplaceTokens, tokens: ["version": project.property("version")]
+    subprojects.each {
+        childJars project(it.path)
     }
 }
 
 jar {
-    configurations.shade.each { dep ->
-        from (project.zipTree(dep)) {
-            exclude '**/*.yml'
-            exclude 'META-INF', 'META-INF/**'
+    dependsOn configurations.childJars
+    from {
+        configurations.childJars.collect {
+            zipTree(it)
         }
     }
 }
