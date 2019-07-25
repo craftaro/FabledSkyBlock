@@ -201,6 +201,12 @@ public class Interact implements Listener {
 				return;
 			}
 
+			if (event.getItem() != null && event.getItem().getType() == Material.BONE_MEAL && !islandManager.hasPermission(player, block.getLocation(), "Place")) {
+				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+				event.setCancelled(true);
+				return;
+			}
+
 			if (block.getType() == Materials.SWEET_BERRY_BUSH.parseMaterial()) {
 				if (!islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
 					event.setCancelled(true);
@@ -781,6 +787,15 @@ public class Interact implements Listener {
 
 						return;
 					}
+				}
+			}
+			else if (entity.getType().equals(EntityType.SHEEP)) {
+				if (!islandManager.hasPermission(player, entity.getLocation(), "EntityPlacement")) {
+					event.setCancelled(true);
+					skyblock.getMessageManager().sendMessage(player,
+							skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+									.getFileConfiguration().getString("Island.Settings.Permission.Message"));
+					skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				}
 			}
 			else if (entity.getType().equals(EntityType.ITEM_FRAME)){
