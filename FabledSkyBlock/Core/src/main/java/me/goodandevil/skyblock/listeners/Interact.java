@@ -112,7 +112,7 @@ public class Interact implements Listener {
 
 					return;
 				}
-			} else if (block.getState() instanceof Cauldron) { // WildStacker stackables
+			} else if (block.getType() == Material.CAULDRON) { // WildStacker stackables
 				if (!islandManager.hasPermission(player, block.getLocation(), "Place") || !islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
 					event.setCancelled(true);
 
