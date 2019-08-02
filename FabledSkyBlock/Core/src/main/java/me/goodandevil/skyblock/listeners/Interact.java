@@ -201,7 +201,7 @@ public class Interact implements Listener {
 				return;
 			}
 
-			if (event.getItem() != null && event.getItem().getType() == Material.BONE_MEAL && !islandManager.hasPermission(player, block.getLocation(), "Place")) {
+			if (event.getItem() != null && event.getItem().getType() == Materials.BONE_MEAL.parseMaterial() && !islandManager.hasPermission(player, block.getLocation(), "Place")) {
 				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				event.setCancelled(true);
 				return;
