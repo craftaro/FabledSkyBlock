@@ -58,7 +58,7 @@ public class Ban {
 				skyblock.getIslandManager().getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID))
 						.getAPIWrapper(),
 				Bukkit.getServer().getOfflinePlayer(issuer), Bukkit.getServer().getOfflinePlayer(banned));
-		Bukkit.getServer().getPluginManager().callEvent(islandBanEvent);
+		Bukkit.getScheduler().runTask(skyblock, () -> Bukkit.getServer().getPluginManager().callEvent(islandBanEvent));
 
 		if (!islandBanEvent.isCancelled()) {
 			List<String> islandBans = new ArrayList<>();
