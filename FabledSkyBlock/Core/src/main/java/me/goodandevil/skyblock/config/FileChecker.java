@@ -18,23 +18,21 @@ public class FileChecker {
 
 	private Map<File.Type, File> loadedFiles;
 
-	public FileChecker(SkyBlock skyblock, FileManager fileManager, String configurationFileName,
-			boolean applyComments) {
+	public FileChecker(SkyBlock skyblock, FileManager fileManager, ConfigFile configFile) {
 		this.fileManager = fileManager;
 
 		loadedFiles = new EnumMap<>(File.Type.class);
 
-		java.io.File configFile = new java.io.File(skyblock.getDataFolder(), configurationFileName);
-		loadedFiles.put(File.Type.CREATED,
-				new File(fileManager, configFile, YamlConfiguration.loadConfiguration(configFile)));
+		java.io.File file = configFile.getResourcePath(skyblock);
+		loadedFiles.put(File.Type.CREATED, new File(fileManager, file, YamlConfiguration.loadConfiguration(file)));
 
-		if (applyComments) {
+		if (configFile.shouldApplyComments()) {
 			loadedFiles.put(File.Type.RESOURCE,
 					new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager
-							.getConfigContent(new InputStreamReader(skyblock.getResource(configurationFileName)))))));
+							.getConfigContent(new InputStreamReader(skyblock.getResource(configFile.getFileName())))))));
 		} else {
 			loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration
-					.loadConfiguration(new InputStreamReader(skyblock.getResource(configurationFileName)))));
+					.loadConfiguration(new InputStreamReader(skyblock.getResource(configFile.getFileName())))));
 		}
 	}
 

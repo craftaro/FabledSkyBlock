@@ -866,8 +866,8 @@ public class Creator implements Listener {
 													() -> open(player), 1L);
 										} else {
 											String fileName = event1.getName();
-											if (fileManager.isFileExist(new File(skyblock.getDataFolder().toString() + "/structures", fileName)) ||
-													fileManager.isFileExist(new File(skyblock.getDataFolder().toString() + "/schematics", fileName))) {
+											if (fileManager.doesDataFileExist(new File(skyblock.getDataFolder().toString() + "/structures", fileName)) ||
+													fileManager.doesDataFileExist(new File(skyblock.getDataFolder().toString() + "/schematics", fileName))) {
 												if (event.getClick() == ClickType.LEFT) {
 													Structure structure = structureManager.getStructure(name);
 													structure.setOverworldFile(fileName);

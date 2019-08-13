@@ -49,7 +49,7 @@ public class CreateCommand extends SubCommand {
 
 					return;
 				} else if (!fileManager
-						.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+						.doesDataFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
 								structures.get(0).getOverworldFile()))) {
 					messageManager.sendMessage(player,
 							configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
@@ -57,7 +57,7 @@ public class CreateCommand extends SubCommand {
 
 					return;
 				} else if (!fileManager
-						.isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+						.doesDataFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
 								structures.get(0).getNetherFile()))) {
 					messageManager.sendMessage(player,
 							configLoad.getString("Island.Creator.Selector.File.Nether.Message"));

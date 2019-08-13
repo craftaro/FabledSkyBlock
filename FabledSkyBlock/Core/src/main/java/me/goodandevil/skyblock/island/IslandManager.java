@@ -294,7 +294,7 @@ public class IslandManager {
                     uuid2.toString() + ".yml");
             fileManager.unloadConfig(oldCoopDataFile);
 
-            if (fileManager.isFileExist(oldCoopDataFile)) {
+            if (fileManager.doesDataFileExist(oldCoopDataFile)) {
                 File newCoopDataFile = new File(new File(skyblock.getDataFolder().toString() + "/coop-data"),
                         player.getUniqueId().toString() + ".yml");
 
@@ -1017,7 +1017,7 @@ public class IslandManager {
     }
 
     public boolean isIslandExist(UUID uuid) {
-        return skyblock.getFileManager().isFileExist(
+        return skyblock.getFileManager().doesDataFileExist(
                 new File(new File(skyblock.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"));
     }
 
@@ -1399,6 +1399,8 @@ public class IslandManager {
         if (islandLocation == null)
             return false;
 
-        return LocationUtil.isLocationAtLocationRadius(location.clone().add(0.5, 0, 0.5), islandLocation, island.getRadius() + 1);
+        double size = island.getRadius();
+
+        return LocationUtil.isLocationAtLocationRadius(location.clone(), islandLocation, size);
     }
 }

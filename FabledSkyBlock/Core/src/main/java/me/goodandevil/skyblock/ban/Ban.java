@@ -1,20 +1,17 @@
 package me.goodandevil.skyblock.ban;
 
-import java.io.File;
-import java.io.IOException;
+import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.api.event.island.IslandBanEvent;
+import me.goodandevil.skyblock.api.event.island.IslandUnbanEvent;
+import me.goodandevil.skyblock.config.DataFolder;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import me.goodandevil.skyblock.SkyBlock;
-import me.goodandevil.skyblock.api.event.island.IslandBanEvent;
-import me.goodandevil.skyblock.api.event.island.IslandUnbanEvent;
-import me.goodandevil.skyblock.config.FileManager.Config;
 
 public class Ban {
 
@@ -41,12 +38,9 @@ public class Ban {
 
 		Set<UUID> islandBans = new HashSet<>();
 
-		for (String islandBanList : skyblock.getFileManager()
-				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-						islandOwnerUUID.toString() + ".yml"))
-				.getFileConfiguration().getStringList("Bans")) {
+		FileConfiguration bansFile = skyblock.getFileManager().getDataFileConfiguration(DataFolder.BAN_DATA, islandOwnerUUID.toString() + ".yml");
+		for (String islandBanList :bansFile.getStringList("Bans"))
 			islandBans.add(UUID.fromString(islandBanList));
-		}
 
 		return islandBans;
 	}
@@ -62,17 +56,14 @@ public class Ban {
 
 		if (!islandBanEvent.isCancelled()) {
 			List<String> islandBans = new ArrayList<>();
-			FileConfiguration configLoad = skyblock.getFileManager()
-					.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-							islandOwnerUUID.toString() + ".yml"))
-					.getFileConfiguration();
+			FileConfiguration bansFile = skyblock.getFileManager().getDataFileConfiguration(DataFolder.BAN_DATA, islandOwnerUUID.toString() + ".yml");
 
-			for (String islandBanList : configLoad.getStringList("Bans")) {
+			for (String islandBanList : bansFile.getStringList("Bans")) {
 				islandBans.add(islandBanList);
 			}
 
 			islandBans.add(banned.toString());
-			configLoad.set("Bans", islandBans);
+			bansFile.set("Bans", islandBans);
 		}
 	}
 
@@ -80,18 +71,15 @@ public class Ban {
 		SkyBlock skyblock = SkyBlock.getInstance();
 
 		List<String> islandBans = new ArrayList<>();
-		FileConfiguration configLoad = skyblock.getFileManager()
-				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-						islandOwnerUUID.toString() + ".yml"))
-				.getFileConfiguration();
+		FileConfiguration bansFile = skyblock.getFileManager().getDataFileConfiguration(DataFolder.BAN_DATA, islandOwnerUUID.toString() + ".yml");
 
-		for (String islandBanList : configLoad.getStringList("Bans")) {
+		for (String islandBanList : bansFile.getStringList("Bans")) {
 			if (!uuid.toString().equals(islandBanList)) {
 				islandBans.add(islandBanList);
 			}
 		}
 
-		configLoad.set("Bans", islandBans);
+		bansFile.set("Bans", islandBans);
 
 		Bukkit.getServer().getPluginManager()
 				.callEvent(new IslandUnbanEvent(skyblock.getIslandManager()
@@ -100,15 +88,6 @@ public class Ban {
 	}
 
 	public void save() {
-		SkyBlock skyblock = SkyBlock.getInstance();
-
-		Config config = skyblock.getFileManager().getConfig(new File(
-				new File(skyblock.getDataFolder().toString() + "/ban-data"), islandOwnerUUID.toString() + ".yml"));
-
-		try {
-			config.getFileConfiguration().save(config.getFile());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		SkyBlock.getInstance().getFileManager().getDataFile(DataFolder.BAN_DATA, islandOwnerUUID.toString() + ".yml").save();
 	}
 }

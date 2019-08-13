@@ -15,8 +15,8 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import com.google.common.io.ByteStreams;
@@ -32,7 +32,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class FileManager {
 
 	private final SkyBlock skyblock;
-	private Map<String, Config> loadedConfigs = new HashMap<>();
+	private Map<ConfigFile, Config> loadedConfigs = new HashMap<>();
+	private Map<DataFolder, Map<String, Config>> loadedDataFiles = new HashMap<>();
 
 	public FileManager(SkyBlock skyblock) {
 		this.skyblock = skyblock;
@@ -41,46 +42,43 @@ public class FileManager {
 	}
 
 	public void loadConfigs() {
+		this.loadedConfigs.clear();
+		this.loadedDataFiles.clear();
+
 		if (!skyblock.getDataFolder().exists()) {
 			skyblock.getDataFolder().mkdir();
 		}
 
-		if (!new File(skyblock.getDataFolder().toString() + "/structures").exists()) {
-			new File(skyblock.getDataFolder().toString() + "/structures").mkdir();
+		// Generate structures directory
+		if (!new File(skyblock.getDataFolder(), "structures").exists()) {
+			new File(skyblock.getDataFolder(), "structures").mkdir();
 		}
 
-		if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !new File(skyblock.getDataFolder().toString() + "/schematics").exists()) {
-			new File(skyblock.getDataFolder().toString() + "/schematics").mkdir();
+		// Generate schematics directory if applicable
+		if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !new File(skyblock.getDataFolder(), "schematics").exists()) {
+			new File(skyblock.getDataFolder(), "schematics").mkdir();
 		}
 
-		Map<String, File> configFiles = new LinkedHashMap<>();
-		configFiles.put("limits.yml", new File(skyblock.getDataFolder(), "limits.yml"));
-		configFiles.put("worlds.yml", new File(skyblock.getDataFolder(), "worlds.yml"));
-		configFiles.put("levelling.yml", new File(skyblock.getDataFolder(), "levelling.yml"));
-		configFiles.put("config.yml", new File(skyblock.getDataFolder(), "config.yml"));
-		configFiles.put("language.yml", new File(skyblock.getDataFolder(), "language.yml"));
-		configFiles.put("settings.yml", new File(skyblock.getDataFolder(), "settings.yml"));
-		configFiles.put("upgrades.yml", new File(skyblock.getDataFolder(), "upgrades.yml"));
-		configFiles.put("generators.yml", new File(skyblock.getDataFolder(), "generators.yml"));
-		configFiles.put("stackables.yml", new File(skyblock.getDataFolder(), "stackables.yml"));
-		configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
-		configFiles.put("structures/default.structure",
-				new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
+		// Create default structure file
+		if (!new File(skyblock.getDataFolder().toString() + "/structures", "default.structure").exists()) {
+			File defaultStructureFile = new File(skyblock.getDataFolder().toString() + "/structures", "default.structure");
+			try {
+				defaultStructureFile.createNewFile();
+			} catch (IOException ignored) { }
 
-		for (String configFileList : configFiles.keySet()) {
-			File configFile = configFiles.get(configFileList);
+			try (InputStream is = skyblock.getResource("structures/default.structure");
+				 OutputStream os = new FileOutputStream(defaultStructureFile)) {
+				ByteStreams.copy(is, os);
+			} catch (IOException ignored) { }
+		}
+
+		// Create/update other config files
+		for (ConfigFile targetConfigFile : ConfigFile.values()) {
+			File configFile = targetConfigFile.getResourcePath(this.skyblock);
 
 			if (configFile.exists()) {
-				if (configFileList.equals("config.yml") || configFileList.equals("language.yml")
-						|| configFileList.equals("settings.yml")) {
-					FileChecker fileChecker;
-
-					if (configFileList.equals("config.yml")) {
-						fileChecker = new FileChecker(skyblock, this, configFileList, true);
-					} else {
-						fileChecker = new FileChecker(skyblock, this, configFileList, false);
-					}
-
+				if (targetConfigFile.shouldUpdateFile()) {
+					FileChecker fileChecker = new FileChecker(this.skyblock, this, targetConfigFile);
 					fileChecker.loadSections();
 					fileChecker.compareFiles();
 					fileChecker.saveChanges();
@@ -88,15 +86,15 @@ public class FileManager {
 			} else {
 				try {
 					configFile.createNewFile();
-					try (InputStream is = skyblock.getResource(configFileList);
-							OutputStream os = new FileOutputStream(configFile)) {
+					try (InputStream is = skyblock.getResource(targetConfigFile.getFileName());
+						 OutputStream os = new FileOutputStream(configFile)) {
 						ByteStreams.copy(is, os);
 					}
 
-					if (configFileList.equals("worlds.yml")) {
+					if (targetConfigFile == ConfigFile.WORLDS) {
 						File mainConfigFile = new File(skyblock.getDataFolder(), "config.yml");
 
-						if (isFileExist(mainConfigFile)) {
+						if (mainConfigFile.exists()) {
 							Config config = new Config(this, configFile);
 							Config mainConfig = new Config(this, mainConfigFile);
 
@@ -105,12 +103,8 @@ public class FileManager {
 
 							for (IslandWorld worldList : IslandWorld.values()) {
 								if (mainConfigLoad.getString("World." + worldList.name()) != null) {
-									configLoad.set("World." + worldList.name() + ".nextAvailableLocation.x",
-											mainConfigLoad.getDouble(
-													"World." + worldList.name() + ".nextAvailableLocation.x"));
-									configLoad.set("World." + worldList.name() + ".nextAvailableLocation.z",
-											mainConfigLoad.getDouble(
-													"World." + worldList.name() + ".nextAvailableLocation.z"));
+									configLoad.set("World." + worldList.name() + ".nextAvailableLocation.x", mainConfigLoad.getDouble("World." + worldList.name() + ".nextAvailableLocation.x"));
+									configLoad.set("World." + worldList.name() + ".nextAvailableLocation.z", mainConfigLoad.getDouble("World." + worldList.name() + ".nextAvailableLocation.z"));
 								}
 							}
 
@@ -121,10 +115,13 @@ public class FileManager {
 						}
 					}
 				} catch (IOException ex) {
-					Bukkit.getServer().getLogger().log(Level.WARNING,
-							"SkyBlock | Error: Unable to create configuration file.");
+					Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: Unable to create configuration file: " + targetConfigFile.getFileName());
 				}
 			}
+
+			Config config = new Config(this, configFile);
+			config.loadFile();
+			this.loadedConfigs.put(targetConfigFile, config);
 		}
 	}
 
@@ -179,37 +176,69 @@ public class FileManager {
 		return location;
 	}
 
-	public boolean isFileExist(File configPath) {
-		return configPath.exists();
+	public boolean doesDataFileExist(DataFolder dataFolder, UUID uuid) {
+		return dataFolder.getFileInFolder(this.skyblock, uuid).exists();
 	}
 
-	public void unloadConfig(File configPath) {
-		loadedConfigs.remove(configPath.getPath());
+	public void deleteDataFile(DataFolder dataFolder, UUID uuid) {
+		this.unloadDataFile(dataFolder, uuid);
+		dataFolder.getFileInFolder(this.skyblock, uuid).delete();
 	}
 
-	public void deleteConfig(File configPath) {
-		Config config = getConfig(configPath);
-		config.getFile().delete();
-		loadedConfigs.remove(configPath.getPath());
+	public void unloadDataFile(DataFolder dataFolder, UUID uuid) {
+		Map<String, Config> dataFiles = this.loadedDataFiles.get(dataFolder);
+		if (dataFiles == null)
+			return;
+		dataFiles.remove(uuid.toString() + ".yml");
 	}
 
-	public Config getConfig(File configPath) {
-		if (loadedConfigs.containsKey(configPath.getPath())) {
-			return loadedConfigs.get(configPath.getPath());
+	public void renameDataFile(DataFolder dataFolder, UUID from, UUID to) {
+		File file1 = dataFolder.getFileInFolder(skyblock, from);
+		File file2 = dataFolder.getFileInFolder(skyblock, to);
+		file1.renameTo(file2);
+	}
+
+	public Config getDataFile(DataFolder dataFolder, String fileName) {
+		Map<String, Config> dataFiles = this.loadedDataFiles.get(dataFolder);
+		if (dataFiles == null) {
+			File folder = dataFolder.getResourcePath(this.skyblock);
+			if (!folder.exists())
+				folder.mkdir();
+			dataFiles = new HashMap<>();
+			this.loadedDataFiles.put(dataFolder, dataFiles);
 		}
 
-		Config config = new Config(this, configPath);
-		loadedConfigs.put(configPath.getPath(), config);
+		Config config = dataFiles.get(fileName);
+		if (config != null)
+			return config;
 
+		config = new Config(this, dataFolder.getFileInFolder(this.skyblock, fileName));
+		config.loadFile();
+		dataFiles.put(fileName, config);
 		return config;
 	}
 
-	public Map<String, Config> getConfigs() {
-		return loadedConfigs;
+	public FileConfiguration getDataFileConfiguration(DataFolder dataFolder, String fileName) {
+		return this.getDataFile(dataFolder, fileName).getFileConfiguration();
 	}
 
-	public boolean isConfigLoaded(java.io.File configPath) {
-		return loadedConfigs.containsKey(configPath.getPath());
+	public Config getConfig(ConfigFile configFile) {
+		return loadedConfigs.get(configFile);
+	}
+
+	public FileConfiguration getFileConfiguration(ConfigFile configFile) {
+		return this.getConfig(configFile).getFileConfiguration();
+	}
+
+	public void saveConfig(String configString, File configFile) {
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
+			writer.write(prepareConfigString(configString));
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public InputStream getConfigContent(Reader reader) {
@@ -274,17 +303,6 @@ public class FileManager {
 		return config.toString();
 	}
 
-	public void saveConfig(String configString, File configFile) {
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
-			writer.write(prepareConfigString(configString));
-			writer.flush();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public static class Config {
 
 		private File configFile;
@@ -294,8 +312,7 @@ public class FileManager {
 			configFile = configPath;
 
 			if (configPath.getName().equals("config.yml")) {
-				configLoad = YamlConfiguration
-						.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
+				configLoad = YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
 			} else {
 				configLoad = YamlConfiguration.loadConfiguration(configPath);
 			}
@@ -310,9 +327,20 @@ public class FileManager {
 		}
 
 		public FileConfiguration loadFile() {
+			if (!configFile.getName().toLowerCase().endsWith(".yml"))
+				return null;
+
 			configLoad = YamlConfiguration.loadConfiguration(configFile);
 
 			return configLoad;
+		}
+
+		public void save() {
+			try {
+				this.configLoad.save(this.configFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

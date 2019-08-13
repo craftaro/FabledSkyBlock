@@ -88,7 +88,7 @@ public class SetSizeCommand extends SubCommand {
 						File islandDataFile = new File(skyblock.getDataFolder().toString() + "/island-data",
 								islandOwnerUUID.toString() + ".yml");
 
-						if (!fileManager.isFileExist(islandDataFile)) {
+						if (!fileManager.doesDataFileExist(islandDataFile)) {
 							messageManager.sendMessage(sender,
 									configLoad.getString("Command.Island.Admin.SetSize.Island.Data.Message"));
 							soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);

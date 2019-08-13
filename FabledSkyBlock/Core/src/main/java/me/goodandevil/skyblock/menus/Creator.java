@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.goodandevil.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,8 +23,6 @@ import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.structure.Structure;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.item.nInventoryUtil;
-import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEvent;
-import me.goodandevil.skyblock.utils.item.nInventoryUtil.ClickEventHandler;
 import me.goodandevil.skyblock.utils.version.Sounds;
 
 public class Creator {
@@ -126,7 +123,7 @@ public class Creator {
 							}
 						}
 
-						if (!fileManager.isFileExist(
+						if (!fileManager.doesDataFileExist(
 								new File(new File(skyblock.getDataFolder().toString() + "/" +
 										(structureList.getOverworldFile().endsWith(".structure") ? "structures" : "schematics")),
 										structureList.getOverworldFile()))) {
@@ -138,7 +135,7 @@ public class Creator {
 							event.setWillDestroy(false);
 
 							return;
-						} else if (!fileManager.isFileExist(
+						} else if (!fileManager.doesDataFileExist(
 								new File(new File(skyblock.getDataFolder().toString() + "/" +
 										(structureList.getNetherFile().endsWith(".structure") ? "structures" : "schematics")),
 										structureList.getNetherFile()))) {
@@ -150,7 +147,7 @@ public class Creator {
 							event.setWillDestroy(false);
 
 							return;
-						} else if (!fileManager.isFileExist(
+						} else if (!fileManager.doesDataFileExist(
 								new File(new File(skyblock.getDataFolder().toString() + "/" +
 										(structureList.getEndFile().endsWith(".structure") ? "structures" : "schematics")),
 										structureList.getEndFile()))) {

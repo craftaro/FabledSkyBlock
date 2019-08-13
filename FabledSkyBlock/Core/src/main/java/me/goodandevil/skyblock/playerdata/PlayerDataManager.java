@@ -83,7 +83,7 @@ public class PlayerDataManager {
 	}
 
 	public void loadPlayerData(Player player) {
-		if (skyblock.getFileManager().isFileExist(new File(skyblock.getDataFolder().toString() + "/player-data",
+		if (skyblock.getFileManager().doesDataFileExist(new File(skyblock.getDataFolder().toString() + "/player-data",
 				player.getUniqueId().toString() + ".yml"))) {
 			PlayerData playerData = new PlayerData(player);
 			playerDataStorage.put(player.getUniqueId(), playerData);

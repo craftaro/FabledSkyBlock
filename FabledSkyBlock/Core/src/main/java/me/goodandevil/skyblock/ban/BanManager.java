@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import me.goodandevil.skyblock.config.ConfigFile;
+import me.goodandevil.skyblock.config.DataFolder;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -41,8 +43,7 @@ public class BanManager {
 	public void loadIslands() {
 		FileManager fileManager = skyblock.getFileManager();
 
-		if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-				.getBoolean("Island.Visitor.Unload")) {
+		if (!fileManager.getFileConfiguration(ConfigFile.CONFIG).getBoolean("Island.Visitor.Unload")) {
 			File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 
 			if (configFile.exists()) {
@@ -60,15 +61,9 @@ public class BanManager {
 		Ban ban = getIsland(uuid1);
 		ban.save();
 
-		File oldBanDataFile = new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-				uuid1.toString() + ".yml");
-		File newBanDataFile = new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-				uuid2.toString() + ".yml");
-
-		fileManager.unloadConfig(oldBanDataFile);
-		fileManager.unloadConfig(newBanDataFile);
-
-		oldBanDataFile.renameTo(newBanDataFile);
+		fileManager.unloadDataFile(DataFolder.BAN_DATA, uuid1);
+		fileManager.unloadDataFile(DataFolder.BAN_DATA, uuid2);
+		fileManager.renameDataFile(DataFolder.BAN_DATA, uuid1, uuid2);
 
 		removeIsland(uuid1);
 		addIsland(uuid2, ban);
@@ -77,17 +72,13 @@ public class BanManager {
 	public void removeVisitor(Island island) {
 		MessageManager messageManager = skyblock.getMessageManager();
 		SoundManager soundManager = skyblock.getSoundManager();
-		FileManager fileManager = skyblock.getFileManager();
-
-		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-		FileConfiguration configLoad = config.getFileConfiguration();
 
 		for (UUID visitorList : skyblock.getIslandManager().getVisitorsAtIsland(island)) {
 			Player targetPlayer = Bukkit.getServer().getPlayer(visitorList);
 
 			LocationUtil.teleportPlayerToSpawn(targetPlayer);
 
-			messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Banned.Island.Message"));
+			messageManager.sendLangMessage(targetPlayer, "Island.Visit.Banned.Island.Message");
 			soundManager.playSound(targetPlayer, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 		}
 	}
@@ -124,16 +115,14 @@ public class BanManager {
 
 	public void unloadIsland(UUID islandOwnerUUID) {
 		if (hasIsland(islandOwnerUUID)) {
-			skyblock.getFileManager().unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-					islandOwnerUUID.toString() + ".yml"));
+			skyblock.getFileManager().unloadDataFile(DataFolder.BAN_DATA, islandOwnerUUID);
 			banStorage.remove(islandOwnerUUID);
 		}
 	}
 
 	public void deleteIsland(UUID islandOwnerUUID) {
 		if (hasIsland(islandOwnerUUID)) {
-			skyblock.getFileManager().deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
-					islandOwnerUUID.toString() + ".yml"));
+			skyblock.getFileManager().deleteDataFile(DataFolder.BAN_DATA, islandOwnerUUID);
 			banStorage.remove(islandOwnerUUID);
 		}
 	}

@@ -71,20 +71,17 @@ public class AddUpgradeCommand extends SubCommand {
 			}
 
 			if (islandOwnerUUID == null) {
-				messageManager.sendMessage(sender,
-						configLoad.getString("Command.Island.Admin.AddUpgrade.Island.Owner.Message"));
+				messageManager.sendLangMessage(sender, "Command.Island.Admin.AddUpgrade.Island.Owner.Message");
 				soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			} else if (upgrade == null) {
-				messageManager.sendMessage(sender,
-						configLoad.getString("Command.Island.Admin.AddUpgrade.Upgrade.Exist.Message"));
+				messageManager.sendLangMessage(sender, "Command.Island.Admin.AddUpgrade.Upgrade.Exist.Message");
 				soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 			} else {
 				if (islandManager.containsIsland(islandOwnerUUID)) {
 					Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 
 					if (island.hasUpgrade(upgrade)) {
-						messageManager.sendMessage(sender,
-								configLoad.getString("Command.Island.Admin.AddUpgrade.Upgrade.Already.Message"));
+						messageManager.sendLangMessage(sender, "Command.Island.Admin.AddUpgrade.Upgrade.Already.Message");
 						soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
 						return;
@@ -95,7 +92,7 @@ public class AddUpgradeCommand extends SubCommand {
 					File islandDataFile = new File(skyblock.getDataFolder().toString() + "/island-data",
 							islandOwnerUUID.toString() + ".yml");
 
-					if (!fileManager.isFileExist(islandDataFile)) {
+					if (!fileManager.doesDataFileExist(islandDataFile)) {
 						messageManager.sendMessage(sender,
 								configLoad.getString("Command.Island.Admin.AddUpgrade.Island.Data.Message"));
 						soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -128,8 +125,7 @@ public class AddUpgradeCommand extends SubCommand {
 				soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
 			}
 		} else {
-			messageManager.sendMessage(sender,
-					configLoad.getString("Command.Island.Admin.AddUpgrade.Invalid.Message"));
+			messageManager.sendLangMessage(sender, "Command.Island.Admin.AddUpgrade.Invalid.Message");
 			soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 		}
 	}

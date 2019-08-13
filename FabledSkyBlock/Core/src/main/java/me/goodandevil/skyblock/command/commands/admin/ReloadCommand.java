@@ -49,21 +49,10 @@ public class ReloadCommand extends SubCommand {
 				"and then start your server again. This command does NOT reload all the plugin files, only " +
 				"the config.yml, language.yml, generators.yml, levelling.yml, and limits.yml.");
 
+		fileManager.loadConfigs();
+
 		Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
-
-		Map<String, Config> configs = fileManager.getConfigs();
-
-		for (int i = 0; i < configs.size(); i++) {
-			String configFileName = (String) configs.keySet().toArray()[i];
-			Config configFileConfig = configs.get(configFileName);
-			String configFilePath = configFileName.replace(configFileConfig.getFile().getName(), "");
-
-			if (configFilePath.equals(skyblock.getDataFolder().toString() + "\\")
-					|| configFilePath.equals(skyblock.getDataFolder().toString() + "/")) {
-				configFileConfig.loadFile();
-			}
-		}
 
 		Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 		FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();

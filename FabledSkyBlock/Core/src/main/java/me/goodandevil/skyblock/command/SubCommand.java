@@ -1,6 +1,7 @@
 package me.goodandevil.skyblock.command;
 
 import me.goodandevil.skyblock.SkyBlock;
+import me.goodandevil.skyblock.config.ConfigFile;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ public abstract class SubCommand {
 
     public SubCommand() {
         this.skyblock = SkyBlock.getInstance();
-        this.info = ChatColor.translateAlternateColorCodes('&', this.skyblock.getFileManager().getConfig(new File(this.skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString(this.getInfoMessagePath()));
+        this.info = ChatColor.translateAlternateColorCodes('&', this.skyblock.getFileManager().getFileConfiguration(ConfigFile.LANGUAGE).getString(this.getInfoMessagePath()));
     }
 
     public abstract void onCommandByPlayer(Player player, String[] args);

@@ -4,6 +4,7 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.api.event.island.*;
 import me.goodandevil.skyblock.api.utils.APIUtil;
 import me.goodandevil.skyblock.ban.Ban;
+import me.goodandevil.skyblock.config.ConfigFile;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.message.MessageManager;
@@ -12,7 +13,6 @@ import me.goodandevil.skyblock.sound.SoundManager;
 import me.goodandevil.skyblock.upgrade.Upgrade;
 import me.goodandevil.skyblock.utils.NumberUtil;
 import me.goodandevil.skyblock.utils.version.Sounds;
-import me.goodandevil.skyblock.utils.world.LocationUtil;
 import me.goodandevil.skyblock.utils.world.WorldBorder;
 import me.goodandevil.skyblock.visit.Visit;
 import org.apache.commons.lang.WordUtils;
@@ -51,8 +51,8 @@ public class Island {
 
 		this.islandUUID = UUID.randomUUID();
 		this.ownerUUID = player.getUniqueId();
-		this.size = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-				.getInt("Island.Size.Minimum");
+		this.size = fileManager.getFileConfiguration(ConfigFile.CONFIG).getInt("Island.Size.Minimum");
+		this.size = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Size.Minimum");
 
 		if (this.size > 1000) {
 			this.size = 50;
@@ -68,7 +68,7 @@ public class Island {
 
 		FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();
 
-		if (fileManager.isFileExist(new File(configFile, ownerUUID + ".yml"))) {
+		if (fileManager.doesDataFileExist(new File(configFile, ownerUUID + ".yml"))) {
 			FileConfiguration configLoad = config.getFileConfiguration();
 
 			if (configLoad.getString("UUID") != null) {
@@ -132,7 +132,7 @@ public class Island {
 
 			Config settingsDataConfig = null;
 
-			if (fileManager.isFileExist(new File(skyblock.getDataFolder().toString() + "/setting-data",
+			if (fileManager.doesDataFileExist(new File(skyblock.getDataFolder().toString() + "/setting-data",
 					getOwnerUUID().toString() + ".yml"))) {
 				settingsDataConfig = fileManager.getConfig(new File(
 						skyblock.getDataFolder().toString() + "/setting-data", getOwnerUUID().toString() + ".yml"));
@@ -199,7 +199,7 @@ public class Island {
 			File coopDataFile = new File(skyblock.getDataFolder().toString() + "/coop-data",
 					getOwnerUUID().toString() + ".yml");
 
-			if (fileManager.isFileExist(coopDataFile)) {
+			if (fileManager.doesDataFileExist(coopDataFile)) {
 				Config coopDataConfig = fileManager.getConfig(coopDataFile);
 				FileConfiguration coopDataConfigLoad = coopDataConfig.getFileConfiguration();
 
@@ -252,7 +252,7 @@ public class Island {
 	}
 
 	public double getRadius() {
-		return (size / 2) + 0.5;
+		return (size / 2.0);
 	}
 
 	public boolean hasPassword() {

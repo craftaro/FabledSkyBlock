@@ -3,6 +3,8 @@ package me.goodandevil.skyblock.message;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.goodandevil.skyblock.config.ConfigFile;
+import me.goodandevil.skyblock.config.FileManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,9 +15,15 @@ import me.goodandevil.skyblock.placeholder.PlaceholderManager;
 public class MessageManager {
 
 	private final SkyBlock skyblock;
+	private final FileManager fileManager;
 
 	public MessageManager(SkyBlock skyblock) {
 		this.skyblock = skyblock;
+		this.fileManager = skyblock.getFileManager();
+	}
+
+	public void sendLangMessage(CommandSender sender, String langKey) {
+		this.sendMessage(sender, this.fileManager.getFileConfiguration(ConfigFile.LANGUAGE).getString(langKey));
 	}
 
 	public void sendMessage(CommandSender sender, String message) {
