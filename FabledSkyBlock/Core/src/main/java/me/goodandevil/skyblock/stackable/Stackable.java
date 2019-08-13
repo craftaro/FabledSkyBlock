@@ -31,7 +31,7 @@ public class Stackable {
 
     public Stackable(Location location, Material material) {
         this.uuid = UUID.randomUUID();
-        this.location = location;
+        this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
         this.updateDisplay();
         SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -40,7 +40,7 @@ public class Stackable {
 
     public Stackable(UUID uuid, Location location, Material material, int size) {
         this.uuid = uuid;
-        this.location = location;
+        this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
         this.size = size;
         this.updateDisplay();
@@ -78,14 +78,14 @@ public class Stackable {
     }
 
     public void addOne() {
-        this.size ++;
+        this.size++;
         this.updateDisplay();
         SkyBlock.getInstance().getSoundManager().playSound(this.location, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
         this.save();
     }
 
     public void takeOne() {
-        this.size --;
+        this.size--;
         this.updateDisplay();
         SkyBlock.getInstance().getSoundManager().playSound(this.location, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
         this.save();
@@ -93,7 +93,6 @@ public class Stackable {
 
     private void updateDisplay() {
         if (this.size > 1) {
-            this.removeDisplay();
             this.createDisplay();
             this.display.setCustomName(this.getCustomName());
             this.display.setCustomNameVisible(true);
@@ -101,10 +100,10 @@ public class Stackable {
             this.removeDisplay();
         }
     }
-    
+
     private void createDisplay() {
         this.removeDisplay();
-        
+
         Location dropLocation = this.location.clone().add(0.5, 1, 0.5);
         ArmorStand as = (ArmorStand) this.location.getWorld().spawnEntity(dropLocation, EntityType.ARMOR_STAND);
         as.setVisible(false);
@@ -124,13 +123,11 @@ public class Stackable {
         if (this.display != null) {
             this.display.remove();
         }
-        
+
         // Find any stragglers
-        for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.1, 0.5, 0.1)) {
-            if (entity instanceof ArmorStand && entity.isValid()) {
+        for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.1, 0.5, 0.1))
+            if (entity instanceof ArmorStand)
                 entity.remove();
-            }
-        }
     }
 
     private void save() {
@@ -138,7 +135,7 @@ public class Stackable {
         FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(configFile,
                 SkyBlock.getInstance().getIslandManager().getIslandAtLocation(this.location).getOwnerUUID() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-        
+
         if (this.getSize() == 0) {
             configLoad.set("Stackables." + this.getUuid().toString(), null);
         } else {
