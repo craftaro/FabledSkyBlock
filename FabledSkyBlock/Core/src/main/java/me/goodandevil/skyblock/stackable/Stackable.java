@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import me.goodandevil.skyblock.utils.NumberUtil;
 import org.apache.commons.lang3.text.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -92,6 +93,10 @@ public class Stackable {
     }
 
     private void updateDisplay() {
+        // The chunk needs to be loaded otherwise the getNearbyEntities() in removeDisplay() won't find anything
+        if (!this.location.getWorld().isChunkLoaded(this.location.getBlockX() >> 4, this.location.getBlockZ() >> 4))
+            this.location.getChunk().load();
+
         if (this.size > 1) {
             this.createDisplay();
             this.display.setCustomName(this.getCustomName());
@@ -125,7 +130,7 @@ public class Stackable {
         }
 
         // Find any stragglers
-        for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.1, 0.5, 0.1))
+        for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.25, 0.5, 0.25))
             if (entity instanceof ArmorStand)
                 entity.remove();
     }
