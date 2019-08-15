@@ -662,7 +662,7 @@ public class Entity implements Listener {
             return;
         }
 
-        if (event.getSpawnReason() != SpawnReason.NATURAL)
+        if (!(event.getSpawnReason() == SpawnReason.NATURAL || event.getSpawnReason() == SpawnReason.JOCKEY || event.getSpawnReason() == SpawnReason.MOUNT))
             return;
 
         LivingEntity livingEntity = event.getEntity();
@@ -672,7 +672,15 @@ public class Entity implements Listener {
 
         if (skyblock.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
             if (!skyblock.getIslandManager().hasSetting(livingEntity.getLocation(), IslandRole.Owner, "NaturalMobSpawning")) {
-                livingEntity.remove();
+                if (event.getSpawnReason() == SpawnReason.JOCKEY || event.getSpawnReason() == SpawnReason.MOUNT) {
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
+                        for (org.bukkit.entity.Entity passenger : livingEntity.getPassengers())
+                            passenger.remove();
+                        livingEntity.remove();
+                    });
+                } else {
+                    livingEntity.remove();
+                }
             }
         }
     }
