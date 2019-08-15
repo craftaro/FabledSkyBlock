@@ -219,19 +219,16 @@ public class IslandManager {
 
         skyblock.getPlayerDataManager().getPlayerData(player).setIsland(player.getUniqueId());
 
-        config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-        configLoad = config.getFileConfiguration();
-
         if (scoreboardManager != null) {
             Scoreboard scoreboard = scoreboardManager.getScoreboard(player);
             scoreboard.cancel();
             scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                    configLoad.getString("Scoreboard.Island.Solo.Displayname")));
+                    fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
             scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
             scoreboard.run();
         }
 
-        Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
             if (structure.getCommands() != null) {
                 for (String commandList : structure.getCommands()) {
                     Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(),
@@ -241,7 +238,7 @@ public class IslandManager {
 
             player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
             player.setFallDistance(0.0F);
-        });
+        }, configLoad.getInt("Island.Creation.TeleportTimeout") * 20);
 
         String biomeName = fileManager
                 .getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()

@@ -1059,6 +1059,8 @@ public enum Materials {
     String old12Mat;
     int data;
     boolean is13Plusonly;
+    private Material cachedMaterial;
+    private boolean isMaterialParsed = false;
 
     Materials(String old13Mat, String old12Mat, int data) {
         this(old13Mat, old12Mat, data, false);
@@ -1129,24 +1131,37 @@ public enum Materials {
 
         Materials pmat = null;
 
+        // Try 1.13+ names
         for (Materials mat : Materials.values()) {
-            if (name.equalsIgnoreCase(mat.old12Mat)) {
+            if (name.equalsIgnoreCase(mat.name())) {
                 if (pmat == null) {
                     pmat = mat;
                 }
 
                 if (((byte) mat.data) == data) {
-                    cachedSearch.put(mat.old12Mat + "," + data, mat);
+                    cachedSearch.put(mat.name() + "," + data, mat);
                     return mat;
                 }
             }
         }
 
-        if (pmat != null) {
-            return pmat;
+        // Try 1.12- names
+        for (Materials mat : Materials.values()) {
+            if (name.equalsIgnoreCase(mat.name()))
+
+                if (name.equalsIgnoreCase(mat.old12Mat)) {
+                    if (pmat == null) {
+                        pmat = mat;
+                    }
+
+                    if (((byte) mat.data) == data) {
+                        cachedSearch.put(mat.old12Mat + "," + data, mat);
+                        return mat;
+                    }
+                }
         }
 
-        return null;
+        return pmat;
     }
 
     public boolean isSpawner() {
@@ -1231,25 +1246,36 @@ public enum Materials {
             case "CHESTPLATE":
                 return true;
             default:
-            return false;
+                return false;
         }
     }
     
     public Material parseMaterial() {
-        if (this.isSpawner() && this != Materials.SPAWNER)
-            return Materials.SPAWNER.parseMaterial();
+        if (this.cachedMaterial != null || this.isMaterialParsed)
+            return this.cachedMaterial;
+
+        if (this.isSpawner() && this != Materials.SPAWNER) {
+            this.cachedMaterial = Materials.SPAWNER.parseMaterial();
+            return this.cachedMaterial;
+        }
 
         Material mat = Material.matchMaterial(this.toString());
-        if (mat != null)
-            return mat;
+        if (mat != null) {
+            this.cachedMaterial = mat;
+            return this.cachedMaterial;
+        }
 
         if (old13Mat != null) {
             mat = Material.matchMaterial(old13Mat);
-            if (mat != null)
-                return mat;
+            if (mat != null) {
+                this.cachedMaterial = mat;
+                return this.cachedMaterial;
+            }
         }
 
-        return Material.matchMaterial(old12Mat);
+        this.cachedMaterial = Material.matchMaterial(old12Mat);
+        this.isMaterialParsed = true;
+        return this.cachedMaterial;
     }
 
     public Material getPostMaterial() {

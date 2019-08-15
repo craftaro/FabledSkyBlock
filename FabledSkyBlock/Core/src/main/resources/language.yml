@@ -84,6 +84,12 @@ Command:
           Message: '&bSkyBlock &8| &cError&8: &eYou cannot initiate an Island level scan without being on your Island.'
         BlockPlacing:
           Message: '&bSkyBlock &8 | &cError:&8: &eYou cannot place blocks during an Island level scan. Please wait for the scan to finish.'
+        Started:
+          Message: '&bSkyBlock &8| &aInfo&8: &eA level scan has started on this island.'
+        Queued:
+          Message: '&bSkyBlock &8| &aInfo&8: &eA level scan has been &aqueued&e for this island. The scan will start as soon as all other queued scans are complete.'
+        Done:
+          Message: '&bSkyBlock &8| &aInfo&8: &eThe scan has completed.'
       Cooldown:
         Word:
           Minute: minute(s)

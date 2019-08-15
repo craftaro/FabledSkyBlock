@@ -7,6 +7,7 @@ import me.goodandevil.skyblock.island.Island;
 import me.goodandevil.skyblock.island.IslandLevel;
 import me.goodandevil.skyblock.island.IslandManager;
 import me.goodandevil.skyblock.island.IslandWorld;
+import me.goodandevil.skyblock.message.MessageManager;
 import me.goodandevil.skyblock.stackable.Stackable;
 import me.goodandevil.skyblock.stackable.StackableManager;
 import me.goodandevil.skyblock.utils.version.Materials;
@@ -31,9 +32,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -41,7 +44,8 @@ public class LevellingManager {
 
     private final SkyBlock skyblock;
 
-    private Set<Island> activeIslandScans = new HashSet<>();
+    private Island activelyScanningIsland = null;
+    private Queue<QueuedIsland> islandsInQueue = new LinkedList<>();
     private List<LevellingMaterial> materialStorage = new ArrayList<>();
 
     public LevellingManager(SkyBlock skyblock) {
@@ -53,17 +57,29 @@ public class LevellingManager {
     public void calculatePoints(Player player, Island island) {
         IslandManager islandManager = skyblock.getIslandManager();
         WorldManager worldManager = skyblock.getWorldManager();
+        MessageManager messageManager = skyblock.getMessageManager();
         StackableManager stackableManager = skyblock.getStackableManager();
 
-        if (player != null && islandManager.getIslandPlayerAt(player) != island) {
-            String message = ChatColor.translateAlternateColorCodes('&', this.skyblock.getFileManager()
-                    .getConfig(new File(this.skyblock.getDataFolder(), "language.yml"))
-                    .getFileConfiguration().getString("Command.Island.Level.Scanning.NotOnIsland.Message"));
-            player.sendMessage(message);
+        FileConfiguration languageConfig = this.skyblock.getFileManager().getConfig(new File(this.skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+
+        if (!this.isIslandLevelBeingScanned(island) && player != null && islandManager.getIslandPlayerAt(player) != island) {
+            messageManager.sendMessage(player, languageConfig.getString("Command.Island.Level.Scanning.NotOnIsland.Message"));
             return;
         }
 
-        this.activeIslandScans.add(island);
+        if (this.activelyScanningIsland != null) {
+            this.islandsInQueue.add(new QueuedIsland(player, island));
+
+            String queuedMessage = languageConfig.getString("Command.Island.Level.Scanning.Queued.Message");
+            islandManager.getPlayersAtIsland(island).forEach(x -> messageManager.sendMessage(x, queuedMessage));
+
+            return;
+        }
+
+        this.activelyScanningIsland = island;
+
+        String nowScanningMessage = languageConfig.getString("Command.Island.Level.Scanning.Started.Message");
+        islandManager.getPlayersAtIsland(island).forEach(x -> messageManager.sendMessage(x, nowScanningMessage));
 
         Chunk chunk = new Chunk(skyblock, island);
         chunk.prepareInitial();
@@ -100,111 +116,116 @@ public class LevellingManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (!chunk.isReadyToScan()) return;
-
-                if (chunk.isFinished()) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> finalizeMaterials(levellingData, spawnerLocations, epicSpawnerLocations, ultimateStackerSpawnerLocations, player, island), 1);
-                    cancel();
+                if (!chunk.isReadyToScan())
                     return;
-                }
 
-                for (LevelChunkSnapshotWrapper chunkSnapshotList : chunk.getAvailableChunkSnapshots()) {
-                    for (int x = 0; x < 16; x++) {
-                        for (int z = 0; z < 16; z++) {
-                            for (int y = 0; y < worldMaxHeight; y++) {
-                                ChunkSnapshot chunkSnapshot = chunkSnapshotList.getChunkSnapshot();
+                try {
+                    if (chunk.isFinished()) {
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> finalizeMaterials(levellingData, spawnerLocations, epicSpawnerLocations, ultimateStackerSpawnerLocations, player, island), 1);
+                        cancel();
+                        return;
+                    }
 
-                                try {
-                                    org.bukkit.Material blockMaterial;
-                                    int blockData = 0;
-                                    EntityType spawnerType = null;
+                    for (LevelChunkSnapshotWrapper chunkSnapshotList : chunk.getAvailableChunkSnapshots()) {
+                        for (int x = 0; x < 16; x++) {
+                            for (int z = 0; z < 16; z++) {
+                                for (int y = 0; y < worldMaxHeight; y++) {
+                                    ChunkSnapshot chunkSnapshot = chunkSnapshotList.getChunkSnapshot();
 
-                                    if (NMSVersion > 12) {
-                                        blockMaterial = chunkSnapshot.getBlockType(x, y, z);
-                                    } else {
-                                        LegacyChunkSnapshotData data = LegacyChunkSnapshotFetcher.fetch(chunkSnapshot, x, y, z);
+                                    try {
+                                        org.bukkit.Material blockMaterial;
+                                        int blockData = 0;
+                                        EntityType spawnerType = null;
 
-                                        blockMaterial = data.getMaterial();
-                                        blockData = data.getData();
-                                    }
+                                        if (NMSVersion > 12) {
+                                            blockMaterial = chunkSnapshot.getBlockType(x, y, z);
+                                        } else {
+                                            LegacyChunkSnapshotData data = LegacyChunkSnapshotFetcher.fetch(chunkSnapshot, x, y, z);
 
-                                    if (blacklistedMaterials.contains(blockMaterial))
-                                        continue;
+                                            blockMaterial = data.getMaterial();
+                                            blockData = data.getData();
+                                        }
 
-                                    long amount = 1;
+                                        if (blacklistedMaterials.contains(blockMaterial))
+                                            continue;
 
-                                    if (blockMaterial == Materials.SPAWNER.parseMaterial()) {
-                                        World world = Bukkit.getWorld(chunkSnapshot.getWorldName());
-                                        Location location = new Location(world, chunkSnapshot.getX() * 16 + x, y, chunkSnapshot.getZ() * 16 + z);
+                                        long amount = 1;
 
-                                        if (isEpicSpawnersEnabled) {
-                                            com.songoda.epicspawners.EpicSpawners epicSpawners = com.songoda.epicspawners.EpicSpawners.getInstance();
-                                            if (epicSpawners.getSpawnerManager().isSpawner(location)) {
-                                                com.songoda.epicspawners.spawners.spawner.Spawner spawner = epicSpawners.getSpawnerManager().getSpawnerFromWorld(location);
-                                                if (spawner != null)
-                                                    epicSpawnerLocations.add(location);
+                                        if (blockMaterial == Materials.SPAWNER.parseMaterial()) {
+                                            World world = Bukkit.getWorld(chunkSnapshot.getWorldName());
+                                            Location location = new Location(world, chunkSnapshot.getX() * 16 + x, y, chunkSnapshot.getZ() * 16 + z);
+
+                                            if (isEpicSpawnersEnabled) {
+                                                com.songoda.epicspawners.EpicSpawners epicSpawners = com.songoda.epicspawners.EpicSpawners.getInstance();
+                                                if (epicSpawners.getSpawnerManager().isSpawner(location)) {
+                                                    com.songoda.epicspawners.spawners.spawner.Spawner spawner = epicSpawners.getSpawnerManager().getSpawnerFromWorld(location);
+                                                    if (spawner != null)
+                                                        epicSpawnerLocations.add(location);
+                                                    continue;
+                                                }
+                                            } else if (isUltimateStackerEnabled) {
+                                                com.songoda.ultimatestacker.spawner.SpawnerStack spawnerStack = com.songoda.ultimatestacker.UltimateStacker.getInstance().getSpawnerStackManager().getSpawner(location);
+                                                if (spawnerStack != null)
+                                                    ultimateStackerSpawnerLocations.add(location);
                                                 continue;
                                             }
-                                        } else if (isUltimateStackerEnabled) {
-                                            com.songoda.ultimatestacker.spawner.SpawnerStack spawnerStack = com.songoda.ultimatestacker.UltimateStacker.getInstance().getSpawnerStackManager().getSpawner(location);
-                                            if (spawnerStack != null)
-                                                ultimateStackerSpawnerLocations.add(location);
-                                            continue;
-                                        }
 
-                                        if (chunkSnapshotList.hasWildStackerData()) {
-                                            com.bgsoftware.wildstacker.api.objects.StackedSnapshot snapshot = ((WildStackerChunkSnapshotWrapper)chunkSnapshotList).getStackedSnapshot();
-                                            if (snapshot.isStackedSpawner(location)) {
-                                                Map.Entry<Integer, EntityType> spawnerData = snapshot.getStackedSpawner(location);
-                                                amount = spawnerData.getKey();
-                                                spawnerType = spawnerData.getValue();
+                                            if (chunkSnapshotList.hasWildStackerData()) {
+                                                com.bgsoftware.wildstacker.api.objects.StackedSnapshot snapshot = ((WildStackerChunkSnapshotWrapper) chunkSnapshotList).getStackedSnapshot();
+                                                if (snapshot.isStackedSpawner(location)) {
+                                                    Map.Entry<Integer, EntityType> spawnerData = snapshot.getStackedSpawner(location);
+                                                    amount = spawnerData.getKey();
+                                                    spawnerType = spawnerData.getValue();
+                                                }
                                             }
-                                        }
 
-                                        if (spawnerType == null) {
-                                            spawnerLocations.add(location);
-                                            continue;
-                                        }
-                                    } else {
-                                        if (chunkSnapshotList.hasWildStackerData()) {
-                                            com.bgsoftware.wildstacker.api.objects.StackedSnapshot snapshot = ((WildStackerChunkSnapshotWrapper)chunkSnapshotList).getStackedSnapshot();
-                                            World world = Bukkit.getWorld(chunkSnapshot.getWorldName());
-                                            Location location = new Location(world, chunkSnapshot.getX() * 16 + x, y, chunkSnapshot.getZ() * 16 + z);
-                                            if (snapshot.isStackedBarrel(location)) {
-                                                Map.Entry<Integer, Material> barrelData = snapshot.getStackedBarrel(location);
-                                                amount = barrelData.getKey();
-                                                blockMaterial = barrelData.getValue();
-                                                if (NMSUtil.getVersionNumber() > 12 && blockMaterial.name().startsWith("LEGACY_")) {
-                                                    blockMaterial = Material.matchMaterial(blockMaterial.name().replace("LEGACY_", ""));
+                                            if (spawnerType == null) {
+                                                spawnerLocations.add(location);
+                                                continue;
+                                            }
+                                        } else {
+                                            if (chunkSnapshotList.hasWildStackerData()) {
+                                                com.bgsoftware.wildstacker.api.objects.StackedSnapshot snapshot = ((WildStackerChunkSnapshotWrapper) chunkSnapshotList).getStackedSnapshot();
+                                                World world = Bukkit.getWorld(chunkSnapshot.getWorldName());
+                                                Location location = new Location(world, chunkSnapshot.getX() * 16 + x, y, chunkSnapshot.getZ() * 16 + z);
+                                                if (snapshot.isStackedBarrel(location)) {
+                                                    Map.Entry<Integer, Material> barrelData = snapshot.getStackedBarrel(location);
+                                                    amount = barrelData.getKey();
+                                                    blockMaterial = barrelData.getValue();
+                                                    if (NMSUtil.getVersionNumber() > 12 && blockMaterial.name().startsWith("LEGACY_")) {
+                                                        blockMaterial = Material.matchMaterial(blockMaterial.name().replace("LEGACY_", ""));
+                                                    }
+                                                }
+                                            }
+
+                                            if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial) && amount == 1) {
+                                                World world = Bukkit.getWorld(chunkSnapshot.getWorldName());
+                                                Location location = new Location(world, chunkSnapshot.getX() * 16 + x, y, chunkSnapshot.getZ() * 16 + z);
+                                                if (stackableManager.isStacked(location)) {
+                                                    Stackable stackable = stackableManager.getStack(location, blockMaterial);
+                                                    if (stackable != null) {
+                                                        amount = stackable.getSize();
+                                                    }
                                                 }
                                             }
                                         }
 
-                                        if (stackableManager != null && stackableManager.getStackableMaterials().contains(blockMaterial) && amount == 1) {
-                                            World world = Bukkit.getWorld(chunkSnapshot.getWorldName());
-                                            Location location = new Location(world, chunkSnapshot.getX() * 16 + x, y, chunkSnapshot.getZ() * 16 + z);
-                                            if (stackableManager.isStacked(location)) {
-                                                Stackable stackable = stackableManager.getStack(location, blockMaterial);
-                                                if (stackable != null) {
-                                                    amount = stackable.getSize();
-                                                }
-                                            }
-                                        }
+                                        LevellingData data = new LevellingData(blockMaterial, (byte) blockData, spawnerType);
+                                        Long totalAmountInteger = levellingData.get(data);
+                                        long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
+                                        levellingData.put(data, totalAmount);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-
-                                    LevellingData data = new LevellingData(blockMaterial, (byte) blockData, spawnerType);
-                                    Long totalAmountInteger = levellingData.get(data);
-                                    long totalAmount = totalAmountInteger == null ? amount : totalAmountInteger + amount;
-                                    levellingData.put(data, totalAmount);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
                                 }
                             }
                         }
                     }
-                }
 
-                chunk.prepareNextChunkSnapshots();
+                    chunk.prepareNextChunkSnapshots();
+                } catch (Exception ex) {
+                    skyblock.getLogger().severe("An error occurred while scanning an island. This is a severe error.");
+                }
             }
         }.runTaskTimerAsynchronously(skyblock, 0L, 1L);
     }
@@ -282,7 +303,15 @@ public class LevellingManager {
             }
         }
 
-        this.activeIslandScans.remove(island);
+        MessageManager messageManager = skyblock.getMessageManager();
+        FileConfiguration languageConfig = this.skyblock.getFileManager().getConfig(new File(this.skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+        String nowScanningMessage = languageConfig.getString("Command.Island.Level.Scanning.Done.Message");
+        skyblock.getIslandManager().getPlayersAtIsland(island).forEach(x -> messageManager.sendMessage(x, nowScanningMessage));
+
+        this.activelyScanningIsland = null;
+        QueuedIsland nextInQueue = this.islandsInQueue.poll();
+        if (nextInQueue != null)
+            this.calculatePoints(nextInQueue.getPlayer(), nextInQueue.getIsland());
     }
 
     public void registerMaterials() {
@@ -307,7 +336,7 @@ public class LevellingManager {
     }
 
     public boolean isIslandLevelBeingScanned(Island island) {
-        return this.activeIslandScans.contains(island);
+        return this.islandsInQueue.stream().anyMatch(x -> x.getIsland() == island) || this.activelyScanningIsland == island;
     }
 
     public void unregisterMaterials() {
@@ -383,6 +412,24 @@ public class LevellingManager {
             }
 
             return Materials.getMaterials(this.material, this.data);
+        }
+    }
+
+    private class QueuedIsland {
+        private final Player player;
+        private final Island island;
+
+        public QueuedIsland(Player player, Island island) {
+            this.player = player;
+            this.island = island;
+        }
+
+        public Player getPlayer() {
+            return this.player;
+        }
+
+        public Island getIsland() {
+            return this.island;
         }
     }
 }

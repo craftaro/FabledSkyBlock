@@ -228,7 +228,7 @@ public class Block implements Listener {
         if (configLoad.getBoolean("Island.Spawn.Protection")) {
             boolean isObstructing = false;
             // Directly on the block
-            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+            if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
                 isObstructing = true;
             }
 
@@ -236,7 +236,7 @@ public class Block implements Listener {
             if (!isObstructing && event.getBlock().getState().getData() instanceof org.bukkit.material.Bed) {
                 BlockFace bedDirection = ((org.bukkit.material.Bed) event.getBlock().getState().getData()).getFacing();
                 org.bukkit.block.Block bedBlock = block.getRelative(bedDirection);
-                if (LocationUtil.isLocationAffectingLocation(bedBlock.getLocation(), island.getLocation(world, IslandEnvironment.Main)))
+                if (LocationUtil.isLocationAffectingIslandSpawn(bedBlock.getLocation(), island, world))
                     isObstructing = true;
             }
 
@@ -319,7 +319,7 @@ public class Block implements Listener {
         }
 
         // Protect spawn
-        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main)) && configLoad.getBoolean("Island.Spawn.Protection")) {
+        if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world) && configLoad.getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
         }
@@ -391,13 +391,13 @@ public class Block implements Listener {
 
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 // Check exact block
-                if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+                if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
                     event.setCancelled(true);
                     return;
                 }
 
                 // Check block in direction
-                if (LocationUtil.isLocationAffectingLocation(block.getRelative(event.getDirection()).getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+                if (LocationUtil.isLocationAffectingIslandSpawn(block.getRelative(event.getDirection()).getLocation(), island, world)) {
                     event.setCancelled(true);
                     return;
                 }
@@ -413,7 +413,7 @@ public class Block implements Listener {
 
         // Check piston head
         if (configLoad.getBoolean("Island.Spawn.Protection")) {
-            if (LocationUtil.isLocationAffectingLocation(event.getBlock().getRelative(event.getDirection()).getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+            if (LocationUtil.isLocationAffectingIslandSpawn(event.getBlock().getRelative(event.getDirection()).getLocation(), island, world)) {
                 event.setCancelled(true);
             }
         }
@@ -445,7 +445,7 @@ public class Block implements Listener {
                 return;
             }
 
-            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main)) && configLoad.getBoolean("Island.Spawn.Protection")) {
+            if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world) && configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 return;
             }
@@ -482,7 +482,7 @@ public class Block implements Listener {
 
         // Check spawn block protection
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
-        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+        if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
             if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 return;
@@ -586,7 +586,7 @@ public class Block implements Listener {
 
         // Check spawn block protection
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
-        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main))) {
+        if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
             if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 return;
@@ -660,7 +660,7 @@ public class Block implements Listener {
         Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
 
         for (org.bukkit.block.BlockState block : event.getBlocks()) {
-            if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+            if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
                 event.setCancelled(true);
                 return;
             }
@@ -687,10 +687,9 @@ public class Block implements Listener {
 
             // Check spawn block protection
             IslandWorld world = worldManager.getIslandWorld(event.getBlocks().get(0).getWorld());
-            Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
 
             for (BlockState block : blocks) {
-                if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+                if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
                     event.setCancelled(true);
                     return;
                 }
@@ -708,10 +707,9 @@ public class Block implements Listener {
 
                 // Check spawn block protection
                 IslandWorld world = worldManager.getIslandWorld(blocks.get(0).getWorld());
-                Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
 
                 for (org.bukkit.block.Block block : blocks) {
-                    if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+                    if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
                         event.setCancelled(true);
                         return;
                     }
@@ -739,9 +737,8 @@ public class Block implements Listener {
 
         // Check spawn block protection
         IslandWorld world = worldManager.getIslandWorld(placeLocation.getWorld());
-        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
 
-        if (LocationUtil.isLocationAffectingLocation(placeLocation.getLocation(), islandLocation)) {
+        if (LocationUtil.isLocationAffectingIslandSpawn(placeLocation.getLocation(), island, world)) {
             event.setCancelled(true);
         }
     }

@@ -112,7 +112,7 @@ public class Interact implements Listener {
 
 					return;
 				}
-			} else if (block.getState() instanceof Cauldron) { // WildStacker stackables
+			} else if (block.getType() == Material.CAULDRON) { // WildStacker stackables
 				if (!islandManager.hasPermission(player, block.getLocation(), "Place") || !islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
 					event.setCancelled(true);
 
@@ -201,7 +201,7 @@ public class Interact implements Listener {
 				return;
 			}
 
-			if (event.getItem() != null && event.getItem().getType() == Material.BONE_MEAL && !islandManager.hasPermission(player, block.getLocation(), "Place")) {
+			if (event.getItem() != null && event.getItem().getType() == Materials.BONE_MEAL.parseMaterial() && !islandManager.hasPermission(player, block.getLocation(), "Place")) {
 				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 				event.setCancelled(true);
 				return;
@@ -587,7 +587,7 @@ public class Interact implements Listener {
 							player.updateInventory();
 						}
 					}
-				} else if (event.getItem().getType().name().contains("SPAWN_EGG")) {
+				} else if (event.getItem().getType().name().contains("SPAWN_EGG") || event.getItem().getType().name().equals("MONSTER_EGG")) {
 					if (!islandManager.hasPermission(player, block.getLocation(), "SpawnEgg")) {
 						event.setCancelled(true);
 

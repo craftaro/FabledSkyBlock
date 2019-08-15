@@ -34,6 +34,8 @@ Island:
                 Enable: true
             # Time until player can create another island.
             Time: 60
+        # [!] How many seconds to wait before teleporting to a newly created island
+        TeleportTimeout: 1
     World:
         # Delete the Island world when changing the liquid option.
         # If lava disabled, the world will be a water world.

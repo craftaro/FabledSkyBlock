@@ -77,8 +77,7 @@ public class Bucket implements Listener {
 
 		// Check spawn block protection
 		IslandWorld world = worldManager.getIslandWorld(block.getWorld());
-		Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
-		if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation)) {
+		if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
 			event.setCancelled(true);
 			skyblock.getMessageManager().sendMessage(player,
 					skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
