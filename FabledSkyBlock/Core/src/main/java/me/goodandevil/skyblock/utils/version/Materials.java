@@ -1147,18 +1147,16 @@ public enum Materials {
 
         // Try 1.12- names
         for (Materials mat : Materials.values()) {
-            if (name.equalsIgnoreCase(mat.name()))
-
-                if (name.equalsIgnoreCase(mat.old12Mat)) {
-                    if (pmat == null) {
-                        pmat = mat;
-                    }
-
-                    if (((byte) mat.data) == data) {
-                        cachedSearch.put(mat.old12Mat + "," + data, mat);
-                        return mat;
-                    }
+            if (name.equalsIgnoreCase(mat.old12Mat)) {
+                if (pmat == null) {
+                    pmat = mat;
                 }
+
+                if (((byte) mat.data) == data) {
+                    cachedSearch.put(mat.old12Mat + "," + data, mat);
+                    return mat;
+                }
+            }
         }
 
         return pmat;
