@@ -587,7 +587,7 @@ public class Interact implements Listener {
 							player.updateInventory();
 						}
 					}
-				} else if (event.getItem().getType().name().contains("SPAWN_EGG")) {
+				} else if (event.getItem().getType().name().contains("SPAWN_EGG") || event.getItem().getType().name().equals("MONSTER_EGG")) {
 					if (!islandManager.hasPermission(player, block.getLocation(), "SpawnEgg")) {
 						event.setCancelled(true);
 

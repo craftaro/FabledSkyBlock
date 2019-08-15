@@ -77,7 +77,7 @@ public class Teleport implements Listener {
                 return;
             }
 
-            if (isCause) {
+            if (isCause && event.getCause() != TeleportCause.ENDER_PEARL) {
                 event.setCancelled(true);
                 return;
             }

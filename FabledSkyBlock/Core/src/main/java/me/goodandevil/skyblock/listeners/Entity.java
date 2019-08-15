@@ -418,8 +418,8 @@ public class Entity implements Listener {
         org.bukkit.block.Block block = event.getBlock();
 
         // Check spawn block falling, this can be a bit glitchy, but it's better than nothing
-        Location islandLocation = island.getLocation(world, IslandEnvironment.Main);
-        if (LocationUtil.isLocationLocation(block.getLocation(), islandLocation.clone().subtract(0, 1, 0)) &&
+        if ((LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0, 1, 0))
+                || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0, 1, 0))) &&
                 skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
@@ -451,7 +451,7 @@ public class Entity implements Listener {
             return;
 
         // Check entities interacting with spawn
-        if (LocationUtil.isLocationAffectingLocation(block.getLocation(), islandLocation) &&
+        if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world) &&
                 skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
