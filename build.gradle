@@ -1,7 +1,7 @@
 allprojects {
     apply plugin: 'java'
     group = 'com.goodandevil.skyblock'
-    version = 'Build-78'
+    version = 'Build-78.3'
 }
 
 subprojects {

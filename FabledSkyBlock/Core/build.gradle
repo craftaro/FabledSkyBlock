@@ -15,6 +15,9 @@ dependencies {
     // Vault
     compileOnly (group: 'net.milkbowl', name: 'vault', version: '1.7.1')
 
+    // Reserve
+    compileOnly (group: 'net.tnemc', name: 'Reserve', version: '0.1.3.0')
+
     // Leaderheads
     compileOnly (group: 'me.robin', name: 'leaderheads', version: '1.0')
 
