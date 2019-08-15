@@ -1131,24 +1131,37 @@ public enum Materials {
 
         Materials pmat = null;
 
+        // Try 1.13+ names
         for (Materials mat : Materials.values()) {
-            if (name.equalsIgnoreCase(mat.old12Mat)) {
+            if (name.equalsIgnoreCase(mat.name())) {
                 if (pmat == null) {
                     pmat = mat;
                 }
 
                 if (((byte) mat.data) == data) {
-                    cachedSearch.put(mat.old12Mat + "," + data, mat);
+                    cachedSearch.put(mat.name() + "," + data, mat);
                     return mat;
                 }
             }
         }
 
-        if (pmat != null) {
-            return pmat;
+        // Try 1.12- names
+        for (Materials mat : Materials.values()) {
+            if (name.equalsIgnoreCase(mat.name()))
+
+                if (name.equalsIgnoreCase(mat.old12Mat)) {
+                    if (pmat == null) {
+                        pmat = mat;
+                    }
+
+                    if (((byte) mat.data) == data) {
+                        cachedSearch.put(mat.old12Mat + "," + data, mat);
+                        return mat;
+                    }
+                }
         }
 
-        return null;
+        return pmat;
     }
 
     public boolean isSpawner() {
@@ -1233,7 +1246,7 @@ public enum Materials {
             case "CHESTPLATE":
                 return true;
             default:
-            return false;
+                return false;
         }
     }
     
