@@ -20,6 +20,9 @@ public class VisitCommand extends SubCommand {
 		SoundManager soundManager = skyblock.getSoundManager();
 
 		if (args.length == 0) {
+			if (!skyblock.getPlayerDataManager().hasPlayerData(player))
+				skyblock.getPlayerDataManager().createPlayerData(player);
+
 			PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 			playerData.setType(Visit.Type.Default);
 			playerData.setSort(Visit.Sort.Default);
