@@ -4,7 +4,9 @@ import me.goodandevil.skyblock.SkyBlock;
 import me.goodandevil.skyblock.config.FileManager;
 import me.goodandevil.skyblock.config.FileManager.Config;
 import me.goodandevil.skyblock.island.Island;
+import me.goodandevil.skyblock.island.IslandEnvironment;
 import me.goodandevil.skyblock.island.IslandManager;
+import me.goodandevil.skyblock.island.IslandWorld;
 import me.goodandevil.skyblock.utils.math.VectorUtil;
 import me.goodandevil.skyblock.utils.version.Materials;
 import me.goodandevil.skyblock.utils.world.block.BlockDegreesType;
@@ -32,7 +34,12 @@ public final class LocationUtil {
 		return false;
 	}
 
-	public static boolean isLocationAffectingLocation(Location location1, Location location2) {
+	public static boolean isLocationAffectingIslandSpawn(Location location, Island island, IslandWorld world) {
+		return isLocationAffectingLocation(location, island.getLocation(world, IslandEnvironment.Main))
+				|| isLocationAffectingLocation(location, island.getLocation(world, IslandEnvironment.Visitor));
+	}
+
+	private static boolean isLocationAffectingLocation(Location location1, Location location2) {
 		Location headHeight = location2.clone().add(0, 1, 0);
 		Location feetHeight = location2.clone();
 		Location groundHeight = location2.clone().add(0, -1, 0);

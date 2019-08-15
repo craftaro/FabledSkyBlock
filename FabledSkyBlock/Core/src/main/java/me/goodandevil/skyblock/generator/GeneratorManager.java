@@ -140,7 +140,7 @@ public class GeneratorManager {
     }
 
     public Materials getRandomMaterials(Generator generator) {
-        if (generator.getGeneratorMaterials() != null && generator.getGeneratorMaterials().size() != 0) {
+        if (generator.getGeneratorMaterials() != null && generator.getGeneratorMaterials().stream().anyMatch(x -> x.getChance() > 0)) {
             List<Materials> weightedList = new ArrayList<>();
             for (GeneratorMaterial generatorMaterial : generator.getGeneratorMaterials())
                 for (int i = 0; i < generatorMaterial.getChance() * 30; i++)
