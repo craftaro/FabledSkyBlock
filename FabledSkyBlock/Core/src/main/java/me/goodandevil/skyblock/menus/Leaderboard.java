@@ -247,6 +247,10 @@ public class Leaderboard {
 						playerTexture = offlinePlayer.getTexture();
 					} else {
 						playerName = targetPlayer.getName();
+
+						if (!playerDataManager.hasPlayerData(targetPlayer))
+							playerDataManager.createPlayerData(targetPlayer);
+
 						playerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
 					}
 

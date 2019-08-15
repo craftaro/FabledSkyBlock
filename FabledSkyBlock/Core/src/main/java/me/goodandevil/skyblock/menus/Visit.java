@@ -403,6 +403,10 @@ public class Visit {
 						targetPlayerTexture = offlinePlayer.getTexture();
 					} else {
 						targetPlayerName = targetPlayer.getName();
+
+						if (!playerDataManager.hasPlayerData(targetPlayer))
+							playerDataManager.createPlayerData(targetPlayer);
+
 						targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
 					}
 
