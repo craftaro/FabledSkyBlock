@@ -223,7 +223,7 @@ public class Bans {
 								nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]),
 										ChatColor.translateAlternateColorCodes('&',
 												configLoad.getString("Menu.Bans.Item.Ban.Displayname")
-														.replace("%player", targetPlayerName)),
+														.replace("%player", targetPlayerName == null ? "" : targetPlayerName)),
 										configLoad.getStringList("Menu.Bans.Item.Ban.Lore"), null, null, null),
 								inventorySlot);
 					}
