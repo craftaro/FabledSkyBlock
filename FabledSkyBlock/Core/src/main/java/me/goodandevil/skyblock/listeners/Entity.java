@@ -674,8 +674,13 @@ public class Entity implements Listener {
             if (!skyblock.getIslandManager().hasSetting(livingEntity.getLocation(), IslandRole.Owner, "NaturalMobSpawning")) {
                 if (event.getSpawnReason() == SpawnReason.JOCKEY || event.getSpawnReason() == SpawnReason.MOUNT) {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
-                        for (org.bukkit.entity.Entity passenger : livingEntity.getPassengers())
-                            passenger.remove();
+                        if (NMSUtil.getVersionNumber() > 10) { // getPassengers() was added in 1.11
+                            for (org.bukkit.entity.Entity passenger : livingEntity.getPassengers())
+                                passenger.remove();
+                        } else {
+                            if (livingEntity.getPassenger() != null)
+                                livingEntity.getPassenger().remove();
+                        }
                         livingEntity.remove();
                     });
                 } else {
