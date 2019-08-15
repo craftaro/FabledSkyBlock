@@ -1059,6 +1059,7 @@ public enum Materials {
     String old12Mat;
     int data;
     boolean is13Plusonly;
+    private Material cachedMaterial;
 
     Materials(String old13Mat, String old12Mat, int data) {
         this(old13Mat, old12Mat, data, false);
@@ -1236,20 +1237,30 @@ public enum Materials {
     }
     
     public Material parseMaterial() {
-        if (this.isSpawner() && this != Materials.SPAWNER)
-            return Materials.SPAWNER.parseMaterial();
+        if (this.cachedMaterial != null)
+            return this.cachedMaterial;
+
+        if (this.isSpawner() && this != Materials.SPAWNER) {
+            this.cachedMaterial = Materials.SPAWNER.parseMaterial();
+            return this.cachedMaterial;
+        }
 
         Material mat = Material.matchMaterial(this.toString());
-        if (mat != null)
-            return mat;
+        if (mat != null) {
+            this.cachedMaterial = mat;
+            return this.cachedMaterial;
+        }
 
         if (old13Mat != null) {
             mat = Material.matchMaterial(old13Mat);
-            if (mat != null)
-                return mat;
+            if (mat != null) {
+                this.cachedMaterial = mat;
+                return this.cachedMaterial;
+            }
         }
 
-        return Material.matchMaterial(old12Mat);
+        this.cachedMaterial = Material.matchMaterial(old12Mat);
+        return this.cachedMaterial;
     }
 
     public Material getPostMaterial() {
