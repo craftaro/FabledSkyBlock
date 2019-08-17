@@ -216,7 +216,12 @@ public class Bans {
 							targetPlayerTexture = offlinePlayer.getTexture();
 						} else {
 							targetPlayerName = targetPlayer.getName();
-							targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+
+							if (playerDataManager.hasPlayerData(targetPlayer)) {
+								targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+							} else {
+								targetPlayerTexture = new String[] { null, null };
+							}
 						}
 
 						nInv.addItem(

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import me.goodandevil.skyblock.utils.player.OfflinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -45,7 +46,12 @@ public class Ban {
 				.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
 						islandOwnerUUID.toString() + ".yml"))
 				.getFileConfiguration().getStringList("Bans")) {
-			islandBans.add(UUID.fromString(islandBanList));
+
+			UUID uuid = UUID.fromString(islandBanList);
+			if (!Bukkit.getOfflinePlayer(uuid).hasPlayedBefore())
+				continue;
+
+			islandBans.add(uuid);
 		}
 
 		return islandBans;
