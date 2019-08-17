@@ -1125,37 +1125,42 @@ public enum Materials {
     private static HashMap<String, Materials> cachedSearch = new HashMap<>();
 
     public static Materials requestMaterials(String name, byte data) {
-        if (cachedSearch.containsKey(name.toUpperCase() + "," + data)) {
+        if (cachedSearch.containsKey(name.toUpperCase() + "," + data))
             return cachedSearch.get(name.toUpperCase() + "," + data);
+
+        Materials pmat = internalRequestMaterials(name, data);
+        if (pmat != null || data == 0) {
+            cachedSearch.put(name.toUpperCase() + "," + data, pmat);
+            return pmat;
         }
 
+        pmat = internalRequestMaterials(name, (byte) 0);
+        cachedSearch.put(name.toUpperCase() + "," + data, pmat);
+        return pmat;
+    }
+
+    private static Materials internalRequestMaterials(String name, byte data) {
         Materials pmat = null;
 
         // Try 1.13+ names
         for (Materials mat : Materials.values()) {
             if (name.equalsIgnoreCase(mat.name())) {
-                if (pmat == null) {
+                if (pmat == null)
                     pmat = mat;
-                }
 
-                if (((byte) mat.data) == data) {
-                    cachedSearch.put(mat.name() + "," + data, mat);
+                if (((byte) mat.data) == data)
                     return mat;
-                }
             }
         }
 
         // Try 1.12- names
         for (Materials mat : Materials.values()) {
             if (name.equalsIgnoreCase(mat.old12Mat)) {
-                if (pmat == null) {
+                if (pmat == null)
                     pmat = mat;
-                }
 
-                if (((byte) mat.data) == data) {
-                    cachedSearch.put(mat.old12Mat + "," + data, mat);
+                if (((byte) mat.data) == data)
                     return mat;
-                }
             }
         }
 

@@ -375,7 +375,9 @@ public class LevellingManager {
         return materialStorage;
     }
 
-    private class LevellingData {
+    private static class LevellingData {
+        private final static int version = NMSUtil.getVersionNumber();
+
         private final Material material;
         private final byte data;
         private final EntityType spawnerType;
@@ -391,12 +393,32 @@ public class LevellingManager {
             if (!(obj instanceof LevellingData)) return false;
             LevellingData data = (LevellingData) obj;
             if (this == obj) return true;
-            return this.material == data.material && this.data == data.data && this.spawnerType == data.spawnerType;
+            if (version > 12) {
+                return this.material == data.material && this.spawnerType == data.spawnerType;
+            } else {
+                if (this.data == 0 && data.data == 0)
+                    return this.material == data.material && this.spawnerType == data.spawnerType;
+
+                Materials thisMaterials = Materials.requestMaterials(this.material.name(), this.data);
+                Materials otherMaterials = Materials.requestMaterials(this.material.name(), (byte) 0);
+
+                return thisMaterials == otherMaterials && this.spawnerType == data.spawnerType;
+            }
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(this.material, this.data, this.spawnerType);
+            if (version > 12) {
+                return Objects.hash(this.material, this.spawnerType);
+            } else {
+                if (this.data == 0)
+                    return Objects.hash(this.material, true, this.spawnerType);
+
+                Materials thisMaterials = Materials.requestMaterials(this.material.name(), this.data);
+                Materials otherMaterials = Materials.requestMaterials(this.material.name(), (byte) 0);
+
+                return Objects.hash(this.material, thisMaterials == otherMaterials, this.spawnerType);
+            }
         }
 
         private Materials getMaterials() {
@@ -415,7 +437,7 @@ public class LevellingManager {
         }
     }
 
-    private class QueuedIsland {
+    private static class QueuedIsland {
         private final Player player;
         private final Island island;
 
