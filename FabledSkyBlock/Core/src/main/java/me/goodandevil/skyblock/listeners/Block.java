@@ -181,7 +181,7 @@ public class Block implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlock();
@@ -269,28 +269,36 @@ public class Block implements Listener {
         if (!configLoad.getBoolean("Island.Block.Level.Enable"))
             return;
 
-        @SuppressWarnings("deprecation")
-        Materials materials = Materials.getMaterials(block.getType(), block.getData());
-        if (materials == null)
-            return;
-
-        if (materials.equals(Materials.SPAWNER)) {
-            if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
+        // Fix a bug in Paper 1.8.8 when using ViaVersion on a 1.12.2 client.
+        // BUG: Player can infinitely increase their level by placing a block at their feet.
+        // It doesn't take the block away but still increments the level.
+        // This doesn't happen in Spigot, but does happen in PaperSpigot due to a BlockPlaceEvent being incorrectly fired.
+        // The solution is to wait a tick to make sure that the block was actually placed.
+        // This shouldn't cause any issues besides the task number being increased insanely fast.
+        Bukkit.getScheduler().runTask(skyblock, () -> {
+            @SuppressWarnings("deprecation")
+            Materials materials = Materials.getMaterials(block.getType(), block.getData());
+            if (materials == null || materials == Materials.AIR)
                 return;
 
-            CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
-            EntityType spawnerType = creatureSpawner.getSpawnedType();
-            materials = Materials.getSpawner(spawnerType);
-        }
+            if (materials.equals(Materials.SPAWNER)) {
+                if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
+                    return;
 
-        long materialAmount = 0;
-        IslandLevel level = island.getLevel();
+                CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
+                EntityType spawnerType = creatureSpawner.getSpawnedType();
+                materials = Materials.getSpawner(spawnerType);
+            }
 
-        if (level.hasMaterial(materials.name())) {
-            materialAmount = level.getMaterialAmount(materials.name());
-        }
+            long materialAmount = 0;
+            IslandLevel level = island.getLevel();
 
-        level.setMaterialAmount(materials.name(), materialAmount + 1);
+            if (level.hasMaterial(materials.name())) {
+                materialAmount = level.getMaterialAmount(materials.name());
+            }
+
+            level.setMaterialAmount(materials.name(), materialAmount + 1);
+        });
     }
 
 
