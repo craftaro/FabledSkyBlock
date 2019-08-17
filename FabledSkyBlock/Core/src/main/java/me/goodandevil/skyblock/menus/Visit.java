@@ -404,10 +404,11 @@ public class Visit {
 					} else {
 						targetPlayerName = targetPlayer.getName();
 
-						if (!playerDataManager.hasPlayerData(targetPlayer))
-							playerDataManager.createPlayerData(targetPlayer);
-
-						targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+						if (playerDataManager.hasPlayerData(targetPlayer)) {
+							targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+						} else {
+							targetPlayerTexture = new String[] { null, null };
+						}
 					}
 
 					Island island = null;

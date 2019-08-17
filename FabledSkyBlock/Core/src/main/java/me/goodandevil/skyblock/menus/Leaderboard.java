@@ -248,10 +248,11 @@ public class Leaderboard {
 					} else {
 						playerName = targetPlayer.getName();
 
-						if (!playerDataManager.hasPlayerData(targetPlayer))
-							playerDataManager.createPlayerData(targetPlayer);
-
-						playerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+						if (playerDataManager.hasPlayerData(targetPlayer)) {
+							playerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+						} else {
+							playerTexture = new String[] { null, null };
+						}
 					}
 
 					if (leaderboard.getPosition() == 0) {
