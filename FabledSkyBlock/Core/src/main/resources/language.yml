@@ -2147,6 +2147,20 @@ Menu:
         - ''
         - '&eClick to view Island Visitors!'
         Displayname: '&aIsland Visitors'
+      Upgrades:
+        Displayname: '&aIsland Upgrades'
+        Lore:
+        - '&7[&f!&7] Upgrade your island'
+        - '    &7and unlock amazing perks'
+        - ''
+        - '&eClick to view Island Upgrades!'
+      Lock:
+        Displayname: '&aIsland Lock'
+        Lore:
+        - '&7[&f!&7] Open or close your'
+        - '    &7island for visitors'
+        - ''
+        - '&eClick to open/close your Island!'
       Barrier:
         Displayname: '&cIsland Control Panel'
     Title: '&8Island Control Panel'
