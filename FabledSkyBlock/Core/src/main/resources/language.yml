@@ -292,6 +292,15 @@ Command:
       Level:
         Info:
           Message: '&f&oChange Island level materials and points.'
+      LevelScan:
+        Info:
+          Message: '&f&oLevel scan another player''s island.'
+        Invalid:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin levelscan <player>'
+        NoIsland:
+          Message: '&bSkyBlock &8| &cError&8: &eA player with that name does not own an island.'
+        Started:
+          Message: '&bSkyBlock &8| &aInfo&8: &eThe level scan has been queued or started.'
       Owner:
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin Owner <player>'
