@@ -10,6 +10,7 @@ import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.invite.Invite;
 import com.songoda.skyblock.invite.InviteManager;
+import com.songoda.skyblock.levelling.LevelChunkSnapshotWrapper;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -383,6 +384,26 @@ public class IslandManager {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         CooldownManager cooldownManager = skyblock.getCooldownManager();
         FileManager fileManager = skyblock.getFileManager();
+        WorldManager worldManager = skyblock.getWorldManager();
+
+        // Delete island from world.
+        Bukkit.getScheduler().runTask(skyblock, () -> {
+            for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
+                org.bukkit.World world = worldManager.getWorld(worldList);
+                Location location = island.getLocation(worldList, IslandEnvironment.Island);
+                if (location == null) continue;
+                int size = island.getSize();
+                int xx = location.getBlockX() - size / 2;
+                int zz = location.getBlockZ() - size / 2;
+                for (int x = xx; x < xx + size; x++) {
+                    for (int z = zz; z < zz + size; z++) {
+                        for (int y = 0; y < world.getMaxHeight(); y++) {
+                            new Location(world, x, y, z).getBlock().setType(Material.AIR);
+                        }
+                    }
+                }
+            }
+        });
 
         skyblock.getVisitManager().deleteIsland(island.getOwnerUUID());
         skyblock.getBanManager().deleteIsland(island.getOwnerUUID());
