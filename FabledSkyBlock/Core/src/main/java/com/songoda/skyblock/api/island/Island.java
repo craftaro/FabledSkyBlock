@@ -5,6 +5,7 @@ import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.api.ban.Ban;
 import com.songoda.skyblock.api.utils.APIUtil;
 import com.songoda.skyblock.api.visit.Visit;
+import com.songoda.skyblock.island.IslandCoop;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
@@ -12,10 +13,7 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Island {
 
@@ -201,24 +199,24 @@ public class Island {
     /**
      * @return A Set of cooped players
      */
-    public Set<UUID> getCoopPlayers() {
+    public Map<UUID, IslandCoop> getCoopPlayers() {
         return this.handle.getCoopPlayers();
     }
 
     /**
      * Add a player to the coop players for the Island
      */
-    public void addCoopPlayer(UUID uuid) {
+    public void addCoopPlayer(UUID uuid, IslandCoop islandCoop) {
         Preconditions.checkArgument(uuid != null, "Cannot add coop player to null uuid");
-        this.handle.addCoopPlayer(uuid);
+        this.handle.addCoopPlayer(uuid, islandCoop);
     }
 
     /**
      * Add a player to the coop players for the Island
      */
-    public void addCoopPlayer(OfflinePlayer player) {
+    public void addCoopPlayer(OfflinePlayer player, IslandCoop islandCoop) {
         Preconditions.checkArgument(player != null, "Cannot add coop player to null player");
-        this.handle.addCoopPlayer(player.getUniqueId());
+        this.handle.addCoopPlayer(player.getUniqueId(), islandCoop);
     }
 
     /**

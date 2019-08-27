@@ -4,6 +4,7 @@ import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandCoop;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.menus.Coop;
@@ -34,6 +35,8 @@ public class CoopCommand extends SubCommand {
 
         Island island = islandManager.getIsland(player);
 
+        String temp = configLoad.getString("Menu.Coop.Item.Word.Temp");
+
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Owner.Message"));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -42,11 +45,11 @@ public class CoopCommand extends SubCommand {
             if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                     || (island.hasRole(IslandRole.Operator, player.getUniqueId())
                     && island.getSetting(IslandRole.Operator, "CoopPlayers").getStatus())) {
-                if (args.length == 1) {
+                if (args.length == 1 || args.length == 2) {
                     Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
-                    UUID targetPlayerUUID = null;
-                    String targetPlayerName = null;
+                    UUID targetPlayerUUID;
+                    String targetPlayerName;
 
                     if (targetPlayer == null) {
                         OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);
@@ -98,13 +101,17 @@ public class CoopCommand extends SubCommand {
                                         targetPlayerName));
                         soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
                     } else {
-                        island.addCoopPlayer(targetPlayerUUID);
+                        IslandCoop type = IslandCoop.NORMAL;
+                        if (args.length == 2 && args[1].equalsIgnoreCase(temp))
+                            type = IslandCoop.TEMP;
 
-                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Added.Message")
+                        island.addCoopPlayer(targetPlayerUUID, type);
+
+                        messageManager.sendMessage(player, configLoad.getString(type == IslandCoop.TEMP ? "Command.Island.Coop.AddedTemp.Message" : "Command.Island.Coop.Added.Message")
                                 .replace("%player", targetPlayerName));
 
                         if (targetPlayer != null) {
-                            messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.Coop.AddedTarget.Message")
+                            messageManager.sendMessage(targetPlayer, configLoad.getString(type == IslandCoop.TEMP ? "Command.Island.Coop.AddedTempTarget.Message" : "Command.Island.Coop.AddedTarget.Message")
                                     .replace("%player", player.getName()));
                         }
 

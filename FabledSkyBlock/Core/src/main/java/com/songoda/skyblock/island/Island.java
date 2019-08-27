@@ -35,7 +35,7 @@ public class Island {
 
     private Map<IslandRole, List<IslandSetting>> islandSettings = new HashMap<>();
     private List<IslandLocation> islandLocations = new ArrayList<>();
-    private Set<UUID> coopPlayers = new HashSet<>();
+    private Map<UUID, IslandCoop> coopPlayers = new HashMap<>();
 
     private UUID islandUUID;
     private UUID ownerUUID;
@@ -204,7 +204,7 @@ public class Island {
 
                 if (coopDataConfigLoad.getString("CoopPlayers") != null) {
                     for (String coopPlayerList : coopDataConfigLoad.getStringList("CoopPlayers")) {
-                        coopPlayers.add(UUID.fromString(coopPlayerList));
+                        coopPlayers.put(UUID.fromString(coopPlayerList), IslandCoop.NORMAL);
                     }
                 }
             }
@@ -438,12 +438,12 @@ public class Island {
                 .getFileConfiguration().set("Weather.Time", time);
     }
 
-    public Set<UUID> getCoopPlayers() {
+    public Map<UUID, IslandCoop> getCoopPlayers() {
         return coopPlayers;
     }
 
-    public void addCoopPlayer(UUID uuid) {
-        coopPlayers.add(uuid);
+    public void addCoopPlayer(UUID uuid, IslandCoop islandCoop) {
+        coopPlayers.put(uuid, islandCoop);
         Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
     }
 
@@ -453,7 +453,11 @@ public class Island {
     }
 
     public boolean isCoopPlayer(UUID uuid) {
-        return coopPlayers.contains(uuid);
+        return coopPlayers.containsKey(uuid);
+    }
+
+    public IslandCoop getCoopType(UUID uuid) {
+        return coopPlayers.getOrDefault(uuid, null);
     }
 
     public Set<UUID> getRole(IslandRole role) {
@@ -776,8 +780,9 @@ public class Island {
 
             List<String> coopPlayersAsString = new ArrayList<>();
 
-            for (UUID coopPlayerList : coopPlayers) {
-                coopPlayersAsString.add(coopPlayerList.toString());
+            for (Map.Entry<UUID, IslandCoop> entry : coopPlayers.entrySet()) {
+                if (entry.getValue() == IslandCoop.TEMP) continue;
+                coopPlayersAsString.add(entry.getKey().toString());
             }
 
             configLoad.set("CoopPlayers", coopPlayersAsString);

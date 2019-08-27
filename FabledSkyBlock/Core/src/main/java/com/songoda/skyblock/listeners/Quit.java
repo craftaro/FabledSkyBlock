@@ -6,6 +6,7 @@ import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.invite.Invite;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandCoop;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
@@ -93,9 +94,9 @@ public class Quit implements Listener {
             playerDataManager.savePlayerData(player);
             playerDataManager.unloadPlayerData(player);
 
-            if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                    .getBoolean("Island.Coop.Unload")) {
-                for (Island islandList : islandManager.getCoopIslands(player)) {
+            for (Island islandList : islandManager.getCoopIslands(player)) {
+                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                        .getBoolean("Island.Coop.Unload") || islandList.getCoopType(player.getUniqueId()) == IslandCoop.TEMP) {
                     islandList.removeCoopPlayer(player.getUniqueId());
                 }
             }

@@ -4,6 +4,7 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandCoop;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
@@ -26,7 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 public class Coop {
@@ -93,14 +94,36 @@ public class Coop {
                             configLoad.getString("Menu.Coop.Item.Information.Displayname"))))) {
                         soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
+                        String normal = configLoad.getString("Menu.Coop.Item.Word.Normal");
+                        String temp = configLoad.getString("Menu.Coop.Item.Word.Temp");
+
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
                             AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                 if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
-                                    Bukkit.getServer().dispatchCommand(player,
-                                            "island coop " + event1.getName());
 
-                                    event1.setWillClose(true);
-                                    event1.setWillDestroy(true);
+                                    AbstractAnvilGUI gui2 = new AbstractAnvilGUI(player, event2 -> {
+                                        if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+                                            Bukkit.getServer().dispatchCommand(player,
+                                                    "island coop " + event1.getName() + " " + event2.getName());
+
+                                            event2.setWillClose(true);
+                                            event2.setWillDestroy(true);
+                                        } else {
+                                            event2.setWillClose(false);
+                                            event2.setWillDestroy(false);
+                                        }
+                                    });
+
+                                    ItemStack is1 = new ItemStack(Material.NAME_TAG);
+                                    ItemMeta im = is1.getItemMeta();
+                                    im.setDisplayName(normal + "/" + temp);
+                                    is1.setItemMeta(im);
+
+                                    gui2.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is1);
+                                    gui2.open();
+
+                                    event1.setWillClose(false);
+                                    event1.setWillDestroy(false);
                                 } else {
                                     event1.setWillClose(false);
                                     event1.setWillDestroy(false);
@@ -160,8 +183,10 @@ public class Coop {
             PlayerData playerData = playerDataManager.getPlayerData(player);
             Island island = islandManager.getIsland(player);
 
-            Set<UUID> coopPlayers = island.getCoopPlayers();
-            coopPlayers.removeIf(x -> !Bukkit.getOfflinePlayer(x).hasPlayedBefore());
+            Map<UUID, IslandCoop> coopPlayers = island.getCoopPlayers();
+            for (UUID uuid : coopPlayers.keySet())
+                if (!Bukkit.getOfflinePlayer(uuid).hasPlayedBefore())
+                    coopPlayers.remove(uuid);
 
             int playerMenuPage = playerData.getPage(), nextEndIndex = coopPlayers.size() - playerMenuPage * 36;
 
@@ -204,7 +229,7 @@ public class Coop {
                     if (coopPlayers.size() > index) {
                         inventorySlot++;
 
-                        UUID targetPlayerUUID = (UUID) coopPlayers.toArray()[index];
+                        UUID targetPlayerUUID = (UUID) coopPlayers.keySet().toArray()[index];
                         String targetPlayerName;
                         String[] targetPlayerTexture;
 
@@ -224,8 +249,7 @@ public class Coop {
                             }
                         }
 
-                        nInv.addItem(
-                                nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]),
+                        nInv.addItem(nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]),
                                         ChatColor.translateAlternateColorCodes('&',
                                                 configLoad.getString("Menu.Coop.Item.Coop.Displayname")
                                                         .replace("%player", targetPlayerName)),
@@ -238,7 +262,7 @@ public class Coop {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Coop.Title")));
             nInv.setRows(6);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(skyblock, nInv::open);
         }
     }
 }

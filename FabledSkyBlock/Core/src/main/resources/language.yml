@@ -320,7 +320,7 @@ Command:
           Message: '&f&oSets the spawn point to your location.'
     Coop:
       Invalid:
-        Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island coop [<player>]'
+        Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island coop <player> [temp]'
       Removed:
         Sender:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have removed the coop of &d%player&e.'
@@ -340,8 +340,12 @@ Command:
         Message: '&bSkyBlock &8| &cError&8: &eYou cannot coop yourself because you''re already a Member of the Island.'
       Added:
         Message: '&bSkyBlock &8| &aInfo&8: &eYou have cooped &d%player&e.'
+      AddedTemp:
+        Message: '&bSkyBlock &8| &aInfo&8: &eYou have temporally cooped &d%player&e.'
       AddedTarget:
         Message: '&bSkyBlock &8| &aInfo&8: &eYou have been cooped on &d%player''s&e island.'
+      AddedTempTarget:
+        Message: '&bSkyBlock &8| &aInfo&8: &eYou have been temporally cooped on &d%player''s&e island.'
       Banned:
         Message: '&bSkyBlock &8| &cError&8: &eYou cannot coop a banned player.'
       Permission:
@@ -2990,6 +2994,8 @@ Menu:
         - '&eClick to remove player!'
       Word:
         Enter: Enter player
+        Normal: 'Normal'
+        Temp: 'Temp'
       Next:
         Displayname: '&aNext Page >'
       Nothing:

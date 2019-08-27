@@ -1246,7 +1246,7 @@ public class IslandManager {
 
         if (island != null) {
             for (Player all : Bukkit.getOnlinePlayers()) {
-                if (island.getCoopPlayers().contains(all.getUniqueId())) {
+                if (island.getCoopPlayers().containsKey(all.getUniqueId())) {
                     if (isPlayerAtIsland(island, all)) {
                         coopPlayersAtIsland.add(all.getUniqueId());
                     }
@@ -1359,7 +1359,7 @@ public class IslandManager {
         for (UUID islandList : getIslands().keySet()) {
             Island island = getIslands().get(islandList);
 
-            if (island.getCoopPlayers().contains(player.getUniqueId())) {
+            if (island.getCoopPlayers().containsKey(player.getUniqueId())) {
                 islands.add(island);
             }
         }
