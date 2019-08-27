@@ -2988,7 +2988,7 @@ Menu:
         - ''
         - '&eClick to coop a player!'
       Coop:
-        Displayname: '&a%player'
+        Displayname: '&a%player &7- &e%type'
         Lore:
         - ''
         - '&eClick to remove player!'

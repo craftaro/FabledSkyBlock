@@ -55,6 +55,9 @@ public class Coop {
             Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
+            String normal = configLoad.getString("Menu.Coop.Item.Word.Normal");
+            String temp = configLoad.getString("Menu.Coop.Item.Word.Temp");
+
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (playerDataManager.hasPlayerData(player)) {
                     PlayerData playerData = playerDataManager.getPlayerData(player);
@@ -93,9 +96,6 @@ public class Coop {
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Coop.Item.Information.Displayname"))))) {
                         soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
-
-                        String normal = configLoad.getString("Menu.Coop.Item.Word.Normal");
-                        String temp = configLoad.getString("Menu.Coop.Item.Word.Temp");
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
                             AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
@@ -230,6 +230,7 @@ public class Coop {
                         inventorySlot++;
 
                         UUID targetPlayerUUID = (UUID) coopPlayers.keySet().toArray()[index];
+                        IslandCoop type = (IslandCoop) coopPlayers.values().toArray()[index];
                         String targetPlayerName;
                         String[] targetPlayerTexture;
 
@@ -252,7 +253,8 @@ public class Coop {
                         nInv.addItem(nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]),
                                         ChatColor.translateAlternateColorCodes('&',
                                                 configLoad.getString("Menu.Coop.Item.Coop.Displayname")
-                                                        .replace("%player", targetPlayerName)),
+                                                        .replace("%player", targetPlayerName)
+                                                        .replace("%type", type == IslandCoop.TEMP ? temp : normal)),
                                         configLoad.getStringList("Menu.Coop.Item.Coop.Lore"), null, null, null),
                                 inventorySlot);
                     }
