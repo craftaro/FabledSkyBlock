@@ -103,6 +103,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 new RemoveHologramCommand(),
                 new RemoveUpgradeCommand(),
                 new SetBiomeCommand(),
+                new SetAlwaysLoadedCommand(),
                 new SetHologramCommand(),
                 new SetSizeCommand(),
                 new com.songoda.skyblock.command.commands.admin.SetSpawnCommand(),

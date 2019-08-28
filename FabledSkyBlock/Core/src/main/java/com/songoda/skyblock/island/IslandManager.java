@@ -10,7 +10,6 @@ import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.invite.Invite;
 import com.songoda.skyblock.invite.InviteManager;
-import com.songoda.skyblock.levelling.LevelChunkSnapshotWrapper;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -70,6 +69,10 @@ public class IslandManager {
 
         for (Player all : Bukkit.getOnlinePlayers()) {
             loadIsland(all);
+        }
+        for (Island island : getIslands().values()) {
+            if (island.isAlwaysLoaded())
+                loadIslandAtLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island));
         }
     }
 
@@ -599,15 +602,14 @@ public class IslandManager {
     }
 
     public void unloadIsland(Island island, org.bukkit.OfflinePlayer player) {
+        if (island.isAlwaysLoaded()) return;
         ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
         FileManager fileManager = skyblock.getFileManager();
 
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (island.isDeleted()) {
-            return;
-        }
+        if (island.isDeleted()) return;
 
         island.save();
 

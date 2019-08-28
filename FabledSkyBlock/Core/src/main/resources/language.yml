@@ -224,6 +224,13 @@ Command:
           Message: '&bSkyBlock &8| &cError&8: &eYou must enter a numerical value.'
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player> <size>'
+      SetAlwaysLoaded:
+        IsOn:
+          Message: '&bSkyBlock &8| &aInfo&8: &eThis island will not unload.'
+        IsOff:
+          Message: '&bSkyBlock &8| &aInfo&8: &eThis island will unload.'
+        Info:
+          Message: '&f&oKeeps an island from unloading.'
       AddUpgrade:
         Info:
           Message: '&f&oAdd an upgrade to a player''s Island.'

@@ -460,6 +460,18 @@ public class Island {
         return coopPlayers.getOrDefault(uuid, null);
     }
 
+    public void setAlwaysLoaded(boolean alwaysLoaded) {
+        skyblock.getFileManager().getConfig(
+                new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
+                .getFileConfiguration().set("AlwaysLoaded", alwaysLoaded);
+    }
+
+    public boolean isAlwaysLoaded() {
+        return skyblock.getFileManager().getConfig(
+                new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
+                .getFileConfiguration().getBoolean("AlwaysLoaded", false);
+    }
+
     public Set<UUID> getRole(IslandRole role) {
         Set<UUID> islandRoles = new HashSet<>();
 
