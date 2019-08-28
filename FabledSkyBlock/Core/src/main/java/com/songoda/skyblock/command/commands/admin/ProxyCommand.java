@@ -54,14 +54,14 @@ public class ProxyCommand extends SubCommand {
             if (islandManager.containsIsland(islandOwnerUUID)) {
                 if (islandManager.isPlayerProxyingAnotherPlayer(((Player)sender).getUniqueId())) {
                     messageManager.sendMessage(sender,
-                            configLoad.getString("Command.Island.Admin.Proxy.IsOff.Message")
+                            configLoad.getString("Command.Island.Admin.Proxy.IsOffPlayer.Message")
                                     .replace("%player", targetPlayer.getName()));
                     soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
                     islandManager.removeProxyingPlayer(((Player)sender).getUniqueId());
                 } else {
                     messageManager.sendMessage(sender,
-                            configLoad.getString("Command.Island.Admin.Proxy.IsOnPlayer.Message")
+                            configLoad.getString("Command.Island.Admin.Proxy.IsOn.Message")
                                     .replace("%player", targetPlayer.getName()));
                     soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
