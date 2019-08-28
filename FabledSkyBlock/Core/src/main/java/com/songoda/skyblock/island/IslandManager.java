@@ -52,6 +52,7 @@ public class IslandManager {
     private double x = 0, offset = 1200;
 
     private List<IslandPosition> islandPositions = new ArrayList<>();
+    private Map<UUID, UUID> islandProxies = new HashMap<>();
     private Map<UUID, Island> islandStorage = new HashMap<>();
 
     public IslandManager(SkyBlock skyblock) {
@@ -983,11 +984,15 @@ public class IslandManager {
     public Island getIsland(org.bukkit.OfflinePlayer offlinePlayer) {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
 
+        UUID uuid = offlinePlayer.getUniqueId();
+        if (islandProxies.containsKey(uuid))
+            uuid = islandProxies.get(uuid);
+
         // TODO: Find out how this can be fixed without this, for some reason IslandManager tries to load PlayerDataManager before it's even loaded
         if (playerDataManager == null) return null;
 
-        if (islandStorage.containsKey(offlinePlayer.getUniqueId())) {
-            return islandStorage.get(offlinePlayer.getUniqueId());
+        if (islandStorage.containsKey(uuid)) {
+            return islandStorage.get(uuid);
         }
 
         if (offlinePlayer.isOnline()) {
@@ -1379,6 +1384,22 @@ public class IslandManager {
         }
 
         return null;
+    }
+
+    public boolean isPlayerProxyingAnotherPlayer(UUID proxying) {
+        return islandProxies.containsKey(proxying);
+    }
+
+    public boolean isPlayerProxyingAnotherPlayer(UUID proxying, UUID proxied) {
+        return islandProxies.containsKey(proxying) && islandProxies.get(proxying) == proxied;
+    }
+
+    public void addProxiedPlayer(UUID toProxy, UUID proxied) {
+        islandProxies.put(toProxy, proxied);
+    }
+
+    public void removeProxyingPlayer(UUID toProxy) {
+        islandProxies.remove(toProxy);
     }
 
     public boolean isPlayerAtIsland(Island island, Player player) {

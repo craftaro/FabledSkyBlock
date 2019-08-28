@@ -579,7 +579,7 @@ public class Island {
 
     public boolean hasRole(IslandRole role, UUID uuid) {
         if (role == IslandRole.Owner) {
-            return getOwnerUUID().equals(uuid);
+            return getOwnerUUID().equals(uuid) || skyblock.getIslandManager().isPlayerProxyingAnotherPlayer(uuid, getOwnerUUID());
         }
 
         return getRole(role).contains(uuid);
