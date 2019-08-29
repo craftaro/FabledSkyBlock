@@ -224,6 +224,22 @@ Command:
           Message: '&bSkyBlock &8| &cError&8: &eYou must enter a numerical value.'
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player> <size>'
+      SetAlwaysLoaded:
+        IsOn:
+          Message: '&bSkyBlock &8| &aInfo&8: &eThis island will not unload.'
+        IsOff:
+          Message: '&bSkyBlock &8| &aInfo&8: &eThis island will unload.'
+        Info:
+          Message: '&f&oKeeps an island from unloading.'
+      Proxy:
+        IsOn:
+          Message: '&bSkyBlock &8| &aInfo&8: &eYou are now proxying %player.'
+        IsOffPlayer:
+          Message: '&bSkyBlock &8| &aInfo&8: &eYou are no longer proxying %player.'
+        IsOff:
+          Message: '&bSkyBlock &8| &aInfo&8: &eYou are no longer proxying a player.'
+        Info:
+          Message: '&f&oAllows you to execute island commands as another player.'
       AddUpgrade:
         Info:
           Message: '&f&oAdd an upgrade to a player''s Island.'
@@ -292,6 +308,15 @@ Command:
       Level:
         Info:
           Message: '&f&oChange Island level materials and points.'
+      LevelScan:
+        Info:
+          Message: '&f&oLevel scan another player''s island.'
+        Invalid:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin levelscan <player>'
+        NoIsland:
+          Message: '&bSkyBlock &8| &cError&8: &eA player with that name does not own an island.'
+        Started:
+          Message: '&bSkyBlock &8| &aInfo&8: &eThe level scan has been queued or started.'
       Owner:
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin Owner <player>'
@@ -311,7 +336,7 @@ Command:
           Message: '&f&oSets the spawn point to your location.'
     Coop:
       Invalid:
-        Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island coop [<player>]'
+        Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island coop <player> [temp]'
       Removed:
         Sender:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have removed the coop of &d%player&e.'
@@ -331,8 +356,12 @@ Command:
         Message: '&bSkyBlock &8| &cError&8: &eYou cannot coop yourself because you''re already a Member of the Island.'
       Added:
         Message: '&bSkyBlock &8| &aInfo&8: &eYou have cooped &d%player&e.'
+      AddedTemp:
+        Message: '&bSkyBlock &8| &aInfo&8: &eYou have temporally cooped &d%player&e.'
       AddedTarget:
         Message: '&bSkyBlock &8| &aInfo&8: &eYou have been cooped on &d%player''s&e island.'
+      AddedTempTarget:
+        Message: '&bSkyBlock &8| &aInfo&8: &eYou have been temporally cooped on &d%player''s&e island.'
       Banned:
         Message: '&bSkyBlock &8| &cError&8: &eYou cannot coop a banned player.'
       Permission:
@@ -2147,6 +2176,20 @@ Menu:
         - ''
         - '&eClick to view Island Visitors!'
         Displayname: '&aIsland Visitors'
+      Upgrades:
+        Displayname: '&aIsland Upgrades'
+        Lore:
+        - '&7[&f!&7] Upgrade your island'
+        - '    &7and unlock amazing perks'
+        - ''
+        - '&eClick to view Island Upgrades!'
+      Lock:
+        Displayname: '&aIsland Lock'
+        Lore:
+        - '&7[&f!&7] Open or close your'
+        - '    &7island for visitors'
+        - ''
+        - '&eClick to open/close your Island!'
       Barrier:
         Displayname: '&cIsland Control Panel'
     Title: '&8Island Control Panel'
@@ -2961,12 +3004,14 @@ Menu:
         - ''
         - '&eClick to coop a player!'
       Coop:
-        Displayname: '&a%player'
+        Displayname: '&a%player &7- &e%type'
         Lore:
         - ''
         - '&eClick to remove player!'
       Word:
         Enter: Enter player
+        Normal: 'Normal'
+        Temp: 'Temp'
       Next:
         Displayname: '&aNext Page >'
       Nothing:
