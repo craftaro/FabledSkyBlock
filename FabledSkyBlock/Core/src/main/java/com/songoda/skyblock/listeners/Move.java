@@ -202,14 +202,14 @@ public class Move implements Listener {
             }
 
             // Load the island they are now on if one exists
-            if (player.hasPermission("fabledskyblock.bypass")
-                    || islandManager.getIslandAtLocation(player.getLocation()).isAlwaysLoaded()) {
+            if (player.hasPermission("fabledskyblock.bypass")) {
                 Island loadedIsland = islandManager.loadIslandAtLocation(player.getLocation());
                 if (loadedIsland != null) {
                     playerData.setIsland(loadedIsland.getOwnerUUID());
                     return;
                 }
             }
+
 
             LocationUtil.teleportPlayerToSpawn(player);
 
