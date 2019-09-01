@@ -391,11 +391,12 @@ public class IslandManager {
         WorldManager worldManager = skyblock.getWorldManager();
 
         // Delete island from world.
-        Bukkit.getScheduler().runTask(skyblock, () -> {
-            for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
+        long i = 0;
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
+            Bukkit.getScheduler().runTaskLater(skyblock, () -> {
                 org.bukkit.World world = worldManager.getWorld(worldList);
                 Location location = island.getLocation(worldList, IslandEnvironment.Island);
-                if (location == null) continue;
+                if (location == null) return;
                 int size = island.getSize();
                 int xx = location.getBlockX() - size / 2;
                 int zz = location.getBlockZ() - size / 2;
@@ -406,8 +407,9 @@ public class IslandManager {
                         }
                     }
                 }
-            }
-        });
+            }, i);
+            i += 20L;
+        }
 
         skyblock.getVisitManager().deleteIsland(island.getOwnerUUID());
         skyblock.getBanManager().deleteIsland(island.getOwnerUUID());
