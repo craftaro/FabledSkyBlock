@@ -41,31 +41,24 @@ public class ProxyCommand extends SubCommand {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
-            Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
-            UUID islandOwnerUUID;
-
-            if (targetPlayer == null) {
-                OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
-                islandOwnerUUID = targetPlayerOffline.getOwner();
-            } else {
-                islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
-            }
+            OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
+            UUID islandOwnerUUID = targetPlayerOffline.getOwner();
 
             if (islandManager.containsIsland(islandOwnerUUID)) {
                 if (islandManager.isPlayerProxyingAnotherPlayer(((Player)sender).getUniqueId())) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.Proxy.IsOffPlayer.Message")
-                                    .replace("%player", targetPlayer.getName()));
+                                    .replace("%player", targetPlayerOffline.getName()));
                     soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
                     islandManager.removeProxyingPlayer(((Player)sender).getUniqueId());
                 } else {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.Proxy.IsOn.Message")
-                                    .replace("%player", targetPlayer.getName()));
+                                    .replace("%player", targetPlayerOffline.getName()));
                     soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-                    islandManager.addProxiedPlayer(((Player)sender).getUniqueId(), targetPlayer.getUniqueId());
+                    islandManager.addProxiedPlayer(((Player)sender).getUniqueId(), targetPlayerOffline.getUniqueId());
                 }
             }
         } else if (args.length == 0){
