@@ -20,7 +20,7 @@ public class PlayerIslandLeaveEvent extends PlayerEvent implements Cancellable {
         return HANDLERS;
     }
 
-    public HandlerList getHandlerList() {
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 
