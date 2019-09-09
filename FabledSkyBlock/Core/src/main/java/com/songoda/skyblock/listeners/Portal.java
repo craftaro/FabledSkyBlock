@@ -122,7 +122,7 @@ public class Portal implements Listener {
             } else if (System.currentTimeMillis() - tick.getLast() >= 1000) {
                 tick.setLast(System.currentTimeMillis());
             }
-            if (tick.getTick() >= 300) {
+            if (tick.getTick() >= 100) {
                 messageManager.sendMessage(player,
                         fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                 .getString("Island.Portal.Stuck.Message"));

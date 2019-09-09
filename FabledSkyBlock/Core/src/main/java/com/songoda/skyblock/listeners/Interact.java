@@ -44,7 +44,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.util.Set;
 
 public class Interact implements Listener {
 
@@ -514,6 +513,7 @@ public class Interact implements Listener {
                     }
 
                     ItemStack is = event.getPlayer().getItemInHand();
+                    boolean hasEye = ((block.getData() >> 2) & 1) == 1;
 
                     if (is == null || is.getType() == Material.AIR) {
                         if (stackableManager != null && stackableManager.isStacked(block.getLocation())) {
@@ -528,6 +528,7 @@ public class Interact implements Listener {
                         }
 
                         player.getInventory().addItem(new ItemStack(Materials.END_PORTAL_FRAME.parseMaterial(), 1));
+                        if (hasEye) player.getInventory().addItem(new ItemStack(Materials.ENDER_EYE.parseMaterial(), 1));
                         player.updateInventory();
 
                         FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));

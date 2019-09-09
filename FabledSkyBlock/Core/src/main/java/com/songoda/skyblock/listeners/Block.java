@@ -250,6 +250,9 @@ public class Block implements Listener {
         if (!configLoad.getBoolean("Island.Block.Level.Enable"))
             return;
 
+        if (event.getBlock().getType() == Materials.END_PORTAL_FRAME.parseMaterial()
+            && event.getPlayer().getItemInHand().getType() == Materials.ENDER_EYE.parseMaterial()) return;
+
         // Fix a bug in Paper 1.8.8 when using ViaVersion on a 1.12.2 client.
         // BUG: Player can infinitely increase their level by placing a block at their feet.
         // It doesn't take the block away but still increments the level.
