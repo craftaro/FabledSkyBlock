@@ -210,6 +210,8 @@ Island:
             Island: true
             # The Y position that the player is teleported when reached.
             Offset: 30
+            # When enabled, the players inventory and XP will be cleared when they fall off of the Island.
+            ClearInventory: false
     Block:
         Obsidian:
             # When enabled, players can right-click an obsidian block to retrieve lava at an Island.

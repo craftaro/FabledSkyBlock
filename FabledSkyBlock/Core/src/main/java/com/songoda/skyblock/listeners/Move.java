@@ -142,7 +142,7 @@ public class Move implements Listener {
 
                         if (configLoad.getBoolean("Island.Void.Teleport.Enable")) {
                             if (to.getY() <= configLoad.getInt("Island.Void.Teleport.Offset")) {
-                                if (!keepItemsOnDeath) {
+                                if (configLoad.getBoolean("Island.Void.Teleport.ClearInventory")) {
                                     player.getInventory().clear();
                                     player.setLevel(0);
                                     player.setExp(0.0F);

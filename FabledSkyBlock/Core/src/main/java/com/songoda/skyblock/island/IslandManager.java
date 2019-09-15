@@ -1223,7 +1223,9 @@ public class IslandManager {
     }
 
     public void updateFlight(Player player) {
-        if (player.getGameMode() == GameMode.CREATIVE)
+        // The player can fly in other worlds if they are in creative or have another plugin's fly permission.
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR
+                || player.hasPermission("essentials.fly") || player.hasPermission("cmi.command.fly"))
             return;
 
         Island island = getIslandAtLocation(player.getLocation());
