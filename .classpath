@@ -147,4 +147,9 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Sean Grover/OneDrive/Projects/workspace/Skyblock/libraries/Skyblock-LegacyChunkSnapshot.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
 </classpath>

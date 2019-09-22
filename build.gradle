@@ -88,6 +88,8 @@ dependencies {
 	// Songoda Updater
 	shade (group: 'com.songoda', name: 'songodaupdater', version: '1')
 
+	shade fileTree(dir: 'libraries', include: '*.jar')
+
 }
 
 processResources {
