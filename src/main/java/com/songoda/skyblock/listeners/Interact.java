@@ -5,6 +5,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.levelling.LevellingManager;
 import com.songoda.skyblock.limit.LimitManager;
 import com.songoda.skyblock.message.MessageManager;
@@ -17,6 +18,8 @@ import com.songoda.skyblock.utils.structure.StructureUtil;
 import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
+import com.songoda.skyblock.world.WorldManager;
+
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -196,6 +199,15 @@ public class Interact implements Listener {
 
                 level.setMaterialAmount(materials.name(), materialAmount + 1);
                 return;
+            }
+            
+            // Check if the clicked block is outside of the border.
+            WorldManager worldManager = skyblock.getWorldManager();
+            org.bukkit.block.Block clickedBlock = event.getClickedBlock();
+            IslandWorld world = worldManager.getIslandWorld(clickedBlock.getWorld());
+            if (!islandManager.isLocationAtIsland(island, clickedBlock.getLocation(), world)) {
+            	event.setCancelled(true);
+            	return;
             }
 
             if (event.getItem() != null && event.getItem().getType() == Materials.BONE_MEAL.parseMaterial() && !islandManager.hasPermission(player, block.getLocation(), "Place")) {
@@ -597,7 +609,8 @@ public class Interact implements Listener {
 
                         player.updateInventory();
                     }
-                } else if (event.getItem().getType() == Material.ARMOR_STAND) {
+                } else if (event.getItem().getType() == Material.ARMOR_STAND || event.getItem().getType().name().contains("BOAT")
+                		|| event.getItem().getType().name().contains("MINECART")) {
                     if (!islandManager.hasPermission(player, block.getLocation(), "EntityPlacement")) {
                         event.setCancelled(true);
 
