@@ -44,11 +44,7 @@ public final class WorldBorder {
 
             Object worldBorder = worldBorderClass.getConstructor().newInstance();
 
-            if (NMSUtil.getVersionNumber() < 9) {
-                Field borderSize = worldBorder.getClass().getDeclaredField("d");
-                borderSize.setAccessible(true);
-                borderSize.set(worldBorder, size);
-            } else {
+            if (NMSUtil.getVersionNumber() >= 9) {
                 Object craftWorld = craftWorldClass.cast(centerLocation.getWorld());
                 Method getHandleMethod = craftWorld.getClass().getMethod("getHandle");
                 Object worldServer = getHandleMethod.invoke(craftWorld);
