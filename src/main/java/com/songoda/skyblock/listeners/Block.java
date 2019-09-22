@@ -587,8 +587,7 @@ public class Block implements Listener {
 
         List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
 
-        if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-                && island.isUpgrade(Upgrade.Type.Crop)) {
+        if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Crop)) {
             if (NMSUtil.getVersionNumber() > 12) {
                 try {
                     Object blockData = block.getClass().getMethod("getBlockData").invoke(block);
@@ -605,11 +604,13 @@ public class Block implements Listener {
                     e.printStackTrace();
                 }
             } else {
+            	Material type = block.getType();
                 if (block.getState().getData() instanceof Crops
-                        || block.getType().name().equals("BEETROOT_BLOCK")
-                        || block.getType().name().equals("CARROT")
-                        || block.getType().name().equals("POTATO")
-                        || block.getType().name().equals("CROPS")) {
+                        || type.name().equals("BEETROOT_BLOCK")
+                        || type.name().equals("CARROT")
+                        || type.name().equals("POTATO")
+                        || type.name().equals("WHEAT")
+                        || type.name().equals("CROPS")) {
                     try {
                         block.getClass().getMethod("setData", byte.class).invoke(block, (byte) (block.getData() + 1));
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException

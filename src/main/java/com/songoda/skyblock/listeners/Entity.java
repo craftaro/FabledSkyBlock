@@ -686,6 +686,7 @@ public class Entity implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 		if (event.getEntity() instanceof ArmorStand
