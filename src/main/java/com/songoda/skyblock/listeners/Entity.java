@@ -1,5 +1,6 @@
 package com.songoda.skyblock.listeners;
 
+import com.google.common.collect.Sets;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -689,37 +690,37 @@ public class Entity implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if (event.getEntity() instanceof ArmorStand
-				|| event.getEntity() instanceof FallingBlock
-				|| event.getEntity() instanceof org.bukkit.entity.Item) {
+		LivingEntity entity = event.getEntity();
+		if (entity instanceof ArmorStand)
+			return;
+		if (entity.hasMetadata("SkyBlock"))
+			return;
+
+		SpawnReason reason = event.getSpawnReason();
+		Set<SpawnReason> reasons = Sets.newHashSet(SpawnReason.NATURAL, SpawnReason.JOCKEY, SpawnReason.MOUNT, SpawnReason.valueOf("RAID"), SpawnReason.valueOf("PATROL"));
+		// Check that the reason of this event is not any of these above.
+		if (!reasons.stream().filter(r -> r != null).anyMatch(r -> r == reason))
+			return;
+
+		if (!skyblock.getWorldManager().isIslandWorld(entity.getWorld()))
+			return;
+		if (skyblock.getIslandManager().hasSetting(entity.getLocation(), IslandRole.Owner, "NaturalMobSpawning"))
+			return;
+		if (event.getSpawnReason() != SpawnReason.JOCKEY && event.getSpawnReason() != SpawnReason.MOUNT) {
+			entity.remove(); // Older versions ignore the event being cancelled, so this fixes that issue.
 			return;
 		}
-
-		if (!(event.getSpawnReason() == SpawnReason.NATURAL || event.getSpawnReason() == SpawnReason.JOCKEY || event.getSpawnReason() == SpawnReason.MOUNT))
-			return;
-
-		LivingEntity livingEntity = event.getEntity();
-
-		if (livingEntity.hasMetadata("SkyBlock"))
-			return;
-
-		if (skyblock.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
-			if (!skyblock.getIslandManager().hasSetting(livingEntity.getLocation(), IslandRole.Owner, "NaturalMobSpawning")) {
-				if (event.getSpawnReason() == SpawnReason.JOCKEY || event.getSpawnReason() == SpawnReason.MOUNT) {
-					Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
-						if (NMSUtil.getVersionNumber() > 10) { // getPassengers() was added in 1.11
-							for (org.bukkit.entity.Entity passenger : livingEntity.getPassengers())
-								passenger.remove();
-						} else {
-							if (livingEntity.getPassenger() != null)
-								livingEntity.getPassenger().remove();
-						}
-						livingEntity.remove();
-					});
-				} else {
-					livingEntity.remove();
-				}
+		Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
+			if (NMSUtil.getVersionNumber() > 10) { // getPassengers() was added in 1.11
+				for (org.bukkit.entity.Entity passenger : entity.getPassengers())
+					passenger.remove();
+			} else {
+				if (entity.getPassenger() != null)
+					entity.getPassenger().remove();
 			}
-		}
+			entity.remove();
+		});
+		event.setCancelled(true); // For other plugin API reasons.
 	}
+
 }
