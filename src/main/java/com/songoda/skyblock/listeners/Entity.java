@@ -42,6 +42,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -697,7 +698,7 @@ public class Entity implements Listener {
 			return;
 
 		SpawnReason reason = event.getSpawnReason();
-		Set<SpawnReason> reasons = Sets.newHashSet(SpawnReason.NATURAL, SpawnReason.JOCKEY, SpawnReason.MOUNT, SpawnReason.valueOf("RAID"), SpawnReason.valueOf("PATROL"));
+		Set<SpawnReason> reasons = Sets.newHashSet(SpawnReason.NATURAL, SpawnReason.JOCKEY, SpawnReason.MOUNT, getSpawnReason("RAID"), getSpawnReason("PATROL"));
 		// Check that the reason of this event is not any of these above.
 		if (!reasons.stream().filter(r -> r != null).anyMatch(r -> r == reason))
 			return;
@@ -721,6 +722,14 @@ public class Entity implements Listener {
 			entity.remove();
 		});
 		event.setCancelled(true); // For other plugin API reasons.
+	}
+
+	private SpawnReason getSpawnReason(String reason) {
+		try {
+			return SpawnReason.valueOf(reason);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }
