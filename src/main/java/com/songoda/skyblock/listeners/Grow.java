@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.data.Ageable;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockGrowEvent;
@@ -92,11 +90,18 @@ public class Grow implements Listener {
 			return;
 
 		if (NMSUtil.getVersionNumber() > 12) {
-			BlockData data = block.getBlockData();
-			if (data instanceof Ageable) {
-				Ageable ageable = (Ageable) data;
-				ageable.setAge(ageable.getAge() + 1);
-				block.setBlockData(ageable);
+			try {
+				Object blockData = block.getClass().getMethod("getBlockData").invoke(block);
+				if (blockData instanceof org.bukkit.block.data.Ageable) {
+					org.bukkit.block.data.Ageable ageable = (org.bukkit.block.data.Ageable) blockData;
+					ageable.setAge(ageable.getAge() + 1);
+					block.getClass()
+							.getMethod("setBlockData", Class.forName("org.bukkit.block.data.BlockData"))
+							.invoke(block, ageable);
+				}
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException | ClassNotFoundException e) {
+				e.printStackTrace();
 			}
 		} else {
 			Material type = block.getType();
