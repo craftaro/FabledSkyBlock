@@ -158,7 +158,7 @@ public class PlayerDataManager {
                             && fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                             .getFileConfiguration().getBoolean("Island.Visitor.Banning")
                             && banManager.getIsland(island.getOwnerUUID()).isBanned(player.getUniqueId())) {
-                        messageManager.sendMessage(player, configLoad.getString("Island.Visit.Teleport.Island.Message")
+                        messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Island.Message")
                                 .replace("%player", targetPlayerName));
                     } else {
                         if (island.hasRole(IslandRole.Member, player.getUniqueId())
@@ -273,7 +273,7 @@ public class PlayerDataManager {
                                 .getFileConfiguration().getBoolean("Island.Visitor.Banning")
                                 && banManager.getIsland(visitIslandList).isBanned(player.getUniqueId())) {
                             messageManager.sendMessage(player,
-                                    configLoad.getString("Island.Visit.Teleport.Island.Message").replace("%player",
+                                    configLoad.getString("Island.Visit.Banned.Island.Message").replace("%player",
                                             targetPlayerName));
                         } else {
                             org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer()
