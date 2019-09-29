@@ -7,6 +7,8 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.placeholder.PlaceholderManager;
 import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.skyblock.utils.version.NMSUtil;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -72,8 +74,8 @@ public class Scoreboard {
 
                         String formattedDisplayName = ChatColor.translateAlternateColorCodes('&',
                                 replaceDisplayName(displayName));
-
-                        if (formattedDisplayName.length() > 32) {
+                        int max = NMSUtil.getVersionNumber() > 8 ? 32 : 16;
+                        if (formattedDisplayName.length() > max) {
                             obj.setDisplayName(ChatColor.RED + "Too long...");
                         } else {
                             obj.setDisplayName(formattedDisplayName);
@@ -101,7 +103,7 @@ public class Scoreboard {
                                     String formattedDisplayName = ChatColor.translateAlternateColorCodes('&',
                                             replaceDisplayName(displayName));
 
-                                    if (formattedDisplayName.length() > 32) {
+                                    if (formattedDisplayName.length() > max) {
                                         obj.setDisplayName(ChatColor.RED + "Too long...");
                                     } else {
                                         obj.setDisplayName(formattedDisplayName);
