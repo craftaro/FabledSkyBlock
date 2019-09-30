@@ -3,7 +3,7 @@ image: gradle:alpine
 variables:
   name: "FabledSkyBlock"
   path: "/builds/$CI_PROJECT_PATH"
-  version: "2.0.1"
+  version: "2.0.2"
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
