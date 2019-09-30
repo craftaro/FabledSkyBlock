@@ -291,6 +291,9 @@ public class Entity implements Listener {
 			return;
 
 		org.bukkit.entity.Entity target = event.getTarget();
+		// Somehow the target can be null, thanks Spigot.
+		if (target == null)
+			return;
 
 		IslandManager islandManager = skyblock.getIslandManager();
 		Island entityIsland = islandManager.getIslandAtLocation(entity.getLocation());
