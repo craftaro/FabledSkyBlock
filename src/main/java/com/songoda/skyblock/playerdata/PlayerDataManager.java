@@ -47,8 +47,8 @@ public class PlayerDataManager {
     }
 
     public void onDisable() {
-        for (UUID playerDataStorageList : playerDataStorage.keySet()) {
-            playerDataStorage.get(playerDataStorageList).save();
+        for (PlayerData data : playerDataStorage.values()) {
+            data.save();
         }
     }
 
