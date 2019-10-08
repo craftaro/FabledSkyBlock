@@ -69,6 +69,10 @@ public class StackableManager {
     public List<Material> getStackableMaterials() {
         return Collections.unmodifiableList(stackableMaterials);
     }
+    
+    public boolean isStackableMaterial(Material material) {
+        return stackableMaterials.contains(material);
+    }
 
     public Map<Location, Stackable> getStacks() {
         return Collections.unmodifiableMap(stacks);
