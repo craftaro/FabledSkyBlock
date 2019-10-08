@@ -25,7 +25,7 @@ public class Stackable {
 
     private Location location;
     private Material material;
-    private Integer size = 2;
+    private int size = 2;
     private ArmorStand display;
 
     public Stackable(Location location, Material material) {
@@ -66,11 +66,11 @@ public class Stackable {
         this.save();
     }
 
-    public Integer getSize() {
+    public int getSize() {
         return this.size;
     }
 
-    public void setSize(Integer size) {
+    public void setSize(int size) {
         this.size = size;
         this.updateDisplay();
         this.save();

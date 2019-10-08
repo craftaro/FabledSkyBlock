@@ -48,9 +48,11 @@ public class StackableManager {
             FileManager.Config config = fileManager.getConfig(new File(configFile, file.getName()));
             FileConfiguration configLoad = config.getFileConfiguration();
             ConfigurationSection cs = configLoad.getConfigurationSection("Stackables");
-            if (cs == null || cs.getKeys(false) == null) continue;
-            for (String uuid : cs.getKeys(false)) {
-                ConfigurationSection section = configLoad.getConfigurationSection("Stackables." + uuid);
+            if (cs == null) continue;
+            Set<String> keys = cs.getKeys(false);
+            if (keys == null) continue;
+            for (String uuid : keys) {
+                ConfigurationSection section = cs.getConfigurationSection(uuid);
                 Location location = (Location) section.get("Location");
                 org.bukkit.Material material = org.bukkit.Material.valueOf(section.getString("Material"));
                 int size = section.getInt("Size");

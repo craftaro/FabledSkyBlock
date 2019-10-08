@@ -47,8 +47,8 @@ public class PlayerDataManager {
     }
 
     public void onDisable() {
-        for (UUID playerDataStorageList : playerDataStorage.keySet()) {
-            playerDataStorage.get(playerDataStorageList).save();
+        for (PlayerData data : playerDataStorage.values()) {
+            data.save();
         }
     }
 
@@ -118,11 +118,7 @@ public class PlayerDataManager {
     }
 
     public PlayerData getPlayerData(Player player) {
-        if (hasPlayerData(player)) {
-            return playerDataStorage.get(player.getUniqueId());
-        }
-
-        return null;
+        return playerDataStorage.get(player.getUniqueId());
     }
 
     public boolean hasPlayerData(Player player) {
