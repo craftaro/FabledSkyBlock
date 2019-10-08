@@ -68,12 +68,15 @@ public class StackableCommand extends SubCommand {
                 return;
             }
 
+            final int oldSize;
+
             if (stack == null) {
                 stack = new Stackable(loc, block.getType());
                 stackableManager.addStack(stack);
+                oldSize = 0;
+            } else {
+                oldSize = stack.getSize();
             }
-
-            final int oldSize = stack.getSize();
 
             stack.setSize(amount);
 
