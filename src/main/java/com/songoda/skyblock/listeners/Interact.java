@@ -141,7 +141,7 @@ public class Interact implements Listener {
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (stackableManager != null
-                    && stackableManager.getStackableMaterials().contains(event.getMaterial())
+                    && stackableManager.isStackableMaterial(event.getMaterial())
                     && event.getClickedBlock().getType() == event.getMaterial()
                     && !player.isSneaking() && islandManager.hasPermission(player, block.getLocation(), "Place")
                     && (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission") || player.hasPermission("fabledskyblock.stackable"))) {
