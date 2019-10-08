@@ -15,7 +15,7 @@ public class StackableManager {
     //ToDO: Should pobably be a GUI for this
 
     private final SkyBlock skyblock;
-    private List<Material> stackableMaterials = new ArrayList<>();
+    private Set<Material> stackableMaterials = EnumSet.noneOf(Material.class);
     private Map<Location, Stackable> stacks = new HashMap<>();
 
     public StackableManager(SkyBlock skyblock) {
@@ -66,8 +66,8 @@ public class StackableManager {
         stackableMaterials.clear();
     }
 
-    public List<Material> getStackableMaterials() {
-        return Collections.unmodifiableList(stackableMaterials);
+    public Set<Material> getStackableMaterials() {
+        return Collections.unmodifiableSet(stackableMaterials);
     }
     
     public boolean isStackableMaterial(Material material) {
