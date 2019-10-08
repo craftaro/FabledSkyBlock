@@ -3,6 +3,8 @@ package com.songoda.skyblock.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.md_5.bungee.api.ChatColor;
+
 public final class StringUtil {
 
     public static String capatilizeUppercaseLetters(String string) {
@@ -18,5 +20,9 @@ public final class StringUtil {
         }
 
         return stringBuilder.toString();
+    }
+
+    public static String color(String input) {
+        return input == null ? null : ChatColor.translateAlternateColorCodes('&', input);
     }
 }

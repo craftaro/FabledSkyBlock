@@ -142,6 +142,17 @@ Command:
           Message: '&f&oReload all loaded files.'
         Reloaded:
           Message: '&bSkyBlock &8| &aInfo&8: &eAll loaded files have been reloaded.'
+      Stackable:
+       Info:
+        Message: '&f&oManage stackables'
+       Target:
+        None:  '&bSkyBlock &8| &cError&8: &eYou must be looking at a block.'
+        Unstackable: '&bSkyBlock &8| &cError&8: &eUnable to target unstackable block.' 
+        Remove-Stack: '&bSkyBlock &8| &aInfo&8: &eSuccessfully removed stack if one was present.'
+       Setsize:
+        No-Arguments: '&bSkyBlock &8| &cError&8: &ePlease input a number that will become the new stack size.'
+        Invalid-Number: '&bSkyBlock &8| &cError&8: &eFailed to parse a number from %number%'
+        Success: '&bSkyBlock &8| &aInfo&8: &eSuccessfully changed the target block''s stack size from %old_size% to %new_size%'
       RemoveUpgrade:
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin removeupgrade <player> <upgrade>'
