@@ -518,7 +518,7 @@ public class Interact implements Listener {
                         return;
 
                     if (Bukkit.getPluginManager().isPluginEnabled("EpicAnchors")) {
-                        if (com.songoda.epicanchors.EpicAnchorsPlugin.getInstance().getAnchorManager().getAnchor(block.getLocation()) != null) {
+                        if (com.songoda.epicanchors.EpicAnchors.getInstance().getAnchorManager().getAnchor(block.getLocation()) != null) {
                             event.setCancelled(true);
                             return;
                         }
