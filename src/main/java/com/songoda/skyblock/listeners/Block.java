@@ -99,7 +99,7 @@ public class Block implements Listener {
 
 				int droppedAmount = 0;
 				if (event.getPlayer().isSneaking()) {
-					Location dropLoc = event.getBlock().getLocation().clone().add(0.5, 0.5, 0.5);
+					Location dropLoc = event.getBlock().getLocation().add(0.5, 0.5, 0.5);
 					int count = stackable.getSize();
 					droppedAmount = count;
 					while (count > 64) {
@@ -110,7 +110,7 @@ public class Block implements Listener {
 					block.setType(Material.AIR);
 					stackable.setSize(0);
 				} else {
-					block.getWorld().dropItemNaturally(block.getLocation().clone().add(.5, 1, .5), new ItemStack(material, 1, data));
+					block.getWorld().dropItemNaturally(block.getLocation().add(.5, 1, .5), new ItemStack(material, 1, data));
 					stackable.takeOne();
 					droppedAmount = 1;
 				}

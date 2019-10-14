@@ -1,6 +1,8 @@
 package com.songoda.skyblock.utils.structure;
 
+import com.google.common.io.Files;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -32,203 +34,221 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 public final class StructureUtil {
 
-	public static void saveStructure(File configFile, org.bukkit.Location originLocation,
-									 org.bukkit.Location[] positions) throws Exception {
-		if (!configFile.exists()) {
-			configFile.createNewFile();
-		}
+    public static void saveStructure(File configFile, org.bukkit.Location originLocation,
+            org.bukkit.Location[] positions) throws Exception {
+        if (!configFile.exists()) {
+            configFile.createNewFile();
+        }
 
-		LinkedHashMap<Block, Location> blocks = SelectionLocation.getBlocks(originLocation, positions[0], positions[1]);
-		LinkedHashMap<Entity, Location> entities = SelectionLocation.getEntities(originLocation, positions[0],
-				positions[1]);
+        LinkedHashMap<Block, Location> blocks = SelectionLocation.getBlocks(originLocation, positions[0], positions[1]);
+        LinkedHashMap<Entity, Location> entities = SelectionLocation.getEntities(originLocation, positions[0],
+                positions[1]);
 
-		List<BlockData> blockData = new ArrayList<>();
-		List<EntityData> entityData = new ArrayList<>();
+        List<BlockData> blockData = new ArrayList<>();
+        List<EntityData> entityData = new ArrayList<>();
 
-		String originBlockLocation = "";
+        String originBlockLocation = "";
 
-		for (Block blockList : blocks.keySet()) {
-			Location location = blocks.get(blockList);
+        for (Block blockList : blocks.keySet()) {
+            Location location = blocks.get(blockList);
 
-			if (location.isOriginLocation()) {
-				originBlockLocation = location.getX() + ":" + location.getY() + ":" + location.getZ() + ":"
-						+ positions[0].getWorld().getName();
+            if (location.isOriginLocation()) {
+                originBlockLocation = location.getX() + ":" + location.getY() + ":" + location.getZ() + ":"
+                        + positions[0].getWorld().getName();
 
-				if (blockList.getType() == Material.AIR) {
-					blockData.add(BlockUtil.convertBlockToBlockData(blockList, location.getX(), location.getY(),
-							location.getZ()));
-				}
-			}
+                if (blockList.getType() == Material.AIR) {
+                    blockData.add(BlockUtil.convertBlockToBlockData(blockList, location.getX(), location.getY(),
+                            location.getZ()));
+                }
+            }
 
-			if (blockList.getType() == Material.AIR) {
-				continue;
-			}
+            if (blockList.getType() == Material.AIR) {
+                continue;
+            }
 
-			blockData.add(
-					BlockUtil.convertBlockToBlockData(blockList, location.getX(), location.getY(), location.getZ()));
-		}
+            blockData.add(
+                    BlockUtil.convertBlockToBlockData(blockList, location.getX(), location.getY(), location.getZ()));
+        }
 
-		for (Entity entityList : entities.keySet()) {
-			if (entityList.getType() == EntityType.PLAYER) {
-				continue;
-			}
+        for (Entity entityList : entities.keySet()) {
+            if (entityList.getType() == EntityType.PLAYER) {
+                continue;
+            }
 
-			Location location = entities.get(entityList);
-			entityData.add(EntityUtil.convertEntityToEntityData(entityList, location.getX(), location.getY(),
-					location.getZ()));
-		}
+            Location location = entities.get(entityList);
+            entityData.add(EntityUtil.convertEntityToEntityData(entityList, location.getX(), location.getY(),
+                    location.getZ()));
+        }
 
-		if (!originBlockLocation.isEmpty()) {
-			originBlockLocation = originBlockLocation + ":" + originLocation.getYaw() + ":" + originLocation.getPitch();
-		}
+        if (!originBlockLocation.isEmpty()) {
+            originBlockLocation = originBlockLocation + ":" + originLocation.getYaw() + ":" + originLocation.getPitch();
+        }
 
-		String JSONString = new Gson().toJson(new Storage(new Gson().toJson(blockData), new Gson().toJson(entityData),
-				originBlockLocation, System.currentTimeMillis(), NMSUtil.getVersionNumber()), Storage.class);
+        String JSONString = new Gson().toJson(new Storage(new Gson().toJson(blockData), new Gson().toJson(entityData),
+                originBlockLocation, System.currentTimeMillis(), NMSUtil.getVersionNumber()), Storage.class);
 
-		FileOutputStream fileOutputStream = new FileOutputStream(configFile, false);
-		fileOutputStream.write(Base64.getEncoder().encode(JSONString.getBytes(StandardCharsets.UTF_8)));
-		fileOutputStream.flush();
-		fileOutputStream.close();
-	}
+        FileOutputStream fileOutputStream = new FileOutputStream(configFile, false);
+        fileOutputStream.write(Base64.getEncoder().encode(JSONString.getBytes(StandardCharsets.UTF_8)));
+        fileOutputStream.flush();
+        fileOutputStream.close();
+    }
 
-	public static Structure loadStructure(File configFile) throws IOException {
-		if (!configFile.exists())
-			return null;
+    private static String getBase64String(File file) {
+        if (!file.exists()) return null;
 
-		byte[] content = new byte[(int) configFile.length()];
+        String firstLine = null;
 
-		FileInputStream fileInputStream = new FileInputStream(configFile);
-		fileInputStream.read(content);
-		fileInputStream.close();
+        try {
+            firstLine = Files.asCharSource(file, StandardCharsets.UTF_8).readFirstLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-		String json;
-		try {
-			json = Compression.decompress(content);
-		} catch (Exception e) {
-			Bukkit.getConsoleSender().sendMessage("Could not load structure '" + configFile.getName() + "' Try using the '/is admin structure tool' command to make a new schematic of it.");
-			File defaultStructure = new File(SkyBlock.getInstance().getDataFolder() + "/" + "structures", "default.structure");
-			content = new byte[(int) defaultStructure.length()];
-			fileInputStream = new FileInputStream(defaultStructure);
-			fileInputStream.read(content);
-			fileInputStream.close();
-			json = Compression.decompress(content);
-		}
+        return firstLine;
+    }
 
-		Storage storage = new Gson().fromJson(json, Storage.class);
-		return new Structure(storage, configFile.getName());
-	}
+    public static Structure loadStructure(File configFile) throws IOException {
+        String base64 = getBase64String(configFile);
 
-	@SuppressWarnings("unchecked")
-	public static Float[] pasteStructure(Structure structure, org.bukkit.Location location, BlockDegreesType type) {
-		Storage storage = structure.getStructureStorage();
+        if (base64 == null) {
+            base64 = getBase64String(
+                    new File(SkyBlock.getInstance().getDataFolder() + "/" + "structures", "default.structure"));
+            SkyBlock.getInstance().getLogger().log(Level.SEVERE,
+                    "Unable to load structure '" + configFile.getAbsolutePath() + "' using default instead.");
+        }
 
-		String[] originLocationPositions = null;
+        if (base64 == null) {
+            throw new IllegalArgumentException("Couldn't load the default structure file.");
+        }
 
-		if (!storage.getOriginLocation().isEmpty()) {
-			originLocationPositions = storage.getOriginLocation().split(":");
-		}
+        Storage storage;
 
-		float yaw = 0.0F, pitch = 0.0F;
+        try {
+            storage = new Gson().fromJson(
+                    new String(Base64.getDecoder().decode(base64.getBytes(StandardCharsets.UTF_8))), Storage.class);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
 
-		if (originLocationPositions.length == 6) {
-			yaw = Float.valueOf(originLocationPositions[4]);
-			pitch = Float.valueOf(originLocationPositions[5]);
-		}
+        return new Structure(storage, configFile.getName());
+    }
 
-		List<BlockData> blockData = new Gson().fromJson(storage.getBlocks(),
-				new TypeToken<List<BlockData>>() {
-				}.getType());
+    @SuppressWarnings("unchecked")
+    public static Float[] pasteStructure(Structure structure, org.bukkit.Location location, BlockDegreesType type) {
+        Storage storage = structure.getStructureStorage();
 
-		for (BlockData blockDataList : blockData) {
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
-				try {
-					org.bukkit.Location blockRotationLocation = LocationUtil
-							.rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(),
-									blockDataList.getY(), blockDataList.getZ()), type);
-					org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(),
-							location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])),
-							location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]),
-							location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
-					blockLocation.add(blockRotationLocation);
-					BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);
-				} catch (Exception e) {
-					SkyBlock.getInstance().getLogger().warning("Unable to convert BlockData to Block for type {" + blockDataList.getMaterial() +
-							":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile() + "}");
-				}
-			});
-		}
+        String[] originLocationPositions = null;
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
-			for (EntityData entityDataList : (List<EntityData>) new Gson().fromJson(storage.getEntities(),
-					new TypeToken<List<EntityData>>() {
-					}.getType())) {
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
-					try {
-						org.bukkit.Location blockRotationLocation = LocationUtil
-								.rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(),
-										entityDataList.getY(), entityDataList.getZ()), type);
-						org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(),
-								location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])),
-								location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]),
-								location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
-						blockLocation.add(blockRotationLocation);
-						EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
-					} catch (Exception e) {
-						SkyBlock.getInstance().getLogger().warning("Unable to convert EntityData to Entity for type {" + entityDataList.getEntityType() +
-								"} in structure {" + structure.getStructureFile() + "}");
-					}
-				});
-			}
-		}, 60L);
+        if (!storage.getOriginLocation().isEmpty()) {
+            originLocationPositions = storage.getOriginLocation().split(":");
+        }
 
-		return new Float[]{yaw, pitch};
-	}
+        float yaw = 0.0F, pitch = 0.0F;
 
-	public static ItemStack getTool() throws Exception {
-		SkyBlock skyblock = SkyBlock.getInstance();
+        if (originLocationPositions.length == 6) {
+            yaw = Float.valueOf(originLocationPositions[4]);
+            pitch = Float.valueOf(originLocationPositions[5]);
+        }
 
-		FileManager fileManager = skyblock.getFileManager();
+        List<BlockData> blockData = new Gson().fromJson(storage.getBlocks(), new TypeToken<List<BlockData>>() {
+        }.getType());
 
-		FileManager.Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-		FileConfiguration configLoad = config.getFileConfiguration();
+        for (BlockData blockDataList : blockData) {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
+                try {
+                    org.bukkit.Location blockRotationLocation = LocationUtil
+                            .rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(),
+                                    blockDataList.getY(), blockDataList.getZ()), type);
+                    org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(),
+                            location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])),
+                            location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]),
+                            location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
+                    blockLocation.add(blockRotationLocation);
+                    BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);
+                } catch (Exception e) {
+                    SkyBlock.getInstance().getLogger()
+                            .warning("Unable to convert BlockData to Block for type {" + blockDataList.getMaterial()
+                                    + ":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile()
+                                    + "}");
+                }
+            });
+        }
 
-		ItemStack is = new ItemStack(
-				Material.valueOf(fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-						.getFileConfiguration().getString("Island.Admin.Structure.Selector")));
-		ItemMeta im = is.getItemMeta();
-		im.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-				configLoad.getString("Island.Structure.Tool.Item.Displayname")));
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
+            for (EntityData entityDataList : (List<EntityData>) new Gson().fromJson(storage.getEntities(),
+                    new TypeToken<List<EntityData>>() {
+                    }.getType())) {
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
+                    try {
+                        org.bukkit.Location blockRotationLocation = LocationUtil
+                                .rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(),
+                                        entityDataList.getY(), entityDataList.getZ()), type);
+                        org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(),
+                                location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])),
+                                location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]),
+                                location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
+                        blockLocation.add(blockRotationLocation);
+                        EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
+                    } catch (Exception e) {
+                        SkyBlock.getInstance().getLogger()
+                                .warning("Unable to convert EntityData to Entity for type {"
+                                        + entityDataList.getEntityType() + "} in structure {"
+                                        + structure.getStructureFile() + "}");
+                    }
+                });
+            }
+        }, 60L);
 
-		List<String> itemLore = new ArrayList<>();
+        return new Float[] { yaw, pitch };
+    }
 
-		for (String itemLoreList : configLoad.getStringList("Island.Structure.Tool.Item.Lore")) {
-			itemLore.add(ChatColor.translateAlternateColorCodes('&', itemLoreList));
-		}
+    public static ItemStack getTool() throws Exception {
+        SkyBlock skyblock = SkyBlock.getInstance();
 
-		im.setLore(itemLore);
-		is.setItemMeta(im);
+        FileManager fileManager = skyblock.getFileManager();
 
-		return is;
-	}
+        FileManager.Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
 
-	public static org.bukkit.Location[] getFixedLocations(org.bukkit.Location location1,
-														  org.bukkit.Location location2) {
-		org.bukkit.Location location1Fixed = location1.clone();
-		org.bukkit.Location location2Fixed = location2.clone();
+        ItemStack is = new ItemStack(
+                Material.valueOf(fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                        .getFileConfiguration().getString("Island.Admin.Structure.Selector")));
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                configLoad.getString("Island.Structure.Tool.Item.Displayname")));
 
-		if (location1.getX() > location2.getX()) {
-			location1Fixed.setX(location2.getX());
-			location2Fixed.setX(location1.getX());
-		}
+        List<String> itemLore = new ArrayList<>();
 
-		if (location1.getZ() < location2.getZ()) {
-			location1Fixed.setZ(location2.getZ());
-			location2Fixed.setZ(location1.getZ());
-		}
+        for (String itemLoreList : configLoad.getStringList("Island.Structure.Tool.Item.Lore")) {
+            itemLore.add(ChatColor.translateAlternateColorCodes('&', itemLoreList));
+        }
 
-		return new org.bukkit.Location[]{location1Fixed, location2Fixed};
-	}
+        im.setLore(itemLore);
+        is.setItemMeta(im);
+
+        return is;
+    }
+
+    public static org.bukkit.Location[] getFixedLocations(org.bukkit.Location location1,
+            org.bukkit.Location location2) {
+        org.bukkit.Location location1Fixed = location1.clone();
+        org.bukkit.Location location2Fixed = location2.clone();
+
+        if (location1.getX() > location2.getX()) {
+            location1Fixed.setX(location2.getX());
+            location2Fixed.setX(location1.getX());
+        }
+
+        if (location1.getZ() < location2.getZ()) {
+            location1Fixed.setZ(location2.getZ());
+            location2Fixed.setZ(location1.getZ());
+        }
+
+        return new org.bukkit.Location[] { location1Fixed, location2Fixed };
+    }
 }

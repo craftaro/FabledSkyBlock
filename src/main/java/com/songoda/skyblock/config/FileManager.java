@@ -5,15 +5,16 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 public class FileManager {
@@ -31,13 +32,18 @@ public class FileManager {
         if (!skyblock.getDataFolder().exists()) {
             skyblock.getDataFolder().mkdir();
         }
+        
+        File structureDirectory = new File(skyblock.getDataFolder().toString() + "/structures");
 
-        if (!new File(skyblock.getDataFolder().toString() + "/structures").exists()) {
-            new File(skyblock.getDataFolder().toString() + "/structures").mkdir();
+        if (!structureDirectory.exists()) {
+            structureDirectory.mkdir();
         }
+        
+        // Will remain null unless WorldEdit is present.
+        File schematicsDirectory = null;
 
-        if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !new File(skyblock.getDataFolder().toString() + "/schematics").exists()) {
-            new File(skyblock.getDataFolder().toString() + "/schematics").mkdir();
+        if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !(schematicsDirectory = new File(skyblock.getDataFolder().toString() + "/schematics")).exists()) {
+            schematicsDirectory.mkdir();
         }
 
         Map<String, File> configFiles = new LinkedHashMap<>();
@@ -53,19 +59,40 @@ public class FileManager {
         configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
         configFiles.put("structures/default.structure",
                 new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
+        
+        File oldStructureFile = new File(skyblock.getDataFolder().toString() + "/structures", "default.structure");
+        oldStructureFile.delete();
 
-        for (String configFileList : configFiles.keySet()) {
-            File configFile = configFiles.get(configFileList);
+        for (Entry<String, File> configEntry : configFiles.entrySet()) {
+            
+            String fileName = configEntry.getKey();
+            File configFile = configEntry.getValue();
+            
+            if (fileName.equals("structures/default.structure")) {
+                configFile.delete();
+                try {
+                    configFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try (InputStream is = skyblock.getResource(fileName);
+                     OutputStream os = new FileOutputStream(configFile)) {
+                    ByteStreams.copy(is, os);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
 
             if (configFile.exists()) {
-                if (configFileList.equals("config.yml") || configFileList.equals("language.yml")
-                        || configFileList.equals("settings.yml")) {
+                if (fileName.equals("config.yml") || fileName.equals("language.yml")
+                        || fileName.equals("settings.yml")) {
                     FileChecker fileChecker;
 
-                    if (configFileList.equals("config.yml")) {
-                        fileChecker = new FileChecker(skyblock, this, configFileList, true);
+                    if (fileName.equals("config.yml")) {
+                        fileChecker = new FileChecker(skyblock, this, fileName, true);
                     } else {
-                        fileChecker = new FileChecker(skyblock, this, configFileList, false);
+                        fileChecker = new FileChecker(skyblock, this, fileName, false);
                     }
 
                     fileChecker.loadSections();
@@ -75,13 +102,13 @@ public class FileManager {
             } else {
                 try {
                     configFile.createNewFile();
-                    try (InputStream is = skyblock.getResource(configFileList);
+                    try (InputStream is = skyblock.getResource(fileName);
                          OutputStream os = new FileOutputStream(configFile)) {
                         ByteStreams.copy(is, os);
                     }
 
-                    if (configFileList.equals("worlds.yml")) {
-                        File mainConfigFile = new File(skyblock.getDataFolder(), "config.yml");
+                    if (fileName.equals("worlds.yml")) {
+                        File mainConfigFile = configFiles.get("config.yml");
 
                         if (isFileExist(mainConfigFile)) {
                             Config config = new Config(this, configFile);
@@ -116,54 +143,46 @@ public class FileManager {
     }
 
     public void setLocation(Config config, String path, Location location, boolean direction) {
-        File configFile = config.getFile();
-        FileConfiguration configLoad = config.getFileConfiguration();
 
-        configLoad.set(path + ".world", location.getWorld().getName());
-        configLoad.set(path + ".x", Double.valueOf(location.getX()));
-        configLoad.set(path + ".y", Double.valueOf(location.getY()));
-        configLoad.set(path + ".z", Double.valueOf(location.getZ()));
+        final ConfigurationSection section = config.getFileConfiguration().createSection(path);
+
+        section.set("world", location.getWorld().getName());
+        section.set("x", Double.valueOf(location.getX()));
+        section.set("y", Double.valueOf(location.getY()));
+        section.set("z", Double.valueOf(location.getZ()));
 
         if (direction) {
-            configLoad.set(path + ".yaw", Float.valueOf(location.getYaw()));
-            configLoad.set(path + ".pitch", Float.valueOf(location.getPitch()));
+            section.set("yaw", Float.valueOf(location.getYaw()));
+            section.set("pitch", Float.valueOf(location.getPitch()));
         }
 
         try {
-            configLoad.save(configFile);
+            config.getFileConfiguration().save(config.getFile());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     public Location getLocation(Config config, String path, boolean direction) {
-        Location location = null;
 
-        FileConfiguration configLoad = config.getFileConfiguration();
+        ConfigurationSection section = config.getFileConfiguration().getConfigurationSection(path);
 
-        if (configLoad.contains(path)) {
-            String world = configLoad.getString(path + ".world");
+        if (section == null) return null;
 
-            double x = configLoad.getDouble(path + ".x");
-            double y = configLoad.getDouble(path + ".y");
-            double z = configLoad.getDouble(path + ".z");
-            double yaw = 0.0D;
-            double pitch = 0.0D;
+        String world = section.getString("world");
+        double x = section.getDouble("x");
+        double y = section.getDouble("y");
+        double z = section.getDouble("z");
 
-            if (configLoad.contains(path + ".yaw")) {
-                yaw = configLoad.getDouble(path + ".yaw");
-                pitch = configLoad.getDouble(path + ".pitch");
-            }
+        double yaw = 0.0D;
+        double pitch = 0.0D;
 
-            location = new org.bukkit.Location(Bukkit.getWorld(world), x, y, z);
-
-            if (direction) {
-                location.setYaw((float) yaw);
-                location.setPitch((float) pitch);
-            }
+        if (direction) {
+            yaw = section.getDouble("yaw");
+            pitch = section.getDouble("pitch");
         }
 
-        return location;
+        return new org.bukkit.Location(Bukkit.getWorld(world), x, y, z, (short) yaw, (short) pitch);
     }
 
     public boolean isFileExist(File configPath) {
@@ -181,9 +200,10 @@ public class FileManager {
     }
 
     public Config getConfig(File configPath) {
-        if (loadedConfigs.containsKey(configPath.getPath())) {
-            return loadedConfigs.get(configPath.getPath());
-        }
+
+        Config cached = loadedConfigs.get(configPath.getPath());
+
+        if (cached != null) return cached;
 
         Config config = new Config(this, configPath);
         loadedConfigs.put(configPath.getPath(), config);

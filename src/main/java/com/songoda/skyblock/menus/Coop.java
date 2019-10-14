@@ -162,7 +162,13 @@ public class Coop {
                             if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
                                     && island.getSetting(IslandRole.Operator, "CoopPlayers").getStatus())
                                     || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+                                
                                 String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
+                                
+                                int space = playerName.indexOf(" ");
+                                
+                                if(space != -1) playerName = playerName.substring(0, space);
+                                
                                 Bukkit.getServer().dispatchCommand(player, "island coop " + playerName);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -184,10 +190,7 @@ public class Coop {
             Island island = islandManager.getIsland(player);
 
             Map<UUID, IslandCoop> coopPlayers = island.getCoopPlayers();
-            for (UUID uuid : coopPlayers.keySet())
-                if (!Bukkit.getOfflinePlayer(uuid).hasPlayedBefore())
-                    coopPlayers.remove(uuid);
-
+            
             int playerMenuPage = playerData.getPage(), nextEndIndex = coopPlayers.size() - playerMenuPage * 36;
 
             nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),

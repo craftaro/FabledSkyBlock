@@ -1276,7 +1276,7 @@ public class IslandManager {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         boolean coopPlayers = island.getSetting(IslandRole.Operator, "CoopPlayers").getStatus();
-
+        
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (uuid != null && all.getUniqueId().equals(uuid)) {
                 continue;
@@ -1367,9 +1367,7 @@ public class IslandManager {
     public List<Island> getCoopIslands(Player player) {
         List<Island> islands = new ArrayList<>();
 
-        for (UUID islandList : getIslands().keySet()) {
-            Island island = getIslands().get(islandList);
-
+        for (Island island : getIslands().values()) {
             if (island.getCoopPlayers().containsKey(player.getUniqueId())) {
                 islands.add(island);
             }
@@ -1379,9 +1377,7 @@ public class IslandManager {
     }
 
     public Island getIslandAtLocation(org.bukkit.Location location) {
-        for (UUID islandList : getIslands().keySet()) {
-            Island island = getIslands().get(islandList);
-
+        for (Island island : getIslands().values()) {
             if (isLocationAtIsland(island, location)) {
                 return island;
             }
