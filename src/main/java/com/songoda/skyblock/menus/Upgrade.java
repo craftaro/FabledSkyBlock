@@ -379,6 +379,7 @@ public class Upgrade {
 
                                             economyManager.withdraw(player, upgrade.getCost());
                                             island.setSize(upgrade.getValue());
+                                            islandManager.updateBorder(island);
 
                                             Bukkit.getServer().getPluginManager().callEvent(new IslandUpgradeEvent(
                                                     island.getAPIWrapper(), player, APIUtil.fromImplementation(

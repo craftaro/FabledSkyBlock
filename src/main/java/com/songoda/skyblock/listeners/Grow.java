@@ -2,6 +2,7 @@ package com.songoda.skyblock.listeners;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -46,19 +47,20 @@ public class Grow implements Listener {
 
 		IslandManager islandManager = skyblock.getIslandManager();
 		Island origin = islandManager.getIslandAtLocation(event.getLocation());
-		for (BlockState state : event.getBlocks()) {
+       for (Iterator<BlockState> it = event.getBlocks().iterator(); it.hasNext();) {
+	      BlockState state = it.next();
 			Island growingTo = islandManager.getIslandAtLocation(state.getLocation());
 			// This block is ok to continue as it's not related to Skyblock islands.
 			if (origin == null && growingTo == null)
 				continue;
 			// A block from the structure is outside/inside that it's not suppose to.
 			if (origin == null || growingTo == null) {
-				event.getBlocks().remove(state);
+				it.remove();
 				continue;
 			}
 			// The structure is growing from one island to another.
 			if (!origin.getIslandUUID().equals(growingTo.getIslandUUID())) {
-				event.getBlocks().remove(state);
+				it.remove();
 				continue;
 			}
 		}
