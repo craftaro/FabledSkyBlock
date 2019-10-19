@@ -40,14 +40,14 @@ public class SchematicUtil {
                 // TODO: Cache this later
                 try {
                     Class<?> bukkitWorldClass = Class.forName("com.sk89q.worldedit.bukkit.BukkitWorld");
-                    Constructor bukkitWorldConstructor = bukkitWorldClass.getConstructor(World.class);
+                    Constructor<?> bukkitWorldConstructor = bukkitWorldClass.getConstructor(World.class);
                     Class<?> editSessionClass = Class.forName("com.sk89q.worldedit.EditSession");
                     Class<?> localWorldClass = Class.forName("com.sk89q.worldedit.LocalWorld");
-                    Constructor editSessionConstructor = editSessionClass.getConstructor(localWorldClass, int.class);
+                    Constructor<?> editSessionConstructor = editSessionClass.getConstructor(localWorldClass, int.class);
                     Class<?> cuboidClipboardClass = Class.forName("com.sk89q.worldedit.CuboidClipboard");
                     Method loadSchematicMethod = cuboidClipboardClass.getMethod("loadSchematic", File.class);
                     Class<?> vectorClass = Class.forName("com.sk89q.worldedit.Vector");
-                    Constructor vectorConstructor = vectorClass.getConstructor(double.class, double.class, double.class);
+                    Constructor<?> vectorConstructor = vectorClass.getConstructor(double.class, double.class, double.class);
                     Method pasteMethod = cuboidClipboardClass.getMethod("paste", editSessionClass, vectorClass, boolean.class);
 
                     Object editSessionObj = editSessionConstructor.newInstance(bukkitWorldConstructor.newInstance(location.getWorld()), 999999999);

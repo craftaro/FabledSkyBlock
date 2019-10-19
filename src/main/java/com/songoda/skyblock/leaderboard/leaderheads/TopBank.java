@@ -27,9 +27,9 @@ public class TopBank extends DataCollector {
 
     @Override
     public List<Entry<?, Double>> requestAll() {
-        Map<UUID, Double> topLevels = new HashMap<>();
 
         List<Leaderboard> leaderboards = skyblock.getLeaderboardManager().getLeaderboard(Type.Bank);
+        Map<UUID, Double> topLevels = new HashMap<>(leaderboards.size());
 
         for (Leaderboard leaderboard : leaderboards) {
             Visit visit = leaderboard.getVisit();

@@ -18,22 +18,17 @@ public class InviteManager {
     public Invite createInvite(Player player, Player sender, UUID owner, int time) {
         Invite invite = new Invite(player, sender, owner, time);
         inviteStorage.put(player.getUniqueId(), invite);
-
         return invite;
     }
 
     public void removeInvite(UUID uuid) {
-        if (hasInvite(uuid)) {
-            inviteStorage.remove(uuid);
-        }
+        inviteStorage.remove(uuid);
     }
 
     public void tranfer(UUID uuid1, UUID uuid2) {
         Map<UUID, Invite> islandInvites = getInvites();
 
-        for (UUID islandInviteList : islandInvites.keySet()) {
-            Invite invite = islandInvites.get(islandInviteList);
-
+        for (Invite invite : islandInvites.values()) {
             if (invite.getOwnerUUID().equals(uuid1)) {
                 invite.setOwnerUUID(uuid2);
             }
@@ -45,11 +40,7 @@ public class InviteManager {
     }
 
     public Invite getInvite(UUID uuid) {
-        if (hasInvite(uuid)) {
-            return inviteStorage.get(uuid);
-        }
-
-        return null;
+        return inviteStorage.get(uuid);
     }
 
     public boolean hasInvite(UUID uuid) {

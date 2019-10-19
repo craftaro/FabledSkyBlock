@@ -15,22 +15,22 @@ public class CooldownTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (CooldownType cooldownTypeList : CooldownType.values()) {
-            if (cooldownManager.hasCooldownType(cooldownTypeList)) {
-                List<CooldownPlayer> cooldownPlayers = cooldownManager.getCooldownPlayers(cooldownTypeList);
+        for (CooldownType cooldownType : CooldownType.getTypes()) {
+            List<CooldownPlayer> cooldownPlayers = cooldownManager.getCooldownPlayers(cooldownType);
 
-                for (int i = 0; i < cooldownPlayers.size(); i++) {
-                    CooldownPlayer cooldownPlayer = cooldownPlayers.get(i);
-                    Cooldown cooldown = cooldownPlayer.getCooldown();
+            if (cooldownPlayers == null) return;
 
-                    cooldown.setTime(cooldown.getTime() - 1);
+            for (int i = 0; i < cooldownPlayers.size(); i++) {
+                CooldownPlayer cooldownPlayer = cooldownPlayers.get(i);
+                Cooldown cooldown = cooldownPlayer.getCooldown();
 
-                    if (cooldown.getTime() <= 0) {
-                        cooldownManager.deletePlayer(cooldownTypeList,
-                                Bukkit.getServer().getOfflinePlayer(cooldownPlayer.getUUID()));
-                    }
+                cooldown.setTime(cooldown.getTime() - 1);
+
+                if (cooldown.getTime() <= 0) {
+                    cooldownManager.deletePlayer(cooldownType, Bukkit.getServer().getOfflinePlayer(cooldownPlayer.getUUID()));
                 }
             }
+
         }
     }
 }

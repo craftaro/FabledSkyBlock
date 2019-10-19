@@ -1,3 +1,6 @@
 block:
-  BEDROCK: 0
-  END_PORTAL_FRAME: 12
+   DefaultLimit: -1
+   BEDROCK: 0
+   END_PORTAL_FRAME: 12
+entity:
+   DefaultLimit: -1

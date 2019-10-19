@@ -14,11 +14,7 @@ public class Area {
     }
 
     public Location getPosition(int position) {
-        if (positions.containsKey(position)) {
-            return positions.get(position);
-        }
-
-        return null;
+        return positions.get(position);
     }
 
     public void setPosition(int position, Location location) {

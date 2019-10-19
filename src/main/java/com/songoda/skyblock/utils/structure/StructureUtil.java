@@ -6,7 +6,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.utils.Compression;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.utils.world.block.BlockData;
@@ -26,7 +25,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

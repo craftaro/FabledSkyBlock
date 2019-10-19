@@ -43,7 +43,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.levelling.LevellingManager;
-import com.songoda.skyblock.limit.LimitManager;
+import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.NumberUtil;
@@ -74,14 +74,17 @@ public class Block implements Listener {
 		if (!worldManager.isIslandWorld(block.getWorld())) return;
 
 		IslandWorld world = worldManager.getIslandWorld(block.getWorld());
-		Island island = islandManager.getIslandAtLocation(block.getLocation());
+		
+		Location blockLocation = block.getLocation();
+		
+		Island island = islandManager.getIslandAtLocation(blockLocation);
 
 		if (island == null) {
 			event.setCancelled(true);
 			return;
 		}
 
-		if (!islandManager.hasPermission(player, block.getLocation(), "Destroy")) {
+		if (!islandManager.hasPermission(player, blockLocation, "Destroy")) {
 			event.setCancelled(true);
 			skyblock.getMessageManager().sendMessage(player,
 					skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
@@ -91,7 +94,7 @@ public class Block implements Listener {
 		}
 
 		if (stackableManager != null
-				&& stackableManager.isStacked(block.getLocation())) {
+				&& stackableManager.isStacked(blockLocation)) {
 			Stackable stackable = stackableManager.getStack(block.getLocation(), block.getType());
 			if (stackable != null) {
 				Material material = block.getType();
@@ -99,7 +102,7 @@ public class Block implements Listener {
 
 				int droppedAmount = 0;
 				if (event.getPlayer().isSneaking()) {
-					Location dropLoc = event.getBlock().getLocation().add(0.5, 0.5, 0.5);
+					Location dropLoc = blockLocation.clone().add(0.5, 0.5, 0.5);
 					int count = stackable.getSize();
 					droppedAmount = count;
 					while (count > 64) {
@@ -110,7 +113,7 @@ public class Block implements Listener {
 					block.setType(Material.AIR);
 					stackable.setSize(0);
 				} else {
-					block.getWorld().dropItemNaturally(block.getLocation().add(.5, 1, .5), new ItemStack(material, 1, data));
+					block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5), new ItemStack(material, 1, data));
 					stackable.takeOne();
 					droppedAmount = 1;
 				}
@@ -247,15 +250,18 @@ public class Block implements Listener {
 			}
 		}
 
-		LimitManager limitManager = skyblock.getLimitManager();
-		if (limitManager.isBlockLimitExceeded(player, block)) {
+		BlockLimitation limits = skyblock.getLimitationHandler().getInstance(BlockLimitation.class);
+		
+		long limit = limits.getBlockLimit(player, block);
+		
+		if (limits.isBlockLimitExceeded(player, block, limit)) {
 			Materials material = Materials.getMaterials(block.getType(), block.getData());
 
 			skyblock.getMessageManager().sendMessage(player,
 					skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 							.getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
 							.replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " ")))
-							.replace("%limit", NumberUtil.formatNumber(limitManager.getBlockLimit(player, block))));
+							.replace("%limit", NumberUtil.formatNumber(limit)));
 			skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
 			event.setCancelled(true);

@@ -242,6 +242,8 @@ Command:
           Message: '&bSkyBlock &8| &aInfo&8: &eThis island will unload.'
         Info:
           Message: '&f&oKeeps an island from unloading.'
+        No-Player-Input:
+          Message: '&bSkyBlock &8| &cError&8: &ePlease input a player.'
       Proxy:
         IsOn:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou are now proxying %player.'

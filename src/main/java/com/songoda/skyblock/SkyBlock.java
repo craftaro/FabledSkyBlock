@@ -15,7 +15,7 @@ import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.LevellingManager;
-import com.songoda.skyblock.limit.LimitManager;
+import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import com.songoda.skyblock.listeners.*;
 import com.songoda.skyblock.menus.Rollback;
 import com.songoda.skyblock.menus.admin.Creator;
@@ -61,7 +61,6 @@ public class SkyBlock extends JavaPlugin {
     private UpgradeManager upgradeManager;
     private PlayerDataManager playerDataManager;
     private CooldownManager cooldownManager;
-    private LimitManager limitManager;
     private ScoreboardManager scoreboardManager;
     private InviteManager inviteManager;
     private BiomeManager biomeManager;
@@ -76,6 +75,7 @@ public class SkyBlock extends JavaPlugin {
     private MessageManager messageManager;
     private EconomyManager economyManager;
     private HologramManager hologramManager;
+    private LimitationInstanceHandler limitationHandler;
 
     public static SkyBlock getInstance() {
         return instance;
@@ -101,7 +101,7 @@ public class SkyBlock extends JavaPlugin {
         upgradeManager = new UpgradeManager(this);
         playerDataManager = new PlayerDataManager(this);
         cooldownManager = new CooldownManager(this);
-        limitManager = new LimitManager(this);
+        limitationHandler = new LimitationInstanceHandler();
 
         if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Scoreboard.Enable")) {
@@ -261,10 +261,6 @@ public class SkyBlock extends JavaPlugin {
         return cooldownManager;
     }
 
-    public LimitManager getLimitManager() {
-        return limitManager;
-    }
-
     public ScoreboardManager getScoreboardManager() {
         return scoreboardManager;
     }
@@ -327,6 +323,10 @@ public class SkyBlock extends JavaPlugin {
 
     public StackableManager getStackableManager() {
         return stackableManager;
+    }
+
+    public LimitationInstanceHandler getLimitationHandler() {
+        return limitationHandler;
     }
 
     @Override

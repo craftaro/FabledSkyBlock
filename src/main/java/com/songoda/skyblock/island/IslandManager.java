@@ -615,6 +615,7 @@ public class IslandManager {
         if (island.isDeleted()) return;
 
         island.save();
+        
 
         int islandMembers = island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1,
                 islandVisitors = getVisitorsAtIsland(island).size();
@@ -627,7 +628,7 @@ public class IslandManager {
 
             if (island.hasRole(IslandRole.Member, all.getUniqueId())
                     || island.hasRole(IslandRole.Operator, all.getUniqueId())
-                    || island.hasRole(IslandRole.Owner, all.getUniqueId())) {
+                    || island.hasRole(IslandRole.Owner, all.getUniqueId()) || island.getCoopType(all.getUniqueId()) == IslandCoop.NORMAL) {
                 if (scoreboardManager != null) {
                     try {
                         if (islandMembers == 1 && islandVisitors == 0) {
@@ -1291,7 +1292,9 @@ public class IslandManager {
 
         for (UUID coopPlayerAtIslandList : getCoopPlayersAtIsland(island)) {
             Player targetPlayer = Bukkit.getServer().getPlayer(coopPlayerAtIslandList);
-
+            
+            if(island.getCoopType(coopPlayerAtIslandList) == IslandCoop.NORMAL) continue;
+            
             if (targetPlayer != null) {
                 LocationUtil.teleportPlayerToSpawn(targetPlayer);
 

@@ -31,8 +31,7 @@ public class BanManager {
     public void onDisable() {
         Map<UUID, Ban> banIslands = getIslands();
 
-        for (UUID banIslandList : banIslands.keySet()) {
-            Ban ban = banIslands.get(banIslandList);
+        for (Ban ban : banIslands.values()) {
             ban.save();
         }
     }
@@ -96,11 +95,7 @@ public class BanManager {
     }
 
     public Ban getIsland(UUID islandOwnerUUID) {
-        if (hasIsland(islandOwnerUUID)) {
-            return banStorage.get(islandOwnerUUID);
-        }
-
-        return null;
+        return banStorage.get(islandOwnerUUID);
     }
 
     public Map<UUID, Ban> getIslands() {
@@ -116,9 +111,7 @@ public class BanManager {
     }
 
     public void removeIsland(UUID islandOwnerUUID) {
-        if (hasIsland(islandOwnerUUID)) {
-            banStorage.remove(islandOwnerUUID);
-        }
+        banStorage.remove(islandOwnerUUID);
     }
 
     public void unloadIsland(UUID islandOwnerUUID) {
