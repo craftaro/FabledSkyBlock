@@ -512,9 +512,10 @@ public class Block implements Listener {
 			return;
 
 		GeneratorManager generatorManager = skyblock.getGeneratorManager();
+        if(generatorManager == null) return;
+        
 		List<Generator> generators = Lists.newArrayList(generatorManager.getGenerators());
-		if (generatorManager == null || generators.size() == 0)
-			return;
+        if(generators == null || generators.isEmpty()) return;
 		Collections.reverse(generators); // Use the highest generator available
 
 		// Filter valid players on the island.
