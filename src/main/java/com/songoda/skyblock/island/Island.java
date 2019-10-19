@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map.Entry;
 
 public class Island {
 
@@ -104,7 +105,7 @@ public class Island {
 
                     if (playerDataConfigLoad.getString("Island.Owner") == null
                             || !playerDataConfigLoad.getString("Island.Owner").equals(ownerUUID.toString())) {
-                        members.remove(member);
+                        members.remove(i);
                     }
                 }
 
@@ -122,7 +123,7 @@ public class Island {
 
                     if (playerDataConfigLoad.getString("Island.Owner") == null
                             || !playerDataConfigLoad.getString("Island.Owner").equals(ownerUUID.toString())) {
-                        operators.remove(operator);
+                        operators.remove(i);
                     }
                 }
 
@@ -131,24 +132,21 @@ public class Island {
 
             Config settingsDataConfig = null;
 
-            if (fileManager.isFileExist(new File(skyblock.getDataFolder().toString() + "/setting-data",
-                    getOwnerUUID().toString() + ".yml"))) {
-                settingsDataConfig = fileManager.getConfig(new File(
-                        skyblock.getDataFolder().toString() + "/setting-data", getOwnerUUID().toString() + ".yml"));
+            File settingDataFile = new File(skyblock.getDataFolder().toString() + "/setting-data", getOwnerUUID().toString() + ".yml");
+            
+            if (fileManager.isFileExist(settingDataFile)) {
+                settingsDataConfig = fileManager.getConfig(settingDataFile);
             }
 
-            for (IslandRole roleList : IslandRole.values()) {
+            for (IslandRole roleList : IslandRole.getRoles()) {
                 List<IslandSetting> settings = new ArrayList<>();
-
-                for (String settingList : defaultSettingsConfig.getFileConfiguration()
-                        .getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
-                    if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
-                            .getString("Settings." + roleList.name() + "." + settingList) == null) {
-                        settings.add(new IslandSetting(settingList, defaultSettingsConfig.getFileConfiguration()
-                                .getBoolean("Settings." + roleList.name() + "." + settingList)));
+                
+                for (String settingList : defaultSettingsConfig.getFileConfiguration().getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
+                    if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration().getString("Settings." + roleList.name() + "." + settingList) == null) {
+                        settings.add(
+                                new IslandSetting(settingList, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + settingList)));
                     } else {
-                        settings.add(new IslandSetting(settingList, settingsDataConfig.getFileConfiguration()
-                                .getBoolean("Settings." + roleList.name() + "." + settingList)));
+                        settings.add(new IslandSetting(settingList, settingsDataConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + settingList)));
                     }
                 }
 
@@ -167,13 +165,13 @@ public class Island {
             configLoad.set("Weather.Weather", mainConfigLoad.getString("Island.Weather.Default.Weather").toUpperCase());
             configLoad.set("Ownership.Original", ownerUUID.toString());
 
-            for (IslandRole roleList : IslandRole.values()) {
-                List<IslandSetting> settings = new ArrayList<>();
+            for (IslandRole roleList : IslandRole.getRoles()) {
 
-                for (String settingList : defaultSettingsConfig.getFileConfiguration()
-                        .getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
-                    settings.add(new IslandSetting(settingList, defaultSettingsConfig.getFileConfiguration()
-                            .getBoolean("Settings." + roleList.name() + "." + settingList)));
+                Set<String> keys = defaultSettingsConfig.getFileConfiguration().getConfigurationSection("Settings." + roleList.name()).getKeys(false);
+                List<IslandSetting> settings = new ArrayList<>(keys.size());
+
+                for (String settingList : keys) {
+                    settings.add(new IslandSetting(settingList, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + settingList)));
                 }
 
                 islandSettings.put(roleList, settings);
@@ -227,12 +225,8 @@ public class Island {
     }
 
     public UUID getOriginalOwnerUUID() {
-        return UUID
-                .fromString(
-                        skyblock.getFileManager()
-                                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
-                                        ownerUUID.toString() + ".yml"))
-                                .getFileConfiguration().getString("Ownership.Original"));
+        return UUID.fromString(skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
+                .getFileConfiguration().getString("Ownership.Original"));
     }
 
     public int getSize() {
@@ -772,9 +766,9 @@ public class Island {
                 .getConfig(new File(skyblock.getDataFolder().toString() + "/setting-data", ownerUUID.toString() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        for (IslandRole roleList : islandSettings.keySet()) {
-            for (IslandSetting settingList : islandSettings.get(roleList)) {
-                configLoad.set("Settings." + roleList + "." + settingList.getName(), settingList.getStatus());
+        for (Entry<IslandRole, List<IslandSetting>> entry : islandSettings.entrySet()) {
+            for (IslandSetting setting : entry.getValue()) {
+                configLoad.set("Settings." + entry.getKey() + "." + setting.getName(), setting.getStatus());
             }
         }
 
@@ -790,7 +784,7 @@ public class Island {
                     .getConfig(new File(skyblock.getDataFolder().toString() + "/coop-data", ownerUUID.toString() + ".yml"));
             configLoad = config.getFileConfiguration();
 
-            List<String> coopPlayersAsString = new ArrayList<>();
+            List<String> coopPlayersAsString = new ArrayList<>(coopPlayers.size());
 
             for (Map.Entry<UUID, IslandCoop> entry : coopPlayers.entrySet()) {
                 if (entry.getValue() == IslandCoop.TEMP) continue;

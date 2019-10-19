@@ -7,7 +7,7 @@ import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.levelling.LevellingManager;
-import com.songoda.skyblock.limit.LimitManager;
+import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.Stackable;
@@ -157,21 +157,24 @@ public class Interact implements Listener {
                     return;
                 }
 
-                LimitManager limitManager = skyblock.getLimitManager();
-                if (limitManager.isBlockLimitExceeded(player, block)) {
-                    Materials material = Materials.getMaterials(block.getType(), block.getData());
+                BlockLimitation limits = skyblock.getLimitationHandler().getInstance(BlockLimitation.class);
+                
+                long limit = limits.getBlockLimit(player, block);
+                
+                if (limits.isBlockLimitExceeded(player, block, limit)) {
+                   Materials material = Materials.getMaterials(block.getType(), block.getData());
 
-                    skyblock.getMessageManager().sendMessage(player,
-                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                    .getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
-                                    .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " ")))
-                                    .replace("%limit", NumberUtil.formatNumber(limitManager.getBlockLimit(player, block))));
-                    skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                   skyblock.getMessageManager().sendMessage(player,
+                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                               .getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+                               .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " ")))
+                               .replace("%limit", NumberUtil.formatNumber(limit)));
+                   skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
-                    event.setCancelled(true);
-                    return;
+                   event.setCancelled(true);
+                   return;
                 }
-
+                
                 Location location = event.getClickedBlock().getLocation();
                 if (stackableManager.isStacked(location)) {
                     Stackable stackable = stackableManager.getStack(location, event.getMaterial());

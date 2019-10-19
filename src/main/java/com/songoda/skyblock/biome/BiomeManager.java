@@ -11,8 +11,8 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BiomeManager {
 
@@ -23,7 +23,7 @@ public class BiomeManager {
     }
 
     public void setBiome(Island island, Biome biome) {
-        List<Chunk> chunks = new ArrayList<>();
+        Set<Chunk> chunks = new HashSet<>();
         Location location = island.getLocation(IslandWorld.Normal, IslandEnvironment.Island);
         int radius = (int) Math.ceil(island.getRadius());
 
@@ -31,8 +31,7 @@ public class BiomeManager {
             for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z++) {
                 location.getWorld().setBiome(x, z, biome);
                 Chunk chunk = location.getWorld().getChunkAt(x >> 4, z >> 4);
-                if (!chunks.contains(chunk))
-                    chunks.add(chunk);
+                chunks.add(chunk);
             }
         }
 

@@ -1,25 +1,25 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.songoda.skyblock.command.SubCommand;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.generator.GeneratorManager;
-import com.songoda.skyblock.hologram.HologramManager;
-import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.levelling.LevellingManager;
-import com.songoda.skyblock.limit.LimitManager;
-import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.scoreboard.ScoreboardManager;
-import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
+import java.io.File;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.util.Map;
+import com.songoda.skyblock.command.SubCommand;
+import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.generator.GeneratorManager;
+import com.songoda.skyblock.leaderboard.LeaderboardManager;
+import com.songoda.skyblock.levelling.LevellingManager;
+import com.songoda.skyblock.limit.LimitationInstanceHandler;
+import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.scoreboard.ScoreboardManager;
+import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.utils.version.Sounds;
 
 public class ReloadCommand extends SubCommand {
 
@@ -35,10 +35,9 @@ public class ReloadCommand extends SubCommand {
 
     public void onCommand(CommandSender sender, String[] args) {
         LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
-        HologramManager hologramManager = skyblock.getHologramManager();
         MessageManager messageManager = skyblock.getMessageManager();
         SoundManager soundManager = skyblock.getSoundManager();
-        LimitManager limitManager = skyblock.getLimitManager();
+        LimitationInstanceHandler limitHandler = skyblock.getLimitationHandler();
         FileManager fileManager = skyblock.getFileManager();
 
         messageManager.sendMessage(sender, "&cPlease note that this command is not supported and may " +
@@ -96,7 +95,7 @@ public class ReloadCommand extends SubCommand {
             Bukkit.getScheduler().runTask(skyblock, () -> skyblock.getHologramManager().resetHologram());
         });
 
-        limitManager.reload();
+        limitHandler.reloadAll();
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
         soundManager.playSound(sender, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);

@@ -1,5 +1,14 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import java.io.File;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -10,16 +19,6 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.version.Sounds;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
 
 public class SetAlwaysLoadedCommand extends SubCommand {
 
@@ -34,14 +33,21 @@ public class SetAlwaysLoadedCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
 
+        FileManager fileManager = skyblock.getFileManager();
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
+        MessageManager messageManager = skyblock.getMessageManager();
+
+        if (args.length == 0) {
+            messageManager.sendMessage(sender,
+                    configLoad.getString("Command.Island.Admin.SetAlwaysLoaded.No-Player-Input.Message"));
+            return;
+        }
+
+        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+        IslandManager islandManager = skyblock.getIslandManager();
+        SoundManager soundManager = skyblock.getSoundManager();
 
         if (args.length == 1) {
             Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);

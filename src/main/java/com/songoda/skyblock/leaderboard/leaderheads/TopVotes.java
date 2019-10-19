@@ -27,10 +27,10 @@ public class TopVotes extends DataCollector {
 
     @Override
     public List<Entry<?, Double>> requestAll() {
-        Map<UUID, Double> topLevels = new HashMap<>();
-
+        
         List<Leaderboard> leaderboards = skyblock.getLeaderboardManager().getLeaderboard(Type.Votes);
-
+        Map<UUID, Double> topLevels = new HashMap<>(leaderboards.size());
+        
         for (int i = 0; i < leaderboards.size(); i++) {
             Leaderboard leaderboard = leaderboards.get(i);
             Visit visit = leaderboard.getVisit();
