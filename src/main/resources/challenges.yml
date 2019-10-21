@@ -1,0 +1,140 @@
+#
+#     _______   __       _______   ___       _______  ________    ________  __   ___  ___  ___  _______   ___        ______    ______   __   ___  
+#    /"     "| /""\     |   _  "\ |"  |     /"     "||"      "\   /"       )|/"| /  ")|"  \/"  ||   _  "\ |"  |      /    " \  /" _  "\ |/"| /  ") 
+#   (: ______)/    \    (. |_)  :)||  |    (: ______)(.  ___  :) (:   \___/ (: |/   /  \   \  / (. |_)  :)||  |     // ____  \(: ( \___)(: |/   /  
+#    \/    | /' /\  \   |:     \/ |:  |     \/    |  |: \   ) ||  \___  \   |    __/    \\  \/  |:     \/ |:  |    /  /    ) :)\/ \     |    __/   
+#    // ___)//  __'  \  (|  _  \\  \  |___  // ___)_ (| (___\ ||   __/  \\  (// _  \    /   /   (|  _  \\  \  |___(: (____/ // //  \ _  (// _  \   
+#   (:  (  /   /  \\  \ |: |_)  :)( \_|:  \(:      "||:       :)  /" \   :) |: | \  \  /   /    |: |_)  :)( \_|:  \\        / (:   _) \ |: | \  \  
+#    \__/ (___/    \___)(_______/  \_______)\_______)(________/  (_______/  (__|  \__)|___/     (_______/  \_______)\"_____/   \_______)(__|  \__) 
+#
+# Challenges reward players and keep their play retention.
+challenges:
+    # Categories allow you to be able to sort challenges.
+    # Users can sort in the challenges menu to pick challlenge categories they may be interested in.
+    # You can add more categories if you want.
+    categories:
+        - "FARMING"
+        - "CRAFTING"
+        - "MINING"
+        - "LEVELING"
+    # Difficulties define how hard a challenge is.
+    # Users can sort through challenges via difficulty.
+    # And it's displayed on each item if the challenge defines a difficulty.
+    difficulty:
+        1: "NOVICE"
+        2: "HARD"
+        3: "ADVANCED"
+    # Used globally to tell the player if they have started the challenge.
+    started-lore-addition: "&6You have started progress on this challenge."
+    # If the items in the challenge menu should glow when they have been started.
+    # Glow is the enchanted effect that hides the enchantment.
+    glowing-when-started: true
+    # The name of this challenge.
+    tree-grower:
+        # The display on items etc.
+        title: "&2&lTree Grower"
+        # The material representing the challenge in the challenge menu.
+        material: "OAK_SAPLING"
+        # Material meta is Bukkit's ItemMeta, The string will be used as a ItemMeta object, anything that the Material has as in ItemMeta will be accepted.
+        # Example: A skull for material and a player's name in the meta string, will set the skull to the player's skull.
+        #material-meta: "MHF_ArrowLeft"
+        # When this require is complete this is what the item will be displayed:
+        complete:
+            title: "&2&lTree Grower"
+            material: "OAK_SAPLING"
+            glowing: false
+            #material-meta: "MHF_ArrowLeft"
+            lore:
+                - "&aYou have completed this challenge"
+        # Define how many levels their are.
+        # Each level will be required before the other one.
+        levels:
+            # The number spot of this level. lower numbers become lower levels and will be required first.
+            1:
+                difficulty: "NOVICE"
+                category: "FARMING"
+                # The description of the challenge at this level.
+                # Placeholders:
+                #   %number% - the amount required.
+                #   %progress% - how many they have done.
+                #   %left% - how much is left.
+                description:
+                    - "&7Grow %number% trees to unlock."
+                    - "&e&l%left%&e more trees required."
+                    - ""
+                    - "&6Rewards: All sapplings."
+                # Conditions are what tell Skyblock when to award/count the challenge.
+                conditions:
+                    # Require an action to be completed X amount of times. X being the required number.
+                    action:
+                        # ACTIONS ARE PREDEFINED, COMING SOON A LIST OF THEM, TODO LIMEGLASS, UPDATE AND REMOVE THIS COMMENT WHEN FINISHED.
+                        type: "grow-tree"
+                        # How many values are required.
+                        # AKA how many times do they have to grow a tree.
+                        required: 5
+                    # You can have multiple conditions;
+                    # An example of an item requirement.
+                    #item:
+                    #    material: "ACACIA_SAPLING"
+                    #    required: 5
+                    # Example of a permission requirement.
+                    #permission: "skyblock.treegrower.challenge.1"
+                    # Blocks condition will scan the nearby blocks in a 10 block radius.
+                    #blocks:
+                    #   material: "STONE"
+                    #   required: 5
+                    # Entities condition will scan the nearby entities in a 10 block radius.
+                    #entities:
+                    #   entity: "PIG"
+                    #   required: 5
+                    # Level means the island level must meet this requirement to comeplete the challenge.
+                    #level:
+                    #   required: 10
+                    # Statistics is something I might add, it would be used with the actions since I have to add actions anyways, This area is not 100% confirmed. - Lime
+                    # statistics:
+                    #   statistic: "something"
+                    #   required: 69
+
+                # How the player should be rewarded when completing this level.
+                # Reward types include
+                rewards:
+                    # Add X amount of economy to one of the supported economy hook plugins.
+                    #economy:
+                    #   amount: 500
+                    # Example of command execution.
+                    #command:
+                    #   command: "/example %player%"
+                    #   #If this should be ran as a console command or player command.
+                    #   console-command: true
+                    #   as-op: false
+                    # Reward experience.
+                    #experience:
+                    #   amount: 10
+                    # Give them an item for completing.
+                    give-item:
+                        # If you want to set a title for the reward item.
+                        #title: ""
+                        # How many of this item to give.
+                        amount: 1
+                        # The name of the material, for 1.13+ you can find a Material list here https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+                        material: "OAK_SAPLING"
+                        #material-meta: "LimeGlass"
+                        # If you want to add lores to the item.
+                        #lore:
+                        #    - "&7line1"
+                        #    - "&a&lline2"
+                    give-item:
+                        amount: 1
+                        material: "ACACIA_SAPLING"
+                    give-item:
+                        amount: 1
+                        material: "BAMBOO_SAPLING"
+                    give-item:
+                        amount: 1
+                        material: "BIRCH_SAPLING"
+                    give-item:
+                        amount: 1
+                        material: "DARK_OAK_SAPLING"
+                    give-item:
+                        amount: 1
+                        material: "DARK_OAK_SAPLING"
