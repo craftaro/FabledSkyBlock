@@ -70,6 +70,8 @@ public class IslandLevel {
         for (Entry<String, Long> entry : this.materials.entrySet()) {
             ConfigurationSection current = materialSection.getConfigurationSection(entry.getKey());
 
+            if (current == null) continue;
+            
             long pointsRequired = current.getLong("Points", 0);
 
             if (pointsRequired != 0) pointsEarned = pointsEarned + (entry.getValue() * pointsRequired);
