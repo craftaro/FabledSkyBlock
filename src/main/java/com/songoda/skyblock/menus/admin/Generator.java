@@ -118,7 +118,7 @@ public class Generator implements Listener {
             com.songoda.skyblock.generator.Generator generator = generatorManager
                     .getGenerator(((Generator.Viewer) playerData.getViewer()).getName());
 
-            List<String> permissionLore = new ArrayList<>();
+            final List<String> permissionLore;
 
             if (generator.isPermission()) {
                 permissionLore = configLoad

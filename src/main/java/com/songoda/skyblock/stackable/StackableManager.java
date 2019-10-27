@@ -84,11 +84,8 @@ public class StackableManager {
 
     public Stackable getStack(Location location, Material material) {
         Stackable stackable = stacks.get(location);
-
-        if (stackable != null && stackable.getMaterial() == material)
-            return stacks.get(location);
-        else
-            return null;
+        
+        return stackable != null && stackable.getMaterial() == material ? stackable : null;
     }
 
     public Stackable addStack(Stackable stackable) {

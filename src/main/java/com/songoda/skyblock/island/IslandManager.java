@@ -1,8 +1,38 @@
 package com.songoda.skyblock.island;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.ChunkSnapshot;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.IllegalPluginAccessException;
+
 import com.google.common.base.Preconditions;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.api.event.island.*;
+import com.songoda.skyblock.api.event.island.IslandCreateEvent;
+import com.songoda.skyblock.api.event.island.IslandDeleteEvent;
+import com.songoda.skyblock.api.event.island.IslandLoadEvent;
+import com.songoda.skyblock.api.event.island.IslandOwnershipTransferEvent;
+import com.songoda.skyblock.api.event.island.IslandUnloadEvent;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -10,6 +40,7 @@ import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.invite.Invite;
 import com.songoda.skyblock.invite.InviteManager;
+import com.songoda.skyblock.island.removal.ChunkDeleteSplitter;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -32,18 +63,6 @@ import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.world.WorldManager;
-import org.bukkit.*;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.IllegalPluginAccessException;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 
 public class IslandManager {
 
@@ -383,6 +402,8 @@ public class IslandManager {
         }
     }
 
+    int j = 0;
+    
     public void deleteIsland(Island island) {
         ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
@@ -396,17 +417,13 @@ public class IslandManager {
             Bukkit.getScheduler().runTaskLater(skyblock, () -> {
                 org.bukkit.World world = worldManager.getWorld(worldList);
                 Location location = island.getLocation(worldList, IslandEnvironment.Island);
+
                 if (location == null) return;
-                int size = island.getSize();
-                int xx = location.getBlockX() - size / 2;
-                int zz = location.getBlockZ() - size / 2;
-                for (int x = xx; x < xx + size; x++) {
-                    for (int z = zz; z < zz + size; z++) {
-                        for (int y = 0; y < world.getMaxHeight(); y++) {
-                            new Location(world, x, y, z).getBlock().setType(Material.AIR);
-                        }
-                    }
-                }
+
+                List<ChunkSnapshot> snapshots = com.songoda.skyblock.levelling.Chunk.getChunksToScan(island, worldList).stream().map(ch -> world.getChunkAt(ch.getX(), ch.getZ()))
+                        .map(chunk -> chunk.getChunkSnapshot()).collect(Collectors.toList());
+
+                ChunkDeleteSplitter.startDeleting(world, snapshots);
             }, i);
             i += 20L;
         }

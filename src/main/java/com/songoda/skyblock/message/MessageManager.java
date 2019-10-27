@@ -36,7 +36,7 @@ public class MessageManager {
                     messages.add(ChatColor.translateAlternateColorCodes('&', messageList));
                 }
 
-                sender.sendMessage(messages.toArray(new String[0]));
+                sender.sendMessage(messages.toArray(new String[messages.size()]));
             } else {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
             }
@@ -50,7 +50,7 @@ public class MessageManager {
                     messages.add(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', messageList)));
                 }
 
-                sender.sendMessage(messages.toArray(new String[0]));
+                sender.sendMessage(messages.toArray(new String[messages.size()]));
             } else {
                 sender.sendMessage(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)));
             }

@@ -29,23 +29,24 @@ public class IslandLevel {
         this.skyblock = skyblock;
         this.ownerUUID = ownerUUID;
 
-        Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        final Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
+        final FileConfiguration configLoad = config.getFileConfiguration();
 
-        Map<String, Long> materials;
+        final ConfigurationSection section = configLoad.getConfigurationSection("Levelling.Materials");
+        final Map<String, Long> materials;
 
-        ConfigurationSection materialSection = configLoad.getConfigurationSection("Leveling.Materials");
+        if (section != null) {
+            final Set<String> keys = section.getKeys(false);
+            materials = new HashMap<>(keys.size());
 
-        if (materialSection != null) {
-            Set<String> keys = materialSection.getKeys(false);
-            materials = new HashMap<>(keys.size() * 2);
+            for (String material : keys) {
 
-            for (String material : materialSection.getKeys(false)) {
-
-                final ConfigurationSection current = materialSection.getConfigurationSection(material);
+                ConfigurationSection current = section.getConfigurationSection(material);
 
                 if (current.isSet("Amount")) materials.put(material, current.getLong("Amount"));
+
             }
+
         } else {
             materials = new HashMap<>();
         }
@@ -71,10 +72,11 @@ public class IslandLevel {
             ConfigurationSection current = materialSection.getConfigurationSection(entry.getKey());
 
             if (current == null) continue;
-            
+
             long pointsRequired = current.getLong("Points", 0);
 
             if (pointsRequired != 0) pointsEarned = pointsEarned + (entry.getValue() * pointsRequired);
+
         }
 
         return pointsEarned;

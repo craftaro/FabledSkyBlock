@@ -59,11 +59,8 @@ public class UpgradeManager {
     }
 
     public List<Upgrade> getUpgrades(Upgrade.Type type) {
-        if (upgradeStorage.containsKey(type)) {
-            return upgradeStorage.get(type);
-        }
+        return upgradeStorage.get(type);
 
-        return null;
     }
 
     public void addUpgrade(Upgrade.Type type, int value) {

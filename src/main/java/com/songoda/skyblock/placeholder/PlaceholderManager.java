@@ -400,7 +400,7 @@ public class PlaceholderManager {
     }
 
     public List<String> getPlaceholders() {
-        List<String> placeholders = new ArrayList<>();
+        List<String> placeholders = new ArrayList<>(25);
         placeholders.add("fabledskyblock_island_exists");
         placeholders.add("fabledskyblock_island_isopen");
         placeholders.add("fabledskyblock_island_size");

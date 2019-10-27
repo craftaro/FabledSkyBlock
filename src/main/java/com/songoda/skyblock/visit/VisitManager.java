@@ -33,8 +33,7 @@ public class VisitManager {
     public void onDisable() {
         HashMap<UUID, Visit> visitIslands = getIslands();
 
-        for (UUID visitIslandList : visitIslands.keySet()) {
-            Visit visit = visitIslands.get(visitIslandList);
+        for (Visit visit : visitIslands.values()) {
             visit.save();
         }
     }

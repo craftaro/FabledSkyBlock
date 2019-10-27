@@ -12,7 +12,7 @@ public enum IslandWorld {
     Normal, Nether, End;
 
     public static List<IslandWorld> getIslandWorlds() {
-        List<IslandWorld> islandWorlds = new ArrayList<>();
+        List<IslandWorld> islandWorlds = new ArrayList<>(3);
 
         WorldManager worldManager = SkyBlock.getInstance().getWorldManager();
         if (worldManager.getWorld(Normal) != null)
