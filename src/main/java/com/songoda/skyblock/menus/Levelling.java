@@ -10,7 +10,7 @@ import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.levelling.LevellingManager;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -55,7 +55,7 @@ public class Levelling {
         SkyBlock skyblock = SkyBlock.getInstance();
 
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        LevellingManager levellingManager = skyblock.getLevellingManager();
+        IslandLevelManager levellingManager = skyblock.getLevellingManager();
         CooldownManager cooldownManager = skyblock.getCooldownManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
@@ -155,7 +155,7 @@ public class Levelling {
 
                             cooldownManager.createPlayer(CooldownType.Levelling,
                                     Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
-                            levellingManager.calculatePoints(player, island);
+                            levellingManager.startScan(player, island);
                         });
                     } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
                         PlayerData playerData1 = skyblock.getPlayerDataManager().getPlayerData(player);

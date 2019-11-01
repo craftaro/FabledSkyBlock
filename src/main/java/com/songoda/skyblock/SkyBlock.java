@@ -14,7 +14,7 @@ import com.songoda.skyblock.hologram.HologramManager;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.levelling.LevellingManager;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import com.songoda.skyblock.listeners.*;
 import com.songoda.skyblock.menus.Rollback;
@@ -64,7 +64,7 @@ public class SkyBlock extends JavaPlugin {
     private ScoreboardManager scoreboardManager;
     private InviteManager inviteManager;
     private BiomeManager biomeManager;
-    private LevellingManager levellingManager;
+    private IslandLevelManager levellingManager;
     private CommandManager commandManager;
     private StructureManager structureManager;
     private StackableManager stackableManager;
@@ -110,7 +110,7 @@ public class SkyBlock extends JavaPlugin {
 
         inviteManager = new InviteManager(this);
         biomeManager = new BiomeManager(this);
-        levellingManager = new LevellingManager(this);
+        levellingManager = new IslandLevelManager();
         commandManager = new CommandManager(this);
         structureManager = new StructureManager(this);
         soundManager = new SoundManager(this);
@@ -277,7 +277,7 @@ public class SkyBlock extends JavaPlugin {
         return biomeManager;
     }
 
-    public LevellingManager getLevellingManager() {
+    public IslandLevelManager getLevellingManager() {
         return levellingManager;
     }
 

@@ -6,7 +6,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Set;
 
 public enum Materials {
 
@@ -1054,7 +1057,13 @@ public enum Materials {
     ZOMBIE_SPAWN_EGG("MONSTER_EGG", 0),
     ZOMBIE_VILLAGER_SPAWN_EGG("MONSTER_EGG", 0),
     ZOMBIE_WALL_HEAD("SKULL", 0);
+    
+    private static final Set<Materials> ALL = Collections.unmodifiableSet(EnumSet.allOf(Materials.class));
 
+    public static Set<Materials> getAllMaterials(){
+        return ALL;
+    }
+    
     static int newV = -1;
     private static HashMap<String, Materials> cachedSearch = new HashMap<>();
     String old13Mat;
@@ -1096,17 +1105,20 @@ public enum Materials {
     }
 
     public static Materials requestMaterials(String name, byte data) {
-        if (cachedSearch.containsKey(name.toUpperCase() + "," + data))
-            return cachedSearch.get(name.toUpperCase() + "," + data);
+
+        final String blockName = name.toUpperCase() + "," + data;
+        Materials cached = cachedSearch.get(blockName);
+
+        if (cached != null) return cached;
 
         Materials pmat = internalRequestMaterials(name, data);
         if (pmat != null || data == 0) {
-            cachedSearch.put(name.toUpperCase() + "," + data, pmat);
+            cachedSearch.put(blockName, pmat);
             return pmat;
         }
 
         pmat = internalRequestMaterials(name, (byte) 0);
-        cachedSearch.put(name.toUpperCase() + "," + data, pmat);
+        cachedSearch.put(blockName, pmat);
         return pmat;
     }
 
@@ -1114,7 +1126,7 @@ public enum Materials {
         Materials pmat = null;
 
         // Try 1.13+ names
-        for (Materials mat : Materials.values()) {
+        for (Materials mat : ALL) {
             if (name.equalsIgnoreCase(mat.name())) {
                 if (pmat == null)
                     pmat = mat;
@@ -1125,7 +1137,7 @@ public enum Materials {
         }
 
         // Try 1.12- names
-        for (Materials mat : Materials.values()) {
+        for (Materials mat : ALL) {
             if (name.equalsIgnoreCase(mat.old12Mat)) {
                 if (pmat == null)
                     pmat = mat;
@@ -1216,7 +1228,7 @@ public enum Materials {
         try {
             return Materials.valueOf(mat.toString());
         } catch (IllegalArgumentException e) {
-            for (Materials xmat : Materials.values()) {
+            for (Materials xmat : ALL) {
                 if (xmat.old12Mat.equalsIgnoreCase(mat.toString())) {
                     return xmat;
                 }

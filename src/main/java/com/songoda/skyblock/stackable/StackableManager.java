@@ -4,6 +4,7 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -12,7 +13,7 @@ import java.util.*;
 
 public class StackableManager {
 
-    //ToDO: Should pobably be a GUI for this
+    // ToDO: Should pobably be a GUI for this
 
     private final SkyBlock skyblock;
     private Set<Material> stackableMaterials = EnumSet.noneOf(Material.class);
@@ -69,7 +70,7 @@ public class StackableManager {
     public Set<Material> getStackableMaterials() {
         return Collections.unmodifiableSet(stackableMaterials);
     }
-    
+
     public boolean isStackableMaterial(Material material) {
         return stackableMaterials.contains(material);
     }
@@ -84,7 +85,7 @@ public class StackableManager {
 
     public Stackable getStack(Location location, Material material) {
         Stackable stackable = stacks.get(location);
-        
+
         return stackable != null && stackable.getMaterial() == material ? stackable : null;
     }
 
@@ -95,5 +96,11 @@ public class StackableManager {
     public void removeStack(Stackable stackable) {
         stackable.setSize(0);
         stacks.remove(stackable.getLocation());
+    }
+
+    public long getStackSizeOf(Location loc, Material type) {
+        final Stackable stack = getStack(loc, type);
+
+        return stack == null ? 0 : stack.getSize();
     }
 }

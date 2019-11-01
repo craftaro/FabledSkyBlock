@@ -14,7 +14,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.generator.GeneratorManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.levelling.LevellingManager;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
@@ -83,9 +83,8 @@ public class ReloadCommand extends SubCommand {
             generatorManager.registerGenerators();
         }
 
-        LevellingManager levellingManager = skyblock.getLevellingManager();
-        levellingManager.unregisterMaterials();
-        levellingManager.registerMaterials();
+        IslandLevelManager levellingManager = skyblock.getLevellingManager();
+        levellingManager.reloadWorth();
 
         Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
             leaderboardManager.clearLeaderboard();

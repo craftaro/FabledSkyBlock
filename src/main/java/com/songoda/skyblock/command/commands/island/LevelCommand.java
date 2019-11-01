@@ -8,7 +8,7 @@ import com.songoda.skyblock.cooldown.CooldownPlayer;
 import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.levelling.LevellingManager;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.menus.Levelling;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -31,7 +31,7 @@ public class LevelCommand extends SubCommand {
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        LevellingManager levellingManager = skyblock.getLevellingManager();
+        IslandLevelManager levellingManager = skyblock.getLevellingManager();
         CooldownManager cooldownManager = skyblock.getCooldownManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
@@ -138,7 +138,7 @@ public class LevelCommand extends SubCommand {
 
                 cooldownManager.createPlayer(CooldownType.Levelling,
                         Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
-                levellingManager.calculatePoints(player, island);
+                levellingManager.startScan(player, island);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Loading.Message"));
                 soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);

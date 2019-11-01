@@ -1,9 +1,10 @@
-package com.songoda.skyblock.levelling;
+package com.songoda.skyblock.levelling.rework;
 
-import com.songoda.skyblock.utils.version.Materials;
 import org.bukkit.inventory.ItemStack;
 
-public class LevellingMaterial {
+import com.songoda.skyblock.utils.version.Materials;
+
+public final class LevellingMaterial {
 
     private Materials materials;
     private long points;

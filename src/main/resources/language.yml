@@ -78,18 +78,19 @@ Command:
       Scanning:
         Finished:
           Message: '&aIsland level scan complete!'
+          Should-Display-Message: false
         Progress:
-          Message: '&eScanning Island level: &b%percent%'
+          Message: '&fScanned &a%current_scanned_blocks%&f/&b%max_blocks% &fblocks ( &a%percent%&f%&f )'
+          Should-Display-Message: true
+          Display-Every-X-Scan: 3
         NotOnIsland:
           Message: '&bSkyBlock &8| &cError&8: &eYou cannot initiate an Island level scan without being on your Island.'
         BlockPlacing:
           Message: '&bSkyBlock &8 | &cError:&8: &eYou cannot place blocks during an Island level scan. Please wait for the scan to finish.'
         Started:
-          Message: '&bSkyBlock &8| &aInfo&8: &eA level scan has started on this island.'
-        Queued:
-          Message: '&bSkyBlock &8| &aInfo&8: &eA level scan has been &aqueued&e for this island. The scan will start as soon as all other queued scans are complete.'
-        Done:
-          Message: '&bSkyBlock &8| &aInfo&8: &eThe scan has completed.'
+          Message: '&bSkyBlock &8| &aInfo&8: &eStarting the island chunk scan. The block scan will start after this is complete.'
+        InScan:
+          Message: '&bSkyBlock &8| &aInfo&8: &eThis island is already being scanned.'
       Cooldown:
         Word:
           Minute: minute(s)
@@ -329,7 +330,7 @@ Command:
         NoIsland:
           Message: '&bSkyBlock &8| &cError&8: &eA player with that name does not own an island.'
         Started:
-          Message: '&bSkyBlock &8| &aInfo&8: &eThe level scan has been queued or started.'
+          Message: '&bSkyBlock &8| &aInfo&8: &eThe level scan has been started.'
       Owner:
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin Owner <player>'

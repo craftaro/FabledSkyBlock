@@ -42,7 +42,7 @@ import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.levelling.LevellingManager;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
@@ -187,7 +187,7 @@ public class Block implements Listener {
 
 		IslandManager islandManager = skyblock.getIslandManager();
 		WorldManager worldManager = skyblock.getWorldManager();
-		LevellingManager levellingManager = skyblock.getLevellingManager();
+		IslandLevelManager levellingManager = skyblock.getLevellingManager();
 		if (!worldManager.isIslandWorld(block.getWorld())) return;
 
 		IslandWorld world = worldManager.getIslandWorld(block.getWorld());
@@ -198,7 +198,7 @@ public class Block implements Listener {
 			return;
 		}
 
-		if (levellingManager.isIslandLevelBeingScanned(island)) {
+		if (levellingManager.isScanning(island)) {
 			skyblock.getMessageManager().sendMessage(player,
 					skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 							.getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
