@@ -26,8 +26,7 @@ import java.util.logging.Level;
 public final class LocationUtil {
 
     public static boolean isLocationLocation(Location location1, Location location2) {
-        return location1.getBlockX() == location2.getBlockX() && location1.getBlockY() == location2.getBlockY()
-                && location1.getBlockZ() == location2.getBlockZ();
+        return location1.getBlockX() == location2.getBlockX() && location1.getBlockY() == location2.getBlockY() && location1.getBlockZ() == location2.getBlockZ();
     }
 
     public static boolean isLocationAffectingIslandSpawn(Location location, Island island, IslandWorld world) {
@@ -36,13 +35,14 @@ public final class LocationUtil {
     }
 
     private static boolean isLocationAffectingLocation(Location location1, Location location2) {
-        Location headHeight = location2.clone().add(0, 1, 0);
-        Location feetHeight = location2.clone();
-        Location groundHeight = location2.clone().add(0, -1, 0);
+        location2 = location2.clone();
 
-        return isLocationLocation(headHeight, location1)
-                || isLocationLocation(feetHeight, location1)
-                || isLocationLocation(groundHeight, location1);
+        /*
+         * First isLocationLocation() call is HeadHeight, second feetHeight, and the
+         * final one is GroundHeight.
+         */
+        return isLocationLocation(location2.add(0, 1, 0), location1) || isLocationLocation(location2.subtract(0, 1, 0), location1)
+                || isLocationLocation(location2.subtract(0, 1, 0), location1);
     }
 
     public static boolean isLocationAtLocationRadius(Location location1, Location location2, double radius) {
@@ -58,19 +58,20 @@ public final class LocationUtil {
     }
 
     public static List<Location> getLocations(Location minLocation, Location maxLocation) {
-        List<Location> locations = new ArrayList<>();
 
-        int MinX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
-        int MinY = Math.min(maxLocation.getBlockY(), minLocation.getBlockY());
-        int MinZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
+        int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
+        int minY = Math.min(maxLocation.getBlockY(), minLocation.getBlockY());
+        int minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
 
-        int MaxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX());
-        int MaxY = Math.max(maxLocation.getBlockY(), minLocation.getBlockY());
-        int MaxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ());
+        int maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX());
+        int maxY = Math.max(maxLocation.getBlockY(), minLocation.getBlockY());
+        int maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ());
 
-        for (int x = MinX; x <= MaxX; x++) {
-            for (int y = MinY; y <= MaxY; y++) {
-                for (int z = MinZ; z <= MaxZ; z++) {
+        List<Location> locations = new ArrayList<>(maxX + maxY + maxZ + 3);
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
                     locations.add(new Location(minLocation.getWorld(), x, y, z));
                 }
             }
@@ -88,8 +89,8 @@ public final class LocationUtil {
         int MaxY = Math.max(maxLocation.getBlockY(), minLocation.getBlockY());
         int MaxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ());
 
-        return MinX < targetLocation.getX() && MaxX > targetLocation.getX() && MinY < targetLocation.getY()
-                && MaxY > targetLocation.getY() && MinZ < targetLocation.getZ() && MaxZ > targetLocation.getZ();
+        return MinX < targetLocation.getX() && MaxX > targetLocation.getX() && MinY < targetLocation.getY() && MaxY > targetLocation.getY() && MinZ < targetLocation.getZ()
+                && MaxZ > targetLocation.getZ();
     }
 
     public static Location getHighestBlock(Location location) {
@@ -110,28 +111,25 @@ public final class LocationUtil {
         int maxY = 0;
         boolean followY = false;
 
+        final int blockX = location.getBlockX();
+        final int blockZ = location.getBlockZ();
+        final World world = location.getWorld();
+
         for (int y = 0; y < location.getWorld().getMaxHeight(); y++) {
-            Location loc = new Location(location.getWorld(), location.getBlockX(), y, location.getBlockZ());
-            Block block = loc.getBlock().getRelative(BlockFace.UP);
+            final Block block = world.getBlockAt(blockX, y, blockZ).getRelative(BlockFace.UP);
 
             if (isNether) {
-                if (y < 127 && (block.getType() == Material.LAVA
-                        || block.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial()
-                        || block.getType() == Material.AIR)) {
+                if (y < 127 && (block.getType() == Material.LAVA || block.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getType() == Material.AIR)) {
                     maxY = y;
                     break;
                 }
             } else {
-                if (block.getType() == Materials.OAK_LEAVES.parseMaterial()
-                        || block.getType() == Materials.ACACIA_LEAVES.parseMaterial()) {
+                if (block.getType() == Materials.OAK_LEAVES.parseMaterial() || block.getType() == Materials.ACACIA_LEAVES.parseMaterial()) {
                     break;
                 }
 
-                if (block.getType() == Material.AIR
-                        || block.getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial()
-                        || block.getType() == Material.WATER
-                        || block.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial()
-                        || block.getType() == Material.LAVA) {
+                if (block.getType() == Material.AIR || block.getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getType() == Material.WATER
+                        || block.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getType() == Material.LAVA) {
                     if (!followY) {
                         maxY = y;
                         followY = true;
@@ -191,8 +189,7 @@ public final class LocationUtil {
             Location spawnLocation = getSpawnLocation();
 
             if (spawnLocation == null) {
-                Bukkit.getServer().getLogger().log(Level.WARNING,
-                        "SkyBlock | Error: The location for the spawn point could not be found.");
+                Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: The location for the spawn point could not be found.");
 
                 return;
             }
@@ -230,8 +227,7 @@ public final class LocationUtil {
         return null;
     }
 
-    public static Location getRandomLocation(World world, int xRange, int zRange, boolean loadChunk,
-                                             boolean ignoreLiquid) {
+    public static Location getRandomLocation(World world, int xRange, int zRange, boolean loadChunk, boolean ignoreLiquid) {
         Random rnd = new Random();
 
         int rndX = rnd.nextInt(xRange);
@@ -242,16 +238,14 @@ public final class LocationUtil {
         double rndY = -1;
 
         if (world.getEnvironment() == Environment.NETHER) {
-            
+
             Location rndLoc = new Location(world, rndX, 0, rndZ);
-            
+
             for (int i = 120; i > 0; i--) {
                 rndLoc.setY(i);
 
-                if (rndLoc.getBlock().getType() != Material.AIR
-                        && rndLoc.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR
-                        && rndLoc.clone().add(0.0D, 2.0D, 0.0D).getBlock().getType() == Material.AIR
-                        && rndLoc.clone().add(0.0D, 3.0D, 0.0D).getBlock().getType() == Material.AIR
+                if (rndLoc.getBlock().getType() != Material.AIR && rndLoc.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR
+                        && rndLoc.clone().add(0.0D, 2.0D, 0.0D).getBlock().getType() == Material.AIR && rndLoc.clone().add(0.0D, 3.0D, 0.0D).getBlock().getType() == Material.AIR
                         && rndLoc.clone().add(0.0D, 4.0D, 0.0D).getBlock().getType() == Material.AIR) {
                     rndY = i;
                     break;

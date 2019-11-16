@@ -4,6 +4,8 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;
 import com.songoda.skyblock.utils.structure.Area;
+
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -146,7 +148,7 @@ public class PlayerData {
     public String[] getTexture() {
         FileConfiguration configLoad = getConfig().getFileConfiguration();
 
-        return new String[]{configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value")};
+        return new String[] { configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value") };
     }
 
     public void setTexture(String signature, String value) {
@@ -161,6 +163,23 @@ public class PlayerData {
     public void setLastOnline(String date) {
         getConfig().getFileConfiguration().set("Statistics.Island.LastOnline", date);
     }
+    
+    public long getIslandCreationCount() {
+        return getConfig().getFileConfiguration().getLong("Statistics.Island.IslandCreationCount");
+    }
+
+    public long getIslandDeletionCount() {
+        return getConfig().getFileConfiguration().getLong("Statistics.Island.IslandDeleteCount");
+    }
+
+    public void setIslandCreationCount(long newNumber) {
+        getConfig().getFileConfiguration().set("Statistics.Island.IslandCreationCount", newNumber);
+    }
+
+    public void setIslandDeletionCount(long newNumber) {
+        getConfig().getFileConfiguration().set("Statistics.Island.IslandDeleteCount", newNumber);
+    }
+
 
     public Area getArea() {
         return area;
@@ -197,7 +216,11 @@ public class PlayerData {
     private Config getConfig() {
         SkyBlock skyblock = SkyBlock.getInstance();
 
-        return skyblock.getFileManager().getConfig(
-                new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+        return skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
     }
+    
+    public Player getPlayer() {
+        return Bukkit.getPlayer(uuid);
+    }
+    
 }

@@ -173,11 +173,7 @@ public class VisitManager {
     }
 
     public Visit getIsland(UUID islandOwnerUUID) {
-        if (hasIsland(islandOwnerUUID)) {
-            return visitStorage.get(islandOwnerUUID);
-        }
-
-        return null;
+        return visitStorage.get(islandOwnerUUID);
     }
 
     public HashMap<UUID, Visit> getIslands() {

@@ -1,10 +1,9 @@
 package com.songoda.skyblock.visit;
 
+import org.bukkit.scheduler.BukkitRunnable;
+
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class VisitTask extends BukkitRunnable {
 
@@ -16,13 +15,9 @@ public class VisitTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            if (playerDataManager.hasPlayerData(all)) {
-                PlayerData playerData = playerDataManager.getPlayerData(all);
-
-                if (playerData.getIsland() != null) {
-                    playerData.setVisitTime(playerData.getVisitTime() + 1);
-                }
+        for (PlayerData playerData : playerDataManager.getPlayerData().values()) {
+            if (playerData.getIsland() != null) {
+                playerData.setVisitTime(playerData.getVisitTime() + 1);
             }
         }
     }

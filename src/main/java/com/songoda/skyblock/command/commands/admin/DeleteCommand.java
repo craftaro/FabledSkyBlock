@@ -91,7 +91,7 @@ public class DeleteCommand extends SubCommand {
                 }
 
                 island.setDeleted(true);
-                islandManager.deleteIsland(island);
+                islandManager.deleteIsland(island, true);
 
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.Delete.Deleted.Message").replace("%player",

@@ -7,19 +7,32 @@ import java.lang.reflect.Field;
 
 public class NMSUtil {
 
+    private static final String version;
+    private static final int versionNumber;
+    private static final int versionReleaseNumber;
+
+    static {
+
+        String packageName = Bukkit.getServer().getClass().getPackage().getName();
+        version = packageName.substring(packageName.lastIndexOf('.') + 1) + ".";
+
+        String name = version.substring(3);
+        versionNumber = Integer.parseInt(name.substring(0, name.length() - 4));
+
+        versionReleaseNumber = Integer.parseInt(version.substring(version.length() - 2).replace(".", ""));
+
+    }
+
     public static String getVersion() {
-        String name = Bukkit.getServer().getClass().getPackage().getName();
-        return name.substring(name.lastIndexOf('.') + 1) + ".";
+        return version;
     }
 
     public static int getVersionNumber() {
-        String name = getVersion().substring(3);
-        return Integer.valueOf(name.substring(0, name.length() - 4));
+        return versionNumber;
     }
 
     public static int getVersionReleaseNumber() {
-        String NMSVersion = getVersion();
-        return Integer.valueOf(NMSVersion.substring(NMSVersion.length() - 2).replace(".", ""));
+        return versionReleaseNumber;
     }
 
     public static Class<?> getNMSClass(String className) {

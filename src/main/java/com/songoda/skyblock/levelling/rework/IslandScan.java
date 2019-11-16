@@ -138,10 +138,13 @@ public final class IslandScan extends BukkitRunnable {
 
         if (config.getBoolean("Command.Island.Level.Scanning.Progress.Should-Display-Message") && executions == 1 || totalScanned == blocksSize || executions % runEveryX == 0) {
 
+            final double percent = ((double) totalScanned / (double) blocksSize) * 100;
+
             String message = config.getString("Command.Island.Level.Scanning.Progress.Message");
             message = message.replace("%current_scanned_blocks%", String.valueOf(totalScanned));
             message = message.replace("%max_blocks%", String.valueOf(blocksSize));
-            message = message.replace("%percent%", FORMATTER.format(((double) totalScanned / (double) blocksSize) * 100));
+            message = message.replace("%percent_whole%", String.valueOf((int) percent));
+            message = message.replace("%percent%", FORMATTER.format(percent));
 
             final boolean displayComplete = totalScanned == blocksSize && config.getBoolean("Command.Island.Level.Scanning.Finished.Should-Display-Message");
             final MessageManager messageManager = SkyBlock.getInstance().getMessageManager();

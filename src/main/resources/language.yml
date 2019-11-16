@@ -806,6 +806,7 @@ Command:
           Message: '&bSkyBlock &8| &cError&8: &eYou must close your Island before deleting it.'
         Sender:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou are no longer an Island Owner.'
+          MaxDeletionMessage: '&bSkyBlock &8| &cError&8: &eYou have reach the maximum island deletions. Sorry.'
         Broadcast:
           Message: '&bSkyBlock &8| &aInfo&8: &eThe Island Owner has disbanded the Island.'
         Money:
@@ -3109,11 +3110,6 @@ Placeholder:
       Message: '&f&oUnclaimed'
     Non-empty:
       Message: '&f[%position] %player [%level]'
-  fabledskyblock_island_points:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
   fabledskyblock_island_visitors:
     Non-empty:
       Message: '&f%placeholder'
@@ -3192,11 +3188,6 @@ Placeholder:
   fabledskyblock_island_biome:
     Empty:
       Message: '&f&oNone'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_level:
-    Empty:
-      Message: '&c0'
     Non-empty:
       Message: '&f%placeholder'
   fabledskyblock_island_level_formatted:
@@ -3376,6 +3367,7 @@ Island:
         Message: '&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore creating an Island.'
     Error:
       Message: '&bSkyBlock &8| &cError&8: &eThe main spawn point must be set before you are able to create an Island by performing the command ''&f&o/island admin setspawn&e''.'
+      MaxCreationMessage: '&bSkyBlock &8| &cError&8: &eYou have reach the maximum island creations. Sorry.'
   Upgrade:
     Owner:
       Message: '&bSkyBlock &8| &cError&8: &eYou are not an Island Owner.'

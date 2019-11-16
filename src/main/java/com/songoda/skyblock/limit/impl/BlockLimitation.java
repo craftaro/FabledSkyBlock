@@ -3,17 +3,14 @@ package com.songoda.skyblock.limit.impl;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.limit.EnumLimitation;
+import com.songoda.skyblock.utils.player.PlayerUtil;
 import com.songoda.skyblock.utils.version.Materials;
 
 public final class BlockLimitation extends EnumLimitation<Materials> {
@@ -46,7 +43,7 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
             final String enumName = key.toUpperCase(Locale.ENGLISH);
             final Materials type = Materials.fromString(enumName);
 
-            if (type == null) throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in " + loadFrom.getCurrentPath());
+            if (type == null) throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
 
             getMap().put(type, loadFrom.getLong(key));
         }
@@ -63,25 +60,9 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
 
         if (material == null) return -1;
 
-        long limit = getMap().getOrDefault(material, getDefault());
-
         final String name = material.name().toLowerCase();
 
-        Set<PermissionAttachmentInfo> permissions = player.getEffectivePermissions().stream()
-                .filter(x -> x.getPermission().toLowerCase().startsWith("fabledskyblock.limit.block." + name)).collect(Collectors.toSet());
-
-        for (PermissionAttachmentInfo permission : permissions) {
-            try {
-                String permString = permission.getPermission();
-                String numberString = permString.substring(permString.lastIndexOf(".") + 1);
-                if (numberString.equals("*")) return -1;
-
-                limit = Math.max(limit, Integer.parseInt(numberString));
-            } catch (Exception ignored) {
-            }
-        }
-
-        return limit;
+        return Math.max(getMap().getOrDefault(material, getDefault()), PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.block." + name, true, -1));
     }
 
     @SuppressWarnings("deprecation")
@@ -94,8 +75,7 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
         final long totalPlaced;
 
         if (block.getType() == Materials.SPAWNER.parseMaterial()) {
-            totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER"))
-                    .mapToLong(Map.Entry::getValue).sum();
+            totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {
             totalPlaced = island.getLevel().getMaterialAmount(Materials.getMaterials(block.getType(), block.getData()).name());
         }

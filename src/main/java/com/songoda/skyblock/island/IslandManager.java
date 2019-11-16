@@ -52,6 +52,7 @@ import com.songoda.skyblock.structure.StructureManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
+import com.songoda.skyblock.utils.player.PlayerUtil;
 import com.songoda.skyblock.utils.structure.SchematicUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
 import com.songoda.skyblock.utils.version.Materials;
@@ -162,6 +163,21 @@ public class IslandManager {
         FileManager fileManager = skyblock.getFileManager();
         BanManager banManager = skyblock.getBanManager();
 
+        PlayerData data = skyblock.getPlayerDataManager().getPlayerData(player);
+
+        long amt = 0;
+
+        if (data != null) {
+            final int highest = PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.create", true, 2);
+
+            if ((amt = data.getIslandCreationCount()) >= highest) {
+                skyblock.getMessageManager().sendMessage(player,
+                        fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.MaxCreationMessage"));
+                return false;
+            }
+
+        }
+
         if (fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
             skyblock.getMessageManager().sendMessage(player,
                     fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.Message"));
@@ -169,6 +185,8 @@ public class IslandManager {
 
             return false;
         }
+
+        data.setIslandCreationCount(amt + 1);
 
         Island island = new Island(player);
         island.setStructure(structure.getName());
@@ -231,12 +249,6 @@ public class IslandManager {
         }
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
-            if (structure.getCommands() != null) {
-                for (String commandList : structure.getCommands()) {
-                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));
-                }
-            }
-
             player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
             player.setFallDistance(0.0F);
         }, configLoad.getInt("Island.Creation.TeleportTimeout") * 20);
@@ -250,7 +262,14 @@ public class IslandManager {
         }
         Biome biome = sBiome.getBiome();
 
-        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getBiomeManager().setBiome(island, biome), 20L);
+        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+            skyblock.getBiomeManager().setBiome(island, biome);
+            if (structure.getCommands() != null) {
+                for (String commandList : structure.getCommands()) {
+                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));
+                }
+            }
+        }, 20L);
 
         // Recalculate island level after 5 seconds
         if (configLoad.getBoolean("Island.Levelling.ScanAutomatically"))
@@ -373,14 +392,31 @@ public class IslandManager {
 
     int j = 0;
 
-    public void deleteIsland(Island island) {
+    public boolean deleteIsland(Island island, boolean force) {
         ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         CooldownManager cooldownManager = skyblock.getCooldownManager();
         FileManager fileManager = skyblock.getFileManager();
         WorldManager worldManager = skyblock.getWorldManager();
 
-        // Delete island from world.
+        if (!force) {
+            PlayerData data = playerDataManager.getPlayerData(island.getOwnerUUID());
+
+            if (data != null) {
+
+                final Player player = data.getPlayer();
+
+                if (player != null) {
+
+                    long amt = 0;
+                    final int highest = PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.delete", true, 1);
+
+                    if ((amt = data.getIslandDeletionCount()) >= highest) return false;
+
+                    data.setIslandDeletionCount(amt + 1);
+                }
+            }
+        }
 
         final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
 
@@ -462,6 +498,7 @@ public class IslandManager {
         Bukkit.getServer().getPluginManager().callEvent(new IslandDeleteEvent(island.getAPIWrapper()));
 
         islandStorage.remove(island.getOwnerUUID());
+        return true;
     }
 
     public void deleteIslandData(UUID uuid) {
@@ -1171,16 +1208,17 @@ public class IslandManager {
     }
 
     public Set<UUID> getCoopPlayersAtIsland(Island island) {
-        Set<UUID> coopPlayersAtIsland = new HashSet<>();
+        final Set<UUID> coopPlayersAtIsland = new HashSet<>();
 
-        if (island != null) {
-            for (Player all : Bukkit.getOnlinePlayers()) {
-                if (island.getCoopPlayers().containsKey(all.getUniqueId())) {
-                    if (isPlayerAtIsland(island, all)) {
-                        coopPlayersAtIsland.add(all.getUniqueId());
-                    }
-                }
-            }
+        if (island == null) return coopPlayersAtIsland;
+
+        for (UUID coopUUID : island.getCoopPlayers().keySet()) {
+
+            final Player player = Bukkit.getPlayer(coopUUID);
+
+            if (player == null) continue;
+
+            if (isPlayerAtIsland(island, player)) coopPlayersAtIsland.add(coopUUID);
         }
 
         return coopPlayersAtIsland;

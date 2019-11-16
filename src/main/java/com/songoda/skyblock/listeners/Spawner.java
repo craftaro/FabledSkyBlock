@@ -54,7 +54,7 @@ public class Spawner implements Listener {
                                 Object TileEntityMobSpawner = TileEntityMobSpawnerField.get(spawner);
                                 MobSpawner = TileEntityMobSpawner.getClass().getMethod("getSpawner")
                                         .invoke(TileEntityMobSpawner);
-                            } catch (NoSuchFieldException e) {
+                            } catch (NoSuchFieldException ignored) {
                                 Field snapshotField = spawner.getClass().getSuperclass().getDeclaredField("snapshot");
                                 snapshotField.setAccessible(true);
                                 Object snapshot = snapshotField.get(spawner);
@@ -92,6 +92,8 @@ public class Spawner implements Listener {
                             e.printStackTrace();
                         }
                     }
+                    
+                    spawner.update();
                 }
 
                 return;

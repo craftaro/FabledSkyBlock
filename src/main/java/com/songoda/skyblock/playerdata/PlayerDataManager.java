@@ -117,12 +117,20 @@ public class PlayerDataManager {
         return playerDataStorage;
     }
 
+    public PlayerData getPlayerData(UUID uuid) {
+        return playerDataStorage.get(uuid);
+    }
+
+    public boolean hasPlayerData(UUID uuid) {
+        return playerDataStorage.containsKey(uuid);
+    }
+
     public PlayerData getPlayerData(Player player) {
-        return playerDataStorage.get(player.getUniqueId());
+        return getPlayerData(player.getUniqueId());
     }
 
     public boolean hasPlayerData(Player player) {
-        return playerDataStorage.containsKey(player.getUniqueId());
+        return hasPlayerData(player.getUniqueId());
     }
 
     public void storeIsland(Player player) {

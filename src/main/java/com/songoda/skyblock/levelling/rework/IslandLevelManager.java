@@ -27,6 +27,7 @@ import com.songoda.skyblock.levelling.rework.calculator.impl.EpicSpawnerCalculat
 import com.songoda.skyblock.levelling.rework.calculator.impl.UltimateStackerCalculator;
 import com.songoda.skyblock.levelling.rework.calculator.impl.WildStackerCalculator;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 
@@ -63,12 +64,12 @@ public final class IslandLevelManager {
         }
 
         if (attemptScanner != null) {
-            
-            if(SkyBlock.getInstance().getIslandManager().getIslandPlayerAt(attemptScanner) != island) {
+
+            if (SkyBlock.getInstance().getIslandManager().getIslandPlayerAt(attemptScanner) != island) {
                 messageManager.sendMessage(attemptScanner, config.getString("Command.Island.Level.Scanning.NotOnIsland.Message"));
                 return;
             }
-            
+
             messageManager.sendMessage(attemptScanner, config.getString("Command.Island.Level.Scanning.Started.Message"));
         }
 
@@ -164,7 +165,9 @@ public final class IslandLevelManager {
         if (finalType == Materials.SPAWNER) finalType = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
 
         final List<Calculator> calculators = CalculatorRegistry.getCalculators(blockType);
-        final long stackSize = SkyBlock.getInstance().getStackableManager().getStackSizeOf(block.getLocation(), blockType);
+        final StackableManager stackableManager = SkyBlock.getInstance().getStackableManager();
+
+        final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(block.getLocation(), blockType);
 
         if (calculators == null) {
 
