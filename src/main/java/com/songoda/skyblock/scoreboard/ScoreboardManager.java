@@ -161,7 +161,7 @@ public class ScoreboardManager extends BukkitRunnable {
 
                 obj.setDisplayName(primaryObjective.getDisplayName());
                 obj.setDisplaySlot(primaryObjective.getDisplaySlot());
-                obj.setRenderType(primaryObjective.getRenderType());
+                if (VERSION > 12) obj.setRenderType(primaryObjective.getRenderType());
             }
 
             for (Team primaryTeam : teams) {
