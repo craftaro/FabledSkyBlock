@@ -135,16 +135,6 @@ public class Interact implements Listener {
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-
-            System.out.println("1st Condition: " + (stackableManager != null));
-            System.out.println("2nd Condition: " + (stackableManager != null && stackableManager.isStackableMaterial(event.getMaterial())));
-            System.out.println("3rd Condition: " + (event.getClickedBlock().getType() == event.getMaterial()));
-            System.out.println("4th Condition: " + (!player.isSneaking()));
-            System.out.println("5th Condition: "
-                    + ((!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission")
-                            || player.hasPermission("fabledskyblock.stackable"))));
-            System.out.println("All must be true.");
-
             if (stackableManager != null && stackableManager.isStackableMaterial(event.getMaterial()) && event.getClickedBlock().getType() == event.getMaterial() && !player.isSneaking()
                     && islandManager.hasPermission(player, block.getLocation(), "Place")
                     && (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission")
@@ -183,10 +173,8 @@ public class Interact implements Listener {
                 if (stackable == null) {
                     stackableManager.addStack(stackable = new Stackable(location, event.getMaterial()));
                     stackable.setSize(itemAmount + 1);
-                    System.out.println("Stack is null. Creating");
                 } else {
                     stackable.setSize(stackable.getSize() + itemAmount);
-                    System.out.println("Incrementing stack count.");
                 }
 
                 event.setCancelled(true);
