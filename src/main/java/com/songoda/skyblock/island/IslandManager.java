@@ -172,16 +172,14 @@ public class IslandManager {
             final int highest = PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.create", true, 2);
 
             if ((amt = data.getIslandCreationCount()) >= highest) {
-                skyblock.getMessageManager().sendMessage(player,
-                        fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.MaxCreationMessage"));
+                skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.MaxCreationMessage"));
                 return false;
             }
 
         }
 
         if (fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
-            skyblock.getMessageManager().sendMessage(player,
-                    fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.Message"));
+            skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.Message"));
             skyblock.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
             return false;
@@ -200,8 +198,8 @@ public class IslandManager {
             visitManager.createIsland(island.getOwnerUUID(),
                     new IslandLocation[] { island.getIslandLocation(IslandWorld.Normal, IslandEnvironment.Island), island.getIslandLocation(IslandWorld.Nether, IslandEnvironment.Island),
                             island.getIslandLocation(IslandWorld.End, IslandEnvironment.Island) },
-                    island.getSize(), island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1, island.getBankBalance(),
-                    visitManager.getIslandSafeLevel(island.getOwnerUUID()), island.getLevel(), island.getMessage(IslandMessage.Signature), island.isOpen());
+                    island.getSize(), island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1, island.getBankBalance(), visitManager.getIslandSafeLevel(island.getOwnerUUID()), island.getLevel(),
+                    island.getMessage(IslandMessage.Signature), island.isOpen());
         }
 
         if (!banManager.hasIsland(island.getOwnerUUID())) banManager.createIsland(island.getOwnerUUID());
@@ -273,8 +271,7 @@ public class IslandManager {
         }, 20L);
 
         // Recalculate island level after 5 seconds
-        if (configLoad.getBoolean("Island.Levelling.ScanAutomatically"))
-            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().startScan(null, island), 100L);
+        if (configLoad.getBoolean("Island.Levelling.ScanAutomatically")) Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().startScan(null, island), 100L);
 
         return true;
     }
@@ -429,8 +426,7 @@ public class IslandManager {
 
             final World world = worldManager.getWorld(worldList);
 
-            final List<ChunkSnapshot> list = com.songoda.skyblock.levelling.ChunkUtil.getChunksToScan(island, worldList).stream().map(chunk -> chunk.getChunkSnapshot())
-                    .collect(Collectors.toList());
+            final List<ChunkSnapshot> list = com.songoda.skyblock.levelling.ChunkUtil.getChunksToScan(island, worldList).stream().map(chunk -> chunk.getChunkSnapshot()).collect(Collectors.toList());
 
             snapshots.put(world, list);
         }
@@ -454,8 +450,7 @@ public class IslandManager {
         configLoad = config.getFileConfiguration();
 
         for (Player all : Bukkit.getOnlinePlayers()) {
-            if ((island.hasRole(IslandRole.Member, all.getUniqueId()) || island.hasRole(IslandRole.Operator, all.getUniqueId()) || island.hasRole(IslandRole.Owner, all.getUniqueId()))
-                    && playerDataManager.hasPlayerData(all)) {
+            if ((island.hasRole(IslandRole.Member, all.getUniqueId()) || island.hasRole(IslandRole.Operator, all.getUniqueId()) || island.hasRole(IslandRole.Owner, all.getUniqueId())) && playerDataManager.hasPlayerData(all)) {
                 PlayerData playerData = playerDataManager.getPlayerData(all);
                 playerData.setOwner(null);
                 playerData.setMemberSince(null);
@@ -559,10 +554,10 @@ public class IslandManager {
 
                 if (!visitManager.hasIsland(island.getOwnerUUID())) {
                     visitManager.createIsland(island.getOwnerUUID(),
-                            new IslandLocation[] { island.getIslandLocation(IslandWorld.Normal, IslandEnvironment.Island),
-                                    island.getIslandLocation(IslandWorld.Nether, IslandEnvironment.Island), island.getIslandLocation(IslandWorld.End, IslandEnvironment.Island) },
-                            island.getSize(), island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1, island.getBankBalance(),
-                            visitManager.getIslandSafeLevel(island.getOwnerUUID()), island.getLevel(), island.getMessage(IslandMessage.Signature), island.isOpen());
+                            new IslandLocation[] { island.getIslandLocation(IslandWorld.Normal, IslandEnvironment.Island), island.getIslandLocation(IslandWorld.Nether, IslandEnvironment.Island),
+                                    island.getIslandLocation(IslandWorld.End, IslandEnvironment.Island) },
+                            island.getSize(), island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1, island.getBankBalance(), visitManager.getIslandSafeLevel(island.getOwnerUUID()),
+                            island.getLevel(), island.getMessage(IslandMessage.Signature), island.isOpen());
                 }
 
                 if (!banManager.hasIsland(island.getOwnerUUID())) {
@@ -914,8 +909,7 @@ public class IslandManager {
 
             List<String> islandWelcomeMessage = island.getMessage(IslandMessage.Welcome);
 
-            if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable")
-                    && islandWelcomeMessage.size() != 0) {
+            if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable") && islandWelcomeMessage.size() != 0) {
                 for (String islandWelcomeMessageList : islandWelcomeMessage) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', islandWelcomeMessageList));
                 }
@@ -1182,8 +1176,7 @@ public class IslandManager {
     public void updateFlight(Player player) {
         // The player can fly in other worlds if they are in creative or have another
         // plugin's fly permission.
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR || player.hasPermission("essentials.fly") || player.hasPermission("cmi.command.fly"))
-            return;
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR || player.hasPermission("essentials.fly") || player.hasPermission("cmi.command.fly")) return;
 
         Island island = getIslandAtLocation(player.getLocation());
 
