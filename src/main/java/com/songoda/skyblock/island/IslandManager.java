@@ -196,27 +196,6 @@ public class IslandManager {
         for (IslandWorld worldList : IslandWorld.getIslandWorlds())
             prepareIsland(island, worldList);
 
-        for (IslandWorld world : IslandWorld.values()) {
-
-            for (IslandEnvironment env : IslandEnvironment.values()) {
-
-                Location loc = island.getLocation(world, env);
-
-                if (loc != null) {
-                    new BukkitRunnable() {
-
-                        @Override
-                        public void run() {
-                            loc.getWorld().loadChunk(loc.getChunk());
-                        }
-
-                    }.runTask(skyblock);
-
-                }
-
-            }
-        }
-
         if (!visitManager.hasIsland(island.getOwnerUUID())) {
             visitManager.createIsland(island.getOwnerUUID(),
                     new IslandLocation[] { island.getIslandLocation(IslandWorld.Normal, IslandEnvironment.Island), island.getIslandLocation(IslandWorld.Nether, IslandEnvironment.Island),
