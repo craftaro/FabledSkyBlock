@@ -97,15 +97,14 @@ public class Teleport implements Listener {
                             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
                             return;
-                        } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning")
-                                && island.getBan().isBanned(player.getUniqueId())) {
-                                    event.setCancelled(true);
+                        } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
+                            event.setCancelled(true);
 
-                                    messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Teleport.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Teleport.Message"));
+                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-                                    return;
-                                }
+                            return;
+                        }
                     }
                 }
 
@@ -126,8 +125,7 @@ public class Teleport implements Listener {
 
                 if (worldManager.getIslandWorld(event.getTo().getWorld()) == IslandWorld.Normal) {
                     if (!island.isWeatherSynchronized()) {
-                        player.setPlayerTime(island.getTime(),
-                                fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+                        player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                         player.setPlayerWeather(island.getWeather());
                     }
                 }

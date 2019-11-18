@@ -25,6 +25,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.IllegalPluginAccessException;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.base.Preconditions;
 import com.songoda.skyblock.SkyBlock;
@@ -194,6 +195,27 @@ public class IslandManager {
 
         for (IslandWorld worldList : IslandWorld.getIslandWorlds())
             prepareIsland(island, worldList);
+
+        for (IslandWorld world : IslandWorld.values()) {
+
+            for (IslandEnvironment env : IslandEnvironment.values()) {
+
+                Location loc = island.getLocation(world, env);
+
+                if (loc != null) {
+                    new BukkitRunnable() {
+
+                        @Override
+                        public void run() {
+                            loc.getWorld().loadChunk(loc.getChunk());
+                        }
+
+                    }.runTask(skyblock);
+
+                }
+
+            }
+        }
 
         if (!visitManager.hasIsland(island.getOwnerUUID())) {
             visitManager.createIsland(island.getOwnerUUID(),

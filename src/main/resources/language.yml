@@ -833,6 +833,9 @@ Command:
         Message: '&f&oOpens a menu of public Islands to Visit.'
       Invalid:
         Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island visit [<player>]'
+      Closed:
+       Island:
+        Message: '&bSkyBlock &8| &aInfo&8: &eThe island you were at closed.'
     Help:
       Page:
         Message: '&bSkyBlock &8| &cError&8: &eThere are not that many pages.'

@@ -18,13 +18,21 @@ public class MessageManager {
     }
 
     public void sendMessage(CommandSender sender, String message) {
+
+        if (message == null) {
+            System.out.println("Message is null.");
+            System.out.println("Message is null.");
+            System.out.println("Message is null.");
+            System.out.println("Message is null.");
+            return;
+        }
+
         if (sender instanceof Player) {
             PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
             Player player = (Player) sender;
 
             if (placeholderManager.isPlaceholderAPIEnabled()) {
-                message = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message.replace("&", "clr"))
-                        .replace("clr", "&");
+                message = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message.replace("&", "clr")).replace("clr", "&");
             }
 
             if (message.contains("\n") || message.contains("\\n")) {
@@ -61,8 +69,7 @@ public class MessageManager {
         PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
 
         if (placeholderManager.isPlaceholderAPIEnabled()) {
-            message = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message.replace("&", "clr"))
-                    .replace("clr", "&");
+            message = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message.replace("&", "clr")).replace("clr", "&");
         }
 
         return message;
