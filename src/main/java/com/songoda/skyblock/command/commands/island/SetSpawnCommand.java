@@ -61,7 +61,9 @@ public class SetSpawnCommand extends SubCommand {
                                     .getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
                                 if (location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR
                                         || location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock()
-                                        .getType() == Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial()) {
+                                        .getType() == Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial()
+                                        || location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock()
+                                        .getType() == Material.ICE) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.SetSpawn.Protection.Block.Message"));
                                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
