@@ -205,12 +205,7 @@ public class PlayerDataManager {
                                             scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
                                             scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
 
-                                            Map<String, String> displayVariables = new HashMap<>();
-                                            displayVariables.put("%owner", configLoad.getString("Scoreboard.Island.Team.Word.Owner"));
-                                            displayVariables.put("%operator", configLoad.getString("Scoreboard.Island.Team.Word.Operator"));
-                                            displayVariables.put("%member", configLoad.getString("Scoreboard.Island.Team.Word.Member"));
 
-                                            scoreboard.setDisplayVariables(displayVariables);
                                         }
 
                                         scoreboard.run();

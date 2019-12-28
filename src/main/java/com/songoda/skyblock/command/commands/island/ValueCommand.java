@@ -10,7 +10,8 @@ import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
-import org.apache.commons.lang3.text.WordUtils;
+
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

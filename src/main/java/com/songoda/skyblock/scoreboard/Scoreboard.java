@@ -20,6 +20,7 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.localization.type.Localization;
 import com.songoda.skyblock.placeholder.PlaceholderManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
@@ -31,14 +32,13 @@ public class Scoreboard {
 
     private String displayName;
     private List<String> displayList;
-    private Map<String, String> displayVariables;
+
     private BukkitTask scheduler;
 
     public Scoreboard(SkyBlock plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
         displayList = new ArrayList<>();
-        displayVariables = new HashMap<>();
     }
 
     public void setDisplayName(String displayName) {
@@ -47,10 +47,6 @@ public class Scoreboard {
 
     public void setDisplayList(List<String> displayList) {
         this.displayList = displayList;
-    }
-
-    public void setDisplayVariables(Map<String, String> displayVariables) {
-        this.displayVariables = displayVariables;
     }
 
     public void run() {
@@ -135,8 +131,7 @@ public class Scoreboard {
                                                     String lastColorCodeText = colorCodes[colorCodes.length - 1];
                                                     lastColorCodes = "&" + lastColorCodeText.substring(0, Math.min(lastColorCodeText.length(), 1));
 
-                                                    if ((colorCodes.length >= 2)
-                                                            && (lastColorCodes.equals("&l") || lastColorCodes.equals("&m") || lastColorCodes.equals("&n") || lastColorCodes.equals("&o"))) {
+                                                    if ((colorCodes.length >= 2) && (lastColorCodes.equals("&l") || lastColorCodes.equals("&m") || lastColorCodes.equals("&n") || lastColorCodes.equals("&o"))) {
                                                         lastColorCodeText = colorCodes[colorCodes.length - 2];
                                                         lastColorCodes = "&" + lastColorCodeText.substring(0, Math.min(lastColorCodeText.length(), 1)) + lastColorCodes;
                                                     }
@@ -188,29 +183,30 @@ public class Scoreboard {
             IslandLevel level = island.getLevel();
 
             if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
-                displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel())).replace("%island_members", ChatColor.RED + "0")
-                        .replace("%island_role", ChatColor.RED + "null").replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size())
-                        .replace("%island_size", "" + island.getSize()).replace("%island_radius", "" + island.getRadius());
+                displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel())).replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null")
+                        .replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size()).replace("%island_size", "" + island.getSize()).replace("%island_radius", "" + island.getRadius());
             } else {
                 int islandMembers = 1 + island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size();
                 String islandRole = "";
 
+                
+                Localization<IslandRole> locale = skyblock.getLocalizationManager().getLocalizationFor(IslandRole.class);
+                
                 if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                    islandRole = displayVariables.get("%owner");
+                    islandRole = locale.getLocale(IslandRole.Owner);
                 } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
-                    islandRole = displayVariables.get("%operator");
+                    islandRole = locale.getLocale(IslandRole.Operator);
                 } else if (island.hasRole(IslandRole.Member, player.getUniqueId())) {
-                    islandRole = displayVariables.get("%member");
+                    islandRole = locale.getLocale(IslandRole.Member);;
                 }
 
-                displayLine = displayLine.replace("%island_points", "" + NumberUtil.formatNumberByDecimal(level.getPoints()))
-                        .replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel())).replace("%island_members", "" + islandMembers).replace("%island_role", islandRole)
-                        .replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size()).replace("%island_size", "" + island.getSize())
-                        .replace("%island_radius", "" + island.getRadius());
+                displayLine = displayLine.replace("%island_points", "" + NumberUtil.formatNumberByDecimal(level.getPoints())).replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel()))
+                        .replace("%island_members", "" + islandMembers).replace("%island_role", islandRole).replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size())
+                        .replace("%island_size", "" + island.getSize()).replace("%island_radius", "" + island.getRadius());
             }
         } else {
-            displayLine = displayLine.replace("%island_points", ChatColor.RED + "0").replace("%island_level", ChatColor.RED + "0").replace("%island_members", ChatColor.RED + "0")
-                    .replace("%island_role", ChatColor.RED + "null").replace("%island_size", ChatColor.RED + "0").replace("%island_radius", ChatColor.RED + "0");
+            displayLine = displayLine.replace("%island_points", ChatColor.RED + "0").replace("%island_level", ChatColor.RED + "0").replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null")
+                    .replace("%island_size", ChatColor.RED + "0").replace("%island_radius", ChatColor.RED + "0");
         }
 
         PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();

@@ -1,15 +1,16 @@
 package com.songoda.skyblock.utils.version;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.inventory.ItemStack;
-
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 
 public enum Materials {
 
@@ -26,7 +27,7 @@ public enum Materials {
     ACACIA_SLAB("WOOD_STEP", 4),
     ACACIA_SIGN("STONE", 0, true),
     ACACIA_STAIRS("ACACIA_STAIRS", 4),
-    ACACIA_TRAPDOOR("TRAP_DOOR", 0, true),
+    ACACIA_TRAPDOOR("TRAP_DOOR", "OAK_TRAPDOOR", true),
     ACACIA_WALL_SIGN("STONE", 0, true),
     ACACIA_WOOD("LOG_2", 0),
     ACTIVATOR_RAIL("ACTIVATOR_RAIL", 0),
@@ -70,7 +71,7 @@ public enum Materials {
     BIRCH_SIGN("STONE", 0, true),
     BIRCH_SLAB("WOOD_STEP", 2),
     BIRCH_STAIRS("BIRCH_WOOD_STAIRS", 0),
-    BIRCH_TRAPDOOR("TRAP_DOOR", 0, true),
+    BIRCH_TRAPDOOR("TRAP_DOOR", "OAK_TRAPDOOR", true),
     BIRCH_WALL_SIGN("STONE", 0, true),
     BIRCH_WOOD("LOG", 2),
     BLACK_BANNER("BANNER", 0),
@@ -248,9 +249,9 @@ public enum Materials {
     DARK_OAK_PRESSURE_PLATE("WOOD_PLATE", 0, true),
     DARK_OAK_SAPLING("SAPLING", 5),
     DARK_OAK_SIGN("STONE", 0, true),
-    DARK_OAK_SLAB("WOOD_STEP", 0),
+    DARK_OAK_SLAB("WOOD_STEP", 5),
     DARK_OAK_STAIRS("DARK_OAK_STAIRS", 0),
-    DARK_OAK_TRAPDOOR("TRAP_DOOR", 0, true),
+    DARK_OAK_TRAPDOOR("TRAP_DOOR", "OAK_TRAPDOOR", true),
     DARK_OAK_WALL_SIGN("STONE", 0, true),
     DARK_OAK_WOOD("LOG_2", 1),
     DARK_PRISMARINE("PRISMARINE", 2),
@@ -464,7 +465,7 @@ public enum Materials {
     JUNGLE_SIGN("STONE", 0, true),
     JUNGLE_SLAB("WOOD_STEP", 3),
     JUNGLE_STAIRS("JUNGLE_WOOD_STAIRS", 0),
-    JUNGLE_TRAPDOOR("TRAP_DOOR", 0, true),
+    JUNGLE_TRAPDOOR("TRAP_DOOR", "OAK_TRAPDOOR", true),
     JUNGLE_WALL_SIGN("STONE", 0, true),
     JUNGLE_WOOD("LOG", 3),
     KELP("STONE", 0, true),
@@ -932,7 +933,7 @@ public enum Materials {
     SPRUCE_SIGN("STONE", 0, true),
     SPRUCE_SLAB("WOOD_STEP", 1),
     SPRUCE_STAIRS("SPRUCE_WOOD_STAIRS", 0),
-    SPRUCE_TRAPDOOR("TRAP_DOOR", 0, true),
+    SPRUCE_TRAPDOOR("TRAP_DOOR", 1, true),
     SPRUCE_WALL_SIGN("STONE", 0, true),
     SPRUCE_WOOD("LOG", 1),
     SQUID_SPAWN_EGG("MONSTER_EGG", 0),
@@ -1056,22 +1057,30 @@ public enum Materials {
     ZOMBIE_PIGMAN_SPAWN_EGG("MONSTER_EGG", 0),
     ZOMBIE_SPAWN_EGG("MONSTER_EGG", 0),
     ZOMBIE_VILLAGER_SPAWN_EGG("MONSTER_EGG", 0),
-    ZOMBIE_WALL_HEAD("SKULL", 0);
-    
+    ZOMBIE_WALL_HEAD("SKULL", 0),
+    HONEYCOMB("STONE", 0, true),
+    HONEYCOMB_BLOCK("STONE", 0, true),
+    BEE_NEST("STONE", 0, true),
+    BEEHIVE("STONE", 0, true),
+    HONEY_BLOCK("stone", 0, true),
+    HONEY_BOTTLE("stone", 0, true),
+    BEE_SPAWN_EGG("stone", 0, true);
+
     private static final Set<Materials> ALL = Collections.unmodifiableSet(EnumSet.allOf(Materials.class));
 
-    public static Set<Materials> getAllMaterials(){
+    public static Set<Materials> getAllMaterials() {
         return ALL;
     }
-    
+
     static int newV = -1;
-    private static HashMap<String, Materials> cachedSearch = new HashMap<>();
+    private static Map<String, Materials> cachedSearch = new HashMap<>();
     String old13Mat;
     String old12Mat;
     int data;
     boolean is13Plusonly;
     private Material cachedMaterial;
     private boolean isMaterialParsed = false;
+    private String actualMaterials;
 
     Materials(String old13Mat, String old12Mat, int data) {
         this(old13Mat, old12Mat, data, false);
@@ -1090,6 +1099,15 @@ public enum Materials {
 
     Materials(String old12Mat, int data, boolean is13Plusonly) {
         this(null, old12Mat, data, is13Plusonly);
+    }
+
+    Materials(String old12Mat, String actualMaterials, boolean is13Plusonly) {
+        this(old12Mat, 0, is13Plusonly);
+        this.actualMaterials = actualMaterials;
+    }
+
+    public Materials getActualMaterials() {
+        return actualMaterials == null ? null : Materials.valueOf(actualMaterials);
     }
 
     public static boolean isNewVersion() {
@@ -1128,22 +1146,24 @@ public enum Materials {
         // Try 1.13+ names
         for (Materials mat : ALL) {
             if (name.equalsIgnoreCase(mat.name())) {
-                if (pmat == null)
-                    pmat = mat;
+                if (pmat == null) pmat = mat;
 
-                if (((byte) mat.data) == data)
-                    return mat;
+                final Materials actual = mat.getActualMaterials();
+
+                if (actual != null && mat.is13Plusonly) return actual;
+                if (((byte) mat.data) == data) return mat;
             }
         }
 
         // Try 1.12- names
         for (Materials mat : ALL) {
             if (name.equalsIgnoreCase(mat.old12Mat)) {
-                if (pmat == null)
-                    pmat = mat;
+                if (pmat == null) pmat = mat;
 
-                if (((byte) mat.data) == data)
-                    return mat;
+                final Materials actual = mat.getActualMaterials();
+
+                if (actual != null && mat.is13Plusonly) return actual;
+                if (((byte) mat.data) == data) return mat;
             }
         }
 
@@ -1197,8 +1217,7 @@ public enum Materials {
         if (this.isSpawner() && this != Materials.SPAWNER) {
             String spawnerType = this.name().replace("SPAWNER_", "");
             for (EntityType entityType : EntityType.values())
-                if (entityType.name().equalsIgnoreCase(spawnerType))
-                    return true;
+                if (entityType.name().equalsIgnoreCase(spawnerType)) return true;
             return false;
         }
 
@@ -1241,29 +1260,28 @@ public enum Materials {
         String[] split = type.toString().split("_");
         int length = split.length;
         switch (split[length - 1]) {
-            case "HELMET":
-            case "SHEARS":
-            case "HORSE_ARMOR":
-            case "TRIDENT":
-            case "TURTLE_HELMET":
-            case "ELYTRA":
-            case "HOE":
-            case "SHOVEL":
-            case "PICKAXE":
-            case "AXE":
-            case "SWORD":
-            case "BOOTS":
-            case "LEGGINGS":
-            case "CHESTPLATE":
-                return true;
-            default:
-                return false;
+        case "HELMET":
+        case "SHEARS":
+        case "HORSE_ARMOR":
+        case "TRIDENT":
+        case "TURTLE_HELMET":
+        case "ELYTRA":
+        case "HOE":
+        case "SHOVEL":
+        case "PICKAXE":
+        case "AXE":
+        case "SWORD":
+        case "BOOTS":
+        case "LEGGINGS":
+        case "CHESTPLATE":
+            return true;
+        default:
+            return false;
         }
     }
 
     public Material parseMaterial() {
-        if (this.cachedMaterial != null || this.isMaterialParsed)
-            return this.cachedMaterial;
+        if (this.cachedMaterial != null || this.isMaterialParsed) return this.cachedMaterial;
 
         if (this.isSpawner() && this != Materials.SPAWNER) {
             this.cachedMaterial = Materials.SPAWNER.parseMaterial();

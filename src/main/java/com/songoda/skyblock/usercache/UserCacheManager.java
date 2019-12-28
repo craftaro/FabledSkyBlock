@@ -45,8 +45,6 @@ public final class UserCacheManager {
                         final FileConfiguration configLoad = new Config(fileManager, fileList).getFileConfiguration();
                         final String ownerUUIDString = fileName.substring(0, fileName.indexOf('.'));
 
-                        System.out.println(ownerUUIDString);
-
                         Set<UUID> islandMembers = new HashSet<>();
                         islandMembers.add(UUID.fromString(ownerUUIDString));
 
@@ -76,8 +74,7 @@ public final class UserCacheManager {
                 save();
 
                 if (usersIgnored != 0) {
-                    Bukkit.getServer().getLogger().log(Level.INFO,
-                            "SkyBlock | Info: Finished fetching user information from island data. There were " + usersIgnored + " users that were skipped.");
+                    Bukkit.getServer().getLogger().log(Level.INFO, "SkyBlock | Info: Finished fetching user information from island data. There were " + usersIgnored + " users that were skipped.");
                 } else {
                     Bukkit.getServer().getLogger().log(Level.INFO, "SkyBlock | Info: Finished fetching user information from island data. No users were ignored.");
                 }

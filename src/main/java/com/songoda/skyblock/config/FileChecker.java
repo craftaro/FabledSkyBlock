@@ -1,9 +1,5 @@
 package com.songoda.skyblock.config;
 
-import com.songoda.skyblock.SkyBlock;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.EnumMap;
@@ -11,29 +7,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import com.songoda.skyblock.SkyBlock;
+
 public class FileChecker {
 
     private final FileManager fileManager;
 
     private Map<File.Type, File> loadedFiles;
 
-    public FileChecker(SkyBlock skyblock, FileManager fileManager, String configurationFileName,
-                       boolean applyComments) {
+    public FileChecker(SkyBlock skyblock, FileManager fileManager, String configurationFileName, boolean applyComments) {
         this.fileManager = fileManager;
 
         loadedFiles = new EnumMap<>(File.Type.class);
 
         java.io.File configFile = new java.io.File(skyblock.getDataFolder(), configurationFileName);
-        loadedFiles.put(File.Type.CREATED,
-                new File(fileManager, configFile, YamlConfiguration.loadConfiguration(configFile)));
+        loadedFiles.put(File.Type.CREATED, new File(fileManager, configFile, YamlConfiguration.loadConfiguration(configFile)));
 
         if (applyComments) {
-            loadedFiles.put(File.Type.RESOURCE,
-                    new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager
-                            .getConfigContent(new InputStreamReader(skyblock.getResource(configurationFileName)))))));
+            loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(new InputStreamReader(skyblock.getResource(configurationFileName)))))));
         } else {
-            loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration
-                    .loadConfiguration(new InputStreamReader(skyblock.getResource(configurationFileName)))));
+            loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(skyblock.getResource(configurationFileName)))));
         }
     }
 
@@ -103,8 +99,7 @@ public class FileChecker {
             configKeys = new HashMap<>();
 
             if (configFile != null && configFile.getName().equals("config.yml")) {
-                this.configLoad = YamlConfiguration
-                        .loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
+                this.configLoad = YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
             }
         }
 
@@ -125,7 +120,8 @@ public class FileChecker {
         }
 
         public enum Type {
-            CREATED, RESOURCE
+            CREATED,
+            RESOURCE
         }
     }
 }

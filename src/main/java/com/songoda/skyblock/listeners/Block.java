@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -85,22 +85,27 @@ public class Block implements Listener {
 
         if (!islandManager.hasPermission(player, blockLocation, "Destroy")) {
             event.setCancelled(true);
-            skyblock.getMessageManager().sendMessage(player,
-                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
+            skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
             skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
             return;
         }
 
         if (stackableManager != null && stackableManager.isStacked(blockLocation)) {
-            Stackable stackable = stackableManager.getStack(block.getLocation(), block.getType());
+            Stackable stackable = stackableManager.getStack(block.getLocation(), Materials.getMaterials(block.getType(), block.getData()));
             if (stackable != null) {
                 Material material = block.getType();
                 byte data = block.getData();
 
                 int droppedAmount = 0;
                 if (event.getPlayer().isSneaking()) {
-                    droppedAmount = stackable.getSize();
-                    block.getWorld().dropItemNaturally(blockLocation.clone().add(0.5, 0.5, 0.5), new ItemStack(material, droppedAmount, block.getData()));
+                    Location dropLoc = blockLocation.clone().add(0.5, 0.5, 0.5);
+                    int count = stackable.getSize();
+                    droppedAmount = count;
+                    while (count > 64) {
+                        dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material, 64, data));
+                        count -= 64;
+                    }
+                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material, count, block.getData()));
                     block.setType(Material.AIR);
                     stackable.setSize(0);
                 } else {
@@ -146,13 +151,22 @@ public class Block implements Listener {
                 || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone())) {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Break.Message"));
+                skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Break.Message"));
                 skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
             }
         }
 
         if (event.isCancelled() || !configLoad.getBoolean("Island.Block.Level.Enable")) return;
+
+        if (IslandLevelManager.isDoubleCheckedBlock(block)) {
+
+            final org.bukkit.block.Block belowBlock = block.getRelative(BlockFace.DOWN);
+
+            if (IslandLevelManager.isDoubleCheckedBlock(belowBlock)) {
+                block = belowBlock;
+            }
+
+        }
 
         final Materials materials;
 
@@ -189,7 +203,7 @@ public class Block implements Listener {
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
         Location blockLoc = block.getLocation();
-        
+
         Island island = islandManager.getIslandAtLocation(blockLoc);
 
         if (island == null) {
@@ -198,24 +212,23 @@ public class Block implements Listener {
         }
 
         if (levellingManager.isScanning(island)) {
-            skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                    .getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
+            skyblock.getMessageManager().sendMessage(player,
+                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
             event.setCancelled(true);
             return;
         }
 
         if (!islandManager.hasPermission(player, blockLoc, "Place")) {
             event.setCancelled(true);
-            skyblock.getMessageManager().sendMessage(player,
-                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
+            skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
             skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
             return;
         }
-        
+
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
-        
+
         if (configLoad.getBoolean("Island.WorldBorder.Block") && block.getType() == Material.DISPENSER) {
             if (!islandManager.isLocationAtIsland(island, blockLoc, world)) {
                 event.setCancelled(true);
@@ -238,8 +251,7 @@ public class Block implements Listener {
             }
 
             if (isObstructing) {
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
+                skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
                 skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
                 event.setCancelled(true);
@@ -254,9 +266,8 @@ public class Block implements Listener {
         if (limits.isBlockLimitExceeded(player, block, limit)) {
             Materials material = Materials.getMaterials(block.getType(), block.getData());
 
-            skyblock.getMessageManager().sendMessage(player,
-                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
-                            .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
+            skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+                    .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
             skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
             event.setCancelled(true);
@@ -338,8 +349,8 @@ public class Block implements Listener {
                 // Filter valid players on the island
                 Set<Player> possiblePlayers = new HashSet<>();
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    boolean isMember = island.hasRole(IslandRole.Owner, p.getUniqueId()) || island.hasRole(IslandRole.Member, p.getUniqueId())
-                            || island.hasRole(IslandRole.Coop, p.getUniqueId()) || island.hasRole(IslandRole.Operator, p.getUniqueId());
+                    boolean isMember = island.hasRole(IslandRole.Owner, p.getUniqueId()) || island.hasRole(IslandRole.Member, p.getUniqueId()) || island.hasRole(IslandRole.Coop, p.getUniqueId())
+                            || island.hasRole(IslandRole.Operator, p.getUniqueId());
                     if (isMember && islandManager.isLocationAtIsland(island, p.getLocation(), world)) {
                         possiblePlayers.add(p);
                     }
@@ -387,8 +398,7 @@ public class Block implements Listener {
 
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
         for (org.bukkit.block.Block block : event.getBlocks()) {
-            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)
-                    || !islandManager.isLocationAtIsland(island, block.getRelative(event.getDirection()).getLocation(), world)) {
+            if (!islandManager.isLocationAtIsland(island, block.getLocation(), world) || !islandManager.isLocationAtIsland(island, block.getRelative(event.getDirection()).getLocation(), world)) {
                 event.setCancelled(true);
                 return;
             }
@@ -513,8 +523,7 @@ public class Block implements Listener {
 
         // Check ice/snow forming
         if (block.getType() == Material.ICE || block.getType() == Material.SNOW) {
-            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.IceAndSnow"))
-                event.setCancelled(true);
+            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.IceAndSnow")) event.setCancelled(true);
             return;
         }
 
@@ -550,8 +559,8 @@ public class Block implements Listener {
         // Filter valid players on the island.
         Set<Player> possiblePlayers = new HashSet<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            boolean isMember = island.hasRole(IslandRole.Owner, player.getUniqueId()) || island.hasRole(IslandRole.Member, player.getUniqueId())
-                    || island.hasRole(IslandRole.Coop, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId());
+            boolean isMember = island.hasRole(IslandRole.Owner, player.getUniqueId()) || island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Coop, player.getUniqueId())
+                    || island.hasRole(IslandRole.Operator, player.getUniqueId());
             if (isMember && islandManager.isLocationAtIsland(island, player.getLocation(), world)) {
                 possiblePlayers.add(player);
             }

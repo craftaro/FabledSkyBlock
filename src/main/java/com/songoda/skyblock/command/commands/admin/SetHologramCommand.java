@@ -9,7 +9,8 @@ import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.version.Sounds;
-import org.apache.commons.lang3.text.WordUtils;
+
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;

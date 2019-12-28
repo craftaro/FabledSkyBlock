@@ -3,14 +3,18 @@ package com.songoda.skyblock.levelling.rework;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -33,6 +37,20 @@ import com.songoda.skyblock.utils.version.NMSUtil;
 
 public final class IslandLevelManager {
 
+    private static final Set<Materials> CHECKED_DOUBLE_TYPES;
+
+    static {
+        CHECKED_DOUBLE_TYPES = EnumSet.noneOf(Materials.class);
+
+        CHECKED_DOUBLE_TYPES.add(Materials.SUNFLOWER);
+        CHECKED_DOUBLE_TYPES.add(Materials.LILAC);
+        CHECKED_DOUBLE_TYPES.add(Materials.LEGACY_DOUBLE_PLANT);
+        CHECKED_DOUBLE_TYPES.add(Materials.LARGE_FERN);
+        CHECKED_DOUBLE_TYPES.add(Materials.ROSE_BUSH);
+        CHECKED_DOUBLE_TYPES.add(Materials.PEONY);
+        CHECKED_DOUBLE_TYPES.add(Materials.TALL_GRASS);
+    }
+
     private final static int VERSION = NMSUtil.getVersionNumber();
     private Map<Island, IslandScan> inScan;
     private Map<Materials, Long> worth;
@@ -44,6 +62,16 @@ public final class IslandLevelManager {
         this.cachedPairs = new EnumMap<>(Materials.class);
         registerCalculators();
         reloadWorth();
+    }
+
+    public static boolean isDoubleCheckedBlock(Block block) {
+        return CHECKED_DOUBLE_TYPES.contains(parseType(block));
+    }
+
+    @SuppressWarnings("deprecation")
+    private static Materials parseType(Block block) {
+        final Material blockType = block.getType();
+        return VERSION > 12 ? Materials.fromString(blockType.name()) : Materials.requestMaterials(blockType.name(), block.getData());
     }
 
     public void startScan(Player attemptScanner, Island island) {
@@ -103,7 +131,7 @@ public final class IslandLevelManager {
 
             final Materials material = Materials.fromString(key);
 
-            if (material.isAvailable() || material.getPostItem() == null) continue;
+            if (material == null || !material.isAvailable()) continue;
 
             worth.put(material, current.getLong("Points"));
         }
@@ -151,23 +179,42 @@ public final class IslandLevelManager {
 
     private static final AmountMaterialPair EMPTY = new AmountMaterialPair(null, 0);
 
-    @SuppressWarnings("deprecation")
-    public AmountMaterialPair getAmountAndType(BlockInfo info) {
+    AmountMaterialPair getAmountAndType(IslandScan scan, BlockInfo info) {
 
-        final Block block = info.getWorld().getBlockAt(info.getX(), info.getY(), info.getZ());
-        final Material blockType = block.getType();
+        Block block = info.getWorld().getBlockAt(info.getX(), info.getY(), info.getZ());
+        Material blockType = block.getType();
 
         if (blockType == Material.AIR) return EMPTY;
 
-        Materials finalType = VERSION > 12 ? Materials.fromString(blockType.name()) : Materials.requestMaterials(blockType.name(), block.getData());
+        Materials finalType = parseType(block);
 
         if (finalType == null) return EMPTY;
-        if (finalType == Materials.SPAWNER) finalType = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+
+        final Location blockLocation = block.getLocation();
+
+        if (scan.getDoubleBlocks().contains(blockLocation)) return EMPTY;
+
+        if (CHECKED_DOUBLE_TYPES.contains(finalType)) {
+
+            final Block belowBlock = block.getRelative(BlockFace.DOWN);
+            final Materials belowType = parseType(belowBlock);
+
+            if (CHECKED_DOUBLE_TYPES.contains(belowType)) {
+                block = belowBlock;
+                blockType = belowType.parseMaterial();
+                scan.getDoubleBlocks().add(belowBlock.getLocation());
+            } else {
+                scan.getDoubleBlocks().add(block.getRelative(BlockFace.UP).getLocation());
+            }
+
+        } else if (finalType == Materials.SPAWNER) {
+            finalType = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+        }
 
         final List<Calculator> calculators = CalculatorRegistry.getCalculators(blockType);
         final StackableManager stackableManager = SkyBlock.getInstance().getStackableManager();
 
-        final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(block.getLocation(), blockType);
+        final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(blockLocation, finalType);
 
         if (calculators == null) {
 

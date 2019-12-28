@@ -80,12 +80,7 @@ public class ScoreboardManager extends BukkitRunnable {
                                 scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
                             }
 
-                            Map<String, String> displayVariables = new HashMap<>();
-                            displayVariables.put("%owner", config.getFileConfiguration().getString("Scoreboard.Island.Team.Word.Owner"));
-                            displayVariables.put("%operator", config.getFileConfiguration().getString("Scoreboard.Island.Team.Word.Operator"));
-                            displayVariables.put("%member", config.getFileConfiguration().getString("Scoreboard.Island.Team.Word.Member"));
 
-                            scoreboard.setDisplayVariables(displayVariables);
                         }
                     }
 
@@ -229,12 +224,6 @@ public class ScoreboardManager extends BukkitRunnable {
                         scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
                     }
 
-                    Map<String, String> displayVariables = new HashMap<>();
-                    displayVariables.put("%owner", config.getFileConfiguration().getString("Scoreboard.Island.Team.Word.Owner"));
-                    displayVariables.put("%operator", config.getFileConfiguration().getString("Scoreboard.Island.Team.Word.Operator"));
-                    displayVariables.put("%member", config.getFileConfiguration().getString("Scoreboard.Island.Team.Word.Member"));
-
-                    scoreboard.setDisplayVariables(displayVariables);
                 }
             }
             scoreboard.run();
