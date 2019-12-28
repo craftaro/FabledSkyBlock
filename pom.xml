@@ -5,8 +5,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.songoda</groupId>
 	<artifactId>skyblock</artifactId>
-	<version>maven-version-number</version>
+	<version>2.1.1</version>
 	<build>
+		<defaultGoal>clean install</defaultGoal>
 		<finalName>FabledSkyblock-${project.version}</finalName>
 		<resources>
 			<resource>
@@ -15,6 +16,28 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.3</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<file>${project.build.directory}/classes/plugin.yml</file>
+					<replacements>
+						<replacement>
+							<token>maven-version-number</token>
+							<value>${project.version}</value>
+						</replacement>
+					</replacements>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
