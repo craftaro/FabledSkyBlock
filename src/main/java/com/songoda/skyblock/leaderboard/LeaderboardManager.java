@@ -83,6 +83,14 @@ public class LeaderboardManager {
     }
 
     public int getPlayerIslandLeaderboardPosition(Player player, Leaderboard.Type type) {
+        return getPlayerIslandLeaderboardPosition(player.getUniqueId(), type);
+    }
+
+    public int getPlayerIslandLeaderboardPosition(OfflinePlayer offlinePlayer, Leaderboard.Type type) {
+        return getPlayerIslandLeaderboardPosition(offlinePlayer.getUniqueId(), type);
+    }
+
+    public int getPlayerIslandLeaderboardPosition(UUID uuid, Leaderboard.Type type) {
         VisitManager visitManager = skyblock.getVisitManager();
         visitManager.loadIslands();
 
@@ -111,7 +119,7 @@ public class LeaderboardManager {
         leaderboardPlayers.sort(Comparator.comparingLong(LeaderboardPlayer::getValue).reversed());
 
         for (int i = 0; i < leaderboardPlayers.size(); i++) {
-            if (leaderboardPlayers.get(i).getUUID().equals(player.getUniqueId())) {
+            if (leaderboardPlayers.get(i).getUUID().equals(uuid) {
                 return i + 1;
             }
         }
