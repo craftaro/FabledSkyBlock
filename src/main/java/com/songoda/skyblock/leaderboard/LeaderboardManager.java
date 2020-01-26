@@ -10,6 +10,7 @@ import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -111,7 +112,7 @@ public class LeaderboardManager {
         leaderboardPlayers.sort(Comparator.comparingLong(LeaderboardPlayer::getValue).reversed());
 
         for (int i = 0; i < leaderboardPlayers.size(); i++) {
-            if (leaderboardPlayers.get(i).getUUID().equals(offlinePlayer.getUniqueId()) {
+            if (leaderboardPlayers.get(i).getUUID().equals(offlinePlayer.getUniqueId())) {
                 return i + 1;
             }
         }
