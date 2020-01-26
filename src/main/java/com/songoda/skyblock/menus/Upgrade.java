@@ -1,10 +1,11 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandUpgradeEvent;
 import com.songoda.skyblock.api.utils.APIUtil;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.economy.EconomyManager;
+import com.songoda.skyblock.utils.VaultPermissions;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
@@ -51,7 +52,6 @@ public class Upgrade {
         SkyBlock skyblock = SkyBlock.getInstance();
 
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        EconomyManager economyManager = skyblock.getEconomyManager();
         MessageManager messageManager = skyblock.getMessageManager();
         UpgradeManager upgradeManager = skyblock.getUpgradeManager();
         IslandManager islandManager = skyblock.getIslandManager();
@@ -61,7 +61,7 @@ public class Upgrade {
         FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                 .getFileConfiguration();
 
-        if (!economyManager.isEconomy()) {
+        if (!EconomyManager.isEnabled()) {
             messageManager.sendMessage(player, configLoad.getString("Island.Upgrade.Disabled.Message"));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
@@ -72,7 +72,7 @@ public class Upgrade {
             Island island = islandManager.getIsland(player);
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                if (!economyManager.isEconomy()) {
+                if (!EconomyManager.isEnabled()) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Upgrade.Disabled.Message"));
                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
@@ -118,13 +118,13 @@ public class Upgrade {
                                 if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
                                     com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
-                                    if (economyManager.hasBalance(player, upgrade.getCost())) {
+                                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                                         messageManager.sendMessage(player,
                                                 configLoad.getString("Island.Upgrade.Bought.Message")
                                                         .replace("%upgrade", is.getItemMeta().getDisplayName()));
                                         soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
-                                        economyManager.withdraw(player, upgrade.getCost());
+                                        EconomyManager.withdrawBalance(player, upgrade.getCost());
                                         island.setUpgrade(player,
                                                 com.songoda.skyblock.upgrade.Upgrade.Type.Speed, true);
 
@@ -173,13 +173,13 @@ public class Upgrade {
                                 if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
                                     com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
-                                    if (economyManager.hasBalance(player, upgrade.getCost())) {
+                                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                                         messageManager.sendMessage(player,
                                                 configLoad.getString("Island.Upgrade.Bought.Message")
                                                         .replace("%upgrade", is.getItemMeta().getDisplayName()));
                                         soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
-                                        economyManager.withdraw(player, upgrade.getCost());
+                                        EconomyManager.withdrawBalance(player, upgrade.getCost());
                                         island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Jump,
                                                 true);
 
@@ -223,13 +223,13 @@ public class Upgrade {
                             if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
                                 com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
-                                if (economyManager.hasBalance(player, upgrade.getCost())) {
+                                if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Bought.Message")
                                                     .replace("%upgrade", is.getItemMeta().getDisplayName()));
                                     soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
-                                    economyManager.withdraw(player, upgrade.getCost());
+                                    EconomyManager.withdrawBalance(player, upgrade.getCost());
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Crop,
                                             true);
 
@@ -274,13 +274,13 @@ public class Upgrade {
                             if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
                                 com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
-                                if (economyManager.hasBalance(player, upgrade.getCost())) {
+                                if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Bought.Message")
                                                     .replace("%upgrade", is.getItemMeta().getDisplayName()));
                                     soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
-                                    economyManager.withdraw(player, upgrade.getCost());
+                                    EconomyManager.withdrawBalance(player, upgrade.getCost());
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Fly,
                                             true);
 
@@ -326,13 +326,13 @@ public class Upgrade {
                             if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
                                 com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
-                                if (economyManager.hasBalance(player, upgrade.getCost())) {
+                                if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Bought.Message")
                                                     .replace("%upgrade", is.getItemMeta().getDisplayName()));
                                     soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
-                                    economyManager.withdraw(player, upgrade.getCost());
+                                    EconomyManager.withdrawBalance(player, upgrade.getCost());
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Drops,
                                             true);
 
@@ -370,14 +370,14 @@ public class Upgrade {
                                                         .replace("%tier", "" + tier)))) {
                                     if (upgrade.getValue() > island.getSize()
                                             && upgrade.getValue() != island.getSize()) {
-                                        if (economyManager.hasBalance(player, upgrade.getCost())) {
+                                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                                             messageManager.sendMessage(player,
                                                     configLoad.getString("Island.Upgrade.Bought.Message").replace(
                                                             "%upgrade", is.getItemMeta().getDisplayName()));
                                             soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F,
                                                     1.0F);
 
-                                            economyManager.withdraw(player, upgrade.getCost());
+                                            EconomyManager.withdrawBalance(player, upgrade.getCost());
                                             island.setSize(upgrade.getValue());
                                             islandManager.updateBorder(island);
 
@@ -431,13 +431,13 @@ public class Upgrade {
                             if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
                                 com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
-                                if (economyManager.hasBalance(player, upgrade.getCost())) {
+                                if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Bought.Message")
                                                     .replace("%upgrade", is.getItemMeta().getDisplayName()));
                                     soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
 
-                                    economyManager.withdraw(player, upgrade.getCost());
+                                    EconomyManager.withdrawBalance(player, upgrade.getCost());
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner,
                                             true);
 
@@ -499,7 +499,7 @@ public class Upgrade {
                                             getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Speed))},
                             null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
                 } else {
-                    if (economyManager.hasBalance(player, upgrade.getCost())) {
+                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                         nInv.addItem(nInv.createItem(potion,
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
@@ -550,7 +550,7 @@ public class Upgrade {
                                             getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Jump))},
                             null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
                 } else {
-                    if (economyManager.hasBalance(player, upgrade.getCost())) {
+                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                         nInv.addItem(nInv.createItem(potion,
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
@@ -586,7 +586,7 @@ public class Upgrade {
                                             getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Crop))},
                             null, null), 3);
                 } else {
-                    if (economyManager.hasBalance(player, upgrade.getCost())) {
+                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                         nInv.addItem(nInv.createItem(Materials.WHEAT_SEEDS.parseItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
@@ -622,7 +622,7 @@ public class Upgrade {
                                             getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Fly))},
                             null, null), 4);
                 } else {
-                    if (economyManager.hasBalance(player, upgrade.getCost())) {
+                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                         nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
@@ -658,7 +658,7 @@ public class Upgrade {
                                             getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Drops))},
                             null, null), 5);
                 } else {
-                    if (economyManager.hasBalance(player, upgrade.getCost())) {
+                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                         nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
@@ -703,7 +703,7 @@ public class Upgrade {
                                         new Placeholder("%size", "" + upgrade.getValue())},
                                 null, null), 7);
                     } else {
-                        if (economyManager.hasBalance(player, upgrade.getCost())) {
+                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                             nInv.addItem(
                                     nInv.createItem(new ItemStack(Material.BEACON),
                                             ChatColor.translateAlternateColorCodes('&',
@@ -754,7 +754,7 @@ public class Upgrade {
                                             getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner))},
                             null, null), 8);
                 } else {
-                    if (economyManager.hasBalance(player, upgrade.getCost())) {
+                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
                         nInv.addItem(nInv.createItem(Materials.SPAWNER.parseItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),

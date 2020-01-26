@@ -1,15 +1,10 @@
 package com.songoda.skyblock;
 
-import java.io.File;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.event.HandlerList;
-import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
+import com.songoda.core.SongodaCore;
+import com.songoda.core.SongodaPlugin;
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.configuration.Config;
+import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.biome.BiomeManager;
@@ -18,7 +13,6 @@ import com.songoda.skyblock.command.commands.SkyBlockCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.confirmation.ConfirmationTask;
 import com.songoda.skyblock.cooldown.CooldownManager;
-import com.songoda.skyblock.economy.EconomyManager;
 import com.songoda.skyblock.generator.GeneratorManager;
 import com.songoda.skyblock.hologram.HologramManager;
 import com.songoda.skyblock.invite.InviteManager;
@@ -26,27 +20,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
-import com.songoda.skyblock.listeners.Block;
-import com.songoda.skyblock.listeners.Bucket;
-import com.songoda.skyblock.listeners.Chat;
-import com.songoda.skyblock.listeners.Death;
-import com.songoda.skyblock.listeners.Entity;
-import com.songoda.skyblock.listeners.EpicSpawners;
-import com.songoda.skyblock.listeners.Food;
-import com.songoda.skyblock.listeners.Grow;
-import com.songoda.skyblock.listeners.Interact;
-import com.songoda.skyblock.listeners.Inventory;
-import com.songoda.skyblock.listeners.Item;
-import com.songoda.skyblock.listeners.Join;
-import com.songoda.skyblock.listeners.Move;
-import com.songoda.skyblock.listeners.Portal;
-import com.songoda.skyblock.listeners.Projectile;
-import com.songoda.skyblock.listeners.Quit;
-import com.songoda.skyblock.listeners.Respawn;
-import com.songoda.skyblock.listeners.Spawner;
-import com.songoda.skyblock.listeners.Teleport;
-import com.songoda.skyblock.listeners.UltimateStacker;
-import com.songoda.skyblock.listeners.WildStacker;
+import com.songoda.skyblock.listeners.*;
 import com.songoda.skyblock.localization.LocalizationManager;
 import com.songoda.skyblock.menus.Rollback;
 import com.songoda.skyblock.menus.admin.Creator;
@@ -62,17 +36,23 @@ import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.structure.StructureManager;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.usercache.UserCacheManager;
-import com.songoda.skyblock.utils.Metrics;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.visit.VisitTask;
 import com.songoda.skyblock.world.WorldManager;
 import com.songoda.skyblock.world.generator.VoidGenerator;
-import com.songoda.update.Plugin;
-import com.songoda.update.SongodaUpdate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.event.HandlerList;
+import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.plugin.PluginManager;
 
-public class SkyBlock extends JavaPlugin {
+import java.io.File;
+import java.util.List;
 
-    private static SkyBlock instance;
+public class SkyBlock extends SongodaPlugin {
+
+    private static SkyBlock INSTANCE;
 
     private FileManager fileManager;
     private WorldManager worldManager;
@@ -95,30 +75,31 @@ public class SkyBlock extends JavaPlugin {
     private LeaderboardManager leaderboardManager;
     private PlaceholderManager placeholderManager;
     private MessageManager messageManager;
-    private EconomyManager economyManager;
     private HologramManager hologramManager;
     private LimitationInstanceHandler limitationHandler;
     private LocalizationManager localizationManager;
 
     public static SkyBlock getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     @Override
-    public void onEnable() {
-        ConsoleCommandSender console = Bukkit.getConsoleSender();
-        console.sendMessage(formatText("&a============================="));
-        console.sendMessage(formatText("&7FabledSkyBlock " + this.getDescription().getVersion() + " by &5Songoda <3&7!"));
-        console.sendMessage(formatText("&7Action: &aEnabling&7..."));
-        console.sendMessage(formatText("&a============================="));
+    public void onPluginLoad() {
+        INSTANCE = this;
+    }
 
-        instance = this;
+    @Override
+    public void onPluginEnable() {
+        // Run Songoda Updater
+        SongodaCore.registerPlugin(this, 17, CompatibleMaterial.GRASS_BLOCK);
+
+        // Load Economy
+        EconomyManager.load();
 
         fileManager = new FileManager(this);
         localizationManager = new LocalizationManager();
         worldManager = new WorldManager(this);
         userCacheManager = new UserCacheManager(this);
-        economyManager = new EconomyManager();
         visitManager = new VisitManager(this);
         banManager = new BanManager(this);
         islandManager = new IslandManager(this);
@@ -181,7 +162,8 @@ public class SkyBlock extends JavaPlugin {
 
         if (pluginManager.isPluginEnabled("EpicSpawners")) pluginManager.registerEvents(new EpicSpawners(this), this);
         if (pluginManager.isPluginEnabled("WildStacker")) pluginManager.registerEvents(new WildStacker(this), this);
-        if (pluginManager.isPluginEnabled("UltimateStacker")) pluginManager.registerEvents(new UltimateStacker(this), this);
+        if (pluginManager.isPluginEnabled("UltimateStacker"))
+            pluginManager.registerEvents(new UltimateStacker(this), this);
 
         pluginManager.registerEvents(new Rollback(), this);
         pluginManager.registerEvents(new Levelling(), this);
@@ -190,18 +172,11 @@ public class SkyBlock extends JavaPlugin {
 
         this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
 
-        // bStats Metrics
-        new Metrics(this);
-
-        // Songoda Updater
-        Plugin plugin = new Plugin(this, 17);
-        SongodaUpdate.load(plugin);
-
-        SkyBlockAPI.setImplementation(instance);
+        SkyBlockAPI.setImplementation(INSTANCE);
     }
 
     @Override
-    public void onDisable() {
+    public void onPluginDisable() {
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         console.sendMessage(formatText("&a============================="));
         console.sendMessage(formatText("&7FabledSkyBlock " + this.getDescription().getVersion() + " by &5Songoda <3&7!"));
@@ -237,6 +212,16 @@ public class SkyBlock extends JavaPlugin {
         }
 
         HandlerList.unregisterAll(this);
+    }
+
+    @Override
+    public void onConfigReload() {
+
+    }
+
+    @Override
+    public List<Config> getExtraConfig() {
+        return null;
     }
 
     private String formatText(String string) {
@@ -329,10 +314,6 @@ public class SkyBlock extends JavaPlugin {
 
     public MessageManager getMessageManager() {
         return messageManager;
-    }
-
-    public EconomyManager getEconomyManager() {
-        return economyManager;
     }
 
     public HologramManager getHologramManager() {

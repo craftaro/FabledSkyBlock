@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.menus.Upgrade;
@@ -27,7 +28,7 @@ public class UpgradeCommand extends SubCommand {
                     configLoad.getString("Command.Island.Upgrade.Owner.Message"));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         } else {
-            if (!skyblock.getEconomyManager().isEconomy()) {
+            if (!EconomyManager.isEnabled()) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Upgrade.Disabled.Message"));
                 soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
                 return;
