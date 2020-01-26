@@ -13,10 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class LeaderboardManager {
 
@@ -49,7 +46,7 @@ public class LeaderboardManager {
         boolean enableExemptions = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Leaderboard.Exemptions.Enable");
 
-        for (UUID ownerUUID : visitManager.getIslands().keySet()) {
+        for (UUID ownerUUID : new LinkedHashSet<>(visitManager.getIslands().keySet())) {
             if (enableExemptions && VaultPermissions.hasPermission(worldManager.getWorld(IslandWorld.Normal).getName(), Bukkit.getOfflinePlayer(ownerUUID), "fabledskyblock.top.exempt"))
                 continue;
 
