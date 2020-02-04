@@ -74,6 +74,7 @@ import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
+import com.songoda.skyblock.utils.world.entity.EntityUtil;
 import com.songoda.skyblock.world.WorldManager;
 
 public class Entity implements Listener {
@@ -171,7 +172,15 @@ public class Entity implements Listener {
                         soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
                     }
                 } else {
-                    if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
+                	// Check if it's a monster and player has the permission to damage the entity
+                	// If
+                	// If it's not a monster or the player has the permission
+                	if (EntityUtil.isMonster(entity.getType()) && islandManager.hasPermission(player, entity.getLocation(), "MonsterHurting")) {
+                		// Player has permission to damage the entity
+                		return;
+                	}
+                	// Either the entity is not a monster or the player doesn't have permission so whe check if he has permission to damage mobs
+                	if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
                         event.setCancelled(true);
 
                         messageManager.sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
@@ -208,6 +217,14 @@ public class Entity implements Listener {
                         event.setCancelled(true);
                     }
                 } else {
+                	// Check if it's a monster and player has the permission to damage the entity
+                	// If
+                	// If it's not a monster or the player has the permission
+                	if (EntityUtil.isMonster(entity.getType()) && islandManager.hasPermission(player, entity.getLocation(), "MonsterHurting")) {
+                		// Player has permission to damage the entity
+                		return;
+                	}
+                	// Either the entity is not a monster or the player doesn't have permission so whe check if he has permission to damage mobs
                     if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
                         event.setCancelled(true);
 

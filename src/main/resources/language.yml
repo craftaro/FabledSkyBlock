@@ -1107,6 +1107,8 @@ Menu:
             Displayname: '&aWater Collection'
           AnimalBreeding:
             Displayname: '&aAnimal Breeding'
+          MonsterHurting:
+            Displayname: '&aMonster Hurting'
           MobHurting:
             Displayname: '&aMob Hurting'
           Bed:
@@ -1395,6 +1397,8 @@ Menu:
               Displayname: '&aFishing'
             Enchant:
               Displayname: '&aEnchantment Table Use'
+            MonsterHurting:
+              Displayname: '&aMonster Hurting'
             MobHurting:
               Displayname: '&aMob Hurting'
             Bed:

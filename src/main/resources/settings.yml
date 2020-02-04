@@ -21,6 +21,7 @@ Settings:
         Furnace: false
         HorseInventory: false
         MobRiding: false
+        MonsterHurting: false
         MobHurting: false
         MobTaming: true
         Leash: false
@@ -66,6 +67,7 @@ Settings:
         Furnace: true
         HorseInventory: true
         MobRiding: true
+        MonsterHurting: true
         MobHurting: true
         MobTaming: true
         Leash: true
@@ -126,6 +128,7 @@ Settings:
         Furnace: true
         HorseInventory: true
         MobRiding: true
+        MonsterHurting: true
         MobHurting: true
         MobTaming: true
         Leash: true

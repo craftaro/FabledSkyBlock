@@ -422,28 +422,29 @@ public class Settings {
                     nInv.addItemStack(createItem(island, role, "HorseInventory", Materials.CHEST_MINECART.parseItem()),
                             28);
                     nInv.addItemStack(createItem(island, role, "MobRiding", new ItemStack(Material.SADDLE)), 29);
-                    nInv.addItemStack(createItem(island, role, "MobHurting", Materials.WOODEN_SWORD.parseItem()), 30);
-                    nInv.addItemStack(createItem(island, role, "MobTaming", Materials.POPPY.parseItem()), 31);
-                    nInv.addItemStack(createItem(island, role, "Leash", Materials.LEAD.parseItem()), 32);
-                    nInv.addItemStack(createItem(island, role, "LeverButton", new ItemStack(Material.LEVER)), 33);
-                    nInv.addItemStack(createItem(island, role, "Milking", new ItemStack(Material.MILK_BUCKET)), 34);
-                    nInv.addItemStack(createItem(island, role, "Jukebox", new ItemStack(Material.JUKEBOX)), 35);
+                    nInv.addItemStack(createItem(island, role, "MonsterHurting", Materials.BONE.parseItem()), 30);
+                    nInv.addItemStack(createItem(island, role, "MobHurting", Materials.WOODEN_SWORD.parseItem()), 31);
+                    nInv.addItemStack(createItem(island, role, "MobTaming", Materials.POPPY.parseItem()), 32);
+                    nInv.addItemStack(createItem(island, role, "Leash", Materials.LEAD.parseItem()), 33);
+                    nInv.addItemStack(createItem(island, role, "LeverButton", new ItemStack(Material.LEVER)), 34);
+                    nInv.addItemStack(createItem(island, role, "Milking", new ItemStack(Material.MILK_BUCKET)), 35);
+                    nInv.addItemStack(createItem(island, role, "Jukebox", new ItemStack(Material.JUKEBOX)), 36);
                     nInv.addItemStack(
-                            createItem(island, role, "PressurePlate", Materials.OAK_PRESSURE_PLATE.parseItem()), 36);
-                    nInv.addItemStack(createItem(island, role, "Redstone", new ItemStack(Material.REDSTONE)), 37);
-                    nInv.addItemStack(createItem(island, role, "Shearing", new ItemStack(Material.SHEARS)), 38);
-                    nInv.addItemStack(createItem(island, role, "Trading", new ItemStack(Material.EMERALD)), 39);
-                    nInv.addItemStack(createItem(island, role, "ItemDrop", new ItemStack(Material.PUMPKIN_SEEDS)), 40);
-                    nInv.addItemStack(createItem(island, role, "ItemPickup", new ItemStack(Material.MELON_SEEDS)), 41);
-                    nInv.addItemStack(createItem(island, role, "Fishing", new ItemStack(Material.FISHING_ROD)), 42);
+                            createItem(island, role, "PressurePlate", Materials.OAK_PRESSURE_PLATE.parseItem()), 37);
+                    nInv.addItemStack(createItem(island, role, "Redstone", new ItemStack(Material.REDSTONE)), 38);
+                    nInv.addItemStack(createItem(island, role, "Shearing", new ItemStack(Material.SHEARS)), 39);
+                    nInv.addItemStack(createItem(island, role, "Trading", new ItemStack(Material.EMERALD)), 40);
+                    nInv.addItemStack(createItem(island, role, "ItemDrop", new ItemStack(Material.PUMPKIN_SEEDS)), 41);
+                    nInv.addItemStack(createItem(island, role, "ItemPickup", new ItemStack(Material.MELON_SEEDS)), 42);
+                    nInv.addItemStack(createItem(island, role, "Fishing", new ItemStack(Material.FISHING_ROD)), 43);
                     nInv.addItemStack(createItem(island, role, "DropperDispenser", new ItemStack(Material.DISPENSER)),
-                            43);
-                    nInv.addItemStack(createItem(island, role, "SpawnEgg", new ItemStack(Material.EGG)), 44);
+                            44);
+                    nInv.addItemStack(createItem(island, role, "SpawnEgg", new ItemStack(Material.EGG)), 45);
                     nInv.addItemStack(createItem(island, role, "HangingDestroy", new ItemStack(Material.ITEM_FRAME)),
-                            45);
-                    nInv.addItemStack(createItem(island, role, "Cake", new ItemStack(Material.CAKE)), 46);
-                    nInv.addItemStack(createItem(island, role, "DragonEggUse", new ItemStack(Material.DRAGON_EGG)), 47);
-                    nInv.addItemStack(createItem(island, role, "MinecartBoat", new ItemStack(Material.MINECART)), 48);
+                            46);
+                    nInv.addItemStack(createItem(island, role, "Cake", new ItemStack(Material.CAKE)), 47);
+                    nInv.addItemStack(createItem(island, role, "DragonEggUse", new ItemStack(Material.DRAGON_EGG)), 48);
+                    nInv.addItemStack(createItem(island, role, "MinecartBoat", new ItemStack(Material.MINECART)), 49);
                     nInv.addItemStack(createItem(island, role, "Portal", new ItemStack(Material.ENDER_PEARL)), 50);
                     nInv.addItemStack(createItem(island, role, "Hopper", new ItemStack(Material.HOPPER)), 51);
                     nInv.addItemStack(createItem(island, role, "EntityPlacement", new ItemStack(Material.ARMOR_STAND)),

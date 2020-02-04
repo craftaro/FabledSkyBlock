@@ -497,4 +497,41 @@ public final class EntityUtil {
             }
         }
     }
+
+	public static boolean isMonster(EntityType type) {
+		switch (type) {
+		case BAT:
+		case BLAZE:
+		case CAVE_SPIDER:
+		case COD:
+		case CREEPER:
+		case DROWNED:
+		case ELDER_GUARDIAN:
+		case ENDERMAN:
+		case ENDERMITE:
+		case EVOKER:
+		case GHAST:
+		case HUSK:
+		case ILLUSIONER:
+		case MAGMA_CUBE:
+		case PHANTOM:
+		case PIG_ZOMBIE:
+		case RAVAGER:
+		case SILVERFISH:
+		case SKELETON:
+		case SLIME:
+		case SPIDER:
+		case STRAY:
+		case VEX:
+		case VINDICATOR:
+		case WITCH:
+		case WITHER:
+		case WITHER_SKELETON:
+		case ZOMBIE:
+		case ZOMBIE_VILLAGER:
+			return true;
+		default:
+			return false;
+		}
+	}
 }
