@@ -342,6 +342,8 @@ public class Block implements Listener {
         }
 
         if (NMSUtil.getVersionNumber() < 12) {
+        	if (event.getToBlock().getType() != Material.COBBLESTONE)
+        		return;
             if (generatorManager != null && generatorManager.getGenerators().size() > 0 && generatorManager.isGenerator(block)) {
                 List<Generator> generators = new ArrayList<>(generatorManager.getGenerators());
                 Collections.reverse(generators); // Use the highest generator available
@@ -547,7 +549,7 @@ public class Block implements Listener {
 
         BlockState state = event.getNewState();
         Material type = state.getType();
-        if (type != Material.COBBLESTONE && type != Material.STONE) return;
+        if (type != Material.COBBLESTONE) return;
 
         GeneratorManager generatorManager = skyblock.getGeneratorManager();
         if (generatorManager == null) return;
