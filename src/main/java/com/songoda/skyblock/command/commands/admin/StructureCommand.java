@@ -1,14 +1,21 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.google.gson.Gson;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.ChatComponent;
+import com.songoda.skyblock.utils.Compression;
+import com.songoda.skyblock.utils.structure.Storage;
+import com.songoda.skyblock.utils.structure.Structure;
 import com.songoda.skyblock.utils.structure.StructureUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -19,7 +26,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
 import java.util.logging.Level;
 
 public class StructureCommand extends SubCommand {
@@ -82,6 +88,22 @@ public class StructureCommand extends SubCommand {
                                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                                             "Command.Island.Admin.Structure.Save.Info.Message")))
                                                     .create())).getTextComponent());
+                    player.spigot()
+                        .sendMessage(
+                            new ChatComponent(
+                                prefix.replace("%info",
+                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                        "Command.Island.Admin.Structure.Convert.Info.Message")))
+                                    + "/island admin structure convert"
+                                    + suffix.replace("%info", ChatColor.translateAlternateColorCodes(
+                                    '&',
+                                    configLoad.getString(
+                                        "Command.Island.Admin.Structure.Save.Convert.Message"))),
+                                false, null, null,
+                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                        "Command.Island.Admin.Structure.Convert.Info.Message")))
+                                    .create())).getTextComponent());
                 } else {
                     messageManager.sendMessage(player, helpLines);
                 }
@@ -176,6 +198,49 @@ public class StructureCommand extends SubCommand {
                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
                 }
 
+            } else if (args[0].equalsIgnoreCase("convert")) {
+                if (args.length == 2) {
+                    File structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"), args[1]);
+                    if (!structureFile.exists()) {
+                        messageManager.sendMessage(player,
+                            configLoad.getString("Command.Island.Admin.Structure.Convert.Invalid.Message")
+                                .replace("%name", args[1]));
+                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        return;
+                    }
+                    byte[] content = new byte[(int) structureFile.length()];
+                    try {
+                        FileInputStream fileInputStream = new FileInputStream(structureFile);
+                        fileInputStream.read(content);
+                        fileInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        FileOutputStream fileOutputStream = new FileOutputStream(structureFile, false);
+                        fileOutputStream.write(Base64.getEncoder().encode(Compression.decompress(content).getBytes()));
+                        fileOutputStream.flush();
+                        fileOutputStream.close();
+                    } catch (IOException e) {
+                        messageManager.sendMessage(player,
+                            configLoad.getString("Command.Island.Admin.Structure.Convert.Converted.Failed.Message")
+                                .replace("%name", args[1]));
+                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        e.printStackTrace();
+                    }
+
+                    messageManager.sendMessage(player,
+                        configLoad.getString("Command.Island.Admin.Structure.Convert.Converted.Successful.Message")
+                            .replace("%name", args[1]));
+                    soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+
+                } else {
+                    messageManager.sendMessage(player,
+                        configLoad.getString("Command.Island.Admin.Structure.Convert.Invalid.Message"));
+                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                }
+
                 return;
             }
 
@@ -206,6 +271,7 @@ public class StructureCommand extends SubCommand {
 
     @Override
     public String[] getArguments() {
-        return new String[]{"tool", "save"};
+        return new String[]{"tool", "save", "convert"};
     }
+
 }
