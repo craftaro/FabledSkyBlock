@@ -27,11 +27,22 @@ public class Stackable {
     private Materials material;
     private int size = 2;
     private ArmorStand display;
+    private int maxSize;
 
     public Stackable(Location location, Materials material) {
         this.uuid = UUID.randomUUID();
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
+        this.updateDisplay();
+        SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+        this.save();
+    }
+
+    public Stackable(Location location, Materials material, int maxSize) {
+        this.uuid = UUID.randomUUID();
+        this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        this.material = material;
+        this.maxSize = maxSize;
         this.updateDisplay();
         SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         this.save();
@@ -74,6 +85,14 @@ public class Stackable {
         this.size = size;
         this.updateDisplay();
         this.save();
+    }
+
+    public int getMaxSize() {
+        return maxSize;
+    }
+
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
     }
 
     public void addOne() {

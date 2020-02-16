@@ -47,6 +47,9 @@ import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.world.WorldManager;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public class Interact implements Listener {
 
@@ -173,16 +176,24 @@ public class Interact implements Listener {
                 Location location = event.getClickedBlock().getLocation();
                 Stackable stackable = stackableManager.getStack(location, blockType);
                 int itemAmount = event.getItem().getAmount();
+                Materials material = Materials.getMaterials(block.getType(), block.getData());
+                int maxSize = getStackLimit(player, material) + 1;
 
                 if (stackable == null) {
-                    stackableManager.addStack(stackable = new Stackable(location, blockType));
+                    stackableManager.addStack(stackable = new Stackable(location, blockType, maxSize));
                     stackable.setSize(itemAmount + 1);
                 } else {
-                    stackable.setSize(stackable.getSize() + itemAmount);
+                    stackable.setMaxSize(maxSize);
+                    if (stackable.getSize() + itemAmount <= stackable.getMaxSize()) {
+                        stackable.setSize(stackable.getSize() + itemAmount);
+                    }
                 }
 
                 event.setCancelled(true);
-                InventoryUtil.takeItem(player, itemAmount);
+
+                if (stackable.getSize() + itemAmount <= stackable.getMaxSize()) {
+                    InventoryUtil.takeItem(player, itemAmount);
+                }
 
                 FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
                 FileConfiguration configLoad = config.getFileConfiguration();
@@ -586,6 +597,21 @@ public class Interact implements Listener {
                     }
                 }
         }
+    }
+
+    private int getStackLimit(Player player, Materials materials) {
+        String maxSizePermission = "fabledskyblock.stackable." + materials.name().toLowerCase() + ".maxsize.";
+        System.out.println(maxSizePermission);
+
+        for (PermissionAttachmentInfo attachmentInfo : player.getEffectivePermissions()) {
+            if (attachmentInfo.getPermission().startsWith(maxSizePermission)) {
+                String permission = attachmentInfo.getPermission();
+                int i = Integer.parseInt(permission.substring(permission.lastIndexOf(".") + 1));
+                System.out.println(i);
+                return i;
+            }
+        }
+        return 5000;
     }
 
     @EventHandler
