@@ -109,6 +109,10 @@ public class Stackable {
         this.save();
     }
 
+    public boolean isMaxSize(){
+        return size > maxSize;
+    }
+
     private void updateDisplay() {
         // The chunk needs to be loaded otherwise the getNearbyEntities() in
         // removeDisplay() won't find anything

@@ -190,18 +190,32 @@ public class Interact implements Listener {
                 FileConfiguration configLoad = config.getFileConfiguration();
 
                 if (configLoad.getBoolean("Island.Stackable.Limit.Enable")) {
+                    // Add block to stackable
                     Materials material = Materials.getMaterials(block.getType(), block.getData());
-                    int maxSize = getStackLimit(player, material) + 1;
+                    int maxStackSize = getStackLimit(player, material);
 
                     if (stackable == null) {
-                        stackableManager.addStack(stackable = new Stackable(location, blockType, maxSize));
+                        stackableManager.addStack(stackable = new Stackable(location, blockType, maxStackSize));
                         stackable.setSize(itemAmount + 1);
+                        if(stackable.isMaxSize()){
+                            stackable.setSize(stackable.getMaxSize());
+                            event.setCancelled(true);
+                            return;
+                        }
                     } else {
-                        stackable.setMaxSize(maxSize);
-                        if (stackable.getSize() + itemAmount <= stackable.getMaxSize()) {
-                            stackable.setSize(stackable.getSize() + itemAmount);
+                        stackable.setMaxSize(maxStackSize);
+                        stackable.setSize(stackable.getSize() + itemAmount);
+                        if(stackable.isMaxSize()){
+                            System.out.println(stackable.getMaxSize() + ":" + stackable.getSize());
+                            stackable.setSize(stackable.getMaxSize());
+                            event.setCancelled(true);
+                            return;
                         }
                     }
+
+                    // Disables interaction
+                    event.setCancelled(true);
+
                 } else {
                     if (stackable == null) {
                         stackableManager.addStack(stackable = new Stackable(location, blockType));
@@ -209,44 +223,31 @@ public class Interact implements Listener {
                     } else {
                         stackable.setSize(stackable.getSize() + itemAmount);
                     }
+
+                    event.setCancelled(true);
                 }
 
-                event.setCancelled(true);
-
-                if (configLoad.getBoolean("Island.Stackable.Limit.Enable")) {
-                    if (stackable.getSize() + itemAmount <= stackable.getMaxSize()) {
-                        InventoryUtil.takeItem(player, itemAmount);
-                    }
-                } else {
-                    InventoryUtil.takeItem(player, itemAmount);
-                }
+                InventoryUtil.takeItem(player, itemAmount);
 
                 if (!configLoad.getBoolean("Island.Block.Level.Enable")) {
                     return;
                 }
 
-                Materials materials = Materials.getMaterials(block.getType(), block.getData());
+                long materialAmmount = 0;
+                IslandLevel level = island.getLevel();
+                Materials material = Materials.getMaterials(block.getType(), block.getData());
 
-                if (materials == null) {
+                if (material == null) {
                     return;
                 }
-                long materialAmount = 0;
-                IslandLevel level = island.getLevel();
 
-                if (level.hasMaterial(materials.name())) {
-                    materialAmount = level.getMaterialAmount(materials.name());
+                if (level.hasMaterial(material.name())) {
+                    materialAmmount = level.getMaterialAmount(material.name());
                 }
 
-                if (configLoad.getBoolean("Island.Stackable.Limit.Enable")) {
-                    if (stackable.getSize() + itemAmount <= stackable.getMaxSize()) {
-                        level.setMaterialAmount(materials.name(), materialAmount + itemAmount);
-                    }else {
-                        return;
-                    }
-                } else {
-                    level.setMaterialAmount(materials.name(), materialAmount + itemAmount);
-                }
+                level.setMaterialAmount(material.name(), materialAmmount + itemAmount);
                 return;
+
             }
 
             // Check if the clicked block is outside of the border.
