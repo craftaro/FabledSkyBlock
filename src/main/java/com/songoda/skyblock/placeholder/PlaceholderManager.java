@@ -116,7 +116,7 @@ public class PlaceholderManager {
                                 .replace("%placeholder", "" + island.getRadius()));
             }
         } else if (placeholder.equalsIgnoreCase("fabledskyblock_island_level")) {
-            return island == null ? "0": Long.toString(island.getLevel().getLevel());
+            return island == null || island.getLevel() == null ? "0": Long.toString(island.getLevel().getLevel());
         } else if (placeholder.equalsIgnoreCase("fabledskyblock_island_level_formatted")) {
             if (island == null) {
                 return ChatColor.translateAlternateColorCodes('&',
