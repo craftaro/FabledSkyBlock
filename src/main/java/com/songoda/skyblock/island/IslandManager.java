@@ -1,38 +1,8 @@
 package com.songoda.skyblock.island;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.IllegalPluginAccessException;
-
 import com.google.common.base.Preconditions;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.api.event.island.IslandCreateEvent;
-import com.songoda.skyblock.api.event.island.IslandDeleteEvent;
-import com.songoda.skyblock.api.event.island.IslandLoadEvent;
-import com.songoda.skyblock.api.event.island.IslandOwnershipTransferEvent;
-import com.songoda.skyblock.api.event.island.IslandUnloadEvent;
+import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -64,6 +34,18 @@ import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.world.WorldManager;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+import org.bukkit.*;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.IllegalPluginAccessException;
 
 public class IslandManager {
 
@@ -203,25 +185,24 @@ public class IslandManager {
 
         if (!banManager.hasIsland(island.getOwnerUUID())) banManager.createIsland(island.getOwnerUUID());
 
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+        Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+            if (PlayerUtil.getNumberFromPermission(player, "fabledskyblock.size", false, 0) > 0 || player.hasPermission("fabledskyblock.*")) {
+                Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                FileConfiguration configLoad = config.getFileConfiguration();
 
-            int minimumSize = configLoad.getInt("Island.Size.Minimum");
-            int maximumSize = configLoad.getInt("Island.Size.Maximum");
+                int minimumSize = configLoad.getInt("Island.Size.Minimum");
+                int maximumSize = configLoad.getInt("Island.Size.Maximum");
 
-            if (minimumSize < 0 || minimumSize > 1000) {
-                minimumSize = 50;
-            }
+                if (minimumSize < 0 || minimumSize > 1000) {
+                    minimumSize = 50;
+                }
 
-            if (maximumSize < 0 || maximumSize > 1000) {
-                maximumSize = 100;
-            }
+                if (maximumSize < 0 || maximumSize > 1000) {
+                    maximumSize = 100;
+                }
 
-            for (int i = maximumSize; i > minimumSize; i--) {
-                if (player.hasPermission("fabledskyblock.size." + i) || player.hasPermission("fabledskyblock.*")) {
+                for (int i = maximumSize; i > minimumSize; i--) {
                     island.setSize(i);
-                    break;
                 }
             }
         });
