@@ -25,6 +25,7 @@ import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Illager;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Llama;
 import org.bukkit.entity.Mule;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
@@ -655,6 +656,10 @@ public class Entity implements Listener {
 
         if (NMSUtil.getVersionNumber() > 10) {
             if (livingEntity instanceof Evoker) return;
+        }
+        
+        if (NMSUtil.getVersionNumber() > 11) {
+        	if (livingEntity instanceof Llama) return;
         }
 
         if (NMSUtil.getVersionNumber() > 13) {
