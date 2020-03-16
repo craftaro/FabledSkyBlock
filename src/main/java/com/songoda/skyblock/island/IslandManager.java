@@ -1,5 +1,34 @@
 package com.songoda.skyblock.island;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.ChunkSnapshot;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.IllegalPluginAccessException;
+
 import com.google.common.base.Preconditions;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
@@ -51,11 +80,10 @@ public class IslandManager {
 
     private final SkyBlock skyblock;
 
-    private double x = 0, offset = 1200;
-
     private List<IslandPosition> islandPositions = new ArrayList<>();
     private Map<UUID, UUID> islandProxies = new HashMap<>();
     private Map<UUID, Island> islandStorage = new HashMap<>();
+    private int offset = 1200;
 
     public IslandManager(SkyBlock skyblock) {
         this.skyblock = skyblock;
@@ -90,15 +118,15 @@ public class IslandManager {
 
         File configFile = config.getFile();
         FileConfiguration configLoad = config.getFileConfiguration();
-
         for (IslandPosition islandPositionList : islandPositions) {
             if (islandPositionList.getWorld() == world) {
+                int island_number = (int) configLoad.get("World." + world.name() + ".nextAvailableLocation.island_number");
                 ConfigurationSection configSection = configLoad.createSection("World." + world.name() + ".nextAvailableLocation");
                 configSection.set("x", islandPositionList.getX());
                 configSection.set("z", islandPositionList.getZ());
+                configSection.set("island_number", (island_number + 1));
             }
         }
-
         try {
             configLoad.save(configFile);
         } catch (IOException e) {
@@ -115,24 +143,54 @@ public class IslandManager {
         }
     }
 
+
+
     public org.bukkit.Location prepareNextAvailableLocation(IslandWorld world) {
         for (IslandPosition islandPositionList : islandPositions) {
             if (islandPositionList.getWorld() == world) {
-                double x = islandPositionList.getX() + offset, z = islandPositionList.getZ();
 
-                if (x > Math.abs(this.x)) {
-                    z += offset;
-                    islandPositionList.setX(this.x);
-                    x = islandPositionList.getX() + offset;
-                    islandPositionList.setZ(z);
+                Config config_world = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "worlds.yml"));
+                Config config_config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+
+                FileConfiguration configLoad_world = config_world.getFileConfiguration();
+                FileConfiguration configLoad_config = config_config.getFileConfiguration();
+                int x = (int) configLoad_world.get("World." + world.name() + ".nextAvailableLocation.island_number");
+                System.out.println("Ile n°"  + x);
+                double r = Math.floor((Math.sqrt(x + 1) - 1) / 2) + 1;
+                double p = (8 * r * (r -1)) / 2;
+                double en = r * 2;
+                double a = (x - p) % (r * 8);
+                int posX = 0;
+                int posY = 0;
+                int loc = (int) Math.floor(a / (r * 2));
+                switch (loc) {
+                    case 0 :
+                        posX = (int) (a-r);
+                        posY = (int) (-r);
+                        break;
+                    case 1:
+                        posX = (int) r;
+                        posY = (int) ((a % en) - r);
+                        break;
+                    case 2:
+                        posX = (int) (r - (a % en));
+                        posY = (int) r;
+                        break;
+                    case 3:
+                        posX = (int) (-r);
+                        posY = (int) (r - (a % en));
+                        break;
+                    default:
+                        System.err.println("[FabledSkyblock][prepareNextAvailableLocation] Erreur dans la spirale, valeur : " + loc);
+                        return null;
                 }
+                posX = posX * offset;
+                posY = posY * offset;
+                islandPositionList.setX((double) posX);
+                islandPositionList.setZ((double) posY);
 
-                Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
-
-                int islandHeight = configLoad.getInt("Island.World." + world.name() + ".IslandSpawnHeight", 72);
-
-                return new org.bukkit.Location(skyblock.getWorldManager().getWorld(world), x, islandHeight, z);
+                int islandHeight = configLoad_config.getInt("Island.World." + world.name() + ".IslandSpawnHeight", 72);
+                return new org.bukkit.Location(skyblock.getWorldManager().getWorld(world), islandPositionList.getX(), islandHeight, islandPositionList.getZ());
             }
         }
 
