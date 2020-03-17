@@ -139,7 +139,7 @@ public class Teleport implements Listener {
 
                 Visit visit = island.getVisit();
 
-                if (!visit.isVisitor(player.getUniqueId())) {
+                if (visit != null && !visit.isVisitor(player.getUniqueId())) {
                     Bukkit.getServer().getPluginManager().callEvent(new PlayerIslandEnterEvent(player, island.getAPIWrapper()));
 
                     visit.addVisitor(player.getUniqueId());
