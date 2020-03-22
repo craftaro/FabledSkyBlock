@@ -48,26 +48,25 @@ public class Portal implements Listener {
         FileManager fileManager = skyblock.getFileManager();
         SoundManager soundManager = skyblock.getSoundManager();
 
+        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) return;
+
         Island island = islandManager.getIslandAtLocation(to.getLocation());
-        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ())
-            return;
 
         if (island == null) return;
-        if ((to.getType().equals(Materials.NETHER_PORTAL.parseMaterial()) ||
-                to.getType().equals(Materials.END_PORTAL.parseMaterial())) &&
-                !islandManager.hasPermission(player, player.getLocation(), "Portal")) {
+        
+        if ((to.getType().equals(Materials.NETHER_PORTAL.parseMaterial()) || to.getType().equals(Materials.END_PORTAL.parseMaterial()))
+                && !islandManager.hasPermission(player, player.getLocation(), "Portal")) {
             event.setTo(LocationUtil.getRandomLocation(event.getFrom().getWorld(), 5000, 5000, true, true));
             messageManager.sendMessage(player,
-                    fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                            .getString("Island.Settings.Permission.Message"));
+                    fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
             soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
         }
+        
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onEntityPortalEnter(EntityPortalEnterEvent event) {
-        if (!(event.getEntity() instanceof Player))
-            return;
+        if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
         org.bukkit.block.Block block = event.getLocation().getBlock();
@@ -78,8 +77,7 @@ public class Portal implements Listener {
         WorldManager worldManager = skyblock.getWorldManager();
         FileManager fileManager = skyblock.getFileManager();
 
-        if (!worldManager.isIslandWorld(player.getWorld()))
-            return;
+        if (!worldManager.isIslandWorld(player.getWorld())) return;
 
         Island island = islandManager.getIslandAtLocation(player.getLocation());
 
@@ -90,23 +88,22 @@ public class Portal implements Listener {
 
         if (!islandManager.hasPermission(player, player.getLocation(), "Portal")) {
             messageManager.sendMessage(player,
-                    fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                            .getString("Island.Settings.Permission.Message"));
+                    fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
             soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
             return;
         }
 
         IslandEnvironment spawnEnvironment;
         switch (island.getRole(player)) {
-            case Operator:
-            case Owner:
-            case Member:
-            case Coop:
-                spawnEnvironment = IslandEnvironment.Island;
-                break;
+        case Operator:
+        case Owner:
+        case Member:
+        case Coop:
+            spawnEnvironment = IslandEnvironment.Island;
+            break;
 
-            default:
-                spawnEnvironment = IslandEnvironment.Visitor;
+        default:
+            spawnEnvironment = IslandEnvironment.Visitor;
         }
 
         Tick tick;
@@ -123,9 +120,7 @@ public class Portal implements Listener {
                 tick.setLast(System.currentTimeMillis());
             }
             if (tick.getTick() >= 100) {
-                messageManager.sendMessage(player,
-                        fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                                .getString("Island.Portal.Stuck.Message"));
+                messageManager.sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Portal.Stuck.Message"));
                 soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
                 LocationUtil.teleportPlayerToSpawn(player);
                 return;
@@ -137,39 +132,37 @@ public class Portal implements Listener {
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
         IslandWorld toWorld = IslandWorld.Normal;
 
-        if (block.getType().equals(Materials.NETHER_PORTAL.parseMaterial()))
-            toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.Nether : IslandWorld.Normal;
-        else if (block.getType().equals(Materials.END_PORTAL.parseMaterial()))
-            toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.End : IslandWorld.Normal;
+        if (block.getType().equals(Materials.NETHER_PORTAL.parseMaterial())) toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.Nether : IslandWorld.Normal;
+        else if (block.getType().equals(Materials.END_PORTAL.parseMaterial())) toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.End : IslandWorld.Normal;
 
         switch (toWorld) {
-            case Nether:
-                if (configLoad.getBoolean("Island.World.Nether.Enable") && island.isRegionUnlocked(player, "Nether")) {
-                    IslandWorld toWorldF = toWorld;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
-                    soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-                    player.setFallDistance(0.0F);
-                    tick.setTick(1);
-                }
-                break;
-
-            case End:
-                if (configLoad.getBoolean("Island.World.End.Enable") && island.isRegionUnlocked(player, "End")) {
-                    IslandWorld toWorldF = toWorld;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
-                    soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
-                    player.setFallDistance(0.0F);
-                    tick.setTick(1);
-                }
-                break;
-
-            default:
+        case Nether:
+            if (configLoad.getBoolean("Island.World.Nether.Enable") && island.isRegionUnlocked(player, "Nether")) {
                 IslandWorld toWorldF = toWorld;
                 Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
                 soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
                 player.setFallDistance(0.0F);
                 tick.setTick(1);
-                break;
+            }
+            break;
+
+        case End:
+            if (configLoad.getBoolean("Island.World.End.Enable") && island.isRegionUnlocked(player, "End")) {
+                IslandWorld toWorldF = toWorld;
+                Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
+                soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                player.setFallDistance(0.0F);
+                tick.setTick(1);
+            }
+            break;
+
+        default:
+            IslandWorld toWorldF = toWorld;
+            Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
+            soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+            player.setFallDistance(0.0F);
+            tick.setTick(1);
+            break;
         }
 
     }

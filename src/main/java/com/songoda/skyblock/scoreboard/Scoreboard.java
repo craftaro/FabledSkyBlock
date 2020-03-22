@@ -1,13 +1,10 @@
 package com.songoda.skyblock.scoreboard;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandLevel;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.placeholder.PlaceholderManager;
-import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,13 +15,20 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 
-import java.util.*;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandLevel;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.placeholder.PlaceholderManager;
+import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.skyblock.utils.version.NMSUtil;
 
 public class Scoreboard {
 
     private final SkyBlock plugin;
-
     private final Player player;
+
     private String displayName;
     private List<String> displayList;
     private Map<String, String> displayVariables;
@@ -72,8 +76,7 @@ public class Scoreboard {
 
                         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-                        String formattedDisplayName = ChatColor.translateAlternateColorCodes('&',
-                                replaceDisplayName(displayName));
+                        String formattedDisplayName = ChatColor.translateAlternateColorCodes('&', replaceDisplayName(displayName));
                         int max = NMSUtil.getVersionNumber() > 8 ? 32 : 16;
                         if (formattedDisplayName.length() > max) {
                             obj.setDisplayName(ChatColor.RED + "Too long...");
@@ -100,8 +103,7 @@ public class Scoreboard {
                                 if (!player.isOnline()) cancel();
 
                                 try {
-                                    String formattedDisplayName = ChatColor.translateAlternateColorCodes('&',
-                                            replaceDisplayName(displayName));
+                                    String formattedDisplayName = ChatColor.translateAlternateColorCodes('&', replaceDisplayName(displayName));
 
                                     if (formattedDisplayName.length() > max) {
                                         obj.setDisplayName(ChatColor.RED + "Too long...");
@@ -119,50 +121,37 @@ public class Scoreboard {
                                         }
 
                                         if (displayLine.length() >= 16) {
-                                            String prefixLine = displayLine.substring(0,
-                                                    Math.min(displayLine.length(), 16));
-                                            String suffixLine = displayLine.substring(16,
-                                                    Math.min(displayLine.length(), displayLine.length()));
+                                            String prefixLine = displayLine.substring(0, Math.min(displayLine.length(), 16));
+                                            String suffixLine = displayLine.substring(16, Math.min(displayLine.length(), displayLine.length()));
 
                                             if (prefixLine.substring(prefixLine.length() - 1).equals("&")) {
-                                                prefixLine = ChatColor.translateAlternateColorCodes('&',
-                                                        prefixLine.substring(0, prefixLine.length() - 1));
-                                                suffixLine = ChatColor.translateAlternateColorCodes('&',
-                                                        "&" + suffixLine);
+                                                prefixLine = ChatColor.translateAlternateColorCodes('&', prefixLine.substring(0, prefixLine.length() - 1));
+                                                suffixLine = ChatColor.translateAlternateColorCodes('&', "&" + suffixLine);
                                             } else {
                                                 String lastColorCodes;
 
                                                 if (prefixLine.contains("&")) {
                                                     String[] colorCodes = prefixLine.split("&");
                                                     String lastColorCodeText = colorCodes[colorCodes.length - 1];
-                                                    lastColorCodes = "&" + lastColorCodeText.substring(0,
-                                                            Math.min(lastColorCodeText.length(), 1));
+                                                    lastColorCodes = "&" + lastColorCodeText.substring(0, Math.min(lastColorCodeText.length(), 1));
 
-                                                    if ((colorCodes.length >= 2) && (lastColorCodes.equals("&l")
-                                                            || lastColorCodes.equals("&m")
-                                                            || lastColorCodes.equals("&n")
-                                                            || lastColorCodes.equals("&o"))) {
+                                                    if ((colorCodes.length >= 2)
+                                                            && (lastColorCodes.equals("&l") || lastColorCodes.equals("&m") || lastColorCodes.equals("&n") || lastColorCodes.equals("&o"))) {
                                                         lastColorCodeText = colorCodes[colorCodes.length - 2];
-                                                        lastColorCodes = "&"
-                                                                + lastColorCodeText.substring(0,
-                                                                Math.min(lastColorCodeText.length(), 1))
-                                                                + lastColorCodes;
+                                                        lastColorCodes = "&" + lastColorCodeText.substring(0, Math.min(lastColorCodeText.length(), 1)) + lastColorCodes;
                                                     }
                                                 } else {
                                                     lastColorCodes = "&f";
                                                 }
 
-                                                prefixLine = ChatColor.translateAlternateColorCodes('&',
-                                                        prefixLine);
-                                                suffixLine = ChatColor.translateAlternateColorCodes('&',
-                                                        lastColorCodes + suffixLine);
+                                                prefixLine = ChatColor.translateAlternateColorCodes('&', prefixLine);
+                                                suffixLine = ChatColor.translateAlternateColorCodes('&', lastColorCodes + suffixLine);
                                             }
 
                                             scoreboard.getTeam(ranStr + i1).setPrefix(prefixLine);
                                             scoreboard.getTeam(ranStr + i1).setSuffix(suffixLine);
                                         } else {
-                                            scoreboard.getTeam(ranStr + i1).setPrefix(
-                                                    ChatColor.translateAlternateColorCodes('&', displayLine));
+                                            scoreboard.getTeam(ranStr + i1).setPrefix(ChatColor.translateAlternateColorCodes('&', displayLine));
                                         }
                                     }
 
@@ -181,8 +170,7 @@ public class Scoreboard {
     }
 
     private String replaceDisplayName(String displayName) {
-        displayName = displayName.replace("%players_online", "" + Bukkit.getServer().getOnlinePlayers().size())
-                .replace("%players_max", "" + Bukkit.getServer().getMaxPlayers());
+        displayName = displayName.replace("%players_online", "" + Bukkit.getServer().getOnlinePlayers().size()).replace("%players_max", "" + Bukkit.getServer().getMaxPlayers());
 
         return displayName;
     }
@@ -192,8 +180,7 @@ public class Scoreboard {
 
         IslandManager islandManager = skyblock.getIslandManager();
 
-        displayLine = displayLine.replace("%players_online", "" + Bukkit.getServer().getOnlinePlayers().size())
-                .replace("%players_max", "" + Bukkit.getServer().getMaxPlayers());
+        displayLine = displayLine.replace("%players_online", "" + Bukkit.getServer().getOnlinePlayers().size()).replace("%players_max", "" + Bukkit.getServer().getMaxPlayers());
 
         Island island = islandManager.getIsland(player);
 
@@ -201,15 +188,11 @@ public class Scoreboard {
             IslandLevel level = island.getLevel();
 
             if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
-                displayLine = displayLine
-                        .replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel()))
-                        .replace("%island_members", ChatColor.RED + "0").replace("%island_role", ChatColor.RED + "null")
-                        .replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size())
-                        .replace("%island_size", "" + island.getSize())
-                        .replace("%island_radius", "" + island.getRadius());
+                displayLine = displayLine.replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel())).replace("%island_members", ChatColor.RED + "0")
+                        .replace("%island_role", ChatColor.RED + "null").replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size())
+                        .replace("%island_size", "" + island.getSize()).replace("%island_radius", "" + island.getRadius());
             } else {
-                int islandMembers = 1 + island.getRole(IslandRole.Member).size()
-                        + island.getRole(IslandRole.Operator).size();
+                int islandMembers = 1 + island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size();
                 String islandRole = "";
 
                 if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
@@ -220,26 +203,20 @@ public class Scoreboard {
                     islandRole = displayVariables.get("%member");
                 }
 
-                displayLine = displayLine
-                        .replace("%island_points", "" + NumberUtil.formatNumberByDecimal(level.getPoints()))
-                        .replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel()))
-                        .replace("%island_members", "" + islandMembers).replace("%island_role", islandRole)
-                        .replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size())
-                        .replace("%island_size", "" + island.getSize())
+                displayLine = displayLine.replace("%island_points", "" + NumberUtil.formatNumberByDecimal(level.getPoints()))
+                        .replace("%island_level", "" + NumberUtil.formatNumberByDecimal(level.getLevel())).replace("%island_members", "" + islandMembers).replace("%island_role", islandRole)
+                        .replace("%island_visitors", "" + islandManager.getVisitorsAtIsland(island).size()).replace("%island_size", "" + island.getSize())
                         .replace("%island_radius", "" + island.getRadius());
             }
         } else {
-            displayLine = displayLine.replace("%island_points", ChatColor.RED + "0")
-                    .replace("%island_level", ChatColor.RED + "0").replace("%island_members", ChatColor.RED + "0")
-                    .replace("%island_role", ChatColor.RED + "null").replace("%island_size", ChatColor.RED + "0")
-                    .replace("%island_radius", ChatColor.RED + "0");
+            displayLine = displayLine.replace("%island_points", ChatColor.RED + "0").replace("%island_level", ChatColor.RED + "0").replace("%island_members", ChatColor.RED + "0")
+                    .replace("%island_role", ChatColor.RED + "null").replace("%island_size", ChatColor.RED + "0").replace("%island_radius", ChatColor.RED + "0");
         }
 
         PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
 
         if (placeholderManager.isPlaceholderAPIEnabled()) {
-            displayLine = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, displayLine.replace("&", "clr"))
-                    .replace("clr", "&");
+            displayLine = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, displayLine.replace("&", "clr")).replace("clr", "&");
         }
 
         return displayLine;

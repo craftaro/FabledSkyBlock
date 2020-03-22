@@ -17,9 +17,7 @@ public class TopLevel extends DataCollector {
 
     public TopLevel(SkyBlock skyblock) {
         super("toplevels", skyblock.getDescription().getName(), BoardType.DEFAULT, "&bTop Level", "toplevel",
-                Arrays.asList(ChatColor.DARK_GRAY + "-=+=-", ChatColor.AQUA + "{name}",
-                        ChatColor.WHITE + "{amount} Level", ChatColor.DARK_GRAY + "-=+=-"),
-                true, UUID.class);
+                Arrays.asList(ChatColor.DARK_GRAY + "-=+=-", ChatColor.AQUA + "{name}", ChatColor.WHITE + "{amount} Level", ChatColor.DARK_GRAY + "-=+=-"), true, UUID.class);
 
         this.skyblock = skyblock;
     }

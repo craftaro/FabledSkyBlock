@@ -49,8 +49,7 @@ public class TeleportCommand extends SubCommand {
             }
 
             if (islandOwnerUUID == null) {
-                messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.Teleport.Island.None.Message"));
+                messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message"));
                 soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
                 return;
@@ -60,39 +59,31 @@ public class TeleportCommand extends SubCommand {
                     boolean isCoopPlayer = false;
 
                     if (islandManager.containsIsland(islandOwnerUUID)) {
-                        if (islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID))
-                                .isCoopPlayer(player.getUniqueId())) {
+                        if (islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).isCoopPlayer(player.getUniqueId())) {
                             isCoopPlayer = true;
                         }
                     }
 
-                    if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass")
-                            || player.hasPermission("fabledskyblock.bypass.*") || player.hasPermission("fabledskyblock.*")
-                            || visit.isOpen()) {
+                    if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass") || player.hasPermission("fabledskyblock.bypass.*") || player.hasPermission("fabledskyblock.*") || visit.isOpen()) {
                         if (!islandManager.containsIsland(islandOwnerUUID)) {
                             islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                         }
 
-                        islandManager.visitIsland(player,
-                                islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)));
+                        islandManager.visitIsland(player, islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)));
 
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Command.Island.Teleport.Teleported.Other.Message")
-                                        .replace("%player", targetPlayerName));
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Other.Message").replace("%player", targetPlayerName));
                         soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 
                         return;
                     } else {
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Command.Island.Teleport.Island.Closed.Message"));
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.Closed.Message"));
                         soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
                     }
 
                     return;
                 }
 
-                messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.Teleport.Island.None.Message"));
+                messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message"));
                 soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
                 return;
@@ -110,8 +101,7 @@ public class TeleportCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Owner.Message"));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         } else {
-            messageManager.sendMessage(player,
-                    configLoad.getString("Command.Island.Teleport.Teleported.Yourself.Message"));
+            messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Yourself.Message"));
             soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
@@ -138,7 +128,7 @@ public class TeleportCommand extends SubCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[]{"tp", "spawn", "home", "go", "warp"};
+        return new String[] { "tp", "spawn", "home", "go", "warp" };
     }
 
     @Override

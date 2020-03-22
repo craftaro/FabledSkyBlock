@@ -228,12 +228,26 @@ public class IslandManager {
     }
 
     /**
-     * Deletes an Island permanently
+     * Executes the {@link IslandManager#deleteIsland(Island, boolean)} method with <code>island<code> and
+     * <code>true<code> as the parameters
+     * <p>
+     * See {@link IslandManager#deleteIsland(Island, boolean)}
      */
     public void deleteIsland(Island island) {
         Preconditions.checkArgument(island != null, "Cannot delete island to null island");
 
-        this.islandManager.deleteIsland(island.getIsland());
+        this.islandManager.deleteIsland(island.getIsland(), true);
+    }
+    
+    /*
+     * If force is set to true, the island will be deleted and no conditions will be
+     * checked, else it will only delete the island if the island deletion
+     * conditions are met.
+     */
+    public void deleteIsland(Island island, boolean force) {
+        Preconditions.checkArgument(island != null, "Cannot delete island to null island");
+
+        this.islandManager.deleteIsland(island.getIsland(), force);
     }
 
     /**

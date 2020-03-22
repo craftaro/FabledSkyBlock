@@ -9,7 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.Stackable;

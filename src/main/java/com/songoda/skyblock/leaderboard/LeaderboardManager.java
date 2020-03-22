@@ -28,8 +28,7 @@ public class LeaderboardManager {
         this.skyblock = skyblock;
 
         new LeaderboardTask(skyblock).runTaskTimerAsynchronously(skyblock, 0L,
-                skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                        .getFileConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
+                skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
 
         resetLeaderboard();
         setupLeaderHeads();
@@ -43,18 +42,16 @@ public class LeaderboardManager {
         visitManager.loadIslands();
 
         int arraySize = visitManager.getIslands().size();
-        
+
         List<LeaderboardPlayer> islandLevels = new ArrayList<>(arraySize);
         List<LeaderboardPlayer> islandBanks = new ArrayList<>(arraySize);
         List<LeaderboardPlayer> islandVotes = new ArrayList<>(arraySize);
 
-        boolean enableExemptions = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Leaderboard.Exemptions.Enable");
+        boolean enableExemptions = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                .getBoolean("Island.Leaderboard.Exemptions.Enable");
 
         for (UUID ownerUUID : visitManager.getIslands().keySet()) {
-            if (enableExemptions && economyManager.hasPermission(worldManager.getWorld(IslandWorld.Normal).getName(),
-                    Bukkit.getOfflinePlayer(ownerUUID),
-                    "fabledskyblock.top.exempt"))
+            if (enableExemptions && economyManager.hasPermission(worldManager.getWorld(IslandWorld.Normal).getName(), Bukkit.getOfflinePlayer(ownerUUID), "fabledskyblock.top.exempt"))
                 continue;
 
             Visit visit = visitManager.getIslands().get(ownerUUID);
@@ -92,23 +89,23 @@ public class LeaderboardManager {
         List<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>(visitManager.getIslands().size());
 
         switch (type) {
-            case Level:
-                for (UUID ownerUUID : visitManager.getIslands().keySet()) {
-                    Visit visit = visitManager.getIslands().get(ownerUUID);
-                    leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getLevel().getLevel()));
-                }
-                break;
-            case Bank:
-                for (UUID ownerUUID : visitManager.getIslands().keySet()) {
-                    Visit visit = visitManager.getIslands().get(ownerUUID);
-                    leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, (long) visit.getBankBalance()));
-                }
-            case Votes:
-                for (UUID ownerUUID : visitManager.getIslands().keySet()) {
-                    Visit visit = visitManager.getIslands().get(ownerUUID);
-                    leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getVoters().size()));
-                }
-                break;
+        case Level:
+            for (UUID ownerUUID : visitManager.getIslands().keySet()) {
+                Visit visit = visitManager.getIslands().get(ownerUUID);
+                leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getLevel().getLevel()));
+            }
+            break;
+        case Bank:
+            for (UUID ownerUUID : visitManager.getIslands().keySet()) {
+                Visit visit = visitManager.getIslands().get(ownerUUID);
+                leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, (long) visit.getBankBalance()));
+            }
+        case Votes:
+            for (UUID ownerUUID : visitManager.getIslands().keySet()) {
+                Visit visit = visitManager.getIslands().get(ownerUUID);
+                leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getVoters().size()));
+            }
+            break;
         }
 
         leaderboardPlayers.sort(Comparator.comparingLong(LeaderboardPlayer::getValue).reversed());

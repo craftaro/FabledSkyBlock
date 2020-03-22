@@ -114,9 +114,8 @@ public class GeneratorManager {
     @SuppressWarnings("deprecation")
     public BlockState generateBlock(Generator generator, Block block) {
         Materials materials = getRandomMaterials(generator);
-        if (materials == null)
-            return block.getState();
-
+        if (materials == null) return block.getState();
+        
         skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(), 1.0F, 10.0F);
 
         if (NMSUtil.getVersionNumber() > 12) {
@@ -127,8 +126,7 @@ public class GeneratorManager {
 
             try {
                 block.getClass().getMethod("setData", byte.class).invoke(block, (byte) is.getDurability());
-            } catch (IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
             }
         }

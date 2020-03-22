@@ -15,6 +15,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.io.File;
 import java.util.UUID;
@@ -91,14 +92,19 @@ public class Stackable {
     }
 
     private void updateDisplay() {
-        // The chunk needs to be loaded otherwise the getNearbyEntities() in removeDisplay() won't find anything
-        if (!this.location.getWorld().isChunkLoaded(this.location.getBlockX() >> 4, this.location.getBlockZ() >> 4))
-            this.location.getChunk().load();
+        // The chunk needs to be loaded otherwise the getNearbyEntities() in
+        // removeDisplay() won't find anything
+        if (!this.location.getWorld().isChunkLoaded(this.location.getBlockX() >> 4, this.location.getBlockZ() >> 4)) this.location.getChunk().load();
 
         if (this.size > 1) {
-            this.createDisplay();
-            this.display.setCustomName(this.getCustomName());
-            this.display.setCustomNameVisible(true);
+
+            if (display == null || !display.isValid()) {
+                this.createDisplay();
+            } else {
+                this.display.setCustomName(this.getCustomName());
+                this.display.setCustomNameVisible(true);
+            }
+
         } else {
             this.removeDisplay();
         }
@@ -119,6 +125,7 @@ public class Stackable {
         as.setHelmet(new ItemStack(this.material));
         as.setCustomName(this.getCustomName());
         as.setCustomNameVisible(true);
+        as.setMetadata("StackableArmorStand", new FixedMetadataValue(SkyBlock.getInstance(), ""));
         this.display = as;
     }
 
@@ -129,14 +136,13 @@ public class Stackable {
 
         // Find any stragglers
         for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.25, 0.5, 0.25))
-            if (entity instanceof ArmorStand)
-                entity.remove();
+            if (entity instanceof ArmorStand) entity.remove();
     }
 
     private void save() {
         File configFile = new File(SkyBlock.getInstance().getDataFolder().toString() + "/island-data");
-        FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(configFile,
-                SkyBlock.getInstance().getIslandManager().getIslandAtLocation(this.location).getOwnerUUID() + ".yml"));
+        FileManager.Config config = SkyBlock.getInstance().getFileManager()
+                .getConfig(new File(configFile, SkyBlock.getInstance().getIslandManager().getIslandAtLocation(this.location).getOwnerUUID() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (this.getSize() == 0) {
@@ -150,10 +156,10 @@ public class Stackable {
     }
 
     private String getCustomName() {
-        return ChatColor.translateAlternateColorCodes('&', SkyBlock.getInstance().getFileManager()
-                .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"))
-                .getFileConfiguration().getString("Hologram.Stackable.Message"))
-                .replace("%block", WordUtils.capitalize(this.material.name().toLowerCase()).replace("_", " "))
-                .replace("%amount", NumberUtil.formatNumber(this.size));
+        return ChatColor
+                .translateAlternateColorCodes('&',
+                        SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration()
+                                .getString("Hologram.Stackable.Message"))
+                .replace("%block", WordUtils.capitalize(this.material.name().toLowerCase()).replace("_", " ")).replace("%amount", NumberUtil.formatNumber(this.size));
     }
 }

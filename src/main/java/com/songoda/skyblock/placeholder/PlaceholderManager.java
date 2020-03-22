@@ -116,14 +116,7 @@ public class PlaceholderManager {
                                 .replace("%placeholder", "" + island.getRadius()));
             }
         } else if (placeholder.equalsIgnoreCase("fabledskyblock_island_level")) {
-            if (island == null) {
-                return ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Placeholder.fabledskyblock_island_level.Empty.Message"));
-            } else {
-                return ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Placeholder.fabledskyblock_island_level.Non-empty.Message")
-                                .replace("%placeholder", "" + island.getLevel().getLevel()));
-            }
+            return island == null ? "0": Long.toString(island.getLevel().getLevel());
         } else if (placeholder.equalsIgnoreCase("fabledskyblock_island_level_formatted")) {
             if (island == null) {
                 return ChatColor.translateAlternateColorCodes('&',
@@ -134,14 +127,7 @@ public class PlaceholderManager {
                                 "%placeholder", "" + NumberUtil.formatNumberBySuffix(island.getLevel().getLevel())));
             }
         } else if (placeholder.equalsIgnoreCase("fabledskyblock_island_points")) {
-            if (island == null) {
-                return ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Placeholder.fabledskyblock_island_points.Empty.Message"));
-            } else {
-                return ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Placeholder.fabledskyblock_island_points.Non-empty.Message")
-                                .replace("%placeholder", "" + island.getLevel().getPoints()));
-            }
+            return island == null ? "0": Long.toString(island.getLevel().getPoints());
         } else if (placeholder.equalsIgnoreCase("fabledskyblock_island_votes")) {
             if (island == null) {
                 return ChatColor.translateAlternateColorCodes('&',

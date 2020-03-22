@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class nInventoryUtil {
 
@@ -55,8 +56,7 @@ public class nInventoryUtil {
                             return;
                         }
 
-                        ClickEvent clickEvent = new ClickEvent(event.getClick(), event.getSlot(),
-                                event.getCurrentItem());
+                        ClickEvent clickEvent = new ClickEvent(event.getClick(), event.getSlot(), event.getCurrentItem());
                         handler.onClick(clickEvent);
 
                         if (!clickEvent.getCancelled()) {
@@ -115,8 +115,7 @@ public class nInventoryUtil {
         return items;
     }
 
-    public Item createItem(ItemStack is, String itemDisplayname, List<String> itemLore, Placeholder[] placeholders,
-                           Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
+    public Item createItem(ItemStack is, String itemDisplayname, List<String> itemLore, Placeholder[] placeholders, Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
         return new Item(is, itemDisplayname, itemLore, placeholders, itemEnchantments, itemFlags);
     }
 
@@ -136,7 +135,6 @@ public class nInventoryUtil {
     public void setRows(int rows) {
         if (rows > 6 || rows < 0) {
             size = 9;
-
             return;
         }
 
@@ -162,9 +160,8 @@ public class nInventoryUtil {
             }
         }
 
-        for (int i = 0; i < items.size(); i++) {
-            int slot = (int) items.keySet().toArray()[i];
-            inv.setItem(slot, items.get(slot));
+        for(Entry<Integer, ItemStack> entry : items.entrySet()) {
+            inv.setItem(entry.getKey(), entry.getValue());
         }
     }
 
@@ -193,7 +190,7 @@ public class nInventoryUtil {
         void onClick(ClickEvent event);
     }
 
-    public class Item {
+    public static class Item {
 
         private ItemStack is;
         private String itemDisplayname;
@@ -202,8 +199,7 @@ public class nInventoryUtil {
         private Enchantment[] itemEnchantments;
         private ItemFlag[] itemFlags;
 
-        public Item(ItemStack is, String itemDisplayname, List<String> itemLore, Placeholder[] placeholders,
-                    Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
+        public Item(ItemStack is, String itemDisplayname, List<String> itemLore, Placeholder[] placeholders, Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
             this.is = is;
             this.itemDisplayname = ChatColor.translateAlternateColorCodes('&', itemDisplayname);
             this.itemLore = itemLore;
@@ -214,14 +210,13 @@ public class nInventoryUtil {
 
         public void setLore() {
             if (itemLore != null) {
-                ArrayList<String> formattedItemLore = new ArrayList<>();
+                List<String> formattedItemLore = new ArrayList<>(itemLore.size());
 
                 for (String itemLoreList : itemLore) {
                     if (placeholders != null) {
                         for (Placeholder placeholderList : placeholders) {
                             if (itemLoreList.contains(placeholderList.getPlaceholder())) {
-                                itemLoreList = ChatColor.translateAlternateColorCodes('&', itemLoreList
-                                        .replace(placeholderList.getPlaceholder(), placeholderList.getResult()));
+                                itemLoreList = ChatColor.translateAlternateColorCodes('&', itemLoreList.replace(placeholderList.getPlaceholder(), placeholderList.getResult()));
                             }
                         }
                     }

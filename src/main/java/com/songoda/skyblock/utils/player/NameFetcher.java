@@ -1,15 +1,18 @@
 package com.songoda.skyblock.utils.player;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class NameFetcher {
+import com.google.gson.Gson;
+
+public final class NameFetcher {
+
+    private NameFetcher() {
+
+    }
 
     public static Names[] getNames(UUID uuid) throws IOException {
         if (uuid == null) {
@@ -18,17 +21,14 @@ public class NameFetcher {
 
         Names[] names = null;
 
-        Scanner jsonScanner = new Scanner(
-                (new URL("https://api.mojang.com/user/profiles/" + uuid.toString().replaceAll("-", "") + "/names"))
-                        .openConnection().getInputStream(),
-                "UTF-8");
+        Scanner jsonScanner = new Scanner((new URL("https://api.mojang.com/user/profiles/" + uuid.toString().replaceAll("-", "") + "/names")).openConnection().getInputStream(), "UTF-8");
         names = new Gson().fromJson(jsonScanner.next(), Names[].class);
         jsonScanner.close();
 
         return names;
     }
 
-    public class Names {
+    public static class Names {
 
         public String name;
         public long changedToAt;

@@ -19,6 +19,7 @@ import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.utils.item.MenuClickRegistry;
 import com.songoda.skyblock.utils.version.Sounds;
 
 public class ReloadCommand extends SubCommand {
@@ -40,11 +41,11 @@ public class ReloadCommand extends SubCommand {
         LimitationInstanceHandler limitHandler = skyblock.getLimitationHandler();
         FileManager fileManager = skyblock.getFileManager();
 
-        messageManager.sendMessage(sender, "&cPlease note that this command is not supported and may " +
-                "cause issues that could put the plugin in an unstable state. " +
-                "If you encounter any issues please stop your server, edit the configuration files, " +
-                "and then start your server again. This command does NOT reload all the plugin files, only " +
-                "the config.yml, language.yml, generators.yml, levelling.yml, and limits.yml.");
+        messageManager.sendMessage(sender,
+                "&cPlease note that this command is not supported and may " + "cause issues that could put the plugin in an unstable state. "
+                        + "If you encounter any issues please stop your server, edit the configuration files, "
+                        + "and then start your server again. This command does NOT reload all the plugin files, only "
+                        + "the config.yml, language.yml, generators.yml, levelling.yml, and limits.yml.");
 
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
@@ -56,8 +57,7 @@ public class ReloadCommand extends SubCommand {
             Config configFileConfig = configs.get(configFileName);
             String configFilePath = configFileName.replace(configFileConfig.getFile().getName(), "");
 
-            if (configFilePath.equals(skyblock.getDataFolder().toString() + "\\")
-                    || configFilePath.equals(skyblock.getDataFolder().toString() + "/")) {
+            if (configFilePath.equals(skyblock.getDataFolder().toString() + "\\") || configFilePath.equals(skyblock.getDataFolder().toString() + "/")) {
                 configFileConfig.loadFile();
             }
         }
@@ -95,6 +95,7 @@ public class ReloadCommand extends SubCommand {
         });
 
         limitHandler.reloadAll();
+        MenuClickRegistry.getInstance().reloadAll();
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
         soundManager.playSound(sender, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);

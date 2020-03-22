@@ -165,12 +165,14 @@ public class ConfirmCommand extends SubCommand {
                                         }
                                     }
 
-                                    island.setDeleted(true);
-                                    islandManager.deleteIsland(island);
-
-                                    messageManager.sendMessage(player, configLoad
-                                            .getString("Command.Island.Confirmation.Deletion.Sender.Message"));
-                                    soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
+                                    if (islandManager.deleteIsland(island, false)) {
+                                        island.setDeleted(true);
+                                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Deletion.Sender.Message"));
+                                        soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
+                                    }else {
+                                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Deletion.Sender.MaxDeletionMessage"));
+                                        soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1f, 1f);
+                                    }
                                 }
                             }
                         } else {
