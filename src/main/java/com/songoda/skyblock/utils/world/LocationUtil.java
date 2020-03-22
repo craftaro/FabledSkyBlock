@@ -237,16 +237,16 @@ public final class LocationUtil {
         int rndX = rnd.nextInt(xRange);
         int rndZ = rnd.nextInt(zRange);
 
-        if (loadChunk) {
-            Chunk chunk = world.getChunkAt(new Location(world, rndX, 10, rndZ));
-            world.loadChunk(chunk);
-        }
+        if (loadChunk) world.getChunkAt(new Location(world, rndX, 10, rndZ));
 
         double rndY = -1;
 
         if (world.getEnvironment() == Environment.NETHER) {
+            
+            Location rndLoc = new Location(world, rndX, 0, rndZ);
+            
             for (int i = 120; i > 0; i--) {
-                Location rndLoc = new Location(world, rndX, i, rndZ);
+                rndLoc.setY(i);
 
                 if (rndLoc.getBlock().getType() != Material.AIR
                         && rndLoc.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR
@@ -254,7 +254,6 @@ public final class LocationUtil {
                         && rndLoc.clone().add(0.0D, 3.0D, 0.0D).getBlock().getType() == Material.AIR
                         && rndLoc.clone().add(0.0D, 4.0D, 0.0D).getBlock().getType() == Material.AIR) {
                     rndY = i;
-
                     break;
                 }
             }

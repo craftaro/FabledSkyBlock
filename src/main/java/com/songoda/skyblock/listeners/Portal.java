@@ -174,7 +174,7 @@ public class Portal implements Listener {
 
     }
 
-    public class Tick {
+    public static class Tick {
         private int tick = 1;
         private long last = System.currentTimeMillis() - 1001;
 

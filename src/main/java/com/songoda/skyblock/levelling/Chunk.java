@@ -12,8 +12,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public class Chunk {
@@ -43,7 +46,7 @@ public class Chunk {
 
             for (IslandWorld islandWorld : IslandWorld.getIslandWorlds()) {
                 if (islandWorld == IslandWorld.Normal || (islandWorld == IslandWorld.Nether && hasNether) || (islandWorld == IslandWorld.End && hasEnd)) {
-                    this.getChunksToScan(islandWorld);
+                    chunkPositions.addAll(getChunksToScan(island, islandWorld));
                 }
             }
 
@@ -130,12 +133,15 @@ public class Chunk {
         }
     }
 
-    private void getChunksToScan(IslandWorld islandWorld) {
-        Location islandLocation = this.island.getLocation(islandWorld, IslandEnvironment.Island);
+    public static List<ChunkPosition> getChunksToScan(Island island, IslandWorld islandWorld) {
+        Location islandLocation = island.getLocation(islandWorld, IslandEnvironment.Island);
+        
+        if (islandLocation == null) return new ArrayList<>(0);
+        
         World world = islandLocation.getWorld();
 
-        Location minLocation = new Location(world, islandLocation.getBlockX() - this.island.getRadius(), 0, islandLocation.getBlockZ() - this.island.getRadius());
-        Location maxLocation = new Location(world, islandLocation.getBlockX() + this.island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + this.island.getRadius());
+        Location minLocation = new Location(world, islandLocation.getBlockX() - island.getRadius(), 0, islandLocation.getBlockZ() - island.getRadius());
+        Location maxLocation = new Location(world, islandLocation.getBlockX() + island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + island.getRadius());
 
         int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
         int minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
@@ -143,10 +149,14 @@ public class Chunk {
         int maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX());
         int maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ());
 
+        List<ChunkPosition> positions = new LinkedList<>();
+        
         for (int x = minX; x < maxX + 16; x += 16) {
             for (int z = minZ; z < maxZ + 16; z += 16) {
-                this.chunkPositions.add(new ChunkPosition(world, x >> 4, z >> 4));
+                positions.add(new ChunkPosition(world, x >> 4, z >> 4));
             }
         }
+        
+        return positions;
     }
 }

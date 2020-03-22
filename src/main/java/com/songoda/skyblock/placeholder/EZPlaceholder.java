@@ -13,18 +13,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 
 import java.io.File;
 import java.util.List;
 
-public class EZPlaceholder extends PlaceholderExpansion implements Listener {
+public class EZPlaceholder extends PlaceholderExpansion {
 
     private final SkyBlock skyblock;
 
     public EZPlaceholder(SkyBlock skyblock) {
         this.skyblock = skyblock;
-        Bukkit.getPluginManager().registerEvents(this, skyblock);
     }
 
     public String getIdentifier() {

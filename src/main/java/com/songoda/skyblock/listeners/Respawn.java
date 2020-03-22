@@ -38,10 +38,11 @@ public class Respawn implements Listener {
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getBoolean("Island.Death.Respawn.Island")) {
-                Island island = islandManager.getIslandAtLocation(player.getLocation());
+                Location playerLocation = player.getLocation();
+                Island island = islandManager.getIslandAtLocation(playerLocation);
 
                 if (island != null) {
-                    Location playerLocation = player.getLocation().clone(), islandLocation;
+                    Location islandLocation;
                     IslandWorld world = worldManager.getIslandWorld(player.getWorld());
 
                     if (island.hasRole(IslandRole.Member, player.getUniqueId())
@@ -67,10 +68,8 @@ public class Respawn implements Listener {
             if (config.getFileConfiguration().getString("Location.Spawn") == null) {
                 Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");
             } else {
-                Location playerLocation = player.getLocation().clone(),
-                        spawnLocation = fileManager.getLocation(config, "Location.Spawn", true);
-                Bukkit.getServer().getPluginManager()
-                        .callEvent(new PlayerTeleportEvent(player, playerLocation, spawnLocation));
+                Location playerLocation = player.getLocation(), spawnLocation = fileManager.getLocation(config, "Location.Spawn", true);
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerTeleportEvent(player, playerLocation, spawnLocation));
                 event.setRespawnLocation(spawnLocation);
             }
         }

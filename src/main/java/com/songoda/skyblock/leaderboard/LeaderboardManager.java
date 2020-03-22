@@ -42,9 +42,11 @@ public class LeaderboardManager {
 
         visitManager.loadIslands();
 
-        List<LeaderboardPlayer> islandLevels = new ArrayList<>();
-        List<LeaderboardPlayer> islandBanks = new ArrayList<>();
-        List<LeaderboardPlayer> islandVotes = new ArrayList<>();
+        int arraySize = visitManager.getIslands().size();
+        
+        List<LeaderboardPlayer> islandLevels = new ArrayList<>(arraySize);
+        List<LeaderboardPlayer> islandBanks = new ArrayList<>(arraySize);
+        List<LeaderboardPlayer> islandVotes = new ArrayList<>(arraySize);
 
         boolean enableExemptions = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Leaderboard.Exemptions.Enable");
@@ -87,7 +89,7 @@ public class LeaderboardManager {
         VisitManager visitManager = skyblock.getVisitManager();
         visitManager.loadIslands();
 
-        List<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
+        List<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>(visitManager.getIslands().size());
 
         switch (type) {
             case Level:
@@ -145,9 +147,11 @@ public class LeaderboardManager {
     }
 
     public Leaderboard getLeaderboardFromPosition(Leaderboard.Type type, int position) {
-        for (Leaderboard leaderboardPlayerList : leaderboardStorage)
-            if (leaderboardPlayerList.getType() == type && leaderboardPlayerList.getPosition() == position)
+        for (Leaderboard leaderboardPlayerList : leaderboardStorage) {
+            if (leaderboardPlayerList.getType() == type && leaderboardPlayerList.getPosition() == position) {
                 return leaderboardPlayerList;
+            }
+        }
         return null;
     }
 
