@@ -65,7 +65,7 @@ public class SetSizeCommand extends SubCommand {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetSize.Island.Owner.Message"));
                     soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-                } else if (size < 50) {
+                } else if (size < 20) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetSize.Size.Greater.Message"));
                     soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
