@@ -1,9 +1,10 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.economy.EconomyManager;
+import com.songoda.skyblock.utils.VaultPermissions;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
@@ -22,7 +23,6 @@ public class BankCommand extends SubCommand {
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
         MessageManager messageManager = skyblock.getMessageManager();
-        EconomyManager economyManager = skyblock.getEconomyManager();
         IslandManager islandManager = skyblock.getIslandManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
@@ -100,12 +100,12 @@ public class BankCommand extends SubCommand {
                     return;
                 }
 
-                if (!economyManager.hasBalance(player, amt)) {
+                if (!EconomyManager.hasBalance(player, amt)) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short.Message"));
                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
                     return;
                 }
-                economyManager.withdraw(player, amt);
+                EconomyManager.withdrawBalance(player, amt);
                 island.addToBank(amt);
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Deposit.Message").replace(
                         "%amount%", NumberUtil.formatNumberByDecimal(amt)));
@@ -149,7 +149,7 @@ public class BankCommand extends SubCommand {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short2.Message"));
                     return;
                 }
-                economyManager.deposit(player, amt);
+                EconomyManager.deposit(player, amt);
                 island.removeFromBank(amt);
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Withdraw.Message").replace(
                         "%amount%", NumberUtil.formatNumberByDecimal(amt)));

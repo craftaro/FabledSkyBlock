@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.utils.Compression;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.utils.world.block.BlockData;
@@ -14,6 +15,8 @@ import com.songoda.skyblock.utils.world.block.BlockUtil;
 import com.songoda.skyblock.utils.world.entity.EntityData;
 import com.songoda.skyblock.utils.world.entity.EntityUtil;
 
+import java.io.FileInputStream;
+import java.util.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,7 +32,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -103,24 +105,37 @@ public final class StructureUtil {
     }
 
     public static Structure loadStructure(File configFile) throws IOException {
-        String base64 = getBase64String(configFile);
 
-        if (base64 == null) {
-            base64 = getBase64String(new File(SkyBlock.getInstance().getDataFolder() + "/" + "structures", "default.structure"));
-            SkyBlock.getInstance().getLogger().log(Level.SEVERE, "Unable to load structure '" + configFile.getAbsolutePath() + "' using default instead.");
-        }
-
-        if (base64 == null) {
-            throw new IllegalArgumentException("Couldn't load the default structure file.");
-        }
-
+        byte[] content = new byte[(int) configFile.length()];
+        FileInputStream fileInputStream = new FileInputStream(configFile);
+        fileInputStream.read(content);
+        fileInputStream.close();
         Storage storage;
 
-        try {
-            storage = new Gson().fromJson(new String(Base64.getDecoder().decode(base64.getBytes(StandardCharsets.UTF_8))), Storage.class);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-            return null;
+        if (!org.bukkit.craftbukkit.libs.org.apache.commons.codec.binary.Base64.isBase64(content)) {
+            try {
+                storage = new Gson().fromJson(Compression.decompress(content), Storage.class);
+            } catch (JsonSyntaxException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            String base64 = getBase64String(configFile);
+
+            if (base64 == null) {
+                base64 = getBase64String(new File(SkyBlock.getInstance().getDataFolder() + "/" + "structures", "default.structure"));
+                SkyBlock.getInstance().getLogger().log(Level.SEVERE, "Unable to load structure '" + configFile.getAbsolutePath() + "' using default instead.");
+            }
+
+            if (base64 == null) {
+                throw new IllegalArgumentException("Couldn't load the default structure file.");
+            }
+            try {
+                storage = new Gson().fromJson(new String(Base64.getDecoder().decode(base64.getBytes(StandardCharsets.UTF_8))), Storage.class);
+            } catch (JsonSyntaxException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         return new Structure(storage, configFile.getName());

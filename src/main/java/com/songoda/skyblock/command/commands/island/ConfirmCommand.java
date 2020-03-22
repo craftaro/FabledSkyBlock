@@ -1,11 +1,12 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;
 import com.songoda.skyblock.cooldown.CooldownType;
-import com.songoda.skyblock.economy.EconomyManager;
+import com.songoda.skyblock.utils.VaultPermissions;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
@@ -35,7 +36,6 @@ public class ConfirmCommand extends SubCommand {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         StructureManager structureManager = skyblock.getStructureManager();
         MessageManager messageManager = skyblock.getMessageManager();
-        EconomyManager economyManager = skyblock.getEconomyManager();
         IslandManager islandManager = skyblock.getIslandManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
@@ -127,15 +127,15 @@ public class ConfirmCommand extends SubCommand {
                                         return;
                                     }
 
-                                    if (economyManager.isEconomy() && island.getStructure() != null
+                                    if (EconomyManager.isEnabled() && island.getStructure() != null
                                             && !island.getStructure().isEmpty()
                                             && structureManager.containsStructure(island.getStructure())) {
                                         Structure structure = structureManager.getStructure(island.getStructure());
                                         double deletionCost = structure.getDeletionCost();
 
                                         if (deletionCost != 0.0D) {
-                                            if (economyManager.hasBalance(player, deletionCost)) {
-                                                economyManager.withdraw(player, deletionCost);
+                                            if (EconomyManager.hasBalance(player, deletionCost)) {
+                                                EconomyManager.withdrawBalance(player, deletionCost);
                                             } else {
                                                 messageManager.sendMessage(player,
                                                         configLoad.getString(

@@ -1,9 +1,10 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.economy.EconomyManager;
+import com.songoda.skyblock.utils.VaultPermissions;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
@@ -23,7 +24,6 @@ public class UnlockCommand extends SubCommand {
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
         MessageManager messageManager = skyblock.getMessageManager();
-        EconomyManager economyManager = skyblock.getEconomyManager();
         IslandManager islandManager = skyblock.getIslandManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
@@ -69,7 +69,7 @@ public class UnlockCommand extends SubCommand {
         double price = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getDouble("Island.World." + islandWorld.name() + ".UnlockPrice");
 
-        if (!economyManager.hasBalance(player, price)) {
+        if (!EconomyManager.hasBalance(player, price)) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Money.Message").replace(
                     "%cost%", NumberUtil.formatNumberByDecimal(price)));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -77,7 +77,7 @@ public class UnlockCommand extends SubCommand {
         }
 
         soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
-        economyManager.withdraw(player, price);
+        EconomyManager.withdrawBalance(player, price);
 
         islandManager.unlockIslandWorld(island, islandWorld);
 

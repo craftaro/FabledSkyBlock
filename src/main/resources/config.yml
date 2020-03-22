@@ -291,3 +291,5 @@ Island:
         Enable: true
         # fabledskyblock.stackables
         RequirePermission: false
+        Limit:
+            Enable: false

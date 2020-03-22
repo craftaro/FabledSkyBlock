@@ -1,22 +1,19 @@
 package com.songoda.skyblock.leaderboard;
 
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.economy.EconomyManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.leaderboard.leaderheads.TopBank;
 import com.songoda.skyblock.leaderboard.leaderheads.TopLevel;
 import com.songoda.skyblock.leaderboard.leaderheads.TopVotes;
+import com.songoda.skyblock.utils.VaultPermissions;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class LeaderboardManager {
 
@@ -35,7 +32,6 @@ public class LeaderboardManager {
     }
 
     public void resetLeaderboard() {
-        EconomyManager economyManager = skyblock.getEconomyManager();
         VisitManager visitManager = skyblock.getVisitManager();
         WorldManager worldManager = skyblock.getWorldManager();
 
@@ -50,8 +46,8 @@ public class LeaderboardManager {
         boolean enableExemptions = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Leaderboard.Exemptions.Enable");
 
-        for (UUID ownerUUID : visitManager.getIslands().keySet()) {
-            if (enableExemptions && economyManager.hasPermission(worldManager.getWorld(IslandWorld.Normal).getName(), Bukkit.getOfflinePlayer(ownerUUID), "fabledskyblock.top.exempt"))
+        for (UUID ownerUUID : new LinkedHashSet<>(visitManager.getIslands().keySet())) {
+            if (enableExemptions && VaultPermissions.hasPermission(worldManager.getWorld(IslandWorld.Normal).getName(), Bukkit.getOfflinePlayer(ownerUUID), "fabledskyblock.top.exempt"))
                 continue;
 
             Visit visit = visitManager.getIslands().get(ownerUUID);
@@ -82,36 +78,36 @@ public class LeaderboardManager {
         }
     }
 
-    public int getPlayerIslandLeaderboardPosition(Player player, Leaderboard.Type type) {
+    public int getPlayerIslandLeaderboardPosition(OfflinePlayer offlinePlayer, Leaderboard.Type type) {
         VisitManager visitManager = skyblock.getVisitManager();
         visitManager.loadIslands();
 
         List<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>(visitManager.getIslands().size());
 
         switch (type) {
-        case Level:
-            for (UUID ownerUUID : visitManager.getIslands().keySet()) {
-                Visit visit = visitManager.getIslands().get(ownerUUID);
-                leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getLevel().getLevel()));
-            }
-            break;
-        case Bank:
-            for (UUID ownerUUID : visitManager.getIslands().keySet()) {
-                Visit visit = visitManager.getIslands().get(ownerUUID);
-                leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, (long) visit.getBankBalance()));
-            }
-        case Votes:
-            for (UUID ownerUUID : visitManager.getIslands().keySet()) {
-                Visit visit = visitManager.getIslands().get(ownerUUID);
-                leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getVoters().size()));
-            }
-            break;
+            case Level:
+                for (UUID ownerUUID : visitManager.getIslands().keySet()) {
+                    Visit visit = visitManager.getIslands().get(ownerUUID);
+                    leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getLevel().getLevel()));
+                }
+                break;
+            case Bank:
+                for (UUID ownerUUID : visitManager.getIslands().keySet()) {
+                    Visit visit = visitManager.getIslands().get(ownerUUID);
+                    leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, (long) visit.getBankBalance()));
+                }
+            case Votes:
+                for (UUID ownerUUID : visitManager.getIslands().keySet()) {
+                    Visit visit = visitManager.getIslands().get(ownerUUID);
+                    leaderboardPlayers.add(new LeaderboardPlayer(ownerUUID, visit.getVoters().size()));
+                }
+                break;
         }
 
         leaderboardPlayers.sort(Comparator.comparingLong(LeaderboardPlayer::getValue).reversed());
 
         for (int i = 0; i < leaderboardPlayers.size(); i++) {
-            if (leaderboardPlayers.get(i).getUUID().equals(player.getUniqueId())) {
+            if (leaderboardPlayers.get(i).getUUID().equals(offlinePlayer.getUniqueId())) {
                 return i + 1;
             }
         }

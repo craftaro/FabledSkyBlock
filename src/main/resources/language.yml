@@ -226,6 +226,16 @@ Command:
               Message: '&bSkyBlock &8| &cError&8: &eBoth selected positions have to be in the same World.'
         Info:
           Message: '&f&oCreate Structures for Islands.'
+        Convert:
+          Info:
+            Message: '&f&oConverts old Structure files.'
+          Invalid:
+            Message: '&bSkyBlock &8| &aInfo&8: &eThe Structure with the name ''&d%name&e'' was not found!'
+          Converted:
+            Successful:
+              Message: '&bSkyBlock &8| &aInfo&8: &eThe Structure with the name ''&d%name&e'' has been converted!'
+            Failed:
+              Message: '&bSkyBlock &8| &cError&8: &eAn error occurred when trying to convert the Structure.'
       SetSize:
         Set:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have set &d%player''s &eIsland size to &d%size&e.'

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.utils.version;
 
-import org.apache.commons.lang3.text.WordUtils;
+import com.songoda.skyblock.utils.StringUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
@@ -96,7 +96,7 @@ public enum SBiome {
     public String getFormattedBiomeName() {
         if (!this.isAvailable())
             return null;
-        return WordUtils.capitalizeFully(this.getBiome().name().replaceAll("_", " "));
+        return StringUtil.capitalizeWord(this.getBiome().name().replaceAll("_", " "));
     }
 
     /**
