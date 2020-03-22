@@ -1,5 +1,21 @@
 package com.songoda.skyblock.menus;
 
+import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -21,23 +37,8 @@ import com.songoda.skyblock.utils.item.MaterialUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
-import org.apache.commons.lang3.text.WordUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-
-import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Levelling {
 
@@ -64,8 +65,7 @@ public class Levelling {
 
         if (playerDataManager.hasPlayerData(player)) {
             PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
-            FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                    .getFileConfiguration();
+            FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (islandManager.getIsland(player) == null) {
@@ -80,110 +80,95 @@ public class Levelling {
                     ItemStack is = event.getItem();
 
                     if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-                            configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"))))) {
+                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"))))) {
                         soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
                     } else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-                            configLoad.getString("Menu.Levelling.Item.Exit.Displayname"))))) {
-                        soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
-                    } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-                            configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"))))) {
-                        soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Exit.Displayname"))))) {
+                                soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                            } else
+                        if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
+                                && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"))))) {
+                                    soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 
-                        event.setWillClose(false);
-                        event.setWillDestroy(false);
-                    } else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-                            configLoad.getString("Menu.Levelling.Item.Nothing.Displayname"))))) {
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    event.setWillClose(false);
+                                    event.setWillDestroy(false);
+                                } else
+                            if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
+                                    && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Nothing.Displayname"))))) {
+                                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
-                        event.setWillClose(false);
-                        event.setWillDestroy(false);
-                    } else if ((is.getType() == Materials.FIREWORK_STAR.parseMaterial()) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-                            configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"))))) {
-                        Island island = islandManager.getIsland(player);
-                        OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
+                                        event.setWillClose(false);
+                                        event.setWillDestroy(false);
+                                    } else
+                                if ((is.getType() == Materials.FIREWORK_STAR.parseMaterial()) && (is.hasItemMeta())
+                                        && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"))))) {
+                                            Island island = islandManager.getIsland(player);
+                                            OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
 
-                        if (cooldownManager.hasPlayer(CooldownType.Levelling, offlinePlayer) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
-                            CooldownPlayer cooldownPlayer = cooldownManager
-                                    .getCooldownPlayer(CooldownType.Levelling, offlinePlayer);
-                            Cooldown cooldown = cooldownPlayer.getCooldown();
+                                            if (cooldownManager.hasPlayer(CooldownType.Levelling, offlinePlayer) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
+                                                CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Levelling, offlinePlayer);
+                                                Cooldown cooldown = cooldownPlayer.getCooldown();
 
-                            long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
+                                                long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
 
-                            if (cooldown.getTime() >= 3600) {
-                                messageManager.sendMessage(player, configLoad
-                                        .getString("Command.Island.Level.Cooldown.Message")
-                                        .replace("%time", durationTime[1] + " "
-                                                + configLoad.getString("Command.Island.Level.Cooldown.Word.Minute")
-                                                + " " + durationTime[2] + " "
-                                                + configLoad.getString("Command.Island.Level.Cooldown.Word.Minute")
-                                                + " " + durationTime[3] + " " + configLoad
-                                                .getString("Command.Island.Level.Cooldown.Word.Second")));
-                            } else if (cooldown.getTime() >= 60) {
-                                messageManager.sendMessage(player, configLoad
-                                        .getString("Command.Island.Level.Cooldown.Message")
-                                        .replace("%time", durationTime[2] + " "
-                                                + configLoad.getString("Command.Island.Level.Cooldown.Word.Minute")
-                                                + " " + durationTime[3] + " " + configLoad
-                                                .getString("Command.Island.Level.Cooldown.Word.Second")));
-                            } else {
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Command.Island.Level.Cooldown.Message")
-                                                .replace("%time", cooldown.getTime() + " " + configLoad
-                                                        .getString("Command.Island.Level.Cooldown.Word.Second")));
-                            }
+                                                if (cooldown.getTime() >= 3600) {
+                                                    messageManager.sendMessage(player,
+                                                            configLoad.getString("Command.Island.Level.Cooldown.Message").replace("%time",
+                                                                    durationTime[1] + " " + configLoad.getString("Command.Island.Level.Cooldown.Word.Minute") + " " + durationTime[2] + " "
+                                                                            + configLoad.getString("Command.Island.Level.Cooldown.Word.Minute") + " " + durationTime[3] + " "
+                                                                            + configLoad.getString("Command.Island.Level.Cooldown.Word.Second")));
+                                                } else if (cooldown.getTime() >= 60) {
+                                                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Cooldown.Message").replace("%time", durationTime[2] + " "
+                                                            + configLoad.getString("Command.Island.Level.Cooldown.Word.Minute") + " " + durationTime[3] + " " + configLoad.getString("Command.Island.Level.Cooldown.Word.Second")));
+                                                } else {
+                                                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Cooldown.Message").replace("%time",
+                                                            cooldown.getTime() + " " + configLoad.getString("Command.Island.Level.Cooldown.Word.Second")));
+                                                }
 
-                            soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                                                soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
 
-                            event.setWillClose(false);
-                            event.setWillDestroy(false);
+                                                event.setWillClose(false);
+                                                event.setWillDestroy(false);
 
-                            return;
-                        }
+                                                return;
+                                            }
 
-                        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
-                            messageManager.sendMessage(player,
-                                    configLoad.getString("Command.Island.Level.Processing.Message"));
-                            soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                                            Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+                                                messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Processing.Message"));
+                                                soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
 
-                            cooldownManager.createPlayer(CooldownType.Levelling,
-                                    Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
-                            levellingManager.startScan(player, island);
-                        });
-                    } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
-                        PlayerData playerData1 = skyblock.getPlayerDataManager().getPlayerData(player);
+                                                cooldownManager.createPlayer(CooldownType.Levelling, Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
+                                                levellingManager.startScan(player, island);
+                                            });
+                                        } else
+                                    if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
+                                        PlayerData playerData1 = skyblock.getPlayerDataManager().getPlayerData(player);
 
-                        if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-                                configLoad.getString("Menu.Levelling.Item.Previous.Displayname")))) {
-                            playerData1.setPage(playerData1.getPage() - 1);
-                            soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                                        if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Previous.Displayname")))) {
+                                            playerData1.setPage(playerData1.getPage() - 1);
+                                            soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
-                        } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
-                                '&', configLoad.getString("Menu.Levelling.Item.Next.Displayname")))) {
-                            playerData1.setPage(playerData1.getPage() + 1);
-                            soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                                        } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Next.Displayname")))) {
+                                            playerData1.setPage(playerData1.getPage() + 1);
+                                            soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
-                        } else {
-                            soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
+                                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                                        } else {
+                                            soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
 
-                            event.setWillClose(false);
-                            event.setWillDestroy(false);
-                        }
-                    } else {
-                        soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
+                                            event.setWillClose(false);
+                                            event.setWillDestroy(false);
+                                        }
+                                    } else {
+                                        soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
 
-                        event.setWillClose(false);
-                        event.setWillDestroy(false);
-                    }
+                                        event.setWillClose(false);
+                                        event.setWillDestroy(false);
+                                    }
                 }
             });
 
@@ -200,11 +185,8 @@ public class Levelling {
             // Filter out ItemStacks that can't be displayed in the inventory
             Inventory testInventory = Bukkit.createInventory(null, 9);
             for (String materialName : testIslandMaterialKeysOrdered) {
-                if (mainConfig.getFileConfiguration().getString("Materials." + materialName + ".Points") == null)
-                    continue;
-                if (!settingsConfig.getFileConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") &&
-                        mainConfig.getFileConfiguration().getInt("Materials." + materialName + ".Points") <= 0)
-                    continue;
+                if (mainConfig.getFileConfiguration().getString("Materials." + materialName + ".Points") == null) continue;
+                if (!settingsConfig.getFileConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") && mainConfig.getFileConfiguration().getInt("Materials." + materialName + ".Points") <= 0) continue;
 
                 long value = testIslandMaterials.get(materialName);
                 Materials materials = Materials.fromString(materialName);
@@ -224,25 +206,14 @@ public class Levelling {
 
             int playerMenuPage = playerData.getPage(), nextEndIndex = islandMaterials.size() - playerMenuPage * 36;
 
+            nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Levelling.Item.Exit.Displayname"), null, null, null, null), 0, 8);
+            nInv.addItem(nInv.createItem(Materials.FIREWORK_STAR.parseItem(), configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Rescan.Lore"), null, null,
+                    new ItemFlag[] { ItemFlag.HIDE_POTION_EFFECTS }), 3, 5);
             nInv.addItem(
-                    nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
-                            configLoad.getString("Menu.Levelling.Item.Exit.Displayname"), null, null, null, null),
-                    0, 8);
-            nInv.addItem(nInv.createItem(Materials.FIREWORK_STAR.parseItem(),
-                    configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"),
-                    configLoad.getStringList("Menu.Levelling.Item.Rescan.Lore"), null, null,
-                    new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 3, 5);
-            nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
-                    configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"),
-                    configLoad.getStringList("Menu.Levelling.Item.Statistics.Lore"),
-                    new Placeholder[]{
-                            new Placeholder("%level_points", NumberUtil.formatNumberByDecimal(level.getPoints())),
-                            new Placeholder("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))},
-                    null, null), 4);
-            nInv.addItem(
-                    nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
-                            configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"), null, null, null, null),
-                    9, 10, 11, 12, 13, 14, 15, 16, 17);
+                    nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Statistics.Lore"),
+                            new Placeholder[] { new Placeholder("%level_points", NumberUtil.formatNumberByDecimal(level.getPoints())), new Placeholder("%level", NumberUtil.formatNumberByDecimal(level.getLevel())) }, null, null),
+                    4);
+            nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(), configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"), null, null, null, null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
             if (playerMenuPage != 1) {
                 nInv.addItem(nInv.createItem(SkullUtil.create(
@@ -259,12 +230,9 @@ public class Levelling {
             }
 
             if (islandMaterials.size() == 0) {
-                nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER),
-                        configLoad.getString("Menu.Levelling.Item.Nothing.Displayname"), null, null, null, null), 31);
+                nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER), configLoad.getString("Menu.Levelling.Item.Nothing.Displayname"), null, null, null, null), 31);
             } else {
-                int index = playerMenuPage * 36 - 36,
-                        endIndex = index >= islandMaterials.size() ? islandMaterials.size() - 1 : index + 36,
-                        inventorySlot = 17;
+                int index = playerMenuPage * 36 - 36, endIndex = index >= islandMaterials.size() ? islandMaterials.size() - 1 : index + 36, inventorySlot = 17;
 
                 for (; index < endIndex; index++) {
                     if (islandMaterials.size() > index) {
@@ -282,28 +250,19 @@ public class Levelling {
 
                                     long pointsEarned = materialAmount * pointsMultiplier;
 
+                                    String name = skyblock.getLocalizationManager().getLocalizationFor(Materials.class).getLocale(materials);
+
+                                    if (materials == Materials.FARMLAND && NMSUtil.getVersionNumber() < 9) materials = Materials.DIRT;
+
                                     ItemStack is = materials.parseItem();
                                     is.setAmount(Math.min(Math.toIntExact(materialAmount), 64));
                                     is.setType(MaterialUtil.correctMaterial(is.getType()));
 
-                                    String name;
-                                    if (materials.isSpawner() && materials != Materials.SPAWNER) {
-                                        name = "Spawner: " + WordUtils.capitalize(material.replace("SPAWNER_", "").toLowerCase().replace("_", " ")).trim();
-                                    } else {
-                                        name = WordUtils.capitalize(material.toLowerCase().replace("_", " ")).trim();
-                                    }
-
                                     List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");
-                                    lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
-                                            .replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
-                                            .replace("%material", name));
+                                    lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned)).replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)).replace("%material", name));
 
-                                    nInv.addItem(nInv.createItem(is, configLoad
-                                                    .getString("Menu.Levelling.Item.Material.Displayname")
-                                                    .replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
-                                                    .replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
-                                                    .replace("%material", name),
-                                            lore, null, null, null), inventorySlot);
+                                    nInv.addItem(nInv.createItem(is, configLoad.getString("Menu.Levelling.Item.Material.Displayname").replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
+                                            .replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)).replace("%material", name), lore, null, null, null), inventorySlot);
                                 }
                             }
                         }

@@ -1,21 +1,34 @@
 package com.songoda.skyblock.config;
 
-import com.google.common.io.ByteStreams;
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.island.IslandWorld;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import com.google.common.io.ByteStreams;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.island.IslandWorld;
 
 public class FileManager {
 
@@ -32,13 +45,13 @@ public class FileManager {
         if (!skyblock.getDataFolder().exists()) {
             skyblock.getDataFolder().mkdir();
         }
-        
+
         File structureDirectory = new File(skyblock.getDataFolder().toString() + "/structures");
 
         if (!structureDirectory.exists()) {
             structureDirectory.mkdir();
         }
-        
+
         // Will remain null unless WorldEdit is present.
         File schematicsDirectory = null;
 
@@ -57,17 +70,16 @@ public class FileManager {
         configFiles.put("generators.yml", new File(skyblock.getDataFolder(), "generators.yml"));
         configFiles.put("stackables.yml", new File(skyblock.getDataFolder(), "stackables.yml"));
         configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
-        configFiles.put("structures/default.structure",
-                new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
-        
+        configFiles.put("structures/default.structure", new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
+
         File oldStructureFile = new File(skyblock.getDataFolder().toString() + "/structures", "default.structure");
         oldStructureFile.delete();
 
         for (Entry<String, File> configEntry : configFiles.entrySet()) {
-            
+
             String fileName = configEntry.getKey();
             File configFile = configEntry.getValue();
-            
+
             if (fileName.equals("structures/default.structure")) {
                 configFile.delete();
                 try {
@@ -75,8 +87,7 @@ public class FileManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try (InputStream is = skyblock.getResource(fileName);
-                     OutputStream os = new FileOutputStream(configFile)) {
+                try (InputStream is = skyblock.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
                     ByteStreams.copy(is, os);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -85,8 +96,7 @@ public class FileManager {
             }
 
             if (configFile.exists()) {
-                if (fileName.equals("config.yml") || fileName.equals("language.yml")
-                        || fileName.equals("settings.yml")) {
+                if (fileName.equals("config.yml") || fileName.equals("language.yml") || fileName.equals("settings.yml")) {
                     FileChecker fileChecker;
 
                     if (fileName.equals("config.yml")) {
@@ -102,8 +112,7 @@ public class FileManager {
             } else {
                 try {
                     configFile.createNewFile();
-                    try (InputStream is = skyblock.getResource(fileName);
-                         OutputStream os = new FileOutputStream(configFile)) {
+                    try (InputStream is = skyblock.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
                         ByteStreams.copy(is, os);
                     }
 
@@ -119,12 +128,8 @@ public class FileManager {
 
                             for (IslandWorld worldList : IslandWorld.values()) {
                                 if (mainConfigLoad.getString("World." + worldList.name()) != null) {
-                                    configLoad.set("World." + worldList.name() + ".nextAvailableLocation.x",
-                                            mainConfigLoad.getDouble(
-                                                    "World." + worldList.name() + ".nextAvailableLocation.x"));
-                                    configLoad.set("World." + worldList.name() + ".nextAvailableLocation.z",
-                                            mainConfigLoad.getDouble(
-                                                    "World." + worldList.name() + ".nextAvailableLocation.z"));
+                                    configLoad.set("World." + worldList.name() + ".nextAvailableLocation.x", mainConfigLoad.getDouble("World." + worldList.name() + ".nextAvailableLocation.x"));
+                                    configLoad.set("World." + worldList.name() + ".nextAvailableLocation.z", mainConfigLoad.getDouble("World." + worldList.name() + ".nextAvailableLocation.z"));
                                 }
                             }
 
@@ -135,8 +140,7 @@ public class FileManager {
                         }
                     }
                 } catch (IOException ex) {
-                    Bukkit.getServer().getLogger().log(Level.WARNING,
-                            "SkyBlock | Error: Unable to create configuration file.");
+                    Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: Unable to create configuration file.");
                 }
             }
         }
@@ -229,8 +233,7 @@ public class FileManager {
 
             while ((currentLine = bufferedReader.readLine()) != null) {
                 if (currentLine.contains("#")) {
-                    addLine = currentLine.replace("[!]", "IMPORTANT").replace(":", "-").replaceFirst("#",
-                            pluginName + "_COMMENT_" + commentNum + ":");
+                    addLine = currentLine.replace("[!]", "IMPORTANT").replace(":", "-").replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
                     whole.append(addLine + "\n");
                     commentNum++;
                 } else {
@@ -270,9 +273,7 @@ public class FileManager {
 
         for (String line : lines) {
             if (line.contains(skyblock.getDescription().getName() + "_COMMENT")) {
-                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "")
-                        .replace(skyblock.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "")
-                        + "\n");
+                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "").replace(skyblock.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "") + "\n");
             } else if (line.contains(":")) {
                 config.append(line + "\n");
             }
@@ -301,8 +302,7 @@ public class FileManager {
             configFile = configPath;
 
             if (configPath.getName().equals("config.yml")) {
-                configLoad = YamlConfiguration
-                        .loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
+                configLoad = YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
             } else {
                 configLoad = YamlConfiguration.loadConfiguration(configPath);
             }

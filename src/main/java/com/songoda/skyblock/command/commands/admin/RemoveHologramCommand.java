@@ -9,7 +9,8 @@ import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.version.Sounds;
-import org.apache.commons.lang3.text.WordUtils;
+
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -44,15 +45,15 @@ public class RemoveHologramCommand extends SubCommand {
             HologramType hologramType = null;
 
             switch (args[0].toLowerCase()) {
-                case "level":
-                    hologramType = HologramType.Level;
-                    break;
-                case "bank":
-                    hologramType = HologramType.Bank;
-                    break;
-                case "votes":
-                    hologramType = HologramType.Votes;
-                    break;
+            case "level":
+                hologramType = HologramType.Level;
+                break;
+            case "bank":
+                hologramType = HologramType.Bank;
+                break;
+            case "votes":
+                hologramType = HologramType.Votes;
+                break;
             }
 
             if (hologramType != null) {
@@ -60,8 +61,7 @@ public class RemoveHologramCommand extends SubCommand {
                 FileConfiguration locationsConfigLoad = locationsConfig.getFileConfiguration();
 
                 if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + hologramType.name()) == null) {
-                    messageManager.sendMessage(sender,
-                            configLoad.getString("Command.Island.Admin.RemoveHologram.Set.Message"));
+                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Set.Message"));
                     soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
                 } else {
                     locationsConfigLoad.set("Location.Hologram.Leaderboard." + hologramType.name(), null);
@@ -73,8 +73,7 @@ public class RemoveHologramCommand extends SubCommand {
                     }
 
                     Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                        HologramType hologramType1 = HologramType
-                                .valueOf(WordUtils.capitalize(args[0].toLowerCase()));
+                        HologramType hologramType1 = HologramType.valueOf(WordUtils.capitalize(args[0].toLowerCase()));
                         Hologram hologram = hologramManager.getHologram(hologramType1);
 
                         if (hologram != null) {
@@ -82,9 +81,7 @@ public class RemoveHologramCommand extends SubCommand {
                         }
                     });
 
-                    messageManager.sendMessage(sender,
-                            configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message")
-                                    .replace("%type", hologramType.name()));
+                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message").replace("%type", hologramType.name()));
                     soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
                 }
 
@@ -113,6 +110,6 @@ public class RemoveHologramCommand extends SubCommand {
 
     @Override
     public String[] getArguments() {
-        return new String[]{"level", "bank", "votes"};
+        return new String[] { "level", "bank", "votes" };
     }
 }

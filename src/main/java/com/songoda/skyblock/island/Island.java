@@ -755,13 +755,13 @@ public class Island {
 
         Config config = fileManager
                 .getConfig(new File(skyblock.getDataFolder().toString() + "/island-data", ownerUUID.toString() + ".yml"));
-
+        
         try {
             config.getFileConfiguration().save(config.getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
         config = fileManager
                 .getConfig(new File(skyblock.getDataFolder().toString() + "/setting-data", ownerUUID.toString() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();

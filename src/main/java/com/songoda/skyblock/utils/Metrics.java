@@ -33,10 +33,12 @@ import java.util.zip.GZIPOutputStream;
 public class Metrics {
 
     static {
-        // Maven's Relocate is clever and changes strings, too. So we have to use this little "trick" ... :D
+        // Maven's Relocate is clever and changes strings, too. So we have to use this
+        // little "trick" ... :D
         final String defaultPackage = new String(new byte[] { 'o', 'r', 'g', '.', 'b', 's', 't', 'a', 't', 's' });
         final String examplePackage = new String(new byte[] { 'y', 'o', 'u', 'r', '.', 'p', 'a', 'c', 'k', 'a', 'g', 'e' });
-        // We want to make sure nobody just copy & pastes the example and use the wrong package names
+        // We want to make sure nobody just copy & pastes the example and use the wrong
+        // package names
         if (Metrics.class.getPackage().getName().equals(defaultPackage) || Metrics.class.getPackage().getName().equals(examplePackage)) {
             throw new IllegalStateException("bStats Metrics class has not been relocated correctly!");
         }
@@ -87,15 +89,12 @@ public class Metrics {
             config.addDefault("logFailedRequests", false);
 
             // Inform the server owners about bStats
-            config.options().header(
-                    "bStats collects some data for plugin authors like how many servers are using their plugins.\n" +
-                            "To honor their work, you should not disable it.\n" +
-                            "This has nearly no effect on the server performance!\n" +
-                            "Check out https://bStats.org/ to learn more :)"
-            ).copyDefaults(true);
+            config.options().header("bStats collects some data for plugin authors like how many servers are using their plugins.\n" + "To honor their work, you should not disable it.\n"
+                    + "This has nearly no effect on the server performance!\n" + "Check out https://bStats.org/ to learn more :)").copyDefaults(true);
             try {
                 config.save(configFile);
-            } catch (IOException ignored) { }
+            } catch (IOException ignored) {
+            }
         }
 
         // Load the data
@@ -109,7 +108,8 @@ public class Metrics {
                     service.getField("B_STATS_VERSION"); // Our identifier :)
                     found = true; // We aren't the first
                     break;
-                } catch (NoSuchFieldException ignored) { }
+                } catch (NoSuchFieldException ignored) {
+                }
             }
             // Register our service
             Bukkit.getServicesManager().register(Metrics.class, this, plugin, ServicePriority.Normal);
@@ -144,8 +144,10 @@ public class Metrics {
                     timer.cancel();
                     return;
                 }
-                // Nevertheless we want our code to run in the Bukkit main thread, so we have to use the Bukkit scheduler
-                // Don't be afraid! The connection to the bStats server is still async, only the stats collection is sync ;)
+                // Nevertheless we want our code to run in the Bukkit main thread, so we have to
+                // use the Bukkit scheduler
+                // Don't be afraid! The connection to the bStats server is still async, only the
+                // stats collection is sync ;)
                 Bukkit.getScheduler().runTask(plugin, new Runnable() {
                     @Override
                     public void run() {
@@ -153,15 +155,16 @@ public class Metrics {
                     }
                 });
             }
-        }, 1000*60*5, 1000*60*30);
-        // Submit the data every 30 minutes, first time after 5 minutes to give other plugins enough time to start
-        // WARNING: Changing the frequency has no effect but your plugin WILL be blocked/deleted!
+        }, 1000 * 60 * 5, 1000 * 60 * 30);
+        // Submit the data every 30 minutes, first time after 5 minutes to give other
+        // plugins enough time to start
+        // WARNING: Changing the frequency has no effect but your plugin WILL be
+        // blocked/deleted!
         // WARNING: Just don't do it!
     }
 
     /**
-     * Gets the plugin specific data.
-     * This method is called using Reflection.
+     * Gets the plugin specific data. This method is called using Reflection.
      *
      * @return The plugin specific data.
      */
@@ -240,7 +243,8 @@ public class Metrics {
             // Found one!
             try {
                 pluginData.put(service.getMethod("getPluginData").invoke(Bukkit.getServicesManager().load(service)));
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) { }
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+            }
         }
 
         data.put("plugins", pluginData);
@@ -411,8 +415,8 @@ public class Metrics {
         /**
          * Gets the values of the pie.
          *
-         * @param valueMap Just an empty map. The only reason it exists is to make your life easier.
-         *                 You don't have to create a map yourself!
+         * @param valueMap Just an empty map. The only reason it exists is to make your
+         *                 life easier. You don't have to create a map yourself!
          * @return The values of the pie.
          */
         public abstract HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap);
@@ -495,8 +499,8 @@ public class Metrics {
         /**
          * Gets the values of the chart.
          *
-         * @param valueMap Just an empty map. The only reason it exists is to make your life easier.
-         *                 You don't have to create a map yourself!
+         * @param valueMap Just an empty map. The only reason it exists is to make your
+         *                 life easier. You don't have to create a map yourself!
          * @return The values of the chart.
          */
         public abstract HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap);
@@ -545,8 +549,8 @@ public class Metrics {
         /**
          * Gets the value of the chart.
          *
-         * @param valueMap Just an empty map. The only reason it exists is to make your life easier.
-         *                 You don't have to create a map yourself!
+         * @param valueMap Just an empty map. The only reason it exists is to make your
+         *                 life easier. You don't have to create a map yourself!
          * @return The value of the chart.
          */
         public abstract HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap);
@@ -588,8 +592,8 @@ public class Metrics {
         /**
          * Gets the value of the chart.
          *
-         * @param valueMap Just an empty map. The only reason it exists is to make your life easier.
-         *                 You don't have to create a map yourself!
+         * @param valueMap Just an empty map. The only reason it exists is to make your
+         *                 life easier. You don't have to create a map yourself!
          * @return The value of the chart.
          */
         public abstract HashMap<String, int[]> getValues(HashMap<String, int[]> valueMap);
@@ -678,8 +682,8 @@ public class Metrics {
         /**
          * Gets the value of the chart.
          *
-         * @param valueMap Just an empty map. The only reason it exists is to make your life easier.
-         *                 You don't have to create a map yourself!
+         * @param valueMap Just an empty map. The only reason it exists is to make your
+         *                 life easier. You don't have to create a map yourself!
          * @return The value of the chart.
          */
         public abstract HashMap<Country, Integer> getValues(HashMap<Country, Integer> valueMap);
@@ -736,7 +740,7 @@ public class Metrics {
         AUSTRIA("AT", "Austria"),
         AUSTRALIA("AU", "Australia"),
         ARUBA("AW", "Aruba"),
-        ALAND_ISLANDS("AX", "Åland Islands"),
+        ALAND_ISLANDS("AX", "ï¿½land Islands"),
         AZERBAIJAN("AZ", "Azerbaijan"),
         BOSNIA_AND_HERZEGOVINA("BA", "Bosnia and Herzegovina"),
         BARBADOS("BB", "Barbados"),
@@ -747,7 +751,7 @@ public class Metrics {
         BAHRAIN("BH", "Bahrain"),
         BURUNDI("BI", "Burundi"),
         BENIN("BJ", "Benin"),
-        SAINT_BARTHELEMY("BL", "Saint Barthélemy"),
+        SAINT_BARTHELEMY("BL", "Saint Barthï¿½lemy"),
         BERMUDA("BM", "Bermuda"),
         BRUNEI("BN", "Brunei"),
         BOLIVIA("BO", "Bolivia"),
@@ -765,7 +769,7 @@ public class Metrics {
         CENTRAL_AFRICAN_REPUBLIC("CF", "Central African Republic"),
         CONGO("CG", "Congo"),
         SWITZERLAND("CH", "Switzerland"),
-        COTE_D_IVOIRE("CI", "Côte d'Ivoire"),
+        COTE_D_IVOIRE("CI", "Cï¿½te d'Ivoire"),
         COOK_ISLANDS("CK", "Cook Islands"),
         CHILE("CL", "Chile"),
         CAMEROON("CM", "Cameroon"),
@@ -774,7 +778,7 @@ public class Metrics {
         COSTA_RICA("CR", "Costa Rica"),
         CUBA("CU", "Cuba"),
         CAPE_VERDE("CV", "Cape Verde"),
-        CURACAO("CW", "Curaçao"),
+        CURACAO("CW", "Curaï¿½ao"),
         CHRISTMAS_ISLAND("CX", "Christmas Island"),
         CYPRUS("CY", "Cyprus"),
         CZECH_REPUBLIC("CZ", "Czech Republic"),
@@ -1017,8 +1021,8 @@ public class Metrics {
          * Gets a country by a locale.
          *
          * @param locale The locale.
-         * @return The country from the giben locale or <code>null</code> if unknown country or
-         *         if the locale does not contain a country.
+         * @return The country from the giben locale or <code>null</code> if unknown
+         *         country or if the locale does not contain a country.
          */
         public static Country byLocale(Locale locale) {
             return byIsoTag(locale.getCountry());

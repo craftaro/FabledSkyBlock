@@ -159,15 +159,7 @@ public class AcceptCommand extends SubCommand {
                                                                 "Scoreboard.Island.Team.Occupied.Displaylines"));
                                                     }
 
-                                                    Map<String, String> displayVariables = new HashMap<>();
-                                                    displayVariables.put("%owner",
-                                                            configLoad.getString("Scoreboard.Island.Team.Word.Owner"));
-                                                    displayVariables.put("%operator", configLoad
-                                                            .getString("Scoreboard.Island.Team.Word.Operator"));
-                                                    displayVariables.put("%member",
-                                                            configLoad.getString("Scoreboard.Island.Team.Word.Member"));
-
-                                                    scoreboard.setDisplayVariables(displayVariables);
+    
                                                     scoreboard.run();
                                                 }
                                             }
@@ -189,15 +181,7 @@ public class AcceptCommand extends SubCommand {
                                             configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
                                 }
 
-                                Map<String, String> displayVariables = new HashMap<>();
-                                displayVariables.put("%owner",
-                                        configLoad.getString("Scoreboard.Island.Team.Word.Owner"));
-                                displayVariables.put("%operator",
-                                        configLoad.getString("Scoreboard.Island.Team.Word.Operator"));
-                                displayVariables.put("%member",
-                                        configLoad.getString("Scoreboard.Island.Team.Word.Member"));
 
-                                scoreboard.setDisplayVariables(displayVariables);
                                 scoreboard.run();
                             }
                         }

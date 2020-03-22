@@ -146,7 +146,7 @@ public class PlaceholderManager {
                     if (island.hasRole(roleList, player.getUniqueId())) {
                         return ChatColor.translateAlternateColorCodes('&',
                                 configLoad.getString("Placeholder.fabledskyblock_island_role.Non-empty.Message")
-                                        .replace("%placeholder", roleList.name()));
+                                        .replace("%placeholder", skyblock.getLocalizationManager().getLocalizationFor(IslandRole.class).getLocale(roleList)));
                     }
                 }
             }

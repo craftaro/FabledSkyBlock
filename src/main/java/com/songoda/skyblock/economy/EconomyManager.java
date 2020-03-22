@@ -1,16 +1,18 @@
 package com.songoda.skyblock.economy;
 
-import com.songoda.skyblock.api.event.player.PlayerWithdrawMoneyEvent;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
-import net.tnemc.core.Reserve;
-import net.tnemc.core.economy.EconomyAPI;
+import java.math.BigDecimal;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import java.math.BigDecimal;
+import com.songoda.skyblock.api.event.player.PlayerWithdrawMoneyEvent;
+
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+import net.tnemc.core.Reserve;
+import net.tnemc.core.economy.EconomyAPI;
 
 public class EconomyManager {
 
@@ -20,7 +22,7 @@ public class EconomyManager {
 
     // Reserve
     private EconomyAPI reserveEconomy = null;
-//	private PermissionsAPI reservePermission = null;
+    //	private PermissionsAPI reservePermission = null;
 
     public EconomyManager() {
         setup();
@@ -30,27 +32,22 @@ public class EconomyManager {
         if (Bukkit.getServer().getPluginManager().getPlugin("Vault") != null) {
             RegisteredServiceProvider<Economy> economyRsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
 
-            if (economyRsp != null)
-                this.vaultEconomy = economyRsp.getProvider();
+            if (economyRsp != null) this.vaultEconomy = economyRsp.getProvider();
 
             RegisteredServiceProvider<Permission> permissionRsp = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
-            if (permissionRsp != null)
-                this.vaultPermission = permissionRsp.getProvider();
+            if (permissionRsp != null) this.vaultPermission = permissionRsp.getProvider();
         } else if (Bukkit.getServer().getPluginManager().getPlugin("Reserve") != null) {
-            if (Reserve.instance().economyProvided())
-                this.reserveEconomy = Reserve.instance().economy();
+            if (Reserve.instance().economyProvided()) this.reserveEconomy = Reserve.instance().economy();
 
-//			if (Reserve.instance().permissionsProvided())
-//				this.reservePermission = Reserve.instance().permissions();
+            //			if (Reserve.instance().permissionsProvided())
+            //				this.reservePermission = Reserve.instance().permissions();
         }
     }
 
     public double getBalance(Player player) {
-        if (this.vaultEconomy != null)
-            return this.vaultEconomy.getBalance(player);
+        if (this.vaultEconomy != null) return this.vaultEconomy.getBalance(player);
 
-        if (this.reserveEconomy != null)
-            return this.reserveEconomy.getHoldings(player.getUniqueId()).doubleValue();
+        if (this.reserveEconomy != null) return this.reserveEconomy.getHoldings(player.getUniqueId()).doubleValue();
 
         return 0;
     }
@@ -60,30 +57,25 @@ public class EconomyManager {
     }
 
     public void withdraw(Player player, double money) {
-        if (this.vaultEconomy != null)
-            this.vaultEconomy.withdrawPlayer(player, money);
-        else if (this.reserveEconomy != null)
-            this.reserveEconomy.removeHoldings(player.getUniqueId(), new BigDecimal(money));
+        if (this.vaultEconomy != null) this.vaultEconomy.withdrawPlayer(player, money);
+        else if (this.reserveEconomy != null) this.reserveEconomy.removeHoldings(player.getUniqueId(), new BigDecimal(money));
 
         Bukkit.getServer().getPluginManager().callEvent(new PlayerWithdrawMoneyEvent(player, money));
     }
 
     public void deposit(Player player, double money) {
-        if (this.vaultEconomy != null)
-            this.vaultEconomy.depositPlayer(player, money);
-        else if (this.reserveEconomy != null)
-            this.reserveEconomy.addHoldings(player.getUniqueId(), new BigDecimal(money));
+        if (this.vaultEconomy != null) this.vaultEconomy.depositPlayer(player, money);
+        else if (this.reserveEconomy != null) this.reserveEconomy.addHoldings(player.getUniqueId(), new BigDecimal(money));
 
         Bukkit.getServer().getPluginManager().callEvent(new PlayerWithdrawMoneyEvent(player, money));
     }
 
     public boolean hasPermission(String world, OfflinePlayer offlinePlayer, String perm) {
-        if (this.vaultPermission != null)
-            return this.vaultPermission.playerHas(world, offlinePlayer, perm);
+        if (this.vaultPermission != null) return this.vaultPermission.playerHas(world, offlinePlayer, perm);
 
-//		if (this.reservePermission != null) {
-//			// TODO
-//		}
+        //		if (this.reservePermission != null) {
+        //			// TODO
+        //		}
 
         return false;
     }
@@ -93,6 +85,6 @@ public class EconomyManager {
     }
 
     public boolean isPermission() {
-        return this.vaultPermission != null/* || this.reservePermission != null*/;
+        return this.vaultPermission != null/* || this.reservePermission != null */;
     }
 }

@@ -4,15 +4,18 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -36,6 +39,7 @@ public final class IslandScan extends BukkitRunnable {
 
     private static final NumberFormat FORMATTER = NumberFormat.getInstance();;
 
+    private final Set<Location> doubleBlocks;
     private final Island island;
     private final Map<Materials, BlockAmount> amounts;
     private final Configuration config;
@@ -51,14 +55,14 @@ public final class IslandScan extends BukkitRunnable {
         this.amounts = new EnumMap<>(Materials.class);
         this.config = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration();
         this.runEveryX = config.getInt("Command.Island.Level.Scanning.Progress.Display-Every-X-Scan");
+        this.doubleBlocks = new HashSet<>();
     }
 
     public IslandScan start() {
         final SkyBlock skyblock = SkyBlock.getInstance();
 
         final FileConfiguration config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
-        final FileConfiguration islandData = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), this.island.getOwnerUUID().toString() + ".yml")).getFileConfiguration();
+        final FileConfiguration islandData = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), this.island.getOwnerUUID().toString() + ".yml")).getFileConfiguration();
 
         final boolean hasNether = config.getBoolean("Island.World.Nether.Enable") && islandData.getBoolean("Unlocked.Nether", false);
         final boolean hasEnd = config.getBoolean("Island.World.End.Enable") && islandData.getBoolean("Unlocked.End", false);
@@ -109,7 +113,7 @@ public final class IslandScan extends BukkitRunnable {
 
             if (scanned == 8500) break;
 
-            final AmountMaterialPair pair = SkyBlock.getInstance().getLevellingManager().getAmountAndType(info);
+            final AmountMaterialPair pair = SkyBlock.getInstance().getLevellingManager().getAmountAndType(this, info);
 
             if (pair.getType() != null) {
 
@@ -162,6 +166,10 @@ public final class IslandScan extends BukkitRunnable {
         final SkyBlock skyblock = SkyBlock.getInstance();
 
         snapshots.put(skyblock.getWorldManager().getWorld(world), ChunkUtil.getChunksToScan(island, world).stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
+    }
+
+    public Set<Location> getDoubleBlocks() {
+        return doubleBlocks;
     }
 
 }

@@ -1,3 +1,5 @@
+dependency-reduced-pom.xml
+
 # Compiled class file
 *.class
 
@@ -33,3 +35,4 @@ hs_err_pid*
 
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+/target/

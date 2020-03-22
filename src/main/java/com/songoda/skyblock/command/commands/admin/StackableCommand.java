@@ -14,9 +14,11 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.StringUtil;
+import com.songoda.skyblock.utils.version.Materials;
 
 public class StackableCommand extends SubCommand {
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
         final MessageManager messageManager = skyblock.getMessageManager();
@@ -52,14 +54,15 @@ public class StackableCommand extends SubCommand {
             }
 
             final StackableManager stackableManager = skyblock.getStackableManager();
+            final Materials type = Materials.getMaterials(block.getType(), block.getData());
 
-            if (!stackableManager.isStackableMaterial(block.getType())) {
+            if (!stackableManager.isStackableMaterial(type)) {
                 messageManager.sendMessage(player, messageConfig.getString("Command.Island.Admin.Stackable.Target.Unstackable"));
                 return;
             }
 
             final Location loc = block.getLocation();
-            Stackable stack = stackableManager.getStack(loc, block.getType());
+            Stackable stack = stackableManager.getStack(loc, type);
 
             if (amount <= 1) {
                 messageManager.sendMessage(player, messageConfig.getString("Command.Island.Admin.Stackable.Target.Remove-Stack"));
@@ -70,7 +73,7 @@ public class StackableCommand extends SubCommand {
             final int oldSize;
 
             if (stack == null) {
-                stack = new Stackable(loc, block.getType());
+                stack = new Stackable(loc, type);
                 stackableManager.addStack(stack);
                 oldSize = 0;
             } else {

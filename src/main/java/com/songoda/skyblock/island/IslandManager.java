@@ -25,7 +25,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.IllegalPluginAccessException;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.base.Preconditions;
 import com.songoda.skyblock.SkyBlock;
@@ -236,7 +235,8 @@ public class IslandManager {
 
         Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> Bukkit.getServer().getPluginManager().callEvent(new IslandCreateEvent(island.getAPIWrapper(), player)));
 
-        skyblock.getPlayerDataManager().getPlayerData(player).setIsland(player.getUniqueId());
+        data.setIsland(player.getUniqueId());
+        data.setOwner(player.getUniqueId());
 
         if (scoreboardManager != null) {
             Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
@@ -639,12 +639,6 @@ public class IslandManager {
                             scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
                             scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
 
-                            HashMap<String, String> displayVariables = new HashMap<>();
-                            displayVariables.put("%owner", configLoad.getString("Scoreboard.Island.Team.Word.Owner"));
-                            displayVariables.put("%operator", configLoad.getString("Scoreboard.Island.Team.Word.Operator"));
-                            displayVariables.put("%member", configLoad.getString("Scoreboard.Island.Team.Word.Member"));
-
-                            scoreboard.setDisplayVariables(displayVariables);
                             scoreboard.run();
                         }
                     } catch (IllegalPluginAccessException e) {
@@ -888,12 +882,7 @@ public class IslandManager {
                                 scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
                                 scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
 
-                                HashMap<String, String> displayVariables = new HashMap<>();
-                                displayVariables.put("%owner", configLoad.getString("Scoreboard.Island.Team.Word.Owner"));
-                                displayVariables.put("%operator", configLoad.getString("Scoreboard.Island.Team.Word.Operator"));
-                                displayVariables.put("%member", configLoad.getString("Scoreboard.Island.Team.Word.Member"));
 
-                                scoreboard.setDisplayVariables(displayVariables);
                             }
 
                             scoreboard.run();

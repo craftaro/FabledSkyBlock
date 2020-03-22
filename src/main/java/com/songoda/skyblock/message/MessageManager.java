@@ -19,13 +19,7 @@ public class MessageManager {
 
     public void sendMessage(CommandSender sender, String message) {
 
-        if (message == null) {
-            System.out.println("Message is null.");
-            System.out.println("Message is null.");
-            System.out.println("Message is null.");
-            System.out.println("Message is null.");
-            return;
-        }
+        if (message == null) return;
 
         if (sender instanceof Player) {
             PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();

@@ -1,5 +1,15 @@
 package com.songoda.skyblock;
 
+import java.io.File;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.event.HandlerList;
+import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.biome.BiomeManager;
@@ -16,7 +26,28 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
-import com.songoda.skyblock.listeners.*;
+import com.songoda.skyblock.listeners.Block;
+import com.songoda.skyblock.listeners.Bucket;
+import com.songoda.skyblock.listeners.Chat;
+import com.songoda.skyblock.listeners.Death;
+import com.songoda.skyblock.listeners.Entity;
+import com.songoda.skyblock.listeners.EpicSpawners;
+import com.songoda.skyblock.listeners.Food;
+import com.songoda.skyblock.listeners.Grow;
+import com.songoda.skyblock.listeners.Interact;
+import com.songoda.skyblock.listeners.Inventory;
+import com.songoda.skyblock.listeners.Item;
+import com.songoda.skyblock.listeners.Join;
+import com.songoda.skyblock.listeners.Move;
+import com.songoda.skyblock.listeners.Portal;
+import com.songoda.skyblock.listeners.Projectile;
+import com.songoda.skyblock.listeners.Quit;
+import com.songoda.skyblock.listeners.Respawn;
+import com.songoda.skyblock.listeners.Spawner;
+import com.songoda.skyblock.listeners.Teleport;
+import com.songoda.skyblock.listeners.UltimateStacker;
+import com.songoda.skyblock.listeners.WildStacker;
+import com.songoda.skyblock.localization.LocalizationManager;
 import com.songoda.skyblock.menus.Rollback;
 import com.songoda.skyblock.menus.admin.Creator;
 import com.songoda.skyblock.menus.admin.Generator;
@@ -38,17 +69,6 @@ import com.songoda.skyblock.world.WorldManager;
 import com.songoda.skyblock.world.generator.VoidGenerator;
 import com.songoda.update.Plugin;
 import com.songoda.update.SongodaUpdate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.util.UUID;
 
 public class SkyBlock extends JavaPlugin {
 
@@ -78,6 +98,7 @@ public class SkyBlock extends JavaPlugin {
     private EconomyManager economyManager;
     private HologramManager hologramManager;
     private LimitationInstanceHandler limitationHandler;
+    private LocalizationManager localizationManager;
 
     public static SkyBlock getInstance() {
         return instance;
@@ -94,6 +115,7 @@ public class SkyBlock extends JavaPlugin {
         instance = this;
 
         fileManager = new FileManager(this);
+        localizationManager = new LocalizationManager();
         worldManager = new WorldManager(this);
         userCacheManager = new UserCacheManager(this);
         economyManager = new EconomyManager();
@@ -105,8 +127,7 @@ public class SkyBlock extends JavaPlugin {
         cooldownManager = new CooldownManager(this);
         limitationHandler = new LimitationInstanceHandler();
 
-        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
-                .getBoolean("Island.Scoreboard.Enable")) {
+        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable")) {
             scoreboardManager = new ScoreboardManager(this);
         }
 
@@ -117,13 +138,11 @@ public class SkyBlock extends JavaPlugin {
         structureManager = new StructureManager(this);
         soundManager = new SoundManager(this);
 
-        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
-                .getBoolean("Island.Generator.Enable")) {
+        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Generator.Enable")) {
             generatorManager = new GeneratorManager(this);
         }
 
-        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration()
-                .getBoolean("Island.Stackable.Enable")) {
+        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.Enable")) {
             stackableManager = new StackableManager(this);
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> stackableManager.loadSavedStackables(), 5L);
         }
@@ -160,12 +179,9 @@ public class SkyBlock extends JavaPlugin {
         pluginManager.registerEvents(new Food(this), this);
         pluginManager.registerEvents(new Grow(this), this);
 
-        if (pluginManager.isPluginEnabled("EpicSpawners"))
-            pluginManager.registerEvents(new EpicSpawners(this), this);
-        if (pluginManager.isPluginEnabled("WildStacker"))
-            pluginManager.registerEvents(new WildStacker(this), this);
-        if (pluginManager.isPluginEnabled("UltimateStacker"))
-            pluginManager.registerEvents(new UltimateStacker(this), this);
+        if (pluginManager.isPluginEnabled("EpicSpawners")) pluginManager.registerEvents(new EpicSpawners(this), this);
+        if (pluginManager.isPluginEnabled("WildStacker")) pluginManager.registerEvents(new WildStacker(this), this);
+        if (pluginManager.isPluginEnabled("UltimateStacker")) pluginManager.registerEvents(new UltimateStacker(this), this);
 
         pluginManager.registerEvents(new Rollback(), this);
         pluginManager.registerEvents(new Levelling(), this);
@@ -334,5 +350,9 @@ public class SkyBlock extends JavaPlugin {
     @Override
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
         return new VoidGenerator();
+    }
+
+    public LocalizationManager getLocalizationManager() {
+        return localizationManager;
     }
 }
