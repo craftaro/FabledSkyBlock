@@ -3,8 +3,8 @@ package com.songoda.skyblock.menus.admin;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.levelling.LevellingManager;
-import com.songoda.skyblock.levelling.LevellingMaterial;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
+import com.songoda.skyblock.levelling.rework.LevellingMaterial;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -51,12 +51,12 @@ public class Levelling implements Listener {
     public void open(Player player) {
         SkyBlock skyblock = SkyBlock.getInstance();
 
-        LevellingManager levellingManager = skyblock.getLevellingManager();
+        IslandLevelManager levellingManager = skyblock.getLevellingManager();
         FileManager fileManager = skyblock.getFileManager();
 
         PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 
-        List<LevellingMaterial> levellingMaterials = levellingManager.getMaterials();
+        List<LevellingMaterial> levellingMaterials = levellingManager.getWorthsAsLevelingMaterials();
 
         // Filter out materials that won't be displayed in the GUI properly
         Inventory testInventory = Bukkit.createInventory(null, 9);
@@ -153,7 +153,7 @@ public class Levelling implements Listener {
         if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
             SkyBlock skyblock = SkyBlock.getInstance();
 
-            LevellingManager levellingManager = skyblock.getLevellingManager();
+            IslandLevelManager levellingManager = skyblock.getLevellingManager();
             MessageManager messageManager = skyblock.getMessageManager();
             SoundManager soundManager = skyblock.getSoundManager();
             FileManager fileManager = skyblock.getFileManager();
@@ -298,7 +298,7 @@ public class Levelling implements Listener {
                 }
 
                 if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
-                    for (LevellingMaterial materialList : levellingManager.getMaterials()) {
+                    for (LevellingMaterial materialList : levellingManager.getWorthsAsLevelingMaterials()) {
                         Materials materials = materialList.getMaterials();
 
                         if (event.getCurrentItem().getType() == MaterialUtil.correctMaterial(materials.parseMaterial())
@@ -316,7 +316,7 @@ public class Levelling implements Listener {
                                             messageManager.sendMessage(player,
                                                     configLoad.getString("Island.Admin.Levelling.Permission.Message"));
                                             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-                                        } else if (levellingManager.containsMaterial(materials)) {
+                                        } else if (levellingManager.hasWorth(materials)) {
                                             if (event1.getName().matches("[0-9]+")) {
                                                 int materialPoints = Integer.valueOf(event1.getName());
                                                 materialList.setPoints(materialPoints);
@@ -378,7 +378,7 @@ public class Levelling implements Listener {
                                 gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
                                 gui.open();
                             } else if (event.getClick() == ClickType.RIGHT) {
-                                levellingManager.removeMaterial(materialList);
+                                levellingManager.removeWorth(materialList.getMaterials());
                                 open(player);
 
                                 messageManager.sendMessage(player,
@@ -417,14 +417,13 @@ public class Levelling implements Listener {
                     materials = Materials.fromString(event.getCurrentItem().getType().name());
                 }
 
-                if (levellingManager.containsMaterial(materials)) {
+                if (levellingManager.hasWorth(materials)) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Already.Message"));
                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
                     return;
                 }
 
-                levellingManager.addMaterial(materials, 0);
+                levellingManager.addWorth(materials, 0);
                 open(player);
 
                 messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Added.Message")

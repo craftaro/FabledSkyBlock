@@ -4,7 +4,7 @@ import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.levelling.LevellingManager;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.version.Sounds;
@@ -30,7 +30,7 @@ public class LevelScanCommand extends SubCommand {
     }
 
     private void onCommand(CommandSender sender, String[] args) {
-        LevellingManager levellingManager = skyblock.getLevellingManager();
+        IslandLevelManager levellingManager = skyblock.getLevellingManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
         SoundManager soundManager = skyblock.getSoundManager();
@@ -54,7 +54,7 @@ public class LevelScanCommand extends SubCommand {
             return;
         }
 
-        levellingManager.calculatePoints(sender instanceof Player ? (Player) sender : null, island);
+        levellingManager.startScan(sender instanceof Player ? (Player) sender : null, island);
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.LevelScan.Started.Message"));
         soundManager.playSound(sender, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);

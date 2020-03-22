@@ -1,5 +1,17 @@
 package com.songoda.skyblock.placeholder;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.invite.Invite;
@@ -8,21 +20,12 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.levelling.LevellingManager;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
+import com.songoda.skyblock.upgrade.Upgrade;
+import com.songoda.skyblock.upgrade.Upgrade.Type;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.visit.VisitManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class PlaceholderManager {
 
@@ -66,7 +69,7 @@ public class PlaceholderManager {
     public String getPlaceholder(Player player, String placeholder) {
         IslandManager islandManager = skyblock.getIslandManager();
         VisitManager visitManager = skyblock.getVisitManager();
-        LevellingManager levellingManager = skyblock.getLevellingManager();
+        IslandLevelManager levellingManager = skyblock.getLevellingManager();
 
         Island island = islandManager.getIsland(player);
 
@@ -389,11 +392,29 @@ public class PlaceholderManager {
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_level_block_value.Invalid.Message"));
             } else {
-                long blockValue = levellingManager.getMaterial(materials).getPoints();
+                long blockValue = levellingManager.getWorth(materials);
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_level_block_value.Non-empty.Message")
                                 .replace("%placeholder", NumberUtil.formatNumberByDecimal(blockValue)));
             }
+        } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_has_upgrade_")) {
+            Type type;
+
+            final String lower = placeholder.replace("fabledskyblock_island_has_upgrade_", "").toLowerCase();
+
+            if (lower.isEmpty()) return "";
+
+            final String toParse = lower.substring(0, 1).toUpperCase() + lower.substring(1);
+
+            try {
+                type = Upgrade.Type.valueOf(toParse);
+            } catch (IllegalArgumentException ignored) {
+                type = null;
+            }
+
+            if (type == null) return "Invalid type '" + toParse + "'";
+
+            return Boolean.toString(island.hasUpgrade(type));
         }
 
         return "";

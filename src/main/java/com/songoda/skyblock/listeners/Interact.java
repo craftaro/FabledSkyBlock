@@ -6,7 +6,7 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.levelling.LevellingManager;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -70,7 +70,7 @@ public class Interact implements Listener {
         IslandManager islandManager = skyblock.getIslandManager();
         SoundManager soundManager = skyblock.getSoundManager();
         StackableManager stackableManager = skyblock.getStackableManager();
-        LevellingManager levellingManager = skyblock.getLevellingManager();
+        IslandLevelManager levellingManager = skyblock.getLevellingManager();
 
         Island island = islandManager.getIslandAtLocation(player.getLocation());
         if (island == null) {
@@ -149,7 +149,7 @@ public class Interact implements Listener {
                     if (event.getHand() == EquipmentSlot.OFF_HAND) return;
                 }
 
-                if (levellingManager.isIslandLevelBeingScanned(island)) {
+                if (levellingManager.isScanning(island)) {
                     skyblock.getMessageManager().sendMessage(player,
                             skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                     .getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));

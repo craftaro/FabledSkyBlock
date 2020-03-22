@@ -2,94 +2,61 @@ package com.songoda.skyblock.island.removal;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.google.common.collect.Lists;
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.blockscanner.BlockInfo;
+import com.songoda.skyblock.blockscanner.BlockScanner;
 
-public final class ChunkDeleteSplitter extends BukkitRunnable {
+public class ChunkDeleteSplitter extends BukkitRunnable {
 
-    private int completedNum;
+    private final Map<World, List<ChunkSnapshot>> snapshots;
+    private Queue<BlockInfo> blocks;
 
-    private final World world;
-    private final int threadCount;
-    private final Queue<XYZPair> toRemove;
-
-    private ChunkDeleteSplitter(World world, List<ChunkSnapshot> snapshots) {
-        this.toRemove = new ConcurrentLinkedQueue<>();
-        this.world = world;
-
-        final List<List<ChunkSnapshot>> parts = Lists.partition(snapshots, 32);
-
-        this.threadCount = parts.size();
-
-        for (List<ChunkSnapshot> sub : parts) {
-            queueWork(sub);
-        }
+    private ChunkDeleteSplitter(Map<World, List<ChunkSnapshot>> snapshots) {
+        this.snapshots = snapshots;
+        start();
     }
 
-    private void queueWork(List<ChunkSnapshot> subList) {
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(SkyBlock.getInstance(), () -> {
-            for (ChunkSnapshot shot : subList) {
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
-                        for (int y = 0; y < 256; y++) {
-                            final Material type = shot.getBlockType(x, y, z);
-
-                            if (type == Material.AIR) continue;
-
-                            toRemove.add(new XYZPair(x, y, z));
-                        }
-                    }
-                }
-            }
-            increment();
+    private void start() {
+        BlockScanner.startScanner(snapshots, (blocks) -> {
+            this.blocks = blocks;
+            this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
         });
-    }
-
-    private synchronized void increment() {
-        completedNum++;
-    }
-
-    private synchronized int get() {
-        return completedNum;
     }
 
     @Override
     public void run() {
-        if (get() != threadCount) return;
 
         int deleteAmount = 0;
 
-        for (Iterator<XYZPair> it = toRemove.iterator(); it.hasNext();) {
+        for (Iterator<BlockInfo> it = blocks.iterator(); it.hasNext();) {
 
-            if (deleteAmount == 10000) break;
+            if (deleteAmount == 3500) break;
 
-            final XYZPair pair = it.next();
+            final BlockInfo pair = it.next();
+            final Block block = pair.getWorld().getBlockAt(pair.getX(), pair.getY(), pair.getZ());
 
-            world.getBlockAt(pair.getX(), pair.getY(), pair.getZ()).setType(Material.AIR);
+            block.setType(Material.AIR);
 
             deleteAmount++;
             it.remove();
         }
 
-        if (toRemove.isEmpty()) {
+        if (blocks.isEmpty()) {
             cancel();
         }
     }
 
-    public static void startDeleting(World world, List<ChunkSnapshot> snapshots) {
-
-        final ChunkDeleteSplitter splitter = new ChunkDeleteSplitter(world, snapshots);
-
-        splitter.runTaskTimer(SkyBlock.getInstance(), 5, 5);
+    public static void startDeletion(Map<World, List<ChunkSnapshot>> snapshots) {
+        new ChunkDeleteSplitter(snapshots);
     }
 
 }
