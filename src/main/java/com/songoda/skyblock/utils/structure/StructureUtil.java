@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 public final class StructureUtil {
 
@@ -112,7 +113,9 @@ public final class StructureUtil {
         fileInputStream.close();
         Storage storage;
 
-        if (!org.bukkit.craftbukkit.libs.org.apache.commons.codec.binary.Base64.isBase64(content)) {
+        Pattern pattern = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
+
+        if (!pattern.matcher(new String(content)).find()) {
             try {
                 storage = new Gson().fromJson(Compression.decompress(content), Storage.class);
             } catch (JsonSyntaxException e) {

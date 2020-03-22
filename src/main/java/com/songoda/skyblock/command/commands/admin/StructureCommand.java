@@ -185,6 +185,7 @@ public class StructureCommand extends SubCommand {
                                                     "Command.Island.Admin.Structure.Save.Saved.Successful.Message")
                                             .replace("%name", args[1]));
                             soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                            return;
                         } catch (Exception e) {
                             messageManager.sendMessage(player, configLoad
                                     .getString("Command.Island.Admin.Structure.Save.Saved.Failed.Message"));
@@ -197,6 +198,7 @@ public class StructureCommand extends SubCommand {
                             configLoad.getString("Command.Island.Admin.Structure.Save.Invalid.Message"));
                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
                 }
+
 
             } else if (args[0].equalsIgnoreCase("convert")) {
                 if (args.length == 2) {

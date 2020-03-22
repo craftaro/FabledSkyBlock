@@ -155,7 +155,6 @@ public class IslandManager {
                 FileConfiguration configLoad_world = config_world.getFileConfiguration();
                 FileConfiguration configLoad_config = config_config.getFileConfiguration();
                 int x = (int) configLoad_world.get("World." + world.name() + ".nextAvailableLocation.island_number");
-                System.out.println("Ile n°"  + x);
                 double r = Math.floor((Math.sqrt(x + 1) - 1) / 2) + 1;
                 double p = (8 * r * (r -1)) / 2;
                 double en = r * 2;
