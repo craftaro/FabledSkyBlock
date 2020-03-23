@@ -33,11 +33,20 @@ public class CreateCommand extends SubCommand {
 
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-
         if (islandManager.getIsland(player) == null) {
             Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 
-            if (mainConfig.getFileConfiguration().getBoolean("Island.Creation.Menu.Enable")) {
+            if (args.length == 1) {
+                Structure structure = skyblock.getStructureManager().getStructure(args[0]);
+
+                if (structure != null && islandManager.createIsland(player, structure)) {
+                    messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
+                    soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                } else if (structure == null) {
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.StructureNotFound.Message"));
+                    soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                }
+            } else if (mainConfig.getFileConfiguration().getBoolean("Island.Creation.Menu.Enable")) {
                 Creator.getInstance().open(player);
                 soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
             } else {
