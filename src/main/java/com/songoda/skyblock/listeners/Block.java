@@ -403,6 +403,11 @@ public class Block implements Listener {
                 return;
             }
 
+            if(!island.isInBorder(block.getRelative(event.getDirection()).getLocation())) {
+                event.setCancelled(true);
+                return;
+            }
+
             if (skyblock.getStackableManager() != null && skyblock.getStackableManager().isStacked(block.getLocation())) {
                 event.setCancelled(true);
                 return;
@@ -492,6 +497,11 @@ public class Block implements Listener {
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
         for (org.bukkit.block.Block block : event.getBlocks()) {
             if (!islandManager.isLocationAtIsland(island, block.getLocation(), world)) {
+                event.setCancelled(true);
+                return;
+            }
+
+            if(!island.isInBorder(block.getLocation())) {
                 event.setCancelled(true);
                 return;
             }

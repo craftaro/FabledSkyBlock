@@ -91,8 +91,6 @@ public final class BlockScanner extends BukkitRunnable {
 
             final ConfigurationSection liquidSection = config.getConfigurationSection("Island.World." + env + ".Liquid");
 
-            System.out.println("LiquidSection: " + liquidSection);
-            
             for (List<ChunkSnapshot> sub : parts) {
                 queueWork(world, liquidSection.getBoolean("Enable") ? liquidSection.getInt("Height") + 1 : 0, sub);
             }

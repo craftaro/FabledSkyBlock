@@ -206,7 +206,6 @@ public class Interact implements Listener {
                         stackable.setMaxSize(maxStackSize);
                         stackable.setSize(stackable.getSize() + itemAmount);
                         if(stackable.isMaxSize()){
-                            System.out.println(stackable.getMaxSize() + ":" + stackable.getSize());
                             stackable.setSize(stackable.getMaxSize());
                             event.setCancelled(true);
                             return;
@@ -658,13 +657,11 @@ public class Interact implements Listener {
 
     private int getStackLimit(Player player, Materials materials) {
         String maxSizePermission = "fabledskyblock.stackable." + materials.name().toLowerCase() + ".maxsize.";
-        System.out.println(maxSizePermission);
 
         for (PermissionAttachmentInfo attachmentInfo : player.getEffectivePermissions()) {
             if (attachmentInfo.getPermission().startsWith(maxSizePermission)) {
                 String permission = attachmentInfo.getPermission();
                 int i = Integer.parseInt(permission.substring(permission.lastIndexOf(".") + 1));
-                System.out.println(i);
                 return i;
             }
         }

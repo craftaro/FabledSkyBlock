@@ -53,6 +53,13 @@ public class Grow implements Listener {
             Island growingTo = islandManager.getIslandAtLocation(state.getLocation());
             // This block is ok to continue as it's not related to Skyblock islands.
             if (origin == null && growingTo == null) continue;
+
+            //Is in border of island
+            if(origin != null && !origin.isInBorder(state.getLocation())) {
+                it.remove();
+                continue;
+            }
+
             // A block from the structure is outside/inside that it's not suppose to.
             if (origin == null || growingTo == null) {
                 it.remove();

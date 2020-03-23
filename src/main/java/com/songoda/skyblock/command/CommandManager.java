@@ -75,6 +75,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 new MembersCommand(),
                 new OpenCommand(),
                 new OwnerCommand(),
+                new PreviewCommand(),
                 new PromoteCommand(),
                 new PublicCommand(),
                 new SetSpawnCommand(),

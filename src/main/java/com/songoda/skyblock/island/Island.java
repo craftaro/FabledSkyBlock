@@ -14,6 +14,7 @@ import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.visit.Visit;
+import com.songoda.skyblock.world.WorldManager;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -348,6 +349,25 @@ public class Island {
         skyblock.getFileManager().getConfig(
                 new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
                 .getFileConfiguration().set("Border.Color", color.name());
+    }
+
+    public boolean isInBorder(Location blockLocation) {
+        WorldManager worldManager = skyblock.getWorldManager();
+        if(!isBorder()) {
+            return true;
+        }
+
+        Location islandLocation = getLocation(worldManager.getIslandWorld(blockLocation.getWorld()), IslandEnvironment.Island);
+        double halfSize = Math.floor(getRadius());
+
+        if(blockLocation.getBlockX() > (islandLocation.getBlockX()+halfSize)
+                || blockLocation.getBlockX() < (islandLocation.getBlockX()-halfSize-1)
+                || blockLocation.getBlockZ() > (islandLocation.getBlockZ()+halfSize)
+                || blockLocation.getBlockZ() < (islandLocation.getBlockZ()-halfSize-1)) {
+            return false;
+        }
+
+        return true;
     }
 
     public Biome getBiome() {

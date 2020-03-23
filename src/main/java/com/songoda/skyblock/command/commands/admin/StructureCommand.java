@@ -244,10 +244,10 @@ public class StructureCommand extends SubCommand {
                 }
 
                 return;
+            } else {
+                messageManager.sendMessage(player, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
+                soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
             }
-
-            messageManager.sendMessage(player, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
-            soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
         }
     }
 
