@@ -17,14 +17,15 @@ public class LevelReward {
         this.money = money;
     }
 
-    public void give(Player player, SkyBlock skyblock) {
+    public void give(Player player, SkyBlock skyblock, long level) {
         if (money > 0)
             EconomyManager.deposit(player, money);
 
         if (!commands.isEmpty()) {
             for (String cmd : commands) {
-                cmd = skyblock.getMessageManager().replaceMessage(player, cmd);
-                skyblock.getServer().dispatchCommand(skyblock.getConsole(), cmd.replace("%player%", player.getName()));
+                cmd = cmd.replace("%level%", "" + level);
+                cmd = cmd.replace("%player%", player.getName());
+                skyblock.getServer().dispatchCommand(skyblock.getConsole(), cmd);
             }
         }
     }

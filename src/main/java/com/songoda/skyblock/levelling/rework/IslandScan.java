@@ -154,8 +154,12 @@ public final class IslandScan extends BukkitRunnable {
             final MessageManager messageManager = SkyBlock.getInstance().getMessageManager();
 
             for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
+
                 messageManager.sendMessage(player, message);
                 if (displayComplete) messageManager.sendMessage(player, config.getString("Command.Island.Level.Scanning.Finished.Message"));
+
+                // Check for level ups
+                island.getLevel().checkLevelUp();
             }
         }
 

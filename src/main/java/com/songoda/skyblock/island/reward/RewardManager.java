@@ -14,6 +14,8 @@ public class RewardManager {
 
     private final Map<Long, LevelReward> registeredRewards = new HashMap<>();
 
+    private final Map<Long, LevelReward> repeatRewards = new HashMap<>();
+
     public RewardManager(SkyBlock skyBlock) {
         this.skyBlock = skyBlock;
     }
@@ -23,8 +25,10 @@ public class RewardManager {
         final FileConfiguration configLoad = config.getFileConfiguration();
 
         this.registeredRewards.clear();
+        this.repeatRewards.clear();
 
-        for (String key : configLoad.getKeys(false)) {
+        ConfigurationSection onceSection = configLoad.getConfigurationSection("Once");
+        for (String key : onceSection.getKeys(false)) {
             long level;
             try {
                 level = Long.parseLong(key);
@@ -32,7 +36,7 @@ public class RewardManager {
                 continue;
             }
 
-            ConfigurationSection section = configLoad.getConfigurationSection(key);
+            ConfigurationSection section = onceSection.getConfigurationSection(key);
 
             double money = section.getDouble("money", 0);
 
@@ -42,10 +46,39 @@ public class RewardManager {
 
             this.registeredRewards.put(level, levelReward);
         }
+
+        ConfigurationSection repeatSection = configLoad.getConfigurationSection("Repeat");
+        for (String key : repeatSection.getKeys(false)) {
+            long level;
+            try {
+                level = Long.parseLong(key);
+            } catch (NumberFormatException e) {
+                continue;
+            }
+
+            ConfigurationSection section = repeatSection.getConfigurationSection(key);
+
+            double money = section.getDouble("money", 0);
+
+            List<String> commands = section.contains("commands") ? section.getStringList("commands") : new ArrayList<>();
+
+            LevelReward levelReward = new LevelReward(commands, money);
+
+            this.repeatRewards.put(level, levelReward);
+        }
     }
 
     public LevelReward getReward(long level) {
         return this.registeredRewards.getOrDefault(level, null);
+    }
+
+    public LevelReward getRepeatReward(long level) {
+        for (long loopLevel : this.repeatRewards.keySet()) {
+            if (level % loopLevel == 0) {
+                return this.repeatRewards.get(loopLevel);
+            }
+        }
+        return null;
     }
 
     public Map<Long, LevelReward> getRegisteredRewards() {

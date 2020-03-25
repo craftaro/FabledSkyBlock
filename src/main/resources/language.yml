@@ -125,6 +125,8 @@ Command:
         Message: '&bSkyBlock &8| &aInfo&8: &7&oProcessing Island level request... Please wait!'
       Materials:
         Message: '&bSkyBlock &8| &cError&8: &eThere are no significant materials on your Island.'
+      LevelUp:
+        Message: '&bSkyBlock &8| &aInfo&8: &7You reached island level &e%level%&7!'
     Unban:
       Member:
         Message: '&bSkyBlock &8| &cError&8: &eThat player is not banned from the Island because they are a Member of it.'
