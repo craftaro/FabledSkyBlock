@@ -1,34 +1,5 @@
 package com.songoda.skyblock.island;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.IllegalPluginAccessException;
-
 import com.google.common.base.Preconditions;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
@@ -50,6 +21,7 @@ import com.songoda.skyblock.structure.Structure;
 import com.songoda.skyblock.structure.StructureManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.upgrade.UpgradeManager;
+import com.songoda.skyblock.utils.ChatComponent;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.player.PlayerUtil;
 import com.songoda.skyblock.utils.structure.SchematicUtil;
@@ -63,10 +35,6 @@ import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.world.WorldManager;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -75,6 +43,17 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.IllegalPluginAccessException;
+import com.songoda.skyblock.confirmation.Confirmation;
+import com.songoda.skyblock.utils.ChatComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class IslandManager {
 
@@ -310,6 +289,118 @@ public class IslandManager {
 
         // Recalculate island level after 5 seconds
         if (configLoad.getBoolean("Island.Levelling.ScanAutomatically")) Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().startScan(null, island), 100L);
+
+        return true;
+    }
+
+    public boolean previewIsland(Player player, Structure structure) {
+        FileManager fileManager = skyblock.getFileManager();
+
+        PlayerData data = skyblock.getPlayerDataManager().getPlayerData(player);
+        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileConfiguration configLang = config.getFileConfiguration();
+        config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileConfiguration configMain = config.getFileConfiguration();
+
+
+        if (data != null) {
+            final int highest = PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.create", true, 2);
+
+            if ((data.getIslandCreationCount()) >= highest) {
+                skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.MaxCreationMessage"));
+                return false;
+            }
+
+        }
+
+        if (fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
+            skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Creator.Error.Message"));
+            skyblock.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+
+            return false;
+        }
+
+        Island island = new Island(player);
+        island.setStructure(structure.getName());
+        islandStorage.put(player.getUniqueId(), island);
+
+        data.setPreview(true);
+
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds())
+            prepareIsland(island, worldList);
+
+
+        Bukkit.getScheduler().callSyncMethod(SkyBlock.getInstance(), () -> {
+            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island));
+            player.setGameMode(GameMode.SPECTATOR);
+            return true;
+        });
+
+        Bukkit.getScheduler().runTaskLater(skyblock, () -> {
+            if(data.isPreview()) {
+                Location spawn = fileManager.getLocation(fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")), "Location.Spawn", true);
+                player.teleport(spawn);
+                player.setGameMode(GameMode.SURVIVAL);
+                data.setIsland(null);
+                islandStorage.remove(player.getUniqueId(), island);
+                deleteIsland(island, true);
+                skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Preview.Timeout.Message"));
+                data.setPreview(false);
+            }
+        }, configMain.getInt("Island.Preview.Time")*20);
+
+
+
+        String defaultMessage = configLang.getString("Command.Island.Preview.Confirmation.Message")
+                .replaceAll("%time", "" + configMain.get("Island.Preview.Time"));
+
+        defaultMessage = defaultMessage.replace("\\n", "\n");
+
+        for (String message : defaultMessage.split("\n")) {
+            ChatComponent confirmation = null, cancelation = null;
+
+            if(message.contains("%confirm")) {
+                message = message.replace("%confirm", "");
+                confirmation = new ChatComponent(configLang.getString("Command.Island.Preview.Confirmation.Word.Confirm").toUpperCase() + "     ",
+                        true, net.md_5.bungee.api.ChatColor.GREEN,
+                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island preview confirm"),
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                new ComponentBuilder(
+                                        net.md_5.bungee.api.ChatColor.translateAlternateColorCodes(
+                                                '&',
+                                                configLang.getString("Command.Island.Preview.Confirmation.Word.TutorialConfirm")))
+                                        .create()
+                        ));
+            }
+
+            if(message.contains("%cancel")) {
+                message = message.replace("%cancel", "");
+                cancelation = new ChatComponent(configLang.getString("Command.Island.Preview.Confirmation.Word.Cancel").toUpperCase(),
+                        true, net.md_5.bungee.api.ChatColor.GREEN,
+                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island preview cancel"),
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                new ComponentBuilder(
+                                        net.md_5.bungee.api.ChatColor.translateAlternateColorCodes(
+                                                '&',
+                                                configLang.getString("Command.Island.Preview.Confirmation.Word.TutorialCancel")))
+                                        .create()
+                        ));
+            }
+
+            TextComponent confirmationMessage = new TextComponent(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message));
+            if(confirmation != null) {
+                confirmationMessage.addExtra(confirmation.getTextComponent());
+            }
+            if(cancelation != null) {
+                confirmationMessage.addExtra(cancelation.getTextComponent());
+            }
+
+            player.spigot().sendMessage(confirmationMessage);
+
+        }
+
+        data.setConfirmation(Confirmation.Preview);
+        data.setConfirmationTime(configMain.getInt("Island.Preview.Time"));
 
         return true;
     }

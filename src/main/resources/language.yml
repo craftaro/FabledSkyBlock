@@ -955,6 +955,19 @@ Command:
         Message: '&f&oOpens the Leaderboard menu of the top 10 Islands.'
       Invalid:
         Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island leaderboard [<Level|Bank|Votes>]'
+    Preview:
+      Info:
+        Message: '&f&oAllows you to preview island before choosing'
+      Argument:
+        Count:
+          Message: '&bSkyBlock &8| &cError&8: &eThis command should have atleast 1 argument.'
+      Confirmation:
+        Message: '&bSkyBlock &8| &aInfo&8: &eYou are now previewing the Island. You have &c%time &eseconds to confirm or cancel.\n %confirm      %cancel'
+        Word:
+          Confirm: 'Confirm'
+          TutorialConfirm: '&7Click to &f&oconfirm &r&7Island creation!'
+          Cancel: 'Cancel'
+          TutorialCancel: '&7Click to &f&ocancel &r&7Island creation!'
   PermissionDenied:
     Admin:
       Message: '&bSkyBlock &8| &cError&8: &eYou don''t have permission to perform that command.'
@@ -3107,6 +3120,7 @@ Menu:
           - '%description'
           - ''
           - '&eClick to create Island!'
+          - '&eRight-Click to create Island!'
 Placeholder:
   fabledskyblock_leaderboard_votes:
     Empty:
@@ -3499,6 +3513,9 @@ Island:
           Message: '&bSkyBlock &8| &cError&8: &eYou don''t have permission to use that feature.'
     Permission:
       Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to do that on this Island.'
+  Preview:
+    Timeout:
+      Message: '&bSkyBlock &8| &aInfo&8: &eYour time to preview island has expired'
 Hologram:
   Leaderboard:
     Votes:

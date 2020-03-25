@@ -191,10 +191,18 @@ public class Creator {
                             return;
                         }
 
-                        if (islandManager.createIsland(player, structureList)) {
-                            messageManager.sendMessage(player,
-                                    configLoad.getString("Island.Creator.Selector.Created.Message"));
-                            soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                        if(event.getClick().isLeftClick()) {
+                            if (islandManager.createIsland(player, structureList)) {
+                                messageManager.sendMessage(player,
+                                        configLoad.getString("Island.Creator.Selector.Created.Message"));
+                                soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                            }
+                        } else if(event.getClick().isRightClick()) {
+                            if (islandManager.previewIsland(player, structureList)) {
+                                messageManager.sendMessage(player,
+                                        configLoad.getString("Island.Creator.Selector.Preview.Message"));
+                                soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                            }
                         }
 
                         return;
