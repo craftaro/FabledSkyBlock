@@ -128,5 +128,7 @@ public class Quit implements Listener {
                 inviteManager.removeInvite(player.getUniqueId());
             }
         });
+        // Unload Challenge
+        SkyBlock.getInstance().getFabledChallenge().getPlayerManager().loadPlayer(event.getPlayer().getUniqueId());
     }
 }

@@ -71,6 +71,7 @@ public class FileManager {
         configFiles.put("stackables.yml", new File(skyblock.getDataFolder(), "stackables.yml"));
         configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
         configFiles.put("structures/default.structure", new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
+        configFiles.put("challenges.yml", new File(skyblock.getDataFolder(), "challenges.yml"));
 
         File oldStructureFile = new File(skyblock.getDataFolder().toString() + "/structures", "default.structure");
         oldStructureFile.delete();
@@ -96,7 +97,7 @@ public class FileManager {
             }
 
             if (configFile.exists()) {
-                if (fileName.equals("config.yml") || fileName.equals("language.yml") || fileName.equals("settings.yml") || fileName.equals("worlds.yml")) {
+                if (fileName.equals("config.yml") || fileName.equals("language.yml") || fileName.equals("settings.yml")) {
                     FileChecker fileChecker;
 
                     if (fileName.equals("config.yml")) {

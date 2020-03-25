@@ -8,6 +8,7 @@ import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.biome.BiomeManager;
+import com.songoda.skyblock.challenge.FabledChallenge;
 import com.songoda.skyblock.command.CommandManager;
 import com.songoda.skyblock.command.commands.SkyBlockCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -78,6 +79,7 @@ public class SkyBlock extends SongodaPlugin {
     private HologramManager hologramManager;
     private LimitationInstanceHandler limitationHandler;
     private LocalizationManager localizationManager;
+    private FabledChallenge fabledChallenge;
 
     public static SkyBlock getInstance() {
         return INSTANCE;
@@ -107,6 +109,7 @@ public class SkyBlock extends SongodaPlugin {
         playerDataManager = new PlayerDataManager(this);
         cooldownManager = new CooldownManager(this);
         limitationHandler = new LimitationInstanceHandler();
+        fabledChallenge = new FabledChallenge(this);
 
         if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable")) {
             scoreboardManager = new ScoreboardManager(this);
@@ -209,6 +212,10 @@ public class SkyBlock extends SongodaPlugin {
 
         if (this.hologramManager != null) {
             this.hologramManager.onDisable();
+        }
+        
+        if (this.fabledChallenge != null) {
+        	this.fabledChallenge.onDisable();
         }
 
         HandlerList.unregisterAll(this);
@@ -335,5 +342,9 @@ public class SkyBlock extends SongodaPlugin {
 
     public LocalizationManager getLocalizationManager() {
         return localizationManager;
+    }
+    
+    public FabledChallenge getFabledChallenge() {
+    	return fabledChallenge;
     }
 }

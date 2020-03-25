@@ -143,5 +143,8 @@ public class Join implements Listener {
             islandManager.updateBorder(island);
             islandManager.updateFlight(player);
         }
+        
+        // Load Challenge
+        SkyBlock.getInstance().getFabledChallenge().getPlayerManager().loadPlayer(player.getUniqueId());
     }
 }
