@@ -6,7 +6,6 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,7 +23,7 @@ public class Piston implements Listener {
         this.skyblock = skyblock;
     }
 
-    // Prevent point farming with Dragon Egg
+    // Prevent point farming dragon eggs.
     @EventHandler
     public void onPistonMove(BlockPistonExtendEvent event) {
 
@@ -37,29 +36,26 @@ public class Piston implements Listener {
 
         Island island = islandManager.getIslandAtLocation(block.getLocation());
 
-        if (island == null ||
-                CompatibleMaterial.DRAGON_EGG != CompatibleMaterial.getMaterial(block)) return;
+        if (island == null || CompatibleMaterial.DRAGON_EGG != CompatibleMaterial.getMaterial(block)) return;
 
         FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (!configLoad.getBoolean("Island.Block.Level.Enable")) return;
 
-        final Materials materials;
+        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
 
-        materials = Materials.getMaterials(block.getType(), block.getData());
-
-        if (materials == null) return;
+        if (material == null) return;
 
         IslandLevel level = island.getLevel();
 
-        if (!level.hasMaterial(materials.name())) return;
+        if (!level.hasMaterial(material.name())) return;
 
-        long materialAmount = level.getMaterialAmount(materials.name());
+        long materialAmount = level.getMaterialAmount(material.name());
 
         if (materialAmount <= 1)
-            level.removeMaterial(materials.name());
+            level.removeMaterial(material.name());
         else
-            level.setMaterialAmount(materials.name(), materialAmount - 1);
+            level.setMaterialAmount(material.name(), materialAmount - 1);
     }
 }
