@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus.admin;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -14,7 +15,6 @@ import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.MaterialUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
@@ -61,7 +61,7 @@ public class Levelling implements Listener {
         // Filter out materials that won't be displayed in the GUI properly
         Inventory testInventory = Bukkit.createInventory(null, 9);
         levellingMaterials = levellingMaterials.stream().filter(x -> {
-            if (!x.getMaterials().isAvailable()) return false;
+            //if (!x.getMaterials().isAvailable()) return false; //TODO: Add spawner check
             if (x.getItemStack() == null) return false;
             ItemStack itemStack = new ItemStack(MaterialUtil.correctMaterial(x.getItemStack().getType()), 1, x.getItemStack().getDurability());
             if (itemStack == null || itemStack.getItemMeta() == null) return false;
@@ -75,11 +75,11 @@ public class Levelling implements Listener {
 
         nInventoryUtil nInv = new nInventoryUtil(player, null);
         nInv.addItem(
-                nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+                nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                         configLoad.getString("Menu.Admin.Levelling.Item.Exit.Displayname"), null, null, null, null),
                 0, 8);
         nInv.addItem(
-                nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
+                nInv.createItem(new ItemStack(CompatibleMaterial.OAK_SIGN.getMaterial()),
                         configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"),
                         configLoad.getStringList("Menu.Admin.Levelling.Item.Information.Lore"),
                         new Placeholder[]{new Placeholder("%materials", "" + levellingMaterials.size()),
@@ -89,7 +89,7 @@ public class Levelling implements Listener {
                         null, null),
                 4);
         nInv.addItem(
-                nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+                nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                         configLoad.getString("Menu.Admin.Levelling.Item.Barrier.Displayname"), null, null, null, null),
                 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
@@ -184,7 +184,7 @@ public class Levelling implements Listener {
                     return;
                 }
 
-                if ((event.getCurrentItem().getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
+                if ((event.getCurrentItem().getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Barrier.Displayname"))))) {
@@ -192,7 +192,7 @@ public class Levelling implements Listener {
                     soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Materials.OAK_FENCE_GATE.parseMaterial())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial())
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Exit.Displayname"))))) {
@@ -201,7 +201,7 @@ public class Levelling implements Listener {
                     player.closeInventory();
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_SIGN.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"))))) {
                     event.setCancelled(true);
@@ -299,9 +299,9 @@ public class Levelling implements Listener {
 
                 if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                     for (LevellingMaterial materialList : levellingManager.getWorthsAsLevelingMaterials()) {
-                        Materials materials = materialList.getMaterials();
+                        CompatibleMaterial materials = materialList.getMaterials();
 
-                        if (event.getCurrentItem().getType() == MaterialUtil.correctMaterial(materials.parseMaterial())
+                        if (event.getCurrentItem().getType() == MaterialUtil.correctMaterial(materials.getMaterial())
                                 && ChatColor.stripColor(is.getItemMeta().getDisplayName()).equals(materials.name())) {
                             event.setCancelled(true);
 
@@ -408,13 +408,10 @@ public class Levelling implements Listener {
 
                 event.setCancelled(true);
 
-                Materials materials;
+                CompatibleMaterial materials = CompatibleMaterial.getMaterial(event.getCurrentItem().getType());
 
                 if (NMSUtil.getVersionNumber() < 13) {
-                    materials = Materials.requestMaterials(event.getCurrentItem().getType().name(),
-                            (byte) event.getCurrentItem().getDurability());
-                } else {
-                    materials = Materials.fromString(event.getCurrentItem().getType().name());
+                    materials.getItem().setData(event.getCurrentItem().getData());
                 }
 
                 if (levellingManager.hasWorth(materials)) {
