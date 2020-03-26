@@ -1,5 +1,6 @@
 package com.songoda.skyblock.listeners;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -9,7 +10,6 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -53,15 +53,16 @@ public class Portal implements Listener {
         Island island = islandManager.getIslandAtLocation(to.getLocation());
 
         if (island == null) return;
-        
-        if ((to.getType().equals(Materials.NETHER_PORTAL.parseMaterial()) || to.getType().equals(Materials.END_PORTAL.parseMaterial()))
+
+        CompatibleMaterial toMaterial = CompatibleMaterial.getMaterial(to.getType());
+
+        if( (toMaterial == CompatibleMaterial.NETHER_BRICK || toMaterial == CompatibleMaterial.END_PORTAL)
                 && !islandManager.hasPermission(player, player.getLocation(), "Portal")) {
             event.setTo(LocationUtil.getRandomLocation(event.getFrom().getWorld(), 5000, 5000, true, true));
             messageManager.sendMessage(player,
                     fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
             soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
         }
-        
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -132,8 +133,8 @@ public class Portal implements Listener {
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
         IslandWorld toWorld = IslandWorld.Normal;
 
-        if (block.getType().equals(Materials.NETHER_PORTAL.parseMaterial())) toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.Nether : IslandWorld.Normal;
-        else if (block.getType().equals(Materials.END_PORTAL.parseMaterial())) toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.End : IslandWorld.Normal;
+        if (CompatibleMaterial.getMaterial(block.getType()).equals(CompatibleMaterial.NETHER_PORTAL)) toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.Nether : IslandWorld.Normal;
+        else if (CompatibleMaterial.getMaterial(block.getType()).equals(CompatibleMaterial.END_PORTAL)) toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.End : IslandWorld.Normal;
 
         switch (toWorld) {
         case Nether:

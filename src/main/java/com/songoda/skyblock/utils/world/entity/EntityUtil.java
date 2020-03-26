@@ -1,5 +1,6 @@
 package com.songoda.skyblock.utils.world.entity;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
 import com.songoda.skyblock.utils.item.MaterialUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
@@ -379,8 +380,7 @@ public final class EntityUtil {
                     String[] materialData = entityData.getCarryBlock().split(":");
 
                     byte data = Byte.parseByte(materialData[1]);
-                    Material material = MaterialUtil.getMaterial(NMSVersion, entityData.getVersion(),
-                            materialData[0].toUpperCase(), data);
+                    Material material = MaterialUtil.getMaterial(NMSVersion, entityData.getVersion(), materialData[0].toUpperCase(), data);
 
                     if (material != null) {
                         if (NMSVersion > 12) {

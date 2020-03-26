@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -15,7 +16,7 @@ import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -79,14 +80,14 @@ public class Bans {
 
                     ItemStack is = event.getItem();
 
-                    if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta())
+                    if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Bans.Item.Barrier.Displayname"))))) {
                         soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                    } else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+                    } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Bans.Item.Exit.Displayname"))))) {
                         soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
@@ -161,14 +162,14 @@ public class Bans {
 
             Set<UUID> islandBans = island.getBan().getBans();
 
-            nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     configLoad.getString("Menu.Bans.Item.Exit.Displayname"), null, null, null, null), 0, 8);
             nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
                     configLoad.getString("Menu.Bans.Item.Information.Displayname"),
                     configLoad.getStringList("Menu.Bans.Item.Information.Lore"),
                     new Placeholder[]{new Placeholder("%bans", "" + islandBans.size())}, null, null), 4);
             nInv.addItem(
-                    nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+                    nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                             configLoad.getString("Menu.Bans.Item.Barrier.Displayname"), null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 

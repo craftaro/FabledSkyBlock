@@ -3,6 +3,7 @@ package com.songoda.skyblock.stackable;
 import java.io.File;
 import java.util.UUID;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,7 +16,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 
@@ -24,12 +25,12 @@ public class Stackable {
     private UUID uuid;
 
     private Location location;
-    private Materials material;
+    private CompatibleMaterial material;
     private int size = 2;
     private ArmorStand display;
     private int maxSize;
 
-    public Stackable(Location location, Materials material) {
+    public Stackable(Location location, CompatibleMaterial material) {
         this.uuid = UUID.randomUUID();
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
@@ -38,7 +39,7 @@ public class Stackable {
         this.save();
     }
 
-    public Stackable(Location location, Materials material, int maxSize) {
+    public Stackable(Location location, CompatibleMaterial material, int maxSize) {
         this.uuid = UUID.randomUUID();
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
@@ -48,7 +49,7 @@ public class Stackable {
         this.save();
     }
 
-    public Stackable(UUID uuid, Location location, Materials material, int size) {
+    public Stackable(UUID uuid, Location location, CompatibleMaterial material, int size) {
         this.uuid = uuid;
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
@@ -68,11 +69,11 @@ public class Stackable {
         this.location = location;
     }
 
-    public Materials getMaterial() {
+    public CompatibleMaterial getMaterial() {
         return this.material;
     }
 
-    public void setMaterial(Materials material) {
+    public void setMaterial(CompatibleMaterial material) {
         this.material = material;
         this.save();
     }
@@ -144,7 +145,7 @@ public class Stackable {
             as.setMarker(true);
         }
         as.setBasePlate(true);
-        as.setHelmet(material.parseItem());
+        as.setHelmet(material.getItem());
         as.setCustomName(this.getCustomName());
         as.setCustomNameVisible(true);
         as.setMetadata("StackableArmorStand", new FixedMetadataValue(SkyBlock.getInstance(), ""));
@@ -178,6 +179,6 @@ public class Stackable {
     private String getCustomName() {
         return ChatColor
                 .translateAlternateColorCodes('&', SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration().getString("Hologram.Stackable.Message"))
-                .replace("%block", SkyBlock.getInstance().getLocalizationManager().getLocalizationFor(Materials.class).getLocale(material)).replace("%amount", NumberUtil.formatNumber(this.size));
+                .replace("%block", SkyBlock.getInstance().getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(material)).replace("%amount", NumberUtil.formatNumber(this.size));
     }
 }

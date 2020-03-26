@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.cooldown.Cooldown;
@@ -13,7 +14,7 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.SBiome;
 import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
@@ -82,7 +83,7 @@ public class Biome {
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
-                } else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
+                } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Barrier.Displayname"))))) {
@@ -90,7 +91,7 @@ public class Biome {
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
-                } else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+                } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Exit.Displayname"))))) {
                     soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
@@ -159,11 +160,11 @@ public class Biome {
                     langConfig.getStringList("Menu.Biome.Item.Info.Lore"),
                     new Placeholder[]{new Placeholder("%biome_type", islandBiomeName)}, null, null), 4);
 
-            nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     langConfig.getString("Menu.Biome.Item.Exit.Displayname"), null, null, null, null),
                     0, 8);
 
-            nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                     ChatColor.translateAlternateColorCodes('&',
                             langConfig.getString("Menu.Biome.Item.Barrier.Displayname")),
                     null, null, null, null),

@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -7,7 +8,7 @@ import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 
@@ -35,13 +36,7 @@ public class ValueCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.Hand.Message"));
             soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
         } else {
-            Materials materials = null;
-
-            if (NMSUtil.getVersionNumber() < 13) {
-                materials = Materials.requestMaterials(player.getItemInHand().getType().name(), (byte) player.getItemInHand().getDurability());
-            } else {
-                materials = Materials.fromString(player.getItemInHand().getType().name());
-            }
+            CompatibleMaterial materials = CompatibleMaterial.getMaterial(player.getItemInHand().getType().name());
 
             if (materials != null && levellingManager.hasWorth(materials)) {
                 long worth = levellingManager.getWorth(materials);

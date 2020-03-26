@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
@@ -9,7 +10,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.WorldBorder;
 import org.bukkit.Bukkit;
@@ -71,7 +72,7 @@ public class Border {
 
             ItemStack is = event.getItem();
 
-            if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+            if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Border.Item.Exit.Displayname"))))) {
                 soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
@@ -88,7 +89,7 @@ public class Border {
                 soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
 
                 Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
-            } else if ((is.getType() == Materials.LIGHT_BLUE_DYE.parseMaterial()) && (is.hasItemMeta())
+            } else if ((is.getType() == CompatibleMaterial.LIGHT_BLUE_DYE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName()
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
@@ -106,7 +107,7 @@ public class Border {
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                 }
-            } else if ((is.getType() == Materials.LIME_DYE.parseMaterial()) && (is.hasItemMeta())
+            } else if ((is.getType() == CompatibleMaterial.LIME_DYE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName()
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
@@ -124,7 +125,7 @@ public class Border {
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                 }
-            } else if ((is.getType() == Materials.RED_DYE.parseMaterial()) && (is.hasItemMeta())
+            } else if ((is.getType() == CompatibleMaterial.RED_DYE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName()
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
@@ -147,7 +148,7 @@ public class Border {
 
         Island island = islandManager.getIsland(player);
 
-        nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+        nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                 configLoad.getString("Menu.Border.Item.Exit.Displayname"), null, null, null, null), 0);
 
         WorldBorder.Color borderColor = island.getBorderColor();
@@ -165,14 +166,14 @@ public class Border {
                 new Placeholder[]{new Placeholder("%toggle", borderToggle)}, null, null), 1);
 
         if (borderColor == WorldBorder.Color.Blue) {
-            nInv.addItem(nInv.createItem(Materials.LIGHT_BLUE_DYE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.LIGHT_BLUE_DYE.getItem(),
                     configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                             configLoad.getString("Menu.Border.Item.Word.Blue")),
                     configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
                     new Placeholder[]{new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Blue"))},
                     null, null), 2);
         } else {
-            nInv.addItem(nInv.createItem(Materials.LIGHT_BLUE_DYE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.LIGHT_BLUE_DYE.getItem(),
                     configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                             configLoad.getString("Menu.Border.Item.Word.Blue")),
                     configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
@@ -181,7 +182,7 @@ public class Border {
         }
 
         if (borderColor == WorldBorder.Color.Green) {
-            nInv.addItem(nInv.createItem(Materials.LIME_DYE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.LIME_DYE.getItem(),
                     configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                             configLoad.getString("Menu.Border.Item.Word.Green")),
                     configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
@@ -189,7 +190,7 @@ public class Border {
                             new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Green"))},
                     null, null), 3);
         } else {
-            nInv.addItem(nInv.createItem(Materials.LIME_DYE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.LIME_DYE.getItem(),
                     configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                             configLoad.getString("Menu.Border.Item.Word.Green")),
                     configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
@@ -199,14 +200,14 @@ public class Border {
         }
 
         if (borderColor == WorldBorder.Color.Red) {
-            nInv.addItem(nInv.createItem(Materials.RED_DYE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.RED_DYE.getItem(),
                     configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                             configLoad.getString("Menu.Border.Item.Word.Red")),
                     configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
                     new Placeholder[]{new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Red"))},
                     null, null), 4);
         } else {
-            nInv.addItem(nInv.createItem(Materials.RED_DYE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.RED_DYE.getItem(),
                     configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                             configLoad.getString("Menu.Border.Item.Word.Red")),
                     configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),

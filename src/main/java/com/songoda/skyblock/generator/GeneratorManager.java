@@ -1,8 +1,9 @@
 package com.songoda.skyblock.generator;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.block.Block;
@@ -35,8 +36,8 @@ public class GeneratorManager {
         if (configLoad.getString("Generators") == null)
             return;
 
-        Materials[] oreMaterials = new Materials[]{Materials.COAL, Materials.CHARCOAL, Materials.DIAMOND,
-                Materials.IRON_INGOT, Materials.GOLD_INGOT, Materials.EMERALD};
+        CompatibleMaterial[] oreMaterials = new CompatibleMaterial[]{CompatibleMaterial.COAL, CompatibleMaterial.CHARCOAL, CompatibleMaterial.DIAMOND,
+                CompatibleMaterial.IRON_INGOT, CompatibleMaterial.GOLD_INGOT, CompatibleMaterial.EMERALD};
         Random rnd = new Random();
 
         for (String generatorList : configLoad.getConfigurationSection("Generators").getKeys(false)) {
@@ -46,7 +47,7 @@ public class GeneratorManager {
             List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
             if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
                 for (String materialList : configLoad.getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
-                    Materials materials = Materials.fromString(materialList);
+                    CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialList);
                     if (materials != null) {
                         generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getDouble(
                                 "Generators." + generatorList + ".Materials." + materialList + ".Chance")));
@@ -113,15 +114,16 @@ public class GeneratorManager {
 
     @SuppressWarnings("deprecation")
     public BlockState generateBlock(Generator generator, Block block) {
-        Materials materials = getRandomMaterials(generator);
+        CompatibleMaterial materials = getRandomMaterials(generator);
         if (materials == null) return block.getState();
         
         skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(), 1.0F, 10.0F);
 
+
         if (NMSUtil.getVersionNumber() > 12) {
-            block.setType(materials.parseMaterial());
+            block.setType(materials.getMaterial());
         } else {
-            ItemStack is = materials.parseItem();
+            ItemStack is = materials.getItem();
             block.setType(is.getType());
 
             try {
@@ -134,9 +136,9 @@ public class GeneratorManager {
         return block.getState();
     }
 
-    public Materials getRandomMaterials(Generator generator) {
+    public CompatibleMaterial getRandomMaterials(Generator generator) {
         if (generator.getGeneratorMaterials() != null && generator.getGeneratorMaterials().stream().anyMatch(x -> x.getChance() > 0)) {
-            List<Materials> weightedList = new ArrayList<>();
+            List<CompatibleMaterial> weightedList = new ArrayList<>();
             for (GeneratorMaterial generatorMaterial : generator.getGeneratorMaterials())
                 for (int i = 0; i < generatorMaterial.getChance() * 30; i++)
                     weightedList.add(generatorMaterial.getMaterials());
@@ -145,12 +147,12 @@ public class GeneratorManager {
             return weightedList.get(choice);
         }
 
-        return Materials.COBBLESTONE;
+        return CompatibleMaterial.COBBLESTONE;
     }
 
     public void addGenerator(String name, List<GeneratorMaterial> generatorMaterials, boolean permission) {
-        Materials[] oreMaterials = new Materials[]{Materials.COAL, Materials.CHARCOAL, Materials.DIAMOND,
-                Materials.IRON_INGOT, Materials.GOLD_INGOT, Materials.EMERALD};
+        CompatibleMaterial[] oreMaterials = new CompatibleMaterial[]{CompatibleMaterial.COAL, CompatibleMaterial.CHARCOAL, CompatibleMaterial.DIAMOND,
+                CompatibleMaterial.IRON_INGOT, CompatibleMaterial.GOLD_INGOT, CompatibleMaterial.EMERALD};
         generatorStorage.add(new Generator(name, oreMaterials[new Random().nextInt(oreMaterials.length)],
                 generatorMaterials, permission));
     }

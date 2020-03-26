@@ -1,8 +1,8 @@
 package com.songoda.skyblock.utils.world.block;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
 import com.songoda.skyblock.utils.item.MaterialUtil;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -67,7 +67,7 @@ public final class BlockUtil {
             for (int i = 0; i < furnace.getInventory().getSize(); i++) {
                 ItemStack is = furnace.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -79,7 +79,7 @@ public final class BlockUtil {
             for (int i = 0; i < chest.getInventory().getSize(); i++) {
                 ItemStack is = chest.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -91,7 +91,7 @@ public final class BlockUtil {
             for (int i = 0; i < dispenser.getInventory().getSize(); i++) {
                 ItemStack is = dispenser.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -103,7 +103,7 @@ public final class BlockUtil {
             for (int i = 0; i < dropper.getInventory().getSize(); i++) {
                 ItemStack is = dropper.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -115,7 +115,7 @@ public final class BlockUtil {
             for (int i = 0; i < hopper.getInventory().getSize(); i++) {
                 ItemStack is = hopper.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -188,7 +188,7 @@ public final class BlockUtil {
                         for (int i = 0; i < shulkerBox.getInventory().getSize(); i++) {
                             ItemStack is = shulkerBox.getInventory().getItem(i);
 
-                            if (is != null && is.getType() != Material.AIR) {
+                            if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                                 blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                             }
                         }
@@ -236,7 +236,7 @@ public final class BlockUtil {
             } else {
                 org.bukkit.material.FlowerPot flowerPot = (org.bukkit.material.FlowerPot) materialData;
 
-                if (flowerPot.getContents() != null && flowerPot.getContents().getItemType() != Material.AIR) {
+                if (flowerPot.getContents() != null && flowerPot.getContents().getItemType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.setFlower(flowerPot.getContents().getItemType().toString() + ":" + flowerPot.getContents().getData());
                 }
             }
@@ -491,7 +491,7 @@ public final class BlockUtil {
             Block bottomBlock = block.getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock();
 
             if (bottomBlock.getType() == Material.AIR && !topBlock.getType().name().equals("DOUBLE_PLANT")) {
-                bottomBlock.setType(Materials.LEGACY_DOUBLE_PLANT.getPostMaterial());
+                bottomBlock.setType(CompatibleMaterial.LARGE_FERN.getMaterial());
 
                 if (NMSVersion < 13) {
                     try {

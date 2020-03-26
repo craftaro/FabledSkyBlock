@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Material;
 
 public final class CalculatorRegistry {
@@ -13,9 +14,9 @@ public final class CalculatorRegistry {
 
     }
 
-    private static final Map<Material, List<Calculator>> calculators = new HashMap<>();
+    private static final Map<CompatibleMaterial, List<Calculator>> calculators = new HashMap<>();
 
-    public static void registerCalculator(Calculator calculator, Material to) {
+    public static void registerCalculator(Calculator calculator, CompatibleMaterial to) {
 
         List<Calculator> list = calculators.get(to);
 
@@ -27,7 +28,7 @@ public final class CalculatorRegistry {
         list.add(calculator);
     }
 
-    public static List<Calculator> getCalculators(Material type) {
+    public static List<Calculator> getCalculators(CompatibleMaterial type) {
         return calculators.get(type);
     }
 

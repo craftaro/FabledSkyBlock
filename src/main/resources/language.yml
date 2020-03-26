@@ -1,6 +1,5 @@
 ClassLocalization:
  Materials:
-  LEGACY_DOUBLE_PLANT: 'Sunflower'
  IslandRoles:
    Coop: 'Coop'
    Visitor: 'Visitor' 

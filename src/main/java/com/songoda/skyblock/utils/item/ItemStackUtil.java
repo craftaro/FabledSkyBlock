@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils.item;
 
-import com.songoda.skyblock.utils.version.Materials;
+ 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -42,9 +43,9 @@ public final class ItemStackUtil {
             // Other structures people make NEED to be saved from the version that they will be using so everything loads properly
             if (itemStack.getType() == Material.AIR) {
                 if (NBTTagCompound.toString().equals("{id:\"minecraft:sugar_cane\",Count:1b}")) {
-                    itemStack = new ItemStack(Materials.SUGAR_CANE.parseMaterial(), 1);
+                    itemStack = new ItemStack(CompatibleMaterial.SUGAR_CANE.getMaterial(), 1);
                 } else if (NBTTagCompound.toString().equals("{id:\"minecraft:melon_slice\",Count:1b}")) {
-                    itemStack = new ItemStack(Materials.MELON_SLICE.parseMaterial(), 1);
+                    itemStack = new ItemStack(CompatibleMaterial.MELON_SLICE.getMaterial(), 1);
                 }
             }
         } catch (Exception e) {

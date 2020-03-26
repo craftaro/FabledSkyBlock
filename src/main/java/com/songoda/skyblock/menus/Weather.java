@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
@@ -11,7 +12,7 @@ import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -80,7 +81,7 @@ public class Weather {
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                    } else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
+                    } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
                             && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Weather.Item.Barrier.Displayname"))))) {
@@ -88,11 +89,11 @@ public class Weather {
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                    } else if (is.getType() == Materials.BARRIER.parseMaterial()) {
+                    } else if (is.getType() == CompatibleMaterial.BARRIER.getMaterial()) {
                         event.setWillClose(false);
                         event.setWillDestroy(false);
                         soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
-                    } else if ((is.getType() == Materials.SUNFLOWER.parseMaterial()) && (is.hasItemMeta())
+                    } else if ((is.getType() == CompatibleMaterial.SUNFLOWER.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Weather.Item.Time.Displayname"))))) {
                         int islandTime = island.getTime();
@@ -229,11 +230,11 @@ public class Weather {
                             new Placeholder("%time_name", timeName), new Placeholder("%time", "" + island.getTime()),
                             new Placeholder("%weather", island.getWeatherName())},
                     null, null), 0);
-            nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                     configLoad.getString("Menu.Weather.Item.Barrier.Displayname"), null, null, null, null), 1);
 
             if (!island.isWeatherSynchronized()) {
-                nInv.addItem(nInv.createItem(Materials.SUNFLOWER.parseItem(),
+                nInv.addItem(nInv.createItem(CompatibleMaterial.SUNFLOWER.getItem(),
                         configLoad.getString("Menu.Weather.Item.Time.Displayname"),
                         configLoad.getStringList("Menu.Weather.Item.Time.Lore"),
                         new Placeholder[]{new Placeholder("%choice", timeChoice)}, null, null), 2);
@@ -242,7 +243,7 @@ public class Weather {
                         configLoad.getStringList("Menu.Weather.Item.Weather.Lore"),
                         new Placeholder[]{new Placeholder("%choice", weatherChoice)}, null, null), 3);
             } else {
-                nInv.addItem(nInv.createItem(Materials.BARRIER.parseItem(),
+                nInv.addItem(nInv.createItem(CompatibleMaterial.BARRIER.getItem(),
                         configLoad.getString("Menu.Weather.Item.Disabled.Time.Displayname"),
                         configLoad.getStringList("Menu.Weather.Item.Disabled.Time.Lore"),
                         new Placeholder[]{new Placeholder("%choice", timeChoice)}, null, null), 2);

@@ -1,13 +1,14 @@
 package com.songoda.skyblock.structure;
 
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.core.compatibility.CompatibleMaterial;
+ 
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Structure implements com.songoda.skyblock.api.structure.Structure {
 
-    private Materials materials;
+    private CompatibleMaterial materials;
 
     private String name;
     private String overworldFile;
@@ -22,7 +23,7 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
 
     private double deletionCost;
 
-    public Structure(String name, Materials materials, String overworldFile, String netherFile, String endFile,
+    public Structure(String name, CompatibleMaterial materials, String overworldFile, String netherFile, String endFile,
                      String displayName, boolean permission, List<String> description, List<String> commands,
                      double deletionCost) {
         this.name = name;
@@ -41,11 +42,11 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
         return name;
     }
 
-    public Materials getMaterials() {
+    public CompatibleMaterial getMaterials() {
         return materials;
     }
 
-    public void setMaterials(Materials materials) {
+    public void setMaterials(CompatibleMaterial materials) {
         this.materials = materials;
     }
 

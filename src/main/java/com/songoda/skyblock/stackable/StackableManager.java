@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,14 +18,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 
 public class StackableManager {
 
     // ToDO: Should pobably be a GUI for this
 
     private final SkyBlock skyblock;
-    private Set<Materials> stackableMaterials = EnumSet.noneOf(Materials.class);
+    private Set<CompatibleMaterial> stackableMaterials = EnumSet.noneOf(CompatibleMaterial.class);
     private Map<Location, Stackable> stacks = new HashMap<>();
 
     public StackableManager(SkyBlock skyblock) {
@@ -41,7 +42,7 @@ public class StackableManager {
 
         for (String stackableStr : stackableList) {
             try {
-                this.stackableMaterials.add(Materials.fromString(stackableStr));
+                this.stackableMaterials.add(CompatibleMaterial.getBlockMaterial(stackableStr));
             } catch (Exception ignored) {
             }
         }
@@ -87,7 +88,7 @@ public class StackableManager {
 
                 if (block.getType() == Material.AIR) continue;
 
-                final Materials type = Materials.getMaterials(block.getType(), block.getData());
+                final CompatibleMaterial type = CompatibleMaterial.getMaterial(block.getType());
 
                 if (type == null) continue;
 
@@ -107,11 +108,11 @@ public class StackableManager {
         stackableMaterials.clear();
     }
 
-    public Set<Materials> getStackableMaterials() {
+    public Set<CompatibleMaterial> getStackableMaterials() {
         return Collections.unmodifiableSet(stackableMaterials);
     }
 
-    public boolean isStackableMaterial(Materials material) {
+    public boolean isStackableMaterial(CompatibleMaterial material) {
         return stackableMaterials.contains(material);
     }
 
@@ -123,7 +124,7 @@ public class StackableManager {
         return stacks.containsKey(location);
     }
 
-    public Stackable getStack(Location location, Materials material) {
+    public Stackable getStack(Location location, CompatibleMaterial material) {
         Stackable stackable = stacks.get(location);
 
         return stackable != null && stackable.getMaterial() == material ? stackable : null;
@@ -138,7 +139,7 @@ public class StackableManager {
         stacks.remove(stackable.getLocation());
     }
 
-    public long getStackSizeOf(Location loc, Materials type) {
+    public long getStackSizeOf(Location loc, CompatibleMaterial type) {
         final Stackable stack = getStack(loc, type);
 
         return stack == null ? 0 : stack.getSize();

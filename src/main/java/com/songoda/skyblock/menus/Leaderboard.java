@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -10,7 +11,7 @@ import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.Bukkit;
@@ -55,7 +56,7 @@ public class Leaderboard {
                     if (playerDataManager.hasPlayerData(player)) {
                         ItemStack is = event.getItem();
 
-                        if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+                        if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Leaderboard." + Viewer.Type.Browse.name()
@@ -95,7 +96,7 @@ public class Leaderboard {
                     }
                 });
 
-                nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+                nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                         configLoad.getString("Menu.Leaderboard." + viewer.getType().name() + ".Item.Exit.Displayname"),
                         null, null, null, null), 0, 4);
                 nInv.addItem(
@@ -139,7 +140,7 @@ public class Leaderboard {
                     if (playerDataManager.hasPlayerData(player)) {
                         ItemStack is = event.getItem();
 
-                        if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())) {
+                        if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())) {
                             if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                                     configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Exit.Displayname")))) {
                                 soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
@@ -215,11 +216,11 @@ public class Leaderboard {
 
                 if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                         .getBoolean("Island.Visitor.Vote")) {
-                    nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+                    nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                             configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname"), null, null,
                             null, null), 0, 8);
                 } else {
-                    nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+                    nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                             configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Exit.Displayname"), null, null,
                             null, null), 0, 8);
                 }

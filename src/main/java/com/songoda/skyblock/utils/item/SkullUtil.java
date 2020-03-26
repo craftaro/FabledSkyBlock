@@ -2,7 +2,7 @@ package com.songoda.skyblock.utils.item;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -72,7 +72,7 @@ public final class SkullUtil {
         if (NMSUtil.getVersionNumber() > 12) {
             is = new ItemStack(Material.valueOf("PLAYER_HEAD"));
         } else {
-            is = Materials.LEGACY_SKULL_ITEM.getPostItem();
+            is = CompatibleMaterial.SKELETON_SKULL.getItem();
         }
 
         return is;

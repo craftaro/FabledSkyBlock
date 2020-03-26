@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -71,7 +72,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
@@ -543,7 +543,7 @@ public class Entity implements Listener {
                 .getBoolean("Island.Block.Level.Enable"))
             return;
 
-        Materials materials = Materials.getMaterials(block.getType(), block.getData());
+        CompatibleMaterial materials = CompatibleMaterial.getBlockMaterial(block.getType());
 
         if (materials != null) {
             IslandLevel level = island.getLevel();
@@ -560,18 +560,7 @@ public class Entity implements Listener {
         }
 
         if (event.getTo() != null && event.getTo() != Material.AIR) {
-            materials = null;
-
-            if (NMSUtil.getVersionNumber() > 12) {
-                materials = Materials.fromString(event.getTo().name());
-            } else {
-                try {
-                    materials = Materials.requestMaterials(event.getTo().name(), (byte) event.getClass().getMethod("getData").invoke(event));
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                        | SecurityException e) {
-                    e.printStackTrace();
-                }
-            }
+            materials = CompatibleMaterial.getBlockMaterial(event.getTo());;
 
             if (materials != null) {
                 long materialAmount = 0;
@@ -607,7 +596,7 @@ public class Entity implements Listener {
                             .getBoolean("Island.Block.Level.Enable")) {
                         for (org.bukkit.block.Block blockList : event.blockList()) {
                             @SuppressWarnings("deprecation")
-                            Materials materials = Materials.getMaterials(blockList.getType(), blockList.getData());
+                            CompatibleMaterial materials = CompatibleMaterial.getBlockMaterial(blockList.getType());
 
                             if (materials != null) {
                                 IslandLevel level = island.getLevel();

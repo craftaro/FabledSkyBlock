@@ -1,17 +1,18 @@
 package com.songoda.skyblock.generator;
 
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.core.compatibility.CompatibleMaterial;
+ 
 
 import java.util.List;
 
 public class Generator {
 
     private String name;
-    private Materials materials;
+    private CompatibleMaterial materials;
     private List<GeneratorMaterial> generatorMaterials;
     private boolean permission;
 
-    public Generator(String name, Materials materials, List<GeneratorMaterial> generatorMaterials, boolean permission) {
+    public Generator(String name, CompatibleMaterial materials, List<GeneratorMaterial> generatorMaterials, boolean permission) {
         this.name = name;
         this.materials = materials;
         this.generatorMaterials = generatorMaterials;
@@ -22,7 +23,7 @@ public class Generator {
         return name;
     }
 
-    public Materials getMaterials() {
+    public CompatibleMaterial getMaterials() {
         return materials;
     }
 

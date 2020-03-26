@@ -13,6 +13,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
@@ -33,7 +34,6 @@ import com.songoda.skyblock.levelling.ChunkUtil;
 import com.songoda.skyblock.levelling.rework.amount.AmountMaterialPair;
 import com.songoda.skyblock.levelling.rework.amount.BlockAmount;
 import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.utils.version.Materials;
 
 public final class IslandScan extends BukkitRunnable {
 
@@ -41,7 +41,7 @@ public final class IslandScan extends BukkitRunnable {
 
     private final Set<Location> doubleBlocks;
     private final Island island;
-    private final Map<Materials, BlockAmount> amounts;
+    private final Map<CompatibleMaterial, BlockAmount> amounts;
     private final Configuration config;
     private final int runEveryX;
 
@@ -52,7 +52,7 @@ public final class IslandScan extends BukkitRunnable {
     public IslandScan(Island island) {
         if (island == null) throw new IllegalArgumentException("island cannot be null");
         this.island = island;
-        this.amounts = new EnumMap<>(Materials.class);
+        this.amounts = new EnumMap<>(CompatibleMaterial.class);
         this.config = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration();
         this.runEveryX = config.getInt("Command.Island.Level.Scanning.Progress.Display-Every-X-Scan");
         this.doubleBlocks = new HashSet<>();
@@ -86,7 +86,7 @@ public final class IslandScan extends BukkitRunnable {
 
         final Map<String, Long> materials = new HashMap<>(amounts.size());
 
-        for (Entry<Materials, BlockAmount> entry : amounts.entrySet()) {
+        for (Entry<CompatibleMaterial, BlockAmount> entry : amounts.entrySet()) {
             materials.put(entry.getKey().name(), entry.getValue().getAmount());
         }
 

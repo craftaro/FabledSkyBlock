@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus.admin;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -13,12 +14,10 @@ import com.songoda.skyblock.structure.StructureManager;
 import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -63,16 +62,16 @@ public class Creator implements Listener {
         if (playerData.getViewer() == null) {
             List<Structure> structures = structureManager.getStructures();
 
-            nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     configLoad.getString("Menu.Admin.Creator.Browse.Item.Exit.Displayname"), null, null, null, null), 0,
                     8);
             nInv.addItem(
-                    nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
+                    nInv.createItem(new ItemStack(CompatibleMaterial.OAK_SIGN.getItem()),
                             configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"),
                             configLoad.getStringList("Menu.Admin.Creator.Browse.Item.Information.Lore"),
                             new Placeholder[]{new Placeholder("%structures", "" + structures.size())}, null, null),
                     4);
-            nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                     configLoad.getString("Menu.Admin.Creator.Browse.Item.Barrier.Displayname"), null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 
@@ -95,7 +94,7 @@ public class Creator implements Listener {
             }
 
             if (structures.size() == 0) {
-                nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER),
+                nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.BARRIER.getMaterial()),
                         configLoad.getString("Menu.Admin.Creator.Browse.Item.Nothing.Displayname"), null, null, null,
                         null), 31);
             } else {
@@ -107,7 +106,7 @@ public class Creator implements Listener {
                         inventorySlot++;
 
                         Structure structure = structures.get(index);
-                        nInv.addItem(nInv.createItem(structure.getMaterials().parseItem(),
+                        nInv.addItem(nInv.createItem(structure.getMaterials().getItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Admin.Creator.Browse.Item.Structure.Displayname")
                                                 .replace("%structure", structure.getName())),
@@ -121,7 +120,7 @@ public class Creator implements Listener {
         } else {
             Structure structure = structureManager.getStructure(((Creator.Viewer) playerData.getViewer()).getName());
 
-            nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.Return.Displayname"), null, null, null, null),
                     0, 8);
 
@@ -132,7 +131,7 @@ public class Creator implements Listener {
                 displayName = ChatColor.translateAlternateColorCodes('&', structure.getDisplayname());
             }
 
-            nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG),
+            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial()),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Displayname"),
                     configLoad.getStringList("Menu.Admin.Creator.Options.Item.Displayname.Lore"),
                     new Placeholder[]{new Placeholder("%displayname", displayName)}, null, null), 1);
@@ -161,7 +160,7 @@ public class Creator implements Listener {
                 }
             }
 
-            nInv.addItem(nInv.createItem(new ItemStack(Material.ENCHANTED_BOOK),
+            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.ENCHANTED_BOOK.getMaterial()),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.Description.Displayname"), descriptionLore,
                     null, null, null), 2);
 
@@ -188,7 +187,7 @@ public class Creator implements Listener {
                 }
             }
 
-            nInv.addItem(nInv.createItem(new ItemStack(Material.BOOK),
+            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.BOOK.getMaterial()),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.Commands.Displayname"), commandsLore, null,
                     null, null), 3);
 
@@ -200,7 +199,7 @@ public class Creator implements Listener {
                 permissionLore = configLoad.getStringList("Menu.Admin.Creator.Options.Item.Permission.Enable.Lore");
             }
 
-            nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.MAP.getItem(),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.Permission.Displayname"), permissionLore,
                     new Placeholder[]{new Placeholder("%permission", structure.getPermission())}, null, null), 4);
 
@@ -226,19 +225,19 @@ public class Creator implements Listener {
                 endFileName = fileName;
             }
 
-            nInv.addItem(nInv.createItem(new ItemStack(Material.PAPER),
+            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.PAPER.getMaterial()),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.File.Displayname"),
                     configLoad.getStringList("Menu.Admin.Creator.Options.Item.File.Lore"),
                     new Placeholder[]{new Placeholder("%overworld_file", overworldFileName),
                             new Placeholder("%nether_file", netherFileName),
                             new Placeholder("%end_file", endFileName)},
                     null, null), 5);
-            nInv.addItem(nInv.createItem(new ItemStack(Material.DIAMOND),
+            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.DIAMOND.getMaterial()),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.Item.Displayname"),
                     configLoad.getStringList("Menu.Admin.Creator.Options.Item.Item.Lore"),
                     new Placeholder[]{new Placeholder("%material", structure.getMaterials().name())}, null, null),
                     6);
-            nInv.addItem(nInv.createItem(new ItemStack(Material.GOLD_NUGGET),
+            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.GOLD_NUGGET.getMaterial()),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.DeletionCost.Displayname"),
                     configLoad.getStringList("Menu.Admin.Creator.Options.Item.DeletionCost.Lore"),
                     new Placeholder[]{new Placeholder("%cost", "" + structure.getDeletionCost())}, null, null), 7);
@@ -257,7 +256,7 @@ public class Creator implements Listener {
         Player player = (Player) event.getWhoClicked();
         ItemStack is = event.getCurrentItem();
 
-        if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
+        if (event.getCurrentItem() != null && event.getCurrentItem().getType() != CompatibleMaterial.AIR.getMaterial()) {
             SkyBlock skyblock = SkyBlock.getInstance();
 
             StructureManager structureManager = skyblock.getStructureManager();
@@ -292,14 +291,14 @@ public class Creator implements Listener {
                     return;
                 }
 
-                if ((event.getCurrentItem().getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
+                if ((event.getCurrentItem().getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Browse.Item.Barrier.Displayname"))))) {
                     soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Materials.OAK_FENCE_GATE.parseMaterial())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial())
                         && (is.hasItemMeta())) {
                     if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Admin.Creator.Browse.Item.Exit.Displayname")))) {
@@ -318,7 +317,7 @@ public class Creator implements Listener {
 
                         return;
                     }
-                } else if ((event.getCurrentItem().getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_SIGN.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"))))) {
                     soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
@@ -340,7 +339,7 @@ public class Creator implements Listener {
                                         configLoad.getString("Island.Admin.Creator.Characters.Message"));
                                 soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
                             } else {
-                                structureManager.addStructure(event1.getName(), Materials.GRASS_BLOCK, null, null, null,
+                                structureManager.addStructure(event1.getName(), CompatibleMaterial.GRASS_BLOCK, null, null, null,
                                         null, false, new ArrayList<>(), new ArrayList<>(), 0.0D);
 
                                 messageManager.sendMessage(player,
@@ -375,7 +374,7 @@ public class Creator implements Listener {
                         }
                     });
 
-                    is = new ItemStack(Material.NAME_TAG);
+                    is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
                     ItemMeta im = is.getItemMeta();
                     im.setDisplayName(configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Word.Enter"));
                     is.setItemMeta(im);
@@ -384,13 +383,13 @@ public class Creator implements Listener {
                     gui.open();
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Material.BARRIER) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.BARRIER.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Browse.Item.Nothing.Displayname"))))) {
                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Material.NAME_TAG) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.NAME_TAG.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Displayname"))))) {
                     if (playerData.getViewer() == null) {
@@ -470,7 +469,7 @@ public class Creator implements Listener {
                                 }
                             });
 
-                            is = new ItemStack(Material.NAME_TAG);
+                            is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
                             ItemMeta im = is.getItemMeta();
                             im.setDisplayName(
                                     configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Word.Enter"));
@@ -492,7 +491,7 @@ public class Creator implements Listener {
                     }
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Material.ENCHANTED_BOOK) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.ENCHANTED_BOOK.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Options.Item.Description.Displayname"))))) {
                     if (playerData.getViewer() == null) {
@@ -604,7 +603,7 @@ public class Creator implements Listener {
                                 }
                             });
 
-                            is = new ItemStack(Material.NAME_TAG);
+                            is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
                             ItemMeta im = is.getItemMeta();
                             im.setDisplayName(
                                     configLoad.getString("Menu.Admin.Creator.Options.Item.Description.Word.Enter"));
@@ -626,7 +625,7 @@ public class Creator implements Listener {
                     }
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Material.BOOK) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.BOOK.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Options.Item.Commands.Displayname"))))) {
                     if (playerData.getViewer() == null) {
@@ -738,7 +737,7 @@ public class Creator implements Listener {
                                 }
                             });
 
-                            is = new ItemStack(Material.NAME_TAG);
+                            is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
                             ItemMeta im = is.getItemMeta();
                             im.setDisplayName(
                                     configLoad.getString("Menu.Admin.Creator.Options.Item.Commands.Word.Enter"));
@@ -760,7 +759,7 @@ public class Creator implements Listener {
                     }
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Materials.LEGACY_EMPTY_MAP.getPostMaterial())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.MAP.getMaterial())
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Options.Item.Permission.Displayname"))))) {
@@ -818,7 +817,7 @@ public class Creator implements Listener {
                     }
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Material.PAPER) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.PAPER.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Options.Item.File.Displayname"))))) {
                     if (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.MIDDLE
@@ -960,7 +959,7 @@ public class Creator implements Listener {
                                     }
                                 });
 
-                                is = new ItemStack(Material.NAME_TAG);
+                                is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
                                 ItemMeta im = is.getItemMeta();
                                 im.setDisplayName(
                                         configLoad.getString("Menu.Admin.Creator.Options.Item.File.Word.Enter"));
@@ -983,7 +982,7 @@ public class Creator implements Listener {
                     }
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Material.DIAMOND) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.DIAMOND.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Options.Item.Item.Displayname"))))) {
                     if (playerData.getViewer() == null) {
@@ -1024,7 +1023,7 @@ public class Creator implements Listener {
                     }
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Material.GOLD_NUGGET) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.GOLD_NUGGET.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Creator.Options.Item.DeletionCost.Displayname"))))) {
                     if (playerData.getViewer() == null) {
@@ -1115,7 +1114,7 @@ public class Creator implements Listener {
                                 }
                             });
 
-                            is = new ItemStack(Material.NAME_TAG);
+                            is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
                             ItemMeta im = is.getItemMeta();
                             im.setDisplayName(
                                     configLoad.getString("Menu.Admin.Creator.Options.Item.DeletionCost.Word.Enter"));
@@ -1145,14 +1144,8 @@ public class Creator implements Listener {
                     if (viewer.isItem()) {
                         if (structureManager.containsStructure(viewer.getName())) {
                             Structure structure = structureManager.getStructure(viewer.getName());
-                            Materials materials = null;
-
-                            if (NMSUtil.getVersionNumber() < 13) {
-                                materials = Materials.requestMaterials(event.getCurrentItem().getType().name(),
-                                        (byte) event.getCurrentItem().getDurability());
-                            } else {
-                                materials = Materials.fromString(event.getCurrentItem().getType().name());
-                            }
+                            CompatibleMaterial materials = CompatibleMaterial.getMaterial(event.getCurrentItem().getType());
+                            materials.getItem().setData(event.getCurrentItem().getData());
 
                             if (materials != null) {
                                 structure.setMaterials(materials);
@@ -1200,7 +1193,7 @@ public class Creator implements Listener {
 
                 if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                     for (Structure structureList : structureManager.getStructures()) {
-                        if (event.getCurrentItem().getType() == structureList.getMaterials().parseMaterial()
+                        if (event.getCurrentItem().getType() == structureList.getMaterials().getMaterial()
                                 && ChatColor.stripColor(is.getItemMeta().getDisplayName())
                                 .equals(structureList.getName())) {
                             if (event.getClick() == ClickType.LEFT) {

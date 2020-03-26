@@ -1,5 +1,6 @@
 package com.songoda.skyblock.utils.world;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -8,7 +9,6 @@ import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.math.VectorUtil;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.*;
@@ -119,17 +119,17 @@ public final class LocationUtil {
             final Block block = world.getBlockAt(blockX, y, blockZ).getRelative(BlockFace.UP);
 
             if (isNether) {
-                if (y < 127 && (block.getType() == Material.LAVA || block.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getType() == Material.AIR)) {
+                if (y < 127 && (block.getType() == Material.LAVA || block.getType() == CompatibleMaterial.LAVA.getMaterial() || block.getType() == Material.AIR)) {
                     maxY = y;
                     break;
                 }
             } else {
-                if (block.getType() == Materials.OAK_LEAVES.parseMaterial() || block.getType() == Materials.ACACIA_LEAVES.parseMaterial()) {
+                if (block.getType() == CompatibleMaterial.OAK_LEAVES.getMaterial() || block.getType() == CompatibleMaterial.ACACIA_LEAVES.getMaterial()) {
                     break;
                 }
 
-                if (block.getType() == Material.AIR || block.getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial() || block.getType() == Material.WATER
-                        || block.getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial() || block.getType() == Material.LAVA) {
+                if (block.getType() == Material.AIR || block.getType() == CompatibleMaterial.WATER.getMaterial() || block.getType() == Material.WATER
+                        || block.getType() == CompatibleMaterial.LAVA.getMaterial() || block.getType() == Material.LAVA) {
                     if (!followY) {
                         maxY = y;
                         followY = true;

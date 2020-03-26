@@ -1,20 +1,21 @@
 package com.songoda.skyblock.localization.type.impl;
 
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.core.compatibility.CompatibleMaterial;
+ 
 
-public class MaterialsLocalization extends EnumLocalization<Materials> {
+public class MaterialsLocalization extends EnumLocalization<CompatibleMaterial> {
 
     public MaterialsLocalization(String keysPath) {
-        super(keysPath, Materials.class);
+        super(keysPath, CompatibleMaterial.class);
     }
 
     @Override
-    public Materials parseEnum(String input) {
-        return Materials.fromString(input);
+    public CompatibleMaterial parseEnum(String input) {
+        return CompatibleMaterial.getMaterial(input);
     }
 
     @Override
-    public String getDefaultLocaleFor(Materials obj) {
+    public String getDefaultLocaleFor(CompatibleMaterial obj) {
         return super.getDefaultLocaleFor(obj).replace("_", " ");
     }
 

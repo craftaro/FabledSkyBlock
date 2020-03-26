@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.utils.version.Materials;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -48,7 +50,7 @@ import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
@@ -91,9 +93,9 @@ public class Block implements Listener {
         }
 
         if (stackableManager != null && stackableManager.isStacked(blockLocation)) {
-            Stackable stackable = stackableManager.getStack(block.getLocation(), Materials.getMaterials(block.getType(), block.getData()));
+            Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getBlockMaterial(block.getType()));
             if (stackable != null) {
-                Material material = block.getType();
+                CompatibleMaterial material = CompatibleMaterial.getBlockMaterial(block.getType());
                 byte data = block.getData();
 
                 int droppedAmount = 0;
@@ -102,14 +104,14 @@ public class Block implements Listener {
                     int count = stackable.getSize();
                     droppedAmount = count;
                     while (count > 64) {
-                        dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material, 64, data));
+                        dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material.getMaterial(), 64, data));
                         count -= 64;
                     }
-                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material, count, block.getData()));
+                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material.getMaterial(), count, block.getData()));
                     block.setType(Material.AIR);
                     stackable.setSize(0);
                 } else {
-                    block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5), new ItemStack(material, 1, data));
+                    block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5), new ItemStack(material.getMaterial(), 1, data));
                     stackable.takeOne();
                     droppedAmount = 1;
                 }
@@ -122,17 +124,16 @@ public class Block implements Listener {
                 FileConfiguration configLoad = config.getFileConfiguration();
 
                 if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-                    Materials materials = Materials.getMaterials(material, data);
-                    if (materials != null) {
+                    if (material != null) {
                         IslandLevel level = island.getLevel();
 
-                        if (level.hasMaterial(materials.name())) {
-                            long materialAmount = level.getMaterialAmount(materials.name());
+                        if (level.hasMaterial(material.name())) {
+                            long materialAmount = level.getMaterialAmount(material.name());
 
                             if (materialAmount - droppedAmount <= 0) {
-                                level.removeMaterial(materials.name());
+                                level.removeMaterial(material.name());
                             } else {
-                                level.setMaterialAmount(materials.name(), materialAmount - droppedAmount);
+                                level.setMaterialAmount(material.name(), materialAmount - droppedAmount);
                             }
                         }
                     }

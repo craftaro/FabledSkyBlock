@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.utils.version.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,34 +34,33 @@ import com.songoda.skyblock.levelling.rework.calculator.impl.UltimateStackerCalc
 import com.songoda.skyblock.levelling.rework.calculator.impl.WildStackerCalculator;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.StackableManager;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.NMSUtil;
 
 public final class IslandLevelManager {
 
-    private static final Set<Materials> CHECKED_DOUBLE_TYPES;
+    private static final Set<CompatibleMaterial> CHECKED_DOUBLE_TYPES;
 
     static {
-        CHECKED_DOUBLE_TYPES = EnumSet.noneOf(Materials.class);
+        CHECKED_DOUBLE_TYPES = EnumSet.noneOf(CompatibleMaterial.class);
 
-        CHECKED_DOUBLE_TYPES.add(Materials.SUNFLOWER);
-        CHECKED_DOUBLE_TYPES.add(Materials.LILAC);
-        CHECKED_DOUBLE_TYPES.add(Materials.LEGACY_DOUBLE_PLANT);
-        CHECKED_DOUBLE_TYPES.add(Materials.LARGE_FERN);
-        CHECKED_DOUBLE_TYPES.add(Materials.ROSE_BUSH);
-        CHECKED_DOUBLE_TYPES.add(Materials.PEONY);
-        CHECKED_DOUBLE_TYPES.add(Materials.TALL_GRASS);
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.SUNFLOWER);
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.LILAC);
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.LARGE_FERN);
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.ROSE_BUSH);
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.PEONY);
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.TALL_GRASS);
     }
 
     private final static int VERSION = NMSUtil.getVersionNumber();
     private Map<Island, IslandScan> inScan;
-    private Map<Materials, Long> worth;
-    private Map<Materials, AmountMaterialPair> cachedPairs;
+    private Map<CompatibleMaterial, Long> worth;
+    private Map<CompatibleMaterial, AmountMaterialPair> cachedPairs;
 
     public IslandLevelManager() {
         this.inScan = new HashMap<>();
-        this.worth = new EnumMap<>(Materials.class);
-        this.cachedPairs = new EnumMap<>(Materials.class);
+        this.worth = new EnumMap<>(CompatibleMaterial.class);
+        this.cachedPairs = new EnumMap<>(CompatibleMaterial.class);
         registerCalculators();
         reloadWorth();
     }
@@ -68,10 +69,8 @@ public final class IslandLevelManager {
         return CHECKED_DOUBLE_TYPES.contains(parseType(block));
     }
 
-    @SuppressWarnings("deprecation")
-    private static Materials parseType(Block block) {
-        final Material blockType = block.getType();
-        return VERSION > 12 ? Materials.fromString(blockType.name()) : Materials.requestMaterials(blockType.name(), block.getData());
+    private static CompatibleMaterial parseType(Block block) {
+        return CompatibleMaterial.getBlockMaterial(block.getType());
     }
 
     public void startScan(Player attemptScanner, Island island) {
@@ -129,19 +128,19 @@ public final class IslandLevelManager {
 
             final ConfigurationSection current = materialSection.getConfigurationSection(key);
 
-            final Materials material = Materials.fromString(key);
+            final CompatibleMaterial material = CompatibleMaterial.getMaterial(key);
 
-            if (material == null || !material.isAvailable()) continue;
+            if (material == null) continue;
 
             worth.put(material, current.getLong("Points"));
         }
     }
 
-    public void addWorth(Materials material, long points) {
+    public void addWorth(CompatibleMaterial material, long points) {
         worth.put(material, points);
     }
 
-    public void removeWorth(Materials material) {
+    public void removeWorth(CompatibleMaterial material) {
         worth.remove(material);
     }
 
@@ -149,27 +148,27 @@ public final class IslandLevelManager {
 
         final List<LevellingMaterial> materials = new ArrayList<>(worth.size());
 
-        for (Entry<Materials, Long> entry : worth.entrySet()) {
+        for (Entry<CompatibleMaterial, Long> entry : worth.entrySet()) {
             materials.add(new LevellingMaterial(entry.getKey(), entry.getValue()));
         }
 
         return materials;
     }
 
-    public Map<Materials, Long> getWorths() {
+    public Map<CompatibleMaterial, Long> getWorths() {
         return worth;
     }
 
-    public long getWorth(Materials material) {
+    public long getWorth(CompatibleMaterial material) {
         return worth.getOrDefault(material, 0L);
     }
 
-    public boolean hasWorth(Materials material) {
+    public boolean hasWorth(CompatibleMaterial material) {
         return worth.containsKey(material);
     }
 
     private void registerCalculators() {
-        final Material spawner = Materials.SPAWNER.parseMaterial();
+        final CompatibleMaterial spawner = CompatibleMaterial.SPAWNER;
         final PluginManager pm = Bukkit.getPluginManager();
 
         if (pm.isPluginEnabled("EpicSpawners")) CalculatorRegistry.registerCalculator(new EpicSpawnerCalculator(), spawner);
@@ -182,11 +181,11 @@ public final class IslandLevelManager {
     AmountMaterialPair getAmountAndType(IslandScan scan, BlockInfo info) {
 
         Block block = info.getWorld().getBlockAt(info.getX(), info.getY(), info.getZ());
-        Material blockType = block.getType();
+        CompatibleMaterial blockType = CompatibleMaterial.getBlockMaterial(block.getType());
 
-        if (blockType == Material.AIR) return EMPTY;
+        if (blockType == CompatibleMaterial.AIR) return EMPTY;
 
-        Materials finalType = parseType(block);
+        CompatibleMaterial finalType = parseType(block);
 
         if (finalType == null) return EMPTY;
 
@@ -197,18 +196,21 @@ public final class IslandLevelManager {
         if (CHECKED_DOUBLE_TYPES.contains(finalType)) {
 
             final Block belowBlock = block.getRelative(BlockFace.DOWN);
-            final Materials belowType = parseType(belowBlock);
+            final CompatibleMaterial belowType = parseType(belowBlock);
 
             if (CHECKED_DOUBLE_TYPES.contains(belowType)) {
                 block = belowBlock;
-                blockType = belowType.parseMaterial();
+                blockType = belowType;
                 scan.getDoubleBlocks().add(belowBlock.getLocation());
             } else {
                 scan.getDoubleBlocks().add(block.getRelative(BlockFace.UP).getLocation());
             }
 
-        } else if (finalType == Materials.SPAWNER) {
-            finalType = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+        } else if (finalType == CompatibleMaterial.SPAWNER) {
+            //finalType = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+            //finalType = CompatibleMaterial.getBlockMaterial(block.getType());
+            //finalType = CompatibleMaterial.getBlockMaterial(Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType()).getPostMaterial());
+            //TODO: Brianna
         }
 
         final List<Calculator> calculators = CalculatorRegistry.getCalculators(blockType);

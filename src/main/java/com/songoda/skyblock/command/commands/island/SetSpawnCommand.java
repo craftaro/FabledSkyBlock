@@ -1,12 +1,13 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -59,15 +60,14 @@ public class SetSpawnCommand extends SubCommand {
 
                             if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
-                                if (location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR
-                                        || location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock()
-                                        .getType() == Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial()
-                                        || location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock()
-                                        .getType() == Material.ICE
-                                        || location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock()
-                                        .getType() == Material.LEGACY_PISTON_EXTENSION
-                                        || location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock()
-                                        .getType() == Material.PISTON_HEAD) {
+
+                                CompatibleMaterial toCompare = CompatibleMaterial.getMaterial(location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType());
+
+                                if(toCompare == CompatibleMaterial.AIR
+                                        || toCompare == CompatibleMaterial.MOVING_PISTON
+                                        || toCompare == CompatibleMaterial.ICE
+                                        || toCompare == CompatibleMaterial.PISTON_HEAD) {
+
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.SetSpawn.Protection.Block.Message"));
                                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
@@ -86,21 +86,21 @@ public class SetSpawnCommand extends SubCommand {
                                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
                                     return;
-                                } else if (location.getBlock().getType() == Materials.NETHER_PORTAL.parseMaterial()
-                                        || location.clone().add(0.0D, 1.0D, 0.0D).getBlock()
-                                        .getType() == Materials.NETHER_PORTAL.parseMaterial()) {
+                                } else if (CompatibleMaterial.getMaterial(location.getBlock().getType()) == CompatibleMaterial.NETHER_PORTAL
+                                        || CompatibleMaterial.getMaterial(location.clone().add(0.0D, 1.0D, 0.0D).getBlock()
+                                        .getType()) == CompatibleMaterial.NETHER_PORTAL) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.SetSpawn.Protection.Portal.Message"));
                                     soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
 
                                     return;
                                 } else {
-                                    Material type = location.getBlock().getType();
+                                    CompatibleMaterial type = CompatibleMaterial.getMaterial(location.getBlock().getType());
                                     if (type.isSolid() && type.isOccluding()) {
                                         location.getBlock().breakNaturally();
                                     }
 
-                                    Material typeBelow = location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType();
+                                    CompatibleMaterial typeBelow = CompatibleMaterial.getMaterial(location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType());
                                     if (typeBelow.isSolid() && type.isOccluding()) {
                                         location.clone().add(0.0D, 1.0D, 0.0D).getBlock().breakNaturally();
                                     }

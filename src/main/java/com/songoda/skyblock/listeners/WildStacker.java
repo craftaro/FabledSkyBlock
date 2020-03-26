@@ -6,6 +6,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
+
 import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -37,6 +38,7 @@ public class WildStacker implements Listener {
 
         Island island = islandManager.getIslandAtLocation(location);
 
+        //TODO: Somehow play with this
         Material material = event.getBarrel().getType();
         byte data = (byte) event.getBarrel().getData();
 

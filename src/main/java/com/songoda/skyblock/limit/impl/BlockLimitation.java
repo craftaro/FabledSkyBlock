@@ -3,6 +3,9 @@ package com.songoda.skyblock.limit.impl;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.utils.version.Materials;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -11,12 +14,12 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.limit.EnumLimitation;
 import com.songoda.skyblock.utils.player.PlayerUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 
-public final class BlockLimitation extends EnumLimitation<Materials> {
+public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
     public BlockLimitation() {
-        super(Materials.class);
+        super(CompatibleMaterial.class);
     }
 
     @Override
@@ -25,7 +28,7 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
     }
 
     @Override
-    public boolean hasTooMuch(long currentAmount, Enum<Materials> type) {
+    public boolean hasTooMuch(long currentAmount, Enum<CompatibleMaterial> type) {
         throw new UnsupportedOperationException("Not implemented. Use getBlockLimit and isBlockLimitExceeded instead.");
     }
 
@@ -41,7 +44,7 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
 
         for (String key : keys) {
             final String enumName = key.toUpperCase(Locale.ENGLISH);
-            final Materials type = Materials.fromString(enumName);
+            final CompatibleMaterial type =  CompatibleMaterial.getMaterial(enumName);
 
             if (type == null) throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
 
@@ -74,6 +77,7 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
         final Island island = islandManager.getIslandAtLocation(block.getLocation());
         final long totalPlaced;
 
+        //TODO: REdo for CompatibleMaterial
         if (block.getType() == Materials.SPAWNER.parseMaterial()) {
             totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {

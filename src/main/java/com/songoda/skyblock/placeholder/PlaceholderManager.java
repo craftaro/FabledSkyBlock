@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,7 +25,7 @@ import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.upgrade.Upgrade.Type;
 import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.visit.VisitManager;
 
 public class PlaceholderManager {
@@ -343,7 +344,7 @@ public class PlaceholderManager {
                         configLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Empty.Message"));
             } else {
                 String materialName = placeholder.replace("fabledskyblock_island_level_block_count_", "").toUpperCase();
-                Materials materials = Materials.fromString(materialName);
+                CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
                 if (materials == null) {
                     return ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Invalid.Message"));
@@ -360,7 +361,7 @@ public class PlaceholderManager {
                         configLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Empty.Message"));
             } else {
                 String materialName = placeholder.replace("fabledskyblock_island_level_block_points_", "").toUpperCase();
-                Materials materials = Materials.fromString(materialName);
+                CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
                 if (materials == null) {
                     return ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Invalid.Message"));
@@ -373,7 +374,7 @@ public class PlaceholderManager {
             }
         } else if (placeholder.toLowerCase().startsWith("fabledskyblock_level_block_value_")) {
             String materialName = placeholder.replace("fabledskyblock_level_block_value_", "").toUpperCase();
-            Materials materials = Materials.fromString(materialName);
+            CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
             if (materials == null) {
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_level_block_value.Invalid.Message"));

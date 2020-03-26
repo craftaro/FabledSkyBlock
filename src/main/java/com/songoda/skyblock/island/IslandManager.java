@@ -1,6 +1,7 @@
 package com.songoda.skyblock.island;
 
 import com.google.common.base.Preconditions;
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.ban.BanManager;
@@ -26,7 +27,6 @@ import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.player.PlayerUtil;
 import com.songoda.skyblock.utils.structure.SchematicUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.SBiome;
 import com.songoda.skyblock.utils.version.Sounds;
@@ -192,7 +192,6 @@ public class IslandManager {
                 skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.MaxCreationMessage"));
                 return false;
             }
-
         }
 
         if (fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
@@ -1171,13 +1170,13 @@ public class IslandManager {
     public void removeSpawnProtection(org.bukkit.Location location) {
         Block block = location.getBlock();
 
-        if (block.getType() == Materials.MOVING_PISTON.parseMaterial()) {
+        if (CompatibleMaterial.getMaterial(block.getType()) == CompatibleMaterial.MOVING_PISTON) {
             block.setType(Material.AIR);
         }
 
         block = location.clone().add(0.0D, 1.0D, 0.0D).getBlock();
 
-        if (block.getType() == Materials.MOVING_PISTON.parseMaterial()) {
+        if (CompatibleMaterial.getMaterial(block.getType()) == CompatibleMaterial.MOVING_PISTON) {
             block.setType(Material.AIR);
         }
     }
