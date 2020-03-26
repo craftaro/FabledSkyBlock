@@ -18,11 +18,14 @@ import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
@@ -173,4 +176,20 @@ public class Teleport implements Listener {
             }
         }
     }
+    
+    @EventHandler
+	public void onEntityTeleport(EntityPortalEvent e) {
+		WorldManager worldManager = skyblock.getWorldManager();
+		// Do not handle player
+		if (e.getEntityType() == EntityType.PLAYER)
+			return;
+		Location from = e.getFrom();
+		Location to = e.getTo();
+		// Test which world the event is from
+		if (from.getWorld() == to.getWorld())
+			return;
+
+		if (worldManager.getIslandWorld(e.getFrom().getWorld()) != null)
+			e.setCancelled(true);
+	}
 }
