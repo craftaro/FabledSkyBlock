@@ -3,6 +3,7 @@ package com.songoda.skyblock.command.commands.admin;
 import java.io.File;
 import java.util.Map;
 
+import com.songoda.skyblock.island.reward.RewardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -83,6 +84,9 @@ public class ReloadCommand extends SubCommand {
 
         IslandLevelManager levellingManager = skyblock.getLevellingManager();
         levellingManager.reloadWorth();
+
+        RewardManager rewardManager = skyblock.getRewardManager();
+        rewardManager.loadRewards();
 
         Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
             leaderboardManager.clearLeaderboard();

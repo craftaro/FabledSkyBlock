@@ -1,8 +1,11 @@
 package com.songoda.skyblock.island;
 
+import com.songoda.core.locale.Message;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
-
+import com.songoda.skyblock.island.reward.LevelReward;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -25,6 +28,9 @@ public class IslandLevel {
 
     private Map<String, Long> materials;
 
+    // Highest level achieved, to prevent reward farming (since is level can decrease)
+    private long highestLevel;
+
     public IslandLevel(UUID ownerUUID, SkyBlock skyblock) {
         this.skyblock = skyblock;
         this.ownerUUID = ownerUUID;
@@ -44,14 +50,17 @@ public class IslandLevel {
                 ConfigurationSection current = section.getConfigurationSection(material);
 
                 if (current.isSet("Amount")) materials.put(material, current.getLong("Amount"));
-
             }
-
         } else {
             materials = new HashMap<>();
         }
 
         this.materials = materials;
+
+        if (configLoad.contains("Levelling.Highest-Level"))
+            this.highestLevel = configLoad.getLong("Levelling.Highest-Level");
+        else
+            this.highestLevel = getLevel();
     }
 
     public void setOwnerUUID(UUID ownerUUID) {
@@ -111,6 +120,33 @@ public class IslandLevel {
         }
 
         return getPoints() / division;
+    }
+
+    public void checkLevelUp() {
+
+        long level = getLevel();
+
+        // Island Level increased above highest
+        if (level > highestLevel) {
+
+            OfflinePlayer offlinePlayer = Bukkit.getPlayer(ownerUUID);
+
+            // Reward the player for each level reached
+            if (offlinePlayer != null && offlinePlayer.isOnline()) {
+                for (int i = (int) highestLevel; i <= level; i++) {
+                    LevelReward levelReward = skyblock.getRewardManager().getReward(i);
+
+                    if (levelReward == null)
+                        continue;
+
+                    levelReward.give(offlinePlayer.getPlayer(), skyblock);
+                }
+
+                new Message("You have reached island level " + level).sendMessage(offlinePlayer.getPlayer());
+            }
+
+            setHighestLevel(level);
+        }
     }
 
     public void setMaterialAmount(String material, long amount) {
@@ -182,5 +218,18 @@ public class IslandLevel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public long getHighestLevel() {
+        return highestLevel;
+    }
+
+    public void setHighestLevel(long highestLevel) {
+        Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
+
+        configLoad.set("Levelling.Highest-Level", highestLevel);
+
+        this.highestLevel = highestLevel;
     }
 }

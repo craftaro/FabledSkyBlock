@@ -18,6 +18,7 @@ import com.songoda.skyblock.generator.GeneratorManager;
 import com.songoda.skyblock.hologram.HologramManager;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.reward.RewardManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
@@ -79,6 +80,7 @@ public class SkyBlock extends SongodaPlugin {
     private HologramManager hologramManager;
     private LimitationInstanceHandler limitationHandler;
     private LocalizationManager localizationManager;
+    private RewardManager rewardManager;
     private FabledChallenge fabledChallenge;
 
     public static SkyBlock getInstance() {
@@ -138,6 +140,9 @@ public class SkyBlock extends SongodaPlugin {
 
         messageManager = new MessageManager(this);
         hologramManager = new HologramManager(this);
+
+        rewardManager = new RewardManager(this);
+        rewardManager.loadRewards();
 
         new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
         new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -342,6 +347,10 @@ public class SkyBlock extends SongodaPlugin {
 
     public LocalizationManager getLocalizationManager() {
         return localizationManager;
+    }
+
+    public RewardManager getRewardManager() {
+        return rewardManager;
     }
     
     public FabledChallenge getFabledChallenge() {

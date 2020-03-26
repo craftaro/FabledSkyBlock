@@ -1,0 +1,11 @@
+# FabledSkyblock Island level rewards
+1:
+  # Vault balance
+  money: 100
+  # Commands ran by console
+  commands:
+    - 'say %player% reached level 1!'
+2:
+  money: 100
+  commands:
+    - 'say %player% reached level 1!'

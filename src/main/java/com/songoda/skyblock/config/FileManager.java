@@ -70,6 +70,7 @@ public class FileManager {
         configFiles.put("generators.yml", new File(skyblock.getDataFolder(), "generators.yml"));
         configFiles.put("stackables.yml", new File(skyblock.getDataFolder(), "stackables.yml"));
         configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
+        configFiles.put("rewards.yml", new File(skyblock.getDataFolder(), "rewards.yml"));
         configFiles.put("structures/default.structure", new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
         configFiles.put("challenges.yml", new File(skyblock.getDataFolder(), "challenges.yml"));
 
