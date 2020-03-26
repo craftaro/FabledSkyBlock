@@ -1,140 +1,1876 @@
-#
-#     _______   __       _______   ___       _______  ________    ________  __   ___  ___  ___  _______   ___        ______    ______   __   ___  
-#    /"     "| /""\     |   _  "\ |"  |     /"     "||"      "\   /"       )|/"| /  ")|"  \/"  ||   _  "\ |"  |      /    " \  /" _  "\ |/"| /  ") 
-#   (: ______)/    \    (. |_)  :)||  |    (: ______)(.  ___  :) (:   \___/ (: |/   /  \   \  / (. |_)  :)||  |     // ____  \(: ( \___)(: |/   /  
-#    \/    | /' /\  \   |:     \/ |:  |     \/    |  |: \   ) ||  \___  \   |    __/    \\  \/  |:     \/ |:  |    /  /    ) :)\/ \     |    __/   
-#    // ___)//  __'  \  (|  _  \\  \  |___  // ___)_ (| (___\ ||   __/  \\  (// _  \    /   /   (|  _  \\  \  |___(: (____/ // //  \ _  (// _  \   
-#   (:  (  /   /  \\  \ |: |_)  :)( \_|:  \(:      "||:       :)  /" \   :) |: | \  \  /   /    |: |_)  :)( \_|:  \\        / (:   _) \ |: | \  \  
-#    \__/ (___/    \___)(_______/  \_______)\_______)(________/  (_______/  (__|  \__)|___/     (_______/  \_______)\"_____/   \_______)(__|  \__) 
-#
-# Challenges reward players and keep their play retention.
-challenges:
-    # Categories allow you to be able to sort challenges.
-    # Users can sort in the challenges menu to pick challlenge categories they may be interested in.
-    # You can add more categories if you want.
-    categories:
-        - "FARMING"
-        - "CRAFTING"
-        - "MINING"
-        - "LEVELING"
-    # Difficulties define how hard a challenge is.
-    # Users can sort through challenges via difficulty.
-    # And it's displayed on each item if the challenge defines a difficulty.
-    difficulty:
-        1: "NOVICE"
-        2: "HARD"
-        3: "ADVANCED"
-    # Used globally to tell the player if they have started the challenge.
-    started-lore-addition: "&6You have started progress on this challenge."
-    # If the items in the challenge menu should glow when they have been started.
-    # Glow is the enchanted effect that hides the enchantment.
-    glowing-when-started: true
-    # The name of this challenge.
-    tree-grower:
-        # The display on items etc.
-        title: "&2&lTree Grower"
-        # The material representing the challenge in the challenge menu.
-        material: "OAK_SAPLING"
-        # Material meta is Bukkit's ItemMeta, The string will be used as a ItemMeta object, anything that the Material has as in ItemMeta will be accepted.
-        # Example: A skull for material and a player's name in the meta string, will set the skull to the player's skull.
-        #material-meta: "MHF_ArrowLeft"
-        # When this require is complete this is what the item will be displayed:
-        complete:
-            title: "&2&lTree Grower"
-            material: "OAK_SAPLING"
-            glowing: false
-            #material-meta: "MHF_ArrowLeft"
-            lore:
-                - "&aYou have completed this challenge"
-        # Define how many levels their are.
-        # Each level will be required before the other one.
-        levels:
-            # The number spot of this level. lower numbers become lower levels and will be required first.
-            1:
-                difficulty: "NOVICE"
-                category: "FARMING"
-                # The description of the challenge at this level.
-                # Placeholders:
-                #   %number% - the amount required.
-                #   %progress% - how many they have done.
-                #   %left% - how much is left.
-                description:
-                    - "&7Grow %number% trees to unlock."
-                    - "&e&l%left%&e more trees required."
-                    - ""
-                    - "&6Rewards: All sapplings."
-                # Conditions are what tell Skyblock when to award/count the challenge.
-                conditions:
-                    # Require an action to be completed X amount of times. X being the required number.
-                    action:
-                        # ACTIONS ARE PREDEFINED, COMING SOON A LIST OF THEM, TODO LIMEGLASS, UPDATE AND REMOVE THIS COMMENT WHEN FINISHED.
-                        type: "grow-tree"
-                        # How many values are required.
-                        # AKA how many times do they have to grow a tree.
-                        required: 5
-                    # You can have multiple conditions;
-                    # An example of an item requirement.
-                    #item:
-                    #    material: "ACACIA_SAPLING"
-                    #    required: 5
-                    # Example of a permission requirement.
-                    #permission: "skyblock.treegrower.challenge.1"
-                    # Blocks condition will scan the nearby blocks in a 10 block radius.
-                    #blocks:
-                    #   material: "STONE"
-                    #   required: 5
-                    # Entities condition will scan the nearby entities in a 10 block radius.
-                    #entities:
-                    #   entity: "PIG"
-                    #   required: 5
-                    # Level means the island level must meet this requirement to comeplete the challenge.
-                    #level:
-                    #   required: 10
-                    # Statistics is something I might add, it would be used with the actions since I have to add actions anyways, This area is not 100% confirmed. - Lime
-                    # statistics:
-                    #   statistic: "something"
-                    #   required: 69
+# The default template for the inventory
+inventory:
+    # The number of rows of inventory (Between 1 and 6)
+  size: 4
+  items:
+    1:
+      # The position in inventory
+      row: 1
+      col: 1
+      # The item
+      item: BLACK_STAINED_GLASS_PANE
+      # The amount of the item
+      amount: 1
+      # The name of the item
+      name: ''
+      # The lore of the item
+      lore:
+      - ''
+      # Redirect to specific category when a player clicks on this item
+      # Remove it or set to 0 to disable redirection on specific item
+      redirect: 0
+    2:
+      row: 1
+      col: 2
+      item: RED_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    3:
+      row: 1
+      col: 3
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    4:
+      row: 1
+      col: 4
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    5:
+      row: 1
+      col: 5
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    6:
+      row: 1
+      col: 6
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    7:
+      row: 1
+      col: 7
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    8:
+      row: 1
+      col: 8
+      item: RED_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    9:
+      row: 1
+      col: 9
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    10:
+      row: 2
+      col: 1
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    11:
+      row: 2
+      col: 2
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    12:
+      row: 2
+      col: 3
+      item: RED_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    13:
+      row: 2
+      col: 4
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    14:
+      row: 2
+      col: 5
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    15:
+      row: 2
+      col: 6
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    16:
+      row: 2
+      col: 7
+      item: RED_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    17:
+      row: 2
+      col: 8
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    18:
+      row: 2
+      col: 9
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    19:
+      row: 3
+      col: 1
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    20:
+      row: 3
+      col: 2
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    21:
+      row: 3
+      col: 3
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    22:
+      row: 3
+      col: 4
+      item: RED_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    23:
+      row: 3
+      col: 5
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    24:
+      row: 3
+      col: 6
+      item: RED_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    25:
+      row: 3
+      col: 7
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    26:
+      row: 3
+      col: 8
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    27:
+      row: 3
+      col: 9
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    28:
+      row: 4
+      col: 1
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    29:
+      row: 4
+      col: 2
+      item: EXPERIENCE_BOTTLE
+      amount: 1
+      name: '&2Category 1'
+      lore:
+      - '&c&l&nCategory 1'
+      redirect: 1
+    30:
+      row: 4
+      col: 3
+      item: EXPERIENCE_BOTTLE
+      amount: 1
+      name: '&2Category 2'
+      lore:
+      - '&c&l&nCategory 2'
+      redirect: 2
+    31:
+      row: 4
+      col: 4
+      item: EXPERIENCE_BOTTLE
+      amount: 1
+      name: '&2Category 3'
+      lore:
+      - '&c&l&nCategory 3'
+      redirect: 3
+    32:
+      row: 4
+      col: 5
+      item: RED_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
+    33:
+      row: 4
+      col: 6
+      item: EXPERIENCE_BOTTLE
+      amount: 1
+      name: '&2Category 4'
+      lore:
+      - '&c&l&nCategory 4'
+      redirect: 4
+    34:
+      row: 4
+      col: 7
+      item: EXPERIENCE_BOTTLE
+      amount: 1
+      name: '&2Category 5'
+      lore:
+      - '&c&l&nCategory 5'
+      redirect: 5
+    35:
+      row: 4
+      col: 8
+      item: EXPERIENCE_BOTTLE
+      amount: 1
+      name: '&2Category 6'
+      lore:
+      - '&c&l&nCategory 6'
+      redirect: 6
+    36:
+      row: 4
+      col: 9
+      item: BLACK_STAINED_GLASS_PANE
+      amount: 1
+      name: ''
+      lore:
+      - ''
 
-                # How the player should be rewarded when completing this level.
-                # Reward types include
-                rewards:
-                    # Add X amount of economy to one of the supported economy hook plugins.
-                    #economy:
-                    #   amount: 500
-                    # Example of command execution.
-                    #command:
-                    #   command: "/example %player%"
-                    #   #If this should be ran as a console command or player command.
-                    #   console-command: true
-                    #   as-op: false
-                    # Reward experience.
-                    #experience:
-                    #   amount: 10
-                    # Give them an item for completing.
-                    give-item:
-                        # If you want to set a title for the reward item.
-                        #title: ""
-                        # How many of this item to give.
-                        amount: 1
-                        # The name of the material, for 1.13+ you can find a Material list here https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
-                        material: "OAK_SAPLING"
-                        #material-meta: "LimeGlass"
-                        # If you want to add lores to the item.
-                        #lore:
-                        #    - "&7line1"
-                        #    - "&a&lline2"
-                    give-item:
-                        amount: 1
-                        material: "ACACIA_SAPLING"
-                    give-item:
-                        amount: 1
-                        material: "BAMBOO_SAPLING"
-                    give-item:
-                        amount: 1
-                        material: "BIRCH_SAPLING"
-                    give-item:
-                        amount: 1
-                        material: "DARK_OAK_SAPLING"
-                    give-item:
-                        amount: 1
-                        material: "DARK_OAK_SAPLING"
+challenges:
+  '1':
+    # The id of the category
+    id: 1
+    # The name of the category
+    name: '&cDébutants'
+    # All challenges
+    challenges:
+      '1':
+        # The id of the challenge
+        id: 1
+        # The name of the challenge
+        name: '&2Mineur'
+        # The requirement
+        # ITEM:<item> <count> ==> the player needs <count> <item>
+        # LEVEL:<level> ==> the player's island needs to be at least <level> level
+        # NEAR:<EntityType> <amount> ==> <amount> of <EntityType> must be next to the player
+        # POTION:<PotionType> <data> <amount>
+        # data must be: 0 = normal potion, 1 = extended, 2 = ++, 3 = splash, 4 = splash extended, 5 = splash ++, 6 = lingering, 7 = lingering extended, 8 = lingering ++
+        require:
+        - 'ITEM:cobblestone 128'
+        # The reward
+        # ITEM:<item> <count> means the player will have <count> <item> when the challenge is done
+        # CMD:<cmd> means a command will be executed by the console when the challenge is done
+        reward:
+        - 'CMD:eco give {player} 100'
+        - 'ITEM:iron_ingot 20'
+        - 'ITEM:name_tag 1'
+        # The maximum amount of time this challenge is repeatable
+        maxtimes: 5
+        # If true, broadcast a message when this challenge is completed
+        showInChat: true
+        item:
+          show: true
+          # The position in inventory
+          row: 1
+          col: 3
+          # The item
+          item: cobblestone
+          # The amount of this item
+          amount: 1
+          # The lore of this item
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 2 stacks de cobble'
+          - '&c&lEt tu gagneras :'
+          - '&e- 100 francs'
+          - '&e- 20 lingots de fer'
+          - '&e- 1 name tag'
+      '2':
+        id: 2
+        name: '&2Bûcheron'
+        require:
+        - 'ITEM:oak_log 32'
+        - 'ITEM:spruce_log 32'
+        - 'ITEM:birch_log 32'
+        - 'ITEM:jungle_log 32'
+        - 'ITEM:acacia_log 32'
+        - 'ITEM:dark_oak_log 32'
+        reward:
+        - 'CMD:eco give {player} 200'
+        - 'ITEM:iron_ingot 24'
+        - 'ITEM:leather 32'
+        maxtimes: 5
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 4
+          item: oak_log
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 32 bûches de chaque arbres'
+          - '&c&lEt tu gagneras :'
+          - '&e- 200 francs'
+          - '&e- 24 lingots de fer'
+          - '&e- 32 cuirs'
+      '3':
+        id: 3
+        name: '&2Ça pique'
+        require:
+        - 'ITEM:cactus_green 48'
+        reward:
+        - 'CMD:eco give {player} 200'
+        - 'ITEM:sand 24'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 5
+          item: cactus_green
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 48 cactus cuits'
+          - '&c&lEt tu gagneras :'
+          - '&e- 200 francs'
+          - '&e- 24 sables'
+      '4':
+        id: 4
+        name: '&2Boulanger'
+        require:
+        - 'ITEM:bread 32'
+        reward:
+        - 'CMD:eco give {player} 200'
+        - 'ITEM:oak_sapling 2'
+        - 'ITEM:spruce_sapling 2'
+        - 'ITEM:birch_sapling 2'
+        - 'ITEM:jungle_sapling 2'
+        - 'ITEM:acacia_sapling 2'
+        - 'ITEM:dark_oak_sapling 2'
+        maxtimes: 5
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 6
+          item: bread
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 32 pains'
+          - '&c&lEt tu gagneras :'
+          - '&e- 200 francs'
+          - '&e- 2 Pousses de chaque arbres'
+      '5':
+        id: 5
+        name: '&2Souffleur'
+        require:
+        - 'ITEM:glass 24'
+        reward:
+        - 'CMD:eco give {player} 200'
+        - 'ITEM:mycelium 10'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 7
+          item: glass
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 24 verres'
+          - '&c&lEt tu gagneras :'
+          - '&e- 200 francs'
+          - '&e- 10 Mycéliums'
+      '6':
+        id: 6
+        name: '&2Ecrivain'
+        require:
+        - 'ITEM:paper 64'
+        reward:
+        - 'CMD:eco give {player} 100'
+        - 'ITEM:dirt 15'
+        - 'ITEM:clay 15'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 4
+          item: paper
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 64 papiers'
+          - '&c&lEt tu gagneras :'
+          - '&e- 100 francs'
+          - '&e- 15 blocs de terre'
+          - '&e- 15 blocs d''argile' 
+      '7':
+        id: 7
+        name: '&2Pommier'
+        require:
+        - 'ITEM:apple 16'
+        reward:
+        - 'CMD:eco give {player} 100'
+        - 'ITEM:dirt 15'
+        - 'ITEM:grass_block 3'
+        maxtimes: 5
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 5
+          item: apple
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 16 pommes'
+          - '&c&lEt tu gagneras :'
+          - '&e- 100 francs'
+          - '&e- 15 terres'
+          - '&e- 3 blocs d''herbe'
+      '8':
+        id: 8
+        name: '&2Amasseur'
+        require:
+        - 'ITEM:pumpkin_seeds 24'
+        - 'ITEM:melon_seeds 24'
+        - 'ITEM:sponge 1'
+        - 'ITEM:wheat_seeds 24'
+        reward:
+        - 'CMD:eco give {player} 150'
+        maxtimes: 5
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 6
+          item: wheat_seeds
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 24 graines de citrouilles'
+          - '&e- 24 graines de pastèques'
+          - '&e- 24 graines de blés'
+          - '&c&lEt tu gagneras :'
+          - '&e- 150 francs'
+          - '&e- 1 éponge'
+      '9':
+        id: 9
+        name: '&2Ile level 250'
+        require:
+        - 'LEVEL:250'
+        reward:
+        - 'CMD:eco give {player} 1000'
+        - 'ITEM:diamond_block 4'
+        - 'ITEM:pig_spawn_egg 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 3
+          col: 5
+          item: experience_bottle
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Avoir ton île au level 250'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1 000 francs'
+          - '&e- 4 blocs de diamant'
+          - '&e- 1 oeuf de cochon'
+  '2':
+    id: 2
+    name: '&cSurvivants'
+    # All challenges
+    challenges:
+      '1':
+        id: 1
+        name: '&2Pâtissier'
+        require:
+        - 'ITEM:cake 5'
+        - 'ITEM:pumpkin_pie 16'
+        reward:
+        - 'CMD:eco give {player} 300'
+        - 'ITEM:diamond 10'
+        - 'ITEM:cow_spawn_egg 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 3
+          item: cake
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 5 gâteaux'
+          - '&e- 16 tartes à la citrouille'
+          - '&c&lEt tu gagneras :'
+          - '&e- 300 francs'
+          - '&e- 10 diamants'
+          - '&e- 1 oeuf de vache'
+      '2':
+        id: 2
+        name: '&2Chasseur'
+        require:
+        - 'ITEM:rotten_flesh 64'
+        - 'ITEM:string 64'
+        - 'ITEM:gunpowder 64'
+        - 'ITEM:arrow 64'
+        - 'ITEM:bone 64'
+        reward:
+        - 'CMD:eco give {player} 250'
+        - 'ITEM:iron_ingot 16'
+        - 'ITEM:redstone_block 8'
+        maxtimes: 5
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 4
+          item: bow
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 stack de chair putrifiée'
+          - '&e- 1 stack de ficelle'
+          - '&e- 1 stack de poudre à canon'
+          - '&e- 1 stack de flèche'
+          - '&e- 1 stack d''os'
+          - '&c&lEt tu gagneras :'
+          - '&e- 250 francs'
+          - '&e- 16 lingots de fer'
+          - '&e- 8 blocs de redstone'
+      '3':
+        id: 3
+        name: '&2Premier champs'
+        require:
+        - 'ITEM:wheat 64'
+        - 'ITEM:sugar_cane 64'
+        - 'ITEM:melon_slice 64'
+        - 'ITEM:pumpkin 64'
+        - 'ITEM:carrot 64'
+        - 'ITEM:potato 64'
+        reward:
+        - 'ITEM:cocoa_beans 5'
+        - 'ITEM:sheep_spawn_egg 1'
+        maxtimes: 5
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 5
+          item: diamond_hoe
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 stack de blé'
+          - '&e- 1 stack de canne à sucre'
+          - '&e- 1 stack de melon en tranche'
+          - '&e- 1 stack de citrouilles'
+          - '&e- 1 stack de carottes'
+          - '&e- 1 stack de patates'
+          - '&c&lEt tu gagneras :'
+          - '&e- 5 fèves de cacao'
+          - '&e- 1 oeuf de mouton'
+      '4':
+        id: 4
+        name: '&2Pêcheur'
+        require:
+        - 'ITEM:cooked_cod 25'
+        - 'ITEM:cooked_salmon 20'
+        reward:
+        - 'CMD:eco give {player} 300'
+        - 'ITEM:ink_sac 5'
+        - 'ITEM:chicken_spawn_egg 1'
+        maxtimes: 5
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 6
+          item: fishing_rod
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 25 morues cuites'
+          - '&e- 20 saumons cuits'
+          - '&c&lEt tu gagneras :'
+          - '&e- 5 encres'
+          - '&e- 300 francs'
+          - '&e- 1 oeuf de poule'
+      '5':
+        id: 5
+        name: '&2Goûter'
+        require:
+        - 'ITEM:cookie 128'
+        - 'ITEM:milk_bucket 2'
+        reward:
+        - 'CMD:eco give {player} 250'
+        - 'ITEM:emerald_block 2'
+        maxtimes: 5
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 7
+          item: cookie
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 2 stacks de cookies'
+          - '&e- 2 seaux de lait'
+          - '&c&l- et tu gagneras :'
+          - '&e- 250 francs'
+          - '&e- 2 blocs d''émeraude'
+      '6':
+        id: 6
+        name: '&2Chez soi'
+        require:
+        - 'ITEM:oak_door 2'
+        - 'ITEM:white_bed 2'
+        - 'ITEM:bookshelf 2'
+        - 'ITEM:crafting_table 2'
+        - 'ITEM:glass 2'
+        - 'ITEM:torch 2'
+        reward:
+        - 'CMD:minecraft:give {player} minecraft:villager_spawn_egg 2'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 4
+          item: white_bed
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 2 porte en &l&nbois'
+          - '&e- 2 lits'
+          - '&e- 2 bibliothèques'
+          - '&e- 2 table de crafts'
+          - '&e- 2 blocs de verre'
+          - '&e- 2 torches'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2 oeufs de PNJ'
+      '7':
+        id: 7
+        name: '&2Les amis'
+        require:
+        - 'NEAR:PLAYER 10'
+        reward:
+        - 'CMD:eco give {player} 500'
+        - 'ITEM:lapis_block 10'
+        - 'ITEM:iron_ingot 24'
+        - 'ITEM:jukebox 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 5
+          item: oak_door
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Avoir 10 joueurs autour de soi'
+          - '&c&lEt tu gagneras :'
+          - '&e- 500 francs'
+          - '&e- 10 blocs de lapis'
+          - '&e- 24 lingots de fer'
+          - '&e- 1 jukebox'
+      '8':
+        id: 8
+        name: '&2Voyageur des ténèbres'
+        require:
+        - 'ITEM:obsidian 64'
+        reward:
+        - 'CMD:eco give {player} 500'
+        - 'ITEM:diamond 24'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 6
+          item: obsidian
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 stack d''obsidienne'
+          - '&c&lEt tu gagneras :'
+          - '&e- 500 francs'
+          - '&e- 24 diamants'
+      '9':
+        id: 9
+        name: '&2Ile level 750'
+        require:
+        - 'LEVEL:750'
+        reward:
+        - 'CMD:eco give {player} 2000'
+        - 'CMD:es give {player} Skeleton 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 3
+          col: 5
+          item: experience_bottle
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Avoir ton île au level 750'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2 000 francs'
+          - '&e- 1 spawner a squelette'
+  '3':
+    id: 3
+    name: '&cChampions'
+    # All challenges
+    challenges:
+      '1':
+        id: 1
+        name: '&2Berger'
+        require:
+        - 'ITEM:white_wool 32'
+        - 'ITEM:orange_wool 32'
+        - 'ITEM:magenta_wool 32'
+        - 'ITEM:light_blue_wool 32'
+        - 'ITEM:yellow_wool 32'
+        - 'ITEM:lime_wool 32'
+        - 'ITEM:pink_wool 32'
+        - 'ITEM:gray_wool 32'
+        - 'ITEM:light_gray_wool 32'
+        - 'ITEM:cyan_wool 32'
+        - 'ITEM:purple_wool 32'
+        - 'ITEM:blue_wool 32'
+        - 'ITEM:brown_wool 32'
+        - 'ITEM:green_wool 32'
+        - 'ITEM:red_wool 32'
+        - 'ITEM:black_wool 32'
+        reward:
+        - 'CMD:eco give {player} 500'
+        - 'ITEM:gold_block 16'
+        - 'ITEM:grass_block 22'
+        maxtimes: 5
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 3
+          item: stick
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 32 laines de chaque couleur'
+          - '&c&lEt tu gagneras :'
+          - '&e- 500 francs'
+          - '&e- 16 blocs d''or'
+          - '&e- 22 blocs d''herbe'
+      '2':
+        id: 2
+        name: '&2Vitrier'
+        require:
+        - 'ITEM:white_stained_glass 48'
+        - 'ITEM:orange_stained_glass 48'
+        - 'ITEM:light_blue_stained_glass 48'
+        - 'ITEM:yellow_stained_glass 48'
+        - 'ITEM:lime_stained_glass 48'
+        - 'ITEM:pink_stained_glass 48'
+        - 'ITEM:gray_stained_glass 48'
+        - 'ITEM:light_gray_stained_glass 48'
+        - 'ITEM:cyan_stained_glass 48'
+        - 'ITEM:purple_stained_glass 48'
+        - 'ITEM:blue_stained_glass 48'
+        - 'ITEM:brown_stained_glass 48'
+        - 'ITEM:magenta_stained_glass 48'
+        - 'ITEM:green_stained_glass 48'
+        - 'ITEM:red_stained_glass 48'
+        - 'ITEM:black_stained_glass 48'
+        reward:
+        - 'CMD:eco give {player} 500'
+        - 'ITEM:emerald_block 8'
+        - 'CMD:minecraft:give {player} enchanted_book{StoredEnchantments:[{id:"minecraft:mending",lvl:1s}]} 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 4
+          item: glass
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 48 blocs de verre de chaque couleur'
+          - '&c&lEt tu gagneras :'
+          - '&e- 500 francs'
+          - '&e- 8 blocs d''émeraudes'
+          - '&e- 1 livre mending'
+      '3':
+        id: 3
+        name: '&2l''Enfer'
+        require:
+        - 'ITEM:blaze_rod 64'
+        - 'ITEM:ghast_tear 10'
+        - 'ITEM:magma_cream 24'
+        - 'ITEM:magma_block 64'
+        reward:
+        - 'CMD:eco give {player} 500'
+        - 'CMD:es give {player} Blaze 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 5
+          item: blaze_rod
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 Stack de bâton de blaze'
+          - '&e- 10 larmes de ghast'
+          - '&e- 24 crèmes de magma'
+          - '&e- 1 stack de blocs de magma'
+          - '&c&lEt tu gagneras :'
+          - '&e- 500 francs'
+          - '&e- 1 spawner a blaze'
+      '4':
+        id: 4
+        name: '&2Cuisto'
+        require:
+        - 'ITEM:cooked_porkchop 64'
+        - 'ITEM:cooked_chicken 64'
+        - 'ITEM:cooked_rabbit 64'
+        - 'ITEM:cooked_mutton 64'
+        - 'ITEM:cooked_beef 64'
+        - 'ITEM:beetroot_soup 6'
+        - 'ITEM:mushroom_stew 6'
+        reward:
+        - 'CMD:eco give {player} 300'
+        - 'ITEM:ink_sac 5'
+        - 'ITEM:villager_spawn_egg 1'
+        maxtimes: 3
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 6
+          item: furnace
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 stack de toutes les viandes &n&lcuites'
+          - '&e- 6 soupes de bétrave'
+          - '&e- 6 soupes de champignon'
+          - '&c&lEt tu gagneras :'
+          - '&e- 300 francs'
+          - '&e- 5 encres'
+          - '&e- 1 oeuf de PNJ'
+      '5':
+        id: 5
+        name: '&2Ender'
+        require:
+        - 'ITEM:ender_pearl 64'
+        reward:
+        - 'CMD:eco give {player} 500'
+        - 'ITEM:diamond_block 2'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 7
+          item: ender_pearl
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 4 stack (64 au total) de perles de l''end'
+          - '&c&lEt tu gagneras :'
+          - '&e- 500 francs'
+          - '&e- 2 blocs de diamant'
+      '6':
+        id: 6
+        name: '&2La Colle'
+        require:
+        - 'ITEM:slime_block 128'
+        reward:
+        - 'CMD:eco give {player} 500'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 4
+          item: slime_ball
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 2 stacks de blocs de slime'
+          - '&c&lEt tu gagneras :'
+          - '&e- 500 francs'
+      '7':
+        id: 7
+        name: '&2Aventurier en Enfer'
+        require:
+        - 'ITEM:map 1'
+        - 'ITEM:compass 1'
+        - 'ITEM:clock 1'
+        - 'ITEM:nether_bricks 128'
+        - 'ITEM:soul_sand 64'
+        - 'ITEM:ghast_tear 5'
+        reward:
+        - 'CMD:es give {player} Zombie 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 5
+          item: lava_bucket
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 carte'
+          - '&e- 1 bousolle'
+          - '&e- 1 montre'
+          - '&e- 128 briques du nether'
+          - '&e- 1 stack de sable des âmes'
+          - '&e- 5 larmes de ghast'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1 spawner a zombie'
+      '8':
+        id: 8
+        name: '&2Atelier'
+        require:
+        - 'ITEM:jukebox 8'
+        - 'ITEM:anvil 8'
+        - 'ITEM:trapped_chest 8'
+        reward:
+        - 'ITEM:powered_rail 16'
+        - 'ITEM:rail 32'
+        - 'ITEM:gold_block 8'
+        maxtimes: 3
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 6
+          item: ladder
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 8 jukeboxs'
+          - '&e- 8 enclumes'
+          - '&e- 8 coffres piégés'
+          - '&c&lEt tu gagneras :'
+          - '&e- 16 rails propulseurs'
+          - '&e- 32 rails'
+          - '&e- 8 blocs d''or'
+      '9':
+        id: 9
+        name: '&2Ile level 2000'
+        require:
+        - 'LEVEL:2000'
+        reward:
+        - 'CMD:eco give {player} 2500'
+        - 'ITEM:diamond_block 16'
+        - 'ITEM:iron_block 32'
+        - 'ITEM:emerald_block 8'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 3
+          col: 5
+          item: experience_bottle
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Avoir ton île au level 2 000'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2 500 francs'
+          - '&e- 16 blocs de diamant'
+          - '&e- 32 blocs de fer'
+          - '&e- 8 blocs d''émeraude'
+  '4':
+    id: 4
+    name: '&cSorciers'
+    # All challenges
+    challenges:
+      '1':
+        id: 1
+        name: '&2Les Voisins'
+        require:
+        - 'NEAR:villager 10'
+        reward:
+        - 'CMD:eco give {player} 1000'
+        - 'ITEM:diamond_block 16'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 3
+          item: villager_spawn_egg
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Etre à côté de 10 PNJS.'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1000 francs'
+          - '&e- 16 blocs de diamant'
+      '2':
+        id: 2
+        name: '&2Cheminot'
+        require:
+        - 'ITEM:powered_rail 32'
+        - 'ITEM:detector_rail 16'
+        - 'ITEM:activator_rail 16'
+        - 'ITEM:minecart 4'
+        reward:
+        - 'CMD:eco give {player} 500'
+        - 'ITEM:redstone_block 16'
+        - 'ITEM:hopper 16'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 4
+          item: rail
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 32 rails de propulsion'
+          - '&e- 16 rails détecteur'
+          - '&e- 16 rails déclencheur'
+          - '&e- 4 wagonnets'
+          - '&c&lEt tu gagneras :'
+          - '&e- 500 francs'
+          - '&e- 16 blocs de redstone'
+          - '&e- 16 entonnoirs'
+      '3':
+        id: 3
+        name: '&2Enchanteur'
+        require:
+        - 'POTION:STRENGTH 0 1'
+        - 'POTION:WEAKNESS 0 1'
+        - 'POTION:INVISIBILITY 0 1'
+        - 'POTION:FIRE_RESISTANCE 0 1'
+        - 'POTION:SPEED 0 1'
+        - 'POTION:SLOWNESS 0 1'
+        - 'POTION:NIGHT_VISION 0 1'
+        - 'POTION:REGEN 0 1'
+        - 'POTION:WATER_BREATHING 0 1'
+        reward:
+        - 'CMD:eco give {player} 2000'
+        - 'ITEM:iron_block 32'
+        - 'ITEM:diamond_block 4'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 5
+          item: brewing_stand
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 potion de force'
+          - '&e- 1 potion de faiblesse'
+          - '&e- 1 potion d''invisibilité'
+          - '&e- 1 potion de résistance au feu'
+          - '&e- 1 potion de rapidité'
+          - '&e- 1 potion de lenteur'
+          - '&e- 1 potion de vision nocturne'
+          - '&e- 1 potion de régénération'
+          - '&e- 1 potion de respiration aquatique'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2000 francs'
+          - '&e- 32 blocs de fer'
+          - '&e- 4 blocs de diamant'
+      '4':
+        id: 4
+        name: '&2Guerrier'
+        require:
+        - 'NEAR:creeper 1'
+        - 'NEAR:witch 1'
+        - 'NEAR:zombie 1'
+        - 'NEAR:skeleton 1'
+        - 'NEAR:spider 1'
+        reward:
+        - 'CMD:eco give {player} 1500'
+        - 'ITEM:villager_spawn_egg 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 6
+          item: diamond_sword
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Etre a proximiter de :'
+          - '&e- 1 creeper'
+          - '&e- 1 sorcière'
+          - '&e- 1 zombie'
+          - '&e- 1 squelette'
+          - '&e- 1 araignée'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1500 francs'
+          - '&e- 1 oeuf de PNJ'
+      '5':
+        id: 5
+        name: '&2Armurier'
+        require:
+        - 'ITEM:iron_helmet 1'
+        - 'ITEM:iron_chestplate 1'
+        - 'ITEM:iron_leggings 1'
+        - 'ITEM:iron_boots 1'
+        - 'ITEM:leather_helmet 1'
+        - 'ITEM:leather_chestplate 1'
+        - 'ITEM:leather_leggings 1'
+        - 'ITEM:leather_boots 1'
+        - 'ITEM:golden_helmet 1'
+        - 'ITEM:golden_chestplate 1'
+        - 'ITEM:golden_leggings 1'
+        - 'ITEM:golden_boots 1'
+        - 'ITEM:diamond_helmet 1'
+        - 'ITEM:diamond_chestplate 1'
+        - 'ITEM:diamond_leggings 1'
+        - 'ITEM:diamond_boots 1'
+        reward:
+        - 'ITEM:redstone_block 15'
+        - 'ITEM:armor_stand 3'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 7
+          item: diamond_chestplate
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Avoir une armure complète en fer'
+          - '&e- Avoir une armure complète en diamant'
+          - '&e- Avoir une armure complète en or'
+          - '&e- Avoir une armure complète en cuir'
+          - '&c&lEt tu gagneras :'
+          - '&e- 15 blocs de redstone'
+          - '&e- 3 porte-armures'
+      '6':
+        id: 6
+        name: '&2Pêcheur 2'
+        require:
+        - 'ITEM:cod 64'
+        - 'ITEM:pufferfish 8'
+        - 'ITEM:salmon 32'
+        - 'ITEM:tropical_fish 5'
+        reward:
+        - 'CMD:eco give {player} 500'
+        - 'CMD:minecraft:give {player} minecraft:fishing_rod{Enchantments:[{id:"minecraft:mending",lvl:1}]} 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 4
+          item: fishing_rod
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 stack de morue &n&l(non cuite)'
+          - '&e- 8 poissons globes'
+          - '&e- 32 saumons'
+          - '&e- 5 poissons clown'
+          - '&c&lEt tu gagneras :'
+          - '&e- 500 francs'
+          - '&e- 1 canne a pêche mending'
+      '7':
+        id: 7
+        name: '&2Chercheur'
+        require:
+        - 'ITEM:clock 3'
+        - 'ITEM:compass 5'
+        - 'ITEM:map 3'
+        reward:
+        - 'CMD:eco give {player} 1500'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 5
+          item: filled_map
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 3 montres'
+          - '&e- 5 boussoles'
+          - '&e- 3 cartes'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1500 francs' 
+      '8':
+        id: 8
+        name: '&2Heros'
+        require:
+        - 'ITEM:wither_skeleton_skull 9'
+        reward:
+        - 'CMD:eco give {player} 2000'
+        maxtimes: 3
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 6
+          item: wither_skeleton_skull
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 9 têtes de wither squelette'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2000 francs'
+      '9':
+        id: 9
+        name: '&2Ile level 3500'
+        require:
+        - 'LEVEL:3500'
+        reward:
+        - 'CMD:eco give {player} 4000'
+        - 'CMD:es give {player} Squid 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 3
+          col: 5
+          item: experience_bottle
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Avoir ton île au level 3 500'
+          - '&c&lEt tu gagneras :'
+          - '&e- 4000 francs'
+          - '&e- 1 spawner a poulpe'
+  '5':
+    id: 5
+    name: '&cAlchimistes'
+    # All challenges
+    challenges:
+      '1':
+        id: 1
+        name: '&2Horloger'
+        require:
+        - 'ITEM:redstone_block 32'
+        - 'ITEM:comparator 16'
+        - 'ITEM:repeater 32'
+        - 'ITEM:observer 16'
+        reward:
+        - 'CMD:eco give {player} 1000'
+        - 'ITEM:emerald_block 24'
+        - 'ITEM:redstone_block 48'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 3
+          item: clock
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 32 blocs de redstone'
+          - '&e- 16 comparateurs'
+          - '&e- 32 repeteurs'
+          - '&e- 16 blocs d''observateur'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1000 francs'
+          - '&e- 24 blocs d''émeraude'
+          - '&e- 48 blocs de redstone'
+      '2':
+        id: 2
+        name: '&2teinturier'
+        require:
+        - 'ITEM:rose_red 64'
+        - 'ITEM:cactus_green 64'
+        - 'ITEM:purple_dye 64'
+        - 'ITEM:cyan_dye 64'
+        - 'ITEM:light_gray_dye 64'
+        - 'ITEM:gray_dye 64'
+        - 'ITEM:pink_dye 64'
+        - 'ITEM:lime_dye 64'
+        - 'ITEM:dandelion_yellow 64'
+        - 'ITEM:light_blue_dye 64'
+        - 'ITEM:magenta_dye 64'
+        - 'ITEM:orange_dye 64'
+        - 'ITEM:cocoa_beans 64'
+        - 'ITEM:ink_sac 64'
+        - 'ITEM:bone_meal 64'
+        - 'ITEM:lapis_lazuli 64'
+        reward:
+        - 'CMD:eco give {player} 2000'
+        - 'ITEM:villager_spawn_egg 2'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 4
+          item: dandelion_yellow
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 stack de colorants de chaque couleur'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2000 francs'
+          - '&e- 2 oeufs de PNJ'
+      '3':
+        id: 3
+        name: '&2l''Atilla'
+        require:
+        - 'ITEM:dragon_egg 2'
+        reward:
+        - 'CMD:eco give {player} 5000'
+        - 'CMD:es give {player} Iron_Golem 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 5
+          item: dragon_egg
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 2 oeufs de dragons'
+          - '&c&lEt tu gagneras :'
+          - '&e- 5000 francs'
+          - '&e- 1 spawner à Iron Golem'
+      '4':
+        id: 4
+        name: '&2Invocateur'
+        require:
+        - 'ITEM:end_crystal 32'
+        reward:
+        - 'ITEM:beacon 1'
+        - 'ITEM:diamond_block 32'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 6
+          item: end_crystal
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 32 cristaux de l''end'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1 balise'
+          - '&e- 32 blocs de diamant'
+      '5':
+        id: 5
+        name: '&2Tueur'
+        require:
+        - 'ITEM:nether_star 9'
+        reward:
+        - 'CMD:es give {player} skeleton 1'
+        - 'CMD:eco give {player} 4000'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 7
+          item: nether_star
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 9 étoiles du nether'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1 spawner a squelette'
+          - '&e- 4000 francs'
+      '6':
+        id: 6
+        name: '&2Plongeur'
+        require:
+        - 'ITEM:sea_lantern 192'
+        reward:
+        - 'CMD:eco give {player} 1500'
+        - 'ITEM:iron_block 64'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 4
+          item: water_bucket
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 3 stacks de lanternes aquatiques'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1500 francs'
+          - '&e- 64 blocs de fer'
+      '7':
+        id: 7
+        name: '&2Patient'
+        require:
+        - 'ITEM:chorus_flower 128'
+        - 'ITEM:end_rod 32'
+        reward:
+        - 'CMD:eco give {player} 2000'
+        - 'ITEM:dragon_head 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 5
+          item: end_stone
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 2 stacks de fleurs de chorus'
+          - '&e- 32 barres de l''end'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2000 francs'
+          - '&e- 1 tête de dragon'
+      '8':
+        id: 8
+        name: '&2Peintre'
+        require:
+        - 'ITEM:black_banner 16'
+        - 'ITEM:red_banner 16'
+        - 'ITEM:green_banner 16'
+        - 'ITEM:brown_banner 16'
+        - 'ITEM:blue_banner 16'
+        - 'ITEM:purple_banner 16'
+        - 'ITEM:cyan_banner 16'
+        - 'ITEM:light_gray_banner 16'
+        - 'ITEM:gray_banner 16'
+        - 'ITEM:pink_banner 16'
+        - 'ITEM:lime_banner 16'
+        - 'ITEM:yellow_banner 16'
+        - 'ITEM:light_blue_banner 16'
+        - 'ITEM:magenta_banner 16'
+        - 'ITEM:orange_banner 16'
+        - 'ITEM:white_banner 16'
+        reward:
+        - 'CMD:eco give {player} 2000'
+        - 'CMD:es give {player} sheep 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 6
+          item: white_banner
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 16 banières de chaque couleur'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2000 francs'
+          - '&e- 1 spawner à mouton'
+      '9':
+        id: 9
+        name: '&2Ile level 5000'
+        require:
+        - 'LEVEL:5000'
+        reward:
+        - 'CMD:eco give {player} 5000'
+        - 'CMD:es give {player} slime 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 3
+          col: 5
+          item: experience_bottle
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Avoir ton île au level 5 000'
+          - '&c&lEt tu gagneras :'
+          - '&e- 5000 francs'
+          - '&e- 1 spawner à slime'
+  '6':
+    id: 6
+    name: '&cBuildeurs'
+    # All challenges
+    challenges:
+      '1':
+        id: 1
+        name: '&2Maçon'
+        require:
+        - 'ITEM:white_concrete 64'
+        - 'ITEM:orange_concrete 64'
+        - 'ITEM:magenta_concrete 64'
+        - 'ITEM:light_blue_concrete 64'
+        - 'ITEM:yellow_concrete 64'
+        - 'ITEM:lime_concrete 64'
+        - 'ITEM:pink_concrete 64'
+        - 'ITEM:gray_concrete 64'
+        - 'ITEM:light_gray_concrete 64'
+        - 'ITEM:cyan_concrete 64'
+        - 'ITEM:purple_concrete 64'
+        - 'ITEM:blue_concrete 64'
+        - 'ITEM:brown_concrete 64'
+        - 'ITEM:green_concrete 64'
+        - 'ITEM:red_concrete 64'
+        - 'ITEM:black_concrete 64'
+        reward:
+        - 'CMD:eco give {player} 2500'
+        - 'ITEM:villager_spawn_egg 2'
+        - 'CMD:es give {player} squid 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 3
+          item: blue_concrete
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Avoir un stack de béton de chaque couleur'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2500 francs'
+          - '&e- 2 oeufs de pnjs'
+          - '&e- 1 spawner a poulpe'
+      '2':
+        id: 2
+        name: '&2Escalator'
+        require:
+        - 'ITEM:oak_stairs 64'
+        - 'ITEM:spruce_stairs 64'
+        - 'ITEM:birch_stairs 64'
+        - 'ITEM:jungle_stairs 64'
+        - 'ITEM:acacia_stairs 64'
+        - 'ITEM:dark_oak_stairs 64'
+        - 'ITEM:nether_brick_stairs 64'
+        - 'ITEM:quartz_stairs 64'
+        - 'ITEM:purpur_stairs 64'
+        reward:
+        - 'CMD:eco give {player} 3000'
+        - 'ITEM:diamond_block 32'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 4
+          item: oak_stairs
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 stack d''escaliers de chaque type de bois'
+          - '&e- 1 stack d''escaliers en brique du nether'
+          - '&e- 1 stack d''escaliers en quartz'
+          - '&e- 1 stack d''escaliers en purpur'
+          - '&c&lEt tu gagneras :'
+          - '&e- 3000 francs'
+          - '&e- 32 blocs de diamant'
+      '3':
+        id: 3
+        name: '&2Voyageur'
+        require:
+        - 'ITEM:purpur_block 256'
+        - 'ITEM:purpur_pillar 256'
+        - 'ITEM:purpur_slab 256'
+        - 'ITEM:dragon_head 2'
+        reward:
+        - 'CMD:es give {player} polarbear 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 5
+          item: end_portal_frame
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 4 stacks de blocs de purpur'
+          - '&e- 4 stacks de dalles de purpur'
+          - '&e- 4 stacks de purpur taillés'
+          - '&e- 2 têtes de dragon'
+          - '&c&lEt tu gagneras :'
+          - '&e- 1 spawner à ours'
+      '4':
+        id: 4
+        name: '&2Alliés'
+        require:
+        - 'NEAR:CHICKEN 1'
+        - 'NEAR:COW 1'
+        - 'NEAR:POLAR_BEAR 1'
+        - 'NEAR:RABBIT 1'
+        - 'NEAR:WOLF 1'
+        - 'NEAR:DONKEY 1'
+        - 'NEAR:HORSE 1'
+        - 'NEAR:LLAMA 1'
+        - 'NEAR:OCELOT 1'
+        - 'NEAR:MUSHROOM_COW 1'
+        - 'NEAR:SHEEP 1'
+        - 'NEAR:SQUID 1'
+        - 'NEAR:PARROT 1'
+        - 'NEAR:VILLAGER 1'
+        - 'NEAR:SKELETON_HORSE 1'
+        reward:
+        - 'CMD:eco give {player} 3000'
+        - 'ITEM:diamond_block 32'
+        - 'CMD:cc give physical pirate 3 {player}'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 6
+          item: end_crystal
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e-  Avoir dans un rayon de 30 blocs :'
+          - '&e   - 1 Poulet'
+          - '&e   - 1 Vache'
+          - '&e   - 1 Ours'
+          - '&e   - 1 Lapin'
+          - '&e   - 1 Loup'
+          - '&e   - 1 Âne'
+          - '&e   - 1 Cheval'
+          - '&e   - 1 Lama'
+          - '&e   - 1 Ocelot'
+          - '&e   - 1 Vache champignon'
+          - '&e   - 1 Mouton'
+          - '&e   - 1 Perroquet'
+          - '&e   - 1 Villageois'
+          - '&e   - 1 Cheval squelette'
+          - '&e   - 1 Poulpe'
+          - '&c&lEt tu gagneras :'
+          - '&e- 3000 francs'
+          - '&e- 32 blocs de diamant'
+          - '&e- 3 clefs de la malle Pirate'
+      '5':
+        id: 5
+        name: '&2Roi du Désert'
+        require:
+        - 'ITEM:sandstone 256'
+        - 'ITEM:red_sandstone 256'
+        - 'ITEM:chiseled_sandstone 256'
+        - 'ITEM:chiseled_red_sandstone 256'
+        - 'ITEM:smooth_sandstone 256'
+        - 'ITEM:smooth_red_sandstone 256'
+        reward:
+        - 'ITEM:beacon 2'
+        - 'CMD:eco give {player} 3000'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 1
+          col: 7
+          item: sand
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 4 stacks de grès'
+          - '&e- 4 stacks de grès poli'
+          - '&e- 4 stacks de grès sculpté'
+          - '&e- 4 stacks de grès rouge'
+          - '&e- 4 stacks de grès poli rouge'
+          - '&e- 4 stacks de grès sculpté rouge'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2 balises'
+          - '&e- 3000 francs'
+      '6':
+        id: 6
+        name: '&2Potier'
+        require:
+        - 'ITEM:white_terracotta 64'
+        - 'ITEM:orange_terracotta 64'
+        - 'ITEM:magenta_terracotta 64'
+        - 'ITEM:light_blue_terracotta 64'
+        - 'ITEM:yellow_terracotta 64'
+        - 'ITEM:lime_terracotta 64'
+        - 'ITEM:pink_terracotta 64'
+        - 'ITEM:gray_terracotta 64'
+        - 'ITEM:light_gray_terracotta 64'
+        - 'ITEM:cyan_terracotta 64'
+        - 'ITEM:purple_terracotta 64'
+        - 'ITEM:blue_terracotta 64'
+        - 'ITEM:brown_terracotta 64'
+        - 'ITEM:green_terracotta 64'
+        - 'ITEM:red_terracotta 64'
+        - 'ITEM:black_terracotta 64'
+        reward:
+        - 'CMD:eco give {player} 2500'
+        - 'CMD:cc give physical pirate 2 {player}'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 4
+          item: white_terracotta
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 1 stack de chaque couleur de terre cuite'
+          - '&c&lEt tu gagneras :'
+          - '&e- 2500 francs'
+          - '&e- 2 clefs de la malle pirate'
+      '7':
+        id: 7
+        name: '&2Poudre'
+        require:
+        - 'ITEM:white_concrete_powder 128'
+        - 'ITEM:red_concrete_powder 128'
+        - 'ITEM:black_concrete_powder 128'
+        - 'ITEM:yellow_concrete_powder 128'
+        - 'ITEM:green_concrete_powder 128'
+        - 'ITEM:lime_concrete_powder 128'
+        - 'ITEM:purple_concrete_powder 128'
+        - 'ITEM:magenta_concrete_powder 128'
+        - 'ITEM:pink_concrete_powder 128'
+        - 'ITEM:gray_concrete_powder 128'
+        - 'ITEM:light_gray_concrete_powder 128'
+        - 'ITEM:light_blue_concrete_powder 128'
+        - 'ITEM:brown_concrete_powder 128'
+        - 'ITEM:orange_concrete_powder 128'
+        - 'ITEM:blue_concrete_powder 128'
+        - 'ITEM:cyan_concrete_powder 128'
+        reward:
+        - 'CMD:eco give {player} 3000'
+        - 'CMD:cc give physical précieuse 2 {player}'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 5
+          item: white_concrete
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- 128 poudres de béton de chaque couleur'
+          - '&c&lEt tu gagneras :'
+          - '&e- 3000 francs'
+          - '&e- 2 clefs de malle précieuse'
+      '8':
+        id: 8
+        name: '&2CHALLENGE NON DISPONIBLE'
+        require:
+        - 'ITEM:bedrock 64'
+        reward:
+        - 'CMD:eco give {player} 0'
+        - 'CMD:es give {player} mutton 1'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 2
+          col: 6
+          item: barrier
+          amount: 1
+          lore:
+          - '&4&lCHALLENGE NON DISPONIBLE'
+      '9':
+        id: 9
+        name: '&2Ile level 15000'
+        require:
+        - 'LEVEL:15000'
+        reward:
+        - 'CMD:eco give {player} 15000'
+        - 'CMD:cc give physical précieuse 4 {player}'
+        maxtimes: 1
+        showInChat: true
+        item:
+          show: true
+          row: 3
+          col: 5
+          item: experience_bottle
+          amount: 1
+          lore:
+          - '&c&lPour ce challenge, il te faudra :'
+          - '&e- Avoir ton île au level 15 000'
+          - '&c&lEt tu gagneras :'
+          - '&e- 15000 francs'
+          - '&e- 4 clefs de la malle précieuse'

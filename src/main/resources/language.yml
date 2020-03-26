@@ -955,6 +955,21 @@ Command:
         Message: '&f&oOpens the Leaderboard menu of the top 10 Islands.'
       Invalid:
         Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island leaderboard [<Level|Bank|Votes>]'
+    Challenge:
+      Disabled:
+        Message: '&bSkyBlock &8| &cError&8: &eYou cannot access to challenges because
+          it has been disabled.'
+      Info:
+        Message: '&f&oAccess to challenges.'
+      NotFound:
+        Message: '&bSkyBlock &8| &cError&8: &eNot a single challenge has been found.'
+      Invalid:
+        Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island challenge <categoryId>
+          <challengeId>'
+      CategoryNotFound:
+        Message: '&bSkyBlock &8| &cError&8: &eCategory not found.'
+      ChallengeNotFound:
+        Message: '&bSkyBlock &8| &cError&8: &eChallenge not found.'
     Preview:
       Info:
         Message: '&f&oAllows you to preview island before choosing'
@@ -3535,3 +3550,9 @@ Hologram:
       Footer: '&ewww.example.net'
   Stackable:
     Message: '%blocks: %amount'
+Challenge:
+  Inventory:
+    Item:
+      Title: '%challenge &e%amount &6/ &e%max'
+  Broadcast: '&bSkyBlock &8| &6%player &7has completed challenge %challenge (%amount
+    / %max)'
