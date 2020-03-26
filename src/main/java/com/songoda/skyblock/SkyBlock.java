@@ -167,6 +167,7 @@ public class SkyBlock extends SongodaPlugin {
         pluginManager.registerEvents(new Spawner(this), this);
         pluginManager.registerEvents(new Food(this), this);
         pluginManager.registerEvents(new Grow(this), this);
+        pluginManager.registerEvents(new Piston(this), this);
 
         if (pluginManager.isPluginEnabled("EpicSpawners")) pluginManager.registerEvents(new EpicSpawners(this), this);
         if (pluginManager.isPluginEnabled("WildStacker")) pluginManager.registerEvents(new WildStacker(this), this);
@@ -218,9 +219,9 @@ public class SkyBlock extends SongodaPlugin {
         if (this.hologramManager != null) {
             this.hologramManager.onDisable();
         }
-        
+
         if (this.fabledChallenge != null) {
-        	this.fabledChallenge.onDisable();
+            this.fabledChallenge.onDisable();
         }
 
         HandlerList.unregisterAll(this);
@@ -352,8 +353,8 @@ public class SkyBlock extends SongodaPlugin {
     public RewardManager getRewardManager() {
         return rewardManager;
     }
-    
+
     public FabledChallenge getFabledChallenge() {
-    	return fabledChallenge;
+        return fabledChallenge;
     }
 }
