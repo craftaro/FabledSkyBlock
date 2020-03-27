@@ -63,12 +63,12 @@ public class PreviewCommand extends SubCommand {
         } else {
         	// Do not preview if user has an island
         	if (island != null) {
-                skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Preview.Island.Message"));
+                skyblock.getMessageManager().sendMessage(player, configLang.getString("Command.Island.Preview.Island.Message"));
                 return;
         	}
             Structure structure = skyblock.getStructureManager().getStructure(args[0]);
             if(structure == null) {
-                skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Preview.File.Message"));
+                skyblock.getMessageManager().sendMessage(player, configLang.getString("Command.Island.Preview.File.Message"));
                 return;
             }
             skyblock.getIslandManager().previewIsland(player, structure);

@@ -984,6 +984,10 @@ Command:
           TutorialConfirm: '&7Click to &f&oconfirm &r&7Island creation!'
           Cancel: 'Cancel'
           TutorialCancel: '&7Click to &f&ocancel &r&7Island creation!'
+      File:
+        Message: '&bSkyBlock &8| &cError&8: &eThis preview doesn''t exist!'
+      Island:
+        Message: '&bSkyBlock &8| &aError&8: &eYou can not preview an island if you already own an island!'
   PermissionDenied:
     Admin:
       Message: '&bSkyBlock &8| &cError&8: &eYou don''t have permission to perform that command.'
@@ -3532,10 +3536,6 @@ Island:
   Preview:
     Timeout:
       Message: '&bSkyBlock &8| &aInfo&8: &eYour time to preview island has expired.'
-    File:
-      Message: '&bSkyBlock &8| &cError&8: &eThis preview doesn''t exist.'
-    Island:
-      Message: '&bSkyBlock &8| &aError&8: &eYou can not preview an island if you already own an island'
 Hologram:
   Leaderboard:
     Votes:
