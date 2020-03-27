@@ -295,3 +295,6 @@ Island:
         RequirePermission: false
         Limit:
             Enable: false
+    Challenge:
+        # Enable or disable challenges. Configuration for challenges are in challenges.yml file
+        Enable: true
