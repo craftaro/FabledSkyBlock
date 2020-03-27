@@ -3531,7 +3531,11 @@ Island:
       Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to do that on this Island.'
   Preview:
     Timeout:
-      Message: '&bSkyBlock &8| &aInfo&8: &eYour time to preview island has expired'
+      Message: '&bSkyBlock &8| &aInfo&8: &eYour time to preview island has expired.'
+    File:
+      Message: '&bSkyBlock &8| &cError&8: &eThis preview doesn''t exist.'
+    Island:
+      Message: '&bSkyBlock &8| &aError&8: &eYou can not preview an island if you already own an island'
 Hologram:
   Leaderboard:
     Votes:

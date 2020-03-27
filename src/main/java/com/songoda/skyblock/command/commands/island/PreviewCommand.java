@@ -9,7 +9,6 @@ import com.songoda.skyblock.structure.Structure;
 import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -62,12 +61,17 @@ public class PreviewCommand extends SubCommand {
                 }
             }
         } else {
+        	// Do not preview if user has an island
+        	if (island != null) {
+                skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Preview.Island.Message"));
+                return;
+        	}
             Structure structure = skyblock.getStructureManager().getStructure(args[0]);
             if(structure == null) {
-                skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Creator.File.Message"));
+                skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Preview.File.Message"));
                 return;
             }
-            skyblock.getIslandManager().previewIsland(player, skyblock.getStructureManager().getStructure(args[0]));
+            skyblock.getIslandManager().previewIsland(player, structure);
         }
     }
 
