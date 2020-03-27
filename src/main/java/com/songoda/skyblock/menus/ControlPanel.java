@@ -3,6 +3,7 @@ package com.songoda.skyblock.menus;
 import java.io.File;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,8 +18,6 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.utils.item.MenuClickRegistry;
 import com.songoda.skyblock.utils.item.MenuClickRegistry.RegistryKey;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-
-import com.songoda.skyblock.utils.version.Sounds;
 
 public final class ControlPanel {
 
@@ -48,7 +47,7 @@ public final class ControlPanel {
             });
 
             executors.put(RegistryKey.fromLanguageFile("Menu.ControlPanel.Item.Barrier.Displayname", CompatibleMaterial.BLACK_STAINED_GLASS_PANE), (inst, player, e) -> {
-                inst.getSoundManager().playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+                inst.getSoundManager().playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
                 e.setWillClose(false);
                 e.setWillDestroy(false);

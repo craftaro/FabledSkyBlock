@@ -2,7 +2,6 @@ package com.songoda.skyblock.utils.world.block;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
-import com.songoda.skyblock.utils.item.MaterialUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -255,7 +254,7 @@ public final class BlockUtil {
         if (NMSVersion > 12 && blockData.getVersion() > 12 && blockData.getBlockData() != null) {
             block.setBlockData(Bukkit.getServer().createBlockData(blockData.getBlockData()));
         } else {
-            material = MaterialUtil.getMaterial(NMSVersion, blockData.getVersion(), blockData.getMaterial(), block.getData());
+            material = CompatibleMaterial.getMaterial(blockData.getMaterial()).getMaterial();
             setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
         }
 
@@ -431,7 +430,7 @@ public final class BlockUtil {
                         String[] flower = blockData.getFlower().split(":");
                         int materialData = Integer.parseInt(flower[1]);
 
-                        material = MaterialUtil.getMaterial(NMSVersion, blockData.getVersion(), flower[0].toUpperCase(), materialData);
+                        material = CompatibleMaterial.getMaterial(flower[0].toUpperCase()).getMaterial();
 
                         if (material != null) {
                             ItemStack is = new ItemStack(material, 1, (byte) materialData);
@@ -520,6 +519,7 @@ public final class BlockUtil {
 
     private static Class<?> IBlockDataClass = NMSUtil.getNMSClass("IBlockData");
     private static Class<?> blocksClass = NMSUtil.getNMSClass("Blocks");
+
 
     private static void setBlockFast(World world, int x, int y, int z, Material material, byte data) {
         try {

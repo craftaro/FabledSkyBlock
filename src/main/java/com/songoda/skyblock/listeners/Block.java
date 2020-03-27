@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -50,9 +51,8 @@ import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.NumberUtil;
- 
+
 import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 
@@ -88,7 +88,7 @@ public class Block implements Listener {
         if (!islandManager.hasPermission(player, blockLocation, "Destroy")) {
             event.setCancelled(true);
             skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
-            skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             return;
         }
 
@@ -153,7 +153,7 @@ public class Block implements Listener {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Break.Message"));
-                skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
 
@@ -169,12 +169,12 @@ public class Block implements Listener {
 
         }
 
-        final Materials materials;
+        final CompatibleSpawners materials;
 
-        if (block.getType() == Materials.SPAWNER.parseMaterial()) {
-            materials = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+        if (block.getType() == CompatibleSpawners.SPAWNER.getMaterial()) {
+            materials = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
         } else {
-            materials = Materials.getMaterials(block.getType(), block.getData());
+            materials = CompatibleSpawners.getMaterials(block.getType(), block.getData());
         }
 
         if (materials == null) return;
@@ -222,7 +222,7 @@ public class Block implements Listener {
         if (!islandManager.hasPermission(player, blockLoc, "Place")) {
             event.setCancelled(true);
             skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
-            skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             return;
         }
 
@@ -253,7 +253,7 @@ public class Block implements Listener {
 
             if (isObstructing) {
                 skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
-                skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 event.setCancelled(true);
                 return;
@@ -265,11 +265,11 @@ public class Block implements Listener {
         long limit = limits.getBlockLimit(player, block);
 
         if (limits.isBlockLimitExceeded(player, block, limit)) {
-            Materials material = Materials.getMaterials(block.getType(), block.getData());
+            CompatibleMaterial material = CompatibleMaterial.getMaterial(block.getType());
 
             skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
                     .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
-            skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
             event.setCancelled(true);
             return;
@@ -277,7 +277,8 @@ public class Block implements Listener {
 
         if (!configLoad.getBoolean("Island.Block.Level.Enable")) return;
 
-        if (event.getBlock().getType() == Materials.END_PORTAL_FRAME.parseMaterial() && event.getPlayer().getItemInHand().getType() == Materials.ENDER_EYE.parseMaterial()) return;
+        if (event.getBlock().getType() == CompatibleMaterial.END_PORTAL_FRAME.getMaterial()
+                && event.getPlayer().getItemInHand().getType() == CompatibleMaterial.ENDER_EYE.getMaterial()) return;
 
         // Fix a bug in Paper 1.8.8 when using ViaVersion on a 1.12.2 client.
         // BUG: Player can infinitely increase their level by placing a block at their
@@ -290,15 +291,15 @@ public class Block implements Listener {
         // This shouldn't cause any issues besides the task number being increased
         // insanely fast.
         Bukkit.getScheduler().runTask(skyblock, () -> {
-            Materials materials = Materials.getMaterials(block.getType(), block.getData());
-            if (materials == null || materials == Materials.AIR) return;
+            CompatibleMaterial materials = CompatibleMaterial.getMaterial(block.getType());
+            if (materials == null || materials == CompatibleMaterial.AIR) return;
 
-            if (materials.equals(Materials.SPAWNER)) {
+            if (materials.equals(CompatibleMaterial.SPAWNER)) {
                 if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker")) return;
 
                 CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
                 EntityType spawnerType = creatureSpawner.getSpawnedType();
-                materials = Materials.getSpawner(spawnerType);
+                materials = CompatibleMaterial.getBlockMaterial(CompatibleSpawners.getSpawner(spawnerType).getMaterial());
             }
 
             long materialAmount = 0;
@@ -429,7 +430,7 @@ public class Block implements Listener {
             }
 
             if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Extend")) {
-                if (block.getType() == Materials.PISTON.parseMaterial() || block.getType() == Materials.STICKY_PISTON.parseMaterial()) {
+                if (block.getType() == CompatibleMaterial.PISTON.getMaterial() || block.getType() == CompatibleMaterial.STICKY_PISTON.getMaterial()) {
                     event.setCancelled(true);
                     return;
                 }
@@ -518,7 +519,7 @@ public class Block implements Listener {
             }
 
             if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
-                if (block.getType() == Materials.PISTON.parseMaterial() || block.getType() == Materials.STICKY_PISTON.parseMaterial()) {
+                if (block.getType() == CompatibleMaterial.PISTON.getMaterial() || block.getType() == CompatibleMaterial.STICKY_PISTON.getMaterial()) {
                     event.setCancelled(true);
                     return;
                 }
@@ -552,8 +553,8 @@ public class Block implements Listener {
         }
 
         Material material = block.getType();
-        if (material != Materials.WATER.parseMaterial() && material != Materials.LEGACY_STATIONARY_WATER.parseMaterial() && material != Materials.LAVA.parseMaterial()
-                && material != Materials.LEGACY_STATIONARY_LAVA.parseMaterial())
+        if (material != CompatibleMaterial.WATER.getBlockMaterial()
+                && material != CompatibleMaterial.LAVA.getBlockMaterial())
             return;
 
         BlockState state = event.getNewState();

@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.cooldown.Cooldown;
@@ -9,13 +10,12 @@ import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.levelling.rework.IslandLevelManager;
-import com.songoda.skyblock.menus.Levelling;
+import com.songoda.skyblock.menus.admin.Levelling;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
 import org.bukkit.Bukkit;
@@ -58,7 +58,7 @@ public class LevelCommand extends SubCommand {
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Level.Owner.Other.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                 return;
             } else if (!islandOwnerUUID.equals(playerDataManager.getPlayerData(player).getOwner())) {
@@ -69,20 +69,20 @@ public class LevelCommand extends SubCommand {
                             configLoad.getString("Command.Island.Level.Level.Message")
                                     .replace("%player", targetPlayerName).replace("%level",
                                     "" + NumberUtil.formatNumberByDecimal(visit.getLevel().getLevel())));
-                    soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Level.Owner.Other.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                 return;
             }
         } else if (args.length != 0) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Invalid.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return;
         }
@@ -91,7 +91,7 @@ public class LevelCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Owner.Yourself.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
             player.closeInventory();
 
@@ -128,20 +128,20 @@ public class LevelCommand extends SubCommand {
                                                 + configLoad.getString("Command.Island.Level.Cooldown.Word.Second")));
                     }
 
-                    soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
 
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Processing.Message"));
-                soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
                 cooldownManager.createPlayer(CooldownType.Levelling,
                         Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                 levellingManager.startScan(player, island);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Loading.Message"));
-                soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
                 Levelling.getInstance().open(player);
             }
         }

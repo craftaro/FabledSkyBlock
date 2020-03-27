@@ -1,6 +1,7 @@
 package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -17,8 +18,7 @@ import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
- 
-import com.songoda.skyblock.utils.version.Sounds;
+
 import com.songoda.skyblock.visit.VisitManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -70,18 +70,18 @@ public class Visit {
                 if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Visit.Item.Barrier.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
                 } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Visit.Item.Exit.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                 } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Visit.Item.Statistics.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
@@ -106,13 +106,13 @@ public class Visit {
                         }
                     }
 
-                    soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
                 } else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Visit.Item.Nothing.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
@@ -120,13 +120,13 @@ public class Visit {
                     if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Visit.Item.Previous.Displayname")))) {
                         playerData.setPage(playerData.getPage() - 1);
-                        soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
                     } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Visit.Item.Next.Displayname")))) {
                         playerData.setPage(playerData.getPage() + 1);
-                        soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
                     } else {
@@ -176,7 +176,7 @@ public class Visit {
                                                 messageManager.sendMessage(player,
                                                         configLoad.getString("Island.Visit.Vote.Removed.Message")
                                                                 .replace("%player", targetPlayerName));
-                                                soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 1.0F,
+                                                soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F,
                                                         1.0F);
                                             } else {
                                                 visit.addVoter(player.getUniqueId());
@@ -184,11 +184,11 @@ public class Visit {
                                                 messageManager.sendMessage(player,
                                                         configLoad.getString("Island.Visit.Vote.Added.Message")
                                                                 .replace("%player", targetPlayerName));
-                                                soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F,
+                                                soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F,
                                                         1.0F);
                                             }
 
-                                            soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F,
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F,
                                                     1.0F);
 
                                             Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -197,7 +197,7 @@ public class Visit {
                                         } else {
                                             messageManager.sendMessage(player,
                                                     configLoad.getString("Island.Visit.Vote.Island.Message"));
-                                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
                                                     1.0F);
 
                                             event.setWillClose(false);
@@ -216,7 +216,7 @@ public class Visit {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Visit.Already.Message").replace("%player",
                                                     targetPlayerName));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     event.setWillClose(false);
                                     event.setWillDestroy(false);
@@ -229,12 +229,12 @@ public class Visit {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Visit.Teleported.Message").replace("%player",
                                                 targetPlayerName));
-                                soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                             } else {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Visit.Closed.Menu.Message").replace("%player",
                                                 targetPlayerName));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                         () -> open(player, (Type) playerData.getType(),
@@ -246,7 +246,7 @@ public class Visit {
 
                         messageManager.sendMessage(player, configLoad.getString("Island.Visit.Exist.Message")
                                 .replace("%player", targetPlayerName));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
                     }

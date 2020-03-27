@@ -1,11 +1,11 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.menus.Visit;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -28,14 +28,14 @@ public class VisitCommand extends SubCommand {
             playerData.setSort(Visit.Sort.Default);
 
             Visit.getInstance().open(player, (Visit.Type) playerData.getType(), (Visit.Sort) playerData.getSort());
-            soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
         } else if (args.length == 1) {
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> Bukkit.getServer().dispatchCommand(player, "island teleport " + args[0]));
         } else {
             messageManager.sendMessage(player,
                     skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                             .getFileConfiguration().getString("Command.Island.Visit.Invalid.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }
     }
 

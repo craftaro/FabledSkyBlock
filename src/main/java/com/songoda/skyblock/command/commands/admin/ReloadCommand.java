@@ -3,6 +3,7 @@ package com.songoda.skyblock.command.commands.admin;
 import java.io.File;
 import java.util.Map;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.island.reward.RewardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -21,7 +22,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.item.MenuClickRegistry;
-import com.songoda.skyblock.utils.version.Sounds;
 
 public class ReloadCommand extends SubCommand {
 
@@ -101,7 +101,7 @@ public class ReloadCommand extends SubCommand {
         MenuClickRegistry.getInstance().reloadAll();
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
-        soundManager.playSound(sender, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
+        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_USE.getSound(), 1.0F, 1.0F);
     }
 
     @Override

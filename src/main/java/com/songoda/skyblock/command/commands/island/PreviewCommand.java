@@ -1,12 +1,12 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.confirmation.Confirmation;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.structure.Structure;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.ConsoleCommandSender;
@@ -45,7 +45,7 @@ public class PreviewCommand extends SubCommand {
                     Bukkit.getScheduler().runTaskLater(skyblock, () -> {
                         if(skyblock.getIslandManager().createIsland(player, islandStructure)) {
                             skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Creator.Selector.Created.Message"));
-                            skyblock.getSoundManager().playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                            skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                         }
                     }, 30L);
                 }

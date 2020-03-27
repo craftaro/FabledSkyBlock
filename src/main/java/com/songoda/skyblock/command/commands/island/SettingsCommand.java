@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
@@ -8,7 +9,6 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.menus.Settings;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ public class SettingsCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Owner.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
@@ -39,15 +39,15 @@ public class SettingsCommand extends SubCommand {
                     || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
                 Settings.getInstance().open(player,
                         Settings.Type.Categories, null, null);
-                soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
             } else {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Settings.Permission.Default.Message"));
-                soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Role.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }
     }
 

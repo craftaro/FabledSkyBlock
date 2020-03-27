@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
@@ -10,7 +11,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
 import org.bukkit.Bukkit;
@@ -50,7 +50,7 @@ public class TeleportCommand extends SubCommand {
 
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                 return;
             } else if (!islandOwnerUUID.equals(playerDataManager.getPlayerData(player).getOwner())) {
@@ -72,25 +72,25 @@ public class TeleportCommand extends SubCommand {
                         islandManager.visitIsland(player, islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)));
 
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Other.Message").replace("%player", targetPlayerName));
-                        soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
 
                         return;
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.Closed.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     }
 
                     return;
                 }
 
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                 return;
             }
         } else if (args.length != 0) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Invalid.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return;
         }
@@ -99,10 +99,10 @@ public class TeleportCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Owner.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Yourself.Message"));
-            soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
                 player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));

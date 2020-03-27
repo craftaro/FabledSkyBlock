@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.message.MessageManager;
@@ -7,7 +8,6 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,7 +34,7 @@ public class CurrentCommand extends SubCommand {
                     if (targetPlayer == null) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Current.Offline.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
@@ -61,14 +61,14 @@ public class CurrentCommand extends SubCommand {
                                             .replace("%owner", ownerPlayerName));
                         }
 
-                        soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
                 } else if (args.length > 1) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Current.Invalid.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
@@ -95,7 +95,7 @@ public class CurrentCommand extends SubCommand {
                             targetPlayerName));
         }
 
-        soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
     }
 
     @Override

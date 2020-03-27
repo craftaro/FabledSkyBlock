@@ -2,6 +2,7 @@ package com.songoda.skyblock.island;
 
 import com.google.common.base.Preconditions;
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.ban.BanManager;
@@ -29,7 +30,6 @@ import com.songoda.skyblock.utils.structure.SchematicUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.SBiome;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
@@ -210,7 +210,7 @@ public class IslandManager {
 
         if (fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
             skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.Message"));
-            skyblock.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return false;
         }
@@ -328,7 +328,7 @@ public class IslandManager {
 
         if (fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
             skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Creator.Error.Message"));
-            skyblock.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return false;
         }
@@ -1432,7 +1432,7 @@ public class IslandManager {
                     messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Coop.Removed.Owner.Message"));
                 }
 
-                soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
             }
         }
 

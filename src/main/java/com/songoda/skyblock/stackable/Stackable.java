@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,7 +19,6 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.utils.NumberUtil;
  
 import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 
 public class Stackable {
 
@@ -35,7 +35,7 @@ public class Stackable {
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+        SkyBlock.getInstance().getSoundManager().playSound(location, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         this.save();
     }
 
@@ -45,7 +45,7 @@ public class Stackable {
         this.material = material;
         this.maxSize = maxSize;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(location, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+        SkyBlock.getInstance().getSoundManager().playSound(location, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         this.save();
     }
 
@@ -99,14 +99,14 @@ public class Stackable {
     public void addOne() {
         this.size++;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(this.location, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+        SkyBlock.getInstance().getSoundManager().playSound(this.location, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
         this.save();
     }
 
     public void takeOne() {
         this.size--;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(this.location, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+        SkyBlock.getInstance().getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
         this.save();
     }
 

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -8,9 +9,6 @@ import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
- 
-import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.ConsoleCommandSender;
@@ -34,7 +32,7 @@ public class ValueCommand extends SubCommand {
 
         if (player.getItemInHand() == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.Hand.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
             CompatibleMaterial materials = CompatibleMaterial.getMaterial(player.getItemInHand().getType().name());
 
@@ -45,10 +43,10 @@ public class ValueCommand extends SubCommand {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Value.Value.Message").replace("%material", WordUtils.capitalizeFully(materials.name().toLowerCase().replace("_", " ")))
                                 .replace("%points", "" + worth).replace("%level", "" + NumberUtil.formatNumberByDecimal(level)));
-                soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.None.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             }
         }
     }

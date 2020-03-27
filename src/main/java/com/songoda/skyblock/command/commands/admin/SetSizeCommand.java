@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -10,7 +11,6 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -64,15 +64,15 @@ public class SetSizeCommand extends SubCommand {
                 if (islandOwnerUUID == null) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetSize.Island.Owner.Message"));
-                    soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 } else if (size < 20) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetSize.Size.Greater.Message"));
-                    soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 } else if (size > 1000) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetSize.Size.Less.Message"));
-                    soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 } else {
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         Island island = islandManager
@@ -91,7 +91,7 @@ public class SetSizeCommand extends SubCommand {
                         if (!fileManager.isFileExist(islandDataFile)) {
                             messageManager.sendMessage(sender,
                                     configLoad.getString("Command.Island.Admin.SetSize.Island.Data.Message"));
-                            soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
                         }
@@ -111,17 +111,17 @@ public class SetSizeCommand extends SubCommand {
                             configLoad.getString("Command.Island.Admin.SetSize.Set.Message")
                                     .replace("%player", targetPlayerName)
                                     .replace("%size", NumberUtil.formatNumberByDecimal(size)));
-                    soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                 }
             } else {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.SetSize.Numerical.Message"));
-                soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(sender,
                     configLoad.getString("Command.Island.Admin.SetSize.Invalid.Message"));
-            soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }
     }
 

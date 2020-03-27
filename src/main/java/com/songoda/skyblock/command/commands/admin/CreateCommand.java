@@ -1,10 +1,10 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.menus.admin.Creator;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,7 +20,7 @@ public class CreateCommand extends SubCommand {
         }
 
         Creator.getInstance().open(player);
-        soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
     }
 
     @Override

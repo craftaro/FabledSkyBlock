@@ -1,5 +1,6 @@
 package com.songoda.skyblock.listeners;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -9,7 +10,6 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -79,7 +79,7 @@ public class Move implements Listener {
                             }
 
                             player.setFallDistance(0.0F);
-                            soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
 
                             return;
                         }
@@ -87,7 +87,7 @@ public class Move implements Listener {
                 }
 
                 LocationUtil.teleportPlayerToSpawn(player);
-                soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
             }
         }
 
@@ -123,7 +123,7 @@ public class Move implements Listener {
                                     }
 
                                     player.setFallDistance(0.0F);
-                                    soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                                 }
                                 return;
                             }
@@ -163,7 +163,7 @@ public class Move implements Listener {
                                 }
 
                                 player.setFallDistance(0.0F);
-                                soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                             }
                         }
                     } else {
@@ -177,7 +177,7 @@ public class Move implements Listener {
                             player.setFallDistance(0.0F);
                             messageManager.sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                     .getString("Island.WorldBorder.Outside.Message"));
-                            soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                         }
                     }
 
@@ -198,7 +198,7 @@ public class Move implements Listener {
 
             messageManager.sendMessage(player,
                     skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
-            soundManager.playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
         }
     }
 
@@ -217,7 +217,7 @@ public class Move implements Listener {
 
         skyblock.getMessageManager().sendMessage(player,
                 skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
-        skyblock.getSoundManager().playSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+        skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
 
     }
 }

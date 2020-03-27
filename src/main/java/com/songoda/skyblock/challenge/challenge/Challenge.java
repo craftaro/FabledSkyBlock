@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -127,7 +128,8 @@ public class Challenge {
 				// The id
 				String id = index == -1 ? value : value.substring(0, index);
 				// Check if it's a Minecraft item
-				Material m = Material.matchMaterial(id);
+				Material m = CompatibleMaterial.getMaterial(id).getMaterial();
+				//Material m = Material.matchMaterial(id);
 				if (m == null)
 					throw new IllegalArgumentException(
 							"\"" + id + "\" isn't a correct Minecraft Material (value = \"" + value + "\")");

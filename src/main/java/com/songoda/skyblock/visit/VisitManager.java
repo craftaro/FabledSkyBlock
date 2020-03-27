@@ -1,5 +1,6 @@
 package com.songoda.skyblock.visit;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
@@ -8,7 +9,6 @@ import com.songoda.skyblock.island.IslandLocation;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -136,7 +136,7 @@ public class VisitManager {
 
             messageManager.sendMessage(targetPlayer,
                     configLoad.getString("Island.Visit." + removal.name() + ".Message"));
-            soundManager.playSound(targetPlayer, Sounds.ENDERMAN_TELEPORT.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
         }
     }
 

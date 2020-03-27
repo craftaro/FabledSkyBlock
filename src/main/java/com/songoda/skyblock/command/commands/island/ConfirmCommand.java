@@ -1,12 +1,12 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;
 import com.songoda.skyblock.cooldown.CooldownType;
-import com.songoda.skyblock.utils.VaultPermissions;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
@@ -17,7 +17,6 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.structure.Structure;
 import com.songoda.skyblock.structure.StructureManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,7 +51,7 @@ public class ConfirmCommand extends SubCommand {
                 if (island == null) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Confirmation.Owner.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else {
                     Confirmation confirmation = playerData.getConfirmation();
 
@@ -76,7 +75,7 @@ public class ConfirmCommand extends SubCommand {
                                         targetPlayerName = targetPlayer.getName();
                                         messageManager.sendMessage(targetPlayer, configLoad
                                                 .getString("Command.Island.Confirmation.Ownership.Assigned.Message"));
-                                        soundManager.playSound(targetPlayer, Sounds.ANVIL_USE.bukkitSound(), 1.0F,
+                                        soundManager.playSound(targetPlayer, CompatibleSound.BLOCK_ANVIL_USE.getSound(), 1.0F,
                                                 1.0F);
                                     }
 
@@ -90,7 +89,7 @@ public class ConfirmCommand extends SubCommand {
                                                     configLoad.getString(
                                                             "Command.Island.Ownership.Assigned.Broadcast.Message")
                                                             .replace("%player", targetPlayerName)));
-                                            soundManager.playSound(all, Sounds.ANVIL_USE.bukkitSound(), 1.0F, 1.0F);
+                                            soundManager.playSound(all, CompatibleSound.BLOCK_ANVIL_USE.getSound(), 1.0F, 1.0F);
                                         }
                                     }
 
@@ -105,7 +104,7 @@ public class ConfirmCommand extends SubCommand {
                                 } else {
                                     messageManager.sendMessage(player, configLoad
                                             .getString("Command.Island.Confirmation.Ownership.Member.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                 }
                             } else if (confirmation == Confirmation.Reset) {
                                 playerData.setConfirmation(null);
@@ -114,7 +113,7 @@ public class ConfirmCommand extends SubCommand {
                                 if (island.isOpen()) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.Confirmation.Deletion.Open.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                 } else {
                                     Location spawnLocation = LocationUtil.getSpawnLocation();
 
@@ -122,7 +121,7 @@ public class ConfirmCommand extends SubCommand {
                                             && islandManager.isLocationAtIsland(island, spawnLocation)) {
                                         messageManager.sendMessage(player, configLoad
                                                 .getString("Command.Island.Confirmation.Deletion.Spawn.Message"));
-                                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                         return;
                                     }
@@ -141,7 +140,7 @@ public class ConfirmCommand extends SubCommand {
                                                         configLoad.getString(
                                                                 "Command.Island.Confirmation.Deletion.Money.Message")
                                                                 .replace("%cost", "" + deletionCost));
-                                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+                                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
                                                         1.0F);
 
                                                 return;
@@ -161,34 +160,34 @@ public class ConfirmCommand extends SubCommand {
                                             all.sendMessage(
                                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                                             "Command.Island.Confirmation.Deletion.Broadcast.Message")));
-                                            soundManager.playSound(all, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
+                                            soundManager.playSound(all, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 10.0F, 10.0F);
                                         }
                                     }
 
                                     if (islandManager.deleteIsland(island, false)) {
                                         island.setDeleted(true);
                                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Deletion.Sender.Message"));
-                                        soundManager.playSound(player, Sounds.EXPLODE.bukkitSound(), 10.0F, 10.0F);
+                                        soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 10.0F, 10.0F);
                                     }else {
                                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Deletion.Sender.MaxDeletionMessage"));
-                                        soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1f, 1f);
+                                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1f, 1f);
                                     }
                                 }
                             }
                         } else {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Confirmation.Role.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         }
                     } else {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Confirmation.Specified.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     }
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Confirmation.Pending.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             }
         }
 

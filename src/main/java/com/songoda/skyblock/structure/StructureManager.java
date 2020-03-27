@@ -12,6 +12,7 @@ import java.util.List;
 
 public class StructureManager {
 
+    public List<String> knownStructures;
     private List<Structure> structureStorage = new ArrayList<>();
 
     public StructureManager(SkyBlock skyblock) {
@@ -87,6 +88,10 @@ public class StructureManager {
                         configLoad.getDouble("Structures." + structureList + ".Deletion.Cost")));
             }
         }
+    }
+
+    public void loadStructures() {
+
     }
 
     public void addStructure(String name, CompatibleMaterial materials, String overworldFile, String netherFile, String endFile,

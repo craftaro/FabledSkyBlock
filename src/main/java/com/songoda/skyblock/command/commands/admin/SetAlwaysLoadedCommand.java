@@ -3,6 +3,7 @@ package com.songoda.skyblock.command.commands.admin;
 import java.io.File;
 import java.util.UUID;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -18,7 +19,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 
 public class SetAlwaysLoadedCommand extends SubCommand {
 
@@ -66,13 +66,13 @@ public class SetAlwaysLoadedCommand extends SubCommand {
                 if (island.isAlwaysLoaded()) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetAlwaysLoaded.IsOff.Message"));
-                    soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     island.setAlwaysLoaded(false);
                 } else {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetAlwaysLoaded.IsOn.Message"));
-                    soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     island.setAlwaysLoaded(true);
                 }

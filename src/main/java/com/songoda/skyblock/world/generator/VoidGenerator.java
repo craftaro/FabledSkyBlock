@@ -33,9 +33,9 @@ public class VoidGenerator extends ChunkGenerator {
 
                 if (section.getBoolean("Liquid.Enable")) {
                     if (section.getBoolean("Liquid.Lava")) {
-                        setBlock(chunkData, CompatibleMaterial.LAVA.getMaterial(), section.getInt("Liquid.Height"));
+                        setBlock(chunkData, CompatibleMaterial.LAVA.getBlockMaterial(), section.getInt("Liquid.Height"));
                     } else {
-                        setBlock(chunkData, CompatibleMaterial.WATER.getMaterial(), section.getInt("Liquid.Height"));
+                        setBlock(chunkData, CompatibleMaterial.WATER.getBlockMaterial(), section.getInt("Liquid.Height"));
                     }
                 }
 

@@ -1,7 +1,7 @@
 package com.songoda.skyblock.listeners;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +33,7 @@ public class Inventory implements Listener {
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                 .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
     }

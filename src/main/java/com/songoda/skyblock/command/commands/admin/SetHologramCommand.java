@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -8,7 +9,6 @@ import com.songoda.skyblock.hologram.HologramManager;
 import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -65,7 +65,7 @@ public class SetHologramCommand extends SubCommand {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Admin.SetHologram.Set.Message").replace("%type",
                                 hologramType.name()));
-                soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                 return;
             }
@@ -73,7 +73,7 @@ public class SetHologramCommand extends SubCommand {
 
         messageManager.sendMessage(player,
                 configLoad.getString("Command.Island.Admin.SetHologram.Invalid.Message"));
-        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.songoda.skyblock.listeners;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerIslandEnterEvent;
 import com.songoda.skyblock.api.event.player.PlayerIslandExitEvent;
@@ -14,7 +15,6 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -74,7 +74,7 @@ public class Teleport implements Listener {
                 event.setCancelled(true);
 
                 messageManager.sendMessage(player, configLoad.getString("Island.Settings.Permission.Message"));
-                soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 return;
             }
@@ -97,14 +97,14 @@ public class Teleport implements Listener {
                             event.setCancelled(true);
 
                             messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Plugin.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
                         } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
                             event.setCancelled(true);
 
                             messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Teleport.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
                         }

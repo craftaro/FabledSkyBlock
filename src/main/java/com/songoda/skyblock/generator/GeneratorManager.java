@@ -1,11 +1,11 @@
 package com.songoda.skyblock.generator;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
  
 import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -117,7 +117,7 @@ public class GeneratorManager {
         CompatibleMaterial materials = getRandomMaterials(generator);
         if (materials == null) return block.getState();
         
-        skyblock.getSoundManager().playSound(block.getLocation(), Sounds.FIZZ.bukkitSound(), 1.0F, 10.0F);
+        skyblock.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 10.0F);
 
 
         if (NMSUtil.getVersionNumber() > 12) {

@@ -1,13 +1,14 @@
 package com.songoda.skyblock.listeners;
 
 import com.bgsoftware.wildstacker.api.events.*;
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
 
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Location;
@@ -38,20 +39,18 @@ public class WildStacker implements Listener {
 
         Island island = islandManager.getIslandAtLocation(location);
 
-        //TODO: Somehow play with this
         Material material = event.getBarrel().getType();
-        byte data = (byte) event.getBarrel().getData();
 
         if (NMSUtil.getVersionNumber() > 12 && material.name().startsWith("LEGACY_")) {
             material = Material.matchMaterial(material.name().replace("LEGACY_", ""));
-            data = 0;
         }
 
         FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-            Materials materials = Materials.getMaterials(material, data);
+            CompatibleMaterial materials = CompatibleMaterial.getBlockMaterial(material);
+
             if (materials != null) {
                 IslandLevel level = island.getLevel();
 
@@ -76,18 +75,17 @@ public class WildStacker implements Listener {
         Island island = islandManager.getIslandAtLocation(location);
 
         Material material = event.getBarrel().getType();
-        byte data = (byte) event.getBarrel().getData();
 
         if (NMSUtil.getVersionNumber() > 12 && material.name().startsWith("LEGACY_")) {
             material = Material.matchMaterial(material.name().replace("LEGACY_", ""));
-            data = 0;
         }
 
         FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-            Materials materials = Materials.getMaterials(material, data);
+            CompatibleMaterial materials = CompatibleMaterial.getBlockMaterial(material);
+
             if (materials != null) {
                 IslandLevel level = island.getLevel();
 
@@ -112,18 +110,17 @@ public class WildStacker implements Listener {
         Island island = islandManager.getIslandAtLocation(location);
 
         Material material = event.getBarrel().getType();
-        byte data = (byte) event.getBarrel().getData();
 
         if (NMSUtil.getVersionNumber() > 12 && material.name().startsWith("LEGACY_")) {
             material = Material.matchMaterial(material.name().replace("LEGACY_", ""));
-            data = 0;
         }
 
         FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-            Materials materials = Materials.getMaterials(material, data);
+            CompatibleMaterial materials = CompatibleMaterial.getBlockMaterial(material);
+
             if (materials != null) {
                 IslandLevel level = island.getLevel();
 
@@ -156,7 +153,8 @@ public class WildStacker implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-            Materials materials = Materials.getSpawner(spawnerType);
+            CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
+
             if (materials != null) {
                 IslandLevel level = island.getLevel();
 
@@ -186,7 +184,8 @@ public class WildStacker implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-            Materials materials = Materials.getSpawner(spawnerType);
+            CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
+
             if (materials != null) {
                 IslandLevel level = island.getLevel();
 
@@ -216,7 +215,8 @@ public class WildStacker implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-            Materials materials = Materials.getSpawner(spawnerType);
+            CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
+
             if (materials != null) {
                 IslandLevel level = island.getLevel();
 

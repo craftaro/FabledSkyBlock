@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.api.event.island.IslandKickEvent;
 import com.songoda.skyblock.api.utils.APIUtil;
 import com.songoda.skyblock.command.SubCommand;
@@ -9,7 +10,6 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -35,7 +35,7 @@ public class KickAllCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Owner.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                 || (island.hasRole(IslandRole.Operator, player.getUniqueId())
                 && island.getSetting(IslandRole.Operator, "Kick").getStatus())) {
@@ -44,7 +44,7 @@ public class KickAllCommand extends SubCommand {
 
                 if (islandVisitors.size() == 0) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Visitors.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else {
                     for (UUID islandVisitorList : islandVisitors) {
                         Player targetPlayer = Bukkit.getServer().getPlayer(islandVisitorList);
@@ -63,22 +63,22 @@ public class KickAllCommand extends SubCommand {
                             messageManager.sendMessage(targetPlayer,
                                     configLoad.getString("Command.Island.KickAll.Kicked.Target.Message")
                                             .replace("%player", player.getName()));
-                            soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                         }
                     }
 
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.KickAll.Kicked.Sender.Message").replace("%visitors",
                                     "" + islandVisitors.size()));
-                    soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Closed.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Role.Message"));
-            soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }
 

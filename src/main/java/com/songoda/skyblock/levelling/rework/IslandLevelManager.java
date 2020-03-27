@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,17 +39,17 @@ import com.songoda.skyblock.utils.version.NMSUtil;
 
 public final class IslandLevelManager {
 
-    private static final Set<CompatibleMaterial> CHECKED_DOUBLE_TYPES;
+    private static final Set<Material> CHECKED_DOUBLE_TYPES;
 
     static {
-        CHECKED_DOUBLE_TYPES = EnumSet.noneOf(CompatibleMaterial.class);
+        CHECKED_DOUBLE_TYPES = EnumSet.noneOf(Material.class);
 
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.SUNFLOWER);
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.LILAC);
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.LARGE_FERN);
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.ROSE_BUSH);
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.PEONY);
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.TALL_GRASS);
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.SUNFLOWER.getMaterial());
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.LILAC.getMaterial());
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.LARGE_FERN.getMaterial());
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.ROSE_BUSH.getMaterial());
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.PEONY.getMaterial());
+        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.TALL_GRASS.getMaterial());
     }
 
     private final static int VERSION = NMSUtil.getVersionNumber();
@@ -185,7 +185,7 @@ public final class IslandLevelManager {
 
         if (blockType == CompatibleMaterial.AIR) return EMPTY;
 
-        CompatibleMaterial finalType = parseType(block);
+        Material finalType = parseType(block).getMaterial();
 
         if (finalType == null) return EMPTY;
 
@@ -206,28 +206,27 @@ public final class IslandLevelManager {
                 scan.getDoubleBlocks().add(block.getRelative(BlockFace.UP).getLocation());
             }
 
-        } else if (finalType == CompatibleMaterial.SPAWNER) {
-            //finalType = Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
-            //finalType = CompatibleMaterial.getBlockMaterial(block.getType());
-            //finalType = CompatibleMaterial.getBlockMaterial(Materials.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType()).getPostMaterial());
-            //TODO: Brianna
+        } else if (finalType == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
+            finalType = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType()).getMaterial();
         }
 
         final List<Calculator> calculators = CalculatorRegistry.getCalculators(blockType);
         final StackableManager stackableManager = SkyBlock.getInstance().getStackableManager();
 
-        final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(blockLocation, finalType);
+        final CompatibleMaterial finalCompatMat = CompatibleMaterial.getMaterial(finalType);
+
+        final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(blockLocation, finalCompatMat);
 
         if (calculators == null) {
 
-            if (stackSize > 1) return new AmountMaterialPair(finalType, stackSize);
+            if (stackSize > 1) return new AmountMaterialPair(finalCompatMat, stackSize);
 
             AmountMaterialPair cachedPair = cachedPairs.get(finalType);
 
             if (cachedPair != null) return cachedPair;
 
-            cachedPair = new AmountMaterialPair(finalType, 1);
-            cachedPairs.put(finalType, cachedPair);
+            cachedPair = new AmountMaterialPair(finalCompatMat, 1);
+            cachedPairs.put(finalCompatMat, cachedPair);
 
             return cachedPair;
         }
@@ -240,7 +239,7 @@ public final class IslandLevelManager {
 
         if (amount == 0) amount = 1;
 
-        return new AmountMaterialPair(finalType, amount + stackSize);
+        return new AmountMaterialPair(finalCompatMat, amount + stackSize);
     }
 
 }

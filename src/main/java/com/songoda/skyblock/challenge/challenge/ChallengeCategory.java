@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -53,7 +54,8 @@ public class ChallengeCategory {
 				lore = new ArrayList<>();
 			try {
 				// If an Exception occurs, we don't handle it here but in parent class
-				Material item = Material.matchMaterial(strItem);
+				System.out.println(strItem);
+				Material item = CompatibleMaterial.getMaterial(strItem).getMaterial();
 				if (item == null)
 					throw new IllegalArgumentException("Item " + strItem + " isn't a correct material");
 				ItemChallenge ic = new ItemChallenge(show, row, col, item, amount, lore);

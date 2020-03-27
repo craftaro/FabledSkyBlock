@@ -1,5 +1,6 @@
 package com.songoda.skyblock.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.api.utils.APIUtil;
@@ -11,7 +12,6 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.world.WorldManager;
@@ -847,7 +847,7 @@ public class Island {
                             .getString("Island.Unlock." + type + ".Message").replace(
                             "%cost%", NumberUtil.formatNumberByDecimal(price)));
 
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             player.setVelocity(player.getLocation().getDirection().multiply(-.50));
         }
         return unlocked;

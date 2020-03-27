@@ -1,10 +1,10 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.menus.Members;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,7 +20,7 @@ public class MembersCommand extends SubCommand {
             skyblock.getMessageManager().sendMessage(player,
                     skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                             .getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
             PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
             playerData.setType(Members.Type.Default);
@@ -28,7 +28,7 @@ public class MembersCommand extends SubCommand {
 
             Members.getInstance().open(player, (Members.Type) playerData.getType(),
                     (Members.Sort) playerData.getSort());
-            soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
         }
     }
 

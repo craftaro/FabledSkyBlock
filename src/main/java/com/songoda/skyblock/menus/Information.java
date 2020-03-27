@@ -1,6 +1,7 @@
 package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -16,7 +17,6 @@ import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -70,7 +70,7 @@ public class Information {
 
                 if (island == null) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Information.Island.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
@@ -80,7 +80,7 @@ public class Information {
                         if (islandManager.getVisitorsAtIsland(island).size() == 0) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Island.Information.Visitors.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             playerData.setViewer(
                                     new Information.Viewer(viewer.getOwner(), Information.Viewer.Type.Categories));
@@ -90,7 +90,7 @@ public class Information {
                         }
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Island.Information.Closed.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         playerData.setViewer(
                                 new Information.Viewer(viewer.getOwner(), Information.Viewer.Type.Categories));
@@ -121,7 +121,7 @@ public class Information {
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Categories.Item.Exit.Displayname"))))) {
-                                soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                             } else if ((is.getType() == CompatibleMaterial.ITEM_FRAME.getMaterial()) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -129,7 +129,7 @@ public class Information {
                                 playerData13.setViewer(new Viewer(
                                         ((Viewer) playerData13.getViewer()).getOwner(),
                                         Viewer.Type.Members));
-                                soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                         () -> open(player), 1L);
@@ -138,7 +138,7 @@ public class Information {
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Categories.Item.Information.Displayname"))))) {
-                                soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -149,7 +149,7 @@ public class Information {
                                 playerData13.setViewer(new Viewer(
                                         ((Viewer) playerData13.getViewer()).getOwner(),
                                         Viewer.Type.Visitors));
-                                soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                         () -> open(player), 1L);
@@ -277,7 +277,7 @@ public class Information {
                                 playerData1.setViewer(new Viewer(
                                         ((Viewer) playerData1.getViewer()).getOwner(),
                                         Viewer.Type.Categories));
-                                soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                         () -> open(player), 1L);
@@ -285,7 +285,7 @@ public class Information {
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Members.Item.Statistics.Displayname"))))) {
-                                soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -294,7 +294,7 @@ public class Information {
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Members.Item.Barrier.Displayname"))))) {
-                                soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -304,7 +304,7 @@ public class Information {
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                                 "Menu.Information.Members.Item.Previous.Displayname")))) {
                                     playerData1.setPage(playerData1.getPage() - 1);
-                                    soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                             () -> open(player), 1L);
@@ -312,12 +312,12 @@ public class Information {
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                                 .getString("Menu.Information.Members.Item.Next.Displayname")))) {
                                     playerData1.setPage(playerData1.getPage() + 1);
-                                    soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                             () -> open(player), 1L);
                                 } else {
-                                    soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F,
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F,
                                             1.0F);
 
                                     event.setWillClose(false);
@@ -438,7 +438,7 @@ public class Information {
                                 playerData12.setViewer(new Viewer(
                                         ((Viewer) playerData12.getViewer()).getOwner(),
                                         Viewer.Type.Categories));
-                                soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                         () -> open(player), 1L);
@@ -446,7 +446,7 @@ public class Information {
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Visitors.Item.Statistics.Displayname"))))) {
-                                soundManager.playSound(player, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -455,7 +455,7 @@ public class Information {
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Visitors.Item.Barrier.Displayname"))))) {
-                                soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -465,7 +465,7 @@ public class Information {
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                                 "Menu.Information.Visitors.Item.Previous.Displayname")))) {
                                     playerData12.setPage(playerData12.getPage() - 1);
-                                    soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                             () -> open(player), 1L);
@@ -473,12 +473,12 @@ public class Information {
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                                 .getString("Menu.Information.Visitors.Item.Next.Displayname")))) {
                                     playerData12.setPage(playerData12.getPage() + 1);
-                                    soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                             () -> open(player), 1L);
                                 } else {
-                                    soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F,
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F,
                                             1.0F);
 
                                     event.setWillClose(false);

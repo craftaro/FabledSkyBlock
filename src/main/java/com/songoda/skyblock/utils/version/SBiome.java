@@ -1,5 +1,6 @@
 package com.songoda.skyblock.utils.version;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.utils.StringUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -8,46 +9,48 @@ import org.bukkit.inventory.ItemStack;
 /**
  * A Biome wrapper for supporting Biomes in 1.8-1.13+
  */
+
+//TODO: Use CompatibleBiome
 public enum SBiome {
 
-    BADLANDS(true, Materials.DEAD_BUSH),
-    COLD_OCEAN(true, Materials.ICE),
-    DARK_FOREST("ROOFED_FOREST", Materials.DARK_OAK_SAPLING),
-    DESERT(Materials.SAND),
-    FOREST(Materials.FERN),
-    JUNGLE(Materials.VINE),
-    MOUNTAINS("EXTREME_HILLS", Materials.EMERALD_ORE),
-    MUSHROOM_FIELDS("MUSHROOM_ISLAND", Materials.RED_MUSHROOM),
-    NETHER("HELL", Materials.NETHERRACK),
-    PLAINS(Materials.SUNFLOWER),
-    RIVER(Materials.COD),
-    SAVANNA(Materials.ACACIA_SAPLING),
-    SNOWY_BEACH("COLD_BEACH", Materials.SNOWBALL),
-    SWAMP("SWAMPLAND", Materials.SLIME_BALL),
-    TAIGA(Materials.SPRUCE_SAPLING),
-    THE_END(true, Materials.END_STONE),
-    THE_VOID("SKY", Materials.OBSIDIAN),
-    WARM_OCEAN(true, Materials.TROPICAL_FISH);
+    BADLANDS(true, CompatibleMaterial.DEAD_BUSH),
+    COLD_OCEAN(true, CompatibleMaterial.ICE),
+    DARK_FOREST("ROOFED_FOREST", CompatibleMaterial.DARK_OAK_SAPLING),
+    DESERT(CompatibleMaterial.SAND),
+    FOREST(CompatibleMaterial.FERN),
+    JUNGLE(CompatibleMaterial.VINE),
+    MOUNTAINS("EXTREME_HILLS", CompatibleMaterial.EMERALD_ORE),
+    MUSHROOM_FIELDS("MUSHROOM_ISLAND", CompatibleMaterial.RED_MUSHROOM),
+    NETHER("HELL", CompatibleMaterial.NETHERRACK),
+    PLAINS(CompatibleMaterial.SUNFLOWER),
+    RIVER(CompatibleMaterial.COD),
+    SAVANNA(CompatibleMaterial.ACACIA_SAPLING),
+    SNOWY_BEACH("COLD_BEACH", CompatibleMaterial.SNOWBALL),
+    SWAMP("SWAMPLAND", CompatibleMaterial.SLIME_BALL),
+    TAIGA(CompatibleMaterial.SPRUCE_SAPLING),
+    THE_END(true, CompatibleMaterial.END_STONE),
+    THE_VOID("SKY", CompatibleMaterial.OBSIDIAN),
+    WARM_OCEAN(true, CompatibleMaterial.TROPICAL_FISH);
 
     private static boolean isPostVersion = NMSUtil.getVersionNumber() >= 13;
 
     private String legacyName;
     private boolean isPost13;
-    private Materials guiIcon;
+    private CompatibleMaterial guiIcon;
 
-    SBiome(Materials guiIcon) {
+    SBiome(CompatibleMaterial guiIcon) {
         this(null, false, guiIcon);
     }
 
-    SBiome(String legacyName, Materials guiIcon) {
+    SBiome(String legacyName, CompatibleMaterial guiIcon) {
         this(legacyName, false, guiIcon);
     }
 
-    SBiome(boolean isPost13, Materials guiIcon) {
+    SBiome(boolean isPost13, CompatibleMaterial guiIcon) {
         this(null, isPost13, guiIcon);
     }
 
-    SBiome(String legacyName, boolean is13only, Materials guiIcon) {
+    SBiome(String legacyName, boolean is13only, CompatibleMaterial guiIcon) {
         this.legacyName = legacyName;
         this.isPost13 = is13only;
         this.guiIcon = guiIcon;
@@ -107,7 +110,7 @@ public enum SBiome {
     public ItemStack getGuiIcon() {
         if (!this.isAvailable())
             return null;
-        return this.guiIcon.parseItem();
+        return this.guiIcon.getItem();
     }
 
 }

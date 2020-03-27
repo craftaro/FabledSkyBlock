@@ -1,6 +1,7 @@
 package com.songoda.skyblock.menus.admin;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -9,7 +10,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -53,7 +53,7 @@ public class Settings {
                         || player.hasPermission("fabledskyblock.*"))) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Admin.Settings.Permission.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
@@ -63,36 +63,36 @@ public class Settings {
                 if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Settings.Categories.Item.Exit.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                 } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                 .getString("Menu.Admin.Settings.Categories.Item.Visitor.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Visitor), 1L);
                 } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Settings.Categories.Item.Member.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Member), 1L);
                 } else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName()
                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                 .getString("Menu.Admin.Settings.Categories.Item.Operator.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Operator), 1L);
                 } else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Settings.Categories.Item.Coop.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Coop), 1L);
                 } else if ((is.getType() == CompatibleMaterial.OAK_SAPLING.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Settings.Categories.Item.Owner.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Owner), 1L);
                 }
@@ -143,7 +143,7 @@ public class Settings {
                         || player.hasPermission("fabledskyblock.*"))) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Admin.Settings.Permission.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
@@ -163,7 +163,7 @@ public class Settings {
                                         .getString("Menu.Admin.Settings.Operator.Item.Return.Displayname")))
                         || is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Settings.Owner.Item.Return.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Categories, null), 1L);
                 } else if (is.hasItemMeta()) {
@@ -198,7 +198,7 @@ public class Settings {
                         }
                     }
 
-                    soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, role), 1L);
                 }

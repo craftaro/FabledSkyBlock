@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.IslandManager;
@@ -9,7 +10,6 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,13 +46,13 @@ public class InformationCommand extends SubCommand {
                 if (islandOwnerUUID == null) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Information.Island.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
             } else if (args.length != 0) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Information.Invalid.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                 return;
             }
@@ -63,7 +63,7 @@ public class InformationCommand extends SubCommand {
                 if (islandManager.getIsland(player) == null) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Information.Owner.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 } else {
@@ -73,7 +73,7 @@ public class InformationCommand extends SubCommand {
 
             playerData.setViewer(new Information.Viewer(islandOwnerUUID, Information.Viewer.Type.Categories));
             Information.getInstance().open(player);
-            soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
         }
     }
 

@@ -169,9 +169,8 @@ public final class StructureUtil {
 
         List<BlockData> blockData = new Gson().fromJson(storage.getBlocks(), new TypeToken<List<BlockData>>() {}.getType());
 
-        //Dump this
-
         for (BlockData blockDataList : blockData) {
+
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
                 try {
                     org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(), blockDataList.getY(), blockDataList.getZ()), type);

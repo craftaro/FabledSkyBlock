@@ -1,6 +1,7 @@
 package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -11,8 +12,7 @@ import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
- 
-import com.songoda.skyblock.utils.version.Sounds;
+
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -61,7 +61,7 @@ public class Leaderboard {
                                 .equals(ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Leaderboard." + Viewer.Type.Browse.name()
                                                 + ".Item.Exit.Displayname"))))) {
-                            soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
 
                             return;
                         } else if ((is.getType() == Material.DIAMOND) && (is.hasItemMeta())
@@ -90,7 +90,7 @@ public class Leaderboard {
                             playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.Votes));
                         }
 
-                        soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                     }
@@ -143,7 +143,7 @@ public class Leaderboard {
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())) {
                             if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                                     configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Exit.Displayname")))) {
-                                soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                             } else if (is.getItemMeta().getDisplayName()
                                     .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                             .getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname")))) {
@@ -152,11 +152,11 @@ public class Leaderboard {
                                         .getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
                                     playerDataManager.getPlayerData(player)
                                             .setViewer(new Viewer(Viewer.Type.Browse));
-                                    soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                                 } else {
-                                    soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                                 }
 
                                 return;
@@ -207,7 +207,7 @@ public class Leaderboard {
                             return;
                         }
 
-                        soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);

@@ -6,7 +6,7 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
 
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.world.WorldManager;
 import com.songoda.ultimatestacker.events.SpawnerBreakEvent;
 import com.songoda.ultimatestacker.events.SpawnerPlaceEvent;
@@ -41,7 +41,7 @@ public class UltimateStacker implements Listener {
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-                Materials materials = Materials.getSpawner(event.getSpawnerType()); //TODO: BRIANNA SPAWNERS
+                CompatibleSpawners materials = CompatibleSpawners.getSpawner(event.getSpawnerType());
                 if (materials != null) {
                     IslandLevel level = island.getLevel();
 
@@ -70,7 +70,7 @@ public class UltimateStacker implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-            Materials materials = Materials.getSpawner(event.getSpawnerType());
+            CompatibleSpawners materials = CompatibleSpawners.getSpawner(event.getSpawnerType());
             if (materials != null) {
                 IslandLevel level = island.getLevel();
 

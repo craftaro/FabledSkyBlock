@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -59,7 +59,7 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
         if (player.hasPermission("fabledskyblock.limit.block.*")) return -1;
 
-        final Materials material = Materials.getMaterials(block.getType(), block.getData());
+        final CompatibleMaterial material = CompatibleMaterial.getMaterial(block.getType());
 
         if (material == null) return -1;
 
@@ -77,11 +77,10 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
         final Island island = islandManager.getIslandAtLocation(block.getLocation());
         final long totalPlaced;
 
-        //TODO: REdo for CompatibleMaterial
-        if (block.getType() == Materials.SPAWNER.parseMaterial()) {
+        if (block.getType() == CompatibleSpawners.SPAWNER.getMaterial()) {
             totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {
-            totalPlaced = island.getLevel().getMaterialAmount(Materials.getMaterials(block.getType(), block.getData()).name());
+            totalPlaced = island.getLevel().getMaterialAmount(CompatibleMaterial.getMaterial(block.getType()).name());
         }
 
         return limit < totalPlaced + 1;

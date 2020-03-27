@@ -9,7 +9,7 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
 
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -47,7 +47,7 @@ public class EpicSpawners implements Listener {
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-                Materials materials = Materials.getSpawner(spawnerType);
+                CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
                 if (materials != null) {
                     IslandLevel level = island.getLevel();
 
@@ -82,7 +82,7 @@ public class EpicSpawners implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-            Materials materials = Materials.getSpawner(spawnerType);
+            CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
             if (materials != null) {
                 IslandLevel level = island.getLevel();
 
@@ -117,7 +117,7 @@ public class EpicSpawners implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-            Materials materials = Materials.getSpawner(spawnerType);
+            CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
             if (materials != null) {
                 IslandLevel level = island.getLevel();
 
