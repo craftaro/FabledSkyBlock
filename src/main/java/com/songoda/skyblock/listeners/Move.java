@@ -208,8 +208,10 @@ public class Move implements Listener {
         final Player player = e.getPlayer();
         final WorldManager worldManager = skyblock.getWorldManager();
 
-        if (!worldManager.isIslandWorld(e.getTo().getWorld())) return;
-        if (skyblock.getIslandManager().getIslandAtLocation(e.getTo()) != null) return;
+        if (e.getTo() == null ||
+                !worldManager.isIslandWorld(e.getTo().getWorld()) ||
+                skyblock.getIslandManager().getIslandAtLocation(e.getTo()) != null)
+            return;
 
         e.setCancelled(true);
 
