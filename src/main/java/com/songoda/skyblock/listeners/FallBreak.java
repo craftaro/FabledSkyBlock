@@ -59,7 +59,7 @@ public class FallBreak implements Listener {
             FallingBlock fallingBlock = (FallingBlock) e;
 
             // Get the block material
-            CompatibleMaterial material = CompatibleMaterial.getMaterial(fallingBlock.getBlockData().getMaterial());
+            CompatibleMaterial material = CompatibleMaterial.getMaterial(fallingBlock.getMaterial());
 
             if (material == null) continue;
 
