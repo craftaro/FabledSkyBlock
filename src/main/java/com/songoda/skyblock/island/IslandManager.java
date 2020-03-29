@@ -44,7 +44,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import com.songoda.skyblock.confirmation.Confirmation;
-import com.songoda.skyblock.utils.ChatComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -64,6 +63,8 @@ public class IslandManager {
     private Map<UUID, Island> islandStorage = new HashMap<>();
     private int offset = 1200;
 
+	private HashMap<IslandWorld, Integer> oldSystemIslands;
+
     public IslandManager(SkyBlock skyblock) {
         this.skyblock = skyblock;
 
@@ -81,6 +82,8 @@ public class IslandManager {
         for (Island island : getIslands().values()) {
             if (island.isAlwaysLoaded()) loadIslandAtLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island));
         }
+        
+        loadIslandPositions();
     }
 
     public void onDisable() {
@@ -134,41 +137,52 @@ public class IslandManager {
                 FileConfiguration configLoad_world = config_world.getFileConfiguration();
                 FileConfiguration configLoad_config = config_config.getFileConfiguration();
                 int x = (int) configLoad_world.get("World." + world.name() + ".nextAvailableLocation.island_number");
-                double r = Math.floor((Math.sqrt(x + 1) - 1) / 2) + 1;
-                double p = (8 * r * (r -1)) / 2;
-                double en = r * 2;
-                double a = (x - p) % (r * 8);
-                int posX = 0;
-                int posY = 0;
-                int loc = (int) Math.floor(a / (r * 2));
-                switch (loc) {
-                    case 0 :
-                        posX = (int) (a-r);
-                        posY = (int) (-r);
-                        break;
-                    case 1:
-                        posX = (int) r;
-                        posY = (int) ((a % en) - r);
-                        break;
-                    case 2:
-                        posX = (int) (r - (a % en));
-                        posY = (int) r;
-                        break;
-                    case 3:
-                        posX = (int) (-r);
-                        posY = (int) (r - (a % en));
-                        break;
-                    default:
-                        System.err.println("[FabledSkyblock][prepareNextAvailableLocation] Erreur dans la spirale, valeur : " + loc);
-                        return null;
-                }
-                posX = posX * offset;
-                posY = posY * offset;
-                islandPositionList.setX((double) posX);
-                islandPositionList.setZ((double) posY);
-
                 int islandHeight = configLoad_config.getInt("Island.World." + world.name() + ".IslandSpawnHeight", 72);
-                return new org.bukkit.Location(skyblock.getWorldManager().getWorld(world), islandPositionList.getX(), islandHeight, islandPositionList.getZ());
+                while (true) {
+                    double r = Math.floor((Math.sqrt(x + 1) - 1) / 2) + 1;
+                    double p = (8 * r * (r -1)) / 2;
+                    double en = r * 2;
+                    double a = (x - p) % (r * 8);
+                    int posX = 0;
+                    int posY = 0;
+                    int loc = (int) Math.floor(a / (r * 2));
+                    switch (loc) {
+                        case 0 :
+                            posX = (int) (a-r);
+                            posY = (int) (-r);
+                            break;
+                        case 1:
+                            posX = (int) r;
+                            posY = (int) ((a % en) - r);
+                            break;
+                        case 2:
+                            posX = (int) (r - (a % en));
+                            posY = (int) r;
+                            break;
+                        case 3:
+                            posX = (int) (-r);
+                            posY = (int) (r - (a % en));
+                            break;
+                        default:
+                            System.err.println("[FabledSkyblock][prepareNextAvailableLocation] Erreur dans la spirale, valeur : " + loc);
+                            return null;
+                    }
+                    posX = posX * offset;
+                    posY = posY * offset;
+                    islandPositionList.setX((double) posX);
+                    islandPositionList.setZ((double) posY);
+                    // Check if there was an island at this position
+                    int oldFormatPos = oldSystemIslands.get(world);
+                    Location islandLocation = new org.bukkit.Location(skyblock.getWorldManager().getWorld(world), islandPositionList.getX(), islandHeight, islandPositionList.getZ());
+                	if (posX == 1200 && posY >= 0 && posY <= oldFormatPos) {
+                		// We have to save to avoid having two islands at same location
+                        setNextAvailableLocation(world, islandLocation);
+                        saveNextAvailableLocation(world);
+                		x++;
+                		continue;
+                	}
+                    return islandLocation;
+                }
             }
         }
 
@@ -700,6 +714,54 @@ public class IslandManager {
 
         return null;
     }
+
+    /**
+     * The old island position system was not good, it always create islands at x = 1200 and z starting at 0 and increasing by 1200<br />
+     * This method will get the nextAvailableLocation for normal, nether and end islands in worlds.yml file
+     * to avoid creating island where an existing island was
+     */
+	public void loadIslandPositions() {
+		oldSystemIslands = new HashMap<>();
+
+		FileManager fileManager = skyblock.getFileManager();
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/worlds.yml"));
+		FileConfiguration fileConfig = config.getFileConfiguration();
+		Config config2 = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/worlds.oldformat.yml"));
+		FileConfiguration fileConfig2 = config2.getFileConfiguration();
+
+		// TODO Find a way to automatically
+		int normalZ = 0;
+		int netherZ = 0;
+		int endZ = 0;
+		if (!config2.getFile().exists()) {
+			// Old data
+			Bukkit.getLogger().info("[FabledSkyblock] Old format detected, please wait ...");
+			if (fileConfig.contains("World.Normal.nextAvailableLocation"))
+				normalZ = fileConfig.getInt("World.Normal.nextAvailableLocation.z");
+			if (fileConfig.contains("World.Nether.nextAvailableLocation"))
+				netherZ = fileConfig.getInt("World.Nether.nextAvailableLocation.z");
+			if (fileConfig.contains("World.End.nextAvailableLocation"))
+				endZ = fileConfig.getInt("World.End.nextAvailableLocation.z");
+			// Save
+			fileConfig2.set("Normal", normalZ);
+			fileConfig2.set("Nether", netherZ);
+			fileConfig2.set("End", endZ);
+			try {
+				fileConfig2.save(config2.getFile());
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			Bukkit.getLogger().info("[FabledSkyblock] Done ! Got normalZ = " + normalZ + ", netherZ = " + netherZ + ", endZ = " + endZ);
+		} else {
+			// Load datas
+			normalZ = fileConfig2.getInt("Normal");
+			netherZ = fileConfig2.getInt("Nether");
+			endZ = fileConfig2.getInt("End");
+		}
+		oldSystemIslands.put(IslandWorld.Normal, normalZ);
+		oldSystemIslands.put(IslandWorld.Nether, netherZ);
+		oldSystemIslands.put(IslandWorld.End, endZ);
+	}
 
     public Island loadIslandAtLocation(Location location) {
         FileManager fileManager = skyblock.getFileManager();
