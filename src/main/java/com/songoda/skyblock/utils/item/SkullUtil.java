@@ -67,14 +67,6 @@ public final class SkullUtil {
     }
 
     public static ItemStack createItemStack() {
-        ItemStack is;
-
-        if (NMSUtil.getVersionNumber() > 12) {
-            is = new ItemStack(Material.valueOf("PLAYER_HEAD"));
-        } else {
-            is = CompatibleMaterial.SKELETON_SKULL.getItem();
-        }
-
-        return is;
+        return CompatibleMaterial.PLAYER_HEAD.getItem();
     }
 }
