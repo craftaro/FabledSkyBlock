@@ -15,10 +15,12 @@ import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,9 +62,11 @@ public class Levelling implements Listener {
         // Filter out materials that won't be displayed in the GUI properly
         Inventory testInventory = Bukkit.createInventory(null, 9);
         levellingMaterials = levellingMaterials.stream().filter(x -> {
-            //if (!x.getMaterials().isAvailable()) return false; //TODO: Add spawner check
+            if (x.getMaterials() == CompatibleMaterial.SPAWNER) return false;
             if (x.getItemStack() == null) return false;
-            ItemStack itemStack = new ItemStack(CompatibleMaterial.getMaterial(x.getItemStack().getType()).getMaterial(), 1, x.getItemStack().getDurability());
+            ItemStack itemStack = x.getMaterials().getItem();
+            itemStack.setAmount(1);
+            itemStack.setDurability(x.getItemStack().getDurability());
             if (itemStack == null || itemStack.getItemMeta() == null) return false;
             testInventory.clear();
             testInventory.setItem(0, itemStack);
@@ -121,10 +125,12 @@ public class Levelling implements Listener {
                     inventorySlot++;
 
                     LevellingMaterial material = levellingMaterials.get(index);
+                    ItemStack itemStack = material.getMaterials().getItem();
+                    itemStack.setAmount(1);
+                    itemStack.setDurability(material.getItemStack().getDurability());
                     nInv.addItem(
                             nInv.createItem(
-                                    new ItemStack( CompatibleMaterial.getMaterial(material.getItemStack().getType()).getMaterial(), 1,
-                                            material.getItemStack().getDurability()),
+                                    itemStack,
                                     ChatColor.translateAlternateColorCodes('&',
                                             configLoad.getString("Menu.Admin.Levelling.Item.Material.Displayname")
                                                     .replace("%material", material.getMaterials().name())),
