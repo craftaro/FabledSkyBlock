@@ -27,7 +27,9 @@ public class VoidGenerator extends ChunkGenerator {
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
 
         for (IslandWorld worldList : IslandWorld.values()) {
-            if (world.getEnvironment() == worldList.getUncheckedEnvironment()) {
+            if (world.getEnvironment() == World.Environment.NETHER
+                    || world.getEnvironment() == World.Environment.NORMAL
+                    || world.getEnvironment() == World.Environment.THE_END) {
 
                 ConfigurationSection section = worldSection.getConfigurationSection(worldList.name());
 
