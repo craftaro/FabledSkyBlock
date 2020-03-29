@@ -1,15 +1,19 @@
-# FabledSkyblock Island level rewards
+# FabledSkyblock Island Level Rewards
+
+# Rewards that should run only once.
 Once:
+  # Level
   1:
-    # Vault balance
+    # Vault balance added directly to the owners account
     money: 100
     # Commands ran by console
     commands:
-      - 'say %player% reached level 1!'
+      - 'say %player% reached level 1 on his island!'
   2:
-    money: 100
-    commands:
-      - 'say %player% reached level 1!'
+    # Balance added to island bank
+    island-balance: 1000
+
+# Rewards that repeat every x levels
 Repeat:
   5:
     money: 1000

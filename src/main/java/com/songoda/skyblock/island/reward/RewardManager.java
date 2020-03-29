@@ -28,57 +28,69 @@ public class RewardManager {
         this.repeatRewards.clear();
 
         ConfigurationSection onceSection = configLoad.getConfigurationSection("Once");
-        for (String key : onceSection.getKeys(false)) {
-            long level;
-            try {
-                level = Long.parseLong(key);
-            } catch (NumberFormatException e) {
-                continue;
+
+        if (onceSection != null) {
+            for (String key : onceSection.getKeys(false)) {
+                long level;
+                try {
+                    level = Long.parseLong(key);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+
+                this.registeredRewards.put(level, loadReward("Once." + key));
             }
-
-            ConfigurationSection section = onceSection.getConfigurationSection(key);
-
-            double money = section.getDouble("money", 0);
-
-            List<String> commands = section.contains("commands") ? section.getStringList("commands") : new ArrayList<>();
-
-            LevelReward levelReward = new LevelReward(commands, money);
-
-            this.registeredRewards.put(level, levelReward);
         }
 
         ConfigurationSection repeatSection = configLoad.getConfigurationSection("Repeat");
-        for (String key : repeatSection.getKeys(false)) {
-            long level;
-            try {
-                level = Long.parseLong(key);
-            } catch (NumberFormatException e) {
-                continue;
+
+        if (repeatSection != null) {
+            for (String key : repeatSection.getKeys(false)) {
+                long level;
+                try {
+                    level = Long.parseLong(key);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+
+                this.repeatRewards.put(level, loadReward("Repeat." + key));
             }
-
-            ConfigurationSection section = repeatSection.getConfigurationSection(key);
-
-            double money = section.getDouble("money", 0);
-
-            List<String> commands = section.contains("commands") ? section.getStringList("commands") : new ArrayList<>();
-
-            LevelReward levelReward = new LevelReward(commands, money);
-
-            this.repeatRewards.put(level, levelReward);
         }
+    }
+
+    private LevelReward loadReward(String path) {
+        final FileConfiguration config = skyBlock.getFileManager().getConfig(new File(skyBlock.getDataFolder(), "rewards.yml")).getFileConfiguration();
+
+        ConfigurationSection section = config.getConfigurationSection(path);
+
+        LevelReward levelReward = new LevelReward();
+
+        if (section == null) return levelReward;
+
+        double money = section.getDouble("money", 0);
+        levelReward.setMoney(money);
+
+        double islandVault = section.getDouble("island-balance", 0);
+        levelReward.setIslandBalance(islandVault);
+
+        List<String> commands = section.contains("commands") ? section.getStringList("commands") : new ArrayList<>();
+        levelReward.setCommands(commands);
+
+        return levelReward;
     }
 
     public LevelReward getReward(long level) {
         return this.registeredRewards.getOrDefault(level, null);
     }
 
-    public LevelReward getRepeatReward(long level) {
+    public List<LevelReward> getRepeatRewards(long level) {
+        List<LevelReward> levelRewards = new ArrayList<>();
+
         for (long loopLevel : this.repeatRewards.keySet()) {
-            if (level % loopLevel == 0) {
-                return this.repeatRewards.get(loopLevel);
-            }
+            if (level % loopLevel == 0) levelRewards.add(this.repeatRewards.get(loopLevel));
         }
-        return null;
+
+        return levelRewards;
     }
 
     public Map<Long, LevelReward> getRegisteredRewards() {

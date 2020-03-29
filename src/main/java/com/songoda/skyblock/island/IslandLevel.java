@@ -1,20 +1,19 @@
 package com.songoda.skyblock.island;
 
+import com.google.common.base.Strings;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.reward.LevelReward;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 
 public class IslandLevel {
 
@@ -126,29 +125,40 @@ public class IslandLevel {
         if (level <= highestLevel)
             return;
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        final FileConfiguration language = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+        final FileConfiguration config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
 
-        String msg = configLoad.getString("Command.Island.Level.LevelUp.Message")
-                .replace("%level%", "" + level);
+        OfflinePlayer owner = Bukkit.getOfflinePlayer(ownerUUID);
 
-        Island island = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(ownerUUID));
+        if (owner.isOnline()) {
 
-        for (Player player : skyblock.getIslandManager().getPlayersAtIsland(island)) {
+            Player player = owner.getPlayer();
 
-            skyblock.getMessageManager().sendMessage(player, msg);
+            if (config.getBoolean("Island.LevelRewards.Rewards", false)) {
+                // Reward the player for each level reached, message only for the highest, so we don't spam the chat
+                for (int i = (int) highestLevel + 1; i <= level; i++) {
+                    LevelReward levelReward = skyblock.getRewardManager().getReward(i);
 
-            // Reward the player for each level reached, message only for the highest, so we don't spam the chat
-            for (int i = (int) highestLevel; i <= level; i++) {
-                LevelReward levelReward = skyblock.getRewardManager().getReward(i);
+                    if (levelReward != null)
+                        levelReward.give(player, skyblock, i);
 
-                if (levelReward != null)
-                    levelReward.give(player, skyblock, i);
+                    List<LevelReward> repeatRewards = skyblock.getRewardManager().getRepeatRewards(i);
 
-                LevelReward repeatReward = skyblock.getRewardManager().getRepeatReward(i);
+                    if (!repeatRewards.isEmpty()) {
+                        for (LevelReward reward : repeatRewards) {
+                            reward.give(player, skyblock, i);
+                        }
+                    }
+                }
+            }
 
-                if (repeatReward != null)
-                    repeatReward.give(player, skyblock, i);
+            if (config.getBoolean("Island.LevelRewards.Messages", false)) {
+                String msg = language.getString("Command.Island.Level.LevelUp.Message");
+
+                if (!Strings.isNullOrEmpty(msg)) {
+                    msg = msg.replace("%level%", String.valueOf(level));
+                    skyblock.getMessageManager().sendMessage(player, msg);
+                }
             }
         }
 
@@ -224,10 +234,6 @@ public class IslandLevel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public long getHighestLevel() {
-        return highestLevel;
     }
 
     public void setHighestLevel(long highestLevel) {
