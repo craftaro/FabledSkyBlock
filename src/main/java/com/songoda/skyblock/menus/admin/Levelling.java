@@ -185,7 +185,7 @@ public class Levelling implements Listener {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Admin.Levelling.Permission.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-
+                    event.setCancelled(true);
                     return;
                 }
 
