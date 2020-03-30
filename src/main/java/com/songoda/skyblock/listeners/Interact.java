@@ -167,7 +167,7 @@ public class Interact implements Listener {
 
                 long limit = limits.getBlockLimit(player, block);
 
-                if (limits.isBlockLimitExceeded(player, block, limit)) {
+                if (limits.isBlockLimitExceeded(block, limit)) {
                     CompatibleMaterial material = CompatibleMaterial.getBlockMaterial(block.getType());
 
                     skyblock.getMessageManager().sendMessage(player,

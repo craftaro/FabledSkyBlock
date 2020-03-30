@@ -1,20 +1,20 @@
 package com.songoda.skyblock.limit.impl;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.skyblock.utils.version.CompatibleSpawners;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.limit.EnumLimitation;
 import com.songoda.skyblock.utils.player.PlayerUtil;
- 
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 
 public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
@@ -44,9 +44,10 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
         for (String key : keys) {
             final String enumName = key.toUpperCase(Locale.ENGLISH);
-            final CompatibleMaterial type =  CompatibleMaterial.getMaterial(enumName);
+            final CompatibleMaterial type = CompatibleMaterial.getMaterial(enumName);
 
-            if (type == null) throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
+            if (type == null)
+                throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
 
             getMap().put(type, loadFrom.getLong(key));
         }
@@ -69,7 +70,7 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
     }
 
     @SuppressWarnings("deprecation")
-    public boolean isBlockLimitExceeded(Player player, Block block, long limit) {
+    public boolean isBlockLimitExceeded(Block block, long limit) {
 
         if (limit == -1) return false;
 
@@ -77,13 +78,13 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
         final Island island = islandManager.getIslandAtLocation(block.getLocation());
         final long totalPlaced;
 
-        if (block.getType() == CompatibleSpawners.SPAWNER.getMaterial()) {
+        if (block.getType() == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
             totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {
             totalPlaced = island.getLevel().getMaterialAmount(CompatibleMaterial.getMaterial(block.getType()).name());
         }
 
-        return limit < totalPlaced + 1;
+        return limit <= totalPlaced;
     }
 
 }

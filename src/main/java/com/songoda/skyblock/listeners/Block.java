@@ -1,15 +1,22 @@
 package com.songoda.skyblock.listeners;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.generator.Generator;
+import com.songoda.skyblock.generator.GeneratorManager;
+import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.levelling.rework.IslandLevelManager;
+import com.songoda.skyblock.limit.impl.BlockLimitation;
+import com.songoda.skyblock.stackable.Stackable;
+import com.songoda.skyblock.stackable.StackableManager;
+import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
+import com.songoda.skyblock.utils.version.NMSUtil;
+import com.songoda.skyblock.utils.world.LocationUtil;
+import com.songoda.skyblock.world.WorldManager;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,42 +26,16 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockFormEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.google.common.collect.Lists;
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.generator.Generator;
-import com.songoda.skyblock.generator.GeneratorManager;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandEnvironment;
-import com.songoda.skyblock.island.IslandLevel;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.levelling.rework.IslandLevelManager;
-import com.songoda.skyblock.limit.impl.BlockLimitation;
-import com.songoda.skyblock.stackable.Stackable;
-import com.songoda.skyblock.stackable.StackableManager;
-import com.songoda.skyblock.utils.NumberUtil;
-
-import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.world.LocationUtil;
-import com.songoda.skyblock.world.WorldManager;
+import java.io.File;
+import java.util.*;
 
 public class Block implements Listener {
 
@@ -169,26 +150,27 @@ public class Block implements Listener {
 
         }
 
-        final CompatibleSpawners materials;
+        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
 
-        if (block.getType() == CompatibleSpawners.SPAWNER.getMaterial()) {
-            materials = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
-        } else {
-            materials = CompatibleSpawners.getMaterials(block.getType(), block.getData());
+        if (block.getType() == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
+            CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+
+            if (spawner != null)
+                material = CompatibleMaterial.getBlockMaterial(spawner.getMaterial());
         }
 
-        if (materials == null) return;
+        if (material == null) return;
 
         IslandLevel level = island.getLevel();
 
-        if (!level.hasMaterial(materials.name())) return;
+        if (!level.hasMaterial(material.name())) return;
 
-        long materialAmount = level.getMaterialAmount(materials.name());
+        long materialAmount = level.getMaterialAmount(material.name());
 
         if (materialAmount - 1 <= 0) {
-            level.removeMaterial(materials.name());
+            level.removeMaterial(material.name());
         } else {
-            level.setMaterialAmount(materials.name(), materialAmount - 1);
+            level.setMaterialAmount(material.name(), materialAmount - 1);
         }
     }
 
@@ -248,7 +230,8 @@ public class Block implements Listener {
             if (!isObstructing && event.getBlock().getState().getData() instanceof org.bukkit.material.Bed) {
                 BlockFace bedDirection = ((org.bukkit.material.Bed) event.getBlock().getState().getData()).getFacing();
                 org.bukkit.block.Block bedBlock = block.getRelative(bedDirection);
-                if (LocationUtil.isLocationAffectingIslandSpawn(bedBlock.getLocation(), island, world)) isObstructing = true;
+                if (LocationUtil.isLocationAffectingIslandSpawn(bedBlock.getLocation(), island, world))
+                    isObstructing = true;
             }
 
             if (isObstructing) {
@@ -264,7 +247,7 @@ public class Block implements Listener {
 
         long limit = limits.getBlockLimit(player, block);
 
-        if (limits.isBlockLimitExceeded(player, block, limit)) {
+        if (limits.isBlockLimitExceeded(block, limit)) {
             CompatibleMaterial material = CompatibleMaterial.getMaterial(block.getType());
 
             skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
@@ -291,25 +274,28 @@ public class Block implements Listener {
         // This shouldn't cause any issues besides the task number being increased
         // insanely fast.
         Bukkit.getScheduler().runTask(skyblock, () -> {
-            CompatibleMaterial materials = CompatibleMaterial.getMaterial(block.getType());
-            if (materials == null || materials == CompatibleMaterial.AIR) return;
+            CompatibleMaterial material = CompatibleMaterial.getMaterial(block.getType());
 
-            if (materials.equals(CompatibleMaterial.SPAWNER)) {
-                if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker")) return;
+            if (material == null || material == CompatibleMaterial.AIR) return;
 
-                CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
-                EntityType spawnerType = creatureSpawner.getSpawnedType();
-                materials = CompatibleMaterial.getBlockMaterial(CompatibleSpawners.getSpawner(spawnerType).getMaterial());
+            if (material == CompatibleMaterial.SPAWNER) {
+                if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
+                    return;
+
+                CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+
+                if (spawner != null)
+                    material = CompatibleMaterial.getBlockMaterial(spawner.getMaterial());
             }
 
             long materialAmount = 0;
             IslandLevel level = island.getLevel();
 
-            if (level.hasMaterial(materials.name())) {
-                materialAmount = level.getMaterialAmount(materials.name());
+            if (level.hasMaterial(material.name())) {
+                materialAmount = level.getMaterialAmount(material.name());
             }
 
-            level.setMaterialAmount(materials.name(), materialAmount + 1);
+            level.setMaterialAmount(material.name(), materialAmount + 1);
         });
     }
 
@@ -405,7 +391,7 @@ public class Block implements Listener {
                 return;
             }
 
-            if(!island.isInBorder(block.getRelative(event.getDirection()).getLocation())) {
+            if (!island.isInBorder(block.getRelative(event.getDirection()).getLocation())) {
                 event.setCancelled(true);
                 return;
             }
@@ -503,7 +489,7 @@ public class Block implements Listener {
                 return;
             }
 
-            if(!island.isInBorder(block.getLocation())) {
+            if (!island.isInBorder(block.getLocation())) {
                 event.setCancelled(true);
                 return;
             }
@@ -535,7 +521,8 @@ public class Block implements Listener {
 
         // Check ice/snow forming
         if (block.getType() == Material.ICE || block.getType() == Material.SNOW) {
-            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.IceAndSnow")) event.setCancelled(true);
+            if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.IceAndSnow"))
+                event.setCancelled(true);
             return;
         }
 
@@ -608,7 +595,8 @@ public class Block implements Listener {
 
     @EventHandler
     public void onPortalCreate(PortalCreateEvent event) {
-        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) return;
+        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+            return;
 
         WorldManager worldManager = skyblock.getWorldManager();
         IslandManager islandManager = skyblock.getIslandManager();
@@ -655,7 +643,8 @@ public class Block implements Listener {
 
     @EventHandler
     public void onDispenserDispenseBlock(BlockDispenseEvent event) {
-        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) return;
+        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+            return;
 
         WorldManager worldManager = skyblock.getWorldManager();
         IslandManager islandManager = skyblock.getIslandManager();
@@ -669,7 +658,8 @@ public class Block implements Listener {
         // Check spawn block protection
         IslandWorld world = worldManager.getIslandWorld(placeLocation.getWorld());
 
-        if (LocationUtil.isLocationAffectingIslandSpawn(placeLocation.getLocation(), island, world)) event.setCancelled(true);
+        if (LocationUtil.isLocationAffectingIslandSpawn(placeLocation.getLocation(), island, world))
+            event.setCancelled(true);
     }
 
 }

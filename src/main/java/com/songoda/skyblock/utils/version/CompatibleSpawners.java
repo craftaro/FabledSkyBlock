@@ -1,14 +1,10 @@
 package com.songoda.skyblock.utils.version;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
 
 public enum CompatibleSpawners {
 
@@ -222,7 +218,7 @@ public enum CompatibleSpawners {
         if (this.cachedMaterial != null || this.isMaterialParsed) return this.cachedMaterial;
 
         if (this.isSpawner() && this != CompatibleSpawners.SPAWNER) {
-            this.cachedMaterial = CompatibleSpawners.SPAWNER.getMaterial();
+            this.cachedMaterial = CompatibleMaterial.SPAWNER.getMaterial();
             return this.cachedMaterial;
         }
 
@@ -230,6 +226,4 @@ public enum CompatibleSpawners {
         this.isMaterialParsed = true;
         return this.cachedMaterial;
     }
-
-
 }
