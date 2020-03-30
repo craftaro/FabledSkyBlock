@@ -132,7 +132,7 @@ public final class UserCacheManager {
         Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> save());
     }
 
-    public void save() {
+    public synchronized void save() {
         try {
             config.getFileConfiguration().save(config.getFile());
         } catch (IOException e) {
