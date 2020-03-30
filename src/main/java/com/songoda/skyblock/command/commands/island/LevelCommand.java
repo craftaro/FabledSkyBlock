@@ -10,7 +10,7 @@ import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.levelling.rework.IslandLevelManager;
-import com.songoda.skyblock.menus.admin.Levelling;
+import com.songoda.skyblock.menus.Levelling;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
