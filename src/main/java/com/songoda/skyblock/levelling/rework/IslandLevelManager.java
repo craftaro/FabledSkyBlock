@@ -185,7 +185,11 @@ public final class IslandLevelManager {
 
         if (blockType == CompatibleMaterial.AIR) return EMPTY;
 
-        Material finalType = parseType(block).getMaterial();
+        CompatibleMaterial compMaterial = parseType(block);
+
+        if (compMaterial == null) return EMPTY;
+
+        Material finalType = compMaterial.getMaterial();
 
         if (finalType == null) return EMPTY;
 
