@@ -74,7 +74,7 @@ public class Teleport implements Listener {
                 event.setCancelled(true);
 
                 messageManager.sendMessage(player, configLoad.getString("Island.Settings.Permission.Message"));
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 return;
             }
@@ -176,20 +176,22 @@ public class Teleport implements Listener {
             }
         }
     }
-    
-    @EventHandler
-	public void onEntityTeleport(EntityPortalEvent e) {
-		WorldManager worldManager = skyblock.getWorldManager();
-		// Do not handle player
-		if (e.getEntityType() == EntityType.PLAYER)
-			return;
-		Location from = e.getFrom();
-		Location to = e.getTo();
-		// Test which world the event is from
-		if (from.getWorld() == to.getWorld())
-			return;
 
-		if (worldManager.getIslandWorld(e.getFrom().getWorld()) != null)
-			e.setCancelled(true);
-	}
+    @EventHandler
+    public void onEntityTeleport(EntityPortalEvent e) {
+        WorldManager worldManager = skyblock.getWorldManager();
+
+        // Do not handle player
+        if (e.getEntityType() == EntityType.PLAYER)
+            return;
+
+        Location from = e.getFrom();
+        Location to = e.getTo();
+
+        if (to == null || from.getWorld() == to.getWorld())
+            return;
+
+        if (worldManager.getIslandWorld(e.getFrom().getWorld()) != null)
+            e.setCancelled(true);
+    }
 }
