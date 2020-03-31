@@ -3,6 +3,7 @@ package com.songoda.skyblock.command.commands.admin;
 import java.io.File;
 import java.util.Set;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,7 +15,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.StringUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 
 public class StackableCommand extends SubCommand {
 
@@ -46,7 +47,7 @@ public class StackableCommand extends SubCommand {
                 return;
             }
 
-            final Block block = player.getTargetBlock((Set<Material>) null, 6);
+            final Block block = player.getTargetBlock(null, 6);
 
             if (block == null) {
                 messageManager.sendMessage(player, messageConfig.getString("Command.Island.Admin.Stackable.Target.None"));
@@ -54,7 +55,7 @@ public class StackableCommand extends SubCommand {
             }
 
             final StackableManager stackableManager = skyblock.getStackableManager();
-            final Materials type = Materials.getMaterials(block.getType(), block.getData());
+            final CompatibleMaterial type = CompatibleMaterial.getMaterial(block.getType());
 
             if (!stackableManager.isStackableMaterial(type)) {
                 messageManager.sendMessage(player, messageConfig.getString("Command.Island.Admin.Stackable.Target.Unstackable"));

@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.songoda</groupId>
 	<artifactId>skyblock</artifactId>
-	<version>2.1.2</version>
+	<version>2.2</version>
 	<build>
 		<defaultGoal>clean install</defaultGoal>
 		<finalName>FabledSkyblock-${project.version}</finalName>
@@ -105,7 +105,7 @@
 		</repository>
 		<repository>
 			<id>placeholderapi</id>
-			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
 		<repository>
 			<id>jitpack.io</id>
@@ -122,6 +122,10 @@
 		<repository>
 			<id>private</id>
 			<url>https://repo.songoda.com/artifactory/private/</url>
+		</repository>
+		<repository>
+			<id>public</id>
+			<url>http://repo.songoda.com/artifactory/public/</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -186,9 +190,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
-			<artifactId>worldedit</artifactId>
-			<version>7.0.0</version>
-			<scope>provided</scope>
+			<artifactId>worldedit-bukkit</artifactId>
+			<version>7.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.songoda</groupId>

@@ -1,15 +1,13 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -48,14 +46,14 @@ public class ProxyCommand extends SubCommand {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.Proxy.IsOffPlayer.Message")
                                     .replace("%player", targetPlayerOffline.getName()));
-                    soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     islandManager.removeProxyingPlayer(((Player)sender).getUniqueId());
                 } else {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.Proxy.IsOn.Message")
                                     .replace("%player", targetPlayerOffline.getName()));
-                    soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     islandManager.addProxiedPlayer(((Player)sender).getUniqueId(), targetPlayerOffline.getUniqueId());
                 }
@@ -64,7 +62,7 @@ public class ProxyCommand extends SubCommand {
             messageManager.sendMessage(sender,
                     configLoad.getString("Command.Island.Admin.Proxy.IsOff.Message")
                             .replace("%player", ""));
-            soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             islandManager.removeProxyingPlayer(((Player)sender).getUniqueId());
         }

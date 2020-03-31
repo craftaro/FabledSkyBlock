@@ -1,19 +1,19 @@
 package com.songoda.skyblock.localization.type.impl;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Material;
 
-import com.songoda.skyblock.utils.version.Materials;
+ 
 
-public class MaterialsToMaterialLocalization extends EnumLocalization<Material> {
+public class MaterialsToMaterialLocalization extends EnumLocalization<CompatibleMaterial> {
 
     public MaterialsToMaterialLocalization(String keysPath) {
-        super(keysPath, Material.class);
+        super(keysPath, CompatibleMaterial.class);
     }
 
     @Override
-    public Material parseEnum(String input) {
-        Materials material = Materials.fromString(input);
-        return material == null ? null : material.parseMaterial();
+    public CompatibleMaterial parseEnum(String input) {
+        return CompatibleMaterial.getMaterial(input);
     }
 
 }

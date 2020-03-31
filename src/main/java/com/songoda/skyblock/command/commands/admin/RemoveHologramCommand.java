@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -8,7 +9,6 @@ import com.songoda.skyblock.hologram.HologramManager;
 import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -62,7 +62,7 @@ public class RemoveHologramCommand extends SubCommand {
 
                 if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + hologramType.name()) == null) {
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Set.Message"));
-                    soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else {
                     locationsConfigLoad.set("Location.Hologram.Leaderboard." + hologramType.name(), null);
 
@@ -82,7 +82,7 @@ public class RemoveHologramCommand extends SubCommand {
                     });
 
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message").replace("%type", hologramType.name()));
-                    soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                 }
 
                 return;
@@ -90,7 +90,7 @@ public class RemoveHologramCommand extends SubCommand {
         }
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Invalid.Message"));
-        soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
     }
 
     @Override

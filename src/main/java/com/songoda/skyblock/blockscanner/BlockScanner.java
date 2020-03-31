@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;
@@ -91,8 +92,6 @@ public final class BlockScanner extends BukkitRunnable {
 
             final ConfigurationSection liquidSection = config.getConfigurationSection("Island.World." + env + ".Liquid");
 
-            System.out.println("LiquidSection: " + liquidSection);
-            
             for (List<ChunkSnapshot> sub : parts) {
                 queueWork(world, liquidSection.getBoolean("Enable") ? liquidSection.getInt("Height") + 1 : 0, sub);
             }

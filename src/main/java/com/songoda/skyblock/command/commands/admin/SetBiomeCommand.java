@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -11,7 +12,6 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.version.SBiome;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -72,7 +72,7 @@ public class SetBiomeCommand extends SubCommand {
                 if (islandOwnerUUID == null) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetBiome.Island.Owner.Message"));
-                    soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 } else {
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
@@ -83,7 +83,7 @@ public class SetBiomeCommand extends SubCommand {
                         if (island == null) {
                             messageManager.sendMessage(sender,
                                     configLoad.getString("Command.Island.Admin.SetBiome.Island.Data.Message"));
-                            soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         } else {
                             biomeManager.setBiome(island, biome.getBiome());
                             island.setBiome(biome.getBiome());
@@ -94,17 +94,17 @@ public class SetBiomeCommand extends SubCommand {
                             configLoad.getString("Command.Island.Admin.SetBiome.Set.Message")
                                     .replace("%player", targetPlayerName)
                                     .replace("%biome", biome.getFormattedBiomeName()));
-                    soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                 }
             } else {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.SetBiome.InvalidBiome.Message"));
-                soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(sender,
                     configLoad.getString("Command.Island.Admin.SetBiome.Invalid.Message"));
-            soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }
     }
 

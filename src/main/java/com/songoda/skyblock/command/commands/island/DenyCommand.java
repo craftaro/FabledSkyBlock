@@ -1,12 +1,12 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.invite.Invite;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,25 +37,25 @@ public class DenyCommand extends SubCommand {
                         messageManager.sendMessage(targetPlayer,
                                 configLoad.getString("Command.Island.Deny.Denied.Target.Message").replace("%player",
                                         player.getName()));
-                        soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 5.0F, 5.0F);
+                        soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
                     }
 
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Deny.Denied.Sender.Message")
                             .replace("%player", invite.getSenderName()));
-                    soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 5.0F, 5.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
 
                     inviteManager.removeInvite(player.getUniqueId());
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Deny.Invited.Message"));
-                    soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Deny.Invited.Message"));
-                soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Deny.Invalid.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }
     }
 

@@ -1,9 +1,9 @@
 package com.songoda.skyblock.listeners;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,7 +41,7 @@ public class Projectile implements Listener {
 				messageManager.sendMessage(player,
 						skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 								.getFileConfiguration().getString("Island.Settings.Permission.Message"));
-				soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+				soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 			}
 			return;
 		}
@@ -51,7 +51,7 @@ public class Projectile implements Listener {
 			messageManager.sendMessage(player,
 					skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
 							.getFileConfiguration().getString("Island.Settings.Permission.Message"));
-			soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+			soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 		}
 	}
 

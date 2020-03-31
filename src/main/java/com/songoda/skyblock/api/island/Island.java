@@ -58,7 +58,7 @@ public class Island {
 	 */
 	public void setSize(int size) {
 		Preconditions.checkArgument(size <= 1000, "Cannot set size to greater than 1000");
-		Preconditions.checkArgument(size >= 50, "Cannot set size to less than 50");
+		Preconditions.checkArgument(size >= 20, "Cannot set size to less than 20");
 		this.handle.setSize(size);
 	}
 

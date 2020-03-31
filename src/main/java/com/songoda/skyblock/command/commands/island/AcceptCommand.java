@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.api.event.player.PlayerIslandJoinEvent;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -15,7 +16,6 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.scoreboard.Scoreboard;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -83,13 +82,13 @@ public class AcceptCommand extends SubCommand {
                                 messageManager.sendMessage(targetPlayer,
                                         configLoad.getString("Command.Island.Accept.Accepted.Target.Message")
                                                 .replace("%player", player.getName()));
-                                soundManager.playSound(targetPlayer, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
                             }
 
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Accept.Accepted.Sender.Message")
                                             .replace("%player", invite.getSenderName()));
-                            soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                             playerData.setPlaytime(0);
                             playerData.setOwner(invite.getOwnerUUID());
@@ -119,7 +118,7 @@ public class AcceptCommand extends SubCommand {
                                                                     "Command.Island.Accept.Capacity.Broadcast.Message")
                                                                     .replace("%player", targetInvite.getSenderName())));
                                             soundManager.playSound(targetInvitePlayer,
-                                                    Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                                                    CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                                         }
                                     }
                                 }
@@ -140,7 +139,7 @@ public class AcceptCommand extends SubCommand {
                                                             .getString(
                                                                     "Command.Island.Accept.Accepted.Broadcast.Message")
                                                             .replace("%player", player.getName())));
-                                            soundManager.playSound(all, Sounds.FIREWORK_BLAST.bukkitSound(), 1.0F,
+                                            soundManager.playSound(all, CompatibleSound.ENTITY_FIREWORK_ROCKET_BLAST.getSound(), 1.0F,
                                                     1.0F);
 
                                             if (scoreboardManager != null) {
@@ -187,19 +186,19 @@ public class AcceptCommand extends SubCommand {
                         }
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Accept.Owner.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     }
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Accept.Invited.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Accept.Invite.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Accept.Invalid.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }
     }
 

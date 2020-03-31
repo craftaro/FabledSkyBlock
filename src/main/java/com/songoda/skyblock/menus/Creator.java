@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -13,7 +14,6 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.structure.Structure;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -72,7 +72,7 @@ public class Creator {
         if (availableStructures.size() == 0) {
             skyblock.getMessageManager().sendMessage(player,
                     configLoad.getString("Island.Creator.Selector.None.Message"));
-            skyblock.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return;
         } else if (availableStructures.size() <= 9) {
@@ -92,7 +92,7 @@ public class Creator {
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
             if (islandManager.getIsland(player) != null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
-                soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 return;
             }
@@ -101,7 +101,7 @@ public class Creator {
                 ItemStack is = event.getItem();
 
                 for (Structure structureList : skyblock.getStructureManager().getStructures()) {
-                    if ((is.getType() == structureList.getMaterials().parseMaterial()) && (is.hasItemMeta())
+                    if ((is.getType() == structureList.getMaterials().getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName()
                             .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                     .getString("Menu.Creator.Selector.Item.Island.Displayname")
@@ -113,7 +113,7 @@ public class Creator {
                                     && !player.hasPermission("fabledskyblock.*")) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Creator.Selector.Permission.Message"));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                         () -> open(player), 1L);
@@ -128,7 +128,7 @@ public class Creator {
                                         structureList.getOverworldFile()))) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -140,7 +140,7 @@ public class Creator {
                                         structureList.getNetherFile()))) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -152,7 +152,7 @@ public class Creator {
                                         structureList.getEndFile()))) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Island.Creator.Selector.File.End.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -183,7 +183,7 @@ public class Creator {
                                                 "Island.Creator.Selector.Cooldown.Word.Second")));
                             }
 
-                            soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -191,10 +191,18 @@ public class Creator {
                             return;
                         }
 
-                        if (islandManager.createIsland(player, structureList)) {
-                            messageManager.sendMessage(player,
-                                    configLoad.getString("Island.Creator.Selector.Created.Message"));
-                            soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                        if(event.getClick().isLeftClick()) {
+                            if (islandManager.createIsland(player, structureList)) {
+                                messageManager.sendMessage(player,
+                                        configLoad.getString("Island.Creator.Selector.Created.Message"));
+                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                            }
+                        } else if(event.getClick().isRightClick()) {
+                            if (islandManager.previewIsland(player, structureList)) {
+                                messageManager.sendMessage(player,
+                                        configLoad.getString("Island.Creator.Selector.Preview.Message"));
+                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                            }
                         }
 
                         return;
@@ -221,7 +229,7 @@ public class Creator {
                 }
             }
 
-            nInv.addItem(nInv.createItem(structure.getMaterials().parseItem(),
+            nInv.addItem(nInv.createItem(structure.getMaterials().getItem(),
                     ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Creator.Selector.Item.Island.Displayname")
                                     .replace("%displayname", structure.getDisplayname())),

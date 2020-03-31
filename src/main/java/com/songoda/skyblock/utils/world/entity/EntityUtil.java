@@ -1,7 +1,7 @@
 package com.songoda.skyblock.utils.world.entity;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
-import com.songoda.skyblock.utils.item.MaterialUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import org.bukkit.*;
@@ -379,8 +379,7 @@ public final class EntityUtil {
                     String[] materialData = entityData.getCarryBlock().split(":");
 
                     byte data = Byte.parseByte(materialData[1]);
-                    Material material = MaterialUtil.getMaterial(NMSVersion, entityData.getVersion(),
-                            materialData[0].toUpperCase(), data);
+                    Material material = CompatibleMaterial.getMaterial(materialData[0].toUpperCase()).getMaterial();
 
                     if (material != null) {
                         if (NMSVersion > 12) {
@@ -497,4 +496,41 @@ public final class EntityUtil {
             }
         }
     }
+
+	public static boolean isMonster(EntityType type) {
+		switch (type) {
+		case BAT:
+		case BLAZE:
+		case CAVE_SPIDER:
+		case COD:
+		case CREEPER:
+		case DROWNED:
+		case ELDER_GUARDIAN:
+		case ENDERMAN:
+		case ENDERMITE:
+		case EVOKER:
+		case GHAST:
+		case HUSK:
+		case ILLUSIONER:
+		case MAGMA_CUBE:
+		case PHANTOM:
+		case PIG_ZOMBIE:
+		case RAVAGER:
+		case SILVERFISH:
+		case SKELETON:
+		case SLIME:
+		case SPIDER:
+		case STRAY:
+		case VEX:
+		case VINDICATOR:
+		case WITCH:
+		case WITHER:
+		case WITHER_SKELETON:
+		case ZOMBIE:
+		case ZOMBIE_VILLAGER:
+			return true;
+		default:
+			return false;
+		}
+	}
 }

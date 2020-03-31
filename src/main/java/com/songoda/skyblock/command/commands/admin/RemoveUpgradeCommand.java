@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -10,7 +11,6 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -73,11 +73,11 @@ public class RemoveUpgradeCommand extends SubCommand {
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.RemoveUpgrade.Island.Owner.Message"));
-                soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             } else if (upgrade == null) {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.RemoveUpgrade.Upgrade.Exist.Message"));
-                soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             } else {
                 if (islandManager.containsIsland(islandOwnerUUID)) {
                     Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
@@ -85,7 +85,7 @@ public class RemoveUpgradeCommand extends SubCommand {
                     if (!island.hasUpgrade(upgrade)) {
                         messageManager.sendMessage(sender,
                                 configLoad.getString("Command.Island.Admin.RemoveUpgrade.Upgrade.Missing.Message"));
-                        soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
@@ -98,7 +98,7 @@ public class RemoveUpgradeCommand extends SubCommand {
                     if (!fileManager.isFileExist(islandDataFile)) {
                         messageManager.sendMessage(sender,
                                 configLoad.getString("Command.Island.Admin.RemoveUpgrade.Island.Data.Message"));
-                        soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
@@ -108,7 +108,7 @@ public class RemoveUpgradeCommand extends SubCommand {
                     if (islandDataConfigLoad.getString("Upgrade." + upgrade.name()) == null) {
                         messageManager.sendMessage(sender,
                                 configLoad.getString("Command.Island.Admin.RemoveUpgrade.Upgrade.Missing.Message"));
-                        soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
@@ -125,12 +125,12 @@ public class RemoveUpgradeCommand extends SubCommand {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.RemoveUpgrade.Removed.Message")
                                 .replace("%player", targetPlayerName).replace("%upgrade", upgrade.name()));
-                soundManager.playSound(sender, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(sender,
                     configLoad.getString("Command.Island.Admin.RemoveUpgrade.Invalid.Message"));
-            soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.utils.world.block;
 
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -28,8 +28,8 @@ public class BlockData {
     private String commandBlockName = "";
     private String entity = EntityType.COW.toString();
     private String exitLocation = "";
-    private String flower = Materials.RED_DYE.parseMaterial().toString() + ":0";
-    private String playing = Materials.MUSIC_DISC_CHIRP.parseMaterial().toString();
+    private String flower = CompatibleMaterial.RED_DYE.getMaterial().toString() + ":0";
+    private String playing = CompatibleMaterial.MUSIC_DISC_CHIRP.getMaterial().toString();
     private String[] signLines = {};
     private String rotateFace = BlockFace.NORTH.toString();
     private String skullOwner = "Notch";

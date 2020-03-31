@@ -1,11 +1,11 @@
 package com.songoda.skyblock.invite;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.ChatComponent;
-import com.songoda.skyblock.utils.version.Sounds;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -68,13 +68,13 @@ public class InviteTask extends BukkitRunnable {
                                                                                 configLoad.getString(
                                                                                         "Command.Island.Invite.Invited.Word.Resend"))))
                                                                 .create()))));
-                        soundManager.playSound(targetPlayer, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(targetPlayer,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                     }
 
                     messageManager.sendMessage(all,
                             configLoad.getString("Command.Island.Invite.Invited.Target.Expired.Message")
                                     .replace("%player", invite.getSenderName()));
-                    soundManager.playSound(all, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(all,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                     inviteManager.removeInvite(all.getUniqueId());
                 }

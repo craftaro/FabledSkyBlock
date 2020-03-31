@@ -1,6 +1,5 @@
 ClassLocalization:
  Materials:
-  LEGACY_DOUBLE_PLANT: 'Sunflower'
  IslandRoles:
    Coop: 'Coop'
    Visitor: 'Visitor' 
@@ -125,6 +124,8 @@ Command:
         Message: '&bSkyBlock &8| &aInfo&8: &7&oProcessing Island level request... Please wait!'
       Materials:
         Message: '&bSkyBlock &8| &cError&8: &eThere are no significant materials on your Island.'
+      LevelUp:
+        Message: '&bSkyBlock &8| &aInfo&8: &7You reached island level &e%level%&7!'
     Unban:
       Member:
         Message: '&bSkyBlock &8| &cError&8: &eThat player is not banned from the Island because they are a Member of it.'
@@ -243,7 +244,7 @@ Command:
           Less:
             Message: '&bSkyBlock &8| &cError&8: &eThe size of the Island must be less than 1000.'
           Greater:
-            Message: '&bSkyBlock &8| &cError&8: &eThe size of the Island must be greater than 50.'
+            Message: '&bSkyBlock &8| &cError&8: &eThe size of the Island must be greater than 20.'
         Info:
           Message: '&f&oSets the size of a player''s Island.'
         Island:
@@ -890,8 +891,10 @@ Command:
     Create:
       Owner:
         Message: '&bSkyBlock &8| &cError&8: &eYou are already an Island Owner.'
+      StructureNotFound:
+        Message: '&bSkyBlock &8| &cError&8: &eNo Island structure with such a name.'
       Info:
-        Message: '&f&oOpens the Island Creator menu.'
+        Message: '&f&oOpens the Island Creator menu. You can also enter a Structure name to instantly create an Island.'
     Members:
       Info:
         Message: '&f&oOpen the Island Members menu.'
@@ -953,6 +956,38 @@ Command:
         Message: '&f&oOpens the Leaderboard menu of the top 10 Islands.'
       Invalid:
         Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island leaderboard [<Level|Bank|Votes>]'
+    Challenge:
+      Disabled:
+        Message: '&bSkyBlock &8| &cError&8: &eYou cannot access to challenges because
+          it has been disabled.'
+      Info:
+        Message: '&f&oAccess to challenges.'
+      NotFound:
+        Message: '&bSkyBlock &8| &cError&8: &eNot a single challenge has been found.'
+      Invalid:
+        Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island challenge <categoryId>
+          <challengeId>'
+      CategoryNotFound:
+        Message: '&bSkyBlock &8| &cError&8: &eCategory not found.'
+      ChallengeNotFound:
+        Message: '&bSkyBlock &8| &cError&8: &eChallenge not found.'
+    Preview:
+      Info:
+        Message: '&f&oAllows you to preview island before choosing'
+      Argument:
+        Count:
+          Message: '&bSkyBlock &8| &cError&8: &eThis command should have atleast 1 argument.'
+      Confirmation:
+        Message: '&bSkyBlock &8| &aInfo&8: &eYou are now previewing the Island. You have &c%time &eseconds to confirm or cancel.\n %confirm      %cancel'
+        Word:
+          Confirm: 'Confirm'
+          TutorialConfirm: '&7Click to &f&oconfirm &r&7Island creation!'
+          Cancel: 'Cancel'
+          TutorialCancel: '&7Click to &f&ocancel &r&7Island creation!'
+      File:
+        Message: '&bSkyBlock &8| &cError&8: &eThis preview doesn''t exist!'
+      Island:
+        Message: '&bSkyBlock &8| &aError&8: &eYou can not preview an island if you already own an island!'
   PermissionDenied:
     Admin:
       Message: '&bSkyBlock &8| &cError&8: &eYou don''t have permission to perform that command.'
@@ -1107,6 +1142,8 @@ Menu:
             Displayname: '&aWater Collection'
           AnimalBreeding:
             Displayname: '&aAnimal Breeding'
+          MonsterHurting:
+            Displayname: '&aMonster Hurting'
           MobHurting:
             Displayname: '&aMob Hurting'
           Bed:
@@ -1395,6 +1432,8 @@ Menu:
               Displayname: '&aFishing'
             Enchant:
               Displayname: '&aEnchantment Table Use'
+            MonsterHurting:
+              Displayname: '&aMonster Hurting'
             MobHurting:
               Displayname: '&aMob Hurting'
             Bed:
@@ -3101,6 +3140,7 @@ Menu:
           - '%description'
           - ''
           - '&eClick to create Island!'
+          - '&eRight-Click to create Island!'
 Placeholder:
   fabledskyblock_leaderboard_votes:
     Empty:
@@ -3493,6 +3533,9 @@ Island:
           Message: '&bSkyBlock &8| &cError&8: &eYou don''t have permission to use that feature.'
     Permission:
       Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to do that on this Island.'
+  Preview:
+    Timeout:
+      Message: '&bSkyBlock &8| &aInfo&8: &eYour time to preview island has expired.'
 Hologram:
   Leaderboard:
     Votes:
@@ -3512,3 +3555,9 @@ Hologram:
       Footer: '&ewww.example.net'
   Stackable:
     Message: '%blocks: %amount'
+Challenge:
+  Inventory:
+    Item:
+      Title: '%challenge &e%amount &6/ &e%max'
+  Broadcast: '&bSkyBlock &8| &6%player &7has completed challenge %challenge (%amount
+    / %max)'

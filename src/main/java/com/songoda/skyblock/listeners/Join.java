@@ -25,8 +25,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Join implements Listener {
 
@@ -145,5 +143,8 @@ public class Join implements Listener {
             islandManager.updateBorder(island);
             islandManager.updateFlight(player);
         }
+        
+        // Load Challenge
+        SkyBlock.getInstance().getFabledChallenge().getPlayerManager().loadPlayer(player.getUniqueId());
     }
 }

@@ -1,18 +1,19 @@
 package com.songoda.skyblock.island;
 
+import com.google.common.base.Strings;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
-
+import com.songoda.skyblock.island.reward.LevelReward;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 
 public class IslandLevel {
 
@@ -24,6 +25,9 @@ public class IslandLevel {
     private long lastCalculatedPoints = 0;
 
     private Map<String, Long> materials;
+
+    // Highest level achieved, to prevent reward farming (since is level can decrease)
+    private long highestLevel;
 
     public IslandLevel(UUID ownerUUID, SkyBlock skyblock) {
         this.skyblock = skyblock;
@@ -44,14 +48,14 @@ public class IslandLevel {
                 ConfigurationSection current = section.getConfigurationSection(material);
 
                 if (current.isSet("Amount")) materials.put(material, current.getLong("Amount"));
-
             }
-
         } else {
             materials = new HashMap<>();
         }
 
         this.materials = materials;
+
+        this.highestLevel = configLoad.contains("Levelling.Highest-Level") ? configLoad.getLong("Levelling.Highest-Level") : getLevel();
     }
 
     public void setOwnerUUID(UUID ownerUUID) {
@@ -111,6 +115,54 @@ public class IslandLevel {
         }
 
         return getPoints() / division;
+    }
+
+    public void checkLevelUp() {
+
+        long level = getLevel();
+
+        // Level didn't reach the highest
+        if (level <= highestLevel)
+            return;
+
+        final FileConfiguration language = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+        final FileConfiguration config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
+
+        OfflinePlayer owner = Bukkit.getOfflinePlayer(ownerUUID);
+
+        if (owner.isOnline()) {
+
+            Player player = owner.getPlayer();
+
+            if (config.getBoolean("Island.LevelRewards.Rewards", false)) {
+                // Reward the player for each level reached, message only for the highest, so we don't spam the chat
+                for (int i = (int) highestLevel + 1; i <= level; i++) {
+                    LevelReward levelReward = skyblock.getRewardManager().getReward(i);
+
+                    if (levelReward != null)
+                        levelReward.give(player, skyblock, i);
+
+                    List<LevelReward> repeatRewards = skyblock.getRewardManager().getRepeatRewards(i);
+
+                    if (!repeatRewards.isEmpty()) {
+                        for (LevelReward reward : repeatRewards) {
+                            reward.give(player, skyblock, i);
+                        }
+                    }
+                }
+            }
+
+            if (config.getBoolean("Island.LevelRewards.Messages", false)) {
+                String msg = language.getString("Command.Island.Level.LevelUp.Message");
+
+                if (!Strings.isNullOrEmpty(msg)) {
+                    msg = msg.replace("%level%", String.valueOf(level));
+                    skyblock.getMessageManager().sendMessage(player, msg);
+                }
+            }
+        }
+
+        setHighestLevel(level);
     }
 
     public void setMaterialAmount(String material, long amount) {
@@ -182,5 +234,14 @@ public class IslandLevel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setHighestLevel(long highestLevel) {
+        Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
+
+        configLoad.set("Levelling.Highest-Level", highestLevel);
+
+        this.highestLevel = highestLevel;
     }
 }

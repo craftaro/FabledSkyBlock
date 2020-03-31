@@ -17,11 +17,17 @@ import com.songoda.skyblock.utils.world.entity.EntityUtil;
 
 import java.io.FileInputStream;
 import java.util.Base64;
+
+import net.minecraft.server.v1_15_R1.ChunkSection;
+import net.minecraft.server.v1_15_R1.IBlockData;
+import net.minecraft.server.v1_15_R1.World;
+import net.minecraft.server.v1_15_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -35,6 +41,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 public final class StructureUtil {
 
@@ -112,7 +119,9 @@ public final class StructureUtil {
         fileInputStream.close();
         Storage storage;
 
-        if (!org.bukkit.craftbukkit.libs.org.apache.commons.codec.binary.Base64.isBase64(content)) {
+        Pattern pattern = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
+
+        if (!pattern.matcher(new String(content)).find()) {
             try {
                 storage = new Gson().fromJson(Compression.decompress(content), Storage.class);
             } catch (JsonSyntaxException e) {
@@ -158,10 +167,10 @@ public final class StructureUtil {
             pitch = Float.valueOf(originLocationPositions[5]);
         }
 
-        List<BlockData> blockData = new Gson().fromJson(storage.getBlocks(), new TypeToken<List<BlockData>>() {
-        }.getType());
+        List<BlockData> blockData = new Gson().fromJson(storage.getBlocks(), new TypeToken<List<BlockData>>() {}.getType());
 
         for (BlockData blockDataList : blockData) {
+
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
                 try {
                     org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(), blockDataList.getY(), blockDataList.getZ()), type);

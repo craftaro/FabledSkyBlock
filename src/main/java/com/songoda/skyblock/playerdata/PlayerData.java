@@ -32,6 +32,7 @@ public class PlayerData {
     private Area area;
 
     private boolean chat;
+    private boolean preview;
 
     private Object viewer;
 
@@ -46,6 +47,7 @@ public class PlayerData {
         area = new Area();
 
         chat = false;
+        preview = false;
     }
 
     public int getPage() {
@@ -115,6 +117,15 @@ public class PlayerData {
     public void setPlaytime(int playTime) {
         this.playTime = playTime;
     }
+
+    public boolean isPreview() {
+        return preview;
+    }
+
+    public void setPreview(boolean preview) {
+        this.preview = preview;
+    }
+
 
     public int getVisitTime() {
         return visitTime;

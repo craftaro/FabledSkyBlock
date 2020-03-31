@@ -1,6 +1,8 @@
 package com.songoda.skyblock.island;
 
 import com.google.common.base.Preconditions;
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.ban.BanManager;
@@ -21,23 +23,18 @@ import com.songoda.skyblock.structure.Structure;
 import com.songoda.skyblock.structure.StructureManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.upgrade.UpgradeManager;
+import com.songoda.skyblock.utils.ChatComponent;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.player.PlayerUtil;
 import com.songoda.skyblock.utils.structure.SchematicUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.version.SBiome;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.world.WorldManager;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -46,16 +43,27 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.IllegalPluginAccessException;
+import com.songoda.skyblock.confirmation.Confirmation;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class IslandManager {
 
     private final SkyBlock skyblock;
 
-    private double x = 0, offset = 1200;
-
     private List<IslandPosition> islandPositions = new ArrayList<>();
     private Map<UUID, UUID> islandProxies = new HashMap<>();
     private Map<UUID, Island> islandStorage = new HashMap<>();
+    private int offset = 1200;
+
+	private HashMap<IslandWorld, Integer> oldSystemIslands;
 
     public IslandManager(SkyBlock skyblock) {
         this.skyblock = skyblock;
@@ -74,6 +82,8 @@ public class IslandManager {
         for (Island island : getIslands().values()) {
             if (island.isAlwaysLoaded()) loadIslandAtLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island));
         }
+        
+        loadIslandPositions();
     }
 
     public void onDisable() {
@@ -90,15 +100,15 @@ public class IslandManager {
 
         File configFile = config.getFile();
         FileConfiguration configLoad = config.getFileConfiguration();
-
         for (IslandPosition islandPositionList : islandPositions) {
             if (islandPositionList.getWorld() == world) {
+                int island_number = (int) configLoad.get("World." + world.name() + ".nextAvailableLocation.island_number");
                 ConfigurationSection configSection = configLoad.createSection("World." + world.name() + ".nextAvailableLocation");
                 configSection.set("x", islandPositionList.getX());
                 configSection.set("z", islandPositionList.getZ());
+                configSection.set("island_number", (island_number + 1));
             }
         }
-
         try {
             configLoad.save(configFile);
         } catch (IOException e) {
@@ -115,24 +125,64 @@ public class IslandManager {
         }
     }
 
+
+
     public org.bukkit.Location prepareNextAvailableLocation(IslandWorld world) {
         for (IslandPosition islandPositionList : islandPositions) {
             if (islandPositionList.getWorld() == world) {
-                double x = islandPositionList.getX() + offset, z = islandPositionList.getZ();
 
-                if (x > Math.abs(this.x)) {
-                    z += offset;
-                    islandPositionList.setX(this.x);
-                    x = islandPositionList.getX() + offset;
-                    islandPositionList.setZ(z);
+                Config config_world = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "worlds.yml"));
+                Config config_config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+
+                FileConfiguration configLoad_world = config_world.getFileConfiguration();
+                FileConfiguration configLoad_config = config_config.getFileConfiguration();
+                int x = (int) configLoad_world.get("World." + world.name() + ".nextAvailableLocation.island_number");
+                int islandHeight = configLoad_config.getInt("Island.World." + world.name() + ".IslandSpawnHeight", 72);
+                while (true) {
+                    double r = Math.floor((Math.sqrt(x + 1) - 1) / 2) + 1;
+                    double p = (8 * r * (r -1)) / 2;
+                    double en = r * 2;
+                    double a = (x - p) % (r * 8);
+                    int posX = 0;
+                    int posY = 0;
+                    int loc = (int) Math.floor(a / (r * 2));
+                    switch (loc) {
+                        case 0 :
+                            posX = (int) (a-r);
+                            posY = (int) (-r);
+                            break;
+                        case 1:
+                            posX = (int) r;
+                            posY = (int) ((a % en) - r);
+                            break;
+                        case 2:
+                            posX = (int) (r - (a % en));
+                            posY = (int) r;
+                            break;
+                        case 3:
+                            posX = (int) (-r);
+                            posY = (int) (r - (a % en));
+                            break;
+                        default:
+                            System.err.println("[FabledSkyblock][prepareNextAvailableLocation] Erreur dans la spirale, valeur : " + loc);
+                            return null;
+                    }
+                    posX = posX * offset;
+                    posY = posY * offset;
+                    islandPositionList.setX((double) posX);
+                    islandPositionList.setZ((double) posY);
+                    // Check if there was an island at this position
+                    int oldFormatPos = oldSystemIslands.get(world);
+                    Location islandLocation = new org.bukkit.Location(skyblock.getWorldManager().getWorld(world), islandPositionList.getX(), islandHeight, islandPositionList.getZ());
+                	if (posX == 1200 && posY >= 0 && posY <= oldFormatPos) {
+                		// We have to save to avoid having two islands at same location
+                        setNextAvailableLocation(world, islandLocation);
+                        saveNextAvailableLocation(world);
+                		x++;
+                		continue;
+                	}
+                    return islandLocation;
                 }
-
-                Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
-
-                int islandHeight = configLoad.getInt("Island.World." + world.name() + ".IslandSpawnHeight", 72);
-
-                return new org.bukkit.Location(skyblock.getWorldManager().getWorld(world), x, islandHeight, z);
             }
         }
 
@@ -156,12 +206,11 @@ public class IslandManager {
                 skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.MaxCreationMessage"));
                 return false;
             }
-
         }
 
         if (fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
             skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.Message"));
-            skyblock.getSoundManager().playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return false;
         }
@@ -253,6 +302,118 @@ public class IslandManager {
 
         // Recalculate island level after 5 seconds
         if (configLoad.getBoolean("Island.Levelling.ScanAutomatically")) Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> skyblock.getLevellingManager().startScan(null, island), 100L);
+
+        return true;
+    }
+
+    public boolean previewIsland(Player player, Structure structure) {
+        FileManager fileManager = skyblock.getFileManager();
+
+        PlayerData data = skyblock.getPlayerDataManager().getPlayerData(player);
+        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileConfiguration configLang = config.getFileConfiguration();
+        config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileConfiguration configMain = config.getFileConfiguration();
+
+
+        if (data != null) {
+            final int highest = PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.create", true, 2);
+
+            if ((data.getIslandCreationCount()) >= highest) {
+                skyblock.getMessageManager().sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.MaxCreationMessage"));
+                return false;
+            }
+
+        }
+
+        if (fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
+            skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Creator.Error.Message"));
+            skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+
+            return false;
+        }
+
+        Island island = new Island(player);
+        island.setStructure(structure.getName());
+        islandStorage.put(player.getUniqueId(), island);
+
+        data.setPreview(true);
+
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds())
+            prepareIsland(island, worldList);
+
+
+        Bukkit.getScheduler().callSyncMethod(SkyBlock.getInstance(), () -> {
+            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island));
+            player.setGameMode(GameMode.SPECTATOR);
+            return true;
+        });
+
+        Bukkit.getScheduler().runTaskLater(skyblock, () -> {
+            if(data.isPreview()) {
+                Location spawn = fileManager.getLocation(fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")), "Location.Spawn", true);
+                player.teleport(spawn);
+                player.setGameMode(GameMode.SURVIVAL);
+                data.setIsland(null);
+                islandStorage.remove(player.getUniqueId(), island);
+                deleteIsland(island, true);
+                skyblock.getMessageManager().sendMessage(player, configLang.getString("Island.Preview.Timeout.Message"));
+                data.setPreview(false);
+            }
+        }, configMain.getInt("Island.Preview.Time")*20);
+
+
+
+        String defaultMessage = configLang.getString("Command.Island.Preview.Confirmation.Message")
+                .replaceAll("%time", "" + configMain.get("Island.Preview.Time"));
+
+        defaultMessage = defaultMessage.replace("\\n", "\n");
+
+        for (String message : defaultMessage.split("\n")) {
+            ChatComponent confirmation = null, cancelation = null;
+
+            if(message.contains("%confirm")) {
+                message = message.replace("%confirm", "");
+                confirmation = new ChatComponent(configLang.getString("Command.Island.Preview.Confirmation.Word.Confirm").toUpperCase() + "     ",
+                        true, net.md_5.bungee.api.ChatColor.GREEN,
+                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island preview confirm"),
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                new ComponentBuilder(
+                                        net.md_5.bungee.api.ChatColor.translateAlternateColorCodes(
+                                                '&',
+                                                configLang.getString("Command.Island.Preview.Confirmation.Word.TutorialConfirm")))
+                                        .create()
+                        ));
+            }
+
+            if(message.contains("%cancel")) {
+                message = message.replace("%cancel", "");
+                cancelation = new ChatComponent(configLang.getString("Command.Island.Preview.Confirmation.Word.Cancel").toUpperCase(),
+                        true, net.md_5.bungee.api.ChatColor.GREEN,
+                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island preview cancel"),
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                new ComponentBuilder(
+                                        net.md_5.bungee.api.ChatColor.translateAlternateColorCodes(
+                                                '&',
+                                                configLang.getString("Command.Island.Preview.Confirmation.Word.TutorialCancel")))
+                                        .create()
+                        ));
+            }
+
+            TextComponent confirmationMessage = new TextComponent(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message));
+            if(confirmation != null) {
+                confirmationMessage.addExtra(confirmation.getTextComponent());
+            }
+            if(cancelation != null) {
+                confirmationMessage.addExtra(cancelation.getTextComponent());
+            }
+
+            player.spigot().sendMessage(confirmationMessage);
+
+        }
+
+        data.setConfirmation(Confirmation.Preview);
+        data.setConfirmationTime(configMain.getInt("Island.Preview.Time"));
 
         return true;
     }
@@ -553,6 +714,54 @@ public class IslandManager {
 
         return null;
     }
+
+    /**
+     * The old island position system was not good, it always create islands at x = 1200 and z starting at 0 and increasing by 1200<br />
+     * This method will get the nextAvailableLocation for normal, nether and end islands in worlds.yml file
+     * to avoid creating island where an existing island was
+     */
+	public void loadIslandPositions() {
+		oldSystemIslands = new HashMap<>();
+
+		FileManager fileManager = skyblock.getFileManager();
+		Config config = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/worlds.yml"));
+		FileConfiguration fileConfig = config.getFileConfiguration();
+		Config config2 = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/worlds.oldformat.yml"));
+		FileConfiguration fileConfig2 = config2.getFileConfiguration();
+
+		// TODO Find a way to automatically
+		int normalZ = 0;
+		int netherZ = 0;
+		int endZ = 0;
+		if (!config2.getFile().exists()) {
+			// Old data
+			Bukkit.getLogger().info("[FabledSkyblock] Old format detected, please wait ...");
+			if (fileConfig.contains("World.Normal.nextAvailableLocation"))
+				normalZ = fileConfig.getInt("World.Normal.nextAvailableLocation.z");
+			if (fileConfig.contains("World.Nether.nextAvailableLocation"))
+				netherZ = fileConfig.getInt("World.Nether.nextAvailableLocation.z");
+			if (fileConfig.contains("World.End.nextAvailableLocation"))
+				endZ = fileConfig.getInt("World.End.nextAvailableLocation.z");
+			// Save
+			fileConfig2.set("Normal", normalZ);
+			fileConfig2.set("Nether", netherZ);
+			fileConfig2.set("End", endZ);
+			try {
+				fileConfig2.save(config2.getFile());
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			Bukkit.getLogger().info("[FabledSkyblock] Done ! Got normalZ = " + normalZ + ", netherZ = " + netherZ + ", endZ = " + endZ);
+		} else {
+			// Load datas
+			normalZ = fileConfig2.getInt("Normal");
+			netherZ = fileConfig2.getInt("Nether");
+			endZ = fileConfig2.getInt("End");
+		}
+		oldSystemIslands.put(IslandWorld.Normal, normalZ);
+		oldSystemIslands.put(IslandWorld.Nether, netherZ);
+		oldSystemIslands.put(IslandWorld.End, endZ);
+	}
 
     public Island loadIslandAtLocation(Location location) {
         FileManager fileManager = skyblock.getFileManager();
@@ -1023,13 +1232,13 @@ public class IslandManager {
     public void removeSpawnProtection(org.bukkit.Location location) {
         Block block = location.getBlock();
 
-        if (block.getType() == Materials.MOVING_PISTON.parseMaterial()) {
+        if (CompatibleMaterial.getMaterial(block.getType()) == CompatibleMaterial.MOVING_PISTON) {
             block.setType(Material.AIR);
         }
 
         block = location.clone().add(0.0D, 1.0D, 0.0D).getBlock();
 
-        if (block.getType() == Materials.MOVING_PISTON.parseMaterial()) {
+        if (CompatibleMaterial.getMaterial(block.getType()) == CompatibleMaterial.MOVING_PISTON) {
             block.setType(Material.AIR);
         }
     }
@@ -1223,7 +1432,7 @@ public class IslandManager {
                     messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Coop.Removed.Owner.Message"));
                 }
 
-                soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
             }
         }
 

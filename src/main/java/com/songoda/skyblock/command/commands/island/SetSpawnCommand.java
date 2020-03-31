@@ -1,15 +1,15 @@
 package com.songoda.skyblock.command.commands.island;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.Materials;
-import com.songoda.skyblock.utils.version.Sounds;
+
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -33,7 +33,7 @@ public class SetSpawnCommand extends SubCommand {
 
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Owner.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             } else {
                 IslandEnvironment environment;
 
@@ -43,7 +43,7 @@ public class SetSpawnCommand extends SubCommand {
                     environment = IslandEnvironment.Visitor;
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Spawn.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
@@ -59,42 +59,47 @@ public class SetSpawnCommand extends SubCommand {
 
                             if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
-                                if (location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR
-                                        || location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock()
-                                        .getType() == Materials.LEGACY_PISTON_MOVING_PIECE.getPostMaterial()) {
+
+                                CompatibleMaterial toCompare = CompatibleMaterial.getMaterial(location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType());
+
+                                if(toCompare == CompatibleMaterial.AIR
+                                        || toCompare == CompatibleMaterial.MOVING_PISTON
+                                        || toCompare == CompatibleMaterial.ICE
+                                        || toCompare == CompatibleMaterial.PISTON_HEAD) {
+
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.SetSpawn.Protection.Block.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     return;
                                 } else if (!player.getLocation().clone().subtract(0, 0.1, 0).getBlock().getType().isSolid()) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.SetSpawn.Protection.Ground.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     return;
                                 } else if (location.getBlock().isLiquid()
                                         || location.clone().add(0.0D, 1.0D, 0.0D).getBlock().isLiquid()) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.SetSpawn.Protection.Liquid.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     return;
-                                } else if (location.getBlock().getType() == Materials.NETHER_PORTAL.parseMaterial()
-                                        || location.clone().add(0.0D, 1.0D, 0.0D).getBlock()
-                                        .getType() == Materials.NETHER_PORTAL.parseMaterial()) {
+                                } else if (CompatibleMaterial.getMaterial(location.getBlock().getType()) == CompatibleMaterial.NETHER_PORTAL
+                                        || CompatibleMaterial.getMaterial(location.clone().add(0.0D, 1.0D, 0.0D).getBlock()
+                                        .getType()) == CompatibleMaterial.NETHER_PORTAL) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.SetSpawn.Protection.Portal.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     return;
                                 } else {
-                                    Material type = location.getBlock().getType();
+                                    CompatibleMaterial type = CompatibleMaterial.getMaterial(location.getBlock().getType());
                                     if (type.isSolid() && type.isOccluding()) {
                                         location.getBlock().breakNaturally();
                                     }
 
-                                    Material typeBelow = location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType();
+                                    CompatibleMaterial typeBelow = CompatibleMaterial.getMaterial(location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType());
                                     if (typeBelow.isSolid() && type.isOccluding()) {
                                         location.clone().add(0.0D, 1.0D, 0.0D).getBlock().breakNaturally();
                                     }
@@ -109,7 +114,7 @@ public class SetSpawnCommand extends SubCommand {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.SetSpawn.Set.Message").replace("%spawn",
                                             environment.name().toLowerCase()));
-                            soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                             return;
                         }
@@ -117,22 +122,22 @@ public class SetSpawnCommand extends SubCommand {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.SetSpawn.Island.Message").replace("%spawn",
                                         environment.name().toLowerCase()));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     } else {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.SetSpawn.Permission.Message").replace("%spawn",
                                         environment.name().toLowerCase()));
-                        soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                     }
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Role.Message")
                             .replace("%spawn", environment.name().toLowerCase()));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 }
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Invalid.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }
     }
 

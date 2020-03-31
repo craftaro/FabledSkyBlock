@@ -8,6 +8,7 @@ import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.biome.BiomeManager;
+import com.songoda.skyblock.challenge.FabledChallenge;
 import com.songoda.skyblock.command.CommandManager;
 import com.songoda.skyblock.command.commands.SkyBlockCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -17,6 +18,7 @@ import com.songoda.skyblock.generator.GeneratorManager;
 import com.songoda.skyblock.hologram.HologramManager;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.reward.RewardManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
@@ -78,6 +80,8 @@ public class SkyBlock extends SongodaPlugin {
     private HologramManager hologramManager;
     private LimitationInstanceHandler limitationHandler;
     private LocalizationManager localizationManager;
+    private RewardManager rewardManager;
+    private FabledChallenge fabledChallenge;
 
     public static SkyBlock getInstance() {
         return INSTANCE;
@@ -107,6 +111,7 @@ public class SkyBlock extends SongodaPlugin {
         playerDataManager = new PlayerDataManager(this);
         cooldownManager = new CooldownManager(this);
         limitationHandler = new LimitationInstanceHandler();
+        fabledChallenge = new FabledChallenge(this);
 
         if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable")) {
             scoreboardManager = new ScoreboardManager(this);
@@ -136,6 +141,9 @@ public class SkyBlock extends SongodaPlugin {
         messageManager = new MessageManager(this);
         hologramManager = new HologramManager(this);
 
+        rewardManager = new RewardManager(this);
+        rewardManager.loadRewards();
+
         new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
         new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
         new ConfirmationTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -159,6 +167,8 @@ public class SkyBlock extends SongodaPlugin {
         pluginManager.registerEvents(new Spawner(this), this);
         pluginManager.registerEvents(new Food(this), this);
         pluginManager.registerEvents(new Grow(this), this);
+        pluginManager.registerEvents(new Piston(this), this);
+        pluginManager.registerEvents(new FallBreak(this), this);
 
         if (pluginManager.isPluginEnabled("EpicSpawners")) pluginManager.registerEvents(new EpicSpawners(this), this);
         if (pluginManager.isPluginEnabled("WildStacker")) pluginManager.registerEvents(new WildStacker(this), this);
@@ -209,6 +219,10 @@ public class SkyBlock extends SongodaPlugin {
 
         if (this.hologramManager != null) {
             this.hologramManager.onDisable();
+        }
+
+        if (this.fabledChallenge != null) {
+            this.fabledChallenge.onDisable();
         }
 
         HandlerList.unregisterAll(this);
@@ -335,5 +349,13 @@ public class SkyBlock extends SongodaPlugin {
 
     public LocalizationManager getLocalizationManager() {
         return localizationManager;
+    }
+
+    public RewardManager getRewardManager() {
+        return rewardManager;
+    }
+
+    public FabledChallenge getFabledChallenge() {
+        return fabledChallenge;
     }
 }

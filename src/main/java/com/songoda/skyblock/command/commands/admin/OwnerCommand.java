@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -7,7 +8,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -57,12 +57,12 @@ public class OwnerCommand extends SubCommand {
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.Owner.Island.None.Message"));
-                soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             } else if (islandOwnerUUID.equals(targetPlayerUUID)) {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.Owner.Island.Owner.Message").replace("%player",
                                 targetPlayerName));
-                soundManager.playSound(sender, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
             } else {
                 targetPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
 
@@ -75,11 +75,11 @@ public class OwnerCommand extends SubCommand {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.Owner.Island.Member.Message")
                                 .replace("%player", targetPlayerName).replace("%owner", islandOwnerName));
-                soundManager.playSound(sender, Sounds.VILLAGER_YES.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Owner.Invalid.Message"));
-            soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }
     }
 

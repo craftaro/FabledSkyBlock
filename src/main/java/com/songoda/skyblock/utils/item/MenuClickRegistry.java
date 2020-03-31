@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil.ClickEvent;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 
 public final class MenuClickRegistry {
 
@@ -55,7 +56,7 @@ public final class MenuClickRegistry {
         if (meta == null) return;
 
         @SuppressWarnings("deprecation")
-        final MenuExecutor executor = executors.get(RegistryKey.fromName(meta.getDisplayName(), Materials.getMaterials(item.getType(), (byte) item.getDurability())));
+        final MenuExecutor executor = executors.get(RegistryKey.fromName(meta.getDisplayName(), CompatibleMaterial.getMaterial(item.getType())));
 
 
         if (executor == null) return;
@@ -80,9 +81,9 @@ public final class MenuClickRegistry {
         private static final File path = new File(SkyBlock.getInstance().getDataFolder(), "language.yml");
 
         private final String name;
-        private final Materials type;
+        private final CompatibleMaterial type;
 
-        private RegistryKey(String name, Materials type) {
+        private RegistryKey(String name, CompatibleMaterial type) {
             this.name = name;
             this.type = type;
         }
@@ -102,11 +103,11 @@ public final class MenuClickRegistry {
             return Objects.equals(name, other.name) && type == other.type;
         }
 
-        public static RegistryKey fromName(String name, Materials type) {
+        public static RegistryKey fromName(String name, CompatibleMaterial type) {
             return new RegistryKey(name, type);
         }
 
-        public static RegistryKey fromLanguageFile(String namePath, Materials type) {
+        public static RegistryKey fromLanguageFile(String namePath, CompatibleMaterial type) {
             return new RegistryKey(StringUtil.color(SkyBlock.getInstance().getFileManager().getConfig(path).getFileConfiguration().getString(namePath)), type);
         }
     }

@@ -1,14 +1,14 @@
 package com.songoda.skyblock.listeners;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.utils.version.Materials;
-import com.songoda.skyblock.utils.version.Sounds;
+
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,10 +30,10 @@ public class Bucket implements Listener {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlockClicked();
 
-        if (event.getBlockClicked().getType() == Material.WATER
-                || event.getBlockClicked().getType() == Materials.LEGACY_STATIONARY_WATER.getPostMaterial()
-                || event.getBlockClicked().getType() == Material.LAVA
-                || event.getBlockClicked().getType() == Materials.LEGACY_STATIONARY_LAVA.getPostMaterial()) {
+        CompatibleMaterial clickedBlock = CompatibleMaterial.getBlockMaterial(event.getBlockClicked().getType());
+
+        if (clickedBlock == CompatibleMaterial.WATER
+                || clickedBlock == CompatibleMaterial.LAVA) {
             if (skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
                 if (!skyblock.getIslandManager().hasPermission(player, block.getLocation(), "Bucket")) {
                     event.setCancelled(true);
@@ -41,7 +41,7 @@ public class Bucket implements Listener {
                     skyblock.getMessageManager().sendMessage(player,
                             skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                     .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                    skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 }
             }
         }
@@ -59,7 +59,7 @@ public class Bucket implements Listener {
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                 .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
 
@@ -80,7 +80,7 @@ public class Bucket implements Listener {
             skyblock.getMessageManager().sendMessage(player,
                     skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                             .getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
-            skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }
 }

@@ -1,20 +1,21 @@
 package com.songoda.skyblock.levelling.rework;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.inventory.ItemStack;
 
-import com.songoda.skyblock.utils.version.Materials;
+ 
 
 public final class LevellingMaterial {
 
-    private Materials materials;
+    private CompatibleMaterial materials;
     private long points;
 
-    public LevellingMaterial(Materials materials, long points) {
+    public LevellingMaterial(CompatibleMaterial materials, long points) {
         this.materials = materials;
         this.points = points;
     }
 
-    public Materials getMaterials() {
+    public CompatibleMaterial getMaterials() {
         return materials;
     }
 
@@ -27,6 +28,6 @@ public final class LevellingMaterial {
     }
 
     public ItemStack getItemStack() {
-        return materials.parseItem();
+        return materials.getItem();
     }
 }

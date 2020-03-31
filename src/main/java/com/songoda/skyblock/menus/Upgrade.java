@@ -1,11 +1,12 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandUpgradeEvent;
 import com.songoda.skyblock.api.utils.APIUtil;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.utils.VaultPermissions;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
@@ -16,9 +17,8 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Materials;
+
 import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -63,7 +63,7 @@ public class Upgrade {
 
         if (!EconomyManager.isEnabled()) {
             messageManager.sendMessage(player, configLoad.getString("Island.Upgrade.Disabled.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return;
         }
@@ -74,7 +74,7 @@ public class Upgrade {
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (!EconomyManager.isEnabled()) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Upgrade.Disabled.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
@@ -84,7 +84,7 @@ public class Upgrade {
 
                     if (playerData.getOwner() == null) {
                         messageManager.sendMessage(player, configLoad.getString("Island.Upgrade.Owner.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
@@ -107,7 +107,7 @@ public class Upgrade {
                                             true);
                                 }
 
-                                soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                         () -> open(player), 1L);
@@ -122,7 +122,7 @@ public class Upgrade {
                                         messageManager.sendMessage(player,
                                                 configLoad.getString("Island.Upgrade.Bought.Message")
                                                         .replace("%upgrade", is.getItemMeta().getDisplayName()));
-                                        soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+                                        soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                                         EconomyManager.withdrawBalance(player, upgrade.getCost());
                                         island.setUpgrade(player,
@@ -133,7 +133,7 @@ public class Upgrade {
                                     } else {
                                         messageManager.sendMessage(player,
                                                 configLoad.getString("Island.Upgrade.Money.Message"));
-                                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                         event.setWillClose(false);
                                         event.setWillDestroy(false);
@@ -141,7 +141,7 @@ public class Upgrade {
                                 } else {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Exist.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     event.setWillClose(false);
                                     event.setWillDestroy(false);
@@ -162,7 +162,7 @@ public class Upgrade {
                                             true);
                                 }
 
-                                soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                         () -> open(player), 1L);
@@ -177,7 +177,7 @@ public class Upgrade {
                                         messageManager.sendMessage(player,
                                                 configLoad.getString("Island.Upgrade.Bought.Message")
                                                         .replace("%upgrade", is.getItemMeta().getDisplayName()));
-                                        soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+                                        soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                                         EconomyManager.withdrawBalance(player, upgrade.getCost());
                                         island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Jump,
@@ -188,7 +188,7 @@ public class Upgrade {
                                     } else {
                                         messageManager.sendMessage(player,
                                                 configLoad.getString("Island.Upgrade.Money.Message"));
-                                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                         event.setWillClose(false);
                                         event.setWillDestroy(false);
@@ -196,14 +196,14 @@ public class Upgrade {
                                 } else {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Exist.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     event.setWillClose(false);
                                     event.setWillDestroy(false);
                                 }
                             }
                         }
-                    } else if ((is.getType() == Materials.WHEAT_SEEDS.parseMaterial()) && (is.hasItemMeta())
+                    } else if ((is.getType() == CompatibleMaterial.WHEAT_SEEDS.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Upgrade.Item.Crop.Displayname"))))) {
                         if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Crop)) {
@@ -213,7 +213,7 @@ public class Upgrade {
                                 island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Crop, true);
                             }
 
-                            soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                         } else {
@@ -227,7 +227,7 @@ public class Upgrade {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Bought.Message")
                                                     .replace("%upgrade", is.getItemMeta().getDisplayName()));
-                                    soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                                     EconomyManager.withdrawBalance(player, upgrade.getCost());
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Crop,
@@ -238,7 +238,7 @@ public class Upgrade {
                                 } else {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Money.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     event.setWillClose(false);
                                     event.setWillDestroy(false);
@@ -246,7 +246,7 @@ public class Upgrade {
                             } else {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Upgrade.Exist.Message"));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -264,7 +264,7 @@ public class Upgrade {
                                 islandManager.updateFlightAtIsland(island);
                             }
 
-                            soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                         } else {
@@ -278,7 +278,7 @@ public class Upgrade {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Bought.Message")
                                                     .replace("%upgrade", is.getItemMeta().getDisplayName()));
-                                    soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                                     EconomyManager.withdrawBalance(player, upgrade.getCost());
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Fly,
@@ -291,7 +291,7 @@ public class Upgrade {
                                 } else {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Money.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     event.setWillClose(false);
                                     event.setWillDestroy(false);
@@ -299,7 +299,7 @@ public class Upgrade {
                             } else {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Upgrade.Exist.Message"));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -316,7 +316,7 @@ public class Upgrade {
                                 island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Drops, true);
                             }
 
-                            soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                         } else {
@@ -330,7 +330,7 @@ public class Upgrade {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Bought.Message")
                                                     .replace("%upgrade", is.getItemMeta().getDisplayName()));
-                                    soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                                     EconomyManager.withdrawBalance(player, upgrade.getCost());
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Drops,
@@ -341,7 +341,7 @@ public class Upgrade {
                                 } else {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Money.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     event.setWillClose(false);
                                     event.setWillDestroy(false);
@@ -349,7 +349,7 @@ public class Upgrade {
                             } else {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Upgrade.Exist.Message"));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -374,7 +374,7 @@ public class Upgrade {
                                             messageManager.sendMessage(player,
                                                     configLoad.getString("Island.Upgrade.Bought.Message").replace(
                                                             "%upgrade", is.getItemMeta().getDisplayName()));
-                                            soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F,
+                                            soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F,
                                                     1.0F);
 
                                             EconomyManager.withdrawBalance(player, upgrade.getCost());
@@ -390,7 +390,7 @@ public class Upgrade {
                                         } else {
                                             messageManager.sendMessage(player,
                                                     configLoad.getString("Island.Upgrade.Money.Message"));
-                                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
                                                     1.0F);
 
                                             event.setWillClose(false);
@@ -404,12 +404,12 @@ public class Upgrade {
 
                             messageManager.sendMessage(player,
                                     configLoad.getString("Island.Upgrade.Claimed.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
                         }
-                    } else if ((is.getType() == Materials.SPAWNER.parseMaterial()) && (is.hasItemMeta())
+                    } else if ((is.getType() == CompatibleMaterial.SPAWNER.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname"))))) {
                         if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner)) {
@@ -421,7 +421,7 @@ public class Upgrade {
                                         true);
                             }
 
-                            soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                         } else {
@@ -435,7 +435,7 @@ public class Upgrade {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Bought.Message")
                                                     .replace("%upgrade", is.getItemMeta().getDisplayName()));
-                                    soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                                     EconomyManager.withdrawBalance(player, upgrade.getCost());
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner,
@@ -446,7 +446,7 @@ public class Upgrade {
                                 } else {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Upgrade.Money.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     event.setWillClose(false);
                                     event.setWillDestroy(false);
@@ -454,7 +454,7 @@ public class Upgrade {
                             } else {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Upgrade.Exist.Message"));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -576,7 +576,7 @@ public class Upgrade {
                 com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
                 if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Crop)) {
-                    nInv.addItem(nInv.createItem(Materials.WHEAT_SEEDS.parseItem(),
+                    nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
                             ChatColor.translateAlternateColorCodes('&',
                                     configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
                             configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimed.Lore"),
@@ -587,7 +587,7 @@ public class Upgrade {
                             null, null), 3);
                 } else {
                     if (EconomyManager.hasBalance(player, upgrade.getCost())) {
-                        nInv.addItem(nInv.createItem(Materials.WHEAT_SEEDS.parseItem(),
+                        nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimable.Lore"),
@@ -595,7 +595,7 @@ public class Upgrade {
                                         new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
                                 null, null), 3);
                     } else {
-                        nInv.addItem(nInv.createItem(Materials.WHEAT_SEEDS.parseItem(),
+                        nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Crop.Unclaimable.Lore"),
@@ -744,7 +744,7 @@ public class Upgrade {
                 com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
                 if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner)) {
-                    nInv.addItem(nInv.createItem(Materials.SPAWNER.parseItem(),
+                    nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
                             ChatColor.translateAlternateColorCodes('&',
                                     configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
                             configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimed.Lore"),
@@ -755,7 +755,7 @@ public class Upgrade {
                             null, null), 8);
                 } else {
                     if (EconomyManager.hasBalance(player, upgrade.getCost())) {
-                        nInv.addItem(nInv.createItem(Materials.SPAWNER.parseItem(),
+                        nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimable.Lore"),
@@ -763,7 +763,7 @@ public class Upgrade {
                                         new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
                                 null, null), 8);
                     } else {
-                        nInv.addItem(nInv.createItem(Materials.SPAWNER.parseItem(),
+                        nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Spawner.Unclaimable.Lore"),

@@ -3,6 +3,7 @@ package com.songoda.skyblock.command.commands.island;
 import java.io.File;
 import java.util.UUID;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,7 +19,6 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.Sounds;
 import com.songoda.skyblock.utils.world.LocationUtil;
 
 public class BanCommand extends SubCommand {
@@ -39,7 +39,7 @@ public class BanCommand extends SubCommand {
 
                 if (island == null) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Owner.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
                     if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                             || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Ban").getStatus())) {
@@ -60,21 +60,21 @@ public class BanCommand extends SubCommand {
 
                         if (targetPlayerUUID == null) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Found.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         } else if (targetPlayerUUID.equals(player.getUniqueId())) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Yourself.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         } else if (island.hasRole(IslandRole.Member, targetPlayerUUID) || island.hasRole(IslandRole.Operator, targetPlayerUUID)
                                 || island.hasRole(IslandRole.Owner, targetPlayerUUID)) {
                                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Member.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                 } else
                             if (island.getBan().isBanned(targetPlayerUUID)) {
                                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Already.Message"));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             } else {
                                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Banned.Sender.Message").replace("%player", targetPlayerName));
-                                soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
                                 if (island.isCoopPlayer(targetPlayerUUID)) {
                                     island.removeCoopPlayer(targetPlayerUUID);
@@ -87,7 +87,7 @@ public class BanCommand extends SubCommand {
                                 if (targetPlayer != null) {
                                     if (islandManager.isPlayerAtIsland(island, targetPlayer)) {
                                         messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.Ban.Banned.Target.Message").replace("%player", player.getName()));
-                                        soundManager.playSound(targetPlayer, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                                        soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
                                         LocationUtil.teleportPlayerToSpawn(targetPlayer);
                                     }
@@ -95,15 +95,15 @@ public class BanCommand extends SubCommand {
                             }
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Permission.Message"));
-                        soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                     }
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Disabled.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Invalid.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             }
         });
     }

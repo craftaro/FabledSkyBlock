@@ -1,5 +1,7 @@
 package com.songoda.skyblock.menus.admin;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -11,15 +13,14 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.item.MaterialUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -61,9 +62,11 @@ public class Levelling implements Listener {
         // Filter out materials that won't be displayed in the GUI properly
         Inventory testInventory = Bukkit.createInventory(null, 9);
         levellingMaterials = levellingMaterials.stream().filter(x -> {
-            if (!x.getMaterials().isAvailable()) return false;
+            if (x.getMaterials() == CompatibleMaterial.SPAWNER) return false;
             if (x.getItemStack() == null) return false;
-            ItemStack itemStack = new ItemStack(MaterialUtil.correctMaterial(x.getItemStack().getType()), 1, x.getItemStack().getDurability());
+            ItemStack itemStack = x.getMaterials().getItem();
+            itemStack.setAmount(1);
+            itemStack.setDurability(x.getItemStack().getDurability());
             if (itemStack == null || itemStack.getItemMeta() == null) return false;
             testInventory.clear();
             testInventory.setItem(0, itemStack);
@@ -75,11 +78,11 @@ public class Levelling implements Listener {
 
         nInventoryUtil nInv = new nInventoryUtil(player, null);
         nInv.addItem(
-                nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+                nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                         configLoad.getString("Menu.Admin.Levelling.Item.Exit.Displayname"), null, null, null, null),
                 0, 8);
         nInv.addItem(
-                nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
+                nInv.createItem(new ItemStack(CompatibleMaterial.OAK_SIGN.getMaterial()),
                         configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"),
                         configLoad.getStringList("Menu.Admin.Levelling.Item.Information.Lore"),
                         new Placeholder[]{new Placeholder("%materials", "" + levellingMaterials.size()),
@@ -89,7 +92,7 @@ public class Levelling implements Listener {
                         null, null),
                 4);
         nInv.addItem(
-                nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+                nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                         configLoad.getString("Menu.Admin.Levelling.Item.Barrier.Displayname"), null, null, null, null),
                 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
@@ -122,10 +125,12 @@ public class Levelling implements Listener {
                     inventorySlot++;
 
                     LevellingMaterial material = levellingMaterials.get(index);
+                    ItemStack itemStack = material.getMaterials().getItem();
+                    itemStack.setAmount(1);
+                    itemStack.setDurability(material.getItemStack().getDurability());
                     nInv.addItem(
                             nInv.createItem(
-                                    new ItemStack(MaterialUtil.correctMaterial(material.getItemStack().getType()), 1,
-                                            material.getItemStack().getDurability()),
+                                    itemStack,
                                     ChatColor.translateAlternateColorCodes('&',
                                             configLoad.getString("Menu.Admin.Levelling.Item.Material.Displayname")
                                                     .replace("%material", material.getMaterials().name())),
@@ -179,33 +184,33 @@ public class Levelling implements Listener {
                         || player.hasPermission("fabledskyblock.*"))) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Admin.Levelling.Permission.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
-
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    event.setCancelled(true);
                     return;
                 }
 
-                if ((event.getCurrentItem().getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
+                if ((event.getCurrentItem().getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Barrier.Displayname"))))) {
                     event.setCancelled(true);
-                    soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Materials.OAK_FENCE_GATE.parseMaterial())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial())
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Exit.Displayname"))))) {
                     event.setCancelled(true);
-                    soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                     player.closeInventory();
 
                     return;
-                } else if ((event.getCurrentItem().getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
+                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_SIGN.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"))))) {
                     event.setCancelled(true);
-                    soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                     AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                         if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -214,14 +219,14 @@ public class Levelling implements Listener {
                                     || player.hasPermission("fabledskyblock.*"))) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Admin.Levelling.Permission.Message"));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             } else if (event1.getName().matches("[0-9]+")) {
                                 int pointDivision = Integer.valueOf(event1.getName());
 
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Admin.Levelling.Division.Message")
                                                 .replace("%division", NumberUtil.formatNumberByDecimal(pointDivision)));
-                                soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
                                     Config config12 = fileManager
@@ -243,7 +248,7 @@ public class Levelling implements Listener {
                             } else {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Admin.Levelling.Numerical.Message"));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             }
 
                             event1.setWillClose(true);
@@ -267,7 +272,7 @@ public class Levelling implements Listener {
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Nothing.Displayname"))))) {
                     event.setCancelled(true);
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 } else if ((event.getCurrentItem().getType() == SkullUtil.createItemStack().getType())
@@ -278,7 +283,7 @@ public class Levelling implements Listener {
                         player.closeInventory();
 
                         playerData.setPage(playerData.getPage() - 1);
-                        soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 
@@ -289,7 +294,7 @@ public class Levelling implements Listener {
                         player.closeInventory();
 
                         playerData.setPage(playerData.getPage() + 1);
-                        soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
 
@@ -299,14 +304,14 @@ public class Levelling implements Listener {
 
                 if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                     for (LevellingMaterial materialList : levellingManager.getWorthsAsLevelingMaterials()) {
-                        Materials materials = materialList.getMaterials();
+                        CompatibleMaterial materials = materialList.getMaterials();
 
-                        if (event.getCurrentItem().getType() == MaterialUtil.correctMaterial(materials.parseMaterial())
+                        if (event.getCurrentItem().getType() == CompatibleMaterial.getMaterial(materials.getMaterial()).getMaterial()
                                 && ChatColor.stripColor(is.getItemMeta().getDisplayName()).equals(materials.name())) {
                             event.setCancelled(true);
 
                             if (event.getClick() == ClickType.LEFT) {
-                                soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                                 AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                     if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -315,7 +320,7 @@ public class Levelling implements Listener {
                                                 || player.hasPermission("fabledskyblock.*"))) {
                                             messageManager.sendMessage(player,
                                                     configLoad.getString("Island.Admin.Levelling.Permission.Message"));
-                                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                         } else if (levellingManager.hasWorth(materials)) {
                                             if (event1.getName().matches("[0-9]+")) {
                                                 int materialPoints = Integer.valueOf(event1.getName());
@@ -325,7 +330,7 @@ public class Levelling implements Listener {
                                                         .getString("Island.Admin.Levelling.Points.Message")
                                                         .replace("%material", materials.name()).replace("%points",
                                                                 NumberUtil.formatNumberByDecimal(materialPoints)));
-                                                soundManager.playSound(player, Sounds.LEVEL_UP.bukkitSound(), 1.0F,
+                                                soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F,
                                                         1.0F);
                                                 player.closeInventory();
 
@@ -352,13 +357,13 @@ public class Levelling implements Listener {
                                             } else {
                                                 messageManager.sendMessage(player, configLoad
                                                         .getString("Island.Admin.Levelling.Numerical.Message"));
-                                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+                                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
                                                         1.0F);
                                             }
                                         } else {
                                             messageManager.sendMessage(player,
                                                     configLoad.getString("Island.Admin.Levelling.Exist.Message"));
-                                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                         }
 
                                         event1.setWillClose(true);
@@ -384,7 +389,7 @@ public class Levelling implements Listener {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Admin.Levelling.Removed.Message")
                                                 .replace("%material", materials.name()));
-                                soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
                                     Config config13 = fileManager
@@ -408,18 +413,15 @@ public class Levelling implements Listener {
 
                 event.setCancelled(true);
 
-                Materials materials;
+                CompatibleMaterial materials = CompatibleMaterial.getMaterial(event.getCurrentItem().getType());
 
                 if (NMSUtil.getVersionNumber() < 13) {
-                    materials = Materials.requestMaterials(event.getCurrentItem().getType().name(),
-                            (byte) event.getCurrentItem().getDurability());
-                } else {
-                    materials = Materials.fromString(event.getCurrentItem().getType().name());
+                    materials.getItem().setData(event.getCurrentItem().getData());
                 }
 
                 if (levellingManager.hasWorth(materials)) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Already.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     return;
                 }
 
@@ -428,7 +430,7 @@ public class Levelling implements Listener {
 
                 messageManager.sendMessage(player, configLoad.getString("Island.Admin.Levelling.Added.Message")
                         .replace("%material", materials.name()));
-                soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                 Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
                     Config config14 = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));

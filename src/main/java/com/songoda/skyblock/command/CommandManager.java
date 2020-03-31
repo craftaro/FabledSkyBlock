@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.commands.admin.*;
 import com.songoda.skyblock.command.commands.island.CreateCommand;
@@ -16,7 +17,6 @@ import com.songoda.skyblock.menus.ControlPanel;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.ChatComponent;
-import com.songoda.skyblock.utils.version.Sounds;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -55,6 +55,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 new BiomeCommand(),
                 new BorderCommand(),
                 new CancelCommand(),
+                new ChallengeCommand(),
                 new ChatCommand(),
                 new CloseCommand(),
                 new ConfirmCommand(),
@@ -75,6 +76,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 new MembersCommand(),
                 new OpenCommand(),
                 new OwnerCommand(),
+                new PreviewCommand(),
                 new PromoteCommand(),
                 new PublicCommand(),
                 new SetSpawnCommand(),
@@ -144,12 +146,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                         if (!canUseControlPanel) {
                             messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Island.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             return true;
                         }
 
                         ControlPanel.getInstance().open(player);
-                        soundManager.playSound(player, Sounds.CHEST_OPEN.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
                     }
                 }
 
@@ -169,7 +171,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                     if (!canUseHelp) {
                         messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Island.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         return true;
                     }
 
@@ -185,7 +187,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                             } else {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Help.Integer.Message"));
-                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 return true;
                             }
@@ -207,7 +209,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                         if (!canUseHelp) {
                             messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Admin.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             return true;
                         }
 
@@ -223,7 +225,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                                 } else {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.Help.Integer.Message"));
-                                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F,
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
                                             1.0F);
 
                                     return true;
@@ -246,13 +248,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
             if (subCommand == null) {
                 messageManager.sendMessage(sender, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
-                soundManager.playSound(sender, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 return true;
             }
 
             if (!subCommand.hasPermission(sender, isAdmin)) {
                 messageManager.sendMessage(sender, configLoad.getString("Command.PermissionDenied." + (isAdmin ? "Admin" : "Island") + ".Message"));
-                soundManager.playSound(sender, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 return true;
             }
 
@@ -402,7 +404,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
         if (nextEndIndex <= -7) {
             skyblock.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Help.Page.Message"));
-            skyblock.getSoundManager().playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
             return;
         }
@@ -530,7 +532,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
         }
 
-        skyblock.getSoundManager().playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+        skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
     }
 
     public void sendConsoleHelpCommands(CommandSender sender) {

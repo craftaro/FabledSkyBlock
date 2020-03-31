@@ -1,5 +1,6 @@
 package com.songoda.skyblock.listeners;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownType;
@@ -12,7 +13,6 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -122,11 +122,13 @@ public class Quit implements Listener {
                                     .getFileConfiguration()
                                     .getString("Command.Island.Invite.Invited.Sender.Disconnected.Message")
                                     .replace("%player", player.getName()));
-                    skyblock.getSoundManager().playSound(targetPlayer, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    skyblock.getSoundManager().playSound(targetPlayer,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 }
 
                 inviteManager.removeInvite(player.getUniqueId());
             }
         });
+        // Unload Challenge
+        SkyBlock.getInstance().getFabledChallenge().getPlayerManager().loadPlayer(event.getPlayer().getUniqueId());
     }
 }

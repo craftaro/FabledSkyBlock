@@ -1,0 +1,76 @@
+package com.songoda.skyblock.challenge.defaultinv;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager.Config;
+
+public class DefaultInventory {
+	private final Item defaultItem = new Item(new ItemStack(Material.AIR));
+	private int size;
+	private Item[][] items;
+
+	public DefaultInventory(SkyBlock skyblock) {
+		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "challenges.yml"));
+		FileConfiguration configLoad = config.getFileConfiguration();
+		size = configLoad.getInt("inventory.size");
+		items = new Item[9][size];
+		ConfigurationSection section = configLoad.getConfigurationSection("inventory.items");
+		if (section == null)
+			// No items
+			return;
+		for (String key : section.getKeys(false)) {
+			String k = "inventory.items." + key;
+			int row = configLoad.getInt(k + ".row");
+			int col = configLoad.getInt(k + ".col");
+			String strItem = configLoad.getString(k + ".item");
+			int amount = configLoad.getInt(k + ".amount");
+			String name = ChatColor.translateAlternateColorCodes('&', configLoad.getString(k + ".name"));
+			List<String> lore = toColor(configLoad.getStringList(k + ".lore"));
+			int redirect = configLoad.getInt(k + ".redirect");
+			Material item = Material.matchMaterial(strItem);
+			if (item == null || item == Material.AIR) {
+				Bukkit.getLogger().warning("Item " + strItem + " is not a Material");
+				continue;
+			}
+
+			ItemStack is = new ItemStack(item, amount);
+			ItemMeta im = is.getItemMeta();
+			im.setDisplayName(name);
+			im.setLore(lore);
+			is.setItemMeta(im);
+			items[col - 1][row - 1] = new Item(is, redirect);
+		}
+	}
+
+	private List<String> toColor(List<String> list) {
+		List<String> copy = new ArrayList<>();
+		if (list == null)
+			return copy;
+		for (String str : list)
+			copy.add(ChatColor.translateAlternateColorCodes('&', str));
+		return copy;
+	}
+
+	public Item get(int row, int col) {
+		Item is = items[col][row];
+		if (is == null)
+			is = defaultItem;
+		// Clone it
+		return new Item(is.getItemStack().clone(), is.getRedirect());
+	}
+
+	public int getSize() {
+		return size;
+	}
+}

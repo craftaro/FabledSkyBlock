@@ -1,8 +1,7 @@
 package com.songoda.skyblock.utils.world.block;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
-import com.songoda.skyblock.utils.item.MaterialUtil;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -67,7 +66,7 @@ public final class BlockUtil {
             for (int i = 0; i < furnace.getInventory().getSize(); i++) {
                 ItemStack is = furnace.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -79,7 +78,7 @@ public final class BlockUtil {
             for (int i = 0; i < chest.getInventory().getSize(); i++) {
                 ItemStack is = chest.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -91,7 +90,7 @@ public final class BlockUtil {
             for (int i = 0; i < dispenser.getInventory().getSize(); i++) {
                 ItemStack is = dispenser.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -103,7 +102,7 @@ public final class BlockUtil {
             for (int i = 0; i < dropper.getInventory().getSize(); i++) {
                 ItemStack is = dropper.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -115,7 +114,7 @@ public final class BlockUtil {
             for (int i = 0; i < hopper.getInventory().getSize(); i++) {
                 ItemStack is = hopper.getInventory().getItem(i);
 
-                if (is != null && is.getType() != Material.AIR) {
+                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -188,7 +187,7 @@ public final class BlockUtil {
                         for (int i = 0; i < shulkerBox.getInventory().getSize(); i++) {
                             ItemStack is = shulkerBox.getInventory().getItem(i);
 
-                            if (is != null && is.getType() != Material.AIR) {
+                            if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                                 blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                             }
                         }
@@ -236,7 +235,7 @@ public final class BlockUtil {
             } else {
                 org.bukkit.material.FlowerPot flowerPot = (org.bukkit.material.FlowerPot) materialData;
 
-                if (flowerPot.getContents() != null && flowerPot.getContents().getItemType() != Material.AIR) {
+                if (flowerPot.getContents() != null && flowerPot.getContents().getItemType() != CompatibleMaterial.AIR.getMaterial()) {
                     blockData.setFlower(flowerPot.getContents().getItemType().toString() + ":" + flowerPot.getContents().getData());
                 }
             }
@@ -255,7 +254,7 @@ public final class BlockUtil {
         if (NMSVersion > 12 && blockData.getVersion() > 12 && blockData.getBlockData() != null) {
             block.setBlockData(Bukkit.getServer().createBlockData(blockData.getBlockData()));
         } else {
-            material = MaterialUtil.getMaterial(NMSVersion, blockData.getVersion(), blockData.getMaterial(), block.getData());
+            material = CompatibleMaterial.getMaterial(blockData.getMaterial()).getMaterial();
             setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
         }
 
@@ -431,7 +430,7 @@ public final class BlockUtil {
                         String[] flower = blockData.getFlower().split(":");
                         int materialData = Integer.parseInt(flower[1]);
 
-                        material = MaterialUtil.getMaterial(NMSVersion, blockData.getVersion(), flower[0].toUpperCase(), materialData);
+                        material = CompatibleMaterial.getMaterial(flower[0].toUpperCase()).getMaterial();
 
                         if (material != null) {
                             ItemStack is = new ItemStack(material, 1, (byte) materialData);
@@ -491,7 +490,7 @@ public final class BlockUtil {
             Block bottomBlock = block.getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock();
 
             if (bottomBlock.getType() == Material.AIR && !topBlock.getType().name().equals("DOUBLE_PLANT")) {
-                bottomBlock.setType(Materials.LEGACY_DOUBLE_PLANT.getPostMaterial());
+                bottomBlock.setType(CompatibleMaterial.LARGE_FERN.getMaterial());
 
                 if (NMSVersion < 13) {
                     try {
@@ -520,6 +519,7 @@ public final class BlockUtil {
 
     private static Class<?> IBlockDataClass = NMSUtil.getNMSClass("IBlockData");
     private static Class<?> blocksClass = NMSUtil.getNMSClass("Blocks");
+
 
     private static void setBlockFast(World world, int x, int y, int z, Material material, byte data) {
         try {

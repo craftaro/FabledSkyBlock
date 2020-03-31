@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 
 import com.google.common.collect.Sets;
@@ -13,7 +15,7 @@ import com.songoda.skyblock.localization.type.Localization;
 import com.songoda.skyblock.localization.type.impl.BlankLocalization;
 import com.songoda.skyblock.localization.type.impl.EnumLocalization;
 import com.songoda.skyblock.localization.type.impl.MaterialsLocalization;
-import com.songoda.skyblock.utils.version.Materials;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public final class LocalizationManager {
 
@@ -23,7 +25,7 @@ public final class LocalizationManager {
 
     public LocalizationManager() {
         this.map = new HashMap<>();
-        registerLocalizationFor(Materials.class, new MaterialsLocalization("Materials"));
+        registerLocalizationFor(CompatibleMaterial.class, new MaterialsLocalization("Materials"));
         registerLocalizationFor(IslandRole.class, new EnumLocalization<>("IslandRoles", IslandRole.class));
     }
 

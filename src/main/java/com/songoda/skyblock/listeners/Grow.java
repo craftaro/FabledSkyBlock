@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
@@ -21,7 +22,6 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -53,6 +53,13 @@ public class Grow implements Listener {
             Island growingTo = islandManager.getIslandAtLocation(state.getLocation());
             // This block is ok to continue as it's not related to Skyblock islands.
             if (origin == null && growingTo == null) continue;
+
+            //Is in border of island
+            if(origin != null && !origin.isInBorder(state.getLocation())) {
+                it.remove();
+                continue;
+            }
+
             // A block from the structure is outside/inside that it's not suppose to.
             if (origin == null || growingTo == null) {
                 it.remove();
@@ -100,7 +107,7 @@ public class Grow implements Listener {
                 e.printStackTrace();
             }
         } else {
-            Material type = block.getType();
+            CompatibleMaterial type = CompatibleMaterial.getBlockMaterial(block.getType());
             if (block.getState().getData() instanceof Crops || type.name().equals("BEETROOT_BLOCK") || type.name().equals("CARROT") || type.name().equals("POTATO")
                     || type.name().equals("WHEAT") || type.name().equals("CROPS")) {
                 try {
@@ -123,7 +130,7 @@ public class Grow implements Listener {
         WorldManager worldManager = skyblock.getWorldManager();
         BlockState state = event.getNewState();
         if (!worldManager.isIslandWorld(state.getWorld())) return;
-        if (state.getType() != Materials.PUMPKIN.parseMaterial() && state.getType() != Materials.MELON.parseMaterial()) return;
+        if (CompatibleMaterial.getBlockMaterial(state.getType()) != CompatibleMaterial.PUMPKIN && CompatibleMaterial.getBlockMaterial(state.getType()) != CompatibleMaterial.MELON)  return;
 
         IslandManager islandManager = skyblock.getIslandManager();
         Island origin = islandManager.getIslandAtLocation(event.getBlock().getLocation());

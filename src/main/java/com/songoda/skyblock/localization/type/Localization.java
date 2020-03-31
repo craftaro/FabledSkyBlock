@@ -13,7 +13,7 @@ public abstract class Localization<T> {
 
     public Localization(String keysPath, Class<T> type) {
         this.type = Objects.requireNonNull(type, "type cannot be null");
-        this.keysPath = "ClassLocalization." + Objects.requireNonNull(keysPath, "keysPath canoot be null.");
+        this.keysPath = "ClassLocalization." + Objects.requireNonNull(keysPath, "keysPath cannot be null.");
         this.values = Objects.requireNonNull(newValueMapInstance(type), "type cannot be null");
     }
 

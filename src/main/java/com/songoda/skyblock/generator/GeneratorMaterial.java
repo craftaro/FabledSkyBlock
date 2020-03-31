@@ -1,18 +1,18 @@
 package com.songoda.skyblock.generator;
 
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.core.compatibility.CompatibleMaterial;
 
 public class GeneratorMaterial {
 
-    private Materials materials;
+    private CompatibleMaterial materials;
     private double chance;
 
-    public GeneratorMaterial(Materials materials, double chance) {
+    public GeneratorMaterial(CompatibleMaterial materials, double chance) {
         this.materials = materials;
         this.chance = chance;
     }
 
-    public Materials getMaterials() {
+    public CompatibleMaterial getMaterials() {
         return materials;
     }
 

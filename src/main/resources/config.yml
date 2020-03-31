@@ -111,6 +111,8 @@ Island:
             # If disabled, any islands the player has been banned from will be removed when they
             # open the Island Visit menu.
             Bans: false
+    Preview:
+        Time: 10
     Visitor:
         # When an Island is unloaded if enabled players won't be able to visit the Island
         # even if it's open.
@@ -293,3 +295,9 @@ Island:
         RequirePermission: false
         Limit:
             Enable: false
+    LevelRewards:
+        Rewards: false
+        Messages: false
+    Challenge:
+        # Enable or disable challenges. Configuration for challenges are in challenges.yml file
+        Enable: true

@@ -1,8 +1,9 @@
 package com.songoda.skyblock.structure;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class StructureManager {
 
+    public List<String> knownStructures;
     private List<Structure> structureStorage = new ArrayList<>();
 
     public StructureManager(SkyBlock skyblock) {
@@ -19,16 +21,14 @@ public class StructureManager {
 
         if (configLoad.getString("Structures") != null) {
             for (String structureList : configLoad.getConfigurationSection("Structures").getKeys(false)) {
-                Materials materials = null;
+                CompatibleMaterial materials = null;
 
                 if (configLoad.getString("Structures." + structureList + ".Item.Material") == null) {
-                    materials = Materials.GRASS_BLOCK;
+                    materials = CompatibleMaterial.GRASS_BLOCK;
                 } else {
-                    materials = Materials
-                            .fromString(configLoad.getString("Structures." + structureList + ".Item.Material"));
-
+                    materials = CompatibleMaterial.getMaterial(configLoad.getString("Structures." + structureList + ".Item.Material"));
                     if (materials == null) {
-                        materials = Materials.GRASS_BLOCK;
+                        materials = CompatibleMaterial.GRASS_BLOCK;
                     }
                 }
 
@@ -90,7 +90,11 @@ public class StructureManager {
         }
     }
 
-    public void addStructure(String name, Materials materials, String overworldFile, String netherFile, String endFile,
+    public void loadStructures() {
+
+    }
+
+    public void addStructure(String name, CompatibleMaterial materials, String overworldFile, String netherFile, String endFile,
                              String displayName, boolean permission, List<String> description, List<String> commands,
                              double deletionCost) {
         structureStorage.add(new Structure(name, materials, overworldFile, netherFile, endFile, displayName, permission,

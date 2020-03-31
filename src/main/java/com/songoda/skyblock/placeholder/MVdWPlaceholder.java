@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
 
 public class MVdWPlaceholder {
 
@@ -127,13 +128,19 @@ public class MVdWPlaceholder {
 
         for (String placeholderList : placeholderManager.getPlaceholders()) {
             PlaceholderAPI.registerPlaceholder(skyblock, placeholderList, event -> {
-                Player player = event.getPlayer();
-
-                if (player == null) {
-                    return null;
-                }
-
-                return placeholderManager.getPlaceholder(player, event.getPlaceholder());
+            	try {
+            		Player player = event.getPlayer();
+            		
+            		if (player == null) {
+            			return null;
+            		}
+            		
+            		return placeholderManager.getPlaceholder(player, event.getPlaceholder());
+            	} catch (Exception ex) {
+            		Bukkit.getLogger().log(Level.WARNING, "[FabledSkyBlock] Exception while retrieving placeholder {}:", event.getPlaceholder());
+            		Bukkit.getLogger().log(Level.WARNING, "", ex);
+            		return event.getPlaceholder();
+            	}
             });
         }
     }

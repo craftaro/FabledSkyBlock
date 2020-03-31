@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -44,7 +45,7 @@ public class ChunkDeleteSplitter extends BukkitRunnable {
             final BlockInfo pair = it.next();
             final Block block = pair.getWorld().getBlockAt(pair.getX(), pair.getY(), pair.getZ());
 
-            block.setType(Material.AIR);
+            block.setType(CompatibleMaterial.AIR.getBlockMaterial());
 
             deleteAmount++;
             it.remove();

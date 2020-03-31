@@ -1,5 +1,7 @@
 package com.songoda.skyblock.menus.admin;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -12,9 +14,7 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Materials;
 import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -61,16 +61,16 @@ public class Generator implements Listener {
         if (playerData.getViewer() == null) {
             List<com.songoda.skyblock.generator.Generator> generators = generatorManager.getGenerators();
 
-            nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Exit.Displayname"), null, null, null, null),
                     0, 8);
             nInv.addItem(
-                    nInv.createItem(new ItemStack(Materials.OAK_SIGN.parseMaterial()),
+                    nInv.createItem(new ItemStack(CompatibleMaterial.OAK_SIGN.getMaterial()),
                             configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Displayname"),
                             configLoad.getStringList("Menu.Admin.Generator.Browse.Item.Information.Lore"),
                             new Placeholder[]{new Placeholder("%generators", "" + generators.size())}, null, null),
                     4);
-            nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Barrier.Displayname"), null, null, null,
                     null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
@@ -105,7 +105,7 @@ public class Generator implements Listener {
                         inventorySlot++;
 
                         com.songoda.skyblock.generator.Generator generator = generators.get(index);
-                        nInv.addItem(nInv.createItem(generator.getMaterials().parseItem(),
+                        nInv.addItem(nInv.createItem(generator.getMaterials().getItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Admin.Generator.Browse.Item.Generator.Displayname")
                                                 .replace("%generator", generator.getName())),
@@ -128,16 +128,16 @@ public class Generator implements Listener {
                         .getStringList("Menu.Admin.Generator.Generator.Item.Information.Permission.Enable.Lore");
             }
 
-            nInv.addItem(nInv.createItem(Materials.LEGACY_EMPTY_MAP.getPostItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.MAP.getItem(),
                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Information.Displayname"), permissionLore,
                     new Placeholder[]{new Placeholder("%name", generator.getName()),
                             new Placeholder("%materials", "" + generator.getGeneratorMaterials().size()),
                             new Placeholder("%permission", generator.getPermission())},
                     null, null), 4);
-            nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Return.Displayname"), null, null, null,
                     null), 0, 8);
-            nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Barrier.Displayname"), null, null, null,
                     null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
@@ -157,7 +157,7 @@ public class Generator implements Listener {
                     inventorySlot++;
 
                     GeneratorMaterial generatorMaterial = generatorMaterials.get(index);
-                    nInv.addItem(nInv.createItem(generatorMaterial.getMaterials().parseItem(),
+                    nInv.addItem(nInv.createItem(generatorMaterial.getMaterials().getItem(),
                             ChatColor.translateAlternateColorCodes('&',
                                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Material.Displayname")
                                             .replace("%material", generatorMaterial.getMaterials().name())),
@@ -213,41 +213,41 @@ public class Generator implements Listener {
                 || player.hasPermission("fabledskyblock.*"))) {
             messageManager.sendMessage(player,
                     configLoad.getString("Island.Admin.Generator.Permission.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return;
         }
 
         if (generatorManager == null) {
             messageManager.sendMessage(player, configLoad.getString("Island.Admin.Generator.Disabled.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return;
         }
 
-        if ((event.getCurrentItem().getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
+        if ((event.getCurrentItem().getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
                 && (is.hasItemMeta())) {
             if (is.getItemMeta().getDisplayName()
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Admin.Generator.Browse.Item.Barrier.Displayname")))
                     || is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Barrier.Displayname")))) {
-                soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
                 return;
             }
-        } else if ((event.getCurrentItem().getType() == Materials.OAK_FENCE_GATE.parseMaterial())
+        } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial())
                 && (is.hasItemMeta())) {
             if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Exit.Displayname")))) {
-                soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                 player.closeInventory();
 
                 return;
             } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Return.Displayname")))) {
                 playerData.setViewer(null);
-                soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                 player.closeInventory();
 
@@ -255,10 +255,10 @@ public class Generator implements Listener {
 
                 return;
             }
-        } else if ((event.getCurrentItem().getType() == Materials.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
+        } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_SIGN.getMaterial()) && (is.hasItemMeta())
                 && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                 configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Displayname"))))) {
-            soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
             AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                 if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -267,22 +267,22 @@ public class Generator implements Listener {
                             || player.hasPermission("fabledskyblock.*"))) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Island.Admin.Generator.Permission.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     } else if (generatorManager.containsGenerator(event1.getName())) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Island.Admin.Generator.Already.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     } else if (!event1.getName().replace(" ", "").matches("^[a-zA-Z0-9]+$")) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Island.Admin.Generator.Characters.Message"));
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     } else {
                         generatorManager.addGenerator(event1.getName(), new ArrayList<>(), false);
 
                         messageManager.sendMessage(player,
                                 configLoad.getString("Island.Admin.Generator.Created.Message")
                                         .replace("%generator", event1.getName()));
-                        soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
                             Config config14 = fileManager
@@ -320,7 +320,7 @@ public class Generator implements Listener {
             gui.open();
 
             return;
-        } else if ((event.getCurrentItem().getType() == Materials.LEGACY_EMPTY_MAP.getPostMaterial())
+        } else if ((event.getCurrentItem().getType() == CompatibleMaterial.MAP.getMaterial())
                 && (is.hasItemMeta())
                 && (is.getItemMeta().getDisplayName()
                 .equals(ChatColor.translateAlternateColorCodes('&', configLoad
@@ -328,7 +328,7 @@ public class Generator implements Listener {
             if (playerData.getViewer() == null) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Island.Admin.Generator.Selected.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                 player.closeInventory();
 
@@ -345,7 +345,7 @@ public class Generator implements Listener {
                         generator.setPermission(true);
                     }
 
-                    soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
                         Config config1 = fileManager
@@ -370,7 +370,7 @@ public class Generator implements Listener {
 
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Admin.Generator.Exist.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     player.closeInventory();
 
@@ -385,7 +385,7 @@ public class Generator implements Listener {
                             configLoad.getString("Menu.Admin.Generator.Browse.Item.Nothing.Displayname")))
                     || is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Nothing.Displayname")))) {
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                 return;
             }
@@ -394,7 +394,7 @@ public class Generator implements Listener {
             if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Previous.Displayname")))) {
                 playerData.setPage(playerData.getPage() - 1);
-                soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                 player.closeInventory();
 
@@ -404,7 +404,7 @@ public class Generator implements Listener {
             } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Next.Displayname")))) {
                 playerData.setPage(playerData.getPage() + 1);
-                soundManager.playSound(player, Sounds.ARROW_HIT.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                 player.closeInventory();
 
@@ -423,8 +423,7 @@ public class Generator implements Listener {
 
                 if (generator.getGeneratorMaterials() != null) {
                     for (GeneratorMaterial generatorMaterialList : generator.getGeneratorMaterials()) {
-                        if ((event.getCurrentItem().getType() == generatorMaterialList.getMaterials()
-                                .parseMaterial())
+                        if ((event.getCurrentItem().getType() == generatorMaterialList.getMaterials().getMaterial())
                                 && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName().equals(
                                 ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -432,7 +431,7 @@ public class Generator implements Listener {
                                         .replace("%material",
                                                 generatorMaterialList.getMaterials().name()))))) {
                             if (event.getClick() == ClickType.LEFT) {
-                                soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                                 AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                     if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -441,29 +440,29 @@ public class Generator implements Listener {
                                                 || player.hasPermission("fabledskyblock.*"))) {
                                             messageManager.sendMessage(player, configLoad
                                                     .getString("Island.Admin.Generator.Permission.Message"));
-                                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
                                                     1.0F, 1.0F);
                                         } else if (generatorManager.containsGenerator(event1.getName())) {
                                             messageManager.sendMessage(player, configLoad
                                                     .getString("Island.Admin.Generator.Already.Message"));
-                                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
                                                     1.0F, 1.0F);
                                         } else if (!event1.getName().replace(" ", "")
                                                 .matches("^[a-zA-Z0-9|.]+$")) {
                                             messageManager.sendMessage(player, configLoad
                                                     .getString("Island.Admin.Generator.Characters.Message"));
-                                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
                                                     1.0F, 1.0F);
                                         } else if (!generator.getGeneratorMaterials()
                                                 .contains(generatorMaterialList)) {
                                             messageManager.sendMessage(player, configLoad.getString(
                                                     "Island.Admin.Generator.Material.Exist.Message"));
-                                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
                                                     1.0F, 1.0F);
                                         } else if (!event1.getName().matches("-?\\d+(?:\\.\\d+)?")) {
                                             messageManager.sendMessage(player, configLoad.getString(
                                                     "Island.Admin.Generator.Chance.Numerical.Message"));
-                                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
                                                     1.0F, 1.0F);
                                         } else {
                                             double materialChance = Double.valueOf(event1.getName());
@@ -480,12 +479,12 @@ public class Generator implements Listener {
                                             if (totalMaterialChance > 100) {
                                                 messageManager.sendMessage(player, configLoad.getString(
                                                         "Island.Admin.Generator.Chance.Over.Message"));
-                                                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(),
+                                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
                                                         1.0F, 1.0F);
                                             } else {
                                                 generatorMaterialList
                                                         .setChance(Double.valueOf(event1.getName()));
-                                                soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(),
+                                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(),
                                                         1.0F, 1.0F);
 
                                                 Bukkit.getServer().getScheduler()
@@ -553,7 +552,7 @@ public class Generator implements Listener {
                                             }
                                         });
 
-                                soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                                 player.closeInventory();
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -569,22 +568,16 @@ public class Generator implements Listener {
                         && generator.getGeneratorMaterials().size() == 36) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Admin.Generator.Material.Limit.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else {
-                    Materials materials;
-
-                    if (NMSUtil.getVersionNumber() < 13) {
-                        materials = Materials.requestMaterials(event.getCurrentItem().getType().name(),
-                                (byte) event.getCurrentItem().getDurability());
-                    } else {
-                        materials = Materials.fromString(event.getCurrentItem().getType().name());
-                    }
+                    CompatibleMaterial materials = CompatibleMaterial.getMaterial(event.getCurrentItem().getType());
+                    materials.getItem().setData(event.getCurrentItem().getData());
 
                     for (GeneratorMaterial generatorMaterialList : generator.getGeneratorMaterials()) {
                         if (generatorMaterialList.getMaterials() == materials) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Island.Admin.Generator.Material.Already.Message"));
-                            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
                         }
@@ -596,7 +589,7 @@ public class Generator implements Listener {
                             configLoad.getString("Island.Admin.Generator.Material.Added.Message")
                                     .replace("%material", materials.name())
                                     .replace("%generator", generator.getName()));
-                    soundManager.playSound(player, Sounds.NOTE_PLING.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
                         Config config16 = fileManager
@@ -624,7 +617,7 @@ public class Generator implements Listener {
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Island.Admin.Generator.Exist.Message"));
-                soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                 player.closeInventory();
 
@@ -636,12 +629,12 @@ public class Generator implements Listener {
 
         if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
             for (com.songoda.skyblock.generator.Generator generatorList : generatorManager.getGenerators()) {
-                if (event.getCurrentItem().getType() == generatorList.getMaterials().parseMaterial()
+                if (event.getCurrentItem().getType() == generatorList.getMaterials().getMaterial()
                         && ChatColor.stripColor(is.getItemMeta().getDisplayName())
                         .equals(generatorList.getName())) {
                     if (event.getClick() == ClickType.LEFT) {
                         playerData.setViewer(new Viewer(generatorList.getName()));
-                        soundManager.playSound(player, Sounds.WOOD_CLICK.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                         player.closeInventory();
 
@@ -652,7 +645,7 @@ public class Generator implements Listener {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Island.Admin.Generator.Removed.Message")
                                         .replace("%generator", generatorList.getName()));
-                        soundManager.playSound(player, Sounds.IRONGOLEM_HIT.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
                             Config config13 = fileManager
@@ -678,7 +671,7 @@ public class Generator implements Listener {
             }
 
             messageManager.sendMessage(player, configLoad.getString("Island.Admin.Generator.Exist.Message"));
-            soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             open(player);
         }

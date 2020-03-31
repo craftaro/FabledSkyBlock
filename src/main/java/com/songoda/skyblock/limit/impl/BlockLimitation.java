@@ -1,22 +1,25 @@
 package com.songoda.skyblock.limit.impl;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.limit.EnumLimitation;
 import com.songoda.skyblock.utils.player.PlayerUtil;
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
-public final class BlockLimitation extends EnumLimitation<Materials> {
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+
+public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
     public BlockLimitation() {
-        super(Materials.class);
+        super(CompatibleMaterial.class);
     }
 
     @Override
@@ -25,7 +28,7 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
     }
 
     @Override
-    public boolean hasTooMuch(long currentAmount, Enum<Materials> type) {
+    public boolean hasTooMuch(long currentAmount, Enum<CompatibleMaterial> type) {
         throw new UnsupportedOperationException("Not implemented. Use getBlockLimit and isBlockLimitExceeded instead.");
     }
 
@@ -41,9 +44,10 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
 
         for (String key : keys) {
             final String enumName = key.toUpperCase(Locale.ENGLISH);
-            final Materials type = Materials.fromString(enumName);
+            final CompatibleMaterial type = CompatibleMaterial.getMaterial(enumName);
 
-            if (type == null) throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
+            if (type == null)
+                throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
 
             getMap().put(type, loadFrom.getLong(key));
         }
@@ -56,7 +60,7 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
 
         if (player.hasPermission("fabledskyblock.limit.block.*")) return -1;
 
-        final Materials material = Materials.getMaterials(block.getType(), block.getData());
+        final CompatibleMaterial material = CompatibleMaterial.getMaterial(block.getType());
 
         if (material == null) return -1;
 
@@ -66,7 +70,7 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
     }
 
     @SuppressWarnings("deprecation")
-    public boolean isBlockLimitExceeded(Player player, Block block, long limit) {
+    public boolean isBlockLimitExceeded(Block block, long limit) {
 
         if (limit == -1) return false;
 
@@ -74,13 +78,13 @@ public final class BlockLimitation extends EnumLimitation<Materials> {
         final Island island = islandManager.getIslandAtLocation(block.getLocation());
         final long totalPlaced;
 
-        if (block.getType() == Materials.SPAWNER.parseMaterial()) {
+        if (block.getType() == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
             totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {
-            totalPlaced = island.getLevel().getMaterialAmount(Materials.getMaterials(block.getType(), block.getData()).name());
+            totalPlaced = island.getLevel().getMaterialAmount(CompatibleMaterial.getMaterial(block.getType()).name());
         }
 
-        return limit < totalPlaced + 1;
+        return limit <= totalPlaced;
     }
 
 }

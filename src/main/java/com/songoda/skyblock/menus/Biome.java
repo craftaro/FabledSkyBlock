@@ -1,5 +1,7 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.cooldown.Cooldown;
@@ -13,9 +15,8 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.Materials;
+ 
 import com.songoda.skyblock.utils.version.SBiome;
-import com.songoda.skyblock.utils.version.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -58,7 +59,7 @@ public class Biome {
                 if (island == null) {
                     messageManager.sendMessage(player,
                             langConfig.getString("Command.Island.Biome.Owner.Message"));
-                    soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     player.closeInventory();
 
                     return;
@@ -67,7 +68,7 @@ public class Biome {
                         || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
                     messageManager.sendMessage(player,
                             langConfig.getString("Command.Island.Biome.Permission.Message"));
-                    soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                     player.closeInventory();
 
                     return;
@@ -78,25 +79,25 @@ public class Biome {
                 if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Info.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.CHICKEN_EGG_POP.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
-                } else if ((is.getType() == Materials.BLACK_STAINED_GLASS_PANE.parseMaterial())
+                } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Barrier.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.GLASS.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
-                } else if ((is.getType() == Materials.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
+                } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Exit.Displayname"))))) {
-                    soundManager.playSound(player, Sounds.CHEST_CLOSE.bukkitSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                 } else {
                     if (is.getItemMeta().hasEnchant(Enchantment.THORNS)) {
-                        soundManager.playSound(player, Sounds.ANVIL_LAND.bukkitSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
@@ -121,7 +122,7 @@ public class Biome {
                                                         + langConfig.getString("Island.Biome.Cooldown.Word.Second")));
                             }
 
-                            soundManager.playSound(player, Sounds.VILLAGER_NO.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -138,10 +139,10 @@ public class Biome {
                         island.save();
 
                         soundManager.playSound(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island),
-                                Sounds.SPLASH.bukkitSound(), 1.0F, 1.0F);
+                                CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
 
                         if (!islandManager.isPlayerAtIsland(island, player, IslandWorld.Normal)) {
-                            soundManager.playSound(player, Sounds.SPLASH.bukkitSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
                         }
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
@@ -159,11 +160,11 @@ public class Biome {
                     langConfig.getStringList("Menu.Biome.Item.Info.Lore"),
                     new Placeholder[]{new Placeholder("%biome_type", islandBiomeName)}, null, null), 4);
 
-            nInv.addItem(nInv.createItem(Materials.OAK_FENCE_GATE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     langConfig.getString("Menu.Biome.Item.Exit.Displayname"), null, null, null, null),
                     0, 8);
 
-            nInv.addItem(nInv.createItem(Materials.BLACK_STAINED_GLASS_PANE.parseItem(),
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                     ChatColor.translateAlternateColorCodes('&',
                             langConfig.getString("Menu.Biome.Item.Barrier.Displayname")),
                     null, null, null, null),

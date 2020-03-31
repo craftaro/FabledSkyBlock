@@ -1,6 +1,6 @@
 package com.songoda.skyblock.api.structure;
 
-import com.songoda.skyblock.utils.version.Materials;
+import com.songoda.core.compatibility.CompatibleMaterial;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ public interface Structure {
 
     String getName();
 
-    Materials getMaterials();
+    CompatibleMaterial getMaterials();
 
-    void setMaterials(Materials materials);
+    void setMaterials(CompatibleMaterial materials);
 
     String getOverworldFile();
 

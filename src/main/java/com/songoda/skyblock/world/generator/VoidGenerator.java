@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
@@ -14,7 +15,6 @@ import org.bukkit.generator.ChunkGenerator;
 
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.utils.version.Materials;
 
 public class VoidGenerator extends ChunkGenerator {
 
@@ -27,15 +27,17 @@ public class VoidGenerator extends ChunkGenerator {
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
 
         for (IslandWorld worldList : IslandWorld.values()) {
-            if (world.getEnvironment() == worldList.getUncheckedEnvironment()) {
+            if (world.getEnvironment() == World.Environment.NETHER
+                    || world.getEnvironment() == World.Environment.NORMAL
+                    || world.getEnvironment() == World.Environment.THE_END) {
 
                 ConfigurationSection section = worldSection.getConfigurationSection(worldList.name());
 
                 if (section.getBoolean("Liquid.Enable")) {
                     if (section.getBoolean("Liquid.Lava")) {
-                        setBlock(chunkData, Materials.LEGACY_STATIONARY_LAVA.parseMaterial(), section.getInt("Liquid.Height"));
+                        setBlock(chunkData, CompatibleMaterial.LAVA.getBlockMaterial(), section.getInt("Liquid.Height"));
                     } else {
-                        setBlock(chunkData, Materials.LEGACY_STATIONARY_WATER.parseMaterial(), section.getInt("Liquid.Height"));
+                        setBlock(chunkData, CompatibleMaterial.WATER.getBlockMaterial(), section.getInt("Liquid.Height"));
                     }
                 }
 
