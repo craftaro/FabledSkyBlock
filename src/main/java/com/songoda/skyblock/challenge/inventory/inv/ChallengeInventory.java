@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -90,7 +91,7 @@ public class ChallengeInventory implements InventoryProvider {
 						// Update count
 						count2 = done.getOrDefault(c, 0);
 						// Play sound
-						p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+						p.playSound(p.getLocation(), CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 1);
 						// Update item
 						ItemStack is2 = ic.createItem(inv.getPlayer().getUniqueId(), count2);
 						// If challenge is done, add enchantment to show to player that it's done
