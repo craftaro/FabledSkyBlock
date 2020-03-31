@@ -190,6 +190,9 @@ public class Levelling {
 
             long value = testIslandMaterials.get(materialName);
             CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
+
+            if (materials == null) continue;
+
             ItemStack is = materials.getItem();
 
             if (is == null || is.getItemMeta() == null) continue;
