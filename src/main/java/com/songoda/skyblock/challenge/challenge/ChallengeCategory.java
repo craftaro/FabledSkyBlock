@@ -54,8 +54,10 @@ public class ChallengeCategory {
 				lore = new ArrayList<>();
 			try {
 				// If an Exception occurs, we don't handle it here but in parent class
-				System.out.println(strItem);
-				Material item = CompatibleMaterial.getMaterial(strItem).getMaterial();
+				CompatibleMaterial compatibleMaterial = CompatibleMaterial.getMaterial(strItem);
+				if (compatibleMaterial == null)
+					throw new IllegalArgumentException("Item " + strItem + " isn't a correct material");
+				Material item = compatibleMaterial.getMaterial();
 				if (item == null)
 					throw new IllegalArgumentException("Item " + strItem + " isn't a correct material");
 				ItemChallenge ic = new ItemChallenge(show, row, col, item, amount, lore);

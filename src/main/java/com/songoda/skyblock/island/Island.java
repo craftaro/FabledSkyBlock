@@ -134,14 +134,14 @@ public class Island {
             Config settingsDataConfig = null;
 
             File settingDataFile = new File(skyblock.getDataFolder().toString() + "/setting-data", getOwnerUUID().toString() + ".yml");
-            
+
             if (fileManager.isFileExist(settingDataFile)) {
                 settingsDataConfig = fileManager.getConfig(settingDataFile);
             }
 
             for (IslandRole roleList : IslandRole.getRoles()) {
                 List<IslandSetting> settings = new ArrayList<>();
-                
+
                 for (String settingList : defaultSettingsConfig.getFileConfiguration().getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
                     if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration().getString("Settings." + roleList.name() + "." + settingList) == null) {
                         settings.add(
@@ -353,17 +353,17 @@ public class Island {
 
     public boolean isInBorder(Location blockLocation) {
         WorldManager worldManager = skyblock.getWorldManager();
-        if(!isBorder()) {
+        if (!isBorder()) {
             return true;
         }
 
         Location islandLocation = getLocation(worldManager.getIslandWorld(blockLocation.getWorld()), IslandEnvironment.Island);
         double halfSize = Math.floor(getRadius());
 
-        if(blockLocation.getBlockX() > (islandLocation.getBlockX()+halfSize)
-                || blockLocation.getBlockX() < (islandLocation.getBlockX()-halfSize-1)
-                || blockLocation.getBlockZ() > (islandLocation.getBlockZ()+halfSize)
-                || blockLocation.getBlockZ() < (islandLocation.getBlockZ()-halfSize-1)) {
+        if (blockLocation.getBlockX() > (islandLocation.getBlockX() + halfSize)
+                || blockLocation.getBlockX() < (islandLocation.getBlockX() - halfSize - 1)
+                || blockLocation.getBlockZ() > (islandLocation.getBlockZ() + halfSize)
+                || blockLocation.getBlockZ() < (islandLocation.getBlockZ() - halfSize - 1)) {
             return false;
         }
 
@@ -413,10 +413,14 @@ public class Island {
 
         WeatherType weatherType;
 
-        if (weatherTypeName == null || weatherTypeName.isEmpty() || WeatherType.valueOf(weatherTypeName) == null) {
+        if (weatherTypeName == null || weatherTypeName.isEmpty()) {
             weatherType = WeatherType.CLEAR;
         } else {
-            weatherType = WeatherType.valueOf(weatherTypeName);
+            try {
+                weatherType = WeatherType.valueOf(weatherTypeName);
+            } catch (IllegalArgumentException e) {
+                weatherType = WeatherType.CLEAR;
+            }
         }
 
         return weatherType;
@@ -615,10 +619,10 @@ public class Island {
     }
 
     public boolean hasUpgrade(Upgrade.Type type) {
-		return skyblock.getFileManager().getConfig(
-				new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
-				.getFileConfiguration().getString("Upgrade." + type.name()) != null;
-	}
+        return skyblock.getFileManager().getConfig(
+                new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
+                .getFileConfiguration().getString("Upgrade." + type.name()) != null;
+    }
 
     public boolean isUpgrade(Upgrade.Type type) {
         return skyblock.getFileManager().getConfig(
@@ -735,8 +739,8 @@ public class Island {
     }
 
     public boolean hasStructure() {
-		return getStructure() != null;
-	}
+        return getStructure() != null;
+    }
 
     public String getStructure() {
         return skyblock.getFileManager().getConfig(
@@ -775,13 +779,13 @@ public class Island {
 
         Config config = fileManager
                 .getConfig(new File(skyblock.getDataFolder().toString() + "/island-data", ownerUUID.toString() + ".yml"));
-        
+
         try {
             config.getFileConfiguration().save(config.getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         config = fileManager
                 .getConfig(new File(skyblock.getDataFolder().toString() + "/setting-data", ownerUUID.toString() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();

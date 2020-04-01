@@ -388,7 +388,7 @@ challenges:
         id: 3
         name: '&2A Prickly Affair'
         require:
-          - 'ITEM:cactus_green 48'
+          - 'ITEM:green_dye 48'
         reward:
           - 'CMD:eco give {player} 200'
           - 'ITEM:sand 24'
@@ -398,7 +398,7 @@ challenges:
           show: true
           row: 1
           col: 5
-          item: cactus_green
+          item: green_dye
           amount: 1
           lore:
             - '&c&lFor this challenge, you''ll need:'
@@ -1368,8 +1368,8 @@ challenges:
         id: 2
         name: '&2Artist'
         require:
-          - 'ITEM:rose_red 64'
-          - 'ITEM:cactus_green 64'
+          - 'ITEM:red_dye 64'
+          - 'ITEM:green_dye 64'
           - 'ITEM:purple_dye 64'
           - 'ITEM:cyan_dye 64'
           - 'ITEM:light_gray_dye 64'
@@ -1393,7 +1393,7 @@ challenges:
           show: true
           row: 1
           col: 4
-          item: dandelion_yellow
+          item: YELLOW_DYE
           amount: 1
           lore:
             - '&c&lFor this challenge, you''ll need:'
