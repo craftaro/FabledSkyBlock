@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Structure implements com.songoda.skyblock.api.structure.Structure {
 
-    private CompatibleMaterial materials;
+    private CompatibleMaterial material;
 
     private String name;
     private String overworldFile;
@@ -23,11 +23,11 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
 
     private double deletionCost;
 
-    public Structure(String name, CompatibleMaterial materials, String overworldFile, String netherFile, String endFile,
+    public Structure(String name, CompatibleMaterial material, String overworldFile, String netherFile, String endFile,
                      String displayName, boolean permission, List<String> description, List<String> commands,
                      double deletionCost) {
         this.name = name;
-        this.materials = materials;
+        this.material = material;
         this.overworldFile = overworldFile;
         this.netherFile = netherFile;
         this.endFile = endFile;
@@ -42,12 +42,12 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
         return name;
     }
 
-    public CompatibleMaterial getMaterials() {
-        return materials;
+    public CompatibleMaterial getMaterial() {
+        return material;
     }
 
-    public void setMaterials(CompatibleMaterial materials) {
-        this.materials = materials;
+    public void setMaterial(CompatibleMaterial material) {
+        this.material = material;
     }
 
     public String getOverworldFile() {

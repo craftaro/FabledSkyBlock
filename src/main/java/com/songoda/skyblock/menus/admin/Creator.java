@@ -106,7 +106,7 @@ public class Creator implements Listener {
                         inventorySlot++;
 
                         Structure structure = structures.get(index);
-                        nInv.addItem(nInv.createItem(structure.getMaterials().getItem(),
+                        nInv.addItem(nInv.createItem(structure.getMaterial().getItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Admin.Creator.Browse.Item.Structure.Displayname")
                                                 .replace("%structure", structure.getName())),
@@ -235,7 +235,7 @@ public class Creator implements Listener {
             nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.DIAMOND.getMaterial()),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.Item.Displayname"),
                     configLoad.getStringList("Menu.Admin.Creator.Options.Item.Item.Lore"),
-                    new Placeholder[]{new Placeholder("%material", structure.getMaterials().name())}, null, null),
+                    new Placeholder[]{new Placeholder("%material", structure.getMaterial().name())}, null, null),
                     6);
             nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.GOLD_NUGGET.getMaterial()),
                     configLoad.getString("Menu.Admin.Creator.Options.Item.DeletionCost.Displayname"),
@@ -1148,7 +1148,7 @@ public class Creator implements Listener {
                             materials.getItem().setData(event.getCurrentItem().getData());
 
                             if (materials != null) {
-                                structure.setMaterials(materials);
+                                structure.setMaterial(materials);
 
                                 Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
                                     Config config113 = fileManager
@@ -1156,7 +1156,7 @@ public class Creator implements Listener {
                                     FileConfiguration configLoad113 = config113.getFileConfiguration();
 
                                     configLoad113.set("Structures." + structure.getName() + ".Item.Material",
-                                            structure.getMaterials().name());
+                                            structure.getMaterial().name());
 
                                     try {
                                         configLoad113.save(config113.getFile());
@@ -1193,7 +1193,7 @@ public class Creator implements Listener {
 
                 if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
                     for (Structure structureList : structureManager.getStructures()) {
-                        if (event.getCurrentItem().getType() == structureList.getMaterials().getMaterial()
+                        if (event.getCurrentItem().getType() == structureList.getMaterial().getMaterial()
                                 && ChatColor.stripColor(is.getItemMeta().getDisplayName())
                                 .equals(structureList.getName())) {
                             if (event.getClick() == ClickType.LEFT) {
