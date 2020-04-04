@@ -68,11 +68,6 @@ public final class IslandLevelManager {
     public static boolean isDoubleCheckedBlock(Block block) {
         return CHECKED_DOUBLE_TYPES.contains(parseType(block));
     }
-
-    private static CompatibleMaterial parseType(Block block) {
-        return CompatibleMaterial.getBlockMaterial(block.getType());
-    }
-
     public void startScan(Player attemptScanner, Island island) {
 
         if (!Bukkit.isPrimaryThread()) {
@@ -185,52 +180,44 @@ public final class IslandLevelManager {
 
         if (blockType == CompatibleMaterial.AIR) return EMPTY;
 
-        CompatibleMaterial compMaterial = parseType(block);
+        CompatibleMaterial compMaterial = CompatibleMaterial.getMaterial(block);
 
         if (compMaterial == null) return EMPTY;
-
-        Material finalType = compMaterial.getMaterial();
-
-        if (finalType == null) return EMPTY;
 
         final Location blockLocation = block.getLocation();
 
         if (scan.getDoubleBlocks().contains(blockLocation)) return EMPTY;
 
         if (CHECKED_DOUBLE_TYPES.contains(finalType)) {
-
             final Block belowBlock = block.getRelative(BlockFace.DOWN);
-            final CompatibleMaterial belowType = parseType(belowBlock);
+            final CompatibleMaterial belowMaterial = CompatibleMaterial.getMaterial(belowBlock);
 
             if (CHECKED_DOUBLE_TYPES.contains(belowType)) {
                 block = belowBlock;
-                blockType = belowType;
+                blockType = belowMaterial;
                 scan.getDoubleBlocks().add(belowBlock.getLocation());
             } else {
                 scan.getDoubleBlocks().add(block.getRelative(BlockFace.UP).getLocation());
             }
 
-        } else if (finalType == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
-            finalType = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType()).getMaterial();
         }
 
         final List<Calculator> calculators = CalculatorRegistry.getCalculators(blockType);
         final StackableManager stackableManager = SkyBlock.getInstance().getStackableManager();
 
-        final CompatibleMaterial finalCompatMat = CompatibleMaterial.getMaterial(finalType);
 
-        final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(blockLocation, finalCompatMat);
+        final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(blockLocation, compMaterial);
 
         if (calculators == null) {
 
-            if (stackSize > 1) return new AmountMaterialPair(finalCompatMat, stackSize);
+            if (stackSize > 1) return new AmountMaterialPair(compMaterial, stackSize);
 
-            AmountMaterialPair cachedPair = cachedPairs.get(finalType);
+            AmountMaterialPair cachedPair = cachedPairs.get(compMaterial);
 
             if (cachedPair != null) return cachedPair;
 
-            cachedPair = new AmountMaterialPair(finalCompatMat, 1);
-            cachedPairs.put(finalCompatMat, cachedPair);
+            cachedPair = new AmountMaterialPair(compMaterial, 1);
+            cachedPairs.put(compMaterial, cachedPair);
 
             return cachedPair;
         }
@@ -243,7 +230,7 @@ public final class IslandLevelManager {
 
         if (amount == 0) amount = 1;
 
-        return new AmountMaterialPair(finalCompatMat, amount + stackSize);
+        return new AmountMaterialPair(compMaterial, amount + stackSize);
     }
 
 }
