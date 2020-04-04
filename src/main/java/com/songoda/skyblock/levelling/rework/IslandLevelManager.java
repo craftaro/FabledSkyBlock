@@ -39,19 +39,6 @@ import com.songoda.skyblock.utils.version.NMSUtil;
 
 public final class IslandLevelManager {
 
-    private static final Set<Material> CHECKED_DOUBLE_TYPES;
-
-    static {
-        CHECKED_DOUBLE_TYPES = EnumSet.noneOf(Material.class);
-
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.SUNFLOWER.getMaterial());
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.LILAC.getMaterial());
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.LARGE_FERN.getMaterial());
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.ROSE_BUSH.getMaterial());
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.PEONY.getMaterial());
-        CHECKED_DOUBLE_TYPES.add(CompatibleMaterial.TALL_GRASS.getMaterial());
-    }
-
     private final static int VERSION = NMSUtil.getVersionNumber();
     private Map<Island, IslandScan> inScan;
     private Map<CompatibleMaterial, Long> worth;
@@ -65,9 +52,6 @@ public final class IslandLevelManager {
         reloadWorth();
     }
 
-    public static boolean isDoubleCheckedBlock(Block block) {
-        return CHECKED_DOUBLE_TYPES.contains(parseType(block));
-    }
     public void startScan(Player attemptScanner, Island island) {
 
         if (!Bukkit.isPrimaryThread()) {
@@ -188,11 +172,11 @@ public final class IslandLevelManager {
 
         if (scan.getDoubleBlocks().contains(blockLocation)) return EMPTY;
 
-        if (CHECKED_DOUBLE_TYPES.contains(finalType)) {
+        if (compMaterial.isTall()) {
             final Block belowBlock = block.getRelative(BlockFace.DOWN);
             final CompatibleMaterial belowMaterial = CompatibleMaterial.getMaterial(belowBlock);
 
-            if (CHECKED_DOUBLE_TYPES.contains(belowType)) {
+            if (belowMaterial.isTall()) {
                 block = belowBlock;
                 blockType = belowMaterial;
                 scan.getDoubleBlocks().add(belowBlock.getLocation());
