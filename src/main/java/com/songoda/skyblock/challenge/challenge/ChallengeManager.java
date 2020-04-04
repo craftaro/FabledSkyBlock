@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -40,7 +41,7 @@ public class ChallengeManager {
 			Bukkit.getLogger().log(Level.SEVERE, "Error while loading challenges:", ex);
 			return;
 		}
-		Bukkit.getLogger().info("[FabledSkyBlock] " + ChatColor.GREEN + " challenges loaded with " + ChatColor.GOLD
+		Bukkit.getConsoleSender().sendMessage("[FabledSkyBlock] " + ChatColor.GREEN + " challenges loaded with " + ChatColor.GOLD
 				+ categories.size() + ChatColor.GREEN + " categories");
 	}
 

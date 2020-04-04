@@ -68,7 +68,7 @@ public class ChallengeCategory {
 						+ ") at challenge " + name + "(" + id + "): " + ex.getMessage());
 			}
 		}
-		Bukkit.getLogger().info("[FabledSkyBlock] " + ChatColor.GREEN + " Category " + name + ChatColor.GREEN
+		Bukkit.getConsoleSender().sendMessage("[FabledSkyBlock] " + ChatColor.GREEN + "Category " + name + ChatColor.GREEN
 				+ " loaded with " + ChatColor.GOLD + challenges.size() + ChatColor.GREEN + " challenges");
 	}
 
