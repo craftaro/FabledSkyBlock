@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils.world.block;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.utils.BlockUtils;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.*;
@@ -18,17 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
-public final class BlockUtil {
+public final class BlockUtil extends BlockUtils {
 
     public static BlockData convertBlockToBlockData(Block block, int x, int y, int z) {
-        BlockData blockData = new BlockData(block.getType().toString(), block.getData(), x, y, z, block.getBiome().toString());
+        BlockData blockData = new BlockData(CompatibleMaterial.getMaterial(block), x, y, z, block.getBiome().toString());
 
         int NMSVersion = NMSUtil.getVersionNumber();
         blockData.setVersion(NMSVersion);
-
-        if (NMSVersion > 12) {
-            blockData.setBlockData(block.getBlockData().getAsString());
-        }
 
         BlockState blockState = block.getState();
         MaterialData materialData = blockState.getData();
@@ -249,14 +246,9 @@ public final class BlockUtil {
     public static void convertBlockDataToBlock(Block block, BlockData blockData) {
         int NMSVersion = NMSUtil.getVersionNumber();
 
-        Material material = null;
+        CompatibleMaterial material = blockData.getCompatibleMaterial();
 
-        if (NMSVersion > 12 && blockData.getVersion() > 12 && blockData.getBlockData() != null) {
-            block.setBlockData(Bukkit.getServer().createBlockData(blockData.getBlockData()));
-        } else {
-            material = CompatibleMaterial.getMaterial(blockData.getMaterial()).getMaterial();
-            setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
-        }
+        setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
 
         // TODO Create a class to support biome changes
         // block.setBiome(Biome.valueOf(blockData.getBiome().toUpperCase()));
@@ -420,9 +412,10 @@ public final class BlockUtil {
             stairs.setFacingDirection(BlockFace.valueOf(blockData.getFacing()));
             state.setData(stairs);
         } else if (blockDataType == BlockDataType.FLOWERPOT) {
-            if (NMSVersion >= 8 && NMSVersion <= 12) {
+            setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), CompatibleMaterial.STONE, (byte) 0);
+             if (NMSVersion >= 8 && NMSVersion <= 12) {
                 if (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR) {
-                    setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), Material.STONE, (byte) 0);
+                    setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), CompatibleMaterial.STONE, (byte) 0);
                 }
 
                 if (blockData.getFlower() != null && !blockData.getFlower().isEmpty()) {
@@ -430,10 +423,10 @@ public final class BlockUtil {
                         String[] flower = blockData.getFlower().split(":");
                         int materialData = Integer.parseInt(flower[1]);
 
-                        material = CompatibleMaterial.getMaterial(flower[0].toUpperCase()).getMaterial();
+                        material = CompatibleMaterial.getMaterial(flower[0].toUpperCase());
 
                         if (material != null) {
-                            ItemStack is = new ItemStack(material, 1, (byte) materialData);
+                            ItemStack is = new ItemStack(material.getMaterial(), 1, (byte) materialData);
 
                             World world = block.getWorld();
 
@@ -468,16 +461,16 @@ public final class BlockUtil {
 
                     if (blockData.getVersion() > 12) {
                         if (NMSVersion > 12) {
-                            material = Material.valueOf(flower[0].toUpperCase());
+                            material = CompatibleMaterial.valueOf(flower[0].toUpperCase());
                         }
                     } else {
                         if (NMSVersion < 13) {
-                            material = Material.valueOf(flower[0].toUpperCase());
+                            material = CompatibleMaterial.valueOf(flower[0].toUpperCase());
                         }
                     }
 
                     if (material != null) {
-                        flowerPot.setContents(new MaterialData(material, (byte) Integer.parseInt(flower[1])));
+                        flowerPot.setContents(new MaterialData(material.getMaterial(), (byte) Integer.parseInt(flower[1])));
                     }
 
                     state.setData(flowerPot);
@@ -485,7 +478,7 @@ public final class BlockUtil {
             }
         }
 
-        if (blockData.getMaterial().equals("DOUBLE_PLANT")) {
+        if (blockData.getCompatibleMaterial().equals("DOUBLE_PLANT")) {
             Block topBlock = block.getLocation().add(0.0D, 1.0D, 0.0D).getBlock();
             Block bottomBlock = block.getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock();
 
@@ -515,37 +508,5 @@ public final class BlockUtil {
         }
 
         return nearbyBlocks;
-    }
-
-    private static Class<?> IBlockDataClass = NMSUtil.getNMSClass("IBlockData");
-    private static Class<?> blocksClass = NMSUtil.getNMSClass("Blocks");
-
-
-    private static void setBlockFast(World world, int x, int y, int z, Material material, byte data) {
-        try {
-            Object worldHandle = world.getClass().getMethod("getHandle").invoke(world);
-            Object chunk = worldHandle.getClass().getMethod("getChunkAt", int.class, int.class).invoke(worldHandle, x >> 4, z >> 4);
-            Object blockPosition = NMSUtil.getNMSClass("BlockPosition").getConstructor(int.class, int.class, int.class).newInstance(x & 0xF, y, z & 0xF);
-
-            if (NMSUtil.getVersionNumber() > 12) {
-                Object block = blocksClass.getField(material.name()).get(null);
-                Object IBlockData = block.getClass().getMethod("getBlockData").invoke(block);
-                worldHandle.getClass().getMethod("setTypeAndData", blockPosition.getClass(), IBlockDataClass, int.class).invoke(worldHandle, blockPosition, IBlockData, 2);
-
-                try {
-                    chunk.getClass().getMethod("a", blockPosition.getClass(), IBlockDataClass, boolean.class).invoke(chunk, blockPosition, IBlockData, true);
-                } catch (Exception ignored) {
-                    chunk.getClass().getMethod("setType", blockPosition.getClass(), IBlockDataClass, boolean.class).invoke(chunk, blockPosition, IBlockData, true);
-                }
-            } else {
-                Object IBlockData = NMSUtil.getNMSClass("Block").getMethod("getByCombinedId", int.class).invoke(null, material.getId() + (data << 12));
-                worldHandle.getClass().getMethod("setTypeAndData", blockPosition.getClass(), IBlockDataClass, int.class).invoke(worldHandle, blockPosition, IBlockData, 3);
-                chunk.getClass().getMethod("a", blockPosition.getClass(), IBlockDataClass).invoke(chunk, blockPosition, IBlockData);
-            }
-        } catch (Exception e) {
-            Block block = world.getBlockAt(x, y, z);
-            block.getState().setRawData(data);
-            block.setType(material);
-        }
     }
 }

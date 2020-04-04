@@ -1,10 +1,10 @@
 package com.songoda.skyblock.utils.world.block;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
-import org.bukkit.block.Biome;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
@@ -17,9 +17,9 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 public class BlockData {
 
-    private String material = Material.AIR.toString();
-    private String blockData = "";
-    private String biome = Biome.PLAINS.toString();
+    private CompatibleMaterial compatibleMaterial;
+    private String material;
+    private String biome;
     private String stateType = BlockStateType.NORMAL.toString();
     private String dataType = BlockDataType.NORMAL.toString();
     private String baseColor = Color.WHITE.toString();
@@ -46,7 +46,7 @@ public class BlockData {
     private int fuelLevel = 0;
     private int delay = 0;
 
-    private byte data = (byte) 0;
+    private byte data;
 
     private short burnTime = (short) 0;
     private short cookTime = (short) 0;
@@ -55,10 +55,8 @@ public class BlockData {
 
     private boolean exactTeleport = true;
 
-    public BlockData(String material, byte data, int x, int y, int z, String biome) {
-        this.material = material;
-        this.data = data;
-
+    public BlockData(CompatibleMaterial material, int x, int y, int z, String biome) {
+        this.compatibleMaterial = material;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -66,20 +64,14 @@ public class BlockData {
         this.biome = biome;
     }
 
-    public String getMaterial() {
-        return this.material;
+    public CompatibleMaterial getCompatibleMaterial() {
+        if (compatibleMaterial == null)
+            return CompatibleMaterial.getMaterial(material);
+        return compatibleMaterial;
     }
 
-    public void setMaterial(String material) {
-        this.material = material;
-    }
-
-    public String getBlockData() {
-        return blockData;
-    }
-
-    public void setBlockData(String blockData) {
-        this.blockData = blockData;
+    public void setMaterial(CompatibleMaterial material) {
+        this.compatibleMaterial = material;
     }
 
     public String getBiome() {
