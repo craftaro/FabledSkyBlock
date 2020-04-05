@@ -93,7 +93,7 @@ public final class BlockScanner extends BukkitRunnable {
             final ConfigurationSection liquidSection = config.getConfigurationSection("Island.World." + env + ".Liquid");
 
             for (List<ChunkSnapshot> sub : parts) {
-                queueWork(world, liquidSection.getBoolean("Enable") ? liquidSection.getInt("Height") + 1 : 0, sub);
+               queueWork(world, liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : 0, sub);
             }
 
         }
@@ -114,9 +114,9 @@ public final class BlockScanner extends BukkitRunnable {
                     for (int z = 0; z < 16; z++) {
                         for (int y = scanY; y < 256; y++) {
 
-                            final Material type = VERSION > 12 ? shot.getBlockType(x, y, z) : MaterialIDHelper.getLegacyMaterial(getBlockTypeID(shot, x, y, z));
+                            final CompatibleMaterial type = CompatibleMaterial.getMaterial(shot.getBlockType(x, y, z));
 
-                            if (type == Material.AIR) continue;
+                            if (type == CompatibleMaterial.AIR || type == CompatibleMaterial.WATER) continue;
 
                             blocks.add(new BlockInfo(world, x + (cX), y, z + (cZ)));
                         }
