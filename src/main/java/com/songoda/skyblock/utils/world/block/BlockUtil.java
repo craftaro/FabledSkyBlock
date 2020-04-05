@@ -247,6 +247,7 @@ public final class BlockUtil extends BlockUtils {
         int NMSVersion = NMSUtil.getVersionNumber();
 
         CompatibleMaterial material = blockData.getCompatibleMaterial();
+        if (material == null) return;
 
         setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
 
