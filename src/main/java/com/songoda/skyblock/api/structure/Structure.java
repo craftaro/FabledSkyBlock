@@ -8,9 +8,9 @@ public interface Structure {
 
     String getName();
 
-    CompatibleMaterial getMaterials();
+    CompatibleMaterial getMaterial();
 
-    void setMaterials(CompatibleMaterial materials);
+    void setMaterial(CompatibleMaterial material);
 
     String getOverworldFile();
 

@@ -178,6 +178,8 @@ Island:
             # time cycle or be fixed.
             Cycle: false
     Levelling:
+        # Should the level scanner scan water?
+        ScanLiquid: false
         # Run a scan automatically when pasting an island structure
         ScanAutomatically: true
         # Include Points: 0 in the '/is level' GUI

@@ -4,6 +4,7 @@ import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.utils.Compression;
@@ -18,16 +19,11 @@ import com.songoda.skyblock.utils.world.entity.EntityUtil;
 import java.io.FileInputStream;
 import java.util.Base64;
 
-import net.minecraft.server.v1_15_R1.ChunkSection;
-import net.minecraft.server.v1_15_R1.IBlockData;
-import net.minecraft.server.v1_15_R1.World;
-import net.minecraft.server.v1_15_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -58,22 +54,23 @@ public final class StructureUtil {
 
         String originBlockLocation = "";
 
-        for (Block blockList : blocks.keySet()) {
-            Location location = blocks.get(blockList);
+        for (Block block : blocks.keySet()) {
+            Location location = blocks.get(block);
+            CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
 
             if (location.isOriginLocation()) {
                 originBlockLocation = location.getX() + ":" + location.getY() + ":" + location.getZ() + ":" + positions[0].getWorld().getName();
 
-                if (blockList.getType() == Material.AIR) {
-                    blockData.add(BlockUtil.convertBlockToBlockData(blockList, location.getX(), location.getY(), location.getZ()));
+                if (material == CompatibleMaterial.AIR) {
+                    blockData.add(BlockUtil.convertBlockToBlockData(block, location.getX(), location.getY(), location.getZ()));
                 }
             }
 
-            if (blockList.getType() == Material.AIR) {
+            if (material == CompatibleMaterial.AIR) {
                 continue;
             }
 
-            blockData.add(BlockUtil.convertBlockToBlockData(blockList, location.getX(), location.getY(), location.getZ()));
+            blockData.add(BlockUtil.convertBlockToBlockData(block, location.getX(), location.getY(), location.getZ()));
         }
 
         for (Entity entityList : entities.keySet()) {
@@ -174,13 +171,13 @@ public final class StructureUtil {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
                 try {
                     org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(), blockDataList.getY(), blockDataList.getZ()), type);
-                    org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])),
-                            location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
+                    org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[0])),
+                            location.getY() - Integer.parseInt(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[2])));
                     blockLocation.add(blockRotationLocation);
                     BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);
                 } catch (Exception e) {
                     SkyBlock.getInstance().getLogger()
-                            .warning("Unable to convert BlockData to Block for type {" + blockDataList.getMaterial() + ":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile() + "}");
+                            .warning("Unable to convert BlockData to Block for type {" + blockDataList.getCompatibleMaterial() + ":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile() + "}");
                 }
             });
         }
@@ -191,8 +188,8 @@ public final class StructureUtil {
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
                     try {
                         org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(), entityDataList.getY(), entityDataList.getZ()), type);
-                        org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[0])),
-                                location.getY() - Integer.valueOf(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.valueOf(storage.getOriginLocation().split(":")[2])));
+                        org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[0])),
+                                location.getY() - Integer.parseInt(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[2])));
                         blockLocation.add(blockRotationLocation);
                         EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
                     } catch (Exception e) {

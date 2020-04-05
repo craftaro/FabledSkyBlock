@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -38,13 +39,14 @@ public class DefaultInventory {
 			String name = ChatColor.translateAlternateColorCodes('&', configLoad.getString(k + ".name"));
 			List<String> lore = toColor(configLoad.getStringList(k + ".lore"));
 			int redirect = configLoad.getInt(k + ".redirect");
-			Material item = Material.matchMaterial(strItem);
-			if (item == null || item == Material.AIR) {
+			CompatibleMaterial material = CompatibleMaterial.getMaterial(strItem);
+			if (material == null || material == CompatibleMaterial.AIR) {
 				Bukkit.getLogger().warning("Item " + strItem + " is not a Material");
 				continue;
 			}
 
-			ItemStack is = new ItemStack(item, amount);
+			ItemStack is = material.getItem();
+			is.setAmount(amount);
 			ItemMeta im = is.getItemMeta();
 			im.setDisplayName(name);
 			im.setLore(lore);

@@ -140,11 +140,11 @@ public class Block implements Listener {
 
         if (event.isCancelled() || !configLoad.getBoolean("Island.Block.Level.Enable")) return;
 
-        if (IslandLevelManager.isDoubleCheckedBlock(block)) {
+        if (CompatibleMaterial.getMaterial(block).isTall()) {
 
             final org.bukkit.block.Block belowBlock = block.getRelative(BlockFace.DOWN);
 
-            if (IslandLevelManager.isDoubleCheckedBlock(belowBlock)) {
+            if (CompatibleMaterial.getMaterial(belowBlock).isTall()) {
                 block = belowBlock;
             }
 

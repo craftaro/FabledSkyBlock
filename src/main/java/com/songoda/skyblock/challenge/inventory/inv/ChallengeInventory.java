@@ -100,7 +100,7 @@ public class ChallengeInventory implements InventoryProvider {
 						// Update
 						inv.updateItem(ic.getCol(), ic.getRow(), is2);
 					} else
-						p.playSound(p.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
+						p.playSound(p.getLocation(), CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1, 1);
 				};
 				inv.set(ic.getCol(), ic.getRow(), ClickableItem.of(is, consumer));
 			}

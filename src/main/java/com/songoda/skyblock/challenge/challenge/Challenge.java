@@ -257,9 +257,6 @@ public class Challenge {
 					throw new IllegalArgumentException(
 							"\"" + id + "\" isn't a correct Minecraft EntityType (value = \"" + value + "\")");
 				}
-				if (et == null)
-					throw new IllegalArgumentException(
-							"\"" + id + "\" isn't a correct Minecraft EntityType (value = \"" + value + "\")");
 				int amount = 1;
 				if (index != -1) {
 					String strAmount = value.substring(index + 1);
