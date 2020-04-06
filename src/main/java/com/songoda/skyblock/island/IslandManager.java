@@ -1504,7 +1504,7 @@ public class IslandManager {
     }
 
     public Island getIslandAtLocation(org.bukkit.Location location) {
-        for (Island island : getIslands().values()) {
+        for (Island island : new ArrayList<>(getIslands().values())) {
             if (isLocationAtIsland(island, location)) {
                 return island;
             }
