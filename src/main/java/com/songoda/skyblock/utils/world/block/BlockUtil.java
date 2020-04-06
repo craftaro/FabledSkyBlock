@@ -22,7 +22,7 @@ import java.util.List;
 public final class BlockUtil extends BlockUtils {
 
     public static BlockData convertBlockToBlockData(Block block, int x, int y, int z) {
-        BlockData blockData = new BlockData(CompatibleMaterial.getMaterial(block), x, y, z, block.getBiome().toString());
+        BlockData blockData = new BlockData(block.getType().name(), x, y, z, block.getBiome().toString());
 
         int NMSVersion = NMSUtil.getVersionNumber();
         blockData.setVersion(NMSVersion);
@@ -246,10 +246,10 @@ public final class BlockUtil extends BlockUtils {
     public static void convertBlockDataToBlock(Block block, BlockData blockData) {
         int NMSVersion = NMSUtil.getVersionNumber();
 
-        CompatibleMaterial material = blockData.getCompatibleMaterial();
+        String material = blockData.getMaterial();
         if (material == null) return;
 
-        setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
+        setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), Material.valueOf(material), blockData.getData());
 
         // TODO Create a class to support biome changes
         // block.setBiome(Biome.valueOf(blockData.getBiome().toUpperCase()));
@@ -424,10 +424,10 @@ public final class BlockUtil extends BlockUtils {
                         String[] flower = blockData.getFlower().split(":");
                         int materialData = Integer.parseInt(flower[1]);
 
-                        material = CompatibleMaterial.getMaterial(flower[0].toUpperCase());
+                        material = flower[0].toUpperCase();
 
                         if (material != null) {
-                            ItemStack is = new ItemStack(material.getMaterial(), 1, (byte) materialData);
+                            ItemStack is = new ItemStack(Material.getMaterial(material), 1, (byte) materialData);
 
                             World world = block.getWorld();
 
@@ -462,16 +462,16 @@ public final class BlockUtil extends BlockUtils {
 
                     if (blockData.getVersion() > 12) {
                         if (NMSVersion > 12) {
-                            material = CompatibleMaterial.valueOf(flower[0].toUpperCase());
+                            material = flower[0].toUpperCase();
                         }
                     } else {
                         if (NMSVersion < 13) {
-                            material = CompatibleMaterial.valueOf(flower[0].toUpperCase());
+                            material = flower[0].toUpperCase();
                         }
                     }
 
                     if (material != null) {
-                        flowerPot.setContents(new MaterialData(material.getMaterial(), (byte) Integer.parseInt(flower[1])));
+                        flowerPot.setContents(new MaterialData(Material.getMaterial(material), (byte) Integer.parseInt(flower[1])));
                     }
 
                     state.setData(flowerPot);
@@ -479,7 +479,7 @@ public final class BlockUtil extends BlockUtils {
             }
         }
 
-        if (blockData.getCompatibleMaterial().equals("DOUBLE_PLANT")) {
+        if (material.equals("DOUBLE_PLANT")) {
             Block topBlock = block.getLocation().add(0.0D, 1.0D, 0.0D).getBlock();
             Block bottomBlock = block.getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock();
 

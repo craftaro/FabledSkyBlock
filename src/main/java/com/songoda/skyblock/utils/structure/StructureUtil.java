@@ -177,7 +177,7 @@ public final class StructureUtil {
                     BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);
                 } catch (Exception e) {
                     SkyBlock.getInstance().getLogger()
-                            .warning("Unable to convert BlockData to Block for type {" + blockDataList.getCompatibleMaterial() + ":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile() + "}");
+                            .warning("Unable to convert BlockData to Block for type {" + blockDataList.getMaterial() + ":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile() + "}");
                 }
             });
         }
