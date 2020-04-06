@@ -114,9 +114,12 @@ public final class BlockScanner extends BukkitRunnable {
                     for (int z = 0; z < 16; z++) {
                         for (int y = scanY; y < 256; y++) {
 
-                            final CompatibleMaterial type = CompatibleMaterial.getMaterial(shot.getBlockType(x, y, z));
 
-                            if (type == CompatibleMaterial.AIR || type == CompatibleMaterial.WATER) continue;
+                            final CompatibleMaterial type = CompatibleMaterial.getBlockMaterial(VERSION > 12
+                                    ? shot.getBlockType(x, y, z) : MaterialIDHelper.getLegacyMaterial(getBlockTypeID(shot, x, y, z)));
+
+
+                            if (type == null || type == CompatibleMaterial.AIR || type == CompatibleMaterial.WATER) continue;
 
                             blocks.add(new BlockInfo(world, x + (cX), y, z + (cZ)));
                         }
