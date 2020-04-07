@@ -51,7 +51,7 @@ public final class BlockUtil extends BlockUtils {
 
             blockData.setPotionEffect(primaryEffectName + ":" + secondaryEffectName);
             blockData.setStateType(BlockStateType.BEACON.toString());
-        } else if (blockState instanceof BrewingStand) {
+        } else if (blockState instanceof BrewingStand && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
             BrewingStand brewingStand = (BrewingStand) blockState;
             blockData.setBrewingTime(brewingStand.getBrewingTime());
             blockData.setFuelLevel(brewingStand.getFuelLevel());
@@ -279,7 +279,7 @@ public final class BlockUtil extends BlockUtils {
                 beacon.setSecondaryEffect(PotionEffectType.getByName(potionEffect[1].toUpperCase()));
             }
             state.update();
-        } else if (blockTypeState == BlockStateType.BREWINGSTAND) {
+        } else if (blockTypeState == BlockStateType.BREWINGSTAND && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
             BrewingStand brewingStand = (BrewingStand) state;
             brewingStand.setBrewingTime(blockData.getBrewingTime());
             brewingStand.setFuelLevel(blockData.getFuelLevel());
