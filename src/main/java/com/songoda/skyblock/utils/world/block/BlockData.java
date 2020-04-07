@@ -1,7 +1,6 @@
 package com.songoda.skyblock.utils.world.block;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -65,7 +64,8 @@ public class BlockData {
     }
 
     public String getMaterial() {
-        return this.material;
+        CompatibleMaterial material = CompatibleMaterial.getMaterial(this.material);
+        return material == null ? this.material : CompatibleMaterial.getMaterial(this.material).getMaterial().name();
     }
 
     public void setMaterial(Material material) {
