@@ -17,7 +17,6 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 public class BlockData {
 
-    private CompatibleMaterial compatibleMaterial;
     private String material;
     private String biome;
     private String stateType = BlockStateType.NORMAL.toString();
@@ -55,8 +54,8 @@ public class BlockData {
 
     private boolean exactTeleport = true;
 
-    public BlockData(CompatibleMaterial material, int x, int y, int z, String biome) {
-        this.compatibleMaterial = material;
+    public BlockData(String material, int x, int y, int z, String biome) {
+        this.material = material;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -64,14 +63,12 @@ public class BlockData {
         this.biome = biome;
     }
 
-    public CompatibleMaterial getCompatibleMaterial() {
-        if (compatibleMaterial == null)
-            return CompatibleMaterial.getMaterial(material);
-        return compatibleMaterial;
+    public String getMaterial() {
+        return this.material;
     }
 
-    public void setMaterial(CompatibleMaterial material) {
-        this.compatibleMaterial = material;
+    public void setMaterial(Material material) {
+        this.material = material.name();
     }
 
     public String getBiome() {
