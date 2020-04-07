@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils.world.block;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.BlockUtils;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
@@ -22,7 +23,7 @@ import java.util.List;
 public final class BlockUtil extends BlockUtils {
 
     public static BlockData convertBlockToBlockData(Block block, int x, int y, int z) {
-        BlockData blockData = new BlockData(block.getType().name(), x, y, z, block.getBiome().toString());
+        BlockData blockData = new BlockData(block.getType().name(), block.getData(), x, y, z, block.getBiome().toString());
 
         int NMSVersion = NMSUtil.getVersionNumber();
         blockData.setVersion(NMSVersion);

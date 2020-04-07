@@ -54,8 +54,9 @@ public class BlockData {
 
     private boolean exactTeleport = true;
 
-    public BlockData(String material, int x, int y, int z, String biome) {
+    public BlockData(String material, byte data, int x, int y, int z, String biome) {
         this.material = material;
+        this.data = data;
         this.x = x;
         this.y = y;
         this.z = z;
