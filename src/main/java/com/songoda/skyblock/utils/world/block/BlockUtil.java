@@ -247,10 +247,12 @@ public final class BlockUtil extends BlockUtils {
     public static void convertBlockDataToBlock(Block block, BlockData blockData) {
         int NMSVersion = NMSUtil.getVersionNumber();
 
-        String material = blockData.getMaterial();
-        if (material == null) return;
+        String materialStr = blockData.getMaterial();
+        if (materialStr == null) return;
+        Material material = Material.valueOf(materialStr);
+        if (material == Material.AIR) return;
 
-        setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), Material.valueOf(material), blockData.getData());
+        setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
 
         // TODO Create a class to support biome changes
         // block.setBiome(Biome.valueOf(blockData.getBiome().toUpperCase()));
@@ -425,10 +427,10 @@ public final class BlockUtil extends BlockUtils {
                         String[] flower = blockData.getFlower().split(":");
                         int materialData = Integer.parseInt(flower[1]);
 
-                        material = flower[0].toUpperCase();
+                        materialStr = flower[0].toUpperCase();
 
-                        if (material != null) {
-                            ItemStack is = new ItemStack(Material.getMaterial(material), 1, (byte) materialData);
+                        if (materialStr != null) {
+                            ItemStack is = new ItemStack(Material.getMaterial(materialStr), 1, (byte) materialData);
 
                             World world = block.getWorld();
 
@@ -459,20 +461,20 @@ public final class BlockUtil extends BlockUtils {
                 if (blockData.getFlower() != null && !blockData.getFlower().isEmpty()) {
                     org.bukkit.material.FlowerPot flowerPot = (org.bukkit.material.FlowerPot) state.getData();
                     String[] flower = blockData.getFlower().split(":");
-                    material = null;
+                    materialStr = null;
 
                     if (blockData.getVersion() > 12) {
                         if (NMSVersion > 12) {
-                            material = flower[0].toUpperCase();
+                            materialStr = flower[0].toUpperCase();
                         }
                     } else {
                         if (NMSVersion < 13) {
-                            material = flower[0].toUpperCase();
+                            materialStr = flower[0].toUpperCase();
                         }
                     }
 
-                    if (material != null) {
-                        flowerPot.setContents(new MaterialData(Material.getMaterial(material), (byte) Integer.parseInt(flower[1])));
+                    if (materialStr != null) {
+                        flowerPot.setContents(new MaterialData(Material.getMaterial(materialStr), (byte) Integer.parseInt(flower[1])));
                     }
 
                     state.setData(flowerPot);
@@ -480,7 +482,7 @@ public final class BlockUtil extends BlockUtils {
             }
         }
 
-        if (material.equals("DOUBLE_PLANT")) {
+        if (materialStr.equals("DOUBLE_PLANT")) {
             Block topBlock = block.getLocation().add(0.0D, 1.0D, 0.0D).getBlock();
             Block bottomBlock = block.getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock();
 
