@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils.world.block;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.BlockUtils;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
@@ -22,7 +23,7 @@ import java.util.List;
 public final class BlockUtil extends BlockUtils {
 
     public static BlockData convertBlockToBlockData(Block block, int x, int y, int z) {
-        BlockData blockData = new BlockData(block.getType().name(), x, y, z, block.getBiome().toString());
+        BlockData blockData = new BlockData(block.getType().name(), block.getData(), x, y, z, block.getBiome().toString());
 
         int NMSVersion = NMSUtil.getVersionNumber();
         blockData.setVersion(NMSVersion);
@@ -50,7 +51,7 @@ public final class BlockUtil extends BlockUtils {
 
             blockData.setPotionEffect(primaryEffectName + ":" + secondaryEffectName);
             blockData.setStateType(BlockStateType.BEACON.toString());
-        } else if (blockState instanceof BrewingStand) {
+        } else if (blockState instanceof BrewingStand && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
             BrewingStand brewingStand = (BrewingStand) blockState;
             blockData.setBrewingTime(brewingStand.getBrewingTime());
             blockData.setFuelLevel(brewingStand.getFuelLevel());
@@ -278,7 +279,7 @@ public final class BlockUtil extends BlockUtils {
                 beacon.setSecondaryEffect(PotionEffectType.getByName(potionEffect[1].toUpperCase()));
             }
             state.update();
-        } else if (blockTypeState == BlockStateType.BREWINGSTAND) {
+        } else if (blockTypeState == BlockStateType.BREWINGSTAND && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
             BrewingStand brewingStand = (BrewingStand) state;
             brewingStand.setBrewingTime(blockData.getBrewingTime());
             brewingStand.setFuelLevel(blockData.getFuelLevel());

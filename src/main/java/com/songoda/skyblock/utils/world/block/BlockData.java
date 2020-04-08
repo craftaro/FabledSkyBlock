@@ -1,7 +1,6 @@
 package com.songoda.skyblock.utils.world.block;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -54,8 +53,9 @@ public class BlockData {
 
     private boolean exactTeleport = true;
 
-    public BlockData(String material, int x, int y, int z, String biome) {
+    public BlockData(String material, byte data, int x, int y, int z, String biome) {
         this.material = material;
+        this.data = data;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -64,7 +64,8 @@ public class BlockData {
     }
 
     public String getMaterial() {
-        return this.material;
+        CompatibleMaterial material = CompatibleMaterial.getMaterial(this.material);
+        return material == null ? this.material : CompatibleMaterial.getMaterial(this.material).getMaterial().name();
     }
 
     public void setMaterial(Material material) {
