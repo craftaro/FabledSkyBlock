@@ -140,7 +140,11 @@ public class Block implements Listener {
 
         if (event.isCancelled() || !configLoad.getBoolean("Island.Block.Level.Enable")) return;
 
-        if (CompatibleMaterial.getMaterial(block).isTall()) {
+        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+
+        if (material == null) return;
+
+        if (material.isTall()) {
 
             final org.bukkit.block.Block belowBlock = block.getRelative(BlockFace.DOWN);
 
@@ -149,8 +153,6 @@ public class Block implements Listener {
             }
 
         }
-
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
 
         if (block.getType() == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
             CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
