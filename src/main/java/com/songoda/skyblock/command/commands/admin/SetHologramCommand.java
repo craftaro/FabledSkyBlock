@@ -9,7 +9,6 @@ import com.songoda.skyblock.hologram.HologramManager;
 import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -55,9 +54,8 @@ public class SetHologramCommand extends SubCommand {
                             .valueOf(WordUtils.capitalize(args[0].toLowerCase()));
                     Hologram hologram = hologramManager.getHologram(hologramType1);
 
-                    if (hologram != null) {
-                        hologramManager.removeHologram(hologram);
-                    }
+                    if (hologram != null)
+                        hologram.remove();
 
                     hologramManager.spawnHologram(hologramType1);
                 });

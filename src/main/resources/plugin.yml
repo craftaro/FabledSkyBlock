@@ -4,7 +4,7 @@ version: maven-version-number
 api-version: 1.13
 description: A unique SkyBlock plugin
 author: Songoda
-softdepend: [PlaceholderAPI, MVdWPlaceholderAPI, Vault, Reserve, LeaderHeads, EpicSpawners, WildStacker, UltimateStacker, WorldEdit]
+softdepend: [HolographicDisplays, Holograms, CMI, PlaceholderAPI, MVdWPlaceholderAPI, Vault, Reserve, LeaderHeads, EpicSpawners, WildStacker, UltimateStacker, WorldEdit]
 loadbefore: [Multiverse-Core]
 commands:
     island:

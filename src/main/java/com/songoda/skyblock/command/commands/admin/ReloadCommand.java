@@ -93,7 +93,7 @@ public class ReloadCommand extends SubCommand {
             leaderboardManager.resetLeaderboard();
             leaderboardManager.setupLeaderHeads();
 
-            Bukkit.getScheduler().runTask(skyblock, () -> skyblock.getHologramManager().resetHologram());
+            Bukkit.getScheduler().runTask(skyblock, () -> skyblock.getHologramManager().updateHologram());
         });
 
         limitHandler.reloadAll();

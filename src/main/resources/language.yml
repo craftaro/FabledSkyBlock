@@ -295,7 +295,7 @@ Command:
         Set:
           Message: '&bSkyBlock &8| &aInfo&8: &eThe ''&b%type&e'' hologram has been set to your location.'
         Invalid:
-          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin sethologram <Level|Votes>'
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin sethologram <Level|Votes|Bank>'
         Info:
           Message: '&f&oSets the location of a hologram.'
       Settings:
@@ -316,7 +316,7 @@ Command:
           Message: '&f&oManage generators for cobblestone generators.'
       RemoveHologram:
         Invalid:
-          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin removehologram <Level|Votes>'
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin removehologram <Level|Votes|Bank>'
         Set:
           Message: '&bSkyBlock &8| &cError&8: &eA location for that hologram has not been set.'
         Info:
