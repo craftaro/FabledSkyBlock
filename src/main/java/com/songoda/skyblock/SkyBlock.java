@@ -100,6 +100,9 @@ public class SkyBlock extends SongodaPlugin {
         // Load Economy
         EconomyManager.load();
 
+        // Load Holograms
+        com.songoda.core.hooks.HologramManager.load(this);
+
         fileManager = new FileManager(this);
         localizationManager = new LocalizationManager();
         worldManager = new WorldManager(this);
