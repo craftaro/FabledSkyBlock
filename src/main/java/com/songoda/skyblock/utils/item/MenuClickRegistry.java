@@ -56,7 +56,7 @@ public final class MenuClickRegistry {
         if (meta == null) return;
 
         @SuppressWarnings("deprecation")
-        final MenuExecutor executor = executors.get(RegistryKey.fromName(meta.getDisplayName(), CompatibleMaterial.getMaterial(item.getType())));
+        final MenuExecutor executor = executors.get(RegistryKey.fromName(meta.getDisplayName(), CompatibleMaterial.getMaterial(item)));
 
 
         if (executor == null) return;
