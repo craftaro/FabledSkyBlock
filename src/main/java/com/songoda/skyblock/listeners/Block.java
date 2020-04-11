@@ -349,10 +349,12 @@ public class Block implements Listener {
                 // Find highest generator available
                 for (Generator generator : generators) {
                     for (Player p : possiblePlayers) {
-                        if (generator.isPermission()) {
-                            if (!p.hasPermission(generator.getPermission()) && !p.hasPermission("fabledskyblock.generator.*") && !p.hasPermission("fabledskyblock.*")) {
-                                continue;
-                            }
+
+                        if (generator.isPermission() &&
+                                !p.hasPermission(generator.getPermission()) &&
+                                !p.hasPermission("fabledskyblock.generator.*") &&
+                                !p.hasPermission("fabledskyblock.*")) {
+                            continue;
                         }
 
                         org.bukkit.block.BlockState genState = generatorManager.generateBlock(generator, block);
@@ -361,7 +363,6 @@ public class Block implements Listener {
                         toBlockState.setData(genState.getData());
                         toBlockState.setType(genState.getType());
                         toBlockState.update();
-
                         return;
                     }
                 }
@@ -530,6 +531,7 @@ public class Block implements Listener {
 
         IslandManager islandManager = skyblock.getIslandManager();
         Island island = islandManager.getIslandAtLocation(block.getLocation());
+
         if (island == null) return;
 
         // Check spawn block protection
@@ -541,27 +543,33 @@ public class Block implements Listener {
             }
         }
 
-        Material material = block.getType();
-        if (material != CompatibleMaterial.WATER.getBlockMaterial()
-                && material != CompatibleMaterial.LAVA.getBlockMaterial())
+        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+        if (material != CompatibleMaterial.WATER
+                && material != CompatibleMaterial.LAVA)
             return;
 
         BlockState state = event.getNewState();
         Material type = state.getType();
+
         if (type != Material.COBBLESTONE && type != Material.STONE) return;
 
         GeneratorManager generatorManager = skyblock.getGeneratorManager();
         if (generatorManager == null) return;
 
         List<Generator> generators = Lists.newArrayList(generatorManager.getGenerators());
-        if (generators == null || generators.isEmpty()) return;
+
+        if (generators.isEmpty()) return;
+
         Collections.reverse(generators); // Use the highest generator available
 
         // Filter valid players on the island.
         Set<Player> possiblePlayers = new HashSet<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            boolean isMember = island.hasRole(IslandRole.Owner, player.getUniqueId()) || island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Coop, player.getUniqueId())
-                    || island.hasRole(IslandRole.Operator, player.getUniqueId());
+            boolean isMember = island.hasRole(IslandRole.Owner, player.getUniqueId()) ||
+                    island.hasRole(IslandRole.Member, player.getUniqueId()) ||
+                    island.hasRole(IslandRole.Coop, player.getUniqueId()) ||
+                    island.hasRole(IslandRole.Operator, player.getUniqueId());
+
             if (isMember && islandManager.isLocationAtIsland(island, player.getLocation(), world)) {
                 possiblePlayers.add(player);
             }
