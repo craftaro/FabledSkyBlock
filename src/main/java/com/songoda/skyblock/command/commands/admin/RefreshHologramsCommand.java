@@ -41,7 +41,7 @@ public class RefreshHologramsCommand extends SubCommand {
             leaderboardManager.resetLeaderboard();
             leaderboardManager.setupLeaderHeads();
 
-            Bukkit.getScheduler().runTask(skyblock, () -> skyblock.getHologramManager().updateHologram());
+            Bukkit.getScheduler().runTask(skyblock, () -> skyblock.getHologramTask().updateHologram());
         });
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RefreshHolograms.Refreshed.Message"));

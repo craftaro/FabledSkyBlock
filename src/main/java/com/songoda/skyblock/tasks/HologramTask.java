@@ -1,9 +1,11 @@
-package com.songoda.skyblock.hologram;
+package com.songoda.skyblock.tasks;
 
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.hologram.Hologram;
+import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
@@ -15,33 +17,45 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HologramManager {
+public class HologramTask extends BukkitRunnable {
 
-    private final SkyBlock skyblock;
-    private List<Hologram> hologramStorage = new ArrayList<>();
+    private static HologramTask instance;
+    private static SkyBlock plugin;
 
-    public HologramManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    private final List<Hologram> hologramStorage = new ArrayList<>();
 
-        FileManager fileManager = skyblock.getFileManager();
+    public HologramTask(SkyBlock plug) {
+        plugin = plug;
+    }
 
-        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
-            for (HologramType hologramTypeList : HologramType.values()) {
-                if (hologramTypeList == HologramType.Votes) {
-                    if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                            .getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
-                        continue;
-                    }
+    public static HologramTask startTask(SkyBlock plug) {
+        plugin = plug;
+        if (instance == null) {
+            instance = new HologramTask(plugin);
+            instance.runTaskTimerAsynchronously(plugin, 0, 20 * 15);
+        }
+
+        return instance;
+    }
+
+    @Override
+    public void run() {
+        FileManager fileManager = plugin.getFileManager();
+        for (HologramType hologramTypeList : HologramType.values()) {
+            if (hologramTypeList == HologramType.Votes) {
+                if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                        .getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+                    continue;
                 }
-
-                spawnHologram(hologramTypeList);
             }
-        }, 200L);
+            spawnHologram(hologramTypeList);
+        }
     }
 
     public void onDisable() {
@@ -53,22 +67,21 @@ public class HologramManager {
     }
 
     public void spawnHologram(HologramType type) {
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config locationsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
+        Config locationsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
         FileConfiguration locationsConfigLoad = locationsConfig.getFileConfiguration();
 
         if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + type) != null)
-            spawnHologram(type, skyblock.getFileManager().getLocation(locationsConfig,
+            spawnHologram(type, plugin.getFileManager().getLocation(locationsConfig,
                     "Location.Hologram.Leaderboard." + type, true), getHologramLines(type));
     }
 
     private List<String> getHologramLines(HologramType type) {
-        FileManager fileManager = skyblock.getFileManager();
-        LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
-        MessageManager messageManager = skyblock.getMessageManager();
+        FileManager fileManager = plugin.getFileManager();
+        LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
 
-        FileConfiguration languageConfigLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+        FileConfiguration languageConfigLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                 .getFileConfiguration();
 
         List<String> hologramLines = new ArrayList<>();
