@@ -15,6 +15,7 @@ public class IslandUpgradeEvent extends IslandEvent {
     public IslandUpgradeEvent(Island island, Player player, IslandUpgrade upgrade) {
         super(island);
         this.player = player;
+        this.upgrade = upgrade;
     }
 
     public static HandlerList getHandlerList() {
