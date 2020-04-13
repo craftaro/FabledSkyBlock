@@ -5,6 +5,7 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.version.NMSUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
@@ -26,23 +27,31 @@ public class BiomeManager {
         Location location = island.getLocation(IslandWorld.Normal, IslandEnvironment.Island);
         int radius = (int) Math.ceil(island.getRadius());
 
-        for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x++) {
-            for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z++) {
-                location.getWorld().setBiome(x, z, biome);
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+            for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x++) {
+                for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z++) {
+                    location.getWorld().setBiome(x, z, biome);
+                }
             }
-        }
-
-        for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x += 16) {
-            for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z += 16) {
-                Chunk chunk = location.getWorld().getChunkAt(x >> 4, z >> 4);
-                updateBiome(island, chunk);
-            }
-        }
+            Bukkit.getScheduler().runTask(skyblock, () -> {
+                for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x += 16) {
+                    for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z += 16) {
+                        Chunk chunk = location.getWorld().getChunkAt(x >> 4, z >> 4);
+                        updateBiome(island, chunk);
+                    }
+                }
+            });
+        });
     }
 
+    private Class<?> packetPlayOutMapChunkClass;
+    private Class<?> chunkClass;
+
     private void updateBiome(Island island, Chunk chunk) {
-        Class<?> packetPlayOutMapChunkClass = NMSUtil.getNMSClass("PacketPlayOutMapChunk");
-        Class<?> chunkClass = NMSUtil.getNMSClass("Chunk");
+        if (packetPlayOutMapChunkClass == null) {
+            packetPlayOutMapChunkClass = NMSUtil.getNMSClass("PacketPlayOutMapChunk");
+            chunkClass = NMSUtil.getNMSClass("Chunk");
+        }
 
         for (Player all : skyblock.getIslandManager().getPlayersAtIsland(island, IslandWorld.Normal)) {
             try {
