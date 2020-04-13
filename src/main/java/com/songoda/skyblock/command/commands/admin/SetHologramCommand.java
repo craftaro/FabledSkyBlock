@@ -5,10 +5,10 @@ import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.hologram.Hologram;
-import com.songoda.skyblock.hologram.HologramManager;
 import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.tasks.HologramTask;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -21,7 +21,7 @@ public class SetHologramCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        HologramManager hologramManager = skyblock.getHologramManager();
+        HologramTask hologramManager = skyblock.getHologramTask();
         MessageManager messageManager = skyblock.getMessageManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
@@ -49,16 +49,15 @@ public class SetHologramCommand extends SubCommand {
                         fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")),
                         "Location.Hologram.Leaderboard." + hologramType.name(), player.getLocation(), true);
 
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                    HologramType hologramType1 = HologramType
-                            .valueOf(WordUtils.capitalize(args[0].toLowerCase()));
-                    Hologram hologram = hologramManager.getHologram(hologramType1);
+                HologramType hologramType1 = HologramType
+                        .valueOf(WordUtils.capitalize(args[0].toLowerCase()));
+                Hologram hologram = hologramManager.getHologram(hologramType1);
 
-                    if (hologram != null)
-                        hologram.remove();
+                if (hologram != null)
+                    hologram.remove();
 
-                    hologramManager.spawnHologram(hologramType1);
-                });
+                Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () ->
+                        hologramManager.spawnHologram(hologramType1));
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Admin.SetHologram.Set.Message").replace("%type",

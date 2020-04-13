@@ -15,7 +15,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.confirmation.ConfirmationTask;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.generator.GeneratorManager;
-import com.songoda.skyblock.hologram.HologramManager;
+import com.songoda.skyblock.tasks.HologramTask;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.reward.RewardManager;
@@ -77,7 +77,7 @@ public class SkyBlock extends SongodaPlugin {
     private LeaderboardManager leaderboardManager;
     private PlaceholderManager placeholderManager;
     private MessageManager messageManager;
-    private HologramManager hologramManager;
+    private HologramTask hologramTask;
     private LimitationInstanceHandler limitationHandler;
     private LocalizationManager localizationManager;
     private RewardManager rewardManager;
@@ -142,7 +142,6 @@ public class SkyBlock extends SongodaPlugin {
         placeholderManager.registerPlaceholders();
 
         messageManager = new MessageManager(this);
-        hologramManager = new HologramManager(this);
 
         rewardManager = new RewardManager(this);
         rewardManager.loadRewards();
@@ -150,6 +149,9 @@ public class SkyBlock extends SongodaPlugin {
         new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
         new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
         new ConfirmationTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
+
+        // Start Tasks
+        hologramTask = HologramTask.startTask(this);
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new Join(this), this);
@@ -220,8 +222,8 @@ public class SkyBlock extends SongodaPlugin {
             this.cooldownManager.onDisable();
         }
 
-        if (this.hologramManager != null) {
-            this.hologramManager.onDisable();
+        if (this.hologramTask != null) {
+            this.hologramTask.onDisable();
         }
 
         if (this.fabledChallenge != null) {
@@ -333,8 +335,8 @@ public class SkyBlock extends SongodaPlugin {
         return messageManager;
     }
 
-    public HologramManager getHologramManager() {
-        return hologramManager;
+    public HologramTask getHologramTask() {
+        return hologramTask;
     }
 
     public StackableManager getStackableManager() {
