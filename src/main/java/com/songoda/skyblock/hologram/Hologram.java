@@ -1,13 +1,10 @@
 package com.songoda.skyblock.hologram;
 
 import com.songoda.core.hooks.HologramManager;
-import com.songoda.skyblock.utils.version.NMSUtil;
-import org.bukkit.ChatColor;
+import com.songoda.skyblock.SkyBlock;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Hologram {
@@ -18,7 +15,9 @@ public class Hologram {
     public Hologram(HologramType type, Location location, List<String> lines) {
         this.type = type;
         this.location = location;
-        HologramManager.createHologram(location, lines);
+
+        Bukkit.getScheduler().runTask(SkyBlock.getInstance(),
+                () -> HologramManager.createHologram(location, lines));
     }
 
     public HologramType getType() {
@@ -32,10 +31,13 @@ public class Hologram {
 
     public void remove() {
         HologramManager.removeHologram(location);
+        Bukkit.getScheduler().runTask(SkyBlock.getInstance(),
+                () -> HologramManager.removeHologram(location));
     }
 
     public void update(List<String> lines) {
-        HologramManager.updateHologram(location, lines);
+        Bukkit.getScheduler().runTask(SkyBlock.getInstance(),
+                () -> HologramManager.updateHologram(location, lines));
 
     }
 }

@@ -38,7 +38,7 @@ public class HologramTask extends BukkitRunnable {
         plugin = plug;
         if (instance == null) {
             instance = new HologramTask(plugin);
-            instance.runTaskTimerAsynchronously(plugin, 0, 20 * 15);
+            instance.runTaskTimerAsynchronously(plugin, 0, 20 * 60);
         }
 
         return instance;
