@@ -163,7 +163,7 @@ public class HologramTask extends BukkitRunnable {
     }
 
     public void updateHologram() {
-        for (Hologram hologramList : hologramStorage) {
+        for (Hologram hologramList : new ArrayList<>(hologramStorage)) {
             hologramList.update(getHologramLines(hologramList.getType()));
         }
     }
