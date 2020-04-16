@@ -28,6 +28,10 @@ public final class BlockUtil extends BlockUtils {
         int NMSVersion = NMSUtil.getVersionNumber();
         blockData.setVersion(NMSVersion);
 
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+            blockData.setBlockData(block.getBlockData().getAsString());
+        }
+
         BlockState blockState = block.getState();
         MaterialData materialData = blockState.getData();
 
@@ -252,7 +256,10 @@ public final class BlockUtil extends BlockUtils {
         Material material = Material.valueOf(materialStr);
         if (material == Material.AIR) return;
 
-        setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
+        if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13))
+            setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
+        else
+            block.setBlockData(Bukkit.getServer().createBlockData(blockData.getBlockData()));
 
         // TODO Create a class to support biome changes
         // block.setBiome(Biome.valueOf(blockData.getBiome().toUpperCase()));
@@ -417,7 +424,7 @@ public final class BlockUtil extends BlockUtils {
             state.setData(stairs);
         } else if (blockDataType == BlockDataType.FLOWERPOT) {
             setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), CompatibleMaterial.STONE, (byte) 0);
-             if (NMSVersion >= 8 && NMSVersion <= 12) {
+            if (NMSVersion >= 8 && NMSVersion <= 12) {
                 if (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR) {
                     setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), CompatibleMaterial.STONE, (byte) 0);
                 }
