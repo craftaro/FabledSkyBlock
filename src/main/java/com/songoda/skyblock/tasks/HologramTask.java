@@ -9,9 +9,9 @@ import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
+import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -63,7 +63,12 @@ public class HologramTask extends BukkitRunnable {
     }
 
     public void spawnHologram(HologramType type, Location location, List<String> lines) {
-        hologramStorage.add(new Hologram(type, location, lines));
+        Hologram hologram = hologramStorage.stream()
+                .filter(h -> LocationUtil.isLocationLocation(h.getLocation(), location)).findFirst().orElse(null);
+        if (hologram == null)
+            hologramStorage.add(new Hologram(type, location, lines));
+        else
+            hologram.update(lines);
     }
 
     public void spawnHologram(HologramType type) {
