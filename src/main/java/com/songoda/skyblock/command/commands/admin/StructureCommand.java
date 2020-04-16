@@ -94,7 +94,7 @@ public class StructureCommand extends SubCommand {
                                     + suffix.replace("%info", ChatColor.translateAlternateColorCodes(
                                     '&',
                                     configLoad.getString(
-                                        "Command.Island.Admin.Structure.Save.Convert.Message"))),
+                                        "Command.Island.Admin.Structure.Convert.Info.Message"))),
                                 false, null, null,
                                 new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
