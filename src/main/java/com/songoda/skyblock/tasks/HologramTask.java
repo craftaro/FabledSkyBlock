@@ -172,4 +172,9 @@ public class HologramTask extends BukkitRunnable {
             hologramList.update(getHologramLines(hologramList.getType()));
         }
     }
+
+    public void removeHologram(Hologram hologram) {
+        hologramStorage.remove(hologram);
+        hologram.remove();
+    }
 }
