@@ -69,7 +69,7 @@ public class ReloadCommand extends SubCommand {
                 skyblock.setScoreboardManager(new ScoreboardManager(skyblock));
             }
         } else {
-            skyblock.getScoreboardManager().resendScoreboard();
+            skyblock.getScoreboardManager().updateScoreboards(false);
         }
 
         if (skyblock.getGeneratorManager() == null) {

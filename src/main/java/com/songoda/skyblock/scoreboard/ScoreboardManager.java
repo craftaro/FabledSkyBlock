@@ -1,14 +1,12 @@
 package com.songoda.skyblock.scoreboard;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,30 +15,22 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.utils.version.NMSUtil;
+import java.io.File;
+import java.util.*;
 
 public class ScoreboardManager extends BukkitRunnable {
 
     private final static int VERSION = NMSUtil.getVersionNumber();
     private final SkyBlock skyblock;
-    private final Map<UUID, Scoreboard> scoreboardStorage;
+    private final Map<UUID, Scoreboard> scoreboardStorage = new HashMap<>();
 
     private int runTicks = 0;
 
-    private List<String> teamNames;
-    private List<String> objectiveNames;
+    private final List<String> teamNames = new ArrayList<>();
+    private final List<String> objectiveNames = new ArrayList<>();
 
     public ScoreboardManager(SkyBlock skyblock) {
         this.skyblock = skyblock;
-        this.scoreboardStorage = new HashMap<>();
-        this.teamNames = new ArrayList<>();
-        this.objectiveNames = new ArrayList<>();
         this.runTaskTimer(skyblock, 20, 40);
     }
 
@@ -49,45 +39,7 @@ public class ScoreboardManager extends BukkitRunnable {
     public void run() {
 
         if (runTicks++ == 0) {
-            IslandManager islandManager = skyblock.getIslandManager();
-            FileManager fileManager = skyblock.getFileManager();
-
-            if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable")) {
-                Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-
-                for (Player all : Bukkit.getOnlinePlayers()) {
-                    Scoreboard scoreboard = new Scoreboard(skyblock, all);
-                    Island island = islandManager.getIsland(all);
-
-                    if (island == null) {
-                        scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-                        scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
-                    } else {
-                        if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
-                            scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
-
-                            if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                                scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
-                            } else {
-                                scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
-                            }
-                        } else {
-                            scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Team.Displayname")));
-
-                            if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                                scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
-                            } else {
-                                scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-                            }
-
-
-                        }
-                    }
-
-                    scoreboard.run();
-                    storeScoreboard(all, scoreboard);
-                }
-            }
+            updateScoreboards(true);
             return;
         }
 
@@ -112,7 +64,6 @@ public class ScoreboardManager extends BukkitRunnable {
                 final Objective objective = board.getObjective(name);
 
                 if (objective != null) objective.unregister();
-
             }
 
             for (String name : teamNames) {
@@ -123,7 +74,6 @@ public class ScoreboardManager extends BukkitRunnable {
 
                 if (team != null) team.unregister();
             }
-
         }
 
         /*
@@ -152,7 +102,8 @@ public class ScoreboardManager extends BukkitRunnable {
 
                 Objective obj = playerBoard.getObjective(primaryObjective.getName());
 
-                if (obj == null) obj = playerBoard.registerNewObjective(primaryObjective.getName(), primaryObjective.getCriteria());
+                if (obj == null)
+                    obj = playerBoard.registerNewObjective(primaryObjective.getName(), primaryObjective.getCriteria());
 
                 obj.setDisplayName(primaryObjective.getDisplayName());
                 obj.setDisplaySlot(primaryObjective.getDisplaySlot());
@@ -182,60 +133,71 @@ public class ScoreboardManager extends BukkitRunnable {
                         obj.setOption(option, primaryTeam.getOption(option));
                     }
                 }
-
             }
-
         }
-
     }
 
-    public void resendScoreboard() {
-        IslandManager islandManager = skyblock.getIslandManager();
+    public void updateScoreboards(boolean createNew) {
+
         FileManager fileManager = skyblock.getFileManager();
 
-        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable")) return;
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable"))
+            return;
 
         for (Player all : Bukkit.getOnlinePlayers()) {
-            if (!hasScoreboard(all)) continue;
 
-            Scoreboard scoreboard = getScoreboard(all);
+            boolean store = false;
 
+            Scoreboard scoreboard = null;
+            if (hasScoreboard(all))
+                scoreboard = getScoreboard(all);
+            else {
+                if (createNew) {
+                    scoreboard = new Scoreboard(skyblock, all);
+                    store = true;
+                }
+            }
+
+            if (scoreboard == null) continue;
+
+            IslandManager islandManager = skyblock.getIslandManager();
+            Config language = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
             Island island = islandManager.getIsland(all);
 
             if (island == null) {
-                scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-                scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
+                scoreboard.setDisplayName(color(language.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
+                scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
             } else {
                 if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
-                    scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
+                    scoreboard.setDisplayName(color(language.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
 
                     if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                        scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
+                        scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
                     } else {
-                        scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
+                        scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
                     }
                 } else {
-                    scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Team.Displayname")));
+                    scoreboard.setDisplayName(color(language.getFileConfiguration().getString("Scoreboard.Island.Team.Displayname")));
 
                     if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                        scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
+                        scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
                     } else {
-                        scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
+                        scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
                     }
-
                 }
             }
+
             scoreboard.run();
+            if (store) storeScoreboard(all, scoreboard);
         }
+    }
+
+    private String color(String str) {
+        return str != null ? ChatColor.translateAlternateColorCodes('&', str) : null;
     }
 
     public void storeScoreboard(Player player, Scoreboard scoreboard) {
         scoreboardStorage.put(player.getUniqueId(), scoreboard);
-    }
-
-    public void unloadPlayer(Player player) {
-        scoreboardStorage.remove(player.getUniqueId());
     }
 
     public Scoreboard getScoreboard(Player player) {
