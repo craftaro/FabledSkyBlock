@@ -17,6 +17,7 @@ import java.util.Map;
 public class BlockData {
 
     private String material;
+    private String blockData = "";
     private String biome;
     private String stateType = BlockStateType.NORMAL.toString();
     private String dataType = BlockDataType.NORMAL.toString();
@@ -71,6 +72,15 @@ public class BlockData {
     public void setMaterial(Material material) {
         this.material = material.name();
     }
+
+    public String getBlockData() {
+        return blockData;
+    }
+
+    public void setBlockData(String blockData) {
+        this.blockData = blockData;
+    }
+
 
     public String getBiome() {
         return this.biome;

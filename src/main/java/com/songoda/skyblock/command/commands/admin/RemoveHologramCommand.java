@@ -77,7 +77,7 @@ public class RemoveHologramCommand extends SubCommand {
                         Hologram hologram = hologramManager.getHologram(hologramType1);
 
                         if (hologram != null)
-                            hologram.remove();
+                            hologramManager.removeHologram(hologram);
                     });
 
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message").replace("%type", hologramType.name()));

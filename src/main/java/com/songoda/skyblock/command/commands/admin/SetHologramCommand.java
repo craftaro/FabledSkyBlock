@@ -49,15 +49,16 @@ public class SetHologramCommand extends SubCommand {
                         fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")),
                         "Location.Hologram.Leaderboard." + hologramType.name(), player.getLocation(), true);
 
-                HologramType hologramType1 = HologramType
-                        .valueOf(WordUtils.capitalize(args[0].toLowerCase()));
-                Hologram hologram = hologramManager.getHologram(hologramType1);
 
-                if (hologram != null)
-                    hologram.remove();
+                Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+                    HologramType hologramType1 = HologramType.valueOf(WordUtils.capitalize(args[0].toLowerCase()));
+                    Hologram hologram = hologramManager.getHologram(hologramType1);
 
-                Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () ->
-                        hologramManager.spawnHologram(hologramType1));
+                    if (hologram != null)
+                        hologramManager.removeHologram(hologram);
+
+                    hologramManager.spawnHologram(hologramType1);
+                });
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Admin.SetHologram.Set.Message").replace("%type",
