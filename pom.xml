@@ -172,7 +172,7 @@
 		</dependency>
 		<dependency>
 			<groupId>me.robin</groupId>
-			<artifactId>leaderheads</artifactId>
+			<artifactId>LeaderHeadsAPI</artifactId>
 			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>
