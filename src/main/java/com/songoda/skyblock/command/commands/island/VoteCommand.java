@@ -1,6 +1,8 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.api.event.player.PlayerVoteEvent;
+import com.songoda.skyblock.api.event.player.PlayerVoteRemoveEvent;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -85,6 +87,7 @@ public class VoteCommand extends SubCommand {
 
                         if (playerData.getIsland() != null && playerData.getIsland().equals(island.getOwnerUUID())) {
                             if (visit.getVoters().contains(player.getUniqueId())) {
+                                Bukkit.getPluginManager().callEvent(new PlayerVoteRemoveEvent(player, island.getAPIWrapper()));
                                 visit.removeVoter(player.getUniqueId());
 
                                 messageManager.sendMessage(player,
@@ -92,6 +95,11 @@ public class VoteCommand extends SubCommand {
                                                 .replace("%player", targetPlayerName));
                                 soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F, 1.0F);
                             } else {
+                                PlayerVoteEvent playerVoteEvent = new PlayerVoteEvent(player, island.getAPIWrapper());
+                                Bukkit.getServer().getPluginManager().callEvent(playerVoteEvent);
+                                if (playerVoteEvent.isCancelled())
+                                    return;
+
                                 visit.addVoter(player.getUniqueId());
 
                                 messageManager.sendMessage(player,
