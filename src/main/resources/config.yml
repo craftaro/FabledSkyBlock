@@ -15,7 +15,7 @@ Island:
         # [!] Do not go over the maximum.
         # [!] Even numbers WILL create world border issues.
         Minimum: 100
-        # The maximum size of an Island based on the permission node 'skyblock.size.<size>'.
+        # The maximum size of an Island based on the permission node 'fabledskyblock.size.<size>'.
         Maximum: 200
     Creation:
         # Rather than opening the 'Island Creator' menu. Create an island

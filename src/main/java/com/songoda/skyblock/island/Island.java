@@ -1,6 +1,7 @@
 package com.songoda.skyblock.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.utils.PlayerUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.api.utils.APIUtil;
@@ -57,6 +58,24 @@ public class Island {
 
         if (this.size > 1000) {
             this.size = 50;
+        }
+
+        if (player.isOnline()) {
+            int customSize = PlayerUtils.getNumberFromPermission(player.getPlayer(), "fabledskyblock.size", 0);
+            if (customSize > 0 || player.getPlayer().hasPermission("fabledskyblock.*")) {
+                Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                FileConfiguration configLoad = config.getFileConfiguration();
+
+                int minimumSize = configLoad.getInt("Island.Size.Minimum");
+                int maximumSize = configLoad.getInt("Island.Size.Maximum");
+
+                if (minimumSize < 0 || minimumSize > 1000)
+                    minimumSize = 50;
+                if (maximumSize < 0 || maximumSize > 1000)
+                    maximumSize = 100;
+
+                size = Math.max(minimumSize, Math.min(customSize, maximumSize));
+            }
         }
 
         level = new IslandLevel(getOwnerUUID(), skyblock);
