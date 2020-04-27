@@ -17,7 +17,6 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.item.InventoryUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -42,7 +41,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -153,11 +151,6 @@ public class Interact implements Listener {
                     .hasPermission(player, block.getLocation(), "Place")
                     && (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission")
                     || player.hasPermission("fabledskyblock.stackable"))) {
-                if (NMSUtil.getVersionNumber() > 8) {
-                    if (event.getHand() == EquipmentSlot.OFF_HAND) {
-                        return;
-                    }
-                }
 
                 if (levellingManager.isScanning(island)) {
                     skyblock.getMessageManager().sendMessage(player,
@@ -223,7 +216,8 @@ public class Interact implements Listener {
                     event.setCancelled(true);
                 }
 
-                InventoryUtil.takeItem(player, itemAmount);
+                if (player.getGameMode() != GameMode.CREATIVE)
+                    ItemUtils.takeActiveItem(player, CompatibleHand.getHand(event), itemAmount);
 
                 if (!configLoad.getBoolean("Island.Block.Level.Enable")) {
                     return;
