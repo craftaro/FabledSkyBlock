@@ -59,7 +59,6 @@ public class HologramTask extends BukkitRunnable {
     }
 
     public void onDisable() {
-        removeHolograms();
     }
 
     public void spawnHologram(HologramType type, Location location, List<String> lines) {
@@ -149,12 +148,6 @@ public class HologramTask extends BukkitRunnable {
             hologramLines.add(TextUtils.formatText(hologramFooter));
 
         return hologramLines;
-    }
-
-    public void removeHolograms() {
-        for (Hologram hologramList : hologramStorage) {
-            hologramList.remove();
-        }
     }
 
     public Hologram getHologram(HologramType type) {
