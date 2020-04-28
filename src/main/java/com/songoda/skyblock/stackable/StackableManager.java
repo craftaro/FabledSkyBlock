@@ -38,7 +38,7 @@ public class StackableManager {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         List<String> stackableList = configLoad.getStringList("Stackables");
-        if (stackableList == null) return;
+        if (stackableList.isEmpty()) return;
 
         for (String stackableStr : stackableList) {
             try {

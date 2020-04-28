@@ -173,9 +173,7 @@ public class Visit {
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
-        for (String islandVoterList : configLoad.getStringList("Voters")) {
-            islandVoters.add(islandVoterList);
-        }
+        islandVoters.addAll(configLoad.getStringList("Voters"));
 
         islandVoters.add(uuid.toString());
         configLoad.set("Voters", islandVoters);

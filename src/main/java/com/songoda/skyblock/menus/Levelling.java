@@ -198,7 +198,7 @@ public class Levelling {
             if (is == null || is.getItemMeta() == null) continue;
 
             is.setAmount(Math.min(Math.toIntExact(value), 64));
-            is.setType(CompatibleMaterial.getMaterial(is.getType()).getMaterial());
+            is.setType(CompatibleMaterial.getMaterial(is).getMaterial());
 
             testInventory.clear();
             testInventory.setItem(0, is);
@@ -269,7 +269,7 @@ public class Levelling {
 
                 ItemStack is = materials.getItem();
                 is.setAmount(Math.min(Math.toIntExact(materialAmount), 64));
-                is.setType(CompatibleMaterial.getMaterial(is.getType()).getMaterial());
+                is.setType(CompatibleMaterial.getMaterial(is).getMaterial());
 
                 List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");
                 lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned)).replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)).replace("%material", name));

@@ -5,7 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.songoda</groupId>
 	<artifactId>skyblock</artifactId>
-	<version>2.2.9</version>
+	<version>2.2.19</version>
+	<packaging>jar</packaging>
 	<build>
 		<defaultGoal>clean install</defaultGoal>
 		<finalName>FabledSkyblock-${project.version}</finalName>
@@ -120,10 +121,6 @@
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 		</repository>
 		<repository>
-			<id>private</id>
-			<url>https://repo.songoda.com/artifactory/private/</url>
-		</repository>
-		<repository>
 			<id>public</id>
 			<url>http://repo.songoda.com/artifactory/public/</url>
 		</repository>
@@ -172,7 +169,7 @@
 		</dependency>
 		<dependency>
 			<groupId>me.robin</groupId>
-			<artifactId>leaderheads</artifactId>
+			<artifactId>LeaderHeadsAPI</artifactId>
 			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>

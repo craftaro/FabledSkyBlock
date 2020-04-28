@@ -17,7 +17,6 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.item.InventoryUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -42,7 +41,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -153,11 +151,6 @@ public class Interact implements Listener {
                     .hasPermission(player, block.getLocation(), "Place")
                     && (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission")
                     || player.hasPermission("fabledskyblock.stackable"))) {
-                if (NMSUtil.getVersionNumber() > 8) {
-                    if (event.getHand() == EquipmentSlot.OFF_HAND) {
-                        return;
-                    }
-                }
 
                 if (levellingManager.isScanning(island)) {
                     skyblock.getMessageManager().sendMessage(player,
@@ -223,7 +216,8 @@ public class Interact implements Listener {
                     event.setCancelled(true);
                 }
 
-                InventoryUtil.takeItem(player, itemAmount);
+                if (player.getGameMode() != GameMode.CREATIVE)
+                    ItemUtils.takeActiveItem(player, CompatibleHand.getHand(event), itemAmount);
 
                 if (!configLoad.getBoolean("Island.Block.Level.Enable")) {
                     return;
@@ -706,8 +700,8 @@ public class Interact implements Listener {
         SoundManager soundManager = skyblock.getSoundManager();
 
         if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
-            if ((is != null) && (CompatibleMaterial.getMaterial(is.getType()) != CompatibleMaterial.AIR)) {
-                if (CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.LEAD) {
+            if ((is != null) && (CompatibleMaterial.getMaterial(is) != CompatibleMaterial.AIR)) {
+                if (CompatibleMaterial.getMaterial(is) == CompatibleMaterial.LEAD) {
                     if (!islandManager.hasPermission(player, entity.getLocation(), "Leash")) {
                         event.setCancelled(true);
 
@@ -771,7 +765,7 @@ public class Interact implements Listener {
                     skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 }
             } else if (entity.getType() == EntityType.COW || entity.getType() == EntityType.MUSHROOM_COW) {
-                if (CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.BUCKET) {
+                if (CompatibleMaterial.getMaterial(is) == CompatibleMaterial.BUCKET) {
                     if (!islandManager.hasPermission(player, entity.getLocation(), "Milking")) {
                         event.setCancelled(true);
 
@@ -825,27 +819,27 @@ public class Interact implements Listener {
             }
 
             if (entity.getType() == EntityType.HORSE) {
-                if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.GOLDEN_APPLE
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.GOLDEN_CARROT
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.SUGAR
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.WHEAT
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.APPLE
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.HAY_BLOCK)) {
+                if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.GOLDEN_APPLE
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.GOLDEN_CARROT
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.SUGAR
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.WHEAT
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.APPLE
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.HAY_BLOCK)) {
                     return;
                 }
             } else if (entity.getType() == EntityType.SHEEP || entity.getType() == EntityType.COW || entity.getType() == EntityType.MUSHROOM_COW) {
-                if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.WHEAT)) {
+                if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.WHEAT)) {
                     return;
                 }
             } else if (entity.getType() == EntityType.PIG) {
-                if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.CARROT || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.POTATO)) {
+                if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.CARROT || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.POTATO)) {
                     return;
                 }
             } else if (entity.getType() == EntityType.CHICKEN) {
-                if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.WHEAT_SEEDS
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.PUMPKIN_SEEDS || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.MELON_SEEDS)) {
+                if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.WHEAT_SEEDS
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.PUMPKIN_SEEDS || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.MELON_SEEDS)) {
                     if (NMSUtil.getVersionNumber() > 8) {
-                        if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.BEETROOT_SEEDS)) {
+                        if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.BEETROOT_SEEDS)) {
                             return;
                         }
                     } else {
@@ -853,31 +847,31 @@ public class Interact implements Listener {
                     }
                 }
             } else if (entity.getType() == EntityType.WOLF) {
-                if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.BONE
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.PORKCHOP
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.BEEF
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.CHICKEN
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.RABBIT
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.MUTTON
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.ROTTEN_FLESH
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.COOKED_PORKCHOP
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.COOKED_BEEF
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.COOKED_CHICKEN
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.COOKED_RABBIT
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.COOKED_MUTTON)) {
+                if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.BONE
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.PORKCHOP
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.BEEF
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.CHICKEN
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.RABBIT
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.MUTTON
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.ROTTEN_FLESH
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_PORKCHOP
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_BEEF
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_CHICKEN
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_RABBIT
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_MUTTON)) {
                     return;
                 }
             } else if (entity.getType() == EntityType.OCELOT) {
-                if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.COD
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.SALMON
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.TROPICAL_FISH
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.PUFFERFISH)) {
+                if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COD
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.SALMON
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.TROPICAL_FISH
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.PUFFERFISH)) {
                     return;
                 }
             } else if (entity.getType() == EntityType.RABBIT) {
-                if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.DANDELION
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.CARROTS
-                        || CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.GOLDEN_CARROT)) {
+                if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.DANDELION
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.CARROTS
+                        || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.GOLDEN_CARROT)) {
                     return;
                 }
             } else {
@@ -885,12 +879,12 @@ public class Interact implements Listener {
 
                 if (NMSVersion > 10) {
                     if (entity.getType() == EntityType.LLAMA) {
-                        if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.HAY_BLOCK)) {
+                        if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.HAY_BLOCK)) {
                             return;
                         }
                     } else if (NMSVersion > 12) {
                         if (entity.getType() == EntityType.TURTLE) {
-                            if (!(CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.SEAGRASS)) {
+                            if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.SEAGRASS)) {
                                 return;
                             }
                         } else {

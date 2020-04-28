@@ -192,12 +192,6 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onPluginDisable() {
-        ConsoleCommandSender console = Bukkit.getConsoleSender();
-        console.sendMessage(formatText("&a============================="));
-        console.sendMessage(formatText("&7FabledSkyBlock " + this.getDescription().getVersion() + " by &5Songoda <3&7!"));
-        console.sendMessage(formatText("&7Action: &cDisabling&7..."));
-        console.sendMessage(formatText("&a============================="));
-
         if (this.userCacheManager != null) {
             this.userCacheManager.onDisable();
         }

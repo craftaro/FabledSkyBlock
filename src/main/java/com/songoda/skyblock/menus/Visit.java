@@ -3,6 +3,7 @@ package com.songoda.skyblock.menus;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.api.event.player.PlayerVoteEvent;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
@@ -179,6 +180,11 @@ public class Visit {
                                                 soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F,
                                                         1.0F);
                                             } else {
+                                                PlayerVoteEvent playerVoteEvent = new PlayerVoteEvent(player, island.getAPIWrapper());
+                                                Bukkit.getServer().getPluginManager().callEvent(playerVoteEvent);
+                                                if (playerVoteEvent.isCancelled())
+                                                    return;
+
                                                 visit.addVoter(player.getUniqueId());
 
                                                 messageManager.sendMessage(player,
