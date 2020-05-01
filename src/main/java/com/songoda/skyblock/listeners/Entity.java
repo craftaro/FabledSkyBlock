@@ -1,52 +1,32 @@
 package com.songoda.skyblock.listeners;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.limit.impl.EntityLimitaton;
+import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.stackable.StackableManager;
+import com.songoda.skyblock.upgrade.Upgrade;
+import com.songoda.skyblock.utils.version.NMSUtil;
+import com.songoda.skyblock.utils.world.LocationUtil;
+import com.songoda.skyblock.utils.world.entity.EntityUtil;
+import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Donkey;
-import org.bukkit.entity.ElderGuardian;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Evoker;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Hanging;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Illager;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Llama;
-import org.bukkit.entity.Mule;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Ravager;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityTameEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
@@ -58,24 +38,9 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandEnvironment;
-import com.songoda.skyblock.island.IslandLevel;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.limit.impl.EntityLimitaton;
-import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.stackable.StackableManager;
-import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.world.LocationUtil;
-import com.songoda.skyblock.utils.world.entity.EntityUtil;
-import com.songoda.skyblock.world.WorldManager;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class Entity implements Listener {
 
@@ -169,23 +134,23 @@ public class Entity implements Listener {
 
                         messageManager.sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                 .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                     }
                 } else {
-                	// Check if it's a monster and player has the permission to damage the entity
-                	// If
-                	// If it's not a monster or the player has the permission
-                	if (EntityUtil.isMonster(entity.getType()) && islandManager.hasPermission(player, entity.getLocation(), "MonsterHurting")) {
-                		// Player has permission to damage the entity
-                		return;
-                	}
-                	// Either the entity is not a monster or the player doesn't have permission so whe check if he has permission to damage mobs
-                	if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
+                    // Check if it's a monster and player has the permission to damage the entity
+                    // If
+                    // If it's not a monster or the player has the permission
+                    if (EntityUtil.isMonster(entity.getType()) && islandManager.hasPermission(player, entity.getLocation(), "MonsterHurting")) {
+                        // Player has permission to damage the entity
+                        return;
+                    }
+                    // Either the entity is not a monster or the player doesn't have permission so whe check if he has permission to damage mobs
+                    if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
                         event.setCancelled(true);
 
                         messageManager.sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                 .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
@@ -217,20 +182,20 @@ public class Entity implements Listener {
                         event.setCancelled(true);
                     }
                 } else {
-                	// Check if it's a monster and player has the permission to damage the entity
-                	// If
-                	// If it's not a monster or the player has the permission
-                	if (EntityUtil.isMonster(entity.getType()) && islandManager.hasPermission(player, entity.getLocation(), "MonsterHurting")) {
-                		// Player has permission to damage the entity
-                		return;
-                	}
-                	// Either the entity is not a monster or the player doesn't have permission so whe check if he has permission to damage mobs
+                    // Check if it's a monster and player has the permission to damage the entity
+                    // If
+                    // If it's not a monster or the player has the permission
+                    if (EntityUtil.isMonster(entity.getType()) && islandManager.hasPermission(player, entity.getLocation(), "MonsterHurting")) {
+                        // Player has permission to damage the entity
+                        return;
+                    }
+                    // Either the entity is not a monster or the player doesn't have permission so whe check if he has permission to damage mobs
                     if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
                         event.setCancelled(true);
 
                         messageManager.sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                 .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
@@ -289,14 +254,14 @@ public class Entity implements Listener {
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                 .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
     }
 
     /**
      * Checks that an entity is not targeting another entity on different islands.
-     * 
+     *
      * @author LimeGlass
      */
     @EventHandler
@@ -334,7 +299,7 @@ public class Entity implements Listener {
 
             skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                     .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-            skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
 
         if (NMSUtil.getVersionNumber() != 8) return;
@@ -362,7 +327,7 @@ public class Entity implements Listener {
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                 .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
     }
@@ -399,7 +364,7 @@ public class Entity implements Listener {
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                 .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
     }
@@ -420,7 +385,7 @@ public class Entity implements Listener {
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                 .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
     }
@@ -441,7 +406,7 @@ public class Entity implements Listener {
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                 .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
     }
@@ -461,7 +426,7 @@ public class Entity implements Listener {
                 skyblock.getMessageManager().sendMessage(player,
                         skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                 .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
     }
@@ -495,9 +460,9 @@ public class Entity implements Listener {
         // nothing
         if ((LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0, 1, 0))
                 || LocationUtil.isLocationLocation(block.getLocation(),
-                        island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0, 1, 0)))
+                island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0, 1, 0)))
                 && skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                        .getBoolean("Island.Spawn.Protection")) {
+                .getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
         }
@@ -559,7 +524,8 @@ public class Entity implements Listener {
         }
 
         if (event.getTo() != null && event.getTo() != Material.AIR) {
-            materials = CompatibleMaterial.getBlockMaterial(event.getTo());;
+            materials = CompatibleMaterial.getBlockMaterial(event.getTo());
+            ;
 
             if (materials != null) {
                 long materialAmount = 0;
@@ -639,15 +605,16 @@ public class Entity implements Listener {
         }
 
         if (NMSUtil.getVersionNumber() > 9) {
-            if (livingEntity instanceof Donkey || livingEntity instanceof Mule || livingEntity instanceof ElderGuardian) return;
+            if (livingEntity instanceof Donkey || livingEntity instanceof Mule || livingEntity instanceof ElderGuardian)
+                return;
         }
 
         if (NMSUtil.getVersionNumber() > 10) {
             if (livingEntity instanceof Evoker) return;
         }
-        
+
         if (NMSUtil.getVersionNumber() > 11) {
-        	if (livingEntity instanceof Llama) return;
+            if (livingEntity instanceof Llama) return;
         }
 
         if (NMSUtil.getVersionNumber() > 13) {
@@ -686,7 +653,8 @@ public class Entity implements Listener {
                     }
 
                     for (ItemStack is : event.getDrops())
-                        if (!dontMultiply.contains(is)) livingEntity.getWorld().dropItemNaturally(livingEntity.getLocation(), is);
+                        if (!dontMultiply.contains(is))
+                            livingEntity.getWorld().dropItemNaturally(livingEntity.getLocation(), is);
                 }
             }
         }
@@ -730,7 +698,8 @@ public class Entity implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         if (entity instanceof ArmorStand) return;
-        if (entity.hasMetadata("SkyBlock")) return;
+        // if (entity.hasMetadata("SkyBlock")) return;
+        // Doesn't appear this is ever set by our plugin and it is extremely intensive.
 
         Location entityLocation = entity.getLocation();
 

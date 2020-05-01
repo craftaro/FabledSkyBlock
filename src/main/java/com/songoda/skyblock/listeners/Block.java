@@ -265,40 +265,7 @@ public class Block implements Listener {
         if (event.getBlock().getType() == CompatibleMaterial.END_PORTAL_FRAME.getMaterial()
                 && event.getPlayer().getItemInHand().getType() == CompatibleMaterial.ENDER_EYE.getMaterial()) return;
 
-        // Fix a bug in Paper 1.8.8 when using ViaVersion on a 1.12.2 client.
-        // BUG: Player can infinitely increase their level by placing a block at their
-        // feet.
-        // It doesn't take the block away but still increments the level.
-        // This doesn't happen in Spigot, but does happen in PaperSpigot due to a
-        // BlockPlaceEvent being incorrectly fired.
-        // The solution is to wait a tick to make sure that the block was actually
-        // placed.
-        // This shouldn't cause any issues besides the task number being increased
-        // insanely fast.
-        Bukkit.getScheduler().runTask(skyblock, () -> {
-            CompatibleMaterial material = CompatibleMaterial.getMaterial(block.getType());
-
-            if (material == null || material == CompatibleMaterial.AIR) return;
-
-            if (material == CompatibleMaterial.SPAWNER) {
-                if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
-                    return;
-
-                CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
-
-                if (spawner != null)
-                    material = CompatibleMaterial.getBlockMaterial(spawner.getMaterial());
-            }
-
-            long materialAmount = 0;
-            IslandLevel level = island.getLevel();
-
-            if (level.hasMaterial(material.name())) {
-                materialAmount = level.getMaterialAmount(material.name());
-            }
-
-            level.setMaterialAmount(material.name(), materialAmount + 1);
-        });
+        updateLevel(island, blockLoc);
     }
 
     @EventHandler
@@ -363,6 +330,7 @@ public class Block implements Listener {
                         toBlockState.setData(genState.getData());
                         toBlockState.setType(genState.getType());
                         toBlockState.update();
+                        updateLevel(island, genState.getLocation());
                         return;
                     }
                 }
@@ -588,6 +556,7 @@ public class Block implements Listener {
                 state.setType(genState.getType());
 
                 if (NMSUtil.getVersionNumber() < 13) state.setData(genState.getData());
+                updateLevel(island, genState.getLocation());
                 return;
             }
         }
@@ -670,6 +639,43 @@ public class Block implements Listener {
 
         if (LocationUtil.isLocationAffectingIslandSpawn(placeLocation.getLocation(), island, world))
             event.setCancelled(true);
+    }
+
+    private void updateLevel(Island island, Location location) {
+        // Fix a bug in Paper 1.8.8 when using ViaVersion on a 1.12.2 client.
+        // BUG: Player can infinitely increase their level by placing a block at their
+        // feet.
+        // It doesn't take the block away but still increments the level.
+        // This doesn't happen in Spigot, but does happen in PaperSpigot due to a
+        // BlockPlaceEvent being incorrectly fired.
+        // The solution is to wait a tick to make sure that the block was actually
+        // placed.
+        // This shouldn't cause any issues besides the task number being increased
+        // insanely fast.
+        Bukkit.getScheduler().runTask(skyblock, () -> {
+            org.bukkit.block.Block block = location.getBlock();
+            CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+
+            if (material == null || material == CompatibleMaterial.AIR) return;
+
+            if (material == CompatibleMaterial.SPAWNER) {
+                if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
+                    return;
+
+                CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+
+                if (spawner != null)
+                    material = CompatibleMaterial.getBlockMaterial(spawner.getMaterial());
+            }
+
+            long materialAmount = 0;
+            IslandLevel level = island.getLevel();
+
+            if (level.hasMaterial(material.name()))
+                materialAmount = level.getMaterialAmount(material.name());
+
+            level.setMaterialAmount(material.name(), materialAmount + 1);
+        });
     }
 
 }
