@@ -685,7 +685,8 @@ public class IslandManager {
                     banManager.createIsland(island.getOwnerUUID());
                 }
 
-                Bukkit.getServer().getPluginManager().callEvent(new IslandLoadEvent(island.getAPIWrapper()));
+                Bukkit.getScheduler().runTask(skyblock, () ->
+                        Bukkit.getServer().getPluginManager().callEvent(new IslandLoadEvent(island.getAPIWrapper())));
 
                 return island;
             }
