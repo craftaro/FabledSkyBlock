@@ -100,7 +100,7 @@ public class Portal implements Listener {
         case Owner:
         case Member:
         case Coop:
-            spawnEnvironment = IslandEnvironment.Island;
+            spawnEnvironment = IslandEnvironment.Main;
             break;
 
         default:
