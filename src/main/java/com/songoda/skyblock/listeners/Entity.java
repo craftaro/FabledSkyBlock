@@ -53,6 +53,13 @@ public class Entity implements Listener {
     }
 
     @EventHandler
+    public void onFireWorkBoom(EntityDamageByEntityEvent event) {
+        if (event.getDamager().getType() == EntityType.FIREWORK
+                && skyblock.getWorldManager().isIslandWorld(event.getEntity().getWorld()))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) {
             return;
@@ -63,23 +70,22 @@ public class Entity implements Listener {
         FileManager fileManager = skyblock.getFileManager();
 
         if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            if (event.getCause() != null) {
-                if (event.getCause() == DamageCause.VOID) {
+            event.getCause();
+            if (event.getCause() == DamageCause.VOID) {
+                return;
+            } else if (event.getCause() == DamageCause.ENTITY_ATTACK) {
+                EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) event;
+
+                if (entityDamageByEntityEvent.getDamager() != null && entityDamageByEntityEvent.getDamager() instanceof Player) {
                     return;
-                } else if (event.getCause() == DamageCause.ENTITY_ATTACK) {
-                    EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) event;
+                }
+            } else {
+                if (NMSUtil.getVersionNumber() > 11) {
+                    if (event.getCause() == DamageCause.valueOf("ENTITY_SWEEP_ATTACK")) {
+                        EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) event;
 
-                    if (entityDamageByEntityEvent.getDamager() != null && entityDamageByEntityEvent.getDamager() instanceof Player) {
-                        return;
-                    }
-                } else {
-                    if (NMSUtil.getVersionNumber() > 11) {
-                        if (event.getCause() == DamageCause.valueOf("ENTITY_SWEEP_ATTACK")) {
-                            EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) event;
-
-                            if (entityDamageByEntityEvent.getDamager() != null && entityDamageByEntityEvent.getDamager() instanceof Player) {
-                                return;
-                            }
+                        if (entityDamageByEntityEvent.getDamager() != null && entityDamageByEntityEvent.getDamager() instanceof Player) {
+                            return;
                         }
                     }
                 }
