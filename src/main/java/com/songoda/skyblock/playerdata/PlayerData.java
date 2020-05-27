@@ -1,6 +1,9 @@
 package com.songoda.skyblock.playerdata;
 
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.bank.BankManager;
+import com.songoda.skyblock.bank.Transaction;
+import com.songoda.skyblock.bank.Type;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;
 import com.songoda.skyblock.utils.structure.Area;
@@ -11,7 +14,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerData {
 
@@ -36,6 +39,8 @@ public class PlayerData {
 
     private Object viewer;
 
+    private List<Transaction> transactions;
+
     public PlayerData(Player player) {
         uuid = player.getUniqueId();
         islandOwnerUUID = null;
@@ -48,6 +53,18 @@ public class PlayerData {
 
         chat = false;
         preview = false;
+        transactions = new ArrayList<>();
+        FileConfiguration configLoad = getConfig().getFileConfiguration();
+        for (int i = 0;i< configLoad.getInt("Bank.Transactions.Size");i++) {
+            Transaction t = new Transaction();
+            t.action = Type.valueOf(configLoad.getString("Bank.Transactions."+i+".Action"));
+            t.ammount = Float.parseFloat(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Amount")));
+            t.player = Bukkit.getOfflinePlayer(UUID.fromString(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Player"))));
+            Date d = new Date();
+            d.setTime(configLoad.getLong("Bank.Transactions."+i+".Date"));
+            t.timestamp = d;
+            transactions.add(t);
+        }
     }
 
     public int getPage() {
@@ -213,10 +230,18 @@ public class PlayerData {
     }
 
     public void save() {
+        transactions = BankManager.getInstance().getTransactionList(getPlayer());
         Config config = getConfig();
         FileConfiguration configLoad = config.getFileConfiguration();
         configLoad.set("Statistics.Island.Playtime", getPlaytime());
-
+        configLoad.set("Bank.Transactions.Size",transactions.size());
+        for (int i = 0;i<transactions.size();i++) {
+            Transaction t = transactions.get(i);
+            configLoad.set("Bank.Transactions."+i+".Action",t.action.name());
+            configLoad.set("Bank.Transactions."+i+".Amount",t.ammount);
+            configLoad.set("Bank.Transactions."+i+".Player",t.player.getUniqueId().toString());
+            configLoad.set("Bank.Transactions."+i+".Date",t.timestamp.getTime());
+        }
         try {
             configLoad.save(config.getFile());
         } catch (IOException e) {
@@ -233,5 +258,8 @@ public class PlayerData {
     public Player getPlayer() {
         return Bukkit.getPlayer(uuid);
     }
-    
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
 }

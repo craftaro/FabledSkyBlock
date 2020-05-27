@@ -8,6 +8,7 @@ import com.songoda.core.gui.GuiManager;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
+import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.challenge.FabledChallenge;
 import com.songoda.skyblock.command.CommandManager;
@@ -40,6 +41,7 @@ import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.structure.StructureManager;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.usercache.UserCacheManager;
+import com.songoda.skyblock.utils.SignMenuFactory;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.visit.VisitTask;
 import com.songoda.skyblock.world.WorldManager;
@@ -83,6 +85,7 @@ public class SkyBlock extends SongodaPlugin {
     private LocalizationManager localizationManager;
     private RewardManager rewardManager;
     private FabledChallenge fabledChallenge;
+    private BankManager bankManager;
     private PermissionManager permissionManager;
 
     private final GuiManager guiManager = new GuiManager(this);
@@ -150,6 +153,8 @@ public class SkyBlock extends SongodaPlugin {
 
         rewardManager = new RewardManager(this);
         rewardManager.loadRewards();
+
+        bankManager = new BankManager();
 
         new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
         new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);

@@ -38,8 +38,7 @@ public class NMSUtil {
     public static Class<?> getNMSClass(String className) {
         try {
             String fullName = "net.minecraft.server." + getVersion() + className;
-            Class<?> clazz = Class.forName(fullName);
-            return clazz;
+            return Class.forName(fullName);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -49,8 +48,7 @@ public class NMSUtil {
     public static Class<?> getCraftClass(String className) {
         try {
             String fullName = "org.bukkit.craftbukkit." + getVersion() + className;
-            Class<?> clazz = Class.forName(fullName);
-            return clazz;
+            return Class.forName(fullName);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

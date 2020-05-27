@@ -5,7 +5,7 @@ api-version: 1.13
 description: A unique SkyBlock plugin
 author: Songoda
 softdepend: [HolographicDisplays, Holograms, CMI, PlaceholderAPI, MVdWPlaceholderAPI, Vault, Reserve, LeaderHeads, EpicSpawners, WildStacker, UltimateStacker, WorldEdit]
-loadbefore: [Multiverse-Core]
+loadbefore: [Multiverse-Core, ProtocolLib]
 commands:
     island:
         description: Island command

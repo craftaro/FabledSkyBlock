@@ -106,6 +106,7 @@ Island:
         Enable: true
         # If enabled, cooped players will not be saved when they disconnect from the server.
         Unload: false
+        AccessBank: false
     Visit:
         Menu:
             # If disabled, any islands the player has been banned from will be removed when they

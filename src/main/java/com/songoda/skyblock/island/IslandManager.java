@@ -1508,4 +1508,11 @@ public class IslandManager {
 
         return LocationUtil.isLocationAtLocationRadius(location.clone().add(0.5, 0, 0.5), islandLocation, island.getRadius() + 1);
     }
+
+    public Island getIslandByPlayer(org.bukkit.OfflinePlayer player) {
+        if (islandStorage.containsKey(player.getUniqueId())) {
+            return islandStorage.get(player.getUniqueId());
+        }
+        return null;
+    }
 }

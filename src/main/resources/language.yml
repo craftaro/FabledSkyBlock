@@ -54,7 +54,7 @@ Command:
       Disabled:
         Message: '&bSkyBlock &8| &cError&8: &eThe bank has been disabled by a server administrator.'
       Unknown:
-        Message: '&bSkyBlock &8| &cError&8: &eYou are not currently on an Island.'
+        Message: '&bSkyBlock &8| &cError&8: &eYou doesn''t have an island.'
       Info:
         Message: '&f&oAllows you to access your Island''s bank.'
       Perm:
@@ -148,6 +148,23 @@ Command:
       Permission:
         Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to unban players from the Island.'
     Admin:
+      Bank:
+        Short01:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin bank [<Deposit|Withdraw|Balance>]'
+        Short02:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin bank [Player] [<Deposit|Withdraw|Balance>]'
+        NullIsland:
+          Message: '&bSkyBlock &8| &cError&8: &eYou are not on an island, please specify a Player or move to an island. Or maybe you are on nullisland?'
+        ByConsole:
+          Message: '&bSkyBlock &8| &cError&8: &eIf you are using it from the console, you need to use like this: /island admin bank [Player] [<Deposit|Withdraw|Balance>] [Ammount]'
+        Balance:
+          Message: ' %player% have %bal%.'
+        Info:
+          Message: '&bSkyBlock &8| &cError&8: /island admin bank [Player] [<Deposit|Withdraw|Balance>]'
+        SuccesWithdraw:
+          Message: 'Succesfully removed %ammount% from %player%''s island'
+        SuccesDeposit:
+          Message: 'Succesfully added %ammount% to %player%''s island'
       Reload:
         Info:
           Message: '&f&oReload all loaded files.'
@@ -3141,6 +3158,40 @@ Menu:
           - ''
           - '&eClick to create Island!'
           - '&eRight-Click to create Island!'
+  Bank:
+    Title: 'Bank'
+    Item:
+      Exit:
+        Displayname: 'Exit'
+        Lore: 'Exits the Menu'
+      Barrier:
+        Displayname: '&cBank'
+      Log:
+        Displayname: 'Transaction Log'
+        Empty: 'Looks like you haven''t got transactions'
+      Deposit:
+        Displayname: 'Deposit'
+        Lore: 'Click to deposit your money. Everything or a custom ammount.'
+      Withdraw:
+        Displayname: 'Withdraw'
+        Lore: 'Click to withdraw your money. Everything or a custom ammount.'
+      Balance:
+        Displayname: 'Balance'
+  Input:
+    Title: 'Select amount.'
+    Item:
+      All:
+        Displayname: 'All'
+        Lore: '%action% all available.'
+      Custom:
+        Displayname: 'Custom'
+        Lore: '%action% a custom amount.'
+      Barrier:
+        Displayname: ' '
+        Lore: ' '
+      Exit:
+        Displayname: 'Exit'
+        Lore: "Closes the menu."
 Placeholder:
   fabledskyblock_leaderboard_votes:
     Empty:
