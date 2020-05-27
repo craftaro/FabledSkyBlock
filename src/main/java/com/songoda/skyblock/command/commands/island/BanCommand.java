@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.permission.PermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,6 +28,7 @@ public class BanCommand extends SubCommand {
     public void onCommandByPlayer(Player player, String[] args) {
         Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
             MessageManager messageManager = skyblock.getMessageManager();
+            PermissionManager permissionManager = skyblock.getPermissionManager();
             IslandManager islandManager = skyblock.getIslandManager();
             SoundManager soundManager = skyblock.getSoundManager();
             FileManager fileManager = skyblock.getFileManager();
@@ -42,7 +44,7 @@ public class BanCommand extends SubCommand {
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
                     if (island.hasRole(IslandRole.Owner, player.getUniqueId())
-                            || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Ban").getStatus())) {
+                            || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && permissionManager.hasPermission(island, "Ban", IslandRole.Operator))) {
                         Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
                         UUID targetPlayerUUID = null;

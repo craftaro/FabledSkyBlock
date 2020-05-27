@@ -7,6 +7,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -43,6 +44,7 @@ public class Visitors {
 
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         IslandManager islandManager = skyblock.getIslandManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
 
@@ -106,8 +108,8 @@ public class Visitors {
                         } else {
                             boolean isOperator = island.hasRole(IslandRole.Operator, player.getUniqueId()),
                                     isOwner = island.hasRole(IslandRole.Owner, player.getUniqueId()),
-                                    canKick = island.getSetting(IslandRole.Operator, "Kick").getStatus(),
-                                    canBan = island.getSetting(IslandRole.Operator, "Ban").getStatus(),
+                                    canKick = permissionManager.hasPermission(island, "Kick", IslandRole.Operator),
+                                    canBan = permissionManager.hasPermission(island, "Ban", IslandRole.Operator),
                                     banningEnabled = fileManager
                                             .getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                                             .getFileConfiguration().getBoolean("Island.Visitor.Banning");
@@ -206,8 +208,8 @@ public class Visitors {
             } else {
                 boolean isOperator = island.hasRole(IslandRole.Operator, player.getUniqueId()),
                         isOwner = island.hasRole(IslandRole.Owner, player.getUniqueId()),
-                        canKick = island.getSetting(IslandRole.Operator, "Kick").getStatus(),
-                        canBan = island.getSetting(IslandRole.Operator, "Ban").getStatus(),
+                        canKick = skyblock.getPermissionManager().hasPermission(island, "Kick", IslandRole.Operator),
+                        canBan = skyblock.getPermissionManager().hasPermission(island, "Ban", IslandRole.Operator),
                         banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                                 .getFileConfiguration().getBoolean("Island.Visitor.Banning");
                 int index = playerMenuPage * 36 - 36,

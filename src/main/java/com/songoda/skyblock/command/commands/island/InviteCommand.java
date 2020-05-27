@@ -46,7 +46,7 @@ public class InviteCommand extends SubCommand {
                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                     || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && island.getSetting(IslandRole.Operator, "Invite").getStatus())) {
+                    && skyblock.getPermissionManager().hasPermission(island, "Invite", IslandRole.Operator))) {
                 Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
 
                 if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()

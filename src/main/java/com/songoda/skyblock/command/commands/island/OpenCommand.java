@@ -7,6 +7,7 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,6 +22,7 @@ public class OpenCommand extends SubCommand {
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
         SoundManager soundManager = skyblock.getSoundManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
 
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
@@ -32,7 +34,7 @@ public class OpenCommand extends SubCommand {
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                 || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && island.getSetting(IslandRole.Operator, "Visitor").getStatus())) {
+                && permissionManager.hasPermission(island, "Visitor", IslandRole.Operator))) {
             if (island.isOpen()) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Open.Already.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);

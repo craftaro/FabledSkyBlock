@@ -10,6 +10,7 @@ import com.songoda.skyblock.island.IslandCoop;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -49,6 +50,7 @@ public class Coop {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
 
@@ -161,7 +163,7 @@ public class Coop {
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                         } else {
                             if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && island.getSetting(IslandRole.Operator, "CoopPlayers").getStatus())
+                                    && permissionManager.hasPermission(island, "CoopPlayers", IslandRole.Operator))
                                     || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
                                 
                                 String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());

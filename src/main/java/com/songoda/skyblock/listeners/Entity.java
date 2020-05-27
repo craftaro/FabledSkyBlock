@@ -1,25 +1,19 @@
 package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.limit.impl.EntityLimitaton;
-import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
-import com.songoda.skyblock.utils.world.entity.EntityUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Projectile;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,10 +23,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
-import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -61,46 +53,16 @@ public class Entity implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
+        IslandManager islandManager = skyblock.getIslandManager();
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
 
         Player player = (Player) event.getEntity();
 
-        FileManager fileManager = skyblock.getFileManager();
-
         if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            event.getCause();
-            if (event.getCause() == DamageCause.VOID) {
-                return;
-            } else if (event.getCause() == DamageCause.ENTITY_ATTACK) {
-                EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) event;
-
-                if (entityDamageByEntityEvent.getDamager() != null && entityDamageByEntityEvent.getDamager() instanceof Player) {
-                    return;
-                }
-            } else {
-                if (NMSUtil.getVersionNumber() > 11) {
-                    if (event.getCause() == DamageCause.valueOf("ENTITY_SWEEP_ATTACK")) {
-                        EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) event;
-
-                        if (entityDamageByEntityEvent.getDamager() != null && entityDamageByEntityEvent.getDamager() instanceof Player) {
-                            return;
-                        }
-                    }
-                }
-            }
-
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
-
-            if (configLoad.getBoolean("Island.Settings.Damage.Enable")) {
-                if (!skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner, "Damage")) {
-                    event.setCancelled(true);
-                }
-            } else if (!configLoad.getBoolean("Island.Damage.Enable")) {
-                event.setCancelled(true);
-            }
+            // Check permissions.
+            skyblock.getPermissionManager().processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
         }
 
         // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
@@ -113,129 +75,40 @@ public class Entity implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
 
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
             org.bukkit.entity.Entity entity = event.getEntity();
 
             if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
-                if (entity instanceof Player) {
-                    Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                    FileConfiguration configLoad = config.getFileConfiguration();
 
-                    if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
-                        if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "PvP")) {
-                            event.setCancelled(true);
-                        }
-                    } else if (!configLoad.getBoolean("Island.PvP.Enable")) {
-                        event.setCancelled(true);
-                    }
-                } else if (entity instanceof ArmorStand) {
-                    if (!islandManager.hasPermission(player, entity.getLocation(), "Destroy")) {
-                        event.setCancelled(true);
-
-                        messageManager.sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-                    }
-                } else {
-                    // Check if it's a monster and player has the permission to damage the entity
-                    // If
-                    // If it's not a monster or the player has the permission
-                    if (EntityUtil.isMonster(entity.getType()) && islandManager.hasPermission(player, entity.getLocation(), "MonsterHurting")) {
-                        // Player has permission to damage the entity
-                        return;
-                    }
-                    // Either the entity is not a monster or the player doesn't have permission so whe check if he has permission to damage mobs
-                    if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
-                        event.setCancelled(true);
-
-                        messageManager.sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-
-                        return;
-                    }
-                }
+                // Check permissions.
+                skyblock.getPermissionManager()
+                        .processPermission(event, player, islandManager.getIslandAtLocation(entity.getLocation()));
             }
 
             return;
         }
 
-        if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player) {
-            Player player = (Player) ((Projectile) event.getDamager()).getShooter();
-            org.bukkit.entity.Entity entity = event.getEntity();
-
-            if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
-                if (event.getEntity() instanceof Player) {
-                    Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                    FileConfiguration configLoad = config.getFileConfiguration();
-
-                    if (entity.getType() == EntityType.ITEM_FRAME && !islandManager.hasPermission(player, entity.getLocation(), "HangingDestroy")) {
-                        event.setCancelled(true);
-                        return;
-                    }
-
-                    if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
-                        if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "PvP")) {
-                            event.setCancelled(true);
-                        }
-                    } else if (!configLoad.getBoolean("Island.PvP.Enable")) {
-                        event.setCancelled(true);
-                    }
-                } else {
-                    // Check if it's a monster and player has the permission to damage the entity
-                    // If
-                    // If it's not a monster or the player has the permission
-                    if (EntityUtil.isMonster(entity.getType()) && islandManager.hasPermission(player, entity.getLocation(), "MonsterHurting")) {
-                        // Player has permission to damage the entity
-                        return;
-                    }
-                    // Either the entity is not a monster or the player doesn't have permission so whe check if he has permission to damage mobs
-                    if (!islandManager.hasPermission(player, entity.getLocation(), "MobHurting")) {
-                        event.setCancelled(true);
-
-                        messageManager.sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-
-                        return;
-                    }
-                }
-            }
-        } else if (event.getEntity() instanceof Player) {
+        if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
 
-            if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-                Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
+            // Check permissions.
+            skyblock.getPermissionManager()
+                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
 
-                if (configLoad.getBoolean("Island.Settings.Damage.Enable")) {
-                    if (!islandManager.hasSetting(player.getLocation(), IslandRole.Owner, "Damage") || (event.getDamager() instanceof TNTPrimed
-                            && !islandManager.hasSetting(player.getLocation(), IslandRole.Owner, "Explosions"))) {
-                        event.setCancelled(true);
-                    }
-                } else if (!configLoad.getBoolean("Island.Damage.Enable")) {
-                    event.setCancelled(true);
-                }
-            }
         } else if (event.getDamager() instanceof TNTPrimed) {
             org.bukkit.entity.Entity entity = event.getEntity();
 
-            if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
-                if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "Explosions")) {
-                    event.setCancelled(true);
-                }
-            }
+            // Check permissions.
+            skyblock.getPermissionManager()
+                    .processPermission(event, islandManager.getIslandAtLocation(entity.getLocation()));
         }
 
         // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
         // the shot entity isn't damaged
-        if (event.isCancelled() && event.getEntity() != null && event.getDamager() instanceof Arrow
+        if (event.isCancelled() && event.getDamager() instanceof Arrow
                 && ((Arrow) event.getDamager()).getShooter() instanceof Player) {
             Arrow arrow = (Arrow) event.getDamager();
             if (arrow.getFireTicks() != 0) {
@@ -254,19 +127,16 @@ public class Entity implements Listener {
         Player player = event.getPlayer();
 
         if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, event.getEntity().getLocation(), "Shearing")) {
-                event.setCancelled(true);
+            IslandManager islandManager = skyblock.getIslandManager();
+            Island island = islandManager.getIslandAtLocation(event.getEntity().getLocation());
 
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                                .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-            }
+            // Check permissions.
+            skyblock.getPermissionManager().processPermission(event, player, island);
         }
     }
 
     /**
-     * Checks that an entity is not targeting another entity on different islands.
+     * Checks that an entity is not targeting another entity on different islands.x
      *
      * @author LimeGlass
      */
@@ -300,13 +170,13 @@ public class Entity implements Listener {
     @EventHandler
     public void onStackableInteract(PlayerArmorStandManipulateEvent event) {
         Player player = event.getPlayer();
-        if (!skyblock.getIslandManager().hasPermission(player, event.getRightClicked().getLocation(), "ArmorStandUse")) {
-            event.setCancelled(true);
+        if (!skyblock.getWorldManager().isIslandWorld(player.getWorld())) return;
+        IslandManager islandManager = skyblock.getIslandManager();
 
-            skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                    .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-            skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-        }
+        // Check permissions.
+        if (!skyblock.getPermissionManager().processPermission(event, player,
+                islandManager.getIslandAtLocation(event.getRightClicked().getLocation())))
+            return;
 
         if (NMSUtil.getVersionNumber() != 8) return;
 
@@ -325,116 +195,53 @@ public class Entity implements Listener {
     @EventHandler
     public void onHangingPlace(HangingPlaceEvent event) {
         Player player = event.getPlayer();
+        if (!skyblock.getWorldManager().isIslandWorld(player.getWorld())) return;
+        IslandManager islandManager = skyblock.getIslandManager();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, event.getEntity().getLocation(), "EntityPlacement")) {
-                event.setCancelled(true);
-
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                                .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-            }
-        }
+        // Check permissions.
+        skyblock.getPermissionManager().processPermission(event, player,
+                islandManager.getIslandAtLocation(event.getEntity().getLocation()));
     }
 
     @EventHandler
     public void onHangingBreak(HangingBreakEvent event) {
         Hanging hanging = event.getEntity();
+        if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
+        IslandManager islandManager = skyblock.getIslandManager();
 
-        if (event.getCause() != RemoveCause.EXPLOSION) {
-            return;
-        }
-
-        if (skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) {
-            if (!skyblock.getIslandManager().hasSetting(hanging.getLocation(), IslandRole.Owner, "Explosions")) {
-                event.setCancelled(true);
-            }
-        }
+        // Check permissions.
+        skyblock.getPermissionManager().processPermission(event, null,
+                islandManager.getIslandAtLocation(hanging.getLocation()));
     }
 
     @EventHandler
     public void onHangingBreak(HangingBreakByEntityEvent event) {
         Hanging hanging = event.getEntity();
 
-        if (!(event.getRemover() instanceof Player)) {
+        if (!(event.getRemover() instanceof Player))
             return;
-        }
 
-        Player player = (Player) event.getRemover();
+        if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
+        IslandManager islandManager = skyblock.getIslandManager();
 
-        if (skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, hanging.getLocation(), "HangingDestroy")) {
-                event.setCancelled(true);
-
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                                .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onHangingInteract(PlayerInteractEntityEvent event) {
-        if (!(event.getRightClicked() instanceof Hanging)) {
-            return;
-        }
-
-        Player player = event.getPlayer();
-        Hanging hanging = (Hanging) event.getRightClicked();
-
-        if (skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, hanging.getLocation(), "HangingDestroy")) {
-                event.setCancelled(true);
-
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                                .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onHangingRemoveItem(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player && event.getEntity() instanceof Hanging)) {
-            return;
-        }
-
-        Player player = (Player) event.getDamager();
-        Hanging hanging = (Hanging) event.getEntity();
-
-        if (skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, hanging.getLocation(), "HangingDestroy")) {
-                event.setCancelled(true);
-
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                                .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-            }
-        }
+        // Check permissions.
+        skyblock.getPermissionManager().processPermission(event, (Player) event.getRemover(),
+                islandManager.getIslandAtLocation(hanging.getLocation()));
     }
 
     @EventHandler
     public void onEntityTaming(EntityTameEvent event) {
-        if (!(event.getOwner() instanceof Player)) {
+        if (!(event.getOwner() instanceof Player))
             return;
-        }
 
-        Player player = (Player) event.getOwner();
+        LivingEntity entity = event.getEntity();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, event.getEntity().getLocation(), "MobTaming")) {
-                event.setCancelled(true);
+        if (!skyblock.getWorldManager().isIslandWorld(entity.getWorld())) return;
+        IslandManager islandManager = skyblock.getIslandManager();
 
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                                .getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-            }
-        }
+        // Check permissions.
+        skyblock.getPermissionManager().processPermission(event, (Player) event.getOwner(),
+                islandManager.getIslandAtLocation(entity.getLocation()));
     }
 
     @EventHandler
@@ -504,10 +311,8 @@ public class Entity implements Listener {
             event.setCancelled(true);
             return;
         }
-
-        if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "MobGriefing")) {
-            event.setCancelled(true);
-        }
+        // Check permissions.
+        skyblock.getPermissionManager().processPermission(event, null, island);
 
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Block.Level.Enable"))
@@ -555,9 +360,10 @@ public class Entity implements Listener {
         IslandManager islandManager = skyblock.getIslandManager();
 
         if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
-            if (!islandManager.hasSetting(entity.getLocation(), IslandRole.Owner, "Explosions")) {
+            // Check permissions.
+            if (!skyblock.getPermissionManager().hasPermission(null,
+                    islandManager.getIslandAtLocation(entity.getLocation()), "Explosions"))
                 event.setCancelled(true);
-            }
 
             if (!event.isCancelled()) {
                 Island island = islandManager.getIslandAtLocation(entity.getLocation());
@@ -668,22 +474,16 @@ public class Entity implements Listener {
 
     @EventHandler
     public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
-        if (!(event.getTarget() instanceof Player)) {
+        if (!(event.getTarget() instanceof Player))
             return;
-        }
-
-        if (!(event.getEntity() instanceof ExperienceOrb)) {
-            return;
-        }
 
         Player player = (Player) event.getTarget();
+        if (!skyblock.getWorldManager().isIslandWorld(player.getWorld())) return;
+        IslandManager islandManager = skyblock.getIslandManager();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, "ExperienceOrbPickup")) {
-                event.setTarget(null);
-                event.setCancelled(true);
-            }
-        }
+        // Check permissions.
+        skyblock.getPermissionManager().processPermission(event, player,
+                islandManager.getIslandAtLocation(event.getEntity().getLocation()));
     }
 
     private static final Set<SpawnReason> CHECKED_REASONS;
@@ -724,7 +524,6 @@ public class Entity implements Listener {
                 event.setCancelled(true);
                 return;
             }
-
         }
 
         SpawnReason spawnReason = event.getSpawnReason();
@@ -732,7 +531,7 @@ public class Entity implements Listener {
         if (!CHECKED_REASONS.contains(spawnReason)) return;
 
         if (!skyblock.getWorldManager().isIslandWorld(entity.getWorld())) return;
-        if (skyblock.getIslandManager().hasSetting(entityLocation, IslandRole.Owner, "NaturalMobSpawning")) return;
+        if (skyblock.getPermissionManager().hasPermission(null, island, "NaturalMobSpawning")) return;
         if (spawnReason != SpawnReason.JOCKEY && spawnReason != SpawnReason.MOUNT) {
             entity.remove(); // Older versions ignore the event being cancelled, so this fixes that issue.
             return;

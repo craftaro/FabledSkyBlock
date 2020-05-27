@@ -55,7 +55,7 @@ public class Border {
 
                 return;
             } else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && island.getSetting(IslandRole.Operator, "Border").getStatus())
+                    && skyblock.getPermissionManager().hasPermission(island,"Border", IslandRole.Operator))
                     || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Border.Permission.Message"));

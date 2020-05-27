@@ -6,6 +6,7 @@ import com.songoda.skyblock.api.ban.Ban;
 import com.songoda.skyblock.api.utils.APIUtil;
 import com.songoda.skyblock.api.visit.Visit;
 import com.songoda.skyblock.island.IslandCoop;
+import com.songoda.skyblock.island.IslandPermission;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
@@ -361,28 +362,11 @@ public class Island {
 	}
 
 	/**
-	 * @return Setting of an IslandRole for the Island
-	 */
-	public IslandSetting getSetting(IslandRole role, String setting) {
-		Preconditions.checkArgument(role != null, "Cannot get setting to null role");
-		Preconditions.checkArgument(setting != null, "Cannot get setting for null setting");
-
-		return new IslandSetting(this.handle.getSetting(APIUtil.toImplementation(role), setting));
-	}
-
-	/**
 	 * @return A List of Settings of an IslandRole for the Island
 	 */
-	public List<IslandSetting> getSettings(IslandRole role) {
+	public List<IslandPermission> getSettings(IslandRole role) {
 		Preconditions.checkArgument(role != null, "Cannot get settings to null role");
-		List<IslandSetting> settings = new ArrayList<>();
-
-		for (com.songoda.skyblock.island.IslandSetting settingList : this.handle
-				.getSettings(APIUtil.toImplementation(role))) {
-			settings.add(new IslandSetting(settingList));
-		}
-
-		return settings;
+		return this.handle.getSettings(APIUtil.toImplementation(role));
 	}
 
 	/**

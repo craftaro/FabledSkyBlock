@@ -11,10 +11,10 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -27,7 +27,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import java.io.File;
 import java.util.UUID;
@@ -58,31 +57,13 @@ public class Teleport implements Listener {
         islandManager.loadPlayer(player);
 
         if (worldManager.isIslandWorld(player.getWorld())) {
-            boolean isCause = false;
 
-            if (event.getCause() == TeleportCause.ENDER_PEARL || event.getCause() == TeleportCause.NETHER_PORTAL || event.getCause() == TeleportCause.END_PORTAL) {
-                isCause = true;
-            } else {
-                if (NMSUtil.getVersionNumber() > 9) {
-                    if (event.getCause() == TeleportCause.END_GATEWAY) {
-                        isCause = true;
-                    }
-                }
-            }
+            com.songoda.skyblock.island.Island island = islandManager.getIslandAtLocation(event.getTo());
 
-            if (isCause && !islandManager.hasPermission(player, "Portal")) {
-                event.setCancelled(true);
-
-                messageManager.sendMessage(player, configLoad.getString("Island.Settings.Permission.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-
+            // Check permissions.
+            if (!skyblock.getPermissionManager().processPermission(new PlayerEnterPortalEvent(player, player.getLocation()),
+                    player, island))
                 return;
-            }
-
-            if (isCause && event.getCause() != TeleportCause.ENDER_PEARL) {
-                event.setCancelled(true);
-                return;
-            }
         }
 
         if (playerDataManager.hasPlayerData(player)) {

@@ -140,7 +140,7 @@ public class Bans {
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                         } else {
                             if ((island1.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && island1.getSetting(IslandRole.Operator, "Unban").getStatus())
+                                    && skyblock.getPermissionManager().hasPermission(island1,"Unban", IslandRole.Operator))
                                     || island1.hasRole(IslandRole.Owner, player.getUniqueId())) {
                                 String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
                                 Bukkit.getServer().dispatchCommand(player, "island unban " + playerName);

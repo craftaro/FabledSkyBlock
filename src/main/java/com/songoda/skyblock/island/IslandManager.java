@@ -3,7 +3,6 @@ package com.songoda.skyblock.island;
 import com.google.common.base.Preconditions;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.utils.PlayerUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.ban.BanManager;
@@ -1184,32 +1183,6 @@ public class IslandManager {
         return islandStorage.containsKey(uuid);
     }
 
-    public boolean hasPermission(Player player, String setting) {
-        return hasPermission(player, player.getLocation(), setting);
-    }
-
-    public boolean hasPermission(Player player, org.bukkit.Location location, String setting) {
-        Island island = getIslandAtLocation(location);
-
-        if (island == null) return true;
-
-        if (player.hasPermission("fabledskyblock.bypass." + setting.toLowerCase())) return true;
-
-        if (island.getSetting(island.getRole(player), setting).getStatus()) return true;
-
-        if (island.isCoopPlayer(player.getUniqueId()) && island.getSetting(IslandRole.Coop, setting).getStatus())
-            return true;
-
-        return island.getSetting(IslandRole.Visitor, setting).getStatus();
-    }
-
-    public boolean hasSetting(org.bukkit.Location location, IslandRole role, String setting) {
-        Island island = getIslandAtLocation(location);
-        if (island == null) return false;
-
-        return island.getSetting(role, setting).getStatus();
-    }
-
     public void removeSpawnProtection(org.bukkit.Location location) {
         Block block = location.getBlock();
 
@@ -1386,7 +1359,7 @@ public class IslandManager {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        boolean coopPlayers = island.getSetting(IslandRole.Operator, "CoopPlayers").getStatus();
+        boolean coopPlayers = island.hasPermission(IslandRole.Operator, skyblock.getPermissionManager().getPermission("CoopPlayers"));
 
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (uuid != null && all.getUniqueId().equals(uuid)) {
@@ -1433,7 +1406,7 @@ public class IslandManager {
         settings.put("Damage", true);
 
         for (String settingList : settings.keySet()) {
-            if (configLoad.getBoolean("Island.Settings." + settingList + ".Enable") && island.getSetting(IslandRole.Owner, settingList).getStatus() == settings.get(settingList)) {
+            if (configLoad.getBoolean("Island.Settings." + settingList + ".Enable") && island.hasPermission(IslandRole.Owner, skyblock.getPermissionManager().getPermission(settingList)) == settings.get(settingList)) {
                 safeLevel++;
             }
         }

@@ -32,7 +32,7 @@ public class PublicCommand extends SubCommand {
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                 || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && island.getSetting(IslandRole.Operator, "Visitor").getStatus())) {
+                && skyblock.getPermissionManager().hasPermission(island, "Visitor", IslandRole.Operator))) {
             if (island.isOpen()) {
                 islandManager.closeIsland(island);
 

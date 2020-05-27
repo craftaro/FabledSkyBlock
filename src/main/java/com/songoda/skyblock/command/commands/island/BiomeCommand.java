@@ -32,7 +32,7 @@ public class BiomeCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Biome.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && island.getSetting(IslandRole.Operator, "Biome").getStatus())
+                && skyblock.getPermissionManager().hasPermission(island,"Biome", IslandRole.Operator))
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             Biome.getInstance().open(player);
             soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);

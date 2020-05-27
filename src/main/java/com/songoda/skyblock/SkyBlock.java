@@ -4,6 +4,7 @@ import com.songoda.core.SongodaCore;
 import com.songoda.core.SongodaPlugin;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.configuration.Config;
+import com.songoda.core.gui.GuiManager;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
@@ -15,6 +16,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.confirmation.ConfirmationTask;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.generator.GeneratorManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.tasks.HologramTask;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
@@ -44,7 +46,6 @@ import com.songoda.skyblock.world.WorldManager;
 import com.songoda.skyblock.world.generator.VoidGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -82,6 +83,9 @@ public class SkyBlock extends SongodaPlugin {
     private LocalizationManager localizationManager;
     private RewardManager rewardManager;
     private FabledChallenge fabledChallenge;
+    private PermissionManager permissionManager;
+
+    private final GuiManager guiManager = new GuiManager(this);
 
     public static SkyBlock getInstance() {
         return INSTANCE;
@@ -103,6 +107,7 @@ public class SkyBlock extends SongodaPlugin {
         // Load Holograms
         com.songoda.core.hooks.HologramManager.load(this);
 
+        permissionManager = new PermissionManager(this);
         fileManager = new FileManager(this);
         localizationManager = new LocalizationManager();
         worldManager = new WorldManager(this);
@@ -356,5 +361,13 @@ public class SkyBlock extends SongodaPlugin {
 
     public FabledChallenge getFabledChallenge() {
         return fabledChallenge;
+    }
+
+    public PermissionManager getPermissionManager() {
+        return permissionManager;
+    }
+
+    public GuiManager getGuiManager() {
+        return guiManager;
     }
 }

@@ -1,8 +1,11 @@
 package com.songoda.skyblock.api.island;
 
 import com.google.common.base.Preconditions;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.structure.Structure;
 import com.songoda.skyblock.api.utils.APIUtil;
+import com.songoda.skyblock.island.IslandPermission;
+import com.songoda.skyblock.permission.PermissionManager;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -15,9 +18,11 @@ import java.util.UUID;
 public class IslandManager {
 
     private final com.songoda.skyblock.island.IslandManager islandManager;
+    private final PermissionManager permissionManager;
 
     public IslandManager(com.songoda.skyblock.island.IslandManager islandManager) {
         this.islandManager = islandManager;
+        this.permissionManager = SkyBlock.getInstance().getPermissionManager();
     }
 
     /**
@@ -73,41 +78,6 @@ public class IslandManager {
         Preconditions.checkArgument(island != null, "Cannot closed island to null island");
 
         this.islandManager.closeIsland(island.getIsland());
-    }
-
-    /**
-     * Checks if a player has permission at an Island for a Setting
-     *
-     * @return true of conditions met, false otherwise
-     */
-    public boolean hasPermission(Player player, String setting) {
-        Preconditions.checkArgument(player != null, "Cannot check permission to null player");
-
-        return this.islandManager.hasPermission(player, setting);
-    }
-
-    /**
-     * Checks if a player has permission at a location of an Island for a Setting
-     *
-     * @return true of conditions met, false otherwise
-     */
-    public boolean hasPermission(Player player, Location location, String setting) {
-        Preconditions.checkArgument(player != null, "Cannot check permission to null player");
-        Preconditions.checkArgument(location != null, "Cannot check permission to null location");
-
-        return this.islandManager.hasPermission(player, location, setting);
-    }
-
-    /**
-     * Checks the permission of a Setting for a Role at a Location
-     *
-     * @return true of conditions met, false otherwise
-     */
-    public boolean hasSetting(Location location, IslandRole role, String setting) {
-        Preconditions.checkArgument(location != null, "Cannot check setting to null location");
-        Preconditions.checkArgument(role != null, "Cannot check setting to null role");
-
-        return this.islandManager.hasSetting(location, APIUtil.toImplementation(role), setting);
     }
 
     /**

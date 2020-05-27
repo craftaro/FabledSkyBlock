@@ -31,8 +31,8 @@ public class Death implements Listener {
             boolean keepInventory = false;
 
             if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
-                if (skyblock.getIslandManager().hasSetting(player.getLocation(), IslandRole.Owner,
-                        "KeepItemsOnDeath")) {
+                if (skyblock.getPermissionManager().hasPermission(player.getLocation(),"KeepItemsOnDeath",
+                        IslandRole.Owner)) {
                     keepInventory = true;
                 }
             } else keepInventory = configLoad.getBoolean("Island.KeepItemsOnDeath.Enable");

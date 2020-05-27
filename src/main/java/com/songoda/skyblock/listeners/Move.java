@@ -6,6 +6,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -49,6 +50,7 @@ public class Move implements Listener {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
         SoundManager soundManager = skyblock.getSoundManager();
         WorldManager worldManager = skyblock.getWorldManager();
         FileManager fileManager = skyblock.getFileManager();
@@ -105,7 +107,7 @@ public class Move implements Listener {
                         boolean keepItemsOnDeath;
 
                         if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
-                            keepItemsOnDeath = island.getSetting(IslandRole.Owner, "KeepItemsOnDeath").getStatus();
+                            keepItemsOnDeath = permissionManager.hasPermission(island,"KeepItemsOnDeath", IslandRole.Owner);
                         } else {
                             keepItemsOnDeath = configLoad.getBoolean("Island.KeepItemsOnDeath.Enable");
                         }

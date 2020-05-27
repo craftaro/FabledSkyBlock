@@ -10,6 +10,7 @@ import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -43,10 +44,7 @@ public class Portal implements Listener {
         org.bukkit.block.Block from = event.getFrom().getBlock();
         org.bukkit.block.Block to = event.getTo().getBlock();
 
-        MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
-        FileManager fileManager = skyblock.getFileManager();
-        SoundManager soundManager = skyblock.getSoundManager();
 
         if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) return;
 
@@ -54,15 +52,9 @@ public class Portal implements Listener {
 
         if (island == null) return;
 
-        CompatibleMaterial toMaterial = CompatibleMaterial.getMaterial(to.getType());
-
-        if( (toMaterial == CompatibleMaterial.NETHER_BRICK || toMaterial == CompatibleMaterial.END_PORTAL)
-                && !islandManager.hasPermission(player, player.getLocation(), "Portal")) {
-            event.setTo(LocationUtil.getRandomLocation(event.getFrom().getWorld(), 5000, 5000, true, true));
-            messageManager.sendMessage(player,
-                    fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-        }
+        // Check permissions.
+        skyblock.getPermissionManager().processPermission(event, player,
+                islandManager.getIslandAtLocation(event.getTo()));
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -87,24 +79,22 @@ public class Portal implements Listener {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (!islandManager.hasPermission(player, player.getLocation(), "Portal")) {
-            messageManager.sendMessage(player,
-                    fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+        // Check permissions.
+        if (!skyblock.getPermissionManager().processPermission(new PlayerEnterPortalEvent(player, player.getLocation()),
+                player, island))
             return;
-        }
 
         IslandEnvironment spawnEnvironment;
         switch (island.getRole(player)) {
-        case Operator:
-        case Owner:
-        case Member:
-        case Coop:
-            spawnEnvironment = IslandEnvironment.Main;
-            break;
+            case Operator:
+            case Owner:
+            case Member:
+            case Coop:
+                spawnEnvironment = IslandEnvironment.Main;
+                break;
 
-        default:
-            spawnEnvironment = IslandEnvironment.Visitor;
+            default:
+                spawnEnvironment = IslandEnvironment.Visitor;
         }
 
         Tick tick;
@@ -133,37 +123,39 @@ public class Portal implements Listener {
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
         IslandWorld toWorld = IslandWorld.Normal;
 
-        if (CompatibleMaterial.getMaterial(block.getType()).equals(CompatibleMaterial.NETHER_PORTAL)) toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.Nether : IslandWorld.Normal;
-        else if (CompatibleMaterial.getMaterial(block.getType()).equals(CompatibleMaterial.END_PORTAL)) toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.End : IslandWorld.Normal;
+        if (CompatibleMaterial.getMaterial(block.getType()).equals(CompatibleMaterial.NETHER_PORTAL))
+            toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.Nether : IslandWorld.Normal;
+        else if (CompatibleMaterial.getMaterial(block.getType()).equals(CompatibleMaterial.END_PORTAL))
+            toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.End : IslandWorld.Normal;
 
         switch (toWorld) {
-        case Nether:
-            if (configLoad.getBoolean("Island.World.Nether.Enable") && island.isRegionUnlocked(player, "Nether")) {
+            case Nether:
+                if (configLoad.getBoolean("Island.World.Nether.Enable") && island.isRegionUnlocked(player, "Nether")) {
+                    IslandWorld toWorldF = toWorld;
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                    player.setFallDistance(0.0F);
+                    tick.setTick(1);
+                }
+                break;
+
+            case End:
+                if (configLoad.getBoolean("Island.World.End.Enable") && island.isRegionUnlocked(player, "End")) {
+                    IslandWorld toWorldF = toWorld;
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                    player.setFallDistance(0.0F);
+                    tick.setTick(1);
+                }
+                break;
+
+            default:
                 IslandWorld toWorldF = toWorld;
                 Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
                 soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                 player.setFallDistance(0.0F);
                 tick.setTick(1);
-            }
-            break;
-
-        case End:
-            if (configLoad.getBoolean("Island.World.End.Enable") && island.isRegionUnlocked(player, "End")) {
-                IslandWorld toWorldF = toWorld;
-                Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
-                soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-                player.setFallDistance(0.0F);
-                tick.setTick(1);
-            }
-            break;
-
-        default:
-            IslandWorld toWorldF = toWorld;
-            Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
-            soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-            player.setFallDistance(0.0F);
-            tick.setTick(1);
-            break;
+                break;
         }
 
     }

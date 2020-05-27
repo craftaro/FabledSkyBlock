@@ -12,7 +12,7 @@ Settings:
         WaterCollection: false
         Storage: false
         Workbench: false
-        Crop: false
+        Trample: false
         Door: false
         Gate: false
         Projectile: false
@@ -40,11 +40,14 @@ Settings:
         HangingDestroy: false
         Cake: false
         DragonEggUse: false
-        MinecartBoat: false
+        Minecart: false
+        Boat: false
         Portal: false
         Hopper: false
         EntityPlacement: false
         ExperienceOrbPickup: false
+        Trapdoor: false
+        Noteblock: false
     Member:
         Destroy: true
         Place: true
@@ -58,7 +61,7 @@ Settings:
         WaterCollection: true
         Storage: true
         Workbench: true
-        Crop: true
+        Trample: true
         Door: true
         Gate: true
         Projectile: true
@@ -83,7 +86,8 @@ Settings:
         Fishing: true
         DropperDispenser: true
         SpawnEgg: true
-        MinecartBoat: true
+        Minecart: true
+        Boat: true
         HangingDestroy: true
         Cake: true
         DragonEggUse: true
@@ -91,6 +95,8 @@ Settings:
         Hopper: true
         EntityPlacement: true
         ExperienceOrbPickup: true
+        Trapdoor: true
+        Noteblock: true
     Operator:
         Invite: true
         Kick: true
