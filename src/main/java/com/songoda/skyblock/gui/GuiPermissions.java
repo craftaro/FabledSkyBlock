@@ -15,6 +15,7 @@ import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.permission.PermissionType;
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -140,11 +141,37 @@ public class GuiPermissions extends Gui {
             if (permission == null) continue;
 
             setButton(i, permission.getItem(island, role), (event) -> {
+                if (!hasPermission(island, event.player, role)) {
+                    plugin.getMessageManager().sendMessage(event.player, configLoad
+                            .getString("Command.Island.Settings.Permission.Change.Message"));
+                   CompatibleSound.BLOCK_ANVIL_LAND.play(event.player);
+
+                    return;
+                }
                 IslandPermission islandPermission = island.getPermission(role, permission);
                 islandPermission.setStatus(!islandPermission.getStatus());
                 paint();
             });
         }
+    }
+
+    private boolean hasPermission(Island island, Player player, IslandRole role) {
+        PermissionManager permissionManager = SkyBlock.getInstance().getPermissionManager();
+        if (role == IslandRole.Visitor || role == IslandRole.Member || role == IslandRole.Coop
+                || role == IslandRole.Owner) {
+            String roleName = role.name();
+
+            if (role == IslandRole.Owner) {
+                roleName = "Island";
+            }
+
+            return !island.hasRole(IslandRole.Operator, player.getUniqueId())
+                    || permissionManager.hasPermission(island, roleName, IslandRole.Operator);
+        } else if (role == IslandRole.Operator) {
+            return island.hasRole(IslandRole.Owner, player.getUniqueId());
+        }
+
+        return true;
     }
 
     public PermissionType getType(IslandRole role) {
