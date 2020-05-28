@@ -7,6 +7,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -48,6 +49,7 @@ public class Members {
 
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         IslandManager islandManager = skyblock.getIslandManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
 
@@ -179,7 +181,7 @@ public class Members {
                                         return;
                                     }
                                 } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                                        && island.getSetting(IslandRole.Operator, "Kick").getStatus()) {
+                                        && permissionManager.hasPermission(island, "Kick", IslandRole.Operator)) {
                                     Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -312,7 +314,7 @@ public class Members {
             if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
                 operatorActions = new boolean[]{true, true};
             } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
-                if (island.getSetting(IslandRole.Operator, "Kick").getStatus()) {
+                if (permissionManager.hasPermission(island, "Kick", IslandRole.Operator)) {
                     operatorActions = new boolean[]{false, true};
                 }
             }

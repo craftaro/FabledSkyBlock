@@ -1,6 +1,8 @@
 package com.songoda.skyblock.listeners;
 
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,23 +20,25 @@ public class Item implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
+        IslandManager islandManager = skyblock.getIslandManager();
         Player player = event.getPlayer();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, "ItemDrop")) {
-                event.setCancelled(true);
-            }
-        }
+        if (!skyblock.getWorldManager().isIslandWorld(player.getWorld())) return;
+
+        // Check permissions.
+        skyblock.getPermissionManager().processPermission(event, player,
+                islandManager.getIslandAtLocation(event.getItemDrop().getLocation()));
     }
 
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+        IslandManager islandManager = skyblock.getIslandManager();
         Player player = event.getPlayer();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, "ItemPickup")) {
-                event.setCancelled(true);
-            }
-        }
+        if (!skyblock.getWorldManager().isIslandWorld(player.getWorld())) return;
+
+        // Check permissions.
+        skyblock.getPermissionManager().processPermission(event, player,
+                islandManager.getIslandAtLocation(event.getItem().getLocation()));
     }
 }

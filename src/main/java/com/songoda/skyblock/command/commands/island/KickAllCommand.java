@@ -38,7 +38,7 @@ public class KickAllCommand extends SubCommand {
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                 || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && island.getSetting(IslandRole.Operator, "Kick").getStatus())) {
+                && skyblock.getPermissionManager().hasPermission(island, "Kick", IslandRole.Operator))) {
             if (island.isOpen()) {
                 Set<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
 

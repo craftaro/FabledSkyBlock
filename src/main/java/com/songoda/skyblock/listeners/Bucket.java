@@ -30,19 +30,17 @@ public class Bucket implements Listener {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlockClicked();
 
+        IslandManager islandManager = skyblock.getIslandManager();
+
         CompatibleMaterial clickedBlock = CompatibleMaterial.getBlockMaterial(event.getBlockClicked().getType());
 
         if (clickedBlock == CompatibleMaterial.WATER
                 || clickedBlock == CompatibleMaterial.LAVA) {
             if (skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
-                if (!skyblock.getIslandManager().hasPermission(player, block.getLocation(), "Bucket")) {
-                    event.setCancelled(true);
-
-                    skyblock.getMessageManager().sendMessage(player,
-                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                    .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                    skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-                }
+                Island island = islandManager.getIslandAtLocation(block.getLocation());
+                // Check permissions.
+                if (!skyblock.getPermissionManager().processPermission(event, player, island))
+                    return;
             }
         }
     }
@@ -52,24 +50,21 @@ public class Bucket implements Listener {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlockClicked().getRelative(event.getBlockFace());
 
-        if (skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
-            if (!skyblock.getIslandManager().hasPermission(player, block.getLocation(), "Bucket")) {
-                event.setCancelled(true);
-
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-                skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-            }
-        }
-
         WorldManager worldManager = skyblock.getWorldManager();
         IslandManager islandManager = skyblock.getIslandManager();
+
+        if (skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
+            Island island = islandManager.getIslandAtLocation(block.getLocation());
+            // Check permissions.
+            if (!skyblock.getPermissionManager().processPermission(event, player, island))
+                return;
+        }
 
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
             return;
 
         Island island = islandManager.getIslandAtLocation(block.getLocation());
+
         if (island == null)
             return;
 

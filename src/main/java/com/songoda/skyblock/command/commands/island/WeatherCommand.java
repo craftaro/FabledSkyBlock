@@ -31,7 +31,7 @@ public class WeatherCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Weather.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && island.getSetting(IslandRole.Operator, "Weather").getStatus())
+                && skyblock.getPermissionManager().hasPermission(island, "Weather", IslandRole.Operator))
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             Weather.getInstance().open(player);
             soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);

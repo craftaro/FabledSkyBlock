@@ -41,7 +41,7 @@ public class UnbanCommand extends SubCommand {
                     .getBoolean("Island.Visitor.Banning")) {
                 if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                         || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                        && island.getSetting(IslandRole.Operator, "Unban").getStatus())) {
+                        && skyblock.getPermissionManager().hasPermission(island,"Unban", IslandRole.Operator))) {
                     Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
                     UUID targetPlayerUUID = null;

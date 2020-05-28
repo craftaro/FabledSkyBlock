@@ -3,11 +3,15 @@ package com.songoda.skyblock.command.commands.island;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.gui.GuiPermissions;
+import com.songoda.skyblock.gui.GuiPermissionsSelector;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.menus.Settings;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionHandler;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,6 +26,7 @@ public class SettingsCommand extends SubCommand {
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
         SoundManager soundManager = skyblock.getSoundManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
 
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
@@ -34,16 +39,15 @@ public class SettingsCommand extends SubCommand {
         } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && (island.getSetting(IslandRole.Operator, "Visitor").getStatus()
-                    || island.getSetting(IslandRole.Operator, "Member").getStatus()))
+                    && (permissionManager.hasPermission(island, "Visitor", IslandRole.Operator)
+                    || permissionManager.hasPermission(island, "Member", IslandRole.Operator)))
                     || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                Settings.getInstance().open(player,
-                        Settings.Type.Categories, null, null);
+                skyblock.getGuiManager().showGUI(player, new GuiPermissionsSelector(skyblock, island, null));
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
-            } else {
+            } else{
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Settings.Permission.Default.Message"));
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Role.Message"));

@@ -30,7 +30,7 @@ public class BansCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bans.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && island.getSetting(IslandRole.Operator, "Unban").getStatus())
+                && skyblock.getPermissionManager().hasPermission(island, "Unban", IslandRole.Operator))
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             if (island.getBan().getBans().size() == 0) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Bans.Bans.Message"));

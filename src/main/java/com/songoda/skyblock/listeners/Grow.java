@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.permission.PermissionManager;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
@@ -182,8 +183,8 @@ public class Grow implements Listener {
         org.bukkit.block.Block block = event.getBlock();
         if (!skyblock.getWorldManager().isIslandWorld(block.getWorld())) return;
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        if (!islandManager.hasSetting(block.getLocation(), IslandRole.Owner, "FireSpread")) event.setCancelled(true);
+        PermissionManager permissionManager = skyblock.getPermissionManager();
+        if (!permissionManager.hasPermission(block.getLocation(), "FireSpread", IslandRole.Owner)) event.setCancelled(true);
     }
 
     @EventHandler
@@ -191,8 +192,8 @@ public class Grow implements Listener {
         org.bukkit.block.Block block = event.getBlock();
         if (!skyblock.getWorldManager().isIslandWorld(block.getWorld())) return;
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        if (!islandManager.hasSetting(block.getLocation(), IslandRole.Owner, "LeafDecay")) event.setCancelled(true);
+        PermissionManager permissionManager = skyblock.getPermissionManager();
+        if (!permissionManager.hasPermission(block.getLocation(), "LeafDecay", IslandRole.Owner)) event.setCancelled(true);
     }
 
 }

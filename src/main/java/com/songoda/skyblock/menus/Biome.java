@@ -10,6 +10,7 @@ import com.songoda.skyblock.cooldown.CooldownPlayer;
 import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -47,6 +48,7 @@ public class Biome {
         CooldownManager cooldownManager = skyblock.getCooldownManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
         BiomeManager biomeManager = skyblock.getBiomeManager();
         SoundManager soundManager = skyblock.getSoundManager();
 
@@ -64,7 +66,7 @@ public class Biome {
 
                     return;
                 } else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                        && island.getSetting(IslandRole.Operator, "Biome").getStatus())
+                        && permissionManager.hasPermission(island, "Biome", IslandRole.Operator))
                         || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
                     messageManager.sendMessage(player,
                             langConfig.getString("Command.Island.Biome.Permission.Message"));

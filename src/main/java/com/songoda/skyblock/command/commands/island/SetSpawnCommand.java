@@ -51,7 +51,8 @@ public class SetSpawnCommand extends SubCommand {
                 if (island.hasRole(IslandRole.Operator, player.getUniqueId())
                         || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
                     if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                            && (island.getSetting(IslandRole.Operator, environment.name() + "Spawn").getStatus()))
+                            && (skyblock.getPermissionManager().hasPermission(island,
+                            environment.name() + "Spawn", IslandRole.Operator)))
                             || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
                         if (islandManager.isPlayerAtIsland(island, player)) {
                             IslandWorld world = skyblock.getWorldManager().getIslandWorld(player.getWorld());

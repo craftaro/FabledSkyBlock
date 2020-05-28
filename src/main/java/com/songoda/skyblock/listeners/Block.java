@@ -10,6 +10,8 @@ import com.songoda.skyblock.generator.GeneratorManager;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.impl.BlockLimitation;
+import com.songoda.skyblock.permission.PermissionManager;
+import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.NumberUtil;
@@ -31,6 +33,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -66,10 +69,8 @@ public class Block implements Listener {
             return;
         }
 
-        if (!islandManager.hasPermission(player, blockLocation, "Destroy")) {
-            event.setCancelled(true);
-            skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
-            skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+        // Check permissions.
+        if (!skyblock.getPermissionManager().processPermission(event, player, island)) {
             return;
         }
 
@@ -203,12 +204,9 @@ public class Block implements Listener {
             return;
         }
 
-        if (!islandManager.hasPermission(player, blockLoc, "Place")) {
-            event.setCancelled(true);
-            skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Settings.Permission.Message"));
-            skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+        // Check permissions.
+        if (!skyblock.getPermissionManager().processPermission(event, player, island))
             return;
-        }
 
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
@@ -569,7 +567,10 @@ public class Block implements Listener {
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
         IslandManager islandManager = skyblock.getIslandManager();
-        if (!islandManager.hasSetting(block.getLocation(), IslandRole.Owner, "FireSpread")) event.setCancelled(true);
+        PermissionManager permissionManager = skyblock.getPermissionManager();
+        if (!permissionManager.hasPermission(
+                islandManager.getIslandAtLocation(block.getLocation()),"FireSpread", IslandRole.Owner))
+            event.setCancelled(true);
     }
 
     @EventHandler
@@ -617,6 +618,20 @@ public class Block implements Listener {
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    @EventHandler
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        Player player = event.getPlayer();
+
+        if (player == null) return;
+
+        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
+            IslandManager islandManager = skyblock.getIslandManager();
+            Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+            // Check permissions.
+            skyblock.getPermissionManager().processPermission(event, player, island);
         }
     }
 

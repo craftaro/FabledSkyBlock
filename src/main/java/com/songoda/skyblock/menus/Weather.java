@@ -9,6 +9,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -43,6 +44,7 @@ public class Weather {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
 
@@ -62,7 +64,7 @@ public class Weather {
 
                         return;
                     } else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                            && island.getSetting(IslandRole.Operator, "Biome").getStatus())
+                            && permissionManager.hasPermission(island, "Biome", IslandRole.Operator))
                             || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Weather.Permission.Message"));

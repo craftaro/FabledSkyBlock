@@ -9,6 +9,8 @@ import com.songoda.skyblock.ban.Ban;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.BasicPermission;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.Upgrade;
@@ -36,7 +38,7 @@ public class Island {
     private final SkyBlock skyblock;
     private final com.songoda.skyblock.api.island.Island apiWrapper;
 
-    private Map<IslandRole, List<IslandSetting>> islandSettings = new HashMap<>();
+    private Map<IslandRole, List<IslandPermission>> islandPermissions = new HashMap<>();
     private List<IslandLocation> islandLocations = new ArrayList<>();
     private Map<UUID, IslandCoop> coopPlayers = new HashMap<>();
 
@@ -50,6 +52,7 @@ public class Island {
         this.skyblock = SkyBlock.getInstance();
 
         FileManager fileManager = skyblock.getFileManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
 
         this.islandUUID = UUID.randomUUID();
         this.ownerUUID = player.getUniqueId();
@@ -159,18 +162,22 @@ public class Island {
             }
 
             for (IslandRole roleList : IslandRole.getRoles()) {
-                List<IslandSetting> settings = new ArrayList<>();
+                List<IslandPermission> permissions = new ArrayList<>();
 
-                for (String settingList : defaultSettingsConfig.getFileConfiguration().getConfigurationSection("Settings." + roleList.name()).getKeys(false)) {
-                    if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration().getString("Settings." + roleList.name() + "." + settingList) == null) {
-                        settings.add(
-                                new IslandSetting(settingList, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + settingList)));
+                for (BasicPermission permission : skyblock.getPermissionManager().getPermissions()) {
+
+                    if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
+                            .getString("Settings." + roleList.name() + "." + permission.getName()) == null) {
+                        permissions.add(
+                                new IslandPermission(permission, defaultSettingsConfig.getFileConfiguration()
+                                        .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
                     } else {
-                        settings.add(new IslandSetting(settingList, settingsDataConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + settingList)));
+                        permissions.add(new IslandPermission(permission, settingsDataConfig.getFileConfiguration()
+                                .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
                     }
                 }
 
-                islandSettings.put(roleList, settings);
+                islandPermissions.put(roleList, permissions);
             }
         } else {
             FileConfiguration configLoad = config.getFileConfiguration();
@@ -186,15 +193,15 @@ public class Island {
             configLoad.set("Ownership.Original", ownerUUID.toString());
 
             for (IslandRole roleList : IslandRole.getRoles()) {
+                List<BasicPermission> allPermissions = skyblock.getPermissionManager().getPermissions();
+                List<IslandPermission> permissions = new ArrayList<>(allPermissions.size());
 
-                Set<String> keys = defaultSettingsConfig.getFileConfiguration().getConfigurationSection("Settings." + roleList.name()).getKeys(false);
-                List<IslandSetting> settings = new ArrayList<>(keys.size());
-
-                for (String settingList : keys) {
-                    settings.add(new IslandSetting(settingList, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + settingList)));
+                for (BasicPermission permission : allPermissions) {
+                    permissions.add(
+                            new IslandPermission(permission, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + permission, true)));
                 }
 
-                islandSettings.put(roleList, settings);
+                islandPermissions.put(roleList, permissions);
             }
 
             save();
@@ -649,24 +656,32 @@ public class Island {
                 .getFileConfiguration().getBoolean("Upgrade." + type.name());
     }
 
-    public IslandSetting getSetting(IslandRole role, String setting) {
-        if (islandSettings.containsKey(role)) {
-            for (IslandSetting settingList : islandSettings.get(role)) {
-                if (settingList.getName().equalsIgnoreCase(setting)) {
-                    return settingList;
-                }
+    public boolean hasPermission(IslandRole role, BasicPermission permission) {
+        if (islandPermissions.containsKey(role)) {
+            for (IslandPermission islandPermission : islandPermissions.get(role)) {
+                if (islandPermission.getPermission() == permission)
+                    return islandPermission.getStatus();
             }
         }
 
-        return new IslandSetting(setting, true); //TODO: Default setting value
+        return true; //TODO: Default setting value
     }
 
-    public List<IslandSetting> getSettings(IslandRole role) {
-        if (islandSettings.containsKey(role)) {
-            return islandSettings.get(role);
+    public IslandPermission getPermission(IslandRole role, BasicPermission permission) {
+        if (islandPermissions.containsKey(role)) {
+            for (IslandPermission islandPermission : islandPermissions.get(role)) {
+                if (islandPermission.getPermission() == permission)
+                    return islandPermission;
+            }
         }
 
         return null;
+    }
+
+    public List<IslandPermission> getSettings(IslandRole role) {
+        if (islandPermissions.containsKey(role))
+            return Collections.unmodifiableList(islandPermissions.get(role));
+        return Collections.emptyList();
     }
 
     public double getBankBalance() {
@@ -809,9 +824,9 @@ public class Island {
                 .getConfig(new File(skyblock.getDataFolder().toString() + "/setting-data", ownerUUID.toString() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        for (Entry<IslandRole, List<IslandSetting>> entry : islandSettings.entrySet()) {
-            for (IslandSetting setting : entry.getValue()) {
-                configLoad.set("Settings." + entry.getKey() + "." + setting.getName(), setting.getStatus());
+        for (Entry<IslandRole, List<IslandPermission>> entry : islandPermissions.entrySet()) {
+            for (IslandPermission permission : entry.getValue()) {
+                configLoad.set("Settings." + entry.getKey() + "." + permission.getPermission().getName(), permission.getStatus());
             }
         }
 
@@ -879,4 +894,5 @@ public class Island {
     public com.songoda.skyblock.api.island.Island getAPIWrapper() {
         return apiWrapper;
     }
+
 }

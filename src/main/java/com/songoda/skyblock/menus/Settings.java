@@ -7,6 +7,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -46,6 +47,7 @@ public class Settings {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
 
@@ -64,6 +66,7 @@ public class Settings {
                         if (island13 == null) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Settings.Owner.Message"));
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
@@ -96,7 +99,7 @@ public class Settings {
                             }
 
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && !island13.getSetting(IslandRole.Operator, "Coop").getStatus()) {
+                                    && !permissionManager.hasPermission(island13, "Coop", IslandRole.Operator)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -114,7 +117,7 @@ public class Settings {
                                 .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Settings.Categories.Item.Visitor.Displayname"))))) {
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && !island13.getSetting(IslandRole.Operator, "Visitor").getStatus()) {
+                                    && !permissionManager.hasPermission(island13, "Visitor", IslandRole.Operator)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -133,7 +136,7 @@ public class Settings {
                                 .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Settings.Categories.Item.Member.Displayname"))))) {
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && !island13.getSetting(IslandRole.Operator, "Member").getStatus()) {
+                                    && !permissionManager.hasPermission(island13, "Member", IslandRole.Operator)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -169,7 +172,7 @@ public class Settings {
                                 .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Settings.Categories.Item.Owner.Displayname"))))) {
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && !island13.getSetting(IslandRole.Operator, "Island").getStatus()) {
+                                    && !permissionManager.hasPermission(island13,"Island", IslandRole.Operator)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -241,7 +244,7 @@ public class Settings {
 
                             return;
                         } else if (island14.hasRole(IslandRole.Operator, player.getUniqueId())
-                                && !island14.getSetting(IslandRole.Operator, role.name()).getStatus()) {
+                                && !permissionManager.hasPermission(island14, role.name(), IslandRole.Operator)) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -295,11 +298,11 @@ public class Settings {
                         } else if (is.hasItemMeta()) {
                             String roleName = getRoleName(role);
 
-                            for (IslandSetting settingList : island14.getSettings(role)) {
+                            for (IslandPermission settingList : island14.getSettings(role)) {
                                 if (is.getItemMeta().getDisplayName()
                                         .equals(ChatColor.translateAlternateColorCodes('&',
                                                 configLoad.getString("Menu.Settings." + roleName + ".Item.Setting."
-                                                        + settingList.getName() + ".Displayname")))) {
+                                                        + settingList.getPermission().getName() + ".Displayname")))) {
                                     if (!hasPermission(island14, player, role)) {
                                         messageManager.sendMessage(player, configLoad
                                                 .getString("Command.Island.Settings.Permission.Change.Message"));
@@ -308,19 +311,17 @@ public class Settings {
                                         return;
                                     }
 
-                                    if (settingList != null) {
-                                        if (settingList.getStatus()) {
-                                            settingList.setStatus(false);
-                                        } else {
-                                            settingList.setStatus(true);
-                                        }
+                                    if (settingList.getStatus()) {
+                                        settingList.setStatus(false);
+                                    } else {
+                                        settingList.setStatus(true);
+                                    }
 
-                                        if (settingList.getName().equals("KeepItemsOnDeath")
-                                                || settingList.getName().equals("PvP")
-                                                || settingList.getName().equals("Damage")) {
-                                            island14.getVisit()
-                                                    .setSafeLevel(islandManager.getIslandSafeLevel(island14));
-                                        }
+                                    if (settingList.getPermission().getName().equals("KeepItemsOnDeath")
+                                            || settingList.getPermission().getName().equals("PvP")
+                                            || settingList.getPermission().getName().equals("Damage")) {
+                                        island14.getVisit()
+                                                .setSafeLevel(islandManager.getIslandSafeLevel(island14));
                                     }
 
                                     break;
@@ -1515,6 +1516,7 @@ public class Settings {
 
     private ItemStack createItem(Island island, IslandRole role, String setting, ItemStack is) {
         SkyBlock skyblock = SkyBlock.getInstance();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
 
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
@@ -1532,7 +1534,7 @@ public class Settings {
         im.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 configLoad.getString("Menu.Settings." + roleName + ".Item.Setting." + setting + ".Displayname")));
 
-        if (island.getSetting(role, setting).getStatus()) {
+        if (island.hasPermission(role, permissionManager.getPermission(setting))) {
             for (String itemLoreList : configLoad
                     .getStringList("Menu.Settings." + roleName + ".Item.Setting.Status.Enabled.Lore")) {
                 itemLore.add(ChatColor.translateAlternateColorCodes('&', itemLoreList));
@@ -1560,6 +1562,7 @@ public class Settings {
     }
 
     private boolean hasPermission(Island island, Player player, IslandRole role) {
+        PermissionManager permissionManager = SkyBlock.getInstance().getPermissionManager();
         if (role == IslandRole.Visitor || role == IslandRole.Member || role == IslandRole.Coop
                 || role == IslandRole.Owner) {
             String roleName = role.name();
@@ -1569,7 +1572,7 @@ public class Settings {
             }
 
             return !island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    || island.getSetting(IslandRole.Operator, roleName).getStatus();
+                    || permissionManager.hasPermission(island, roleName, IslandRole.Operator);
         } else if (role == IslandRole.Operator) {
             return island.hasRole(IslandRole.Owner, player.getUniqueId());
         }

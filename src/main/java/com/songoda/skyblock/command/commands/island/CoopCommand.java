@@ -10,6 +10,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.menus.Coop;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.world.LocationUtil;
@@ -27,6 +28,7 @@ public class CoopCommand extends SubCommand {
     public void onCommandByPlayer(Player player, String[] args) {
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
+        PermissionManager permissionManager = skyblock.getPermissionManager();
         SoundManager soundManager = skyblock.getSoundManager();
         FileManager fileManager = skyblock.getFileManager();
 
@@ -44,7 +46,7 @@ public class CoopCommand extends SubCommand {
                 .getBoolean("Island.Coop.Enable")) {
             if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                     || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && island.getSetting(IslandRole.Operator, "CoopPlayers").getStatus())) {
+                    && permissionManager.hasPermission(island, "CoopPlayers", IslandRole.Operator))) {
                 if (args.length == 1 || args.length == 2) {
                     Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 

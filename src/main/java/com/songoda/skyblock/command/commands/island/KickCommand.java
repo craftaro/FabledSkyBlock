@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.permission.PermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -40,6 +41,7 @@ public class KickCommand extends SubCommand {
             IslandManager islandManager = skyblock.getIslandManager();
             SoundManager soundManager = skyblock.getSoundManager();
             FileManager fileManager = skyblock.getFileManager();
+            PermissionManager permissionManager = skyblock.getPermissionManager();
 
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
@@ -52,7 +54,7 @@ public class KickCommand extends SubCommand {
                     messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Owner.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
-                        || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && island.getSetting(IslandRole.Operator, "Kick").getStatus())) {
+                        || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && permissionManager.hasPermission(island, "Kick", IslandRole.Operator))) {
                             UUID targetPlayerUUID = null;
                             String targetPlayerName = null;
 
