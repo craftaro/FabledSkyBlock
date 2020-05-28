@@ -33,6 +33,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -204,8 +205,7 @@ public class Block implements Listener {
         }
 
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(new PlayerEnterPortalEvent(player, player.getLocation()),
-                player, island))
+        if (!skyblock.getPermissionManager().processPermission(event, player, island))
             return;
 
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
@@ -618,6 +618,20 @@ public class Block implements Listener {
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    @EventHandler
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        Player player = event.getPlayer();
+
+        if (player == null) return;
+
+        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
+            IslandManager islandManager = skyblock.getIslandManager();
+            Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+            // Check permissions.
+            skyblock.getPermissionManager().processPermission(event, player, island);
         }
     }
 

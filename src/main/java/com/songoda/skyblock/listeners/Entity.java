@@ -361,45 +361,41 @@ public class Entity implements Listener {
 
         if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
             // Check permissions.
-            if (!skyblock.getPermissionManager().hasPermission(null,
-                    islandManager.getIslandAtLocation(entity.getLocation()), "Explosions"))
-                event.setCancelled(true);
+            Island island = islandManager.getIslandAtLocation(entity.getLocation());
+            skyblock.getPermissionManager().processPermission(event, null, island);
 
             if (!event.isCancelled()) {
-                Island island = islandManager.getIslandAtLocation(entity.getLocation());
 
-                if (island != null) {
-                    if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                            .getBoolean("Island.Block.Level.Enable")) {
-                        for (org.bukkit.block.Block blockList : event.blockList()) {
-                            @SuppressWarnings("deprecation")
-                            CompatibleMaterial materials = CompatibleMaterial.getBlockMaterial(blockList.getType());
+                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                        .getBoolean("Island.Block.Level.Enable")) {
+                    for (org.bukkit.block.Block blockList : event.blockList()) {
+                        @SuppressWarnings("deprecation")
+                        CompatibleMaterial materials = CompatibleMaterial.getBlockMaterial(blockList.getType());
 
-                            if (materials != null) {
-                                IslandLevel level = island.getLevel();
+                        if (materials != null) {
+                            IslandLevel level = island.getLevel();
 
-                                if (level.hasMaterial(materials.name())) {
-                                    long materialAmount = level.getMaterialAmount(materials.name());
+                            if (level.hasMaterial(materials.name())) {
+                                long materialAmount = level.getMaterialAmount(materials.name());
 
-                                    if (materialAmount - 1 <= 0) {
-                                        level.removeMaterial(materials.name());
-                                    } else {
-                                        level.setMaterialAmount(materials.name(), materialAmount - 1);
-                                    }
+                                if (materialAmount - 1 <= 0) {
+                                    level.removeMaterial(materials.name());
+                                } else {
+                                    level.setMaterialAmount(materials.name(), materialAmount - 1);
                                 }
                             }
                         }
                     }
+                }
 
-                    if (SkyBlock.getInstance().getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                            .getBoolean("Island.Spawn.Protection")) {
-                        IslandWorld world = worldManager.getIslandWorld(event.getEntity().getWorld());
-                        for (org.bukkit.block.Block block : event.blockList()) {
-                            if (LocationUtil.isLocationLocation(block.getLocation(),
-                                    island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
-                                event.blockList().remove(block);
-                                break;
-                            }
+                if (SkyBlock.getInstance().getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                        .getBoolean("Island.Spawn.Protection")) {
+                    IslandWorld world = worldManager.getIslandWorld(event.getEntity().getWorld());
+                    for (org.bukkit.block.Block block : event.blockList()) {
+                        if (LocationUtil.isLocationLocation(block.getLocation(),
+                                island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
+                            event.blockList().remove(block);
+                            break;
                         }
                     }
                 }

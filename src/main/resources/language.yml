@@ -2,7 +2,7 @@ ClassLocalization:
  Materials:
  IslandRoles:
    Coop: 'Coop'
-   Visitor: 'Visitor' 
+   Visitor: 'Visitor'
    Member: 'Member'
    Operator: 'Operator'
    Owner: 'Owner'
@@ -175,7 +175,7 @@ Command:
         Message: '&f&oManage stackables'
        Target:
         None:  '&bSkyBlock &8| &cError&8: &eYou must be looking at a block.'
-        Unstackable: '&bSkyBlock &8| &cError&8: &eUnable to target unstackable block.' 
+        Unstackable: '&bSkyBlock &8| &cError&8: &eUnable to target unstackable block.'
         Remove-Stack: '&bSkyBlock &8| &aInfo&8: &eSuccessfully removed stack if one was present.'
        Setsize:
         No-Arguments: '&bSkyBlock &8| &cError&8: &ePlease input a number that will become the new stack size.'
@@ -1393,6 +1393,10 @@ Menu:
           - '&7they explore your Island.'
           - ''
           - '&eClick to Edit Settings!'
+        Next:
+          Displayname: '&aNext Page'
+        Last:
+          Displayname: '&aLast Page'
         Exit:
           Displayname: '&cClick to Exit'
         Coop:

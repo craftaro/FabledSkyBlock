@@ -64,7 +64,7 @@ public class GuiPermissions extends Gui {
                         TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname")),
                         TextUtils.formatText(configLoad.getStringList("Menu.Settings.Visitor.Item.Welcome.Lore"))),
                         (event) -> {
-                            guiManager.showGUI(event.player, new WelcomeEditor(plugin, this, island));
+                            guiManager.showGUI(event.player, new GuiWelcomeEditor(plugin, this, island));
                         });
 
             if (config.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
@@ -72,7 +72,7 @@ public class GuiPermissions extends Gui {
                         TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Signature.Displayname")),
                         TextUtils.formatText(configLoad.getStringList("Menu.Settings.Visitor.Item.Signature.Lore"))),
                         (event) -> {
-                            guiManager.showGUI(event.player, new SignatureEditor(plugin, this, island));
+                            guiManager.showGUI(event.player, new GuiSignatureEditor(plugin, this, island));
                         });
             }
 
@@ -118,14 +118,16 @@ public class GuiPermissions extends Gui {
         this.pages = (int) Math.max(1, Math.ceil(itemCount / 36));
 
         if (page != 1)
-            setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW, "Back"),
+            setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                    TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Last.Displayname"))),
                     (event) -> {
                         page--;
                         paint();
                     });
 
         if (page != pages)
-            setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW, "Next"),
+            setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                    TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Next.Displayname"))),
                     (event) -> {
                         page++;
                         paint();

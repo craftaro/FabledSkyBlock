@@ -73,7 +73,7 @@ public class PermissionManager {
                     new PvpPermission(plugin),
                     new HangingDestroyPermission(plugin),
                     new DamagePermission(plugin),
-                    new ExplosionsPermission(),
+                    new ExplosionsPermission(plugin),
                     new MobTamingPermission(plugin),
                     new MobGriefingPermission(plugin),
                     new ExperienceOrbPickupPermission(plugin),

@@ -1,13 +1,13 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
 import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -43,19 +43,11 @@ public class PortalPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onTeleport(PlayerTeleportEvent event) {
-        boolean isCause = false;
-
-        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL || event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL) {
-            isCause = true;
-        } else {
-            if (NMSUtil.getVersionNumber() > 9) {
-                if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_GATEWAY) {
-                    isCause = true;
-                }
-            }
-        }
-
-        if (isCause)
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL
+                || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL
+                || event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL
+                || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9) &&
+                event.getCause() == PlayerTeleportEvent.TeleportCause.END_GATEWAY)
             cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
     }
 }

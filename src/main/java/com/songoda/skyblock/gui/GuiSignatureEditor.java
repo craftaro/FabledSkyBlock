@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WelcomeEditor extends Gui {
+public class GuiSignatureEditor extends Gui {
 
     private final SkyBlock plugin;
     private final FileConfiguration configLoad;
@@ -30,7 +30,7 @@ public class WelcomeEditor extends Gui {
     private final MessageManager messageManager;
     private final IslandManager islandManager;
 
-    public WelcomeEditor(SkyBlock plugin, Gui returnGui, Island island) {
+    public GuiSignatureEditor(SkyBlock plugin, Gui returnGui, Island island) {
         super(1);
         this.plugin = plugin;
         this.returnGui = returnGui;
@@ -41,25 +41,25 @@ public class WelcomeEditor extends Gui {
         this.messageManager = plugin.getMessageManager();
         this.islandManager = plugin.getIslandManager();
         setDefaultItem(null);
-        setTitle(TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title")));
+        setTitle(TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")));
         paint();
     }
 
     public void paint() {
-        List<String> welcomeMessage = island.getMessage(IslandMessage.Welcome);
+        List<String> signatureMessage = island.getMessage(IslandMessage.Signature);
         setButton(2, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))),
+                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"))),
                 (event) -> guiManager.showGUI(event.player, returnGui));
         setButton(6, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))),
+                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"))),
                 (event) -> guiManager.showGUI(event.player, returnGui));
 
         setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname")),
+                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Displayname")),
                 TextUtils.formatText(configLoad.getStringList(
-                        welcomeMessage.size() == mainConfig.getFileConfiguration().getInt("Island.Visitor.Welcome.Lines")
-                                ? "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Limit.Lore"
-                                : "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.More.Lore"))),
+                        signatureMessage.size() == mainConfig.getFileConfiguration().getInt("Island.Visitor.Signature.Lines")
+                                ? "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Limit.Lore"
+                                : "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.More.Lore"))),
                 (event -> {
                     AnvilGui gui = new AnvilGui(event.player, this);
                     gui.setAction((e -> {
@@ -72,32 +72,32 @@ public class WelcomeEditor extends Gui {
                                 .getInt("Island.Visitor.Signature.Length")) {
                             CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
                         } else {
-                            welcomeMessage.add(gui.getInputText().trim());
-                            island.setMessage(IslandMessage.Welcome, e.player.getName(), welcomeMessage);
+                            signatureMessage.add(gui.getInputText().trim());
+                            island.setMessage(IslandMessage.Signature, e.player.getName(), signatureMessage);
                             CompatibleSound.BLOCK_NOTE_BLOCK_PLING.play(e.player);
                         }
                         e.player.closeInventory();
                         paint();
                     }));
-                    gui.setTitle(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Word.Enter"));
+                    gui.setTitle(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Word.Enter"));
                     guiManager.showGUI(event.player, gui);
                 }));
 
         List<String> itemLore = new ArrayList<>();
-        itemLore.add(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Word.Empty"));
+        itemLore.add(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Word.Empty"));
         setItem(4, GuiUtils.createButtonItem(CompatibleMaterial.OAK_SIGN,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname")),
-                TextUtils.formatText(welcomeMessage.size() == 0 ? itemLore : welcomeMessage)));
+                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Displayname")),
+                TextUtils.formatText(signatureMessage.size() == 0 ? itemLore : signatureMessage)));
 
         setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Displayname")),
+                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.Displayname")),
                 TextUtils.formatText(configLoad.getStringList(
-                        welcomeMessage.size() == 0
-                                ? "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.None.Lore"
-                                : "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Lines.Lore"))),
+                        signatureMessage.size() == 0
+                                ? "Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.None.Lore"
+                                : "Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.Lines.Lore"))),
                 (event -> {
-                    welcomeMessage.remove(welcomeMessage.size() - 1);
-                    island.setMessage(IslandMessage.Welcome, event.player.getName(), welcomeMessage);
+                    signatureMessage.remove(signatureMessage.size() - 1);
+                    island.setMessage(IslandMessage.Signature, event.player.getName(), signatureMessage);
                     paint();
                 }));
     }

@@ -24,13 +24,10 @@ public class FirePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
         if (event.getAction() != Action.LEFT_CLICK_BLOCK)
             return;
 
         Player player = event.getPlayer();
-        Block block = event.getClickedBlock();
 
         if (CompatibleMaterial.getMaterial(player.getTargetBlock(null, 5)) == CompatibleMaterial.FIRE)
             cancelAndMessage(event, player, plugin, messageManager);

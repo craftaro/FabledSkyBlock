@@ -9,6 +9,7 @@ import com.songoda.skyblock.permission.event.events.ProjectileLaunchByPlayerEven
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
@@ -76,6 +77,8 @@ public abstract class ListeningPermission extends BasicPermission {
     public void onTeleport(PlayerTeleportEvent event) {}
 
     public void onProjectileLaunch(ProjectileLaunchByPlayerEvent event) {}
+
+    public void onBlockIgnite(BlockIgniteEvent event) {}
 
     protected void noPermsMessage(Player player, SkyBlock plugin, MessageManager messageManager) {
         messageManager.sendMessage(player,

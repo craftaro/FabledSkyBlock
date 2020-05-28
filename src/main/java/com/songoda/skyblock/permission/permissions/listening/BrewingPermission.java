@@ -41,6 +41,7 @@ public class BrewingPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player)) return;
         Player player = (Player)event.getDamager();
         Entity entity = event.getEntity();
 

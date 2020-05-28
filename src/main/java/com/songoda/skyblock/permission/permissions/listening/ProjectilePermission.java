@@ -7,6 +7,7 @@ import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionPriority;
 import com.songoda.skyblock.permission.PermissionType;
+import com.songoda.skyblock.permission.event.events.ProjectileLaunchByPlayerEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -34,7 +35,7 @@ public class ProjectilePermission extends ListeningPermission {
     }
 
     @PermissionHandler(priority = PermissionPriority.LAST)
-    public void onProjectileLaunch(ProjectileLaunchEvent event) {
+    public void onProjectileLaunch(ProjectileLaunchByPlayerEvent event) {
         event.setCancelled(true);
     }
 }

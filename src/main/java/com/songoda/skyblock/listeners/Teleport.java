@@ -61,8 +61,7 @@ public class Teleport implements Listener {
             com.songoda.skyblock.island.Island island = islandManager.getIslandAtLocation(event.getTo());
 
             // Check permissions.
-            if (!skyblock.getPermissionManager().processPermission(new PlayerEnterPortalEvent(player, player.getLocation()),
-                    player, island))
+            if (!skyblock.getPermissionManager().processPermission(event, player, island))
                 return;
         }
 
