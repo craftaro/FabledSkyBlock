@@ -229,18 +229,34 @@ public class PlayerData {
         this.viewer = viewer;
     }
 
+    public void deleteTransactions() {
+        Config config = getConfig();
+        FileConfiguration configLoad = config.getFileConfiguration();
+        configLoad.set("Bank.Transactions",null);
+        configLoad.set("Bank.Transactions.Size",0);
+        try {
+            configLoad.save(config.getFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void save() {
         transactions = BankManager.getInstance().getTransactionList(getPlayer());
         Config config = getConfig();
         FileConfiguration configLoad = config.getFileConfiguration();
         configLoad.set("Statistics.Island.Playtime", getPlaytime());
-        configLoad.set("Bank.Transactions.Size",transactions.size());
-        for (int i = 0;i<transactions.size();i++) {
-            Transaction t = transactions.get(i);
-            configLoad.set("Bank.Transactions."+i+".Action",t.action.name());
-            configLoad.set("Bank.Transactions."+i+".Amount",t.ammount);
-            configLoad.set("Bank.Transactions."+i+".Player",t.player.getUniqueId().toString());
-            configLoad.set("Bank.Transactions."+i+".Date",t.timestamp.getTime());
+        if (transactions != null) {
+            configLoad.set("Bank.Transactions.Size", transactions.size());
+            for (int i = 0; i < transactions.size(); i++) {
+                Transaction t = transactions.get(i);
+                configLoad.set("Bank.Transactions." + i + ".Action", t.action.name());
+                configLoad.set("Bank.Transactions." + i + ".Amount", t.ammount);
+                configLoad.set("Bank.Transactions." + i + ".Player", t.player.getUniqueId().toString());
+                configLoad.set("Bank.Transactions." + i + ".Date", t.timestamp.getTime());
+            }
+        }else {
+            configLoad.set("Bank.Transactions.Size", 0);
         }
         try {
             configLoad.save(config.getFile());
@@ -251,7 +267,6 @@ public class PlayerData {
 
     private Config getConfig() {
         SkyBlock skyblock = SkyBlock.getInstance();
-
         return skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
     }
     
