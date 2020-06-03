@@ -3,21 +3,16 @@ package com.songoda.skyblock.levelling.rework;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -31,7 +26,6 @@ import com.songoda.skyblock.levelling.rework.calculator.Calculator;
 import com.songoda.skyblock.levelling.rework.calculator.CalculatorRegistry;
 import com.songoda.skyblock.levelling.rework.calculator.impl.EpicSpawnerCalculator;
 import com.songoda.skyblock.levelling.rework.calculator.impl.UltimateStackerCalculator;
-import com.songoda.skyblock.levelling.rework.calculator.impl.WildStackerCalculator;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.StackableManager;
  
@@ -152,7 +146,6 @@ public final class IslandLevelManager {
 
         if (pm.isPluginEnabled("EpicSpawners")) CalculatorRegistry.registerCalculator(new EpicSpawnerCalculator(), spawner);
         if (pm.isPluginEnabled("UltimateStacker")) CalculatorRegistry.registerCalculator(new UltimateStackerCalculator(), spawner);
-        if (pm.isPluginEnabled("WildStacker")) CalculatorRegistry.registerCalculator(new WildStackerCalculator(), spawner);
     }
 
     private static final AmountMaterialPair EMPTY = new AmountMaterialPair(null, 0);
