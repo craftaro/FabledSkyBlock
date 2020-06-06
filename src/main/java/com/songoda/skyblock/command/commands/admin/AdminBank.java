@@ -121,7 +121,7 @@ public class AdminBank extends SubCommand {
 
     @Override
     public String getName() {
-        return "adminbank";
+        return "bank";
     }
 
     @Override

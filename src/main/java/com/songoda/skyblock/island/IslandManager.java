@@ -532,6 +532,7 @@ public class IslandManager {
                     if ((amt = data.getIslandDeletionCount()) >= highest) return false;
 
                     data.setIslandDeletionCount(amt + 1);
+                    data.deleteTransactions();
                 }
             }
         }

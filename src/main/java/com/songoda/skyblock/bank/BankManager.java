@@ -19,7 +19,7 @@ public class BankManager {
 
     public static BankManager getInstance() {return instance == null ? instance = new BankManager() : instance;}
 
-    public HashMap<UUID, List<Transaction>> log;
+    private HashMap<UUID, List<Transaction>> log;
 
     public FileConfiguration lang;
 
@@ -35,12 +35,10 @@ public class BankManager {
         if (log.containsKey(player.getUniqueId())&&log.get(player.getUniqueId())!=null&&!log.get(player.getUniqueId()).isEmpty()) {
             List<String> lore = new ArrayList<>();
             List<Transaction> transactions = log.get(player.getUniqueId());
-            int count = 1;
-            while (count <= 10) {
-                if (transactions.size()-count < 0) { break; }
-                Transaction t = transactions.get(transactions.size()-count);
-                lore.add("#" + count + " " + t.timestamp.toString() +" " + t.player.getPlayer().getDisplayName() + " " + t.action.name().toLowerCase() + " " + EconomyManager.formatEconomy(t.ammount));
-                count++;
+            int size = transactions.size()>10 ? 10 : transactions.size();
+            for (int i = 0;i<size;i++) {
+                Transaction t = transactions.get((transactions.size()-1)-i);
+                lore.add("#" + (i+1) + " " + t.timestamp.toString() +" " + t.player.getPlayer().getDisplayName() + " " + t.action.name().toLowerCase() + " " + EconomyManager.formatEconomy(t.ammount));
             }
             return lore;
         }else {
@@ -53,13 +51,11 @@ public class BankManager {
     public void addTransaction(Player p, Transaction transaction) {
         if (log.containsKey(p.getUniqueId())) {
             log.get(p.getUniqueId()).add(transaction);
-        }else {
+         }else {
             List<Transaction> t = new ArrayList<>();
             t.add(transaction);
             log.put(p.getUniqueId(),t);
         }
-        SkyBlock.getInstance().getPlayerDataManager().getPlayerData().get(p.getUniqueId()).getTransactions().add(transaction);
-
     }
 
     private void loadTransactions() {
@@ -70,8 +66,9 @@ public class BankManager {
 
     public List<String> getBalanceLore(Player player) {
         List<String> result = new ArrayList<>();
-        result.add("Some error occured while loading your balance");
+        result.add("Some error occurred while loading your balance!");
         Island island = SkyBlock.getInstance().getIslandManager().getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
+        result.add("If this is null then its a easy to fix bug: "+island.toString());
         if (island != null) {
             result.clear();
             result.add(player.getDisplayName()+"'s balance is "+EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId()))));

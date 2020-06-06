@@ -186,7 +186,6 @@ public class SkyBlock extends SongodaPlugin {
         pluginManager.registerEvents(new FallBreak(this), this);
 
         if (pluginManager.isPluginEnabled("EpicSpawners")) pluginManager.registerEvents(new EpicSpawners(this), this);
-        if (pluginManager.isPluginEnabled("WildStacker")) pluginManager.registerEvents(new WildStacker(this), this);
         if (pluginManager.isPluginEnabled("UltimateStacker"))
             pluginManager.registerEvents(new UltimateStacker(this), this);
 

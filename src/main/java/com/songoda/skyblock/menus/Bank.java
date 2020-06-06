@@ -146,7 +146,7 @@ public class Bank {
     }
 
     public void open(Player player) {
-        Island island = null;
+        Island island;
         island = islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
 
 

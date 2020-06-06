@@ -152,7 +152,7 @@ Command:
         Short01:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin bank [<Deposit|Withdraw|Balance>]'
         Short02:
-          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin bank [Player] [<Deposit|Withdraw|Balance>]'
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin bank [<Deposit|Withdraw|Balance>] [Player]'
         NullIsland:
           Message: '&bSkyBlock &8| &cError&8: &eYou are not on an island, please specify a Player or move to an island. Or maybe you are on nullisland?'
         ByConsole:
@@ -160,7 +160,7 @@ Command:
         Balance:
           Message: ' %player% have %bal%.'
         Info:
-          Message: '&bSkyBlock &8| &cError&8: /island admin bank [Player] [<Deposit|Withdraw|Balance>]'
+          Message: '&bSkyBlock &8| &cError&8: /island admin bank [<Deposit|Withdraw|Balance>] [Player]'
         SuccesWithdraw:
           Message: 'Succesfully removed %ammount% from %player%''s island'
         SuccesDeposit:
