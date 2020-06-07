@@ -812,7 +812,7 @@ public class IslandManager {
 
                             scoreboard.run();
                         }
-                    } catch (IllegalPluginAccessException e) {
+                    } catch (Exception e) {
                     }
                 }
 
