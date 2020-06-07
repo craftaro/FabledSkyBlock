@@ -63,6 +63,15 @@ public class WorldManager {
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> registerMultiverse(endWorldName, endWorldEnvironment));
         }
+
+        if (normalWorld != null)
+            normalWorld.setDifficulty(Difficulty.valueOf(configLoad.getString("Island.World.Normal.Difficulty")));
+
+        if (netherWorld != null)
+            netherWorld.setDifficulty(Difficulty.valueOf(configLoad.getString("Island.World.Nether.Difficulty")));
+
+        if (endWorld != null)
+            endWorld.setDifficulty(Difficulty.valueOf(configLoad.getString("Island.World.End.Difficulty")));
     }
 
     public void registerMultiverse(String worldName, World.Environment environment) {
