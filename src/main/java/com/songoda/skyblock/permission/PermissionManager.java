@@ -20,7 +20,7 @@ public class PermissionManager {
 
     private final SkyBlock plugin;
 
-    private final List<BasicPermission> registeredPermissions = new ArrayList<>();
+    private final Map<String, BasicPermission> registeredPermissions = new HashMap<>();
     private List<HandlerWrapper> registeredHandlers = new LinkedList<>();
 
     public PermissionManager(SkyBlock plugin) {
@@ -109,7 +109,7 @@ public class PermissionManager {
     }
 
     public boolean registerPermission(BasicPermission permission) {
-        registeredPermissions.add(permission);
+        registeredPermissions.put(permission.getName().toUpperCase(), permission);
         Set<Method> methods;
         try {
             Method[] publicMethods = permission.getClass().getMethods();
@@ -198,17 +198,15 @@ public class PermissionManager {
     }
 
     public BasicPermission getPermission(String permissionName) {
-        return registeredPermissions.stream()
-                .filter(p -> p.getName().equalsIgnoreCase(permissionName))
-                .findFirst().orElse(null);
+        return registeredPermissions.get(permissionName.toUpperCase());
     }
 
     public List<BasicPermission> getPermissions() {
-        return new ArrayList<>(registeredPermissions);
+        return new ArrayList<>(registeredPermissions.values());
     }
 
     public List<ListeningPermission> getListeningPermissions() {
-        return registeredPermissions.stream()
+        return registeredPermissions.values().stream()
                 .filter(p -> p instanceof ListeningPermission)
                 .map(p -> (ListeningPermission) p)
                 .collect(Collectors.toList());

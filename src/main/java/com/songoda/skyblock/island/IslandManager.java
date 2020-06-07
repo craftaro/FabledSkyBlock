@@ -215,7 +215,8 @@ public class IslandManager {
             return false;
         }
 
-        data.setIslandCreationCount(amt + 1);
+        if (data != null)
+            data.setIslandCreationCount(amt + 1);
 
         Island island = new Island(player);
         island.setStructure(structure.getName());
@@ -811,7 +812,7 @@ public class IslandManager {
 
                             scoreboard.run();
                         }
-                    } catch (IllegalPluginAccessException e) {
+                    } catch (Exception e) {
                     }
                 }
 
