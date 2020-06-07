@@ -1681,7 +1681,6 @@ challenges:
         require:
           - 'NEAR:CHICKEN 1'
           - 'NEAR:COW 1'
-          - 'NEAR:POLAR_BEAR 1'
           - 'NEAR:RABBIT 1'
           - 'NEAR:WOLF 1'
           - 'NEAR:DONKEY 1'
@@ -1690,7 +1689,6 @@ challenges:
           - 'NEAR:OCELOT 1'
           - 'NEAR:MUSHROOM_COW 1'
           - 'NEAR:SHEEP 1'
-          - 'NEAR:PARROT 1'
           - 'NEAR:VILLAGER 1'
           - 'NEAR:SKELETON_HORSE 1'
         reward:
@@ -1709,7 +1707,6 @@ challenges:
             - '&e-  within a radius of 30 blocks:'
             - '&e   - 1 Chicken'
             - '&e   - 1 Cow'
-            - '&e   - 1 Polar Bear'
             - '&e   - 1 Rabbit'
             - '&e   - 1 Wolf'
             - '&e   - 1 Donkey'
@@ -1718,7 +1715,6 @@ challenges:
             - '&e   - 1 Ocelot'
             - '&e   - 1 Mooshroom cow'
             - '&e   - 1 Sheep'
-            - '&e   - 1 Parrot'
             - '&e   - 1 Villager'
             - '&e   - 1 Skeleton Horse'
             - '&c&lRewards:'
