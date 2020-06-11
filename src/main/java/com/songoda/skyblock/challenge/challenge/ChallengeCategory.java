@@ -57,10 +57,7 @@ public class ChallengeCategory {
 				CompatibleMaterial compatibleMaterial = CompatibleMaterial.getMaterial(strItem);
 				if (compatibleMaterial == null)
 					throw new IllegalArgumentException("Item " + strItem + " isn't a correct material");
-				Material item = compatibleMaterial.getMaterial();
-				if (item == null)
-					throw new IllegalArgumentException("Item " + strItem + " isn't a correct material");
-				ItemChallenge ic = new ItemChallenge(show, row, col, item, amount, lore);
+				ItemChallenge ic = new ItemChallenge(show, row, col, compatibleMaterial, amount, lore);
 				Challenge c = new Challenge(this, id, name, maxTimes, showInChat, require, reward, ic);
 				challenges.put(id, c);
 			} catch (IllegalArgumentException ex) {
