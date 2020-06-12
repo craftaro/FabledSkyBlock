@@ -60,7 +60,9 @@ public class Join implements Listener {
                     LocationUtil.teleportPlayerToSpawn(player);
                 } else if (configLoad.getBoolean("Island.Join.Island") && island != null) {
                     player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
-                    player.setFallDistance(0.0F);
+                    if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
+                        player.setFallDistance(0.0F);
+                    }
                     teleportedToIsland = true;
                 }
 

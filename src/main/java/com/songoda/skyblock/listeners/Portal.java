@@ -134,7 +134,9 @@ public class Portal implements Listener {
                     IslandWorld toWorldF = toWorld;
                     Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
                     soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-                    player.setFallDistance(0.0F);
+                    if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
+                        player.setFallDistance(0.0F);
+                    }
                     tick.setTick(1);
                 }
                 break;
@@ -144,7 +146,9 @@ public class Portal implements Listener {
                     IslandWorld toWorldF = toWorld;
                     Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
                     soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-                    player.setFallDistance(0.0F);
+                    if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
+                        player.setFallDistance(0.0F);
+                    }
                     tick.setTick(1);
                 }
                 break;
@@ -153,7 +157,9 @@ public class Portal implements Listener {
                 IslandWorld toWorldF = toWorld;
                 Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
                 soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-                player.setFallDistance(0.0F);
+                if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
+                    player.setFallDistance(0.0F);
+                }
                 tick.setTick(1);
                 break;
         }
