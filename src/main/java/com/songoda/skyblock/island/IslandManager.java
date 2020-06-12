@@ -1033,8 +1033,30 @@ public class IslandManager {
         FileConfiguration configLoad = languageConfig.getFileConfiguration();
 
         if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-            player.setFallDistance(0.0F);
+            boolean found = false;
+            Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
+            Location locChecked = loc.clone();
+            loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+            for(int i=loc.getBlockY(); i>=0 && !found; i--){
+                locChecked.subtract(0, 1, 0);
+                if(!locChecked.getBlock().isEmpty() && !locChecked.getBlock().isLiquid()){
+                    found = true;
+                }
+            }
+            if(!found){
+                for(int i=loc.getBlockY(); i<256 && !found; i++){
+                    locChecked.add(0, 1, 0);
+                    if(!locChecked.getBlock().isEmpty() && !locChecked.getBlock().isLiquid()){
+                        found = true;
+                    }
+                }
+            }
+            if(found){
+                player.teleport(locChecked);
+                    player.setFallDistance(0.0F);
+            } else {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!"));
+            }
         } else {
             if (scoreboardManager != null) {
                 int islandVisitors = getVisitorsAtIsland(island).size(), islandMembers = island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1;
