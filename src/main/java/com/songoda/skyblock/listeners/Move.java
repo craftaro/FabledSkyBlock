@@ -73,15 +73,7 @@ public class Move implements Listener {
                         Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(playerData.getIsland()));
 
                         if (island != null) {
-                            if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                                player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
-                            } else {
-                                player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-                            }
-
-                            player.setFallDistance(0.0F);
-                            soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                            teleportPlayerToIslandSpawn(player, soundManager, island);
 
                             return;
                         }
@@ -117,15 +109,7 @@ public class Move implements Listener {
                                 if (keepItemsOnDeath && configLoad.getBoolean("Island.Liquid.Teleport.Enable")) {
                                     player.setFallDistance(0.0F);
 
-                                    if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                                            || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                                        player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
-                                    } else {
-                                        player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-                                    }
-
-                                    player.setFallDistance(0.0F);
-                                    soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                                    teleportPlayerToIslandSpawn(player, soundManager, island);
                                 }
                                 return;
                             }
@@ -154,12 +138,7 @@ public class Move implements Listener {
                                 player.setFallDistance(0.0F);
 
                                 if (configLoad.getBoolean("Island.Void.Teleport.Island")) {
-                                    if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                                            || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                                        player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
-                                    } else {
-                                        player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-                                    }
+                                    teleportPlayerToIslandSpawn(player, island);
                                 } else {
                                     LocationUtil.teleportPlayerToSpawn(player);
                                 }
@@ -170,11 +149,7 @@ public class Move implements Listener {
                         }
                     } else {
                         if (!LocationUtil.isLocationAtLocationRadius(island.getLocation(world, IslandEnvironment.Island), to, island.getRadius() + 0.5)) {
-                            if (island.getVisit().isVisitor(player.getUniqueId())) {
-                                player.teleport(island.getLocation(world, IslandEnvironment.Visitor));
-                            } else {
-                                player.teleport(island.getLocation(world, IslandEnvironment.Main));
-                            }
+                            teleportPlayerToIslandSpawn(player, world, island);
 
                             player.setFallDistance(0.0F);
                             messageManager.sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
@@ -202,6 +177,30 @@ public class Move implements Listener {
                     skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
             soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
         }
+    }
+
+    private void teleportPlayerToIslandSpawn(Player player, IslandWorld world, Island island) {
+        if (island.getVisit().isVisitor(player.getUniqueId())) {
+            player.teleport(island.getLocation(world, IslandEnvironment.Visitor));
+        } else {
+            player.teleport(island.getLocation(world, IslandEnvironment.Main));
+        }
+    }
+
+    private void teleportPlayerToIslandSpawn(Player player, Island island) {
+        if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
+                || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+        } else {
+            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+        }
+    }
+
+    private void teleportPlayerToIslandSpawn(Player player, SoundManager soundManager, Island island) {
+        teleportPlayerToIslandSpawn(player, island);
+
+        player.setFallDistance(0.0F);
+        soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
