@@ -180,10 +180,10 @@ public class Move implements Listener {
     }
 
     private void teleportPlayerToIslandSpawn(Player player, IslandWorld world, Island island) {
-        if (island.getVisit().isVisitor(player.getUniqueId())) {
-            player.teleport(island.getLocation(world, IslandEnvironment.Visitor));
-        } else {
+        if (!island.getVisit().isVisitor(player.getUniqueId())) {
             player.teleport(island.getLocation(world, IslandEnvironment.Main));
+        } else {
+            player.teleport(island.getLocation(world, IslandEnvironment.Visitor));
         }
     }
 
