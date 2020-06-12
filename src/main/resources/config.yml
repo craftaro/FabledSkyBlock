@@ -191,6 +191,8 @@ Island:
         IncludeEmptyPointsInList: true
         # Island Level Points divided by value
         Division: 100
+        # Points to subtract to Island Level Points
+        Subtract: 1000
         Cooldown:
             # Time until Island level rescan expires
             Time: 60
