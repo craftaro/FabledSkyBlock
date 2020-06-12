@@ -25,6 +25,36 @@ import java.util.logging.Level;
 
 public final class LocationUtil {
 
+    public static Location getSafeLocation(Location loc){
+        boolean found = false;
+        Location locChecked = loc.clone();
+        loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+        for(int i=loc.getBlockY(); i>=0 && !found; i--){
+            locChecked = locChecked.subtract(0d, 1d, 0d);
+            if(!locChecked.getBlock().isEmpty() &&
+                    !locChecked.getBlock().isLiquid() &&
+                    locChecked.add(0d,1d,0d).getBlock().isEmpty() &&
+                    locChecked.add(0d,2d,0d).getBlock().isEmpty()){
+                found = true;
+            }
+        }
+        if(!found){
+            for(int i=loc.getBlockY(); i<256 && !found; i++){
+                locChecked = locChecked.add(0d, 1d, 0d);
+                if(!locChecked.getBlock().isEmpty() &&
+                        !locChecked.getBlock().isLiquid() &&
+                        locChecked.add(0d,1d,0d).getBlock().isEmpty() &&
+                        locChecked.add(0d,2d,0d).getBlock().isEmpty()){
+                    found = true;
+                }
+            }
+        }
+        if(!found){
+            locChecked = null;
+        }
+        return locChecked;
+    }
+
     public static boolean isLocationLocation(Location location1, Location location2) {
         return location1.getBlockX() == location2.getBlockX() && location1.getBlockY() == location2.getBlockY() && location1.getBlockZ() == location2.getBlockZ();
     }

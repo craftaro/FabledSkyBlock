@@ -14,6 +14,7 @@ import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -192,25 +193,33 @@ public class Move implements Listener {
     }
 
     private void teleportPlayerToIslandSpawn(Player player, IslandWorld world, Island island) {
-        if (!island.getVisit().isVisitor(player.getUniqueId())) {
-            player.teleport(island.getLocation(world, IslandEnvironment.Main));
+        if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
+                || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+            Location loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
+            if(loc != null){
+                player.teleport(loc);
+            } else {
+                LocationUtil.teleportPlayerToSpawn(player);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
+            }
         } else {
-            player.teleport(island.getLocation(world, IslandEnvironment.Visitor));
+            Location loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
+            if(loc != null){
+                player.teleport(loc);
+            } else {
+                LocationUtil.teleportPlayerToSpawn(player);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
+            }
         }
     }
 
     private void teleportPlayerToIslandSpawn(Player player, Island island) {
-        if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
-        } else {
-            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-        }
+        this.teleportPlayerToIslandSpawn(player, IslandWorld.Normal, island);
     }
 
     private void teleportPlayerToIslandSpawn(Player player, SoundManager soundManager, Island island) {
         teleportPlayerToIslandSpawn(player, island);
-        
+
         FileManager fileManager = skyblock.getFileManager();
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();

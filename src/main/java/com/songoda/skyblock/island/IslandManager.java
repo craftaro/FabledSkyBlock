@@ -1035,31 +1035,14 @@ public class IslandManager {
         FileConfiguration configLoad = languageConfig.getFileConfiguration();
 
         if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            boolean found = false;
-            Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
-            Location locChecked = loc.clone();
-            loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
-            for(int i=loc.getBlockY(); i>=0 && !found; i--){
-                locChecked.subtract(0, 1, 0);
-                if(!locChecked.getBlock().isEmpty() && !locChecked.getBlock().isLiquid()){
-                    found = true;
-                }
-            }
-            if(!found){
-                for(int i=loc.getBlockY(); i<256 && !found; i++){
-                    locChecked.add(0, 1, 0);
-                    if(!locChecked.getBlock().isEmpty() && !locChecked.getBlock().isLiquid()){
-                        found = true;
-                    }
-                }
-            }
-            if(found){
-                player.teleport(locChecked);
+            Location loc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+            if(loc != null){
+                player.teleport(loc.add(0d,1d,0d));
                 if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
                     player.setFallDistance(0.0F);
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
             }
         } else {
             if (scoreboardManager != null) {
