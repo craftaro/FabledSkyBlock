@@ -109,16 +109,22 @@ public class Leaderboard {
                                 new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.Level.name())}, null,
                                 null),
                         1);
-                nInv.addItem(
-                        nInv.createItem(new ItemStack(Material.GOLD_INGOT), configLoad
-                                        .getString(
-                                                "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
-                                        .replace("%leaderboard", Viewer.Type.Bank.name()),
-                                configLoad.getStringList(
-                                        "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
-                                new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.Bank.name())}, null,
-                                null),
-                        2);
+
+                if(fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")){
+                    nInv.addItem(
+                            nInv.createItem(new ItemStack(Material.GOLD_INGOT), configLoad
+                                            .getString(
+                                                    "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
+                                            .replace("%leaderboard", Viewer.Type.Bank.name()),
+                                    configLoad.getStringList(
+                                            "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
+                                    new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.Bank.name())}, null,
+                                    null),
+                            2);
+                } else {
+                    nInv.addItem(
+                            nInv.createItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", null, null, null, null), 2);
+                }
                 nInv.addItem(
                         nInv.createItem(new ItemStack(Material.EMERALD), configLoad
                                         .getString(
