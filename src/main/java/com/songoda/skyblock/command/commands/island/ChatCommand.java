@@ -85,27 +85,23 @@ public class ChatCommand extends SubCommand {
 
                 Island finalIsland = island;
                 String finalIslandRole = islandRole;
-                Bukkit.getScheduler().runTaskAsynchronously(skyblock, new Runnable(){
+                Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                    PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, finalIsland.getAPIWrapper(),
+                            String.join(" ", args), configLoad.getString("Island.Chat.Format.Message"));
+                    Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
 
-                    @Override
-                    public void run() {
-                        PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, finalIsland.getAPIWrapper(),
-                                String.join(" ", args), configLoad.getString("Island.Chat.Format.Message"));
-                        Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
+                    if (!islandChatEvent.isCancelled()) {
+                        for (UUID islandMembersOnlineList : islandManager.getMembersOnline(finalIsland)) {
+                            Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
+                            String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
+                                    islandChatEvent.getFormat().replace("%role", finalIslandRole).replace("%player", player.getName())))
+                                    .replace("%message", islandChatEvent.getMessage());
+                            targetPlayer.sendMessage(message);
+                        }
 
-                        if (!islandChatEvent.isCancelled()) {
-                            for (UUID islandMembersOnlineList : islandManager.getMembersOnline(finalIsland)) {
-                                Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
-                                String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
-                                        islandChatEvent.getFormat().replace("%role", finalIslandRole).replace("%player", player.getName())))
-                                        .replace("%message", islandChatEvent.getMessage());
-                                targetPlayer.sendMessage(message);
-                            }
-
-                            if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
-                                messageManager.sendMessage(Bukkit.getConsoleSender(), islandChatEvent.getFormat().replace("%role", finalIslandRole).replace("%player", player.getName())
-                                        .replace("%message", islandChatEvent.getMessage()));
-                            }
+                        if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
+                            messageManager.sendMessage(Bukkit.getConsoleSender(), islandChatEvent.getFormat().replace("%role", finalIslandRole).replace("%player", player.getName())
+                                    .replace("%message", islandChatEvent.getMessage()));
                         }
                     }
                 });
