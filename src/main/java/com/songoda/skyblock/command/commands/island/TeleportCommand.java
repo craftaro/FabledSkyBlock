@@ -107,7 +107,7 @@ public class TeleportCommand extends SubCommand {
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
                 player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
 
-                if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
+                if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);
                 }
             });

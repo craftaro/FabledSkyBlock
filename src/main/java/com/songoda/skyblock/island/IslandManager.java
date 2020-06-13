@@ -258,9 +258,7 @@ public class IslandManager {
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
             player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
-            if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
-                player.setFallDistance(0.0F);
-            }
+            player.setFallDistance(0.0F);
         }, configLoad.getInt("Island.Creation.TeleportTimeout") * 20);
 
         String biomeName = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase();
@@ -1038,7 +1036,7 @@ public class IslandManager {
             Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
             if(loc != null){
                 player.teleport(loc);
-                if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
+                if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);
                 }
             } else {
@@ -1080,13 +1078,13 @@ public class IslandManager {
                 }
                 if(loc != null){
                     player.teleport(loc);
-                    if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
+                    if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                         player.setFallDistance(0.0F);
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
                 }
-                if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
+                if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);
                 }
             });

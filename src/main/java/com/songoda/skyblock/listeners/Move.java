@@ -109,10 +109,7 @@ public class Move implements Listener {
                         if (configLoad.getBoolean("Island.World." + world.name() + ".Liquid.Enable")) {
                             if (to.getY() <= configLoad.getInt("Island.World." + world.name() + ".Liquid.Height")) {
                                 if (keepItemsOnDeath && configLoad.getBoolean("Island.Liquid.Teleport.Enable")) {
-                                    if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
-                                        player.setFallDistance(0.0F);
-                                    }
-
+                                    player.setFallDistance(0.0F);
                                     teleportPlayerToIslandSpawn(player, soundManager, island);
                                 }
                                 return;
@@ -138,11 +135,7 @@ public class Move implements Listener {
                                         player.removePotionEffect(potionEffect.getType());
                                     }
                                 }
-                                if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
-                                    if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
-                                        player.setFallDistance(0.0F);
-                                    }
-                                }
+                                player.setFallDistance(0.0F);
 
                                 if (configLoad.getBoolean("Island.Void.Teleport.Island")) {
                                     teleportPlayerToIslandSpawn(player, island);
@@ -150,9 +143,7 @@ public class Move implements Listener {
                                     LocationUtil.teleportPlayerToSpawn(player);
                                 }
 
-                                if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
-                                    player.setFallDistance(0.0F);
-                                }
+                                player.setFallDistance(0.0F);
                                 soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                             }
                         }
@@ -163,9 +154,7 @@ public class Move implements Listener {
                             Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
                             FileConfiguration configLoad = config.getFileConfiguration();
 
-                            if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
-                                player.setFallDistance(0.0F);
-                            }
+                            player.setFallDistance(0.0F);
                             messageManager.sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                     .getString("Island.WorldBorder.Outside.Message"));
                             soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
@@ -228,7 +217,7 @@ public class Move implements Listener {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
+        if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
             player.setFallDistance(0.0F);
         }
         soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
