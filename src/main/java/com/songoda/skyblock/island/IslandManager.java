@@ -1059,8 +1059,6 @@ public class IslandManager {
                             } else {
                                 scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
                                 scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-
-
                             }
 
                             scoreboard.run();
@@ -1070,11 +1068,9 @@ public class IslandManager {
             }
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                Location loc;
+                Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
                 if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                    loc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-                } else {
-                    loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
+                    loc = LocationUtil.getSafeLocation(loc);
                 }
                 if(loc != null){
                     player.teleport(loc);

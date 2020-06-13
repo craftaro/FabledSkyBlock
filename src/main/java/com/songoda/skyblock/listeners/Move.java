@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 
 import java.io.File;
+import java.util.Objects;
 
 public class Move implements Listener {
 
@@ -124,7 +125,7 @@ public class Move implements Listener {
                                     player.setExp(0.0F);
 
                                     if (NMSUtil.getVersionNumber() > 8) {
-                                        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                                        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
                                     } else {
                                         player.setHealth(player.getMaxHealth());
                                     }
@@ -150,9 +151,6 @@ public class Move implements Listener {
                     } else {
                         if (!LocationUtil.isLocationAtLocationRadius(island.getLocation(world, IslandEnvironment.Island), to, island.getRadius() + 0.5)) {
                             teleportPlayerToIslandSpawn(player, world, island);
-
-                            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                            FileConfiguration configLoad = config.getFileConfiguration();
 
                             player.setFallDistance(0.0F);
                             messageManager.sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
