@@ -15,6 +15,7 @@ import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -193,23 +194,26 @@ public class Move implements Listener {
     }
 
     private void teleportPlayerToIslandSpawn(Player player, IslandWorld world, Island island) {
+        Location loc;
         if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            Location loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
-            if(loc != null){
-                player.teleport(loc);
+            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+                loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
             } else {
-                LocationUtil.teleportPlayerToSpawn(player);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
+                loc = island.getLocation(world, IslandEnvironment.Main);
             }
         } else {
-            Location loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
-            if(loc != null){
-                player.teleport(loc);
+            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+                loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
             } else {
-                LocationUtil.teleportPlayerToSpawn(player);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
+                loc = island.getLocation(world, IslandEnvironment.Visitor);
             }
+        }
+        if(loc != null){
+            player.teleport(loc);
+        } else {
+            LocationUtil.teleportPlayerToSpawn(player);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
         }
     }
 

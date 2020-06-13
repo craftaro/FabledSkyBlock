@@ -1072,7 +1072,12 @@ public class IslandManager {
             }
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                Location loc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+                Location loc;
+                if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+                    loc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+                } else {
+                    loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
+                }
                 if(loc != null){
                     player.teleport(loc);
                     if(!configLoad.getBoolean("Island.Teleport.FallDamage")){
