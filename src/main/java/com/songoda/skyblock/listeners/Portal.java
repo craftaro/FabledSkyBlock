@@ -2,6 +2,7 @@ package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.utils.LocationUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -15,6 +16,7 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -131,21 +133,13 @@ public class Portal implements Listener {
         switch (toWorld) {
             case Nether:
                 if (configLoad.getBoolean("Island.World.Nether.Enable") && island.isRegionUnlocked(player, "Nether")) {
-                    IslandWorld toWorldF = toWorld;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
-                    soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-                    player.setFallDistance(0.0F);
-                    tick.setTick(1);
+                    teleportPlayerToWorld(player, soundManager, island, spawnEnvironment, tick, toWorld);
                 }
                 break;
 
             case End:
                 if (configLoad.getBoolean("Island.World.End.Enable") && island.isRegionUnlocked(player, "End")) {
-                    IslandWorld toWorldF = toWorld;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
-                    soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-                    player.setFallDistance(0.0F);
-                    tick.setTick(1);
+                    teleportPlayerToWorld(player, soundManager, island, spawnEnvironment, tick, toWorld);
                 }
                 break;
 
@@ -158,6 +152,21 @@ public class Portal implements Listener {
                 break;
         }
 
+    }
+
+    private void teleportPlayerToWorld(Player player, SoundManager soundManager, Island island, IslandEnvironment spawnEnvironment, Tick tick, IslandWorld toWorld) {
+        IslandWorld toWorldF = toWorld;
+        Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
+            Location loc = island.getLocation(toWorldF, spawnEnvironment);
+            Location safeLoc = LocationUtil.getSafeLocation(loc);
+            if(safeLoc != null){
+                loc = safeLoc;
+            }
+            player.teleport(loc);
+        }, 1L);
+        soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+        player.setFallDistance(0.0F);
+        tick.setTick(1);
     }
 
     public static class Tick {
