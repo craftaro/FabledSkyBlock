@@ -31,28 +31,64 @@ public final class LocationUtil {
         loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
         for(int i=loc.getBlockY(); i>=0 && !found; i--){
             locChecked = locChecked.subtract(0d, 1d, 0d);
-            if(!locChecked.getBlock().isEmpty() &&
-                    !locChecked.getBlock().isLiquid() &&
-                    locChecked.add(0d,1d,0d).getBlock().isEmpty() &&
-                    locChecked.add(0d,2d,0d).getBlock().isEmpty()){
-                found = true;
-            }
+            found = checkBlock(locChecked);
         }
         if(!found){
             for(int i=loc.getBlockY(); i<256 && !found; i++){
                 locChecked = locChecked.add(0d, 1d, 0d);
-                if(!locChecked.getBlock().isEmpty() &&
-                        !locChecked.getBlock().isLiquid() &&
-                        locChecked.add(0d,1d,0d).getBlock().isEmpty() &&
-                        locChecked.add(0d,2d,0d).getBlock().isEmpty()){
-                    found = true;
-                }
+                found = checkBlock(locChecked);
             }
         }
-        if(!found){
+        if (found) {
+            locChecked = locChecked.add(0d,1d,0d);
+        } else {
             locChecked = null;
         }
         return locChecked;
+    }
+
+    private static boolean checkBlock(Location locChecked) {
+        boolean safe = false;
+        if(!locChecked.getBlock().isEmpty() &&
+                !locChecked.getBlock().isLiquid() &&
+                !locChecked.getBlock().isPassable() &&
+                locChecked.getBlock().getType().isSolid() &&
+                locChecked.getBlock().getType().isBlock() &&
+                locChecked.add(0d,1d,0d).getBlock().getType().isAir() &&
+                locChecked.add(0d,2d,0d).getBlock().getType().isAir()){
+            safe = true;
+            switch(locChecked.getBlock().getType()){
+                case ACACIA_BUTTON:
+                case ACACIA_DOOR:
+                case ACACIA_FENCE_GATE:
+                case ACACIA_TRAPDOOR:
+                case BIRCH_DOOR:
+                case BIRCH_FENCE_GATE:
+                case BIRCH_TRAPDOOR:
+                case CACTUS:
+                case CAKE:
+                case CAMPFIRE:
+                case COBWEB:
+                case DARK_OAK_DOOR:
+                case DARK_OAK_FENCE_GATE:
+                case DARK_OAK_TRAPDOOR:
+                case IRON_TRAPDOOR:
+                case JUNGLE_DOOR:
+                case JUNGLE_FENCE_GATE:
+                case JUNGLE_TRAPDOOR:
+                case LADDER:
+                case MAGMA_BLOCK:
+                case NETHER_PORTAL:
+                case OAK_DOOR:
+                case OAK_FENCE_GATE:
+                case SPRUCE_DOOR:
+                case SPRUCE_FENCE_GATE:
+                    safe = false;
+                    break;
+            }
+        }
+
+        return safe;
     }
 
     public static boolean isLocationLocation(Location location1, Location location2) {
