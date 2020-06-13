@@ -113,7 +113,7 @@ public class Island {
             }
 
             if (configLoad.getString("Border") == null) {
-                configLoad.set("Border.Enable", true);
+                configLoad.set("Border.Enable", mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Default", false));
                 configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
             }
 

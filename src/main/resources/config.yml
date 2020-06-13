@@ -87,6 +87,8 @@ Island:
         # Prevent blocks being placed that would go outside of the Island border
         # Pistons | Dispensers | Liquid Flow
         Block: true
+        # Enabled/Disabled by default
+        Default: false
     Spawn:
         # Prevents blocks being placed inside the location where players spawn on
         # an Island. When setting the spawn points, this option when enabled will
