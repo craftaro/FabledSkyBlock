@@ -198,7 +198,7 @@ public class Island {
 
                 for (BasicPermission permission : allPermissions) {
                     permissions.add(
-                            new IslandPermission(permission, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + permission, true)));
+                            new IslandPermission(permission, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
                 }
 
                 islandPermissions.put(roleList, permissions);
