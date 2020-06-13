@@ -312,6 +312,8 @@ Island:
     Challenge:
         # Enable or disable challenges. Configuration for challenges are in challenges.yml file
         Enable: true
+        # Disabling this will make challenges per player
+        PerIsland: true
     Teleport:
         # Enable or disable Fall damage
         FallDamage: true
