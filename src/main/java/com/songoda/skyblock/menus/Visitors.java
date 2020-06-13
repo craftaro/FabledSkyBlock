@@ -134,7 +134,7 @@ public class Visitors {
                                     Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
                                 }
                             } else {
-                                if (banningEnabled && ((isOperator && canBan) || isOwner)) {
+                                if (banningEnabled && ((isOperator && canBan))) {
                                     Bukkit.getServer().dispatchCommand(player, "island ban " + playerName);
                                 } else {
                                     soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F,
@@ -163,7 +163,7 @@ public class Visitors {
                 Player targetPlayer = Bukkit.getPlayer(islandVisitorList);
                 if(targetPlayer != null && player.canSee(targetPlayer)){ // Remove vanished players
                     sortedIslandVisitors.put(
-                            playerDataManager.getPlayerData(Bukkit.getServer().getPlayer(islandVisitorList)).getVisitTime(),
+                            playerDataManager.getPlayerData(targetPlayer).getVisitTime(),
                             islandVisitorList);
                 }
             }
