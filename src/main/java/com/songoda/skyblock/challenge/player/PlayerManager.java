@@ -31,6 +31,12 @@ public class PlayerManager {
 		playersDirectory = new File(skyblock.getDataFolder(), "challenge-data");
 		if (!playersDirectory.exists())
 			playersDirectory.mkdirs();
+
+		Bukkit.getScheduler().runTask(skyblock, () -> {
+			for(Player p : Bukkit.getServer().getOnlinePlayers()){
+				loadPlayer(p.getUniqueId());
+			}
+		});
 	}
 
 	public HashMap<Challenge, Integer> getPlayer(UUID uuid) {
