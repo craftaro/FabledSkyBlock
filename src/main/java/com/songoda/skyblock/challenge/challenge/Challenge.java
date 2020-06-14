@@ -150,14 +150,31 @@ public class Challenge {
 			public boolean has(Player p, Object obj) {
 				// Check if player has specific item in his inventory
 				ItemStack is = (ItemStack) obj;
-				return p.getInventory().contains(is.getType(), is.getAmount());
+				return p.getInventory().containsAtLeast(new ItemStack(is.getType()), is.getAmount());
 			}
 
 			@Override
 			public void executeRequire(Player p, Object obj) {
-				// Remove specific item in player's inventory
-				ItemStack is = (ItemStack) obj;
-				p.getInventory().removeItem(new ItemStack(is.getType(), is.getAmount()));
+				if(obj instanceof ItemStack){
+					// Remove specific item in player's inventory
+					ItemStack is = (ItemStack) obj;
+					//p.getInventory().removeItem(new ItemStack(is.getType(), is.getAmount()));
+					int toRemove = is.getAmount();
+					for(ItemStack jis : p.getInventory().getStorageContents()) {
+						if(jis != null && jis.isSimilar(is)) {
+							if(jis.getAmount() <= toRemove) {
+								toRemove -= jis.getAmount();
+								jis.setAmount(0);
+							} else {
+								jis.setAmount(is.getAmount() - toRemove);
+								toRemove = 0;
+							}
+						}
+						if(toRemove <= 0) {
+							p.updateInventory();
+						}
+					}
+				}
 				// TODO LOG
 			}
 
