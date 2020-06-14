@@ -2,6 +2,7 @@ package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.limit.impl.EntityLimitaton;
@@ -513,12 +514,20 @@ public class Entity implements Listener {
         EntityType type = entity.getType();
 
         if (limits.isBeingTracked(type)) {
-            long count = limits.getEntityCount(island, skyblock.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
+            FileManager fileManager = skyblock.getFileManager();
+            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = config.getFileConfiguration();
 
-            if (limits.hasTooMuch(count + 1, type)) {
-                entity.remove();
-                event.setCancelled(true);
-                return;
+            boolean isSplit = event.getSpawnReason().equals(SpawnReason.SLIME_SPLIT);
+            boolean splitBypass = configLoad.getBoolean("Island.Challenge.PerIsland", true);
+
+            if(!isSplit || splitBypass){
+                long count = limits.getEntityCount(island, skyblock.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
+                if (limits.hasTooMuch(count + 1, type)) {
+                    entity.remove();
+                    event.setCancelled(true);
+                    return;
+                }
             }
         }
 
