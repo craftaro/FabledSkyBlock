@@ -22,12 +22,12 @@ import com.songoda.skyblock.config.FileManager.Config;
 
 public class PlayerManager {
 	private SkyBlock skyblock;
-	private HashMap<UUID, HashMap<Challenge, Integer>> players;
+	private HashMap<UUID, HashMap<Challenge, Integer>> islands;
 	private File playersDirectory;
 
 	public PlayerManager(SkyBlock skyblock) {
 		this.skyblock = skyblock;
-		players = new HashMap<>();
+		islands = new HashMap<>();
 		playersDirectory = new File(skyblock.getDataFolder(), "challenge-data");
 		if (!playersDirectory.exists())
 			playersDirectory.mkdirs();
@@ -38,7 +38,7 @@ public class PlayerManager {
 				.getBoolean("Island.Challenge.PerIsland", true)) {
 			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
 		}
-		return players.get(uuid);
+		return islands.get(uuid);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class PlayerManager {
 					challenges.put(c, count);
 				}
 		}
-		players.put(uuid, challenges);
+		islands.put(uuid, challenges);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class PlayerManager {
 				.getBoolean("Island.Challenge.PerIsland", true)) {
 			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
 		}
-		players.remove(uuid);
+		islands.remove(uuid);
 		skyblock.getFileManager().unloadConfig(new File(playersDirectory,
 				uuid.toString() + ".yml"));
 
@@ -114,11 +114,11 @@ public class PlayerManager {
 			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
 
 		}
-		HashMap<Challenge, Integer> done = players.get(uuid);
+		HashMap<Challenge, Integer> done = islands.get(uuid);
 		if (done == null) {
 			// Wtf ?
 			loadPlayer(uuid);
-			done = players.get(uuid);
+			done = islands.get(uuid);
 		}
 		int count = done.getOrDefault(c, 0);
 		if (c.getMaxTimes() != 0 && count >= c.getMaxTimes())
@@ -147,7 +147,7 @@ public class PlayerManager {
 				.getBoolean("Island.Challenge.PerIsland", true)) {
 			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
 		}
-		HashMap<Challenge, Integer> done = players.get(uuid);
+		HashMap<Challenge, Integer> done = islands.get(uuid);
 		int count = done.getOrDefault(c, 0);
 		done.put(c, count + 1);
 		addChallenge(uuid, c);
@@ -202,7 +202,7 @@ public class PlayerManager {
 	 * @return The number of time specific challenge has been done by player
 	 */
 	public int getChallengeCount(UUID uuid, Challenge c) {
-		HashMap<Challenge, Integer> challenges = players.get(uuid);
+		HashMap<Challenge, Integer> challenges = islands.get(uuid);
 		if (challenges != null) {
 			return challenges.getOrDefault(c, 0);
 		} else {
