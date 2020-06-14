@@ -15,6 +15,7 @@ import org.bukkit.*;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -45,6 +46,19 @@ public final class LocationUtil {
             locChecked = null;
         }
         return locChecked;
+    }
+
+    public static Location getDefinitiveLocation(Location loc){
+        Location locWorking = loc.clone();
+        for(int i=locWorking.getBlockY(); i>=0; i--){
+            if(!locWorking.getBlock().isEmpty()){
+                if(locWorking.getBlock().getType().equals(Material.WATER) || locWorking.getBlock().getBlockData() instanceof Waterlogged){
+                    loc = locWorking;
+                }
+                break;
+            }
+        }
+        return loc;
     }
 
     private static boolean checkBlock(Location locChecked) {

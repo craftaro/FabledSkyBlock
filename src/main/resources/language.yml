@@ -905,6 +905,8 @@ Command:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have been teleported to your Island.'
         Other:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have been teleported to &a%player''s &eIsland.'
+      Unsafe:
+        Message: '&bSkyBlock &8| &cError&8: &eNo safe position found'
     Create:
       Owner:
         Message: '&bSkyBlock &8| &cError&8: &eYou are already an Island Owner.'

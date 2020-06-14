@@ -1061,7 +1061,9 @@ public class IslandManager {
                     player.setFallDistance(0.0F);
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.Teleport.Unsafe.Message"))));
             }
         } else {
             if (scoreboardManager != null) {
@@ -1099,7 +1101,9 @@ public class IslandManager {
                         player.setFallDistance(0.0F);
                     }
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                    .getFileConfiguration().getString("Island.Teleport.Unsafe.Message"))));
                 }
                 if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);

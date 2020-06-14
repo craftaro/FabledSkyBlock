@@ -317,6 +317,7 @@ Island:
     Teleport:
         # Enable or disable Fall damage
         FallDamage: true
+        RemoveWater: true
     Limits:
         # Should slime split bypass limits.yml
         AllowSlimeSplit: true

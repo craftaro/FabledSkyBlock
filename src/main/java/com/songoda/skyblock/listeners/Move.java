@@ -13,11 +13,9 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -194,6 +192,17 @@ public class Move implements Listener {
                 loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
             } else {
                 loc = island.getLocation(world, IslandEnvironment.Main);
+                if(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                        .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)){
+                    Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
+                    if(tempLoc.getBlock().getType().equals(Material.WATER)){
+                        tempLoc.getBlock().setType(Material.AIR);
+                    } else if(tempLoc.getBlock().getBlockData() instanceof Waterlogged){
+                        Waterlogged blockData = (Waterlogged) tempLoc.getBlock().getBlockData();
+                        blockData.setWaterlogged(false);
+                        tempLoc.getBlock().setBlockData(blockData);
+                    }
+                }
             }
         } else {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
@@ -206,7 +215,9 @@ public class Move implements Listener {
             player.teleport(loc);
         } else {
             LocationUtil.teleportPlayerToSpawn(player);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNessuna posizione sicura trovata!")); // TODO: Use language.yml
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                            .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message"))));
         }
     }
 
