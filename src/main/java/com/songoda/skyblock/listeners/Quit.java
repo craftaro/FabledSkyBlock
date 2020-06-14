@@ -2,6 +2,8 @@ package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.challenge.challenge.ChallengeManager;
+import com.songoda.skyblock.challenge.player.PlayerManager;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.invite.Invite;
@@ -44,6 +46,7 @@ public class Quit implements Listener {
             MessageManager messageManager = skyblock.getMessageManager();
             InviteManager inviteManager = skyblock.getInviteManager();
             IslandManager islandManager = skyblock.getIslandManager();
+            PlayerManager challengePlayerManager = skyblock.getFabledChallenge().getPlayerManager();
 
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
@@ -93,6 +96,36 @@ public class Quit implements Listener {
 
             playerDataManager.savePlayerData(player);
             playerDataManager.unloadPlayerData(player);
+
+            boolean offline = true;
+            if(island != null && skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                    .getBoolean("Island.Challenge.PerIsland", false)){
+                if(island.getRole(IslandRole.Member) != null){
+                    for(UUID uuid : island.getRole(IslandRole.Member)){
+                        if(Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline()){
+                            offline = false;
+                        }
+                    }
+                }
+                if(offline && island.getRole(IslandRole.Operator) != null){
+                    for(UUID uuid : island.getRole(IslandRole.Operator)){
+                        if(Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline()){
+                            offline = false;
+                        }
+                    }
+                }
+                if(offline && island.getRole(IslandRole.Owner) != null){
+                    for(UUID uuid : island.getRole(IslandRole.Owner)){
+                        if(Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline()){
+                            offline = false;
+                        }
+                    }
+                }
+            }
+
+            if(offline){
+                challengePlayerManager.unloadPlayer(player.getUniqueId());
+            }
 
             for (Island islandList : islandManager.getCoopIslands(player)) {
                 if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
