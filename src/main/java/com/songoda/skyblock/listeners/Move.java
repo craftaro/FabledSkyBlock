@@ -149,10 +149,16 @@ public class Move implements Listener {
                             }
                         }
                     } else {
-                        if (!LocationUtil.isLocationAtLocationRadius(island.getLocation(world, IslandEnvironment.Island), to, island.getRadius() + 0.5)) {
+                        if (!LocationUtil.isLocationAtLocationRadius(island.getLocation(world, IslandEnvironment.Island), to, island.getRadius())) {
                             teleportPlayerToIslandSpawn(player, world, island);
+                            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                            FileConfiguration configLoad = config.getFileConfiguration();
 
-                            player.setFallDistance(0.0F);
+
+                            if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
+                                player.setFallDistance(0.0F);
+                            }
+
                             messageManager.sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
                                     .getString("Island.WorldBorder.Outside.Message"));
                             soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
