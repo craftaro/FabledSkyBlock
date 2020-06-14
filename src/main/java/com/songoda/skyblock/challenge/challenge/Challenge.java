@@ -150,7 +150,8 @@ public class Challenge {
 			public boolean has(Player p, Object obj) {
 				// Check if player has specific item in his inventory
 				ItemStack is = (ItemStack) obj;
-				return p.getInventory().contains(is.getType(), is.getAmount());
+				return p.getInventory().containsAtLeast(new ItemStack(is.getType()), is.getAmount());
+//				return p.getInventory().contains(is.getType(), is.getAmount());
 			}
 
 			@Override

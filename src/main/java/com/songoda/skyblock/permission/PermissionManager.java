@@ -154,7 +154,7 @@ public class PermissionManager {
 
             BasicPermission permission = wrapper.getPermission();
 
-            if (permission.extraCheck() && hasPermission(player, island, permission))
+            if (permission.overridingCheck() || hasPermission(player, island, permission))
                 continue;
 
             try {
