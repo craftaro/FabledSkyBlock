@@ -1102,8 +1102,8 @@ public class IslandManager {
                     }
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                    .getFileConfiguration().getString("Island.Teleport.Unsafe.Message"))));
+                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                    .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message")));
                 }
                 if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);
