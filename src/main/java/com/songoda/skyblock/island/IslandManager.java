@@ -519,8 +519,6 @@ public class IslandManager {
         }
     }
 
-    int j = 0;
-
     public boolean deleteIsland(Island island, boolean force) {
         ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
