@@ -34,6 +34,10 @@ public class PlayerManager {
 	}
 
 	public HashMap<Challenge, Integer> getPlayer(UUID uuid) {
+		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+				.getBoolean("Island.Challenge.PerIsland", true)) {
+			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
+		}
 		return players.get(uuid);
 	}
 
@@ -44,8 +48,12 @@ public class PlayerManager {
 	 *                 The uuid of specific player
 	 */
 	public void loadPlayer(UUID uuid) {
+		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+				.getBoolean("Island.Challenge.PerIsland", true)) {
+			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
+		}
 		Config config = skyblock.getFileManager().getConfig(new File(playersDirectory,
-				skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID() + ".yml"));
+				uuid.toString() + ".yml"));
 		FileConfiguration fileConfig = config.getFileConfiguration();
 		HashMap<Challenge, Integer> challenges = new HashMap<>();
 		ConfigurationSection section = fileConfig.getConfigurationSection("challenges");
@@ -78,16 +86,13 @@ public class PlayerManager {
 	 *                 The uuid of specific player
 	 */
 	public void unloadPlayer(UUID uuid) {
-		UUID challengeUUID;
-		if(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-				.getBoolean("Island.Challenge.PerIsland", true)){
-			challengeUUID = uuid;
-		} else {
-			challengeUUID = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
+		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+				.getBoolean("Island.Challenge.PerIsland", true)) {
+			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
 		}
 		players.remove(uuid);
 		skyblock.getFileManager().unloadConfig(new File(playersDirectory,
-				challengeUUID.toString() + ".yml"));
+				uuid.toString() + ".yml"));
 
 	}
 
@@ -104,6 +109,11 @@ public class PlayerManager {
 		if (c == null)
 			return false;
 		UUID uuid = p.getUniqueId();
+		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+				.getBoolean("Island.Challenge.PerIsland", true)) {
+			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
+
+		}
 		HashMap<Challenge, Integer> done = players.get(uuid);
 		if (done == null) {
 			// Wtf ?
@@ -133,6 +143,10 @@ public class PlayerManager {
 		if (!canDoChallenge(p, c))
 			return false;
 		UUID uuid = p.getUniqueId();
+		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+				.getBoolean("Island.Challenge.PerIsland", true)) {
+			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
+		}
 		HashMap<Challenge, Integer> done = players.get(uuid);
 		int count = done.getOrDefault(c, 0);
 		done.put(c, count + 1);
@@ -155,15 +169,13 @@ public class PlayerManager {
 	}
 
 	public void addChallenge(UUID uuid, Challenge c) {
-		UUID challengeUUID;
-		if(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-				.getBoolean("Island.Challenge.PerIsland", true)){
-			challengeUUID = uuid;
-		} else {
-			challengeUUID = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
+		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+				.getBoolean("Island.Challenge.PerIsland", true)) {
+			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
+
 		}
 		Config config = skyblock.getFileManager().getConfig(new File(playersDirectory,
-				challengeUUID.toString() + ".yml"));
+				uuid.toString() + ".yml"));
 		FileConfiguration fileConfig = config.getFileConfiguration();
 		int ccId = c.getCategory().getId();
 		int cId = c.getId();
@@ -194,17 +206,14 @@ public class PlayerManager {
 		if (challenges != null) {
 			return challenges.getOrDefault(c, 0);
 		} else {
-			UUID challengeUUID;
-			if(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-					.getBoolean("Island.Challenge.PerIsland", true)){
-				challengeUUID = uuid;
-			} else {
-				challengeUUID = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
+			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+					.getBoolean("Island.Challenge.PerIsland", true)) {
+				uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
 			}
 
 			// Not connected, check in file
 			Config config = skyblock.getFileManager().getConfig(new File(playersDirectory,
-					challengeUUID.toString() + ".yml"));
+					uuid.toString() + ".yml"));
 			FileConfiguration fileConfig = config.getFileConfiguration();
 			int ccId = c.getCategory().getId();
 			int cId = c.getId();
