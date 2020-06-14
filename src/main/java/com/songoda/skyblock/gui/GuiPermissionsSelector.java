@@ -46,7 +46,7 @@ public class GuiPermissionsSelector extends Gui {
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
             CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
-            guiManager.showGUI(event.player, returnGui);
+            event.player.closeInventory();
         });
 
         if (isCoop)
