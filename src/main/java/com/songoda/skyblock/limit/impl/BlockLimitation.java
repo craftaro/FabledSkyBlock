@@ -7,6 +7,8 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.limit.EnumLimitation;
 import com.songoda.skyblock.utils.player.PlayerUtil;
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -54,13 +56,16 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
     }
 
-    @SuppressWarnings("deprecation")
     public long getBlockLimit(Player player, Block block) {
-        if (player == null || block == null) return -1;
+        return this.getBlockLimit(player, block.getType());
+    }
+
+    public long getBlockLimit(Player player, Material type) {
+        if (player == null || type == null) return -1;
 
         if (player.hasPermission("fabledskyblock.limit.block.*")) return -1;
 
-        final CompatibleMaterial material = CompatibleMaterial.getMaterial(block.getType());
+        final CompatibleMaterial material = CompatibleMaterial.getMaterial(type);
 
         if (material == null) return -1;
 
@@ -69,19 +74,22 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
         return Math.max(getMap().getOrDefault(material, getDefault()), PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.block." + name, true, -1));
     }
 
-    @SuppressWarnings("deprecation")
     public boolean isBlockLimitExceeded(Block block, long limit) {
+        return this.isBlockLimitExceeded(block.getType(), block.getLocation(), limit);
+    }
+
+    public boolean isBlockLimitExceeded(Material type, Location loc, long limit) {
 
         if (limit == -1) return false;
 
         final IslandManager islandManager = SkyBlock.getInstance().getIslandManager();
-        final Island island = islandManager.getIslandAtLocation(block.getLocation());
+        final Island island = islandManager.getIslandAtLocation(loc);
         final long totalPlaced;
 
-        if (block.getType() == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
+        if (type == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
             totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {
-            totalPlaced = island.getLevel().getMaterialAmount(CompatibleMaterial.getMaterial(block.getType()).name());
+            totalPlaced = island.getLevel().getMaterialAmount(CompatibleMaterial.getMaterial(type).name());
         }
 
         return limit <= totalPlaced;
