@@ -455,6 +455,16 @@ public class IslandManager {
             fileManager.unloadConfig(newIslandDataFile);
             oldIslandDataFile.renameTo(newIslandDataFile);
 
+            if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                    .getBoolean("Island.Challenge.PerIsland", true)){
+                File oldChallengeDataFile = new File(new File(skyblock.getDataFolder().toString() + "/challenge-data"), uuid2.toString() + ".yml");
+                File newChallengeDataFile = new File(new File(skyblock.getDataFolder().toString() + "/challenge-data"), player.getUniqueId().toString() + ".yml");
+
+                fileManager.unloadConfig(oldChallengeDataFile);
+                fileManager.unloadConfig(newChallengeDataFile);
+                oldChallengeDataFile.renameTo(newChallengeDataFile);
+            }
+
             skyblock.getVisitManager().transfer(uuid2, player.getUniqueId());
             skyblock.getBanManager().transfer(uuid2, player.getUniqueId());
             skyblock.getInviteManager().tranfer(uuid2, player.getUniqueId());
@@ -612,6 +622,10 @@ public class IslandManager {
         fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), island.getOwnerUUID().toString() + ".yml"));
         fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/setting-data"), island.getOwnerUUID().toString() + ".yml"));
         fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml"));
+        if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                .getBoolean("Island.Challenge.PerIsland", true)){
+            fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/challenge-data"), island.getOwnerUUID().toString() + ".yml"));
+        }
 
         Bukkit.getServer().getPluginManager().callEvent(new IslandDeleteEvent(island.getAPIWrapper()));
 
@@ -627,6 +641,10 @@ public class IslandManager {
         fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/level-data", uuid.toString() + ".yml"));
         fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/setting-data", uuid.toString() + ".yml"));
         fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/visit-data", uuid.toString() + ".yml"));
+        if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                .getBoolean("Island.Challenge.PerIsland", true)){
+            fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/challenge-data", uuid.toString() + ".yml"));
+        }
     }
 
     public Island loadIsland(org.bukkit.OfflinePlayer player) {
@@ -850,6 +868,11 @@ public class IslandManager {
         fileManager.unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/coop-data"), island.getOwnerUUID() + ".yml"));
         fileManager.unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/setting-data"), island.getOwnerUUID() + ".yml"));
         fileManager.unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), island.getOwnerUUID() + ".yml"));
+
+        if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                .getBoolean("Island.Challenge.PerIsland", true)){
+            fileManager.unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/challenge-data"), island.getOwnerUUID() + ".yml"));
+        }
 
         islandStorage.remove(island.getOwnerUUID());
 
