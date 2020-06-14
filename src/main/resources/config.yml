@@ -325,3 +325,40 @@ Island:
         WaterDisappearWithNetherMobs: false
         WaterDoNotFlowNearNetherMobs: false
         BlazeImmuneToWaterInNether: false
+    Restrict:
+        NetherBlocks:
+            NETHERRACK: true
+            SOUL_SAND: true
+            GLOWSTONE: true
+            NETHER_BRICKS: true
+            NETHER_BRICK_STAIRS: true
+            NETHER_BRICK_SLAB: true
+            NETHER_QUARTZ_ORE: true
+            QUARTZ_BLOCK: true
+            QUARTZ_PILLAR: true
+            CHISELED_QUARTZ_BLOCK: true
+            QUARTZ_STAIRS: true
+            NETHER_BRICK_WALL: true
+            NETHER_BRICK_FENCE: true
+            RED_NETHER_BRICKS: true
+            RED_NETHER_BRICK_STAIRS: true
+            RED_NETHER_BRICK_SLAB: true
+            RED_NETHER_BRICK_WALL: true
+            NETHER_WART: true
+            NETHER_WART_BLOCK: true
+            WITHER_SKELETON_SKULL: true
+            WITHER_ROSE: true
+        EndBlocks:
+            END_STONE: true
+            END_STONE_BRICKS: true
+            END_STONE_BRICK_WALL: true
+            END_STONE_BRICK_STAIRS: true
+            END_STONE_BRICK_SLAB: true
+            PURPUR_BLOCK: true
+            PURPUR_SLAB: true
+            PURPUR_PILLAR: true
+            PURPUR_STAIRS: true
+            END_ROD: true
+            END_CRYSTAL: true
+            CHORUS_FLOWER: true
+            CHORUS_PLANT: true

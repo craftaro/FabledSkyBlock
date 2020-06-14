@@ -211,6 +211,28 @@ public class Block implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
 
+        if(!player.hasPermission("fabledskyblock.bypass.netherplace") && !islandManager.isIslandWorldUnlocked(island, IslandWorld.Nether)){
+            for(String s : Objects.requireNonNull(configLoad.getConfigurationSection("Island.Restrict.NetherBlocks")).getKeys(false)){
+                if(s.equalsIgnoreCase(block.getType().toString())){
+                    if(configLoad.getBoolean("Island.Restrict.NetherBlocks." + s)){
+                        skyblock.getMessageManager().sendMessage(player, "&cDevi prima sbloccare il Nether per poter piazzare questo blocco!");
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+
+        if(!player.hasPermission("fabledskyblock.bypass.endplace") && !islandManager.isIslandWorldUnlocked(island, IslandWorld.End)){
+            for(String s : Objects.requireNonNull(configLoad.getConfigurationSection("Island.Restrict.EndBlocks")).getKeys(false)){
+                if(s.equalsIgnoreCase(block.getType().toString())){
+                    if(configLoad.getBoolean("Island.Restrict.EndBlocks." + s)){
+                        skyblock.getMessageManager().sendMessage(player, "&cDevi prima sbloccare l'End per poter piazzare questo blocco!");
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+
         if (configLoad.getBoolean("Island.WorldBorder.Block") && block.getType() == Material.DISPENSER) {
             if (!islandManager.isLocationAtIsland(island, blockLoc, world)) {
                 event.setCancelled(true);
