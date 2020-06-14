@@ -184,7 +184,7 @@ public class Island {
 
             configLoad.set("UUID", islandUUID.toString());
             configLoad.set("Visitor.Open", mainConfigLoad.getBoolean("Island.Visitor.Open"));
-            configLoad.set("Border.Enable", true);
+            configLoad.set("Border.Enable", mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Default", false));
             configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
             configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
             configLoad.set("Weather.Synchronised", mainConfigLoad.getBoolean("Island.Weather.Default.Synchronised")); // TODO: Synchronized
