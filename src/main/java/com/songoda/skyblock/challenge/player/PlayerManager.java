@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.songoda.skyblock.island.Island;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -94,7 +95,10 @@ public class PlayerManager {
 	public void unloadPlayer(UUID uuid) {
 		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
-			uuid = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid)).getOwnerUUID();
+			Island is = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+			if(is != null){
+				uuid = is.getOwnerUUID();
+			}
 		}
 		islands.remove(uuid);
 		skyblock.getFileManager().unloadConfig(new File(playersDirectory,
