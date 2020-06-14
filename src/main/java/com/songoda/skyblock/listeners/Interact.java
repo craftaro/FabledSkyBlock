@@ -50,6 +50,7 @@ public class Interact implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onWaterPlace(PlayerInteractEvent event){
+        if(event.getItem() == null) return;
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getClickedBlock().getRelative(event.getBlockFace());
 
