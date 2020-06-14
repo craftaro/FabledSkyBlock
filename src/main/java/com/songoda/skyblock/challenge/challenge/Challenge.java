@@ -166,12 +166,13 @@ public class Challenge {
 								toRemove -= jis.getAmount();
 								jis.setAmount(0);
 							} else {
-								jis.setAmount(is.getAmount() - toRemove);
+								jis.setAmount(jis.getAmount() - toRemove);
 								toRemove = 0;
 							}
 						}
 						if(toRemove <= 0) {
 							p.updateInventory();
+							break;
 						}
 					}
 				}
