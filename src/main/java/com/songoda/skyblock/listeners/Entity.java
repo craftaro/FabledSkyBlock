@@ -531,7 +531,7 @@ public class Entity implements Listener {
             boolean isSplit = event.getSpawnReason().equals(SpawnReason.SLIME_SPLIT);
             boolean splitBypass = configLoad.getBoolean("Island.Challenge.PerIsland", true);
 
-            if(!isSplit || splitBypass){
+            if(!isSplit || !splitBypass){
                 long count = limits.getEntityCount(island, skyblock.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
                 if (limits.hasTooMuch(count + 1, type)) {
                     entity.remove();
