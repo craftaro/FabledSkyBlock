@@ -215,7 +215,8 @@ public class Block implements Listener {
             for(String s : Objects.requireNonNull(configLoad.getConfigurationSection("Island.Restrict.NetherBlocks")).getKeys(false)){
                 if(s.equalsIgnoreCase(block.getType().toString())){
                     if(configLoad.getBoolean("Island.Restrict.NetherBlocks." + s)){
-                        skyblock.getMessageManager().sendMessage(player, "&cDevi prima sbloccare il Nether per poter piazzare questo blocco!");
+                        skyblock.getMessageManager().sendMessage(player, Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.Unlock.NetherBlocksPlace.Message")));
                         event.setCancelled(true);
                     }
                 }
@@ -226,7 +227,8 @@ public class Block implements Listener {
             for(String s : Objects.requireNonNull(configLoad.getConfigurationSection("Island.Restrict.EndBlocks")).getKeys(false)){
                 if(s.equalsIgnoreCase(block.getType().toString())){
                     if(configLoad.getBoolean("Island.Restrict.EndBlocks." + s)){
-                        skyblock.getMessageManager().sendMessage(player, "&cDevi prima sbloccare l'End per poter piazzare questo blocco!");
+                        skyblock.getMessageManager().sendMessage(player, Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.Unlock.EndBlocksPlace.Message")));
                         event.setCancelled(true);
                     }
                 }

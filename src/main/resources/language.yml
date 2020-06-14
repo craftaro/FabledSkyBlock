@@ -3580,6 +3580,10 @@ Island:
       Message: '&bSkyBlock &8| &cError&8: &eYou need to pay to unlock the Nether. To do that use &7/island unlock nether&e This will cost ''&7$%cost%&e''.'
     End:
       Message: '&bSkyBlock &8| &cError&8: &eYou need to pay to unlock The End. To do that use &7/island unlock end&e This will cost ''&7$%cost%&e''.'
+    NetherBlocksPlace:
+      Message: '&bSkyBlock &8| &cError&8: &eYou need to pay to unlock the Nether in order to place this block.'
+    EndBlocksPlace:
+      Message: '&bSkyBlock &8| &cError&8: &eYou need to pay to unlock The End in order to place this block.'
   Settings:
     Visitor:
       Welcome:
