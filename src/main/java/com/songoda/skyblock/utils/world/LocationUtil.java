@@ -26,6 +26,20 @@ import java.util.logging.Level;
 
 public final class LocationUtil {
 
+    public static void removeWaterFromLoc(SkyBlock plugin, Location loc) {
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)){
+            Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
+            if(tempLoc.getBlock().getType().equals(Material.WATER)){
+                tempLoc.getBlock().setType(Material.AIR);
+            } else if(tempLoc.getBlock().getBlockData() instanceof Waterlogged){
+                Waterlogged blockData = (Waterlogged) tempLoc.getBlock().getBlockData();
+                blockData.setWaterlogged(false);
+                tempLoc.getBlock().setBlockData(blockData);
+            }
+        }
+    }
+
     public static Location getSafeLocation(Location loc){
         boolean found = false;
         Location locChecked = loc.clone();
@@ -69,7 +83,8 @@ public final class LocationUtil {
                 locChecked.getBlock().getType().isSolid() &&
                 locChecked.getBlock().getType().isBlock() &&
                 locChecked.add(0d,1d,0d).getBlock().getType().isAir() &&
-                locChecked.add(0d,2d,0d).getBlock().getType().isAir()){
+                locChecked.add(0d,2d,0d).getBlock().getType().isAir() &&
+                !(locChecked.getBlock().getBlockData() instanceof Waterlogged)){
             safe = true;
             switch(locChecked.getBlock().getType()){
                 case ACACIA_BUTTON:

@@ -2,6 +2,7 @@ package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.command.commands.island.TeleportCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
@@ -192,17 +193,7 @@ public class Move implements Listener {
                 loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
             } else {
                 loc = island.getLocation(world, IslandEnvironment.Main);
-                if(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                        .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)){
-                    Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
-                    if(tempLoc.getBlock().getType().equals(Material.WATER)){
-                        tempLoc.getBlock().setType(Material.AIR);
-                    } else if(tempLoc.getBlock().getBlockData() instanceof Waterlogged){
-                        Waterlogged blockData = (Waterlogged) tempLoc.getBlock().getBlockData();
-                        blockData.setWaterlogged(false);
-                        tempLoc.getBlock().setBlockData(blockData);
-                    }
-                }
+                LocationUtil.removeWaterFromLoc(skyblock, loc);
             }
         } else {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {

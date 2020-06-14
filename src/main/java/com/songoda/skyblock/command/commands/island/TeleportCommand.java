@@ -110,17 +110,7 @@ public class TeleportCommand extends SubCommand {
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
                 Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
-                if(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                        .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)){
-                    Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
-                    if(tempLoc.getBlock().getType().equals(Material.WATER)){
-                        tempLoc.getBlock().setType(Material.AIR);
-                    } else if(tempLoc.getBlock().getBlockData() instanceof Waterlogged){
-                        Waterlogged blockData = (Waterlogged) tempLoc.getBlock().getBlockData();
-                        blockData.setWaterlogged(false);
-                        tempLoc.getBlock().setBlockData(blockData);
-                    }
-                }
+                LocationUtil.removeWaterFromLoc(skyblock, loc);
                 player.teleport(loc);
 
                 if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
