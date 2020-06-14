@@ -320,3 +320,8 @@ Island:
     Limits:
         # Should slime split bypass limits.yml
         AllowSlimeSplit: true
+    Nether:
+        AllowNetherWater: false
+        WaterDisappearWithNetherMobs: false
+        WaterDoNotFlowNearNetherMobs: false
+        BlazeImmuneToWaterInNether: false
