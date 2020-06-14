@@ -65,7 +65,7 @@ public abstract class BasicPermission {
      *
      * @return
      */
-    public boolean extraCheck() {
+    public boolean overridingCheck() {
         return true;
     }
 
