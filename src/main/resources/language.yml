@@ -3469,7 +3469,7 @@ Island:
       Word:
         Minute: minute(s)
         Second: second(s)
-      Message: '&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore creating an Island.'
+      Message: '&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore deleting an Island.'
   Creator:
     Selector:
       Created:
