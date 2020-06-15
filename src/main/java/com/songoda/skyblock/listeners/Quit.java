@@ -165,6 +165,6 @@ public class Quit implements Listener {
             }
         });
         // Unload Challenge
-        SkyBlock.getInstance().getFabledChallenge().getPlayerManager().loadPlayer(event.getPlayer().getUniqueId());
+        SkyBlock.getInstance().getFabledChallenge().getPlayerManager().unloadPlayer(event.getPlayer().getUniqueId());
     }
 }
