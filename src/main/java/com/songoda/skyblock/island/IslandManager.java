@@ -601,6 +601,16 @@ public class IslandManager {
                     LocationUtil.teleportPlayerToSpawn(all);
                 }
 
+                // TODO - Find a way to delete also offline players
+                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                        .getBoolean("Island.Deletion.ClearInventory", false)){
+                    all.getInventory().clear();
+                }
+                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                        .getBoolean("Island.Deletion.ClearEnderChest", false)){
+                    all.getEnderChest().clear();
+                }
+
                 if (cooldownEnabled) {
                     if (!all.hasPermission("fabledskyblock.bypass.cooldown") && !all.hasPermission("fabledskyblock.bypass.*") && !all.hasPermission("fabledskyblock.*")) {
                         skyblock.getCooldownManager().createPlayer(CooldownType.Creation, all);

@@ -38,6 +38,9 @@ Island:
         TeleportTimeout: 1
         # The distance between the islands
         Distance: 1200
+    Deletion:
+        ClearInventory: false
+        ClearEnderChest: false
     World:
         # Delete the Island world when changing the liquid option.
         # If lava disabled, the world will be a water world.
