@@ -22,7 +22,7 @@ public class HungerPermission extends ListeningPermission {
     }
 
     @Override
-    public boolean extraCheck() {
+    public boolean overridingCheck() {
         return plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable");
     }

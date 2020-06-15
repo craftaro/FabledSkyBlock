@@ -78,37 +78,37 @@ public class Challenge {
 			}
 		}
 	}
-	
+
 	// GETTERS
-	
+
 	public ChallengeCategory getCategory() {
 		return category;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public int getMaxTimes() {
 		return maxTimes;
 	}
-	
+
 	public boolean isShowInChat() {
 		return showInChat;
 	}
-	
+
 	public List<Peer<Type, Object>> getRequires() {
 		return requires;
 	}
-	
+
 	public List<Peer<Type, Object>> getRewards() {
 		return rewards;
 	}
-	
+
 	public ItemChallenge getItem() {
 		return item;
 	}
@@ -439,7 +439,7 @@ public class Challenge {
 			 * <li>7 = lingering extended</li>
 			 * <li>8 = lingering ++</li>
 			 * </ul>
-			 * 
+			 *
 			 * @param is
 			 * @param type
 			 * @param data
@@ -468,7 +468,7 @@ public class Challenge {
 
 		/**
 		 * Try to convert the value to a useable object used later
-		 * 
+		 *
 		 * @param value
 		 *                  The value to convert
 		 * @return A useable object required
@@ -477,7 +477,7 @@ public class Challenge {
 
 		/**
 		 * Check if specific player has requirement for specific object
-		 * 
+		 *
 		 * @param p
 		 *                The player
 		 * @param obj
@@ -488,7 +488,7 @@ public class Challenge {
 
 		/**
 		 * Execute an action associated with specific object for specific player
-		 * 
+		 *
 		 * @param p
 		 *                The player
 		 * @param obj
@@ -498,7 +498,7 @@ public class Challenge {
 
 		/**
 		 * Give a reward to specific player for specific object
-		 * 
+		 *
 		 * @param p
 		 *                The player
 		 * @param obj

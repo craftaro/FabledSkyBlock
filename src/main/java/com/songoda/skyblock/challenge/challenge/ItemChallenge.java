@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,13 +19,13 @@ public class ItemChallenge {
 	private boolean show;
 	private int row;
 	private int col;
-	private Material type;
+	private CompatibleMaterial type;
 	private int amount;
 	private List<String> lore;
 
 	private String itemTitle;
 
-	public ItemChallenge(boolean show, int row, int col, Material type, int amount, List<String> lore) {
+	public ItemChallenge(boolean show, int row, int col, CompatibleMaterial type, int amount, List<String> lore) {
 		this.show = show;
 		this.row = row;
 		this.col = col;
@@ -39,7 +40,8 @@ public class ItemChallenge {
 	}
 
 	public ItemStack createItem(UUID player, int amount) {
-		ItemStack is = new ItemStack(type, this.amount);
+		ItemStack is = type.getItem();
+		is.setAmount(this.amount);
 		// Air
 		ItemMeta im = is.getItemMeta();
 		if (im != null) {
@@ -73,7 +75,7 @@ public class ItemChallenge {
 		return col;
 	}
 
-	public Material getType() {
+	public CompatibleMaterial getType() {
 		return type;
 	}
 
