@@ -1,10 +1,9 @@
 package com.songoda.skyblock.menus;
 
-import be.maximvdw.placeholderapi.internal.utils.ListUtils;
-import com.google.common.collect.Lists;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.input.ChatPrompt;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
@@ -15,7 +14,6 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.SignMenuFactory;
 import com.songoda.skyblock.utils.item.MenuClickRegistry;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import org.bukkit.Bukkit;
@@ -24,7 +22,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Objects;
 
 public class Bank {
 
@@ -34,7 +33,9 @@ public class Bank {
 
     private IslandManager islandManager;
 
-    public static Bank getInstance() {return instance == null ? instance = new Bank() : instance;}
+    public static Bank getInstance() {
+        return instance == null ? instance = new Bank() : instance;
+    }
 
     public Bank() {
         SkyBlock skyblock = SkyBlock.getInstance();
@@ -65,31 +66,27 @@ public class Bank {
                 //Deposit money
                 Island island = islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
                 if (island != null) {
-                    Island finalIsland = island;
-                    SelectInputMethod.getInstance().open(player,"Deposit", (action) -> {
+                    SelectInputMethod.getInstance().open(player, "Deposit", (action) -> {
                         if (action == InputMethodSelectlistener.InputMethod.CANCELED) {
-                            Bukkit.getScheduler().runTask(skyblock,() -> {this.open(player);});
-                            return;
+                            Bukkit.getScheduler().runTask(skyblock, () ->
+                                    this.open(player));
                         } else if (action == InputMethodSelectlistener.InputMethod.ALL) {
-                            deposit(player,finalIsland,EconomyManager.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())));
+                            deposit(player, island, EconomyManager.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())));
                         } else {
-                            Bukkit.getScheduler().runTaskLater(SkyBlock.getInstance(), () ->
-                                    SignMenuFactory.getInstance().newMenu().reopenIfFail()
-                                            .response((player1, lines) -> {
-                                                if (lines[0] == "") {
-                                                    return true;
-                                                }
-                                                double amount;
-                                                try {
-                                                    amount = Double.parseDouble(lines[0]);
-                                                } catch (NumberFormatException e1) {
-                                                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short4.Message"));
-                                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                                                    return false;
-                                                }
-                                                deposit(player,finalIsland,amount);
-                                                return true;
-                                            }).open(player),10);
+                            ChatPrompt.showPrompt(skyblock, player, (event) -> {
+                                if (event.getMessage().equals(""))
+                                    return;
+
+                                double amount;
+                                try {
+                                    amount = Double.parseDouble(event.getMessage());
+                                } catch (NumberFormatException e1) {
+                                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short4.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                    return;
+                                }
+                                deposit(player, island, amount);
+                            });
                         }
                     });
                 }
@@ -103,30 +100,27 @@ public class Bank {
                 island = islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
                 if (island != null) {
                     Island finalIsland = island;
-                    SelectInputMethod.getInstance().open(player,"Withdraw", (action) -> {
+                    SelectInputMethod.getInstance().open(player, "Withdraw", (action) -> {
                         if (action == InputMethodSelectlistener.InputMethod.CANCELED) {
-                            Bukkit.getScheduler().runTask(skyblock,() -> {this.open(player);});
+                            Bukkit.getScheduler().runTask(skyblock, () -> {
+                                this.open(player);
+                            });
                             return;
                         } else if (action == InputMethodSelectlistener.InputMethod.ALL) {
-                            withdraw(player,finalIsland,finalIsland.getBankBalance());
+                            withdraw(player, finalIsland, finalIsland.getBankBalance());
                         } else {
-                            Bukkit.getScheduler().runTaskLater(SkyBlock.getInstance(), () ->
-                                    SignMenuFactory.getInstance().newMenu().reopenIfFail()
-                                            .response((player1, lines) -> {
-                                                if (lines[0] == "") {
-                                                    return true;
-                                                }
-                                                double amount;
+                                    ChatPrompt.showPrompt(skyblock, player, (event) -> {
+                                                if (event.getMessage().equals(""))
+                                                    return;
+                                                double amount = 0;
                                                 try {
-                                                    amount = Double.parseDouble(lines[0]);
+                                                    amount = Double.parseDouble(event.getMessage());
                                                 } catch (NumberFormatException e1) {
                                                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short4.Message"));
                                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                                                    return false;
                                                 }
-                                                withdraw(player,finalIsland,amount);
-                                                return true;
-                                            }).open(player),10);
+                                                withdraw(player, finalIsland, amount);
+                                            });
                         }
                     });
                 }
@@ -150,7 +144,6 @@ public class Bank {
         island = islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
 
 
-
         SkyBlock skyblock = SkyBlock.getInstance();
         FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
@@ -158,16 +151,16 @@ public class Bank {
 
         if (island == null) {
             skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
-            skyblock.getMessageManager().sendMessage(player,configLoad.getString("Command.Bank.Unknown"));
+            skyblock.getMessageManager().sendMessage(player, configLoad.getString("Command.Bank.Unknown"));
             return;
         }
 
         // Glass panes barriers
         nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(), configLoad.getString("Menu.Bank.Item.Barrier.Displayname"), null, null, null, null), 0, 2, 5, 8,
-                1, 2, 3, 5,6,7,9,11,12,14,15,17);
+                1, 2, 3, 5, 6, 7, 9, 11, 12, 14, 15, 17);
 
         nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(), configLoad.getString("Menu.Bank.Item.Exit.Displayname"),
-                configLoad.getStringList("Menu.Bank.Item.Exit.Lore"), null, null, null), 0,8);
+                configLoad.getStringList("Menu.Bank.Item.Exit.Lore"), null, null, null), 0, 8);
 
         nInv.addItem(nInv.createItem(CompatibleMaterial.BOOK.getItem(), configLoad.getString("Menu.Bank.Item.Log.Displayname"),
                 bankManager.getTransactions(player), null, null, null), 4);
