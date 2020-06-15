@@ -18,6 +18,7 @@ This fork contains bug fixes, features and improvements:
 - Added deletion cooldown
 - Fixed bugs in Challenges that didn't remove all the items
 - Fixed WorldBorder size not reflecting real island size
+- Fixed bugs in island settings that prevented the from loading correctly
 - Now you can use `/is chat <message>` to send messages to island chat
 - Now Challenges can be per-island too
 - Hide options in control panel if missing the permission
