@@ -2,6 +2,7 @@ package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.limit.impl.EntityLimitaton;
@@ -54,22 +55,32 @@ public class Entity implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         IslandManager islandManager = skyblock.getIslandManager();
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
+        if(event.getEntity() instanceof Blaze){
+            WorldManager worldManager = skyblock.getWorldManager();
 
-        Player player = (Player) event.getEntity();
+            Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            // Check permissions.
-            skyblock.getPermissionManager().processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
-        }
+            if(configLoad.getBoolean("Island.Nether.BlazeImmuneToWaterInNether", false) &&
+                    worldManager.getIslandWorld(event.getEntity().getWorld()).equals(IslandWorld.Nether)){
+                if(event.getCause().equals(DamageCause.DROWNING)){
+                    event.setCancelled(true);
+                }
+            }
+        } else if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
 
-        // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
-        // the shot entity isn't damaged
-        if (preventFireTicks.contains(player.getUniqueId()) && event.getCause() == DamageCause.FIRE_TICK) {
-            player.setFireTicks(0);
-            event.setCancelled(true);
+            if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
+                // Check permissions.
+                skyblock.getPermissionManager().processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
+            }
+
+            // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
+            // the shot entity isn't damaged
+            if (preventFireTicks.contains(player.getUniqueId()) && event.getCause() == DamageCause.FIRE_TICK) {
+                player.setFireTicks(0);
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -513,12 +524,20 @@ public class Entity implements Listener {
         EntityType type = entity.getType();
 
         if (limits.isBeingTracked(type)) {
-            long count = limits.getEntityCount(island, skyblock.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
+            FileManager fileManager = skyblock.getFileManager();
+            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = config.getFileConfiguration();
 
-            if (limits.hasTooMuch(count + 1, type)) {
-                entity.remove();
-                event.setCancelled(true);
-                return;
+            boolean isSplit = event.getSpawnReason().equals(SpawnReason.SLIME_SPLIT);
+            boolean splitBypass = configLoad.getBoolean("Island.Challenge.PerIsland", true);
+
+            if(!isSplit || !splitBypass){
+                long count = limits.getEntityCount(island, skyblock.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
+                if (limits.hasTooMuch(count + 1, type)) {
+                    entity.remove();
+                    event.setCancelled(true);
+                    return;
+                }
             }
         }
 

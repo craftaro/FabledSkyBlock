@@ -1,6 +1,7 @@
 Generators:
-    Default:
-        Name: Default
+    Normal:
+        Name: Normal
+        World: Normal
         Permission: false
         Materials:
             COBBLESTONE:
@@ -15,3 +16,21 @@ Generators:
                 Chance: 5.5
             DIAMOND_ORE:
                 Chance: 2.5
+    Nether:
+        Name: Nether
+        World: Nether
+        Permission: false
+        Materials:
+            NETHERRACK:
+                Chance: 80
+            GLOWSTONE:
+                Chance: 10.0
+            QUARTZ_ORE:
+                Chance: 10.0
+    End:
+        Name: End
+        World: End
+        Permission: false
+        Materials:
+            END_STONE:
+                Chance: 100.0

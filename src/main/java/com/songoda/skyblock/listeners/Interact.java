@@ -18,11 +18,11 @@ import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
+import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,6 +46,87 @@ public class Interact implements Listener {
 
     public Interact(SkyBlock skyblock) {
         this.skyblock = skyblock;
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onWaterPlace(PlayerInteractEvent event){
+        if(event.getItem() == null) return;
+        Player player = event.getPlayer();
+        org.bukkit.block.Block block = event.getClickedBlock().getRelative(event.getBlockFace());
+
+        IslandManager islandManager = skyblock.getIslandManager();
+        WorldManager worldManager = skyblock.getWorldManager();
+        IslandLevelManager levellingManager = skyblock.getLevellingManager();
+        if (!worldManager.isIslandWorld(block.getWorld())) return;
+
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
+                worldManager.getIslandWorld(block.getWorld()).equals(IslandWorld.Nether) &&
+                event.getItem().getType().equals(Material.WATER_BUCKET)){
+            Location blockLoc = block.getLocation();
+
+            Island island = islandManager.getIslandAtLocation(blockLoc);
+
+            // Check permissions.
+            if (!skyblock.getPermissionManager().processPermission(event, player, island))
+                return;
+
+            if (island == null) {
+                event.setCancelled(true);
+                return;
+            }
+
+            if (levellingManager.isScanning(island)) {
+                skyblock.getMessageManager().sendMessage(player,
+                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
+                event.setCancelled(true);
+                return;
+            }
+
+            FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = config.getFileConfiguration();
+            IslandWorld world = worldManager.getIslandWorld(block.getWorld());
+
+            // Check spawn protection
+            if (configLoad.getBoolean("Island.Spawn.Protection")) {
+                boolean isObstructing = false;
+                // Directly on the block
+                if (LocationUtil.isLocationAffectingIslandSpawn(blockLoc, island, world)) {
+                    isObstructing = true;
+                }
+
+                if (isObstructing) {
+                    skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
+                    skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+
+            BlockLimitation limits = skyblock.getLimitationHandler().getInstance(BlockLimitation.class);
+
+            long limit = limits.getBlockLimit(player, Material.WATER);
+
+            if (limits.isBlockLimitExceeded(event.getItem().getType(), block.getLocation(), limit)) {
+                CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getItem().getType());
+
+                skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+                        .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
+                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+
+                event.setCancelled(true);
+                return;
+            }
+
+            if(configLoad.getBoolean("Island.Nether.AllowNetherWater", false)){
+                event.setCancelled(true);
+                block.setType(Material.WATER, true);
+                block.getWorld().playSound(block.getLocation(), Sound.ITEM_BUCKET_EMPTY, 1f, 1f);
+                if(!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+                    event.getItem().setType(Material.BUCKET);
+                }
+            }
+        }
     }
 
     @SuppressWarnings("deprecation")

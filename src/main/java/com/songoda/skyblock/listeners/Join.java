@@ -100,6 +100,7 @@ public class Join implements Listener {
 
             cooldownManager.addCooldownPlayer(CooldownType.Biome, cooldownManager.loadCooldownPlayer(CooldownType.Biome, player));
             cooldownManager.addCooldownPlayer(CooldownType.Creation, cooldownManager.loadCooldownPlayer(CooldownType.Creation, player));
+            cooldownManager.addCooldownPlayer(CooldownType.Deletion, cooldownManager.loadCooldownPlayer(CooldownType.Deletion, player));
 
             if (scoreboardManager != null) {
                 Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));

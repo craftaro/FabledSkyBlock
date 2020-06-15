@@ -5,6 +5,10 @@ import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;
+import com.songoda.skyblock.cooldown.Cooldown;
+import com.songoda.skyblock.cooldown.CooldownManager;
+import com.songoda.skyblock.cooldown.CooldownPlayer;
+import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
@@ -12,6 +16,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.ChatComponent;
+import com.songoda.skyblock.utils.NumberUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -28,6 +33,7 @@ public class DeleteCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
+        CooldownManager cooldownManager = skyblock.getCooldownManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
         SoundManager soundManager = skyblock.getSoundManager();
@@ -44,6 +50,32 @@ public class DeleteCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Owner.Message"));
             soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+            if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                    .getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
+                    && cooldownManager.hasPlayer(CooldownType.Deletion, player)) {
+                CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Deletion, player);
+                Cooldown cooldown = cooldownPlayer.getCooldown();
+
+                if (cooldown.getTime() < 60) {
+                    messageManager.sendMessage(player,
+                            config.getFileConfiguration().getString("Island.Deletion.Cooldown.Message") // TODO Add language.yml values
+                                    .replace("%time", cooldown.getTime() + " " + config.getFileConfiguration()
+                                            .getString("Island.Deletion.Cooldown.Word.Second")));
+                } else {
+                    long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
+                    messageManager.sendMessage(player,
+                            config.getFileConfiguration().getString("Island.Deletion.Cooldown.Message")
+                                    .replace("%time", durationTime[2] + " "
+                                            + config.getFileConfiguration()
+                                            .getString("Island.Deletion.Cooldown.Word.Minute")
+                                            + " " + durationTime[3] + " " + config.getFileConfiguration()
+                                            .getString("Island.Deletion.Cooldown.Word.Second")));
+                }
+
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+
+                return;
+            }
             if (playerData.getConfirmationTime() > 0) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Delete.Confirmation.Pending.Message"));

@@ -15,6 +15,7 @@ import org.bukkit.*;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -24,6 +25,100 @@ import java.util.Random;
 import java.util.logging.Level;
 
 public final class LocationUtil {
+
+    public static void removeWaterFromLoc(SkyBlock plugin, Location loc) {
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)){
+            Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
+            if(tempLoc.getBlock().getType().equals(Material.WATER)){
+                tempLoc.getBlock().setType(Material.AIR);
+            } else if(tempLoc.getBlock().getBlockData() instanceof Waterlogged){
+                Waterlogged blockData = (Waterlogged) tempLoc.getBlock().getBlockData();
+                blockData.setWaterlogged(false);
+                tempLoc.getBlock().setBlockData(blockData);
+            }
+        }
+    }
+
+    public static Location getSafeLocation(Location loc){
+        boolean found = false;
+        Location locChecked = loc.clone();
+        loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+        for(int i=loc.getBlockY(); i>=0 && !found; i--){
+            locChecked = locChecked.subtract(0d, 1d, 0d);
+            found = checkBlock(locChecked);
+        }
+        if(!found){
+            for(int i=loc.getBlockY(); i<256 && !found; i++){
+                locChecked = locChecked.add(0d, 1d, 0d);
+                found = checkBlock(locChecked);
+            }
+        }
+        if (found) {
+            locChecked = locChecked.add(0d,1d,0d);
+        } else {
+            locChecked = null;
+        }
+        return locChecked;
+    }
+
+    public static Location getDefinitiveLocation(Location loc){
+        Location locWorking = loc.clone();
+        for(int i=locWorking.getBlockY(); i>=0; i--){
+            if(!locWorking.getBlock().isEmpty()){
+                if(locWorking.getBlock().getType().equals(Material.WATER) || locWorking.getBlock().getBlockData() instanceof Waterlogged){
+                    loc = locWorking;
+                }
+                break;
+            }
+        }
+        return loc;
+    }
+
+    private static boolean checkBlock(Location locChecked) {
+        boolean safe = false;
+        if(!locChecked.getBlock().isEmpty() &&
+                !locChecked.getBlock().isLiquid() &&
+                !locChecked.getBlock().isPassable() &&
+                locChecked.getBlock().getType().isSolid() &&
+                locChecked.getBlock().getType().isBlock() &&
+                locChecked.add(0d,1d,0d).getBlock().getType().isAir() &&
+                locChecked.add(0d,2d,0d).getBlock().getType().isAir() &&
+                !(locChecked.getBlock().getBlockData() instanceof Waterlogged)){
+            safe = true;
+            switch(locChecked.getBlock().getType()){
+                case ACACIA_BUTTON:
+                case ACACIA_DOOR:
+                case ACACIA_FENCE_GATE:
+                case ACACIA_TRAPDOOR:
+                case BIRCH_DOOR:
+                case BIRCH_FENCE_GATE:
+                case BIRCH_TRAPDOOR:
+                case CACTUS:
+                case CAKE:
+                case CAMPFIRE:
+                case COBWEB:
+                case DARK_OAK_DOOR:
+                case DARK_OAK_FENCE_GATE:
+                case DARK_OAK_TRAPDOOR:
+                case IRON_TRAPDOOR:
+                case JUNGLE_DOOR:
+                case JUNGLE_FENCE_GATE:
+                case JUNGLE_TRAPDOOR:
+                case LADDER:
+                case MAGMA_BLOCK:
+                case NETHER_PORTAL:
+                case OAK_DOOR:
+                case OAK_FENCE_GATE:
+                case SPRUCE_DOOR:
+                case SPRUCE_FENCE_GATE:
+                    safe = false;
+                    break;
+            }
+        }
+
+        return safe;
+    }
 
     public static boolean isLocationLocation(Location location1, Location location2) {
         return location1.getBlockX() == location2.getBlockX() && location1.getBlockY() == location2.getBlockY() && location1.getBlockZ() == location2.getBlockZ();

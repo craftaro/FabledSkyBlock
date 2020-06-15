@@ -72,7 +72,12 @@ public class KickCommand extends SubCommand {
                                 targetPlayerName = targetPlayer.getName();
                             }
 
-                            if (targetPlayerUUID.equals(player.getUniqueId())) {
+                            assert targetPlayer != null;
+                            if(targetPlayer.hasPermission("fabledskyblock.bypass.kick") && islandVisitors.contains(targetPlayer.getUniqueId())){
+                                // messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Exempt")); // TODO
+                                messageManager.sendMessage(player, "&cNon puoi cacciare questo utente!");
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            } else if (targetPlayerUUID.equals(player.getUniqueId())) {
                                 messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Yourself.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             } else if (islandOperators.contains(player.getUniqueId()) && islandOperators.contains(targetPlayerUUID)) {

@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import com.songoda.skyblock.challenge.FabledChallenge;
@@ -21,6 +22,7 @@ import com.songoda.skyblock.challenge.defaultinv.Item;
 import com.songoda.skyblock.challenge.inventory.ClickableItem;
 import com.songoda.skyblock.challenge.inventory.Inventory;
 import com.songoda.skyblock.challenge.inventory.InventoryProvider;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class ChallengeInventory implements InventoryProvider {
 	public static final String CATEGORY = "ChallengeCategory";
@@ -78,6 +80,10 @@ public class ChallengeInventory implements InventoryProvider {
 				// If challenge is done, add enchantment to show to player that it's done
 				if (count >= c.getMaxTimes())
 					is.addUnsafeEnchantment(Enchantment.OXYGEN, 1);
+				ItemMeta im = is.getItemMeta();
+				im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+				is.setItemMeta(im);
+
 				Consumer<InventoryClickEvent> consumer = e -> {
 					// Count the new value
 					int count2 = done.getOrDefault(c, 0);
@@ -97,6 +103,9 @@ public class ChallengeInventory implements InventoryProvider {
 						// If challenge is done, add enchantment to show to player that it's done
 						if (count2 >= c.getMaxTimes())
 							is2.addUnsafeEnchantment(Enchantment.OXYGEN, 1);
+						ItemMeta im2 = is2.getItemMeta();
+						im2.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+						is2.setItemMeta(im2);
 						// Update
 						inv.updateItem(ic.getCol(), ic.getRow(), is2);
 					} else

@@ -7,6 +7,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.generator.GeneratorManager;
 import com.songoda.skyblock.generator.GeneratorMaterial;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -277,7 +278,7 @@ public class Generator implements Listener {
                                 configLoad.getString("Island.Admin.Generator.Characters.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     } else {
-                        generatorManager.addGenerator(event1.getName(), new ArrayList<>(), false);
+                        generatorManager.addGenerator(event1.getName(), IslandWorld.Normal, new ArrayList<>(), false);
 
                         messageManager.sendMessage(player,
                                 configLoad.getString("Island.Admin.Generator.Created.Message")

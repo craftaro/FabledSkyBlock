@@ -61,7 +61,7 @@ public class IslandManager {
     private List<IslandPosition> islandPositions = new ArrayList<>();
     private Map<UUID, UUID> islandProxies = new HashMap<>();
     private Map<UUID, Island> islandStorage = new HashMap<>();
-    private int offset = 1200;
+    private int offset;
 
     private HashMap<IslandWorld, Integer> oldSystemIslands;
 
@@ -70,6 +70,9 @@ public class IslandManager {
 
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "worlds.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
+
+        offset = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getInt("Island.Creation.Distance", 1200);
 
         for (IslandWorld worldList : IslandWorld.values()) {
             ConfigurationSection configSection = configLoad.getConfigurationSection("World." + worldList.name() + ".nextAvailableLocation");
@@ -241,6 +244,9 @@ public class IslandManager {
         if (configLoad.getBoolean("Island.Creation.Cooldown.Creation.Enable") && !player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*")
                 && !player.hasPermission("fabledskyblock.*"))
             skyblock.getCooldownManager().createPlayer(CooldownType.Creation, player);
+        if (configLoad.getBoolean("Island.Deletion.Cooldown.Deletion.Enable") && !player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*")
+                && !player.hasPermission("fabledskyblock.*"))
+            skyblock.getCooldownManager().createPlayer(CooldownType.Deletion, player);
 
         Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> Bukkit.getServer().getPluginManager().callEvent(new IslandCreateEvent(island.getAPIWrapper(), player)));
 
@@ -455,6 +461,16 @@ public class IslandManager {
             fileManager.unloadConfig(newIslandDataFile);
             oldIslandDataFile.renameTo(newIslandDataFile);
 
+            if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                    .getBoolean("Island.Challenge.PerIsland", true)){
+                File oldChallengeDataFile = new File(new File(skyblock.getDataFolder().toString() + "/challenge-data"), uuid2.toString() + ".yml");
+                File newChallengeDataFile = new File(new File(skyblock.getDataFolder().toString() + "/challenge-data"), player.getUniqueId().toString() + ".yml");
+
+                fileManager.unloadConfig(oldChallengeDataFile);
+                fileManager.unloadConfig(newChallengeDataFile);
+                oldChallengeDataFile.renameTo(newChallengeDataFile);
+            }
+
             skyblock.getVisitManager().transfer(uuid2, player.getUniqueId());
             skyblock.getBanManager().transfer(uuid2, player.getUniqueId());
             skyblock.getInviteManager().tranfer(uuid2, player.getUniqueId());
@@ -508,8 +524,6 @@ public class IslandManager {
             }
         }
     }
-
-    int j = 0;
 
     public boolean deleteIsland(Island island, boolean force) {
         ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
@@ -566,7 +580,8 @@ public class IslandManager {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        boolean cooldownEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable");
+        boolean cooldownCreationEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Creation.Enable");
+        boolean cooldownDeletionEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable");
 
         config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         configLoad = config.getFileConfiguration();
@@ -590,9 +605,24 @@ public class IslandManager {
                     LocationUtil.teleportPlayerToSpawn(all);
                 }
 
-                if (cooldownEnabled) {
+                // TODO - Find a way to delete also offline players
+                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                        .getBoolean("Island.Deletion.ClearInventory", false)){
+                    all.getInventory().clear();
+                }
+                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                        .getBoolean("Island.Deletion.ClearEnderChest", false)){
+                    all.getEnderChest().clear();
+                }
+
+                if (cooldownCreationEnabled) {
                     if (!all.hasPermission("fabledskyblock.bypass.cooldown") && !all.hasPermission("fabledskyblock.bypass.*") && !all.hasPermission("fabledskyblock.*")) {
                         skyblock.getCooldownManager().createPlayer(CooldownType.Creation, all);
+                    }
+                }
+                if (cooldownDeletionEnabled) {
+                    if (!all.hasPermission("fabledskyblock.bypass.cooldown") && !all.hasPermission("fabledskyblock.bypass.*") && !all.hasPermission("fabledskyblock.*")) {
+                        skyblock.getCooldownManager().createPlayer(CooldownType.Deletion, all);
                     }
                 }
             }
@@ -612,6 +642,10 @@ public class IslandManager {
         fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), island.getOwnerUUID().toString() + ".yml"));
         fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/setting-data"), island.getOwnerUUID().toString() + ".yml"));
         fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml"));
+        if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                .getBoolean("Island.Challenge.PerIsland", true)){
+            fileManager.deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/challenge-data"), island.getOwnerUUID().toString() + ".yml"));
+        }
 
         Bukkit.getServer().getPluginManager().callEvent(new IslandDeleteEvent(island.getAPIWrapper()));
 
@@ -627,6 +661,10 @@ public class IslandManager {
         fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/level-data", uuid.toString() + ".yml"));
         fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/setting-data", uuid.toString() + ".yml"));
         fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/visit-data", uuid.toString() + ".yml"));
+        if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                .getBoolean("Island.Challenge.PerIsland", true)){
+            fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/challenge-data", uuid.toString() + ".yml"));
+        }
     }
 
     public Island loadIsland(org.bukkit.OfflinePlayer player) {
@@ -851,6 +889,11 @@ public class IslandManager {
         fileManager.unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/setting-data"), island.getOwnerUUID() + ".yml"));
         fileManager.unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), island.getOwnerUUID() + ".yml"));
 
+        if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                .getBoolean("Island.Challenge.PerIsland", true)){
+            fileManager.unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/challenge-data"), island.getOwnerUUID() + ".yml"));
+        }
+
         islandStorage.remove(island.getOwnerUUID());
 
         Bukkit.getServer().getPluginManager().callEvent(new IslandUnloadEvent(island.getAPIWrapper()));
@@ -1033,8 +1076,17 @@ public class IslandManager {
         FileConfiguration configLoad = languageConfig.getFileConfiguration();
 
         if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-            player.setFallDistance(0.0F);
+            Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
+            if(loc != null){
+                player.teleport(loc);
+                if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
+                    player.setFallDistance(0.0F);
+                }
+            } else {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.Teleport.Unsafe.Message"))));
+            }
         } else {
             if (scoreboardManager != null) {
                 int islandVisitors = getVisitorsAtIsland(island).size(), islandMembers = island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1;
@@ -1052,8 +1104,6 @@ public class IslandManager {
                             } else {
                                 scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
                                 scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-
-
                             }
 
                             scoreboard.run();
@@ -1063,8 +1113,23 @@ public class IslandManager {
             }
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-                player.setFallDistance(0.0F);
+                Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
+                if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+                    loc = LocationUtil.getSafeLocation(loc);
+                }
+                if(loc != null){
+                    player.teleport(loc);
+                    if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
+                        player.setFallDistance(0.0F);
+                    }
+                } else {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                    .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message")));
+                }
+                if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
+                    player.setFallDistance(0.0F);
+                }
             });
 
             List<String> islandWelcomeMessage = island.getMessage(IslandMessage.Welcome);
@@ -1429,7 +1494,7 @@ public class IslandManager {
                     }
 
                     for (Player all : getPlayersAtIsland(island)) {
-                        WorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island));
+                        WorldBorder.send(all, island.getBorderColor(), island.getSize()+2, island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island));
                     }
                 }
             }

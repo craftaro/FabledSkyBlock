@@ -11,9 +11,13 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
+import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -105,8 +109,13 @@ public class TeleportCommand extends SubCommand {
             soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
-                player.setFallDistance(0.0F);
+                Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
+                LocationUtil.removeWaterFromLoc(skyblock, loc);
+                player.teleport(loc);
+
+                if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
+                    player.setFallDistance(0.0F);
+                }
             });
         }
     }

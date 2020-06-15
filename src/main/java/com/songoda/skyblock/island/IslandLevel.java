@@ -114,7 +114,15 @@ public class IslandLevel {
             division = 1;
         }
 
-        return getPoints() / division;
+        long points = getPoints();
+        long subtract = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getLong("Island.Levelling.Subtract");
+        if(points >= subtract){
+            points -= subtract;
+        } else {
+            points = 0;
+        }
+
+        return points / division;
     }
 
     public void checkLevelUp() {
