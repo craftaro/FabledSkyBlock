@@ -52,7 +52,6 @@ public class Island {
         this.skyblock = SkyBlock.getInstance();
 
         FileManager fileManager = skyblock.getFileManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
 
         this.islandUUID = UUID.randomUUID();
         this.ownerUUID = player.getUniqueId();

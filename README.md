@@ -13,6 +13,7 @@ This fork contains bug fixes, features and improvements:
 - Added permission to bypass `/is kick`
 - Added water in Nether mechanics!
 - Added option to let slime splitting bypass limits.yml
+- Added option to define distance between islands
 - Fixed bugs in Challenges that didn't remove all the items
 - Fixed WorldBorder size not reflecting real island size
 - Now you can use `/is chat <message>` to send messages to island chat

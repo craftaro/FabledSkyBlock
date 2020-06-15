@@ -61,7 +61,7 @@ public class IslandManager {
     private List<IslandPosition> islandPositions = new ArrayList<>();
     private Map<UUID, UUID> islandProxies = new HashMap<>();
     private Map<UUID, Island> islandStorage = new HashMap<>();
-    private int offset = 1200;
+    private int offset;
 
     private HashMap<IslandWorld, Integer> oldSystemIslands;
 
@@ -70,6 +70,9 @@ public class IslandManager {
 
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "worlds.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
+
+        offset = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getInt("Island.Creation.Distance", 1200);
 
         for (IslandWorld worldList : IslandWorld.values()) {
             ConfigurationSection configSection = configLoad.getConfigurationSection("World." + worldList.name() + ".nextAvailableLocation");
