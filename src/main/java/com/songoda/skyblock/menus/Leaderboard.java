@@ -123,7 +123,7 @@ public class Leaderboard {
                             2);
                 } else {
                     nInv.addItem(
-                            nInv.createItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", null, null, null, null), 2);
+                            nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(), "", null, null, null, null), 2);
                 }
                 nInv.addItem(
                         nInv.createItem(new ItemStack(Material.EMERALD), configLoad

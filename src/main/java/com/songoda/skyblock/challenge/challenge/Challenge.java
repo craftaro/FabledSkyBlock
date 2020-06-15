@@ -160,7 +160,7 @@ public class Challenge {
 					ItemStack is = (ItemStack) obj;
 					//p.getInventory().removeItem(new ItemStack(is.getType(), is.getAmount()));
 					int toRemove = is.getAmount();
-					for(ItemStack jis : p.getInventory().getStorageContents()) {
+					for(ItemStack jis : p.getInventory().getContents()) {
 						if(jis != null && jis.isSimilar(is)) {
 							if(jis.getAmount() <= toRemove) {
 								toRemove -= jis.getAmount();

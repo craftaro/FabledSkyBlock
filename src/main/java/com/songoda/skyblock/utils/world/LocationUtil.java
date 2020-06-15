@@ -9,13 +9,13 @@ import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.math.VectorUtil;
+import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -32,10 +32,8 @@ public final class LocationUtil {
             Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
             if(tempLoc.getBlock().getType().equals(Material.WATER)){
                 tempLoc.getBlock().setType(Material.AIR);
-            } else if(tempLoc.getBlock().getBlockData() instanceof Waterlogged){
-                Waterlogged blockData = (Waterlogged) tempLoc.getBlock().getBlockData();
-                blockData.setWaterlogged(false);
-                tempLoc.getBlock().setBlockData(blockData);
+            } else if(NMSUtil.getVersionNumber() > 13){
+                LocationUtil113.removeWaterLoggedFromLocation(tempLoc);
             }
         }
     }
@@ -66,7 +64,8 @@ public final class LocationUtil {
         Location locWorking = loc.clone();
         for(int i=locWorking.getBlockY(); i>=0; i--){
             if(!locWorking.getBlock().isEmpty()){
-                if(locWorking.getBlock().getType().equals(Material.WATER) || locWorking.getBlock().getBlockData() instanceof Waterlogged){
+                if(locWorking.getBlock().getType().equals(Material.WATER) ||
+                        (NMSUtil.getVersionNumber() > 13 && locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
                     loc = locWorking;
                 }
                 break;
@@ -79,39 +78,38 @@ public final class LocationUtil {
         boolean safe = false;
         if(!locChecked.getBlock().isEmpty() &&
                 !locChecked.getBlock().isLiquid() &&
-                !locChecked.getBlock().isPassable() &&
                 locChecked.getBlock().getType().isSolid() &&
                 locChecked.getBlock().getType().isBlock() &&
-                locChecked.add(0d,1d,0d).getBlock().getType().isAir() &&
-                locChecked.add(0d,2d,0d).getBlock().getType().isAir() &&
-                !(locChecked.getBlock().getBlockData() instanceof Waterlogged)){
+                locChecked.add(0d,1d,0d).getBlock().getType().equals(Material.AIR) &&
+                locChecked.add(0d,2d,0d).getBlock().getType().equals(Material.AIR) &&
+                !(NMSUtil.getVersionNumber() <= 13 || locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
             safe = true;
             switch(locChecked.getBlock().getType()){
-                case ACACIA_BUTTON:
-                case ACACIA_DOOR:
+                case ACACIA_DOOR: // <= 1.8.8
                 case ACACIA_FENCE_GATE:
-                case ACACIA_TRAPDOOR:
                 case BIRCH_DOOR:
                 case BIRCH_FENCE_GATE:
-                case BIRCH_TRAPDOOR:
                 case CACTUS:
                 case CAKE:
-                case CAMPFIRE:
-                case COBWEB:
                 case DARK_OAK_DOOR:
                 case DARK_OAK_FENCE_GATE:
-                case DARK_OAK_TRAPDOOR:
                 case IRON_TRAPDOOR:
                 case JUNGLE_DOOR:
                 case JUNGLE_FENCE_GATE:
-                case JUNGLE_TRAPDOOR:
                 case LADDER:
-                case MAGMA_BLOCK:
-                case NETHER_PORTAL:
-                case OAK_DOOR:
-                case OAK_FENCE_GATE:
                 case SPRUCE_DOOR:
                 case SPRUCE_FENCE_GATE:
+                case ACACIA_BUTTON: // TODO check server version
+                case ACACIA_TRAPDOOR: // TODO check server version
+                case BIRCH_TRAPDOOR: // TODO check server version
+                case CAMPFIRE: // TODO check server version
+                case COBWEB: // TODO check server version
+                case DARK_OAK_TRAPDOOR: // TODO check server version
+                case JUNGLE_TRAPDOOR: // TODO check server version
+                case MAGMA_BLOCK: // TODO check server version
+                case NETHER_PORTAL: // TODO check server version
+                case OAK_DOOR: // TODO check server version
+                case OAK_FENCE_GATE: // TODO check server version
                     safe = false;
                     break;
             }

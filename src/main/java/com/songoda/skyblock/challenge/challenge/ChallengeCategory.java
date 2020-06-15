@@ -61,8 +61,8 @@ public class ChallengeCategory {
 				Challenge c = new Challenge(this, id, name, maxTimes, showInChat, require, reward, ic);
 				challenges.put(id, c);
 			} catch (IllegalArgumentException ex) {
-				throw new IllegalArgumentException("Exception at category " + this.name + "(" + this.id
-						+ ") at challenge " + name + "(" + id + "): " + ex.getMessage());
+				throw new IllegalArgumentException("Exception at category " + this.name.replace("&", "") + "(" + this.id
+						+ ") at challenge " + name.replace("&", "") + "(" + id + "): " + ex.getMessage());
 			}
 		}
 		Bukkit.getConsoleSender().sendMessage("[FabledSkyBlock] " + ChatColor.GREEN + "Category " + name + ChatColor.GREEN

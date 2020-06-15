@@ -18,6 +18,7 @@ import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
+import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.apache.commons.lang.WordUtils;
@@ -121,7 +122,12 @@ public class Interact implements Listener {
             if(configLoad.getBoolean("Island.Nether.AllowNetherWater", false)){
                 event.setCancelled(true);
                 block.setType(Material.WATER, true);
-                block.getWorld().playSound(block.getLocation(), Sound.ITEM_BUCKET_EMPTY, 1f, 1f);
+                if(NMSUtil.getVersionNumber() > 8){
+                    block.getWorld().playSound(block.getLocation(), Sound.ITEM_BUCKET_EMPTY, 1f, 1f);
+                } else {
+                    //block.getWorld().playSound(block.getLocation(), Sound.SPLASH, 1f, 1f);
+                    // TODO Find a sound for 1.8
+                }
                 if(!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
                     event.getItem().setType(Material.BUCKET);
                 }
