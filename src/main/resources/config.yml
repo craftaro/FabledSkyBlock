@@ -32,13 +32,23 @@ Island:
             # When enabled cooldown will start when a player deletes their Island.
             Deletion:
                 Enable: true
-            # Time until player can create another island.
+            # Time in seconds until player can create another island.
             Time: 60
         # [!] How many seconds to wait before teleporting to a newly created island
         TeleportTimeout: 1
         # The distance between the islands
         Distance: 1200
     Deletion:
+        # [!] You are adviced to keep these options both enabled to prevent any issues.
+        Cooldown:
+            # When enabled cooldown will start when a player creates an Island.
+            Creation:
+                Enable: true
+            # When enabled cooldown will start when a player deletes their Island.
+            Deletion:
+                Enable: true
+            # Time in seconds until player can delete their island.
+            Time: 60
         ClearInventory: false
         ClearEnderChest: false
     World:

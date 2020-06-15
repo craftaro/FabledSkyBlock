@@ -244,6 +244,9 @@ public class IslandManager {
         if (configLoad.getBoolean("Island.Creation.Cooldown.Creation.Enable") && !player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*")
                 && !player.hasPermission("fabledskyblock.*"))
             skyblock.getCooldownManager().createPlayer(CooldownType.Creation, player);
+        if (configLoad.getBoolean("Island.Deletion.Cooldown.Deletion.Enable") && !player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*")
+                && !player.hasPermission("fabledskyblock.*"))
+            skyblock.getCooldownManager().createPlayer(CooldownType.Deletion, player);
 
         Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> Bukkit.getServer().getPluginManager().callEvent(new IslandCreateEvent(island.getAPIWrapper(), player)));
 
@@ -577,7 +580,8 @@ public class IslandManager {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        boolean cooldownEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable");
+        boolean cooldownCreationEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Creation.Enable");
+        boolean cooldownDeletionEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable");
 
         config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         configLoad = config.getFileConfiguration();
@@ -611,9 +615,14 @@ public class IslandManager {
                     all.getEnderChest().clear();
                 }
 
-                if (cooldownEnabled) {
+                if (cooldownCreationEnabled) {
                     if (!all.hasPermission("fabledskyblock.bypass.cooldown") && !all.hasPermission("fabledskyblock.bypass.*") && !all.hasPermission("fabledskyblock.*")) {
                         skyblock.getCooldownManager().createPlayer(CooldownType.Creation, all);
+                    }
+                }
+                if (cooldownDeletionEnabled) {
+                    if (!all.hasPermission("fabledskyblock.bypass.cooldown") && !all.hasPermission("fabledskyblock.bypass.*") && !all.hasPermission("fabledskyblock.*")) {
+                        skyblock.getCooldownManager().createPlayer(CooldownType.Deletion, all);
                     }
                 }
             }

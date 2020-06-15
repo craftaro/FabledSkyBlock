@@ -94,6 +94,9 @@ public class Quit implements Listener {
             cooldownManager.setCooldownPlayer(CooldownType.Creation, player);
             cooldownManager.removeCooldownPlayer(CooldownType.Creation, player);
 
+            cooldownManager.setCooldownPlayer(CooldownType.Deletion, player);
+            cooldownManager.removeCooldownPlayer(CooldownType.Deletion, player);
+
             playerDataManager.savePlayerData(player);
             playerDataManager.unloadPlayerData(player);
 
