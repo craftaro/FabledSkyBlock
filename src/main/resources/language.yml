@@ -990,6 +990,8 @@ Command:
         Message: '&bSkyBlock &8| &cError&8: &eCategory not found.'
       ChallengeNotFound:
         Message: '&bSkyBlock &8| &cError&8: &eChallenge not found.'
+      NoIsland:
+        Message: '&bSkyBlock &8| &cError&8: &eYou don''t have an island.'
     Preview:
       Info:
         Message: '&f&oAllows you to preview island before choosing'
