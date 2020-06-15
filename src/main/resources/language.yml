@@ -3464,6 +3464,12 @@ Island:
         Message: '&bSkyBlock &8| &cError&8: &eThat Structure does not exist.'
       File:
         Message: '&bSkyBlock &8| &cError&8: &eThat file does not exist in the Structures directory.'
+  Deletion:
+    Cooldown:
+      Word:
+        Minute: minute(s)
+        Second: second(s)
+      Message: '&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore creating an Island.'
   Creator:
     Selector:
       Created:

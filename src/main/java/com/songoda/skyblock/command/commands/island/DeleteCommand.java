@@ -58,18 +58,18 @@ public class DeleteCommand extends SubCommand {
 
                 if (cooldown.getTime() < 60) {
                     messageManager.sendMessage(player,
-                            config.getFileConfiguration().getString("Island.Deletion.Selector.Cooldown.Message") // TODO Add language.yml values
+                            config.getFileConfiguration().getString("Island.Deletion.Cooldown.Message") // TODO Add language.yml values
                                     .replace("%time", cooldown.getTime() + " " + config.getFileConfiguration()
-                                            .getString("Island.Deletion.Selector.Cooldown.Word.Second")));
+                                            .getString("Island.Deletion.Cooldown.Word.Second")));
                 } else {
                     long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
                     messageManager.sendMessage(player,
-                            config.getFileConfiguration().getString("Island.Deletion.Selector.Cooldown.Message")
+                            config.getFileConfiguration().getString("Island.Deletion.Cooldown.Message")
                                     .replace("%time", durationTime[2] + " "
                                             + config.getFileConfiguration()
-                                            .getString("Island.Deletion.Selector.Cooldown.Word.Minute")
+                                            .getString("Island.Deletion.Cooldown.Word.Minute")
                                             + " " + durationTime[3] + " " + config.getFileConfiguration()
-                                            .getString("Island.Deletion.Selector.Cooldown.Word.Second")));
+                                            .getString("Island.Deletion.Cooldown.Word.Second")));
                 }
 
                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
