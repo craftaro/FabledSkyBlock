@@ -27,6 +27,8 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -109,7 +111,7 @@ public class Entity implements Listener {
             skyblock.getPermissionManager()
                     .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
 
-        } else if (event.getDamager() instanceof TNTPrimed) {
+        } else { // Make it work with all the entities, not just TNT
             org.bukkit.entity.Entity entity = event.getEntity();
 
             // Check permissions.
@@ -217,6 +219,7 @@ public class Entity implements Listener {
     @EventHandler
     public void onHangingBreak(HangingBreakEvent event) {
         Hanging hanging = event.getEntity();
+
         if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
         IslandManager islandManager = skyblock.getIslandManager();
 
@@ -229,14 +232,15 @@ public class Entity implements Listener {
     public void onHangingBreak(HangingBreakByEntityEvent event) {
         Hanging hanging = event.getEntity();
 
-        if (!(event.getRemover() instanceof Player))
-            return;
-
         if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
         IslandManager islandManager = skyblock.getIslandManager();
 
+        Player p = null;
+        if(event.getRemover() instanceof Player){
+            p = (Player) event.getRemover();
+        }
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, (Player) event.getRemover(),
+        skyblock.getPermissionManager().processPermission(event, p,
                 islandManager.getIslandAtLocation(hanging.getLocation()));
     }
 
@@ -322,8 +326,10 @@ public class Entity implements Listener {
             event.setCancelled(true);
             return;
         }
+
         // Check permissions.
         skyblock.getPermissionManager().processPermission(event, null, island);
+
 
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Block.Level.Enable"))
@@ -373,10 +379,10 @@ public class Entity implements Listener {
         if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
             // Check permissions.
             Island island = islandManager.getIslandAtLocation(entity.getLocation());
+
             skyblock.getPermissionManager().processPermission(event, null, island);
 
             if (!event.isCancelled()) {
-
                 if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                         .getBoolean("Island.Block.Level.Enable")) {
                     for (org.bukkit.block.Block blockList : event.blockList()) {
@@ -561,6 +567,22 @@ public class Entity implements Listener {
             entity.remove();
         });
         event.setCancelled(true); // For other plugin API reasons.
+    }
+
+    @EventHandler
+    public void onDamageVehicle(VehicleDamageEvent event) {
+        if (!(event.getAttacker() instanceof Player)) {
+            IslandManager islandManager = skyblock.getIslandManager();
+            skyblock.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
+        }
+    }
+
+    @EventHandler
+    public void onDestroyVehicle(VehicleDestroyEvent event) {
+        if (!(event.getAttacker() instanceof Player)) {
+            IslandManager islandManager = skyblock.getIslandManager();
+            skyblock.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
+        }
     }
 
     private static SpawnReason getSpawnReason(String reason) {
