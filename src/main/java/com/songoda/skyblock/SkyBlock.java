@@ -42,7 +42,6 @@ import com.songoda.skyblock.structure.StructureManager;
 import com.songoda.skyblock.tasks.MobNetherWaterTask;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.usercache.UserCacheManager;
-import com.songoda.skyblock.utils.SignMenuFactory;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.visit.VisitTask;
 import com.songoda.skyblock.world.WorldManager;
