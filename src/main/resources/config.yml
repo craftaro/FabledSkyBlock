@@ -337,11 +337,16 @@ Island:
         # Should slime split bypass limits.yml
         AllowSlimeSplit: true
     Nether:
+        # Allow placing water in the Nether
         AllowNetherWater: false
+        # Water disappear when a nether mob walks into it
         WaterDisappearWithNetherMobs: false
+        # Block water from flowing near nether mobs EXPERIMENTAL!
         WaterDoNotFlowNearNetherMobs: false
+        # Make blaze immune from water in the Nether
         BlazeImmuneToWaterInNether: false
     Restrict:
+        # Blocks that can be placed only if the island has nether unlocked
         NetherBlocks:
             NETHERRACK: true
             SOUL_SAND: true
@@ -364,6 +369,7 @@ Island:
             NETHER_WART_BLOCK: true
             WITHER_SKELETON_SKULL: true
             WITHER_ROSE: true
+        # Blocks that can be placed only if the island has The End unlocked
         EndBlocks:
             END_STONE: true
             END_STONE_BRICKS: true
