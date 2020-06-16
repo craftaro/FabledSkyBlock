@@ -242,9 +242,11 @@ public class Move implements Listener {
 
         e.setCancelled(true);
 
-        skyblock.getMessageManager().sendMessage(player,
-                skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
-        skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-
+        Bukkit.getScheduler().runTaskLater(skyblock, () -> {
+            if (e.getTo() != null && worldManager.isIslandWorld(e.getTo().getWorld()) && skyblock.getIslandManager().getIslandAtLocation(e.getTo()) == null)
+                skyblock.getMessageManager().sendMessage(player,
+                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
+            skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+        }, 10L); // 2 ticks are good, 10 because we don't know the cause yet
     }
 }
