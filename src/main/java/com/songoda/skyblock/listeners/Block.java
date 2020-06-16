@@ -337,11 +337,7 @@ public class Block implements Listener {
                         witherSkeleton) {
                         if(block.getRelative(event.getFace().getOppositeFace()).getType().equals(Material.WATER)){
                             event.setCancelled(true);
-                            if(NMSUtil.getVersionNumber() > 8){
-                                event.getToBlock().getWorld().playSound(block.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f);
-                            } else {
-                                // TODO Find a sound for 1.8
-                            }
+                            event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
                             event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
                         }
                         break;

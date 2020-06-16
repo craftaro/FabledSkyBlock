@@ -1,5 +1,6 @@
 package com.songoda.skyblock.tasks;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -80,11 +81,7 @@ public class MobNetherWaterTask  extends BukkitRunnable {
     private void removeWater(World world, Block block) {
         if (block.getType().equals(Material.WATER)) {
             block.setType(Material.AIR, true);
-            if(NMSUtil.getVersionNumber() > 8){
-                world.playSound(block.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f);
-            } else {
-                // TODO Find a sound for 1.8
-            }
+            block.getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
             world.playEffect(block.getLocation(), Effect.SMOKE, 1);
         }
     }

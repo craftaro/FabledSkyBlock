@@ -122,12 +122,7 @@ public class Interact implements Listener {
             if(configLoad.getBoolean("Island.Nether.AllowNetherWater", false)){
                 event.setCancelled(true);
                 block.setType(Material.WATER, true);
-                if(NMSUtil.getVersionNumber() > 8){
-                    block.getWorld().playSound(block.getLocation(), Sound.ITEM_BUCKET_EMPTY, 1f, 1f);
-                } else {
-                    //block.getWorld().playSound(block.getLocation(), Sound.SPLASH, 1f, 1f);
-                    // TODO Find a sound for 1.8
-                }
+                block.getWorld().playSound(block.getLocation(), CompatibleSound.ITEM_BUCKET_EMPTY.getSound(), 1f, 1f);
                 if(!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
                     event.getItem().setType(Material.BUCKET);
                 }
