@@ -728,6 +728,7 @@ public class Block implements Listener {
         // placed.
         // This shouldn't cause any issues besides the task number being increased
         // insanely fast.
+        // TODO Do this only in 1.8.8
         Bukkit.getScheduler().runTask(skyblock, () -> {
             org.bukkit.block.Block block = location.getBlock();
             CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
