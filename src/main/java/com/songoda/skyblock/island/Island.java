@@ -46,6 +46,7 @@ public class Island {
     private UUID ownerUUID;
     private IslandLevel level;
     private int size;
+    private int maxMembers;
     private boolean deleted = false;
 
     public Island(OfflinePlayer player) {
@@ -57,6 +58,8 @@ public class Island {
         this.ownerUUID = player.getUniqueId();
         this.size = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getInt("Island.Size.Minimum");
+        this.maxMembers = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                .getInt("Island.InitialMaxMembers", 3);
 
         if (this.size > 1000) {
             this.size = 50;
@@ -97,6 +100,12 @@ public class Island {
                 islandUUID = UUID.fromString(configLoad.getString("UUID"));
             } else {
                 configLoad.set("UUID", islandUUID.toString());
+            }
+
+            if (configLoad.getString("MaxMembers") != null) {
+                maxMembers = configLoad.getInt("MaxMembers");
+            } else {
+                configLoad.set("MaxMembers", maxMembers);
             }
 
             if (configLoad.getString("Size") != null) {
@@ -254,6 +263,21 @@ public class Island {
     public UUID getOriginalOwnerUUID() {
         return UUID.fromString(skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
                 .getFileConfiguration().getString("Ownership.Original"));
+    }
+
+    public int getMaxMembers() {
+        return maxMembers;
+    }
+
+    public void setMaxMembers(int maxMembers) {
+        if (maxMembers > 100000 || maxMembers < 0) {
+            maxMembers = 2;
+        }
+
+        this.maxMembers = maxMembers;
+        skyblock.getFileManager().getConfig(
+                new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
+                .getFileConfiguration().set("MaxMembers", maxMembers);
     }
 
     public int getSize() {

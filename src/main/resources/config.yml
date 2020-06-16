@@ -9,6 +9,7 @@ Sound:
     # When disabled all sounds will be disabled.
     Enable: true
 Island:
+    InitialMaxMembers: 3
     Size:
         # [!] Do not go over 1000 for both of these options.
         # The size of an Island when created.

@@ -273,6 +273,25 @@ Command:
           Message: '&bSkyBlock &8| &cError&8: &eYou must enter a numerical value.'
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player> <size>'
+      SetMaxMembers:
+        Set:
+          Message: '&bSkyBlock &8| &aInfo&8: &eYou have set &d%player''s &eIsland max members amount to &d%maxMembers&e.'
+        Members:
+          Less:
+            Message: '&bSkyBlock &8| &cError&8: &eThe max members amount of the Island must be less than 100000.'
+          Greater:
+            Message: '&bSkyBlock &8| &cError&8: &eThe max members amount of the Island must be greater than 0.'
+        Info:
+          Message: '&f&oSets the max members amount of a player''s Island.'
+        Island:
+          Owner:
+            Message: '&bSkyBlock &8| &cError&8: &eThat player is not a Member of or does not own an Island.'
+          Data:
+            Message: '&bSkyBlock &8| &cError&8: &eThe Island data for that player''s Island does not exist.'
+        Numerical:
+          Message: '&bSkyBlock &8| &cError&8: &eYou must enter a numerical value.'
+        Invalid:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin setmaxmembers <player> <value>'
       SetAlwaysLoaded:
         IsOn:
           Message: '&bSkyBlock &8| &aInfo&8: &eThis island will not unload.'
@@ -1708,6 +1727,15 @@ Menu:
             - '&7Tiers&8: &f%tiers'
             - ''
             - '&eClick to manage tiers!'
+          Members:
+            Displayname: '&aBorder Size'
+            Lore:
+              - '&7Increases the max amount'
+              - '&7of Island members.'
+              - ''
+              - '&7Tiers&8: &f%tiers'
+              - ''
+              - '&eClick to manage tiers!'
           Fly:
             Displayname: '&aFlight'
             Lore:
@@ -1784,6 +1812,35 @@ Menu:
             - '&eRight-Click to set cost!'
             Displayname: '&bTier #%tier'
         Title: '&8Upgrade Editor - Size'
+      Members:
+        Item:
+          Information:
+            Displayname: '&aInformation'
+            Lore:
+              - '&7Create tiers, and decide the'
+              - '&7cost and what upgrade Islands'
+              - '&7receive from them.'
+              - ''
+              - '&eClick to create a tier!'
+          Return:
+            Displayname: '&cReturn to Upgrade Editor'
+          Word:
+            Size:
+              Enter: Enter Members
+            Cost:
+              Enter: Enter Cost
+          Barrier:
+            Displayname: '&cMax members Tiers'
+          Tier:
+            Lore:
+              - '&7Max members&8: &f%maxMembers'
+              - '&7Cost&8: &f$%cost'
+              - ''
+              - '&eLeft-Click to set size!'
+              - '&eMiddle-Click to remove!'
+              - '&eRight-Click to set cost!'
+            Displayname: '&bTier #%tier'
+        Title: '&8Upgrade Editor - Members'
     Generator:
       Generator:
         Item:
@@ -2067,7 +2124,7 @@ Menu:
       Statistics:
         Lore:
         - '&bIsland Members:'
-        - '&e%island_members/%island_capacity'
+        - '&e%island_members/%island_maxMembers'
         - ''
         - '&bMembers:'
         - '&e%members'
@@ -2806,6 +2863,41 @@ Menu:
           - ''
           - '&cYou don''t have enough money!'
         Displayname: '&bBorder Size [Tier #%tier]'
+      Members:
+        Claimable:
+          Lore:
+            - '&7Increases the max members'
+            - '&7amount of your Island.'
+            - ''
+            - '&7Max members&8: &f%maxMembers'
+            - '&7Cost&8: &f$%cost'
+            - ''
+            - '&7Status&8: &6&lCLAIMABLE'
+            - ''
+            - '&eClick to unlock this upgrade!'
+        Claimed:
+          Lore:
+            - '&7Increases the max members'
+            - '&7amount of your Island.'
+            - ''
+            - '&7Max members&8: &f%maxMembers'
+            - '&7Cost&8: &f$%cost'
+            - ''
+            - '&7Status&8: &a&lCLAIMED'
+            - ''
+            - '&cYou have unlocked this upgrade!'
+        Unclaimable:
+          Lore:
+            - '&7Increases the max members'
+            - '&7amount of your Island.'
+            - ''
+            - '&7Max members&8: &f%maxMembers'
+            - '&7Cost&8: &f$%cost'
+            - ''
+            - '&7Status&8: &c&lLOCKED'
+            - ''
+            - '&cYou don''t have enough money!'
+        Displayname: '&bMax Members [Tier #%tier]'
       Word:
         Enable: Enable
         Disable: Disable
@@ -3241,6 +3333,11 @@ Placeholder:
       Message: '&c0'
     Non-empty:
       Message: '&f%placeholder'
+  fabledskyblock_island_maxmembers:
+    Empty:
+      Message: '&c0'
+    Non-empty:
+      Message: '&f%placeholder'
   fabledskyblock_island_time:
     Non-empty:
       Message: '&f%placeholder'
@@ -3432,6 +3529,8 @@ Island:
       Tier:
         Size:
           Message: '&bSkyBlock &8| &cError&8: &eThe size of the tier must be less than 1000.'
+        Members:
+          Message: '&bSkyBlock &8| &cError&8: &eThe size of the tier must be less than 100000.'
         Limit:
           Message: '&bSkyBlock &8| &cError&8: &eYou have reached the limit of tiers for this upgrade.'
         Selected:

@@ -355,6 +355,59 @@ public class Upgrade {
                                 event.setWillDestroy(false);
                             }
                         }
+                    } else if ((is.getType() == Material.BOOKSHELF) && (is.hasItemMeta())) {
+                        List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
+                                .getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Members);
+
+                        if (upgrades != null && upgrades.size() > 0) {
+                            for (int i = 0; i < upgrades.size(); i++) {
+                                com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(i);
+                                int tier = i + 1;
+
+                                if (is.getItemMeta().getDisplayName()
+                                        .equals(ChatColor.translateAlternateColorCodes('&',
+                                                configLoad.getString("Menu.Upgrade.Item.Members.Displayname")
+                                                        .replace("%tier", "" + tier)))) {
+                                    if (upgrade.getValue() > island.getMaxMembers()
+                                            && upgrade.getValue() != island.getMaxMembers()) {
+                                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+                                            messageManager.sendMessage(player,
+                                                    configLoad.getString("Island.Upgrade.Bought.Message").replace(
+                                                            "%upgrade", is.getItemMeta().getDisplayName()));
+                                            soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F,
+                                                    1.0F);
+
+                                            EconomyManager.withdrawBalance(player, upgrade.getCost());
+                                            island.setMaxMembers(upgrade.getValue());
+
+                                            Bukkit.getServer().getPluginManager().callEvent(new IslandUpgradeEvent(
+                                                    island.getAPIWrapper(), player, APIUtil.fromImplementation(
+                                                    com.songoda.skyblock.upgrade.Upgrade.Type.Members)));
+
+                                            Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                                    () -> open(player), 1L);
+                                        } else {
+                                            messageManager.sendMessage(player,
+                                                    configLoad.getString("Island.Upgrade.Money.Message"));
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                    1.0F);
+
+                                            event.setWillClose(false);
+                                            event.setWillDestroy(false);
+                                        }
+
+                                        return;
+                                    }
+                                }
+                            }
+
+                            messageManager.sendMessage(player,
+                                    configLoad.getString("Island.Upgrade.Claimed.Message"));
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+
+                            event.setWillClose(false);
+                            event.setWillDestroy(false);
+                        }
                     } else if ((is.getType() == Material.BEACON) && (is.hasItemMeta())) {
                         List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
                                 .getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Size);
@@ -675,6 +728,66 @@ public class Upgrade {
                                         new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
                                 null, null), 5);
                     }
+                }
+            }
+
+            upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Members);
+
+            if (upgrades != null && upgrades.size() > 0) {
+                for (int i = 0; i < upgrades.size(); i++) {
+                    com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(i);
+                    int tier = i + 1;
+
+                    if (tier != upgrades.size()) {
+                        if (upgrade.getValue() <= island.getMaxMembers()) {
+                            continue;
+                        }
+                    }
+
+                    if (island.getMaxMembers() >= upgrade.getValue()) {
+                        nInv.addItem(nInv.createItem(new ItemStack(Material.BOOKSHELF),
+                                ChatColor.translateAlternateColorCodes('&',
+                                        configLoad.getString("Menu.Upgrade.Item.Members.Displayname").replace("%tier",
+                                                "" + tier)),
+                                configLoad.getStringList("Menu.Upgrade.Item.Members.Claimed.Lore"),
+                                new Placeholder[]{
+                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%tier", "" + tier),
+                                        new Placeholder("%maxMembers", "" + upgrade.getValue())},
+                                null, null), 6);
+                    } else {
+                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+                            nInv.addItem(
+                                    nInv.createItem(new ItemStack(Material.BOOKSHELF),
+                                            ChatColor.translateAlternateColorCodes('&',
+                                                    configLoad.getString("Menu.Upgrade.Item.Members.Displayname")
+                                                            .replace("%tier", "" + tier)),
+                                            configLoad.getStringList("Menu.Upgrade.Item.Members.Claimable.Lore"),
+                                            new Placeholder[]{
+                                                    new Placeholder("%cost",
+                                                            NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                    new Placeholder("%tier", "" + tier),
+                                                    new Placeholder("%maxMembers", "" + upgrade.getValue())},
+                                            null, null),
+                                    6);
+                        } else {
+                            nInv.addItem(
+                                    nInv.createItem(new ItemStack(Material.BOOKSHELF),
+                                            ChatColor.translateAlternateColorCodes('&',
+                                                    configLoad.getString("Menu.Upgrade.Item.Members.Displayname")
+                                                            .replace("%tier", "" + tier)),
+                                            configLoad.getStringList("Menu.Upgrade.Item.Members.Unclaimable.Lore"),
+                                            new Placeholder[]{
+                                                    new Placeholder("%cost",
+                                                            NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                    new Placeholder("%tier", "" + tier),
+                                                    new Placeholder("%maxMembers", "" + upgrade.getValue())},
+                                            null, null),
+                                    6);
+                        }
+                    }
+
+                    break;
                 }
             }
 

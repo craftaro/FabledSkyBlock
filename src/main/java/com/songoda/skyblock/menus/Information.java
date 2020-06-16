@@ -346,10 +346,8 @@ public class Information {
                                     new Placeholder[]{
                                             new Placeholder("%island_members",
                                                     "" + (islandMembers.size() + islandOperators.size() + 1)),
-                                            new Placeholder("%island_capacity",
-                                                    "" + skyblock.getFileManager()
-                                                            .getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                                                            .getFileConfiguration().getInt("Island.Member.Capacity")),
+                                            new Placeholder("%island_maxMembers", // %island_capacity
+                                                    "" + island.getMaxMembers()),
                                             new Placeholder("%members", "" + islandMembers.size()),
                                             new Placeholder("%operators", "" + islandOperators.size())},
                                     null, null),

@@ -54,6 +54,23 @@ public class UpgradeManager {
             upgradeStorage.put(Upgrade.Type.Size, upgrades);
         }
 
+        if (configLoad.getString("Upgrades.Members") != null) {
+            List<Upgrade> upgrades = new ArrayList<>();
+
+            for (String tierList : configLoad.getConfigurationSection("Upgrades.Members").getKeys(false)) {
+                if (configLoad.getString("Upgrades.Members." + tierList + ".Value") != null) {
+                    if (configLoad.getInt("Upgrades.Members." + tierList + ".Value") > 1000) {
+                        continue;
+                    }
+                }
+
+                upgrades.add(new Upgrade(configLoad.getDouble("Upgrades.Members." + tierList + ".Cost"),
+                        configLoad.getInt("Upgrades.Members." + tierList + ".Value")));
+            }
+
+            upgradeStorage.put(Upgrade.Type.Members, upgrades);
+        }
+
         // Task for applying the speed & jump boost upgrades if the player is on an island that has them
         Bukkit.getScheduler().scheduleSyncRepeatingTask(SkyBlock.getInstance(), this::applyUpgrades, 5L, 20L);
     }
@@ -85,6 +102,22 @@ public class UpgradeManager {
             configLoad.set("Upgrades.Size." + i + ".Cost", upgrade.getCost());
         }
 
+        if (configLoad.getString("Upgrades.Members") != null) {
+            for (String tierList : configLoad.getConfigurationSection("Upgrades.Members").getKeys(false)) {
+                upgrades.add(new Upgrade(configLoad.getDouble("Upgrades.Members." + tierList + ".Cost"),
+                        configLoad.getInt("Upgrades.Members." + tierList + ".Value")));
+            }
+        }
+
+        upgrades.add(new Upgrade(0, value));
+        configLoad.set("Upgrades.Members", null);
+
+        for (int i = 0; i < upgrades.size(); i++) {
+            Upgrade upgrade = upgrades.get(i);
+            configLoad.set("Upgrades.Members." + i + ".Value", upgrade.getValue());
+            configLoad.set("Upgrades.Members." + i + ".Cost", upgrade.getCost());
+        }
+
         upgradeStorage.put(type, upgrades);
 
         try {
@@ -109,6 +142,14 @@ public class UpgradeManager {
                     Upgrade upgrade = upgrades.get(i);
                     configLoad.set("Upgrades.Size." + i + ".Value", upgrade.getValue());
                     configLoad.set("Upgrades.Size." + i + ".Cost", upgrade.getCost());
+                }
+
+                configLoad.set("Upgrades.Members", null);
+
+                for (int i = 0; i < upgrades.size(); i++) {
+                    Upgrade upgrade = upgrades.get(i);
+                    configLoad.set("Upgrades.Members." + i + ".Value", upgrade.getValue());
+                    configLoad.set("Upgrades.Members." + i + ".Cost", upgrade.getCost());
                 }
 
                 try {
