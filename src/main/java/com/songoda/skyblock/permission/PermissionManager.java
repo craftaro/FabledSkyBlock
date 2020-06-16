@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -27,7 +28,7 @@ public class PermissionManager {
         this.plugin = plugin;
 
         // Load default permissions.
-        registerPermissions(
+        registerPermissions( // TODO Reload them with /is admin reload - Fabrimat
                 //Listening
                 new StoragePermission(plugin),
                 new DragonEggUsePermission(plugin),
@@ -77,7 +78,6 @@ public class PermissionManager {
                 new MobGriefingPermission(plugin),
                 new ExperienceOrbPickupPermission(plugin),
                 new NaturalMobSpawningPermission(),
-                new HungerPermission(plugin),
                 new PortalPermission(plugin),
                 new ItemPickupPermission(),
                 new ItemDropPermission(),
@@ -99,6 +99,11 @@ public class PermissionManager {
                 new WeatherPermission(),
                 new MainSpawnPermission(),
                 new VisitorSpawnPermission());
+
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")){
+            registerPermission(new HungerPermission(plugin));
+        }
 
         registeredHandlers = registeredHandlers.stream().sorted(Comparator.comparingInt(h -> {
             final PermissionHandler permissionHandler = h.getHandler().getAnnotation(PermissionHandler.class);
@@ -152,7 +157,7 @@ public class PermissionManager {
 
             BasicPermission permission = wrapper.getPermission();
 
-            if (permission.overridingCheck() && hasPermission(player, island, permission))
+            if (hasPermission(player, island, permission))
                 continue;
 
             try {
