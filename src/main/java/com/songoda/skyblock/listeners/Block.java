@@ -73,9 +73,9 @@ public class Block implements Listener {
         }
 
         if (stackableManager != null && stackableManager.isStacked(blockLocation)) {
-            Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getBlockMaterial(block.getType()));
+            Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getMaterial(block));
             if (stackable != null) {
-                CompatibleMaterial material = CompatibleMaterial.getBlockMaterial(block.getType());
+                CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
                 byte data = block.getData();
 
                 int droppedAmount = 0;
