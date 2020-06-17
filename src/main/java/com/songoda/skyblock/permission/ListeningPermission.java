@@ -83,7 +83,7 @@ public abstract class ListeningPermission extends BasicPermission {
     protected void noPermsMessage(Player player, SkyBlock plugin, MessageManager messageManager) {
         messageManager.sendMessage(player,
                 plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                        .getFileConfiguration().getString("Island.Settings.Permission.Message"));
+                        .getFileConfiguration().getString("Island.Permission.Message"));
         CompatibleSound.ENTITY_VILLAGER_NO.play(player);
     }
 
