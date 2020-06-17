@@ -146,12 +146,12 @@ public class Levelling {
                 PlayerData playerData1 = skyblock.getPlayerDataManager().getPlayerData(player);
 
                 if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Previous.Displayname")))) {
-                    playerData1.setPage(playerData1.getPage() - 1);
+                    playerData1.setPage(MenuType.LEVELLING, playerData1.getPage(MenuType.LEVELLING) - 1);
                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                 } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Next.Displayname")))) {
-                    playerData1.setPage(playerData1.getPage() + 1);
+                    playerData1.setPage(MenuType.LEVELLING, playerData1.getPage(MenuType.LEVELLING) + 1);
                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                     Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
@@ -208,7 +208,7 @@ public class Levelling {
             }
         }
 
-        int playerMenuPage = playerData.getPage(), nextEndIndex = islandMaterials.size() - playerMenuPage * 36;
+        int playerMenuPage = playerData.getPage(MenuType.LEVELLING), nextEndIndex = islandMaterials.size() - playerMenuPage * 36;
 
         nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(), configLoad.getString("Menu.Levelling.Item.Exit.Displayname"), null, null, null, null), 0, 8);
         nInv.addItem(nInv.createItem(CompatibleMaterial.FIREWORK_STAR.getItem(), configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Rescan.Lore"), null, null,

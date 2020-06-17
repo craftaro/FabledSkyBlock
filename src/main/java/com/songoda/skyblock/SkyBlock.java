@@ -111,8 +111,8 @@ public class SkyBlock extends SongodaPlugin {
         // Load Holograms
         com.songoda.core.hooks.HologramManager.load(this);
 
-        permissionManager = new PermissionManager(this);
         fileManager = new FileManager(this);
+        permissionManager = new PermissionManager(this);
         localizationManager = new LocalizationManager();
         worldManager = new WorldManager(this);
         userCacheManager = new UserCacheManager(this);

@@ -36,7 +36,7 @@ Island:
             Time: 60
         # [!] How many seconds to wait before teleporting to a newly created island
         TeleportTimeout: 1
-        # The distance between the islands
+        # The distance between the islands EXPERIMENTAL!
         Distance: 1200
     Deletion:
         # [!] You are adviced to keep these options both enabled to prevent any issues.
@@ -299,6 +299,9 @@ Island:
             Enable: true
         Hunger:
             Enable: false
+        # If owners and operators should have same permission of members
+        # It should be left to false as it could be changed soon
+        OwnersAndOperatorsAsMembers: false
     Portal:
         # When disabled, when a player enters a portal, they will teleport to the nether or
         # end world rather than the island world.
@@ -337,11 +340,16 @@ Island:
         # Should slime split bypass limits.yml
         AllowSlimeSplit: true
     Nether:
+        # Allow placing water in the Nether
         AllowNetherWater: false
+        # Water disappear when a nether mob walks into it
         WaterDisappearWithNetherMobs: false
+        # Block water from flowing near nether mobs EXPERIMENTAL!
         WaterDoNotFlowNearNetherMobs: false
+        # Make blaze immune from water in the Nether
         BlazeImmuneToWaterInNether: false
     Restrict:
+        # Blocks that can be placed only if the island has nether unlocked
         NetherBlocks:
             NETHERRACK: true
             SOUL_SAND: true
@@ -364,6 +372,7 @@ Island:
             NETHER_WART_BLOCK: true
             WITHER_SKELETON_SKULL: true
             WITHER_ROSE: true
+        # Blocks that can be placed only if the island has The End unlocked
         EndBlocks:
             END_STONE: true
             END_STONE_BRICKS: true

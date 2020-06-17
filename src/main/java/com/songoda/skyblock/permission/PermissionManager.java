@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission;
 
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.permission.event.Stoppable;
@@ -8,9 +9,11 @@ import com.songoda.skyblock.permission.permissions.basic.*;
 import com.songoda.skyblock.permission.permissions.listening.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -27,7 +30,7 @@ public class PermissionManager {
         this.plugin = plugin;
 
         // Load default permissions.
-        registerPermissions(
+        registerPermissions( // TODO Reload them with /is admin reload - Fabrimat
                 //Listening
                 new StoragePermission(plugin),
                 new DragonEggUsePermission(plugin),
@@ -77,7 +80,6 @@ public class PermissionManager {
                 new MobGriefingPermission(plugin),
                 new ExperienceOrbPickupPermission(plugin),
                 new NaturalMobSpawningPermission(),
-                new HungerPermission(plugin),
                 new PortalPermission(plugin),
                 new ItemPickupPermission(),
                 new ItemDropPermission(),
@@ -99,6 +101,11 @@ public class PermissionManager {
                 new WeatherPermission(),
                 new MainSpawnPermission(),
                 new VisitorSpawnPermission());
+
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")){
+            registerPermission(new HungerPermission(plugin));
+        }
 
         registeredHandlers = registeredHandlers.stream().sorted(Comparator.comparingInt(h -> {
             final PermissionHandler permissionHandler = h.getHandler().getAnnotation(PermissionHandler.class);
@@ -141,6 +148,10 @@ public class PermissionManager {
     }
 
     public boolean processPermission(Cancellable cancellable, Player player, Island island) {
+        return processPermission(cancellable, player, island, false);
+    }
+
+    public boolean processPermission(Cancellable cancellable, Player player, Island island, boolean reversePermission) {
         if (island == null) return true;
 
         for (HandlerWrapper wrapper : registeredHandlers) {
@@ -152,7 +163,7 @@ public class PermissionManager {
 
             BasicPermission permission = wrapper.getPermission();
 
-            if (permission.overridingCheck() || hasPermission(player, island, permission))
+            if (hasPermission(player, island, permission, reversePermission))
                 continue;
 
             try {
@@ -164,20 +175,37 @@ public class PermissionManager {
         return true;
     }
 
-    public boolean hasPermission(Player player, Island island, BasicPermission permission) {
+    public boolean hasPermission(Player player, Island island, BasicPermission permission, boolean reversePermission){
         if (player == null)
             return island.hasPermission(IslandRole.Owner, permission);
 
         if (player.hasPermission("fabledskyblock.bypass." + permission.getName().toLowerCase()))
-            return true;
+            return !reversePermission;
 
-        if (island.hasPermission(island.getRole(player), permission))
-            return true;
+        FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (island.isCoopPlayer(player.getUniqueId()) && island.hasPermission(IslandRole.Coop, permission))
-            return true;
+        switch(island.getRole(player)){
+            case Owner:
+                if(!configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
+                    return island.hasPermission(IslandRole.Owner, permission);
+                }
+            case Operator:
+                if(!configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
+                    return island.hasPermission(IslandRole.Operator, permission);
+                }
+            case Member:
+                return island.hasPermission(IslandRole.Member, permission);
+            case Coop:
+                return island.hasPermission(IslandRole.Coop, permission);
+            case Visitor:
+                return island.hasPermission(IslandRole.Visitor, permission);
+        }
+        return false;
+    }
 
-        return island.hasPermission(IslandRole.Visitor, permission);
+    public boolean hasPermission(Player player, Island island, BasicPermission permission) {
+        return this.hasPermission(player, island, permission, false);
     }
 
     public boolean hasPermission(Location location, String permission, IslandRole islandRole) {

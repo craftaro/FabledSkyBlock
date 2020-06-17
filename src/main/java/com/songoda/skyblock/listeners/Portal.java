@@ -81,9 +81,10 @@ public class Portal implements Listener {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
+        PlayerEnterPortalEvent playerEnterPortalEvent = new PlayerEnterPortalEvent(player, player.getLocation()); // TODO Why?? - Fabrimat
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(new PlayerEnterPortalEvent(player, player.getLocation()),
-                player, island))
+        if (!skyblock.getPermissionManager().processPermission(playerEnterPortalEvent,
+                player, island) || playerEnterPortalEvent.isCancelled())
             return;
 
         IslandEnvironment spawnEnvironment;

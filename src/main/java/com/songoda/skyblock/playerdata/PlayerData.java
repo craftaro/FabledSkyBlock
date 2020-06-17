@@ -6,6 +6,7 @@ import com.songoda.skyblock.bank.Transaction;
 import com.songoda.skyblock.bank.Type;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;
+import com.songoda.skyblock.menus.MenuType;
 import com.songoda.skyblock.utils.structure.Area;
 
 import org.bukkit.Bukkit;
@@ -22,7 +23,7 @@ public class PlayerData {
     private UUID islandOwnerUUID;
     private UUID ownershipUUID;
 
-    private int page;
+    private List<MenuPage> pages;
     private int playTime;
     private int visitTime;
     private int confirmationTime;
@@ -45,7 +46,8 @@ public class PlayerData {
         uuid = player.getUniqueId();
         islandOwnerUUID = null;
 
-        page = 1;
+        pages = new ArrayList<>();
+
         confirmationTime = 0;
         playTime = getConfig().getFileConfiguration().getInt("Statistics.Island.Playtime");
 
@@ -67,12 +69,23 @@ public class PlayerData {
         }
     }
 
-    public int getPage() {
-        return page;
+    public int getPage(MenuType type) {
+        for(MenuPage menu : pages){
+            if(menu.getType().equals(type)){
+                return menu.getPage();
+            }
+        }
+        return 1;
     }
 
-    public void setPage(int page) {
-        this.page = page;
+    public void setPage(MenuType type, int page) {
+        for(MenuPage menu : pages){
+            if(menu.getType().equals(type)){
+               menu.setPage(page);
+               return;
+            }
+        }
+        pages.add(new MenuPage(type, page));
     }
 
     public Object getType() {

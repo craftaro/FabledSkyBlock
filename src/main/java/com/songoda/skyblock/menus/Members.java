@@ -130,14 +130,14 @@ public class Members {
                     } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
                         if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                                 configLoad.getString("Menu.Members.Item.Previous.Displayname")))) {
-                            playerData.setPage(playerData.getPage() - 1);
+                            playerData.setPage(MenuType.MEMBERS, playerData.getPage(MenuType.MEMBERS) - 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
                                     (Sort) playerData.getSort()), 1L);
                         } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
                                 '&', configLoad.getString("Menu.Members.Item.Next.Displayname")))) {
-                            playerData.setPage(playerData.getPage() + 1);
+                            playerData.setPage(MenuType.MEMBERS, playerData.getPage(MenuType.MEMBERS) + 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
@@ -319,7 +319,7 @@ public class Members {
                 }
             }
 
-            int playerMenuPage = playerData.getPage(), nextEndIndex = displayedMembers.size() - playerMenuPage * 36;
+            int playerMenuPage = playerData.getPage(MenuType.MEMBERS), nextEndIndex = displayedMembers.size() - playerMenuPage * 36;
 
             nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     configLoad.getString("Menu.Members.Item.Exit.Displayname"), null, null, null, null), 0, 8);

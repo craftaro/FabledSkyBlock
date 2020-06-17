@@ -25,9 +25,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -69,14 +68,14 @@ public class Block implements Listener {
         }
 
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(event, player, island)) {
+        if (!skyblock.getPermissionManager().processPermission(event, player, island) || event.isCancelled()) {
             return;
         }
 
         if (stackableManager != null && stackableManager.isStacked(blockLocation)) {
-            Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getBlockMaterial(block.getType()));
+            Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getMaterial(block));
             if (stackable != null) {
-                CompatibleMaterial material = CompatibleMaterial.getBlockMaterial(block.getType());
+                CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
                 byte data = block.getData();
 
                 int droppedAmount = 0;
@@ -323,22 +322,25 @@ public class Block implements Listener {
         if(configLoad.getBoolean("Island.Nether.WaterDoNotFlowNearNetherMobs", false) && worldManager.getIslandWorld(block.getWorld()).equals(IslandWorld.Nether)){
             Collection<Entity> entities = block.getWorld().getNearbyEntities(block.getLocation(), 1d, 1d, 1d);
             if(entities.size() > 0){
-                EntityCycle: for(Entity ent : entities){
-                    switch(ent.getType()){
-                        case PIG_ZOMBIE:
-                        case BLAZE:
-                        case MAGMA_CUBE:
-                        case WITHER_SKELETON:
-                        case WITHER:
-                        case GHAST:
-                            if(block.getRelative(event.getFace().getOppositeFace()).getType().equals(Material.WATER)){
-                                event.setCancelled(true);
-                                event.getToBlock().getWorld().playSound(block.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f);
-                                event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
-                            }
-                            break EntityCycle; // TODO No spaghetti code
-                        default:
-                            break;
+                for(Entity ent : entities){
+                    boolean witherSkeleton;
+                    if (NMSUtil.getVersionNumber() > 10) {
+                        witherSkeleton = ent.getType().equals(EntityType.WITHER_SKELETON);
+                    } else {
+                        witherSkeleton = ent instanceof Skeleton && ((Skeleton) ent).getSkeletonType().equals(Skeleton.SkeletonType.WITHER);
+                    }
+                    if (ent.getType().equals(EntityType.PIG_ZOMBIE) ||
+                        ent.getType().equals(EntityType.BLAZE) ||
+                        ent.getType().equals(EntityType.MAGMA_CUBE) ||
+                        ent.getType().equals(EntityType.WITHER) ||
+                        ent.getType().equals(EntityType.GHAST) ||
+                        witherSkeleton) {
+                        if(block.getRelative(event.getFace().getOppositeFace()).getType().equals(Material.WATER)){
+                            event.setCancelled(true);
+                            event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
+                            event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
+                        }
+                        break;
                     }
                 }
             }
@@ -638,7 +640,7 @@ public class Block implements Listener {
         // PortalCreateEvent.getBlocks() changed from ArrayList<Block> to
         // ArrayList<BlockState> in 1.14.1
         if (NMSUtil.getVersionNumber() > 13) {
-            List<BlockState> blocks = event.getBlocks();
+            List<BlockState> blocks = event.getBlocks(); // TODO 1.8
             if (event.getBlocks().isEmpty()) return;
 
             Island island = islandManager.getIslandAtLocation(event.getBlocks().get(0).getLocation());
@@ -722,6 +724,7 @@ public class Block implements Listener {
         // placed.
         // This shouldn't cause any issues besides the task number being increased
         // insanely fast.
+        // TODO Do this only in 1.8.8
         Bukkit.getScheduler().runTask(skyblock, () -> {
             org.bukkit.block.Block block = location.getBlock();
             CompatibleMaterial material = CompatibleMaterial.getMaterial(block);

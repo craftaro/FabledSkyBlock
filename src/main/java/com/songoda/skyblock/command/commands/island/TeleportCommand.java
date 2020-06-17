@@ -40,7 +40,7 @@ public class TeleportCommand extends SubCommand {
 
         if (args.length == 1) {
             Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
-            UUID islandOwnerUUID = null;
+            UUID islandOwnerUUID;
             String targetPlayerName;
 
             if (targetPlayer == null) {

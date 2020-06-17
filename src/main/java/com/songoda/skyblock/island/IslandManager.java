@@ -47,7 +47,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.IllegalPluginAccessException;
 
 import java.io.File;
 import java.io.IOException;
@@ -896,7 +895,9 @@ public class IslandManager {
 
         islandStorage.remove(island.getOwnerUUID());
 
-        Bukkit.getServer().getPluginManager().callEvent(new IslandUnloadEvent(island.getAPIWrapper()));
+        Bukkit.getScheduler().runTask(skyblock, () -> {
+           Bukkit.getServer().getPluginManager().callEvent(new IslandUnloadEvent(island.getAPIWrapper()));
+        });
     }
 
     public void prepareIsland(Island island, IslandWorld world) {
@@ -1084,8 +1085,8 @@ public class IslandManager {
                 }
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Island.Teleport.Unsafe.Message"))));
+                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.Teleport.Unsafe.Message")));
             }
         } else {
             if (scoreboardManager != null) {

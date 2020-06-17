@@ -60,15 +60,6 @@ public abstract class BasicPermission {
         return is;
     }
 
-    /**
-     * Use this to check additional perms.
-     *
-     * @return
-     */
-    public boolean overridingCheck() {
-        return true;
-    }
-
     public String getName() {
         return name;
     }

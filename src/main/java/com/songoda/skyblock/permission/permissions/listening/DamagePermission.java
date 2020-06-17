@@ -7,6 +7,7 @@ import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
 import com.songoda.skyblock.utils.version.NMSUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -52,10 +53,10 @@ public class DamagePermission extends ListeningPermission {
         FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (configLoad.getBoolean("Island.Settings.Damage.Enable"))
+        if (configLoad.getBoolean("Island.Settings.Damage.Enable", false)
+                || !configLoad.getBoolean("Island.Damage.Enable", false)) {
             event.setCancelled(true);
-        else if (!configLoad.getBoolean("Island.Damage.Enable"))
-            event.setCancelled(true);
+        }
     }
 
     @PermissionHandler
@@ -67,9 +68,8 @@ public class DamagePermission extends ListeningPermission {
         FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (configLoad.getBoolean("Island.Settings.Damage.Enable")) {
-            event.setCancelled(true);
-        } else if (!configLoad.getBoolean("Island.Damage.Enable")) {
+        if (configLoad.getBoolean("Island.Settings.Damage.Enable", false)
+                || !configLoad.getBoolean("Island.Damage.Enable", false)) {
             event.setCancelled(true);
         }
     }
