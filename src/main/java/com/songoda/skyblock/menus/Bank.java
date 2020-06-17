@@ -141,7 +141,7 @@ public class Bank {
 
     public void open(Player player) {
         Island island;
-        island = islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
+        island = islandManager.getIsland(player);
 
 
         SkyBlock skyblock = SkyBlock.getInstance();

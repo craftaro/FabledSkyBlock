@@ -67,11 +67,11 @@ public class BankManager {
     public List<String> getBalanceLore(Player player) {
         List<String> result = new ArrayList<>();
         result.add("Some error occurred while loading your balance!");
-        Island island = SkyBlock.getInstance().getIslandManager().getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
+        Island island = SkyBlock.getInstance().getIslandManager().getIsland(player);
         result.add("If this is null then its a easy to fix bug: "+island.toString());
         if (island != null) {
             result.clear();
-            result.add(player.getDisplayName()+"'s balance is "+EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId()))));
+            result.add(player.getDisplayName()+"'s balance is "+EconomyManager.formatEconomy(EconomyManager.getBalance(player)));
             result.add(player.getDisplayName()+"'s island has "+EconomyManager.formatEconomy(island.getBankBalance()));
         }
         return result;
