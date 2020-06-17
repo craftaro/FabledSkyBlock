@@ -300,6 +300,7 @@ Island:
         Hunger:
             Enable: false
         # If owners and operators should have same permission of members
+        # It should be left to false as it could be changed soon
         OwnersAndOperatorsAsMembers: false
     Portal:
         # When disabled, when a player enters a portal, they will teleport to the nether or
