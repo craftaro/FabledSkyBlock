@@ -68,7 +68,7 @@ public class Block implements Listener {
         }
 
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(event, player, island)) {
+        if (!skyblock.getPermissionManager().processPermission(event, player, island) || event.isCancelled()) {
             return;
         }
 
