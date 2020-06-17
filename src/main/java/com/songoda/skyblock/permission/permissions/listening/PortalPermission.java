@@ -12,6 +12,7 @@ import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -33,18 +34,25 @@ public class PortalPermission extends ListeningPermission {
             Player player = (Player) event.getEntity();
 
             cancelAndMessage(event, player, plugin, messageManager);
-            player.teleport(getToLocation(event.getLocation(), player));
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                player.teleport(getToLocation(event.getLocation(), player));
+            });
         }
     }
 
     @PermissionHandler
     public void onTeleport(PlayerTeleportEvent event) {
-        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL
-                || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL
-                || event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL
-                || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9) &&
-                event.getCause() == PlayerTeleportEvent.TeleportCause.END_GATEWAY){
+        if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL)
+                || event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)
+                || event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)
+                || (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)
+                    && event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_GATEWAY))){
             event.getPlayer().teleport(getToLocation(event.getFrom(), event.getPlayer()));
+            Location to = getToLocation(event.getFrom(), event.getPlayer());
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                event.getPlayer().teleport(to);
+            });
+            event.setTo(to);
 
             cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
         }
