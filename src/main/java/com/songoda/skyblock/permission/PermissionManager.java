@@ -146,6 +146,10 @@ public class PermissionManager {
     }
 
     public boolean processPermission(Cancellable cancellable, Player player, Island island) {
+        return processPermission(cancellable, player, island, false);
+    }
+
+    public boolean processPermission(Cancellable cancellable, Player player, Island island, boolean reversePermission) {
         if (island == null) return true;
 
         for (HandlerWrapper wrapper : registeredHandlers) {
@@ -157,7 +161,7 @@ public class PermissionManager {
 
             BasicPermission permission = wrapper.getPermission();
 
-            if (hasPermission(player, island, permission))
+            if (hasPermission(player, island, permission, reversePermission))
                 continue;
 
             try {
@@ -169,20 +173,28 @@ public class PermissionManager {
         return true;
     }
 
-    public boolean hasPermission(Player player, Island island, BasicPermission permission) {
+    public boolean hasPermission(Player player, Island island, BasicPermission permission, boolean reversePermission){
         if (player == null)
             return island.hasPermission(IslandRole.Owner, permission);
 
         if (player.hasPermission("fabledskyblock.bypass." + permission.getName().toLowerCase()))
-            return true;
+            return !reversePermission;
 
-        if (island.hasPermission(island.getRole(player), permission))
-            return true;
+        switch(island.getRole(player)){
+            case Owner:
+            case Operator:
+            case Member:
+                return island.hasPermission(IslandRole.Member, permission);
+            case Coop:
+                return island.hasPermission(IslandRole.Coop, permission);
+            case Visitor:
+                return island.hasPermission(IslandRole.Visitor, permission);
+        }
+        return false;
+    }
 
-        if (island.isCoopPlayer(player.getUniqueId()) && island.hasPermission(IslandRole.Coop, permission))
-            return true;
-
-        return island.hasPermission(IslandRole.Visitor, permission);
+    public boolean hasPermission(Player player, Island island, BasicPermission permission) {
+        return this.hasPermission(player, island, permission, false);
     }
 
     public boolean hasPermission(Location location, String permission, IslandRole islandRole) {

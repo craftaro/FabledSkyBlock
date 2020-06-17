@@ -109,7 +109,7 @@ public class Entity implements Listener {
 
             // Check permissions.
             skyblock.getPermissionManager()
-                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
+                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()), true);
 
         } else { // Make it work with all the entities, not just TNT
             org.bukkit.entity.Entity entity = event.getEntity();
