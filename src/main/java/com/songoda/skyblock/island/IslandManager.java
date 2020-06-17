@@ -895,7 +895,9 @@ public class IslandManager {
 
         islandStorage.remove(island.getOwnerUUID());
 
-        Bukkit.getServer().getPluginManager().callEvent(new IslandUnloadEvent(island.getAPIWrapper()));
+        Bukkit.getScheduler().runTask(skyblock, () -> {
+           Bukkit.getServer().getPluginManager().callEvent(new IslandUnloadEvent(island.getAPIWrapper()));
+        });
     }
 
     public void prepareIsland(Island island, IslandWorld world) {
