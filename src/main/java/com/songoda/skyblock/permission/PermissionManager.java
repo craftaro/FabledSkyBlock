@@ -187,11 +187,11 @@ public class PermissionManager {
 
         switch(island.getRole(player)){
             case Owner:
-                if(configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
+                if(!configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
                     return island.hasPermission(IslandRole.Owner, permission);
                 }
             case Operator:
-                if(configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
+                if(!configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
                     return island.hasPermission(IslandRole.Operator, permission);
                 }
             case Member:
