@@ -36,7 +36,7 @@ Island:
             Time: 60
         # [!] How many seconds to wait before teleporting to a newly created island
         TeleportTimeout: 1
-        # The distance between the islands
+        # The distance between the islands EXPERIMENTAL!
         Distance: 1200
     Deletion:
         # [!] You are adviced to keep these options both enabled to prevent any issues.
@@ -90,7 +90,7 @@ Island:
                 Height: 60
     Member:
         # Max amount of players allowed to be in a team.
-        Capacity: 12 # TODO Remove
+        Capacity: 12
     Chat:
         # If island chat should be output to console
         OutputToConsole: true
