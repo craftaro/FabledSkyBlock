@@ -11,7 +11,7 @@ This fork contains bug fixes, features and improvements:
 - Added a "subtract" value to levels in order to have all the new islands to level 0
 - Added option to set default WorldBorder status
 - Added permissions for WorldBorder colors
-- Added permission to bypass `/is kick`
+- Added permissions to bypass kick and ban
 - Added water in Nether mechanics!
 - Added option to let slime splitting bypass limits.yml
 - Added option to define distance between islands
@@ -20,8 +20,17 @@ This fork contains bug fixes, features and improvements:
 - Fixed bugs in Challenges that didn't remove all the items
 - Fixed WorldBorder size not reflecting real island size
 - Fixed bugs in island settings that prevented the from loading correctly
+- Fixed mob grief setting
+- Fixed explosion setting
+- Fixed damage setting
+- Fixed use portal setting
+- Fixed bank that couldn't be opened from Members
+- Fixed message telling that island disappeared on login
+- Fixed GUI menus that had used the same page variable
+- Fixed stackable bypassing break setting
 - Now you can use `/is chat <message>` to send messages to island chat
 - Now Challenges can be per-island too
+- Now hunger setting works as intended
 - Hide options in control panel if missing the permission
 - Hide vanished players from visitors list
 - Hide bank from leaderboard if disabled
