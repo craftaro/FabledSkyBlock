@@ -3,6 +3,7 @@ package com.songoda.skyblock.command.commands.island;
 import java.io.File;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.island.IslandManager;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -24,6 +25,7 @@ public class ChallengeCommand extends SubCommand {
 		SoundManager soundManager = skyblock.getSoundManager();
 		FileManager fileManager = skyblock.getFileManager();
 		FabledChallenge fabledChallenge = skyblock.getFabledChallenge();
+		IslandManager islandManager = skyblock.getIslandManager();
 
 		Config langConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
 		FileConfiguration langConfigLoad = langConfig.getFileConfiguration();
@@ -36,6 +38,15 @@ public class ChallengeCommand extends SubCommand {
 			return;
 		}
 		if (args.length == 0) {
+			if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+					.getBoolean("Island.Challenge.PerIsland")){
+				if(islandManager.getIsland(player) == null){
+					messageManager.sendMessage(player, langConfigLoad.getString("Command.Island.Challenge.NoIsland.Message"));
+					soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+					return;
+				}
+			}
+
 			// Open challenge inventory
 			ChallengeCategory cc = fabledChallenge.getChallengeManager().getChallenge(1);
 			if (cc == null) {

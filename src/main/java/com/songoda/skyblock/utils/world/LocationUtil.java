@@ -9,6 +9,7 @@ import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.math.VectorUtil;
+import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.*;
@@ -24,6 +25,98 @@ import java.util.Random;
 import java.util.logging.Level;
 
 public final class LocationUtil {
+
+    public static void removeWaterFromLoc(SkyBlock plugin, Location loc) {
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)){
+            Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
+            if(tempLoc.getBlock().getType().equals(Material.WATER)){
+                tempLoc.getBlock().setType(Material.AIR);
+            } else if(NMSUtil.getVersionNumber() > 13){
+                LocationUtil113.removeWaterLoggedFromLocation(tempLoc);
+            }
+        }
+    }
+
+    public static Location getSafeLocation(Location loc){
+        boolean found = false;
+        Location locChecked = loc.clone();
+        loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+        for(int i=loc.getBlockY(); i>=0 && !found; i--){
+            locChecked = locChecked.subtract(0d, 1d, 0d);
+            found = checkBlock(locChecked);
+        }
+        if(!found){
+            for(int i=loc.getBlockY(); i<256 && !found; i++){
+                locChecked = locChecked.add(0d, 1d, 0d);
+                found = checkBlock(locChecked);
+            }
+        }
+        if (found) {
+            locChecked = locChecked.add(0d,1d,0d);
+        } else {
+            locChecked = null;
+        }
+        return locChecked;
+    }
+
+    public static Location getDefinitiveLocation(Location loc){
+        Location locWorking = loc.clone();
+        for(int i=locWorking.getBlockY(); i>=0; i--){
+            if(!locWorking.getBlock().isEmpty()){
+                if(locWorking.getBlock().getType().equals(CompatibleMaterial.WATER.getMaterial()) ||
+                        (NMSUtil.getVersionNumber() > 13 && locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
+                    loc = locWorking;
+                }
+                break;
+            }
+        }
+        return loc;
+    }
+
+    private static boolean checkBlock(Location locChecked) {
+        boolean safe = false;
+        if(!locChecked.getBlock().isEmpty() &&
+                !locChecked.getBlock().isLiquid() &&
+                locChecked.getBlock().getType().isSolid() &&
+                locChecked.getBlock().getType().isBlock() &&
+                locChecked.add(0d,1d,0d).getBlock().getType().equals(CompatibleMaterial.AIR.getMaterial()) &&
+                locChecked.add(0d,2d,0d).getBlock().getType().equals(CompatibleMaterial.AIR.getMaterial()) &&
+                !(NMSUtil.getVersionNumber() >= 13 && locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
+            safe = true;
+            switch(CompatibleMaterial.getMaterial(locChecked.getBlock())){
+                case ACACIA_DOOR: // <= 1.8.8
+                case ACACIA_FENCE_GATE:
+                case BIRCH_DOOR:
+                case BIRCH_FENCE_GATE:
+                case CACTUS:
+                case CAKE:
+                case DARK_OAK_DOOR:
+                case DARK_OAK_FENCE_GATE:
+                case IRON_TRAPDOOR:
+                case JUNGLE_DOOR:
+                case JUNGLE_FENCE_GATE:
+                case LADDER:
+                case SPRUCE_DOOR:
+                case SPRUCE_FENCE_GATE:
+                case ACACIA_BUTTON:
+                case ACACIA_TRAPDOOR:
+                case BIRCH_TRAPDOOR:
+                case CAMPFIRE:
+                case COBWEB:
+                case DARK_OAK_TRAPDOOR:
+                case JUNGLE_TRAPDOOR:
+                case MAGMA_BLOCK:
+                case NETHER_PORTAL:
+                case OAK_DOOR:
+                case OAK_FENCE_GATE:
+                    safe = false;
+                    break;
+            }
+        }
+
+        return safe;
+    }
 
     public static boolean isLocationLocation(Location location1, Location location2) {
         return location1.getBlockX() == location2.getBlockX() && location1.getBlockY() == location2.getBlockY() && location1.getBlockZ() == location2.getBlockZ();

@@ -39,9 +39,9 @@ import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.structure.StructureManager;
+import com.songoda.skyblock.tasks.MobNetherWaterTask;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.usercache.UserCacheManager;
-import com.songoda.skyblock.utils.SignMenuFactory;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.visit.VisitTask;
 import com.songoda.skyblock.world.WorldManager;
@@ -81,6 +81,7 @@ public class SkyBlock extends SongodaPlugin {
     private PlaceholderManager placeholderManager;
     private MessageManager messageManager;
     private HologramTask hologramTask;
+    private MobNetherWaterTask mobNetherWaterTask;
     private LimitationInstanceHandler limitationHandler;
     private LocalizationManager localizationManager;
     private RewardManager rewardManager;
@@ -110,8 +111,8 @@ public class SkyBlock extends SongodaPlugin {
         // Load Holograms
         com.songoda.core.hooks.HologramManager.load(this);
 
-        permissionManager = new PermissionManager(this);
         fileManager = new FileManager(this);
+        permissionManager = new PermissionManager(this);
         localizationManager = new LocalizationManager();
         worldManager = new WorldManager(this);
         userCacheManager = new UserCacheManager(this);
@@ -162,6 +163,7 @@ public class SkyBlock extends SongodaPlugin {
 
         // Start Tasks
         hologramTask = HologramTask.startTask(this);
+        mobNetherWaterTask = MobNetherWaterTask.startTask(this);
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new Join(this), this);
@@ -227,6 +229,10 @@ public class SkyBlock extends SongodaPlugin {
 
         if (this.hologramTask != null) {
             this.hologramTask.onDisable();
+        }
+
+        if (this.mobNetherWaterTask != null) {
+            this.mobNetherWaterTask.onDisable();
         }
 
         if (this.fabledChallenge != null) {
@@ -340,6 +346,10 @@ public class SkyBlock extends SongodaPlugin {
 
     public HologramTask getHologramTask() {
         return hologramTask;
+    }
+
+    public MobNetherWaterTask getMobNetherWaterTask() {
+        return mobNetherWaterTask;
     }
 
     public StackableManager getStackableManager() {

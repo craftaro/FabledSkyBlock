@@ -2,6 +2,7 @@ package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.limit.impl.EntityLimitaton;
@@ -26,6 +27,8 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -54,22 +57,32 @@ public class Entity implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         IslandManager islandManager = skyblock.getIslandManager();
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
+        if(event.getEntity() instanceof Blaze){
+            WorldManager worldManager = skyblock.getWorldManager();
 
-        Player player = (Player) event.getEntity();
+            Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            // Check permissions.
-            skyblock.getPermissionManager().processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
-        }
+            if(configLoad.getBoolean("Island.Nether.BlazeImmuneToWaterInNether", false) &&
+                    worldManager.getIslandWorld(event.getEntity().getWorld()).equals(IslandWorld.Nether)){
+                if(event.getCause().equals(DamageCause.DROWNING)){
+                    event.setCancelled(true);
+                }
+            }
+        } else if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
 
-        // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
-        // the shot entity isn't damaged
-        if (preventFireTicks.contains(player.getUniqueId()) && event.getCause() == DamageCause.FIRE_TICK) {
-            player.setFireTicks(0);
-            event.setCancelled(true);
+            if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
+                // Check permissions.
+                skyblock.getPermissionManager().processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
+            }
+
+            // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
+            // the shot entity isn't damaged
+            if (preventFireTicks.contains(player.getUniqueId()) && event.getCause() == DamageCause.FIRE_TICK) {
+                player.setFireTicks(0);
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -96,9 +109,9 @@ public class Entity implements Listener {
 
             // Check permissions.
             skyblock.getPermissionManager()
-                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
+                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()), true);
 
-        } else if (event.getDamager() instanceof TNTPrimed) {
+        } else { // Make it work with all the entities, not just TNT
             org.bukkit.entity.Entity entity = event.getEntity();
 
             // Check permissions.
@@ -206,6 +219,7 @@ public class Entity implements Listener {
     @EventHandler
     public void onHangingBreak(HangingBreakEvent event) {
         Hanging hanging = event.getEntity();
+
         if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
         IslandManager islandManager = skyblock.getIslandManager();
 
@@ -218,14 +232,15 @@ public class Entity implements Listener {
     public void onHangingBreak(HangingBreakByEntityEvent event) {
         Hanging hanging = event.getEntity();
 
-        if (!(event.getRemover() instanceof Player))
-            return;
-
         if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
         IslandManager islandManager = skyblock.getIslandManager();
 
+        Player p = null;
+        if(event.getRemover() instanceof Player){
+            p = (Player) event.getRemover();
+        }
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, (Player) event.getRemover(),
+        skyblock.getPermissionManager().processPermission(event, p,
                 islandManager.getIslandAtLocation(hanging.getLocation()));
     }
 
@@ -311,8 +326,10 @@ public class Entity implements Listener {
             event.setCancelled(true);
             return;
         }
+
         // Check permissions.
         skyblock.getPermissionManager().processPermission(event, null, island);
+
 
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Block.Level.Enable"))
@@ -362,10 +379,10 @@ public class Entity implements Listener {
         if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
             // Check permissions.
             Island island = islandManager.getIslandAtLocation(entity.getLocation());
+
             skyblock.getPermissionManager().processPermission(event, null, island);
 
             if (!event.isCancelled()) {
-
                 if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                         .getBoolean("Island.Block.Level.Enable")) {
                     for (org.bukkit.block.Block blockList : event.blockList()) {
@@ -513,12 +530,20 @@ public class Entity implements Listener {
         EntityType type = entity.getType();
 
         if (limits.isBeingTracked(type)) {
-            long count = limits.getEntityCount(island, skyblock.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
+            FileManager fileManager = skyblock.getFileManager();
+            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = config.getFileConfiguration();
 
-            if (limits.hasTooMuch(count + 1, type)) {
-                entity.remove();
-                event.setCancelled(true);
-                return;
+            boolean isSplit = event.getSpawnReason().equals(SpawnReason.SLIME_SPLIT);
+            boolean splitBypass = configLoad.getBoolean("Island.Challenge.PerIsland", true);
+
+            if(!isSplit || !splitBypass){
+                long count = limits.getEntityCount(island, skyblock.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
+                if (limits.hasTooMuch(count + 1, type)) {
+                    entity.remove();
+                    event.setCancelled(true);
+                    return;
+                }
             }
         }
 
@@ -542,6 +567,22 @@ public class Entity implements Listener {
             entity.remove();
         });
         event.setCancelled(true); // For other plugin API reasons.
+    }
+
+    @EventHandler
+    public void onDamageVehicle(VehicleDamageEvent event) {
+        if (!(event.getAttacker() instanceof Player)) {
+            IslandManager islandManager = skyblock.getIslandManager();
+            skyblock.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
+        }
+    }
+
+    @EventHandler
+    public void onDestroyVehicle(VehicleDestroyEvent event) {
+        if (!(event.getAttacker() instanceof Player)) {
+            IslandManager islandManager = skyblock.getIslandManager();
+            skyblock.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
+        }
     }
 
     private static SpawnReason getSpawnReason(String reason) {

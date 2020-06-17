@@ -4,7 +4,8 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
- 
+
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -56,6 +57,7 @@ public class GeneratorManager {
             }
 
             generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
+                    IslandWorld.valueOf(configLoad.getString("Generators." + generatorList + ".World", "Normal")),
                     oreMaterials[rnd.nextInt(oreMaterials.length)], generatorMaterials,
                     configLoad.getBoolean("Generators." + generatorList + ".Permission")));
         }
@@ -150,10 +152,10 @@ public class GeneratorManager {
         return CompatibleMaterial.COBBLESTONE;
     }
 
-    public void addGenerator(String name, List<GeneratorMaterial> generatorMaterials, boolean permission) {
+    public void addGenerator(String name, IslandWorld isWorld, List<GeneratorMaterial> generatorMaterials, boolean permission) {
         CompatibleMaterial[] oreMaterials = new CompatibleMaterial[]{CompatibleMaterial.COAL, CompatibleMaterial.CHARCOAL, CompatibleMaterial.DIAMOND,
                 CompatibleMaterial.IRON_INGOT, CompatibleMaterial.GOLD_INGOT, CompatibleMaterial.EMERALD};
-        generatorStorage.add(new Generator(name, oreMaterials[new Random().nextInt(oreMaterials.length)],
+        generatorStorage.add(new Generator(name, isWorld, oreMaterials[new Random().nextInt(oreMaterials.length)],
                 generatorMaterials, permission));
     }
 

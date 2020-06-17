@@ -36,7 +36,7 @@ public class CooldownManager {
             for (Player all : Bukkit.getOnlinePlayers()) {
                 CooldownPlayer cooldownPlayer = null;
 
-                if (cooldownTypeList == CooldownType.Biome || cooldownTypeList == CooldownType.Creation) {
+                if (cooldownTypeList == CooldownType.Biome || cooldownTypeList == CooldownType.Creation || cooldownTypeList == CooldownType.Deletion) {
                     cooldownPlayer = loadCooldownPlayer(cooldownTypeList, all);
                 } else if (cooldownTypeList == CooldownType.Levelling || cooldownTypeList == CooldownType.Ownership) {
                     Island island = islandManager.getIsland(all);
@@ -69,7 +69,7 @@ public class CooldownManager {
     }
 
     public CooldownPlayer loadCooldownPlayer(CooldownType cooldownType, OfflinePlayer player) {
-        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation) {
+        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
             Config config = skyblock.getFileManager()
                     .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
@@ -99,7 +99,7 @@ public class CooldownManager {
 
         int time = 0;
 
-        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation) {
+        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
             time = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                     .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
 
@@ -139,7 +139,7 @@ public class CooldownManager {
     public void deletePlayer(CooldownType cooldownType, OfflinePlayer player) {
         for (Iterator<CooldownPlayer> it = getCooldownPlayersOrEmptyList(cooldownType).iterator(); it.hasNext();) {
             if (it.next().getUUID().equals(player.getUniqueId())) {
-                if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation) {
+                if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
                     skyblock.getFileManager()
                             .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
                                     player.getUniqueId().toString() + ".yml"))
@@ -197,7 +197,7 @@ public class CooldownManager {
     public void setCooldownPlayer(CooldownType cooldownType, OfflinePlayer player) {
         for (CooldownPlayer cooldownPlayerList : getCooldownPlayersOrEmptyList(cooldownType)) {
             if (cooldownPlayerList.getUUID().equals(player.getUniqueId())) {
-                if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation) {
+                if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
                     skyblock.getFileManager()
                             .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
                                     player.getUniqueId().toString() + ".yml"))
@@ -222,7 +222,7 @@ public class CooldownManager {
     public void saveCooldownPlayer(CooldownType cooldownType, OfflinePlayer player) {
         Config config = null;
 
-        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation) {
+        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
             config = skyblock.getFileManager()
                     .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
         } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {

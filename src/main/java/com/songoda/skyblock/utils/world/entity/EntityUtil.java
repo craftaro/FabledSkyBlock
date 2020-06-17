@@ -498,7 +498,10 @@ public final class EntityUtil {
     }
 
 	public static boolean isMonster(EntityType type) {
-		switch (type) {
+        if (NMSUtil.getVersionNumber() > 10) {
+            if(type.equals(EntityType.WITHER_SKELETON)) return true; // TODO In < 11 we have SkeletonType.Wither
+        }
+		switch (type) { // TODO Check server versions
 		case BAT:
 		case BLAZE:
 		case CAVE_SPIDER:
@@ -525,7 +528,6 @@ public final class EntityUtil {
 		case VINDICATOR:
 		case WITCH:
 		case WITHER:
-		case WITHER_SKELETON:
 		case ZOMBIE:
 		case ZOMBIE_VILLAGER:
 			return true;

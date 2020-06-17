@@ -52,7 +52,6 @@ public class Island {
         this.skyblock = SkyBlock.getInstance();
 
         FileManager fileManager = skyblock.getFileManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
 
         this.islandUUID = UUID.randomUUID();
         this.ownerUUID = player.getUniqueId();
@@ -113,7 +112,7 @@ public class Island {
             }
 
             if (configLoad.getString("Border") == null) {
-                configLoad.set("Border.Enable", true);
+                configLoad.set("Border.Enable", mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Default", false));
                 configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
             }
 
@@ -162,10 +161,10 @@ public class Island {
             }
 
             for (IslandRole roleList : IslandRole.getRoles()) {
-                List<IslandPermission> permissions = new ArrayList<>();
+                List<BasicPermission> allPermissions = skyblock.getPermissionManager().getPermissions();
+                List<IslandPermission> permissions = new ArrayList<>(allPermissions.size());
 
-                for (BasicPermission permission : skyblock.getPermissionManager().getPermissions()) {
-
+                for (BasicPermission permission : allPermissions) {
                     if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
                             .getString("Settings." + roleList.name() + "." + permission.getName()) == null) {
                         permissions.add(
@@ -184,10 +183,10 @@ public class Island {
 
             configLoad.set("UUID", islandUUID.toString());
             configLoad.set("Visitor.Open", mainConfigLoad.getBoolean("Island.Visitor.Open"));
-            configLoad.set("Border.Enable", true);
+            configLoad.set("Border.Enable", mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Default", false));
             configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
             configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
-            configLoad.set("Weather.Synchronised", mainConfigLoad.getBoolean("Island.Weather.Default.Synchronised"));
+            configLoad.set("Weather.Synchronised", mainConfigLoad.getBoolean("Island.Weather.Default.Synchronised")); // TODO: Synchronized
             configLoad.set("Weather.Time", mainConfigLoad.getInt("Island.Weather.Default.Time"));
             configLoad.set("Weather.Weather", mainConfigLoad.getString("Island.Weather.Default.Weather").toUpperCase());
             configLoad.set("Ownership.Original", ownerUUID.toString());
@@ -198,7 +197,8 @@ public class Island {
 
                 for (BasicPermission permission : allPermissions) {
                     permissions.add(
-                            new IslandPermission(permission, defaultSettingsConfig.getFileConfiguration().getBoolean("Settings." + roleList.name() + "." + permission, true)));
+                            new IslandPermission(permission, defaultSettingsConfig.getFileConfiguration()
+                                    .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
                 }
 
                 islandPermissions.put(roleList, permissions);

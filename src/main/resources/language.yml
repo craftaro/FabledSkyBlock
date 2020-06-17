@@ -433,6 +433,8 @@ Command:
       Permission:
         Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to delete your Island.'
     Kick:
+      Bypass:
+        Message: '&bSkyBlock &8| &cError&8: &cYou can''t kick this user!'
       Invalid:
         Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island kick <player>'
       Role:
@@ -766,6 +768,8 @@ Command:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have banned the player &c%player &efrom the Island.'
         Target:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have been banned from the Island.'
+      Bypass:
+        Message: '&bSkyBlock &8| &cError&8: &cYou can''t ban this user!'
       Already:
         Message: '&bSkyBlock &8| &cError&8: &eThat player is already banned from the Island.'
       Owner:
@@ -905,6 +909,8 @@ Command:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have been teleported to your Island.'
         Other:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have been teleported to &a%player''s &eIsland.'
+      Unsafe:
+        Message: '&bSkyBlock &8| &cError&8: &eNo safe position found'
     Create:
       Owner:
         Message: '&bSkyBlock &8| &cError&8: &eYou are already an Island Owner.'
@@ -988,6 +994,8 @@ Command:
         Message: '&bSkyBlock &8| &cError&8: &eCategory not found.'
       ChallengeNotFound:
         Message: '&bSkyBlock &8| &cError&8: &eChallenge not found.'
+      NoIsland:
+        Message: '&bSkyBlock &8| &cError&8: &eYou don''t have an island.'
     Preview:
       Info:
         Message: '&f&oAllows you to preview island before choosing'
@@ -3462,6 +3470,12 @@ Island:
         Message: '&bSkyBlock &8| &cError&8: &eThat Structure does not exist.'
       File:
         Message: '&bSkyBlock &8| &cError&8: &eThat file does not exist in the Structures directory.'
+  Deletion:
+    Cooldown:
+      Word:
+        Minute: minute(s)
+        Second: second(s)
+      Message: '&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore deleting an Island.'
   Creator:
     Selector:
       Created:
@@ -3578,6 +3592,10 @@ Island:
       Message: '&bSkyBlock &8| &cError&8: &eYou need to pay to unlock the Nether. To do that use &7/island unlock nether&e This will cost ''&7$%cost%&e''.'
     End:
       Message: '&bSkyBlock &8| &cError&8: &eYou need to pay to unlock The End. To do that use &7/island unlock end&e This will cost ''&7$%cost%&e''.'
+    NetherBlocksPlace:
+      Message: '&bSkyBlock &8| &cError&8: &eYou need to pay to unlock the Nether in order to place this block.'
+    EndBlocksPlace:
+      Message: '&bSkyBlock &8| &cError&8: &eYou need to pay to unlock The End in order to place this block.'
   Settings:
     Visitor:
       Welcome:

@@ -120,13 +120,13 @@ public class Visit {
                 } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
                     if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Visit.Item.Previous.Displayname")))) {
-                        playerData.setPage(playerData.getPage() - 1);
+                        playerData.setPage(MenuType.VISIT, playerData.getPage(MenuType.VISIT) - 1);
                         soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
                     } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Visit.Item.Next.Displayname")))) {
-                        playerData.setPage(playerData.getPage() + 1);
+                        playerData.setPage(MenuType.VISIT, playerData.getPage(MenuType.VISIT) + 1);
                         soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
@@ -330,7 +330,7 @@ public class Visit {
             });
         }
 
-        int playerMenuPage = playerDataManager.getPlayerData(player).getPage(),
+        int playerMenuPage = playerDataManager.getPlayerData(player).getPage(MenuType.VISIT),
                 nextEndIndex = visitIslands.size() - playerMenuPage * 36,
                 totalIslands = visitManager.getIslands().size();
 

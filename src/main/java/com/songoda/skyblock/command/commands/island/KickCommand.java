@@ -72,7 +72,11 @@ public class KickCommand extends SubCommand {
                                 targetPlayerName = targetPlayer.getName();
                             }
 
-                            if (targetPlayerUUID.equals(player.getUniqueId())) {
+                            assert targetPlayer != null;
+                            if((targetPlayer.hasPermission("fabledskyblock.bypass.kick") || targetPlayer.isOp()) && islandVisitors.contains(targetPlayer.getUniqueId())){
+                                messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Exempt"));
+                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            } else if (targetPlayerUUID.equals(player.getUniqueId())) {
                                 messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Yourself.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             } else if (islandOperators.contains(player.getUniqueId()) && islandOperators.contains(targetPlayerUUID)) {
@@ -138,7 +142,9 @@ public class KickCommand extends SubCommand {
                                                 languageConfig.getFileConfiguration().getString("Command.Island.Kick.Kicked.Target.Message").replace("%player", player.getName()));
                                         soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
-                                        if (islandManager.isPlayerAtIsland(island, targetPlayer)) {
+                                        if (islandManager.isPlayerAtIsland(island, targetPlayer)
+                                                && !targetPlayer.hasPermission("fabledskyblock.bypass.kick")
+                                                && !targetPlayer.isOp()) {
                                             LocationUtil.teleportPlayerToSpawn(targetPlayer);
                                         }
 

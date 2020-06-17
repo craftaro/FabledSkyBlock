@@ -8,6 +8,7 @@ public enum CooldownType {
 
     Biome,
     Creation,
+    Deletion,
     Levelling,
     Ownership,
     Teleport;

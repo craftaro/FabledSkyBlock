@@ -93,34 +93,85 @@ public final class ControlPanel {
         });
 
         // Teleport to island and open/close island
-        nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_DOOR.getItem(), configLoad.getString("Menu.ControlPanel.Item.Teleport.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Teleport.Lore"), null, null, null), 1);
-        nInv.addItem(nInv.createItem(CompatibleMaterial.IRON_DOOR.getItem(), configLoad.getString("Menu.ControlPanel.Item.Lock.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Lock.Lore"), null, null, null), 10);
+        if(player.hasPermission("fabledskyblock.island.teleport")){
+            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_DOOR.getItem(), configLoad.getString("Menu.ControlPanel.Item.Teleport.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Teleport.Lore"), null, null, null), 1);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 1);
+        }
+
+        if(player.hasPermission("fabledskyblock.island.close")){
+            nInv.addItem(nInv.createItem(CompatibleMaterial.IRON_DOOR.getItem(), configLoad.getString("Menu.ControlPanel.Item.Lock.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Lock.Lore"), null, null, null), 10);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 10);
+        }
 
         // Glass panes barriers
         nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(), configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 0, 2, 5, 8,
                 9, 11, 14, 17);
 
         // 4 Items at the left
-        nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.EXPERIENCE_BOTTLE.getMaterial()), configLoad.getString("Menu.ControlPanel.Item.Level.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Level.Lore"), null, null, null), 3);
-        nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG), configLoad.getString("Menu.ControlPanel.Item.Settings.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Settings.Lore"), null, null, null), 4);
-        nInv.addItem(nInv.createItem(CompatibleMaterial.CLOCK.getItem(), configLoad.getString("Menu.ControlPanel.Item.Weather.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Weather.Lore"), null, null, null), 12);
-        nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_SAPLING.getItem(), configLoad.getString("Menu.ControlPanel.Item.Biome.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Biome.Lore"), null, null, null), 13);
+        if(player.hasPermission("fabledskyblock.island.level")){
+            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.EXPERIENCE_BOTTLE.getMaterial()), configLoad.getString("Menu.ControlPanel.Item.Level.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Level.Lore"), null, null, null), 3);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 3);
+        }
+        if(player.hasPermission("fabledskyblock.island.settings")){
+            nInv.addItem(nInv.createItem(new ItemStack(Material.NAME_TAG), configLoad.getString("Menu.ControlPanel.Item.Settings.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Settings.Lore"), null, null, null), 4);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 4);
+        }
+        if(player.hasPermission("fabledskyblock.island.weather")){
+            nInv.addItem(nInv.createItem(CompatibleMaterial.CLOCK.getItem(), configLoad.getString("Menu.ControlPanel.Item.Weather.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Weather.Lore"), null, null, null), 12);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 12);
+        }
+        if(player.hasPermission("fabledskyblock.island.biome")){
+            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_SAPLING.getItem(), configLoad.getString("Menu.ControlPanel.Item.Biome.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Biome.Lore"), null, null, null), 13);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 13);
+        }
 
         // 4 Items at the right
-        nInv.addItem(nInv.createItem(new ItemStack(Material.ITEM_FRAME), configLoad.getString("Menu.ControlPanel.Item.Members.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Members.Lore"), null, null, null), 16);
-        nInv.addItem(nInv.createItem(new ItemStack(Material.IRON_AXE), configLoad.getString("Menu.ControlPanel.Item.Bans.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Bans.Lore"), null, null, new ItemFlag[] { ItemFlag.HIDE_ATTRIBUTES }), 6);
-        nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.OAK_SIGN.getMaterial()), configLoad.getString("Menu.ControlPanel.Item.Visitors.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Visitors.Lore"), null, null, null), 7);
-        nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.ANVIL.getMaterial()), configLoad.getString("Menu.ControlPanel.Item.Upgrades.Displayname"),
-                configLoad.getStringList("Menu.ControlPanel.Item.Upgrades.Lore"), null, null, null), 15);
+        if(player.hasPermission("fabledskyblock.island.members")){
+            nInv.addItem(nInv.createItem(new ItemStack(Material.ITEM_FRAME), configLoad.getString("Menu.ControlPanel.Item.Members.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Members.Lore"), null, null, null), 16);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 16);
+        }
+        if(player.hasPermission("fabledskyblock.island.bans")){
+            nInv.addItem(nInv.createItem(new ItemStack(Material.IRON_AXE), configLoad.getString("Menu.ControlPanel.Item.Bans.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Bans.Lore"), null, null, new ItemFlag[] { ItemFlag.HIDE_ATTRIBUTES }), 6);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 6);
+        }
+        if(player.hasPermission("fabledskyblock.island.visitors")){
+            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.OAK_SIGN.getMaterial()), configLoad.getString("Menu.ControlPanel.Item.Visitors.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Visitors.Lore"), null, null, null), 7);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 7);
+        }
+        if(player.hasPermission("fabledskyblock.island.upgrade")){
+            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.ANVIL.getMaterial()), configLoad.getString("Menu.ControlPanel.Item.Upgrades.Displayname"),
+                    configLoad.getStringList("Menu.ControlPanel.Item.Upgrades.Lore"), null, null, null), 15);
+        } else {
+            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    configLoad.getString("Menu.ControlPanel.Item.Barrier.Displayname"), null, null, null, null), 15);
+        }
 
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.ControlPanel.Title")));
         nInv.setRows(2);

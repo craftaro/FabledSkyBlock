@@ -95,13 +95,13 @@ public class Visitors {
                     } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
                         if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                                 configLoad.getString("Menu.Visitors.Item.Previous.Displayname")))) {
-                            playerData.setPage(playerData.getPage() - 1);
+                            playerData.setPage(MenuType.VISITORS, playerData.getPage(MenuType.VISITORS) - 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                         } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
                                 '&', configLoad.getString("Menu.Visitors.Item.Next.Displayname")))) {
-                            playerData.setPage(playerData.getPage() + 1);
+                            playerData.setPage(MenuType.VISITORS, playerData.getPage(MenuType.VISITORS) + 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
@@ -134,7 +134,7 @@ public class Visitors {
                                     Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
                                 }
                             } else {
-                                if (banningEnabled && ((isOperator && canBan) || isOwner)) {
+                                if (banningEnabled && ((isOperator && canBan))) {
                                     Bukkit.getServer().dispatchCommand(player, "island ban " + playerName);
                                 } else {
                                     soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F,
@@ -159,24 +159,28 @@ public class Visitors {
             Set<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
             Map<Integer, UUID> sortedIslandVisitors = new TreeMap<>();
 
+            for (UUID islandVisitorList : islandVisitors) {
+                Player targetPlayer = Bukkit.getPlayer(islandVisitorList);
+                if(targetPlayer != null && player.canSee(targetPlayer)){ // Remove vanished players
+                    sortedIslandVisitors.put(
+                            playerDataManager.getPlayerData(targetPlayer).getVisitTime(),
+                            islandVisitorList);
+                }
+            }
+
             nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     configLoad.getString("Menu.Visitors.Item.Exit.Displayname"), null, null, null, null), 0, 8);
             nInv.addItem(
                     nInv.createItem(new ItemStack(Material.PAINTING),
                             configLoad.getString("Menu.Visitors.Item.Statistics.Displayname"),
                             configLoad.getStringList("Menu.Visitors.Item.Statistics.Lore"),
-                            new Placeholder[]{new Placeholder("%visitors", "" + islandVisitors.size())}, null, null),
+                            new Placeholder[]{new Placeholder("%visitors", "" + sortedIslandVisitors.size())}, null, null),
                     4);
             nInv.addItem(
                     nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                             configLoad.getString("Menu.Visitors.Item.Barrier.Displayname"), null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-            for (UUID islandVisitorList : islandVisitors) {
-                sortedIslandVisitors.put(
-                        playerDataManager.getPlayerData(Bukkit.getServer().getPlayer(islandVisitorList)).getVisitTime(),
-                        islandVisitorList);
-            }
 
             islandVisitors.clear();
 
@@ -184,7 +188,7 @@ public class Visitors {
                 islandVisitors.add(sortedIslandVisitors.get(sortedIslandVisitorList));
             }
 
-            int playerMenuPage = playerData.getPage(), nextEndIndex = sortedIslandVisitors.size() - playerMenuPage * 36;
+            int playerMenuPage = playerData.getPage(MenuType.VISITORS), nextEndIndex = sortedIslandVisitors.size() - playerMenuPage * 36;
 
             if (playerMenuPage != 1) {
                 nInv.addItem(nInv.createItem(SkullUtil.create(

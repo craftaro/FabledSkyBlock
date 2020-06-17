@@ -78,37 +78,37 @@ public class Challenge {
 			}
 		}
 	}
-	
+
 	// GETTERS
-	
+
 	public ChallengeCategory getCategory() {
 		return category;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public int getMaxTimes() {
 		return maxTimes;
 	}
-	
+
 	public boolean isShowInChat() {
 		return showInChat;
 	}
-	
+
 	public List<Peer<Type, Object>> getRequires() {
 		return requires;
 	}
-	
+
 	public List<Peer<Type, Object>> getRewards() {
 		return rewards;
 	}
-	
+
 	public ItemChallenge getItem() {
 		return item;
 	}
@@ -151,14 +151,31 @@ public class Challenge {
 				// Check if player has specific item in his inventory
 				ItemStack is = (ItemStack) obj;
 				return p.getInventory().containsAtLeast(new ItemStack(is.getType()), is.getAmount());
-//				return p.getInventory().contains(is.getType(), is.getAmount());
 			}
 
 			@Override
 			public void executeRequire(Player p, Object obj) {
-				// Remove specific item in player's inventory
-				ItemStack is = (ItemStack) obj;
-				p.getInventory().removeItem(new ItemStack(is.getType(), is.getAmount()));
+				if(obj instanceof ItemStack){
+					// Remove specific item in player's inventory
+					ItemStack is = (ItemStack) obj;
+					//p.getInventory().removeItem(new ItemStack(is.getType(), is.getAmount()));
+					int toRemove = is.getAmount();
+					for(ItemStack jis : p.getInventory().getContents()) {
+						if(jis != null && jis.isSimilar(is)) {
+							if(jis.getAmount() <= toRemove) {
+								toRemove -= jis.getAmount();
+								jis.setAmount(0);
+							} else {
+								jis.setAmount(jis.getAmount() - toRemove);
+								toRemove = 0;
+							}
+						}
+						if(toRemove <= 0) {
+							p.updateInventory();
+							break;
+						}
+					}
+				}
 				// TODO LOG
 			}
 
@@ -422,7 +439,7 @@ public class Challenge {
 			 * <li>7 = lingering extended</li>
 			 * <li>8 = lingering ++</li>
 			 * </ul>
-			 * 
+			 *
 			 * @param is
 			 * @param type
 			 * @param data
@@ -451,7 +468,7 @@ public class Challenge {
 
 		/**
 		 * Try to convert the value to a useable object used later
-		 * 
+		 *
 		 * @param value
 		 *                  The value to convert
 		 * @return A useable object required
@@ -460,7 +477,7 @@ public class Challenge {
 
 		/**
 		 * Check if specific player has requirement for specific object
-		 * 
+		 *
 		 * @param p
 		 *                The player
 		 * @param obj
@@ -471,7 +488,7 @@ public class Challenge {
 
 		/**
 		 * Execute an action associated with specific object for specific player
-		 * 
+		 *
 		 * @param p
 		 *                The player
 		 * @param obj
@@ -481,7 +498,7 @@ public class Challenge {
 
 		/**
 		 * Give a reward to specific player for specific object
-		 * 
+		 *
 		 * @param p
 		 *                The player
 		 * @param obj
