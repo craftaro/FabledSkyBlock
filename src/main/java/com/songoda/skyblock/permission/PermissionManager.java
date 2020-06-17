@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission;
 
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.permission.event.Stoppable;
@@ -8,6 +9,7 @@ import com.songoda.skyblock.permission.permissions.basic.*;
 import com.songoda.skyblock.permission.permissions.listening.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
@@ -180,9 +182,18 @@ public class PermissionManager {
         if (player.hasPermission("fabledskyblock.bypass." + permission.getName().toLowerCase()))
             return !reversePermission;
 
+        FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
+
         switch(island.getRole(player)){
             case Owner:
+                if(configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
+                    return island.hasPermission(IslandRole.Owner, permission);
+                }
             case Operator:
+                if(configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
+                    return island.hasPermission(IslandRole.Operator, permission);
+                }
             case Member:
                 return island.hasPermission(IslandRole.Member, permission);
             case Coop:

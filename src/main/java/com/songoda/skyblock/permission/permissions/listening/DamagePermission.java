@@ -67,7 +67,7 @@ public class DamagePermission extends ListeningPermission {
 
         FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-        
+
         if (configLoad.getBoolean("Island.Settings.Damage.Enable", false)
                 || !configLoad.getBoolean("Island.Damage.Enable", false)) {
             event.setCancelled(true);

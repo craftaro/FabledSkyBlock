@@ -90,7 +90,7 @@ Island:
                 Height: 60
     Member:
         # Max amount of players allowed to be in a team.
-        Capacity: 12
+        Capacity: 12 # TODO Remove
     Chat:
         # If island chat should be output to console
         OutputToConsole: true
@@ -299,6 +299,8 @@ Island:
             Enable: true
         Hunger:
             Enable: false
+        # If owners and operators should have same permission of members
+        OwnersAndOperatorsAsMembers: false
     Portal:
         # When disabled, when a player enters a portal, they will teleport to the nether or
         # end world rather than the island world.
