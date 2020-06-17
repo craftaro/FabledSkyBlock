@@ -5,7 +5,8 @@ Forked from [FabledSkyBlock](https://gitlab.com/Songoda/fabledskyblock)
 This fork contains bug fixes, features and improvements:
 - Added option to check location security when using `/is visit`
 - Added option to remove water from Island Spawn
-- Added an option to toggle fall damage in certain conditions like when using `/is home`
+- Added option to have Members, Operators and Owners all responding to Members settings as a temporary fix to Operators and Owners settings not being editable via GUI
+- Added option to toggle fall damage in certain conditions like when using `/is home`
 - Added per-world generator (editable only from generators.yml, GUI not supported yet)
 - Added a "subtract" value to levels in order to have all the new islands to level 0
 - Added option to set default WorldBorder status
