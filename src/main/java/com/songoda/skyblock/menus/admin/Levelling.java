@@ -7,6 +7,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.levelling.rework.LevellingMaterial;
+import com.songoda.skyblock.menus.MenuType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -96,7 +97,7 @@ public class Levelling implements Listener {
                         configLoad.getString("Menu.Admin.Levelling.Item.Barrier.Displayname"), null, null, null, null),
                 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-        int playerMenuPage = playerData.getPage(), nextEndIndex = levellingMaterials.size() - playerMenuPage * 36;
+        int playerMenuPage = playerData.getPage(MenuType.ADMIN_LEVELLING), nextEndIndex = levellingMaterials.size() - playerMenuPage * 36;
 
         if (playerMenuPage != 1) {
             nInv.addItem(nInv.createItem(SkullUtil.create(
@@ -277,7 +278,7 @@ public class Levelling implements Listener {
                             configLoad.getString("Menu.Admin.Levelling.Item.Previous.Displayname")))) {
                         player.closeInventory();
 
-                        playerData.setPage(playerData.getPage() - 1);
+                        playerData.setPage(MenuType.ADMIN_LEVELLING, playerData.getPage(MenuType.ADMIN_LEVELLING) - 1);
                         soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
@@ -287,7 +288,7 @@ public class Levelling implements Listener {
                             configLoad.getString("Menu.Admin.Levelling.Item.Next.Displayname")))) {
                         player.closeInventory();
 
-                        playerData.setPage(playerData.getPage() + 1);
+                        playerData.setPage(MenuType.ADMIN_LEVELLING, playerData.getPage(MenuType.ADMIN_LEVELLING) + 1);
                         soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);

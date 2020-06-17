@@ -5,6 +5,7 @@ import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.menus.MenuType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -75,7 +76,7 @@ public class Creator implements Listener {
                     configLoad.getString("Menu.Admin.Creator.Browse.Item.Barrier.Displayname"), null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-            int playerMenuPage = playerData.getPage(), nextEndIndex = structures.size() - playerMenuPage * 36;
+            int playerMenuPage = playerData.getPage(MenuType.ADMIN_CREATOR), nextEndIndex = structures.size() - playerMenuPage * 36;
 
             if (playerMenuPage != 1) {
                 nInv.addItem(nInv.createItem(SkullUtil.create(
