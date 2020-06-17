@@ -1085,8 +1085,8 @@ public class IslandManager {
                 }
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Island.Teleport.Unsafe.Message"))));
+                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Island.Teleport.Unsafe.Message")));
             }
         } else {
             if (scoreboardManager != null) {
