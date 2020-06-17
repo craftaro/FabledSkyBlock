@@ -178,6 +178,7 @@ public class Levelling implements Listener {
             }
 
             if (inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Levelling.Title")))) {
+                event.setCancelled(true);
                 PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
 
                 if (!(player.hasPermission("fabledskyblock.admin.level") || player.hasPermission("fabledskyblock.admin.*")
@@ -185,7 +186,6 @@ public class Levelling implements Listener {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Admin.Levelling.Permission.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                    event.setCancelled(true);
                     return;
                 }
 
@@ -193,7 +193,6 @@ public class Levelling implements Listener {
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Barrier.Displayname"))))) {
-                    event.setCancelled(true);
                     soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
                     return;
@@ -201,7 +200,6 @@ public class Levelling implements Listener {
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Exit.Displayname"))))) {
-                    event.setCancelled(true);
                     soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                     player.closeInventory();
 
@@ -209,7 +207,6 @@ public class Levelling implements Listener {
                 } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_SIGN.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"))))) {
-                    event.setCancelled(true);
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                     AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
@@ -271,7 +268,6 @@ public class Levelling implements Listener {
                 } else if ((event.getCurrentItem().getType() == Material.BARRIER) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Admin.Levelling.Item.Nothing.Displayname"))))) {
-                    event.setCancelled(true);
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
@@ -279,7 +275,6 @@ public class Levelling implements Listener {
                         && (is.hasItemMeta())) {
                     if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Admin.Levelling.Item.Previous.Displayname")))) {
-                        event.setCancelled(true);
                         player.closeInventory();
 
                         playerData.setPage(playerData.getPage() - 1);
@@ -290,7 +285,6 @@ public class Levelling implements Listener {
                         return;
                     } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Admin.Levelling.Item.Next.Displayname")))) {
-                        event.setCancelled(true);
                         player.closeInventory();
 
                         playerData.setPage(playerData.getPage() + 1);
@@ -306,9 +300,9 @@ public class Levelling implements Listener {
                     for (LevellingMaterial materialList : levellingManager.getWorthsAsLevelingMaterials()) {
                         CompatibleMaterial materials = materialList.getMaterials();
 
-                        if (event.getCurrentItem().getType() == CompatibleMaterial.getMaterial(materials.getMaterial()).getMaterial()
+                        if (CompatibleMaterial.getMaterial(materials.getMaterial()) != null
+                                &&  event.getCurrentItem().getType().equals(CompatibleMaterial.getMaterial(materials.getMaterial()).getMaterial())
                                 && ChatColor.stripColor(is.getItemMeta().getDisplayName()).equals(materials.name())) {
-                            event.setCancelled(true);
 
                             if (event.getClick() == ClickType.LEFT) {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
@@ -410,8 +404,6 @@ public class Levelling implements Listener {
                         }
                     }
                 }
-
-                event.setCancelled(true);
 
                 CompatibleMaterial materials = CompatibleMaterial.getMaterial(event.getCurrentItem().getType());
 
