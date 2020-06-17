@@ -81,9 +81,13 @@ public abstract class ListeningPermission extends BasicPermission {
     public void onBlockIgnite(BlockIgniteEvent event) {}
 
     protected void noPermsMessage(Player player, SkyBlock plugin, MessageManager messageManager) {
+        if(messageManager == null){ // TODO Check why this is null - Fabrimat
+            messageManager = SkyBlock.getInstance().getMessageManager();
+        }
+
         messageManager.sendMessage(player,
                 plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                        .getFileConfiguration().getString("Island.Permission.Message"));
+                        .getFileConfiguration().getString("Island.Settings.Permission.Message"));
         CompatibleSound.ENTITY_VILLAGER_NO.play(player);
     }
 
