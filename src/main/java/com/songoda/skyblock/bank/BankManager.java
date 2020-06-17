@@ -9,6 +9,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +40,8 @@ public class BankManager {
             int size = transactions.size()>10 ? 10 : transactions.size();
             for (int i = 0;i<size;i++) {
                 Transaction t = transactions.get((transactions.size()-1)-i);
-                lore.add("#" + (i+1) + " " + t.timestamp.toString() +" " + t.player.getPlayer().getDisplayName() + " " + t.action.name().toLowerCase() + " " + EconomyManager.formatEconomy(t.ammount));
+                SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                lore.add("#" + (i+1) + " " + formatDate.format(t.timestamp) +" " + t.player.getPlayer().getDisplayName() + " " + t.action.name().toLowerCase() + " " + EconomyManager.formatEconomy(t.ammount));
             }
             return lore;
         }else {

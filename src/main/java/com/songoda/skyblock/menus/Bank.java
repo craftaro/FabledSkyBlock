@@ -2,6 +2,7 @@ package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.core.input.ChatPrompt;
 import com.songoda.skyblock.SkyBlock;
@@ -9,19 +10,25 @@ import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
 import com.songoda.skyblock.bank.Type;
 import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.generator.GeneratorMaterial;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.MenuClickRegistry;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -73,7 +80,57 @@ public class Bank {
                         } else if (action == InputMethodSelectlistener.InputMethod.ALL) {
                             deposit(player, island, EconomyManager.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())));
                         } else {
-                            ChatPrompt.showPrompt(skyblock, player, (event) -> {
+                            AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
+                                if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+                                    if (!(player.hasPermission("fabledskyblock.island.bank") // TODO check correct permissions - Fabrimat
+                                            || player.hasPermission("fabledskyblock.*"))) {
+                                        messageManager.sendMessage(player, "No permission"); // TODO language.yml - Fabrimat
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
+                                                1.0F, 1.0F);
+                                    } else if (!event1.getName().replace(" ", "")
+                                            .matches("^[a-zA-Z0-9|.]+$")) {
+                                        messageManager.sendMessage(player, "Invalid characters"); // TODO language.yml - Fabrimat
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
+                                                1.0F, 1.0F);
+                                    } else if (!event1.getName().matches("-?\\d+(?:\\.\\d+)?")) {
+                                        messageManager.sendMessage(player, "Only numbers allowed"); // TODO language.yml - Fabrimat
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
+                                                1.0F, 1.0F);
+                                    } else {
+                                        double amount;
+
+                                        try {
+                                            amount = Double.parseDouble(event1.getName());
+                                        } catch (NumberFormatException e1) {
+                                            messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short4.Message"));
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                            return;
+                                        }
+                                        deposit(player, island, amount);
+
+                                        player.closeInventory();
+
+                                        Bukkit.getServer().getScheduler()
+                                                .runTaskLater(skyblock, () -> open(player), 1L);
+                                    }
+
+                                    event1.setWillClose(true);
+                                    event1.setWillDestroy(true);
+                                } else {
+                                    event1.setWillClose(false);
+                                    event1.setWillDestroy(false);
+                                }
+                            });
+
+                            ItemStack is = CompatibleMaterial.NAME_TAG.getItem();
+                            ItemMeta im = is.getItemMeta();
+                            im.setDisplayName("Amount"); // TODO language.yml - Fabrimat
+                            is.setItemMeta(im);
+
+                            gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
+                            gui.open();
+                            // ---
+                            /*ChatPrompt.showPrompt(skyblock, player, (event) -> {
                                 if (event.getMessage().equals(""))
                                     return;
 
@@ -86,7 +143,7 @@ public class Bank {
                                     return;
                                 }
                                 deposit(player, island, amount);
-                            });
+                            });*/
                         }
                     });
                 }
