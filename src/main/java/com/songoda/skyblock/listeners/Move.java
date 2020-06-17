@@ -230,23 +230,20 @@ public class Move implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onTeleport(PlayerTeleportEvent e) {
-
+    public void onTeleport(PlayerTeleportEvent e) { // TODO We should wait for the player island to be loaded in 1.8.8 - Fabrimat
         final Player player = e.getPlayer();
         final WorldManager worldManager = skyblock.getWorldManager();
-
-        if (e.getTo() == null ||
-                !worldManager.isIslandWorld(e.getTo().getWorld()) ||
-                skyblock.getIslandManager().getIslandAtLocation(e.getTo()) != null)
-            return;
-
-        e.setCancelled(true);
-
-        Bukkit.getScheduler().runTaskLater(skyblock, () -> {
-            if (e.getTo() != null && worldManager.isIslandWorld(e.getTo().getWorld()) && skyblock.getIslandManager().getIslandAtLocation(e.getTo()) == null)
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
-            skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-        }, 10L); // 2 ticks are good, 10 because we don't know the cause yet
+        if(e.getTo() != null && e.getTo().getWorld() != null){
+            e.getTo().getWorld().loadChunk(e.getTo().getChunk());
+            if(worldManager.isIslandWorld(e.getTo().getWorld()) && e.getTo().distance(e.getFrom()) > 1.0d){ // We should not care of self block tp
+                if(skyblock.getIslandManager().getIslandAtLocation(e.getTo()) == null){
+                    e.setCancelled(true);
+                    skyblock.getMessageManager().sendMessage(player,
+                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                    .getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
+                    skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                }
+            }
+        }
     }
 }
