@@ -332,6 +332,8 @@ public class Levelling implements Listener {
                                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
                                                         () -> open(player), 1L);
 
+                                                levellingManager.addWorth(materials, materialPoints);
+
                                                 Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
                                                         () -> {
                                                             Config config1 = fileManager.getConfig(new File(
