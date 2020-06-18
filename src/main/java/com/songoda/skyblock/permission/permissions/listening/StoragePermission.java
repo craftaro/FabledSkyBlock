@@ -7,6 +7,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.StorageMinecart;
@@ -27,31 +28,44 @@ public class StoragePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
             return;
 
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
         Player player = event.getPlayer();
 
-        if (material == CompatibleMaterial.CHEST || material == CompatibleMaterial.TRAPPED_CHEST
-                || (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9) && (material == CompatibleMaterial.SHULKER_BOX
-                || material == CompatibleMaterial.BLACK_SHULKER_BOX || material == CompatibleMaterial.BLUE_SHULKER_BOX
-                || material == CompatibleMaterial.BROWN_SHULKER_BOX || material == CompatibleMaterial.CYAN_SHULKER_BOX
-                || material == CompatibleMaterial.GRAY_SHULKER_BOX || material == CompatibleMaterial.GREEN_SHULKER_BOX
-                || material == CompatibleMaterial.LIGHT_BLUE_SHULKER_BOX || material == CompatibleMaterial.LIGHT_GRAY_SHULKER_BOX
-                || material == CompatibleMaterial.LIME_SHULKER_BOX || material == CompatibleMaterial.MAGENTA_SHULKER_BOX
-                || material == CompatibleMaterial.ORANGE_SHULKER_BOX || material == CompatibleMaterial.PINK_SHULKER_BOX
-                || material == CompatibleMaterial.PURPLE_SHULKER_BOX || material == CompatibleMaterial.RED_SHULKER_BOX
-                || material == CompatibleMaterial.WHITE_SHULKER_BOX || material == CompatibleMaterial.YELLOW_SHULKER_BOX))
-                || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14) && material == CompatibleMaterial.BARREL)
-            cancelAndMessage(event, player, plugin, messageManager);
+        switch (material){
+            case CHEST:
+            case TRAPPED_CHEST:
+            case DROPPER:
+            case DISPENSER:
+            case SHULKER_BOX:
+            case BLACK_SHULKER_BOX:
+            case BLUE_SHULKER_BOX:
+            case BROWN_SHULKER_BOX:
+            case CYAN_SHULKER_BOX:
+            case GRAY_SHULKER_BOX:
+            case GREEN_SHULKER_BOX:
+            case LIGHT_BLUE_SHULKER_BOX:
+            case LIGHT_GRAY_SHULKER_BOX:
+            case LIME_SHULKER_BOX:
+            case MAGENTA_SHULKER_BOX:
+            case ORANGE_SHULKER_BOX:
+            case PURPLE_SHULKER_BOX:
+            case PINK_SHULKER_BOX:
+            case RED_SHULKER_BOX:
+            case YELLOW_SHULKER_BOX:
+            case WHITE_SHULKER_BOX:
+            case BARREL:
+                cancelAndMessage(event, player, plugin, messageManager);
+        }
     }
 
     @PermissionHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getRightClicked().getType() == EntityType.ITEM_FRAME
+        if (event.getRightClicked().getType().equals(EntityType.ITEM_FRAME)
                 || event.getRightClicked() instanceof StorageMinecart)
             cancelAndMessage(event, player, plugin, messageManager);
 
