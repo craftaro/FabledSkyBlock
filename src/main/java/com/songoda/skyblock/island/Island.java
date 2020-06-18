@@ -537,6 +537,9 @@ public class Island {
     }
 
     public IslandRole getRole(OfflinePlayer player) {
+        if(isCoopPlayer(player.getUniqueId())){
+            return IslandRole.Coop; // TODO Rework Coop status - Fabrimat
+        }
         for (IslandRole role : IslandRole.values())
             if (getRole(role).contains(player.getUniqueId()))
                 return role;
