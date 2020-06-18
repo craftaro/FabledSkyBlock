@@ -28,26 +28,27 @@ public class PvpPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Entity entity = event.getEntity();
-
-        Player player;
+        Player attacker = null;
         if (event.getDamager() instanceof Player)
-            player = (Player) event.getDamager();
+            attacker = (Player) event.getDamager();
         else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player)
-            player = (Player) ((Projectile) event.getDamager()).getShooter();
-        else return;
+            attacker = (Player) ((Projectile) event.getDamager()).getShooter();
 
-        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        if(attacker instanceof Player
+                && event.getEntity() instanceof Player){
+            Player victim = (Player) event.getEntity();
 
-        if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
-            event.setCancelled(true);
-        } else if (!configLoad.getBoolean("Island.PvP.Enable")) {
-            event.setCancelled(true);
+            FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = config.getFileConfiguration();
+
+            if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
+                event.setCancelled(true);
+            } else if (!configLoad.getBoolean("Island.PvP.Enable")) {
+                event.setCancelled(true);
+            }
+
+            cancelAndMessage(event, victim, plugin, messageManager);
         }
 
-        if (entity.getType() == EntityType.ARMOR_STAND || !(entity instanceof Monster)) return;
-
-        cancelAndMessage(event, player, plugin, messageManager);
     }
 }
