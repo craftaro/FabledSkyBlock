@@ -28,6 +28,10 @@ public abstract class BasicPermission {
     }
 
     public ItemStack getItem(Island island, IslandRole role) {
+        return getItem(island.hasPermission(role, this), role);
+    }
+
+    public ItemStack getItem(boolean permissionEnabled, IslandRole role) {
         ItemStack is = icon.getItem();
         FileManager.Config config = SkyBlock.getInstance().getFileManager()
                 .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"));
@@ -50,7 +54,7 @@ public abstract class BasicPermission {
 
         for (String itemLoreList : configLoad
                 .getStringList("Menu.Settings." + roleName + ".Item.Setting.Status."
-                        + (island.hasPermission(role, this) ? "Enabled" : "Disabled") + ".Lore"))
+                        + (permissionEnabled ? "Enabled" : "Disabled") + ".Lore"))
             itemLore.add(TextUtils.formatText(itemLoreList));
 
         im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

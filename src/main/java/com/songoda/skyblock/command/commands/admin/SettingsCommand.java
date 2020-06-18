@@ -2,10 +2,20 @@ package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
+import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.gui.GuiPermissionsSelector;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.menus.admin.Settings;
+import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class SettingsCommand extends SubCommand {
 
@@ -13,7 +23,7 @@ public class SettingsCommand extends SubCommand {
     public void onCommandByPlayer(Player player, String[] args) {
         SoundManager soundManager = skyblock.getSoundManager();
 
-        Settings.getInstance().open(player, Settings.Type.Categories, null);
+        skyblock.getGuiManager().showGUI(player, new GuiPermissionsSelector(skyblock, null, null));
         soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
     }
 
