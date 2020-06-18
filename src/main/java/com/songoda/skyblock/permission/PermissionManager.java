@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -158,10 +159,12 @@ public class PermissionManager {
             Method handler = wrapper.getHandler();
             if (handler.getParameterTypes()[0] != cancellable.getClass()) continue;
 
-            // if (cancellable.isCancelled()) return false;
+            if (cancellable.isCancelled()) return false;
             if (cancellable instanceof Stoppable && ((Stoppable) cancellable).isStopped()) return true;
 
             BasicPermission permission = wrapper.getPermission();
+
+            //if(cancellable instanceof PlayerMoveEvent) Bukkit.broadcastMessage("A " + permission.getName());
 
             if (hasPermission(player, island, permission, reversePermission))
                 continue;
@@ -172,7 +175,7 @@ public class PermissionManager {
                 e.printStackTrace();
             }
         }
-        return cancellable.isCancelled();
+        return true;
     }
 
     public boolean hasPermission(Player player, Island island, BasicPermission permission, boolean reversePermission){

@@ -81,12 +81,6 @@ public class Portal implements Listener {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        PlayerEnterPortalEvent playerEnterPortalEvent = new PlayerEnterPortalEvent(player, player.getLocation()); // TODO Why?? - Fabrimat
-        // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(playerEnterPortalEvent,
-                player, island) || playerEnterPortalEvent.isCancelled())
-            return;
-
         IslandEnvironment spawnEnvironment;
         switch (island.getRole(player)) {
             case Operator:
@@ -123,23 +117,25 @@ public class Portal implements Listener {
 
         if (tick == null) return;
 
+        PlayerEnterPortalEvent playerEnterPortalEvent = new PlayerEnterPortalEvent(player, player.getLocation()); // TODO Why?? - Fabrimat
+        // Check permissions.
+        if (!skyblock.getPermissionManager().processPermission(playerEnterPortalEvent,
+                player, island))
+            return;
+
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
         IslandWorld toWorld = IslandWorld.Normal;
 
-        if (CompatibleMaterial.getMaterial(block.getType()).equals(CompatibleMaterial.NETHER_PORTAL))
+        if (block.getType().equals(CompatibleMaterial.NETHER_PORTAL.getMaterial())) {
             toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.Nether : IslandWorld.Normal;
-        else if (CompatibleMaterial.getMaterial(block.getType()).equals(CompatibleMaterial.END_PORTAL))
+        } else if (block.getType().equals(CompatibleMaterial.END_PORTAL.getMaterial())) {
             toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.End : IslandWorld.Normal;
+        }
 
         switch (toWorld) {
-            case Nether:
-                if (configLoad.getBoolean("Island.World.Nether.Enable") && island.isRegionUnlocked(player, "Nether")) {
-                    teleportPlayerToWorld(player, soundManager, island, spawnEnvironment, tick, toWorld);
-                }
-                break;
-
             case End:
-                if (configLoad.getBoolean("Island.World.End.Enable") && island.isRegionUnlocked(player, "End")) {
+            case Nether:
+                if (configLoad.getBoolean("Island.World." + toWorld.name() + ".Enable") && island.isRegionUnlocked(player, toWorld)) {
                     teleportPlayerToWorld(player, soundManager, island, spawnEnvironment, tick, toWorld);
                 }
                 break;

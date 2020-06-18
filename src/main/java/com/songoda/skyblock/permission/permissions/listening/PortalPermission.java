@@ -35,10 +35,23 @@ public class PortalPermission extends ListeningPermission {
 
             cancelAndMessage(event, player, plugin, messageManager);
             Bukkit.getScheduler().runTask(plugin, () -> {
-                player.teleport(getToLocation(event.getLocation(), player));
+                //player.teleport(getToLocation(event.getLocation(), player));
             });
         }
     }
+
+    @PermissionHandler
+    public void onMove(PlayerMoveEvent event) {
+        if(event.getTo() != null){
+            CompatibleMaterial toMaterial = CompatibleMaterial.getMaterial(event.getTo().getBlock().getType());
+
+            if (toMaterial == CompatibleMaterial.NETHER_PORTAL || toMaterial == CompatibleMaterial.END_PORTAL) {
+                //event.setTo(LocationUtil.getRandomLocation(event.getFrom().getWorld(), 5000, 5000, true, true));
+                cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+            }
+        }
+    }
+
 
     @PermissionHandler
     public void onTeleport(PlayerTeleportEvent event) {
@@ -47,12 +60,12 @@ public class PortalPermission extends ListeningPermission {
                 || event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)
                 || (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)
                     && event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_GATEWAY))){
-            event.getPlayer().teleport(getToLocation(event.getFrom(), event.getPlayer()));
+            /*event.getPlayer().teleport(getToLocation(event.getFrom(), event.getPlayer()));
             Location to = getToLocation(event.getFrom(), event.getPlayer());
             Bukkit.getScheduler().runTask(plugin, () -> {
                 event.getPlayer().teleport(to);
             });
-            event.setTo(to);
+            event.setTo(to);*/
 
             cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
         }
