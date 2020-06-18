@@ -158,7 +158,7 @@ public class PermissionManager {
             Method handler = wrapper.getHandler();
             if (handler.getParameterTypes()[0] != cancellable.getClass()) continue;
 
-            if (cancellable.isCancelled()) return false;
+            // if (cancellable.isCancelled()) return false;
             if (cancellable instanceof Stoppable && ((Stoppable) cancellable).isStopped()) return true;
 
             BasicPermission permission = wrapper.getPermission();
@@ -172,7 +172,7 @@ public class PermissionManager {
                 e.printStackTrace();
             }
         }
-        return true;
+        return cancellable.isCancelled();
     }
 
     public boolean hasPermission(Player player, Island island, BasicPermission permission, boolean reversePermission){
