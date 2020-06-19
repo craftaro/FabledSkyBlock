@@ -1191,8 +1191,8 @@ public class IslandManager {
             return islandStorage.get(uuid);
         }
 
-        if (offlinePlayer.isOnline()) {
-            Player player = offlinePlayer.getPlayer();
+        Player player = offlinePlayer.getPlayer();
+        if (offlinePlayer.isOnline() && player != null) {
 
             if (playerDataManager.hasPlayerData(player)) {
                 PlayerData playerData = playerDataManager.getPlayerData(player);
@@ -1207,6 +1207,8 @@ public class IslandManager {
             if (offlinePlayerData.getOwner() != null && islandStorage.containsKey(offlinePlayer.getUniqueId())) {
                 return islandStorage.get(offlinePlayerData.getOwner());
             }
+
+            return loadIsland(offlinePlayer); // TODO That could be done first, needs testing - Fabrimat
         }
 
         return null;
