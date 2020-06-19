@@ -1,5 +1,9 @@
 package com.songoda.skyblock.island;
 
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.api.ResidenceApi;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.google.common.base.Preconditions;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
@@ -47,6 +51,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -1379,6 +1384,16 @@ public class IslandManager {
         // plugin's fly permission.
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR || player.hasPermission("essentials.fly") || player.hasPermission("cmi.command.fly"))
             return;
+
+        // Residence support
+        if (Bukkit.getServer().getPluginManager().getPlugin("Residence") != null) {
+            ClaimedResidence res = Residence.getInstance().getResidenceManagerAPI().getByLoc(player.getLocation());
+            if(res != null){
+                if(res.getPermissions().has(Flags.fly, false)){
+                    return;
+                }
+            }
+        }
 
         Island island = getIslandAtLocation(player.getLocation());
 

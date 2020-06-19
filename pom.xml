@@ -190,5 +190,11 @@
 			<version>LATEST</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.Zrips</groupId>
+			<artifactId>Residence</artifactId>
+			<scope>provided</scope>
+			<version>4.9.0.6</version>
+		</dependency>
 	</dependencies>
 </project>
