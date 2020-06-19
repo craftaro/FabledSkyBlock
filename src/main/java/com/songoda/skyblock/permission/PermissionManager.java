@@ -164,8 +164,6 @@ public class PermissionManager {
 
             BasicPermission permission = wrapper.getPermission();
 
-            //if(cancellable instanceof PlayerMoveEvent) Bukkit.broadcastMessage("A " + permission.getName());
-
             if (hasPermission(player, island, permission, reversePermission))
                 continue;
 
@@ -175,7 +173,7 @@ public class PermissionManager {
                 e.printStackTrace();
             }
         }
-        return true;
+        return !cancellable.isCancelled();
     }
 
     public boolean hasPermission(Player player, Island island, BasicPermission permission, boolean reversePermission){
