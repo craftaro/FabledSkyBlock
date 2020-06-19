@@ -1,5 +1,6 @@
 package com.songoda.skyblock.listeners;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerIslandEnterEvent;
@@ -11,7 +12,6 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -20,6 +20,7 @@ import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -55,6 +56,17 @@ public class Teleport implements Listener {
 
         Bukkit.getScheduler().runTaskLater(skyblock, () -> islandManager.updateFlight(player), 1L);
         islandManager.loadPlayer(player);
+
+
+        // Fix for bug that tp you in the real Nether/End when entering in a portal in an island
+        if (worldManager.isIslandWorld(event.getFrom().getWorld())
+                && !worldManager.isIslandWorld(event.getTo().getWorld())
+                && (event.getFrom().getBlock().getType().equals(CompatibleMaterial.END_PORTAL.getMaterial())
+                    || event.getFrom().getBlock().getType().equals(CompatibleMaterial.NETHER_PORTAL.getMaterial())) && (event.getTo().getWorld() != null
+                && event.getTo().getWorld().getEnvironment().equals(World.Environment.NETHER)
+                    || event.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END))) {
+            event.setCancelled(true);
+        }
 
         if (worldManager.isIslandWorld(player.getWorld())) {
 
