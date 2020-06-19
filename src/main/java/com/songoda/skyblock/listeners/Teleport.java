@@ -54,17 +54,20 @@ public class Teleport implements Listener {
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        Bukkit.getScheduler().runTaskLater(skyblock, () -> islandManager.updateFlight(player), 1L);
+        if(worldManager.isIslandWorld(event.getFrom().getWorld())
+                 || (event.getTo() != null && worldManager.isIslandWorld(event.getTo().getWorld()))) {
+            Bukkit.getScheduler().runTaskLater(skyblock, () -> islandManager.updateFlight(player), 1L);
+        }
         islandManager.loadPlayer(player);
 
 
         // Fix for bug that tp you in the real Nether/End when entering in a portal in an island
-        if (worldManager.isIslandWorld(event.getFrom().getWorld())
+        if (event.getTo() != null && (worldManager.isIslandWorld(event.getFrom().getWorld())
                 && !worldManager.isIslandWorld(event.getTo().getWorld())
                 && (event.getFrom().getBlock().getType().equals(CompatibleMaterial.END_PORTAL.getMaterial())
                     || event.getFrom().getBlock().getType().equals(CompatibleMaterial.NETHER_PORTAL.getMaterial())) && (event.getTo().getWorld() != null
                 && event.getTo().getWorld().getEnvironment().equals(World.Environment.NETHER)
-                    || event.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END))) {
+                    || event.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END)))) {
             event.setCancelled(true);
         }
 
