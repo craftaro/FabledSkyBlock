@@ -8,7 +8,8 @@ import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.io.File;
@@ -29,25 +30,22 @@ public class PvpPermission extends ListeningPermission {
     @PermissionHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player attacker = null;
-        if (event.getDamager() instanceof Player)
+        if (event.getDamager() instanceof Player) {
             attacker = (Player) event.getDamager();
-        else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player)
+        } else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player) {
             attacker = (Player) ((Projectile) event.getDamager()).getShooter();
+        }
 
-        if(attacker instanceof Player
-                && event.getEntity() instanceof Player){
-            Player victim = (Player) event.getEntity();
+        if(attacker != null && event.getEntity() instanceof Player){
 
             FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
-            if (configLoad.getBoolean("Island.Settings.PvP.Enable")) {
-                event.setCancelled(true);
-            } else if (!configLoad.getBoolean("Island.PvP.Enable")) {
+            if (configLoad.getBoolean("Island.Settings.PvP.Enable") || !configLoad.getBoolean("Island.PvP.Enable")) {
                 event.setCancelled(true);
             }
 
-            cancelAndMessage(event, victim, plugin, messageManager);
+            cancelAndMessage(event, attacker, plugin, messageManager);
         }
 
     }
