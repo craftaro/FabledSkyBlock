@@ -119,9 +119,8 @@ public class Portal implements Listener {
 
         PlayerEnterPortalEvent playerEnterPortalEvent = new PlayerEnterPortalEvent(player, player.getLocation()); // TODO Why?? - Fabrimat
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(playerEnterPortalEvent,
-                player, island))
-            return;
+        boolean perms = !skyblock.getPermissionManager().processPermission(playerEnterPortalEvent,
+                player, island);
 
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
         IslandWorld toWorld = IslandWorld.Normal;
@@ -132,21 +131,29 @@ public class Portal implements Listener {
             toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.End : IslandWorld.Normal;
         }
 
-        switch (toWorld) {
-            case End:
-            case Nether:
-                if (configLoad.getBoolean("Island.World." + toWorld.name() + ".Enable") && island.isRegionUnlocked(player, toWorld)) {
-                    teleportPlayerToWorld(player, soundManager, island, spawnEnvironment, tick, toWorld);
-                }
-                break;
+        if(!perms){
+            switch (toWorld) {
+                case End:
+                case Nether:
+                    if (configLoad.getBoolean("Island.World." + toWorld.name() + ".Enable") && island.isRegionUnlocked(player, toWorld)) {
+                        teleportPlayerToWorld(player, soundManager, island, spawnEnvironment, tick, toWorld);
+                    }
+                    break;
 
-            default:
-                IslandWorld toWorldF = toWorld;
-                Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
-                soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
-                player.setFallDistance(0.0F);
-                tick.setTick(1);
-                break;
+                default:
+                    IslandWorld toWorldF = toWorld;
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                    player.setFallDistance(0.0F);
+                    tick.setTick(1);
+                    break;
+            }
+        } else {
+            if(toWorld.equals(IslandWorld.End)){
+                player.setVelocity(player.getLocation().getDirection().multiply(-.50).setY(.6f));
+            } else if(toWorld.equals(IslandWorld.Nether)) {
+                player.setVelocity(player.getLocation().getDirection().multiply(-.50));
+            }
         }
 
     }

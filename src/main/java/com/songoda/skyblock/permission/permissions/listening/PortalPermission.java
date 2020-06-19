@@ -34,9 +34,6 @@ public class PortalPermission extends ListeningPermission {
             Player player = (Player) event.getEntity();
 
             cancelAndMessage(event, player, plugin, messageManager);
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                //player.teleport(getToLocation(event.getLocation(), player));
-            });
         }
     }
 
