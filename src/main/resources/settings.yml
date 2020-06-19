@@ -168,4 +168,3 @@ Settings:
         FireSpread: true
         LeafDecay: true
         KeepItemsOnDeath: true
-        Hunger: true
