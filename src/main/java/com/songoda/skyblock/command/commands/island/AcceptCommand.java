@@ -62,8 +62,8 @@ public class AcceptCommand extends SubCommand {
                             island = islandManager
                                     .getIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
                         } else {
-                            island = islandManager
-                                    .loadIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
+                            islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
+                            island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
                             unloadIsland = true;
                         }
 

@@ -671,7 +671,7 @@ public class IslandManager {
         }
     }
 
-    public Island loadIsland(org.bukkit.OfflinePlayer player) {
+    public void loadIsland(org.bukkit.OfflinePlayer player) {
         VisitManager visitManager = skyblock.getVisitManager();
         FileManager fileManager = skyblock.getFileManager();
         BanManager banManager = skyblock.getBanManager();
@@ -686,7 +686,7 @@ public class IslandManager {
                 deleteIslandData(player.getUniqueId());
                 configLoad.set("Island.Owner", null);
 
-                return null;
+                return;
             }
 
             islandOwnerUUID = player.getUniqueId();
@@ -698,7 +698,8 @@ public class IslandManager {
 
         if (islandOwnerUUID != null) {
             if (containsIsland(islandOwnerUUID)) {
-                return getIsland(player);
+                //return getIsland(player);
+                return;
             } else {
                 config = fileManager.getConfig(new File(skyblock.getDataFolder().toString() + "/island-data", islandOwnerUUID.toString() + ".yml"));
 
@@ -706,7 +707,7 @@ public class IslandManager {
                     deleteIslandData(islandOwnerUUID);
                     configLoad.set("Island.Owner", null);
 
-                    return null;
+                    return;
                 }
 
                 Island island = new Island(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
@@ -731,11 +732,9 @@ public class IslandManager {
                 Bukkit.getScheduler().runTask(skyblock, () ->
                         Bukkit.getServer().getPluginManager().callEvent(new IslandLoadEvent(island.getAPIWrapper())));
 
-                return island;
+                return;
             }
         }
-
-        return null;
     }
 
     /**
@@ -786,11 +785,11 @@ public class IslandManager {
         oldSystemIslands.put(IslandWorld.End, endZ);
     }
 
-    public Island loadIslandAtLocation(Location location) {
+    public void loadIslandAtLocation(Location location) {
         FileManager fileManager = skyblock.getFileManager();
         File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
 
-        if (!configFile.exists()) return null;
+        if (!configFile.exists()) return;
 
         for (File fileList : configFile.listFiles()) {
             if (fileList != null && fileList.getName().contains(".yml") && fileList.getName().length() > 35) {
@@ -807,7 +806,8 @@ public class IslandManager {
 
                     if (LocationUtil.isLocationAtLocationRadius(location, islandLocation, size)) {
                         UUID islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
-                        return this.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                        // return this.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                        return;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -815,7 +815,7 @@ public class IslandManager {
             }
         }
 
-        return null;
+        return;
     }
 
     public void unloadIsland(Island island, org.bukkit.OfflinePlayer player) {
@@ -1203,12 +1203,11 @@ public class IslandManager {
             }
         } else {
             OfflinePlayer offlinePlayerData = new OfflinePlayer(offlinePlayer.getUniqueId());
+            loadIsland(offlinePlayer);
 
             if (offlinePlayerData.getOwner() != null && islandStorage.containsKey(offlinePlayer.getUniqueId())) {
                 return islandStorage.get(offlinePlayerData.getOwner());
             }
-
-            return loadIsland(offlinePlayer); // TODO That could be done first, needs testing - Fabrimat
         }
 
         return null;
@@ -1391,7 +1390,7 @@ public class IslandManager {
         if (Bukkit.getServer().getPluginManager().getPlugin("Residence") != null) {
             ClaimedResidence res = Residence.getInstance().getResidenceManagerAPI().getByLoc(player.getLocation());
             if(res != null){
-                if(res.getPermissions().has(Flags.fly, false)){
+                if (res.getPermissions().has(Flags.fly, false) || res.getPermissions().has(Flags.nofly, false)) {
                     return;
                 }
             }

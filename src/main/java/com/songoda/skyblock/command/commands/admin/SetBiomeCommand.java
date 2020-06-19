@@ -79,7 +79,8 @@ public class SetBiomeCommand extends SubCommand {
                         biomeManager.setBiome(island, biome.getBiome());
                         island.setBiome(biome.getBiome());
                     } else {
-                        Island island = islandManager.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                        islandManager.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                        Island island = islandManager.getIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
                         if (island == null) {
                             messageManager.sendMessage(sender,
                                     configLoad.getString("Command.Island.Admin.SetBiome.Island.Data.Message"));
