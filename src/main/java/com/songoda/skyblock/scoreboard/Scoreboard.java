@@ -1,10 +1,6 @@
 package com.songoda.skyblock.scoreboard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -118,9 +114,9 @@ public class Scoreboard {
 
                                         if (displayLine.length() >= 16) {
                                             String prefixLine = displayLine.substring(0, Math.min(displayLine.length(), 16));
-                                            String suffixLine = displayLine.substring(16, Math.min(displayLine.length(), displayLine.length()));
+                                            String suffixLine = displayLine.substring(16);
 
-                                            if (prefixLine.substring(prefixLine.length() - 1).equals("&")) {
+                                            if (prefixLine.endsWith("&")) {
                                                 prefixLine = ChatColor.translateAlternateColorCodes('&', prefixLine.substring(0, prefixLine.length() - 1));
                                                 suffixLine = ChatColor.translateAlternateColorCodes('&', "&" + suffixLine);
                                             } else {
@@ -175,7 +171,8 @@ public class Scoreboard {
 
         IslandManager islandManager = skyblock.getIslandManager();
 
-        displayLine = displayLine.replace("%players_online", "" + Bukkit.getServer().getOnlinePlayers().size()).replace("%players_max", "" + Bukkit.getServer().getMaxPlayers());
+        displayLine = displayLine.replace("%players_online", String.valueOf(Bukkit.getServer().getOnlinePlayers().size()));
+        displayLine = displayLine.replace("%players_max", String.valueOf(Bukkit.getServer().getMaxPlayers()));
 
         Island island = islandManager.getIsland(player);
 
@@ -212,9 +209,9 @@ public class Scoreboard {
         PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
 
         if (placeholderManager.isPlaceholderAPIEnabled()) {
-            displayLine = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, displayLine.replace("&", "clr")).replace("clr", "&");
+            displayLine = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, displayLine);
         }
 
-        return displayLine;
+        return displayLine.replace("§", "&"); // Returning unformatted line to avoid issues in next step
     }
 }
