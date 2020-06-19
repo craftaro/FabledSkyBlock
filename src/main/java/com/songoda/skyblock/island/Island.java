@@ -812,7 +812,7 @@ public class Island {
         this.deleted = deleted;
     }
 
-    public void save() {
+    public synchronized void save() {
         FileManager fileManager = skyblock.getFileManager();
 
         Config config = fileManager

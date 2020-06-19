@@ -102,7 +102,7 @@ public class IslandManager {
         }
     }
 
-    public void saveNextAvailableLocation(IslandWorld world) {
+    public synchronized void saveNextAvailableLocation(IslandWorld world) {
         FileManager fileManager = skyblock.getFileManager();
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "worlds.yml"));
 
@@ -124,7 +124,7 @@ public class IslandManager {
         }
     }
 
-    public void setNextAvailableLocation(IslandWorld world, org.bukkit.Location location) {
+    public synchronized void setNextAvailableLocation(IslandWorld world, org.bukkit.Location location) {
         for (IslandPosition islandPositionList : islandPositions) {
             if (islandPositionList.getWorld() == world) {
                 islandPositionList.setX(location.getX());
@@ -134,7 +134,7 @@ public class IslandManager {
     }
 
 
-    public org.bukkit.Location prepareNextAvailableLocation(IslandWorld world) {
+    public synchronized org.bukkit.Location prepareNextAvailableLocation(IslandWorld world) {
         for (IslandPosition islandPositionList : islandPositions) {
             if (islandPositionList.getWorld() == world) {
 
@@ -196,7 +196,7 @@ public class IslandManager {
         return null;
     }
 
-    public boolean createIsland(Player player, Structure structure) {
+    public synchronized boolean createIsland(Player player, Structure structure) {
         ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
         VisitManager visitManager = skyblock.getVisitManager();
         FileManager fileManager = skyblock.getFileManager();
@@ -296,7 +296,7 @@ public class IslandManager {
         return true;
     }
 
-    public boolean previewIsland(Player player, Structure structure) {
+    public synchronized boolean previewIsland(Player player, Structure structure) {
         FileManager fileManager = skyblock.getFileManager();
 
         PlayerData data = skyblock.getPlayerDataManager().getPlayerData(player);
@@ -407,7 +407,7 @@ public class IslandManager {
         return true;
     }
 
-    public void giveOwnership(Island island, org.bukkit.OfflinePlayer player) {
+    public synchronized void giveOwnership(Island island, org.bukkit.OfflinePlayer player) {
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         CooldownManager cooldownManager = skyblock.getCooldownManager();
         FileManager fileManager = skyblock.getFileManager();
@@ -529,7 +529,7 @@ public class IslandManager {
         }
     }
 
-    public boolean deleteIsland(Island island, boolean force) {
+    public synchronized boolean deleteIsland(Island island, boolean force) {
         ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         CooldownManager cooldownManager = skyblock.getCooldownManager();
@@ -657,7 +657,7 @@ public class IslandManager {
         return true;
     }
 
-    public void deleteIslandData(UUID uuid) {
+    public synchronized void deleteIslandData(UUID uuid) {
         FileManager fileManager = skyblock.getFileManager();
         fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/island-data", uuid.toString() + ".yml"));
         fileManager.deleteConfig(new File(skyblock.getDataFolder().toString() + "/ban-data", uuid.toString() + ".yml"));
