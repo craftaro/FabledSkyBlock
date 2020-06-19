@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.island.Island;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -18,7 +20,6 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 import com.songoda.skyblock.api.SkyBlockAPI;
-import com.songoda.skyblock.api.island.Island;
 
 public class Challenge {
 	private ChallengeCategory category;
@@ -240,11 +241,12 @@ public class Challenge {
 			public boolean has(Player p, Object obj) {
 				// Check if the level of player's island is greater or equals to the required
 				// level
-				Island is = SkyBlockAPI.getIslandManager().getIsland(p);
+				Island is = SkyBlock.getInstance().getIslandManager().getIsland(p);
 				// Player doesn't have an island
-				if (is == null)
-					return false;
-				return is.getLevel().getLevel() >= (Integer) obj;
+				if (is != null && obj instanceof Number) {
+					return is.getLevel().getLevel() >= (Long) obj;
+				}
+				return false;
 			}
 
 			@Override
