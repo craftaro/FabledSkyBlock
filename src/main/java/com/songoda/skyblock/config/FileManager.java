@@ -98,7 +98,7 @@ public class FileManager {
             }
 
             if (configFile.exists()) {
-                if (fileName.equals("config.yml") || fileName.equals("language.yml") || fileName.equals("settings.yml") || fileName.equals("worlds.yml")) {
+                if (fileName.equals("config.yml") || fileName.equals("language.yml") || fileName.equals("worlds.yml")) {
                     FileChecker fileChecker;
 
                     if (fileName.equals("config.yml")) {

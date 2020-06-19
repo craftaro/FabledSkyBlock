@@ -15,6 +15,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -114,7 +115,43 @@ public class PermissionManager {
         })).collect(Collectors.toList());
     }
 
+    private void updateSettingsConfig(BasicPermission permission){
+        FileManager.Config settingsConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "settings.yml"));
+        FileConfiguration settingsConfigLoad = settingsConfig.getFileConfiguration();
+
+        switch (permission.getType()){
+            case GENERIC:
+                if(settingsConfigLoad.getString("Settings.Visitor." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Visitor." + permission.getName(), true);
+                }
+                if(settingsConfigLoad.getString("Settings.Member." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Member." + permission.getName(), true);
+                }
+                if(settingsConfigLoad.getString("Settings.Coop." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Coop." + permission.getName(), true);
+                }
+                break;
+            case OPERATOR:
+                if(settingsConfigLoad.getString("Settings.Operator." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Operator." + permission.getName(), true);
+                }
+                break;
+            case ISLAND:
+                if(settingsConfigLoad.getString("Settings.Owner." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Owner." + permission.getName(), true);
+                }
+                break;
+        }
+        try {
+            settingsConfigLoad.save(settingsConfig.getFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean registerPermission(BasicPermission permission) {
+        updateSettingsConfig(permission);
+
         registeredPermissions.put(permission.getName().toUpperCase(), permission);
         Set<Method> methods;
         try {
