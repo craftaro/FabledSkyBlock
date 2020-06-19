@@ -61,13 +61,23 @@ public class Teleport implements Listener {
         islandManager.loadPlayer(player);
 
 
-        // Fix for bug that tp you in the real Nether/End when entering in a portal in an island
+        // Fix for bug that tp you in the real Nether/End when entering in a portal in an island // TODO Simplify
         if (event.getTo() != null && (worldManager.isIslandWorld(event.getFrom().getWorld())
                 && !worldManager.isIslandWorld(event.getTo().getWorld())
                 && (event.getFrom().getBlock().getType().equals(CompatibleMaterial.END_PORTAL.getMaterial())
-                    || event.getFrom().getBlock().getType().equals(CompatibleMaterial.NETHER_PORTAL.getMaterial())) && (event.getTo().getWorld() != null
+                || event.getFrom().getBlock().getType().equals(CompatibleMaterial.NETHER_PORTAL.getMaterial()))
+                && (event.getTo().getWorld() != null
                 && event.getTo().getWorld().getEnvironment().equals(World.Environment.NETHER)
-                    || event.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END)))) {
+                || event.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END)))
+                || event.getTo() != null
+                && (worldManager.isIslandWorld(event.getFrom().getWorld())
+                && !worldManager.isIslandWorld(event.getTo().getWorld())
+                && (event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)
+                || event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)
+                || event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL))
+                && (event.getTo().getWorld() != null
+                && event.getTo().getWorld().getEnvironment().equals(World.Environment.NETHER)
+                || event.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END)))) {
             event.setCancelled(true);
         }
 
