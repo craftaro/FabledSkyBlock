@@ -244,7 +244,7 @@ public class Challenge {
 				Island is = SkyBlock.getInstance().getIslandManager().getIsland(p);
 				// Player doesn't have an island
 				if (is != null && obj instanceof Number) {
-					return is.getLevel().getLevel() >= (Long) obj;
+					return is.getLevel().getLevel() >= ((Number) obj).longValue();
 				}
 				return false;
 			}
