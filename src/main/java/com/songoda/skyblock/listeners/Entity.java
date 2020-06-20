@@ -304,7 +304,7 @@ public class Entity implements Listener {
         }
 
         if ((event.getEntityType() == EntityType.FALLING_BLOCK)
-                && LocationUtil.isLocationLocation(event.getBlock().getLocation(), island.getLocation(world, IslandEnvironment.Main).clone())
+                && LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)
                 && configLoad.getBoolean("Island.Spawn.Protection")) {
             FallingBlock fallingBlock = (FallingBlock) event.getEntity();
             if (fallingBlock.getDropItem()) {

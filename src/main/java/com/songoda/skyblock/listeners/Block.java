@@ -128,9 +128,8 @@ public class Block implements Listener {
 
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
 
-        if (LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))
-                || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone()) || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0.0D, 1.0D, 0.0D))
-                || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Visitor).clone())) {
+        if (LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))  || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0.0D, 1.0D, 0.0D))
+                || LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Break.Message"));
