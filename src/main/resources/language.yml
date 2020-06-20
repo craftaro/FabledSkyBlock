@@ -452,6 +452,8 @@ Command:
       Permission:
         Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to delete your Island.'
     Kick:
+      Bypass:
+        Message: '&bSkyBlock &8| &cError&8: &cYou can''t kick this user!'
       Invalid:
         Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island kick <player>'
       Role:
@@ -785,6 +787,8 @@ Command:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have banned the player &c%player &efrom the Island.'
         Target:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have been banned from the Island.'
+      Bypass:
+        Message: '&bSkyBlock &8| &cError&8: &cYou can''t ban this user!'
       Already:
         Message: '&bSkyBlock &8| &cError&8: &eThat player is already banned from the Island.'
       Owner:
@@ -1160,6 +1164,18 @@ Menu:
             Displayname: '&aDoor Use'
           Jukebox:
             Displayname: '&aJukebox Use'
+          PvP:
+            Displayname: '&aPvP'
+          Noteblock:
+            Displayname: '&aNoteblock use'
+          Minecart:
+            Displayname: '&aMinecart'
+          Damage:
+            Displayname: '&aDamage'
+          Boat:
+            Displayname: '&aBoat'
+          Trample:
+            Displayname: '&aTrample'
           Bucket:
             Displayname: '&aBucket Use'
           SpawnEgg:
@@ -1517,6 +1533,18 @@ Menu:
                 - '&7Status&8: &cfalse'
             Milking:
               Displayname: '&aMilking'
+            PvP:
+              Displayname: '&aPvP'
+            Noteblock:
+              Displayname: '&aNoteblock use'
+            Minecart:
+              Displayname: '&aMinecart'
+            Damage:
+              Displayname: '&aDamage'
+            Boat:
+              Displayname: '&aBoat'
+            Trample:
+              Displayname: '&aTrample'
             Anvil:
               Displayname: '&aAnvil Use'
             Portal:
@@ -3262,21 +3290,43 @@ Menu:
     Title: 'Bank'
     Item:
       Exit:
-        Displayname: 'Exit'
-        Lore: 'Exits the Menu'
+        Displayname: '&cExit'
+        Lore: '&7Exits the Menu'
       Barrier:
         Displayname: '&cBank'
       Log:
-        Displayname: 'Transaction Log'
-        Empty: 'Looks like you haven''t got transactions'
+        Displayname: '&fTransaction Log'
+        Empty: '&7Looks like you haven''t got transactions'
       Deposit:
-        Displayname: 'Deposit'
-        Lore: 'Click to deposit your money. Everything or a custom ammount.'
+        Displayname: '&fDeposit'
+        Lore: '&7Click to deposit your money. Everything or a custom amount.'
       Withdraw:
-        Displayname: 'Withdraw'
-        Lore: 'Click to withdraw your money. Everything or a custom ammount.'
+        Displayname: '&fWithdraw'
+        Lore: '&7Click to withdraw your money. Everything or a custom amount.'
       Balance:
-        Displayname: 'Balance'
+        Displayname: '&fBalance'
+        Lore: '&7Bank balance: &6$%balance'
+      Next:
+        Displayname: '&aNext Page'
+      Last:
+        Displayname: '&aPrevious Page'
+    Transactions:
+      Info:
+        Displayname: '&fInfo'
+        Lore: '&7Total transactions: %totalTransactions'
+      Title: 'Transactions'
+      Withdraw:
+        DisplayName: '&c%dateTime'
+        Format: '&7 %playerName withdrawn %amount'
+      Deposit:
+        DisplayName: '&a%dateTime'
+        Format: '&7 %playerName deposited %amount'
+      Admin: '&cAdmin&7'
+      DateTimeFormat: 'dd/MM/yyyy HH:mm:ss'
+    Words:
+      Withdraw: 'Withdraw'
+      Deposit: 'Deposit'
+      Amount: 'Amount'
   Input:
     Title: 'Select amount.'
     Item:

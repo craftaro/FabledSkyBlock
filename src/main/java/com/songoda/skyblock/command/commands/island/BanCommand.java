@@ -63,6 +63,9 @@ public class BanCommand extends SubCommand {
                         if (targetPlayerUUID == null) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Found.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        } else if((targetPlayer.hasPermission("fabledskyblock.bypass.ban") || targetPlayer.isOp())){
+                            messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Exempt"));
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         } else if (targetPlayerUUID.equals(player.getUniqueId())) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Yourself.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);

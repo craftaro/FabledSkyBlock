@@ -110,6 +110,13 @@ public class Stackable {
         this.save();
     }
 
+    public void take(int n) {
+        this.size-=n;
+        this.updateDisplay();
+        SkyBlock.getInstance().getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+        this.save();
+    }
+
     public boolean isMaxSize(){
         return size > maxSize;
     }

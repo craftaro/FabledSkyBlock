@@ -303,7 +303,7 @@ public class Information {
                                 if (is.getItemMeta().getDisplayName()
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                                 "Menu.Information.Members.Item.Previous.Displayname")))) {
-                                    playerData1.setPage(playerData1.getPage() - 1);
+                                    playerData1.setPage(MenuType.INFORMATION, playerData1.getPage(MenuType.INFORMATION) - 1);
                                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -311,7 +311,7 @@ public class Information {
                                 } else if (is.getItemMeta().getDisplayName()
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                                 .getString("Menu.Information.Members.Item.Next.Displayname")))) {
-                                    playerData1.setPage(playerData1.getPage() + 1);
+                                    playerData1.setPage(MenuType.INFORMATION, playerData1.getPage(MenuType.INFORMATION) + 1);
                                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -356,7 +356,7 @@ public class Information {
                             configLoad.getString("Menu.Information.Members.Item.Barrier.Displayname"), null, null, null,
                             null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-                    int playerMenuPage = playerData.getPage(),
+                    int playerMenuPage = playerData.getPage(MenuType.INFORMATION),
                             nextEndIndex = displayedMembers.size() - playerMenuPage * 36;
 
                     if (playerMenuPage != 1) {
@@ -462,7 +462,7 @@ public class Information {
                                 if (is.getItemMeta().getDisplayName()
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                                 "Menu.Information.Visitors.Item.Previous.Displayname")))) {
-                                    playerData12.setPage(playerData12.getPage() - 1);
+                                    playerData12.setPage(MenuType.INFORMATION, playerData12.getPage(MenuType.INFORMATION) - 1);
                                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -470,7 +470,7 @@ public class Information {
                                 } else if (is.getItemMeta().getDisplayName()
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                                 .getString("Menu.Information.Visitors.Item.Next.Displayname")))) {
-                                    playerData12.setPage(playerData12.getPage() + 1);
+                                    playerData12.setPage(MenuType.INFORMATION, playerData12.getPage(MenuType.INFORMATION) + 1);
                                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -501,7 +501,7 @@ public class Information {
                             configLoad.getString("Menu.Information.Visitors.Item.Barrier.Displayname"), null, null,
                             null, null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-                    int playerMenuPage = playerData.getPage(),
+                    int playerMenuPage = playerData.getPage(MenuType.INFORMATION),
                             nextEndIndex = displayedVisitors.size() - playerMenuPage * 36;
 
                     if (playerMenuPage != 1) {

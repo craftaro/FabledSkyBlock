@@ -42,7 +42,6 @@ import com.songoda.skyblock.structure.StructureManager;
 import com.songoda.skyblock.tasks.MobNetherWaterTask;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.usercache.UserCacheManager;
-import com.songoda.skyblock.utils.SignMenuFactory;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.visit.VisitTask;
 import com.songoda.skyblock.world.WorldManager;
@@ -112,8 +111,8 @@ public class SkyBlock extends SongodaPlugin {
         // Load Holograms
         com.songoda.core.hooks.HologramManager.load(this);
 
-        permissionManager = new PermissionManager(this);
         fileManager = new FileManager(this);
+        permissionManager = new PermissionManager(this);
         localizationManager = new LocalizationManager();
         worldManager = new WorldManager(this);
         userCacheManager = new UserCacheManager(this);
@@ -275,6 +274,10 @@ public class SkyBlock extends SongodaPlugin {
 
     public BanManager getBanManager() {
         return banManager;
+    }
+
+    public BankManager getBankManager() {
+        return bankManager;
     }
 
     public IslandManager getIslandManager() {

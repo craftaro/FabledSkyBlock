@@ -1,17 +1,14 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.gui.bank.GuiBank;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.menus.Bank;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.NumberUtil;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -23,8 +20,8 @@ public class BankCommand extends SubCommand {
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
         MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
         SoundManager soundManager = skyblock.getSoundManager();
+        IslandManager islandManager = skyblock.getIslandManager();
         FileManager fileManager = skyblock.getFileManager();
 
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
@@ -36,7 +33,16 @@ public class BankCommand extends SubCommand {
             return;
         }
 
-        Bank.getInstance().open(player);
+        Island island;
+        island = islandManager.getIsland(player);
+
+        if (island == null) {
+            skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+            skyblock.getMessageManager().sendMessage(player, configLoad.getString("Command.Bank.Unknown"));
+            return;
+        }
+
+        skyblock.getGuiManager().showGUI(player, new GuiBank(skyblock, island, null, false));
     }
 
     @Override

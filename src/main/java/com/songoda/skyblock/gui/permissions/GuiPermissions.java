@@ -1,4 +1,4 @@
-package com.songoda.skyblock.gui;
+package com.songoda.skyblock.gui.permissions;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
@@ -7,6 +7,8 @@ import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.gui.GuiSignatureEditor;
+import com.songoda.skyblock.gui.GuiWelcomeEditor;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandPermission;
 import com.songoda.skyblock.island.IslandRole;
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class GuiPermissions extends Gui {
 
-    private SkyBlock plugin;
+    private final SkyBlock plugin;
     private final PermissionManager permissionManager;
     private final IslandRole role;
     private final Island island;
@@ -63,17 +65,13 @@ public class GuiPermissions extends Gui {
                 setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.MAP,
                         TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname")),
                         TextUtils.formatText(configLoad.getStringList("Menu.Settings.Visitor.Item.Welcome.Lore"))),
-                        (event) -> {
-                            guiManager.showGUI(event.player, new GuiWelcomeEditor(plugin, this, island));
-                        });
+                        (event) -> guiManager.showGUI(event.player, new GuiWelcomeEditor(plugin, this, island)));
 
             if (config.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
                 setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.PAPER,
                         TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Signature.Displayname")),
                         TextUtils.formatText(configLoad.getStringList("Menu.Settings.Visitor.Item.Signature.Lore"))),
-                        (event) -> {
-                            guiManager.showGUI(event.player, new GuiSignatureEditor(plugin, this, island));
-                        });
+                        (event) -> guiManager.showGUI(event.player, new GuiSignatureEditor(plugin, this, island)));
             }
 
             Visit visit = island.getVisit();

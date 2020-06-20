@@ -8,6 +8,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,9 +40,10 @@ public class ProxyCommand extends SubCommand {
 
         if (args.length == 1) {
             OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
+
             UUID islandOwnerUUID = targetPlayerOffline.getOwner();
 
-            if (islandManager.containsIsland(islandOwnerUUID)) {
+            if (islandManager.getIsland(Bukkit.getOfflinePlayer(islandOwnerUUID)) != null) {
                 if (islandManager.isPlayerProxyingAnotherPlayer(((Player)sender).getUniqueId())) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.Proxy.IsOffPlayer.Message")

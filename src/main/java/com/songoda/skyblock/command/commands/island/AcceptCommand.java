@@ -62,8 +62,8 @@ public class AcceptCommand extends SubCommand {
                             island = islandManager
                                     .getIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
                         } else {
-                            island = islandManager
-                                    .loadIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
+                            islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
+                            island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
                             unloadIsland = true;
                         }
 
@@ -170,7 +170,7 @@ public class AcceptCommand extends SubCommand {
                             if (scoreboardManager != null) {
                                 Scoreboard scoreboard = scoreboardManager.getScoreboard(player);
                                 scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Scoreboard.Island.Team.Displayname")));
+                                        configLoad.getString("Scoreboard.Island.Team.Displayname", "")));
 
                                 if (islandManager.getVisitorsAtIsland(island).size() == 0) {
                                     scoreboard.setDisplayList(

@@ -26,6 +26,7 @@ import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
@@ -561,6 +562,9 @@ public class Island {
     }
 
     public IslandRole getRole(OfflinePlayer player) {
+        if(isCoopPlayer(player.getUniqueId())){
+            return IslandRole.Coop; // TODO Rework Coop status - Fabrimat
+        }
         for (IslandRole role : IslandRole.values())
             if (getRole(role).contains(player.getUniqueId()))
                 return role;
@@ -832,7 +836,7 @@ public class Island {
         this.deleted = deleted;
     }
 
-    public void save() {
+    public synchronized void save() {
         FileManager fileManager = skyblock.getFileManager();
 
         Config config = fileManager
@@ -885,7 +889,7 @@ public class Island {
         getLevel().save();
     }
 
-    public boolean isRegionUnlocked(Player player, String type) {
+    public boolean isRegionUnlocked(Player player, IslandWorld type) {
         FileManager fileManager = skyblock.getFileManager();
         SoundManager soundManager = skyblock.getSoundManager();
         MessageManager messageManager = skyblock.getMessageManager();
@@ -895,22 +899,26 @@ public class Island {
                 .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
                         ownerUUID.toString() + ".yml"));
         FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
-        double price = configLoad.getDouble("Island.World." + type + ".UnlockPrice");
+        double price = configLoad.getDouble("Island.World." + type.name() + ".UnlockPrice");
 
-        boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + type);
+        boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + type.name());
         if (price == -1) {
-            configLoadIslandData.set("Unlocked." + type, true);
+            configLoadIslandData.set("Unlocked." + type.name(), true);
             unlocked = true;
         }
 
         if (!unlocked) {
             messageManager.sendMessage(player,
                     fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
-                            .getString("Island.Unlock." + type + ".Message").replace(
+                            .getString("Island.Unlock." + type.name() + ".Message").replace(
                             "%cost%", NumberUtil.formatNumberByDecimal(price)));
 
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-            player.setVelocity(player.getLocation().getDirection().multiply(-.50));
+            if(type.equals(IslandWorld.End)){
+                player.setVelocity(player.getLocation().getDirection().multiply(-.50).setY(.6f));
+            } else if(type.equals(IslandWorld.Nether)) {
+                player.setVelocity(player.getLocation().getDirection().multiply(-.50));
+            }
         }
         return unlocked;
     }

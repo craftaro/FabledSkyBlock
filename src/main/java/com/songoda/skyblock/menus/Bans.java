@@ -128,13 +128,13 @@ public class Bans {
                     } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
                         if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                                 configLoad.getString("Menu.Bans.Item.Previous.Displayname")))) {
-                            playerData1.setPage(playerData1.getPage() - 1);
+                            playerData1.setPage(MenuType.BANS, playerData1.getPage(MenuType.BANS) - 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                         } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
                                 '&', configLoad.getString("Menu.Bans.Item.Next.Displayname")))) {
-                            playerData1.setPage(playerData1.getPage() + 1);
+                            playerData1.setPage(MenuType.BANS, playerData1.getPage(MenuType.BANS) + 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
@@ -173,7 +173,7 @@ public class Bans {
                             configLoad.getString("Menu.Bans.Item.Barrier.Displayname"), null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-            int playerMenuPage = playerData.getPage(), nextEndIndex = islandBans.size() - playerMenuPage * 36;
+            int playerMenuPage = playerData.getPage(MenuType.BANS), nextEndIndex = islandBans.size() - playerMenuPage * 36;
 
             if (playerMenuPage != 1) {
                 nInv.addItem(nInv.createItem(SkullUtil.create(

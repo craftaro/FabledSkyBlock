@@ -1,5 +1,6 @@
 package com.songoda.skyblock.bank;
 
+import com.songoda.skyblock.menus.Ownership;
 import org.bukkit.OfflinePlayer;
 
 import java.util.Date;
@@ -7,7 +8,18 @@ import java.util.Date;
 public class Transaction {
 
     public OfflinePlayer player;
-    public float ammount;
+    public float amount;
     public Date timestamp;
     public Type action;
+    public Visibility visibility;
+
+    public enum Type {
+        WITHDRAW,
+        DEPOSIT
+    }
+
+    public enum Visibility {
+        ADMIN,
+        USER
+    }
 }

@@ -151,13 +151,13 @@ public class Coop {
                     } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
                         if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                                 configLoad.getString("Menu.Coop.Item.Previous.Displayname")))) {
-                            playerData.setPage(playerData.getPage() - 1);
+                            playerData.setPage(MenuType.COOP, playerData.getPage(MenuType.COOP) - 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                         } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
                                 '&', configLoad.getString("Menu.Coop.Item.Next.Displayname")))) {
-                            playerData.setPage(playerData.getPage() + 1);
+                            playerData.setPage(MenuType.COOP, playerData.getPage(MenuType.COOP) + 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
@@ -194,7 +194,7 @@ public class Coop {
 
             Map<UUID, IslandCoop> coopPlayers = island.getCoopPlayers();
             
-            int playerMenuPage = playerData.getPage(), nextEndIndex = coopPlayers.size() - playerMenuPage * 36;
+            int playerMenuPage = playerData.getPage(MenuType.COOP), nextEndIndex = coopPlayers.size() - playerMenuPage * 36;
 
             nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     configLoad.getString("Menu.Coop.Item.Exit.Displayname"), null, null, null, null), 0, 8);

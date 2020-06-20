@@ -18,6 +18,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,33 +40,36 @@ public final class LocationUtil {
         }
     }
 
-    public static Location getSafeLocation(Location loc){
+    public static @Nullable Location getSafeLocation(Location loc){
         boolean found = false;
-        Location locChecked = loc.clone();
-        loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
-        for(int i=loc.getBlockY(); i>=0 && !found; i--){
-            locChecked = locChecked.subtract(0d, 1d, 0d);
-            found = checkBlock(locChecked);
-        }
-        if(!found){
-            for(int i=loc.getBlockY(); i<256 && !found; i++){
-                locChecked = locChecked.add(0d, 1d, 0d);
+        Location locChecked = null;
+        if(loc != null && loc.getWorld() != null){
+            locChecked = loc.clone();
+            loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+            for(int i=loc.getBlockY(); i>=0 && !found; i--){
+                locChecked = locChecked.subtract(0d, 1d, 0d);
                 found = checkBlock(locChecked);
             }
-        }
-        if (found) {
-            locChecked = locChecked.add(0d,1d,0d);
-        } else {
-            locChecked = null;
+            if(!found){
+                for(int i=loc.getBlockY(); i<256 && !found; i++){
+                    locChecked = locChecked.add(0d, 1d, 0d);
+                    found = checkBlock(locChecked);
+                }
+            }
+            if (found) {
+                locChecked = locChecked.add(0d,1d,0d);
+            } else {
+                locChecked = null;
+            }
         }
         return locChecked;
     }
 
-    public static Location getDefinitiveLocation(Location loc){
+    public static @Nonnull Location getDefinitiveLocation(Location loc){
         Location locWorking = loc.clone();
         for(int i=locWorking.getBlockY(); i>=0; i--){
             if(!locWorking.getBlock().isEmpty()){
-                if(locWorking.getBlock().getType().equals(Material.WATER) ||
+                if(locWorking.getBlock().getType().equals(CompatibleMaterial.WATER.getMaterial()) ||
                         (NMSUtil.getVersionNumber() > 13 && locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
                     loc = locWorking;
                 }
@@ -80,11 +85,11 @@ public final class LocationUtil {
                 !locChecked.getBlock().isLiquid() &&
                 locChecked.getBlock().getType().isSolid() &&
                 locChecked.getBlock().getType().isBlock() &&
-                locChecked.add(0d,1d,0d).getBlock().getType().equals(Material.AIR) &&
-                locChecked.add(0d,2d,0d).getBlock().getType().equals(Material.AIR) &&
-                !(NMSUtil.getVersionNumber() <= 13 || locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
+                locChecked.add(0d,1d,0d).getBlock().getType().equals(CompatibleMaterial.AIR.getMaterial()) &&
+                locChecked.add(0d,2d,0d).getBlock().getType().equals(CompatibleMaterial.AIR.getMaterial()) &&
+                !(NMSUtil.getVersionNumber() >= 13 && locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
             safe = true;
-            switch(locChecked.getBlock().getType()){
+            switch(CompatibleMaterial.getMaterial(locChecked.getBlock())){
                 case ACACIA_DOOR: // <= 1.8.8
                 case ACACIA_FENCE_GATE:
                 case BIRCH_DOOR:
@@ -99,17 +104,17 @@ public final class LocationUtil {
                 case LADDER:
                 case SPRUCE_DOOR:
                 case SPRUCE_FENCE_GATE:
-                case ACACIA_BUTTON: // TODO check server version
-                case ACACIA_TRAPDOOR: // TODO check server version
-                case BIRCH_TRAPDOOR: // TODO check server version
-                case CAMPFIRE: // TODO check server version
-                case COBWEB: // TODO check server version
-                case DARK_OAK_TRAPDOOR: // TODO check server version
-                case JUNGLE_TRAPDOOR: // TODO check server version
-                case MAGMA_BLOCK: // TODO check server version
-                case NETHER_PORTAL: // TODO check server version
-                case OAK_DOOR: // TODO check server version
-                case OAK_FENCE_GATE: // TODO check server version
+                case ACACIA_BUTTON:
+                case ACACIA_TRAPDOOR:
+                case BIRCH_TRAPDOOR:
+                case CAMPFIRE:
+                case COBWEB:
+                case DARK_OAK_TRAPDOOR:
+                case JUNGLE_TRAPDOOR:
+                case MAGMA_BLOCK:
+                case NETHER_PORTAL:
+                case OAK_DOOR:
+                case OAK_FENCE_GATE:
                     safe = false;
                     break;
             }

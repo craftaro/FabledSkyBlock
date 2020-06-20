@@ -6,6 +6,7 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.limit.impl.EntityLimitaton;
+import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.utils.version.NMSUtil;
@@ -14,8 +15,10 @@ import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,6 +30,8 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -107,9 +112,16 @@ public class Entity implements Listener {
 
             // Check permissions.
             skyblock.getPermissionManager()
-                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
+                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()), true);
 
-        } else if (event.getDamager() instanceof TNTPrimed) {
+        } else if((event.getDamager() instanceof org.bukkit.entity.Projectile
+                    && ((Projectile) event.getDamager()).getShooter() instanceof Player)
+                && (event.getEntity().getType().equals(EntityType.ARMOR_STAND)
+                    || event.getEntity().getType().equals(EntityType.ITEM_FRAME))){
+            Player player = (Player) ((Projectile) event.getDamager()).getShooter();
+            skyblock.getPermissionManager()
+                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
+        } else { // Make it work with all the entities, not just TNT
             org.bukkit.entity.Entity entity = event.getEntity();
 
             // Check permissions.
@@ -217,6 +229,7 @@ public class Entity implements Listener {
     @EventHandler
     public void onHangingBreak(HangingBreakEvent event) {
         Hanging hanging = event.getEntity();
+
         if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
         IslandManager islandManager = skyblock.getIslandManager();
 
@@ -229,14 +242,15 @@ public class Entity implements Listener {
     public void onHangingBreak(HangingBreakByEntityEvent event) {
         Hanging hanging = event.getEntity();
 
-        if (!(event.getRemover() instanceof Player))
-            return;
-
         if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
         IslandManager islandManager = skyblock.getIslandManager();
 
+        Player p = null;
+        if(event.getRemover() instanceof Player){
+            p = (Player) event.getRemover();
+        }
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, (Player) event.getRemover(),
+        skyblock.getPermissionManager().processPermission(event, p,
                 islandManager.getIslandAtLocation(hanging.getLocation()));
     }
 
@@ -292,7 +306,7 @@ public class Entity implements Listener {
         }
 
         if ((event.getEntityType() == EntityType.FALLING_BLOCK)
-                && LocationUtil.isLocationLocation(event.getBlock().getLocation(), island.getLocation(world, IslandEnvironment.Main).clone())
+                && LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)
                 && configLoad.getBoolean("Island.Spawn.Protection")) {
             FallingBlock fallingBlock = (FallingBlock) event.getEntity();
             if (fallingBlock.getDropItem()) {
@@ -322,28 +336,17 @@ public class Entity implements Listener {
             event.setCancelled(true);
             return;
         }
+
         // Check permissions.
         skyblock.getPermissionManager().processPermission(event, null, island);
+
 
         if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Block.Level.Enable"))
             return;
 
-        CompatibleMaterial materials = CompatibleMaterial.getBlockMaterial(block.getType());
-
-        if (materials != null) {
-            IslandLevel level = island.getLevel();
-
-            if (level.hasMaterial(materials.name())) {
-                long materialAmount = level.getMaterialAmount(materials.name());
-
-                if (materialAmount - 1 <= 0) {
-                    level.removeMaterial(materials.name());
-                } else {
-                    level.setMaterialAmount(materials.name(), materialAmount - 1);
-                }
-            }
-        }
+        removeBlockFromLevel(island, block);
+        CompatibleMaterial materials;
 
         if (event.getTo() != null && event.getTo() != Material.AIR) {
             materials = CompatibleMaterial.getBlockMaterial(event.getTo());
@@ -363,7 +366,7 @@ public class Entity implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onEntityExplode(EntityExplodeEvent event) {
         org.bukkit.entity.Entity entity = event.getEntity();
 
@@ -377,41 +380,85 @@ public class Entity implements Listener {
 
             if (!event.isCancelled()) {
 
-                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                        .getBoolean("Island.Block.Level.Enable")) {
-                    for (org.bukkit.block.Block blockList : event.blockList()) {
-                        @SuppressWarnings("deprecation")
-                        CompatibleMaterial materials = CompatibleMaterial.getBlockMaterial(blockList.getType());
+                StackableManager stackableManager = skyblock.getStackableManager();
 
-                        if (materials != null) {
-                            IslandLevel level = island.getLevel();
+                boolean removed;
+                Iterator<org.bukkit.block.Block> it = event.blockList().iterator();
+                while (it.hasNext()){
+                    removed = false;
+                    org.bukkit.block.Block block = it.next();
+                    if (SkyBlock.getInstance().getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                            .getBoolean("Island.Spawn.Protection")) {
+                        IslandWorld world = worldManager.getIslandWorld(event.getEntity().getWorld());
+                        if (LocationUtil.isLocationLocation(block.getLocation(),
+                                island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
+                            it.remove();
+                            removed = true;
+                        }
+                    }
 
-                            if (level.hasMaterial(materials.name())) {
-                                long materialAmount = level.getMaterialAmount(materials.name());
+                    Location blockLocation = block.getLocation();
 
-                                if (materialAmount - 1 <= 0) {
-                                    level.removeMaterial(materials.name());
-                                } else {
-                                    level.setMaterialAmount(materials.name(), materialAmount - 1);
-                                }
+                    if (stackableManager != null && stackableManager.isStacked(blockLocation)) {
+                        Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getMaterial(block));
+                        if (stackable != null) {
+                            CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+                            byte data = block.getData();
+
+                            int removedAmount = (int) (Math.random() * Math.min(64, stackable.getSize()-1));
+                            stackable.take(removedAmount);
+                            Bukkit.getScheduler().runTask(skyblock, () -> {
+                                block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5),
+                                        new ItemStack(material.getMaterial(), (int) (Math.random() * removedAmount), data));
+                            });
+
+                            if (stackable.getSize() <= 1) {
+                                stackableManager.removeStack(stackable);
+                            }
+
+                            Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                            FileConfiguration configLoad = config.getFileConfiguration();
+
+                            if (configLoad.getBoolean("Island.Block.Level.Enable")) {
+                                removeBlockFromLevel(island, block);
+                            }
+
+                            it.remove();
+                            if(!removed){
+                                removed = true;
                             }
                         }
                     }
-                }
-
-                if (SkyBlock.getInstance().getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                        .getBoolean("Island.Spawn.Protection")) {
-                    IslandWorld world = worldManager.getIslandWorld(event.getEntity().getWorld());
-                    for (org.bukkit.block.Block block : event.blockList()) {
-                        if (LocationUtil.isLocationLocation(block.getLocation(),
-                                island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
-                            event.blockList().remove(block);
-                            break;
+                    if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                            .getBoolean("Island.Block.Level.Enable")) {
+                        if(!removed){
+                            removeBlockFromLevel(island, block);
                         }
+
                     }
                 }
             }
         }
+    }
+
+    private void removeBlockFromLevel(Island island, CompatibleMaterial material){
+        if (material != null) {
+            IslandLevel level = island.getLevel();
+
+            if (level.hasMaterial(material.name())) {
+                long materialAmount = level.getMaterialAmount(material.name());
+
+                if (materialAmount - 1 <= 0) {
+                    level.removeMaterial(material.name());
+                } else {
+                    level.setMaterialAmount(material.name(), materialAmount - 1);
+                }
+            }
+        }
+    }
+
+    private void removeBlockFromLevel(Island island, Block block) {
+        removeBlockFromLevel(island, CompatibleMaterial.getBlockMaterial(block.getType()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -561,6 +608,22 @@ public class Entity implements Listener {
             entity.remove();
         });
         event.setCancelled(true); // For other plugin API reasons.
+    }
+
+    @EventHandler
+    public void onDamageVehicle(VehicleDamageEvent event) {
+        if (!(event.getAttacker() instanceof Player)) {
+            IslandManager islandManager = skyblock.getIslandManager();
+            skyblock.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
+        }
+    }
+
+    @EventHandler
+    public void onDestroyVehicle(VehicleDestroyEvent event) {
+        if (!(event.getAttacker() instanceof Player)) {
+            IslandManager islandManager = skyblock.getIslandManager();
+            skyblock.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
+        }
     }
 
     private static SpawnReason getSpawnReason(String reason) {

@@ -1,25 +1,29 @@
 package com.songoda.skyblock.bank;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.utils.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class BankManager {
     private static BankManager instance;
 
     public static BankManager getInstance() {return instance == null ? instance = new BankManager() : instance;}
 
-    private HashMap<UUID, List<Transaction>> log;
+    private final HashMap<UUID, List<Transaction>> log;
 
     public FileConfiguration lang;
 
@@ -31,20 +35,35 @@ public class BankManager {
         loadTransactions();
     }
 
-    public List<String> getTransactions(Player player) {
+    /*public List<String> getTransactions(Player player) {
         if (log.containsKey(player.getUniqueId())&&log.get(player.getUniqueId())!=null&&!log.get(player.getUniqueId()).isEmpty()) {
             List<String> lore = new ArrayList<>();
             List<Transaction> transactions = log.get(player.getUniqueId());
             int size = transactions.size()>10 ? 10 : transactions.size();
             for (int i = 0;i<size;i++) {
                 Transaction t = transactions.get((transactions.size()-1)-i);
-                lore.add("#" + (i+1) + " " + t.timestamp.toString() +" " + t.player.getPlayer().getDisplayName() + " " + t.action.name().toLowerCase() + " " + EconomyManager.formatEconomy(t.ammount));
+                SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                lore.add("#" + (i+1) + " " + formatDate.format(t.timestamp) +" " + t.player.getPlayer().getDisplayName() + " " + t.action.name().toLowerCase() + " " + EconomyManager.formatEconomy(t.ammount));
             }
             return lore;
         }else {
             List<String> lore = new ArrayList<>();
             lore.add(lang.getString("Menu.Bank.Item.Log.Empty"));
             return lore;
+        }
+    }*/
+
+    public List<Transaction> getTransactions(Player player) {
+        return getTransactions(player.getUniqueId());
+    }
+
+    public List<Transaction> getTransactions(UUID uuid) {
+        if (log.containsKey(uuid)
+                && log.get(uuid) != null
+                && !log.get(uuid).isEmpty()) {
+            return new ArrayList<>(log.get(uuid));
+        }else {
+            return new ArrayList<>();
         }
     }
 
@@ -67,17 +86,100 @@ public class BankManager {
     public List<String> getBalanceLore(Player player) {
         List<String> result = new ArrayList<>();
         result.add("Some error occurred while loading your balance!");
-        Island island = SkyBlock.getInstance().getIslandManager().getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
+        Island island = SkyBlock.getInstance().getIslandManager().getIsland(player);
         result.add("If this is null then its a easy to fix bug: "+island.toString());
         if (island != null) {
             result.clear();
-            result.add(player.getDisplayName()+"'s balance is "+EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId()))));
+            result.add(player.getDisplayName()+"'s balance is "+EconomyManager.formatEconomy(EconomyManager.getBalance(player)));
             result.add(player.getDisplayName()+"'s island has "+EconomyManager.formatEconomy(island.getBankBalance()));
         }
         return result;
     }
 
     public List<Transaction> getTransactionList(Player player) {
-        return log.get(player.getUniqueId());
+        return getTransactionList(player.getUniqueId());
+    }
+
+    public List<Transaction> getTransactionList(UUID uuid) {
+        return log.get(uuid);
+    }
+
+    public BankResponse deposit(Player player, Island island, double amt, boolean admin) {
+        SkyBlock skyblock = SkyBlock.getInstance();
+        FileManager fileManager = skyblock.getFileManager();
+
+        // Make sure the amount is positive
+        if (amt <= 0) {
+            return BankResponse.NEGATIVE_AMOUNT;
+        }
+
+        // If decimals aren't allowed, check for them
+        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+            int intAmt = (int) amt;
+            if (intAmt != amt) {
+                return BankResponse.DECIMALS_NOT_ALLOWED;
+            }
+        }
+
+        if(!admin) {
+            if (!EconomyManager.hasBalance(player, amt)) {
+                return BankResponse.NOT_ENOUGH_MONEY;
+            }
+
+            EconomyManager.withdrawBalance(player, amt);
+        }
+
+        island.addToBank(amt);
+        Transaction t = new Transaction();
+        t.player = player;
+        t.amount = (float) amt;
+        t.timestamp = Calendar.getInstance().getTime();
+        t.action = Transaction.Type.DEPOSIT;
+        t.visibility = admin ? Transaction.Visibility.ADMIN : Transaction.Visibility.USER;
+        this.addTransaction(player, t);
+        return BankResponse.SUCCESS;
+    }
+
+    public BankResponse withdraw(Player player, Island island, double amt, boolean admin) {
+        SkyBlock skyblock = SkyBlock.getInstance();
+        FileManager fileManager = skyblock.getFileManager();
+
+        // Make sure the amount is positive
+        if (amt <= 0) {
+            return BankResponse.NEGATIVE_AMOUNT;
+        }
+
+        // If decimals aren't allowed, check for them
+        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+            int intAmt = (int) amt;
+            if (intAmt != amt) {
+                return BankResponse.DECIMALS_NOT_ALLOWED;
+            }
+        }
+
+        if(!admin){
+            if (amt > island.getBankBalance()) {
+                return BankResponse.NOT_ENOUGH_MONEY;
+            }
+
+            EconomyManager.deposit(player, amt);
+        }
+
+        island.removeFromBank(amt);
+        Transaction t = new Transaction();
+        t.player = player;
+        t.amount = (float) amt;
+        t.timestamp = Calendar.getInstance().getTime();
+        t.action = Transaction.Type.WITHDRAW;
+        t.visibility = admin ? Transaction.Visibility.ADMIN : Transaction.Visibility.USER;
+        this.addTransaction(player, t);
+        return BankResponse.SUCCESS;
+    }
+
+    public enum BankResponse{
+        NOT_ENOUGH_MONEY,
+        DECIMALS_NOT_ALLOWED,
+        NEGATIVE_AMOUNT,
+        SUCCESS
     }
 }

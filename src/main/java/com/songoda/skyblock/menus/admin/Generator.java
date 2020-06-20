@@ -8,6 +8,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.generator.GeneratorManager;
 import com.songoda.skyblock.generator.GeneratorMaterial;
 import com.songoda.skyblock.island.IslandWorld;
+import com.songoda.skyblock.menus.MenuType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -75,7 +76,7 @@ public class Generator implements Listener {
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Barrier.Displayname"), null, null, null,
                     null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-            int playerMenuPage = playerData.getPage(), nextEndIndex = generators.size() - playerMenuPage * 36;
+            int playerMenuPage = playerData.getPage(MenuType.ADMIN_GENERATOR), nextEndIndex = generators.size() - playerMenuPage * 36;
 
             if (playerMenuPage != 1) {
                 nInv.addItem(nInv.createItem(SkullUtil.create(
@@ -394,7 +395,7 @@ public class Generator implements Listener {
                 && (is.hasItemMeta())) {
             if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Previous.Displayname")))) {
-                playerData.setPage(playerData.getPage() - 1);
+                playerData.setPage(MenuType.ADMIN_GENERATOR, playerData.getPage(MenuType.ADMIN_GENERATOR) - 1);
                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                 player.closeInventory();
@@ -404,7 +405,7 @@ public class Generator implements Listener {
                 return;
             } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Next.Displayname")))) {
-                playerData.setPage(playerData.getPage() + 1);
+                playerData.setPage(MenuType.ADMIN_GENERATOR, playerData.getPage(MenuType.ADMIN_GENERATOR) + 1);
                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                 player.closeInventory();

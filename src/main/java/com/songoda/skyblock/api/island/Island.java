@@ -459,7 +459,8 @@ public class Island {
 	 */
 	public void load() {
 		if (this.handle == null) {
-			this.handle = SkyBlockAPI.getImplementation().getIslandManager().loadIsland(player);
+			SkyBlockAPI.getImplementation().getIslandManager().loadIsland(player);
+			this.handle = SkyBlockAPI.getImplementation().getIslandManager().getIsland(player);
 		}
 	}
 

@@ -37,7 +37,7 @@ Island:
             Time: 60
         # [!] How many seconds to wait before teleporting to a newly created island
         TeleportTimeout: 1
-        # The distance between the islands
+        # The distance between the islands EXPERIMENTAL!
         Distance: 1200
     Deletion:
         # [!] You are adviced to keep these options both enabled to prevent any issues.
@@ -210,7 +210,7 @@ Island:
         # Island Level Points divided by value
         Division: 100
         # Points to subtract to Island Level Points
-        Subtract: 1000
+        Subtract: 0
         Cooldown:
             # Time until Island level rescan expires
             Time: 60
@@ -300,6 +300,9 @@ Island:
             Enable: true
         Hunger:
             Enable: false
+        # If owners and operators should have same permission of members
+        # It should be left to false as it could be changed soon
+        OwnersAndOperatorsAsMembers: false
     Portal:
         # When disabled, when a player enters a portal, they will teleport to the nether or
         # end world rather than the island world.

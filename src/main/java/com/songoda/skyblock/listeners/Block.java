@@ -68,7 +68,7 @@ public class Block implements Listener {
         }
 
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(event, player, island)) {
+        if (!skyblock.getPermissionManager().processPermission(event, player, island) || event.isCancelled()) {
             return;
         }
 
@@ -128,8 +128,8 @@ public class Block implements Listener {
 
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
 
-        if (LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))
-                || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone())) {
+        if (LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))  || LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0.0D, 1.0D, 0.0D))
+                || LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Break.Message"));
@@ -337,11 +337,7 @@ public class Block implements Listener {
                         witherSkeleton) {
                         if(block.getRelative(event.getFace().getOppositeFace()).getType().equals(Material.WATER)){
                             event.setCancelled(true);
-                            if(NMSUtil.getVersionNumber() > 8){
-                                event.getToBlock().getWorld().playSound(block.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f);
-                            } else {
-                                // TODO Find a sound for 1.8
-                            }
+                            event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
                             event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
                         }
                         break;
