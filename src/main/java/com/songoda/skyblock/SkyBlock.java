@@ -276,6 +276,10 @@ public class SkyBlock extends SongodaPlugin {
         return banManager;
     }
 
+    public BankManager getBankManager() {
+        return bankManager;
+    }
+
     public IslandManager getIslandManager() {
         return islandManager;
     }

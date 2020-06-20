@@ -33,7 +33,7 @@ public class BankManager {
         loadTransactions();
     }
 
-    public List<String> getTransactions(Player player) {
+    /*public List<String> getTransactions(Player player) {
         if (log.containsKey(player.getUniqueId())&&log.get(player.getUniqueId())!=null&&!log.get(player.getUniqueId()).isEmpty()) {
             List<String> lore = new ArrayList<>();
             List<Transaction> transactions = log.get(player.getUniqueId());
@@ -48,6 +48,20 @@ public class BankManager {
             List<String> lore = new ArrayList<>();
             lore.add(lang.getString("Menu.Bank.Item.Log.Empty"));
             return lore;
+        }
+    }*/
+
+    public List<Transaction> getTransactions(Player player) {
+        return getTransactions(player.getUniqueId());
+    }
+
+    public List<Transaction> getTransactions(UUID uuid) {
+        if (log.containsKey(uuid)
+                && log.get(uuid) != null
+                && !log.get(uuid).isEmpty()) {
+            return new ArrayList<>(log.get(uuid));
+        }else {
+            return new ArrayList<>();
         }
     }
 

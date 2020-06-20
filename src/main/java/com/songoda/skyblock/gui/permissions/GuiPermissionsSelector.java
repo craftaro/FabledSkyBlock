@@ -1,4 +1,4 @@
-package com.songoda.skyblock.gui;
+package com.songoda.skyblock.gui.permissions;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;

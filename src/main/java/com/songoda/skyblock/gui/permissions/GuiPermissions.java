@@ -1,4 +1,4 @@
-package com.songoda.skyblock.gui;
+package com.songoda.skyblock.gui.permissions;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
@@ -7,6 +7,8 @@ import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.gui.GuiSignatureEditor;
+import com.songoda.skyblock.gui.GuiWelcomeEditor;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandPermission;
 import com.songoda.skyblock.island.IslandRole;

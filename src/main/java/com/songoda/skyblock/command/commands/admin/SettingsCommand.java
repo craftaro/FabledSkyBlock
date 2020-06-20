@@ -2,7 +2,7 @@ package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
-import com.songoda.skyblock.gui.GuiPermissionsSelector;
+import com.songoda.skyblock.gui.permissions.GuiPermissionsSelector;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
