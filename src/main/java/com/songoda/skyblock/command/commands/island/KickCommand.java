@@ -72,8 +72,7 @@ public class KickCommand extends SubCommand {
                                 targetPlayerName = targetPlayer.getName();
                             }
 
-                            assert targetPlayer != null;
-                            if((targetPlayer.hasPermission("fabledskyblock.bypass.kick") || targetPlayer.isOp()) && islandVisitors.contains(targetPlayer.getUniqueId())){
+                            if(targetPlayer != null && (targetPlayer.hasPermission("fabledskyblock.bypass.kick") || targetPlayer.isOp()) && islandVisitors.contains(targetPlayer.getUniqueId())){
                                 messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Exempt"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             } else if (targetPlayerUUID.equals(player.getUniqueId())) {
@@ -85,7 +84,7 @@ public class KickCommand extends SubCommand {
                             } else if (island.getOwnerUUID().equals(targetPlayerUUID)) {
                                 messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Role.Owner.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                            } else if (island.isOpen() && islandVisitors.contains(targetPlayerUUID) && targetPlayer != null) {
+                            } else if (island.isOpen() && islandVisitors.contains(targetPlayerUUID)) {
                                 if (island.isCoopPlayer(targetPlayerUUID)) {
                                     messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Cooped.Message"));
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);

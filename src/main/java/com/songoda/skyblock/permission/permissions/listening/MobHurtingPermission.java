@@ -24,18 +24,18 @@ public class MobHurtingPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onVehicleDamage(VehicleDamageEvent event) {
-
-
-        Player player = (Player) event.getAttacker();
-        cancelAndMessage(event, player, plugin, messageManager);
+        if(event.getAttacker() instanceof Player){
+            Player player = (Player) event.getAttacker();
+            cancelAndMessage(event, player, plugin, messageManager);
+        }
     }
 
     @PermissionHandler
     public void onVehicleDestroy(VehicleDestroyEvent event) {
-
-
-        Player player = (Player) event.getAttacker();
-        cancelAndMessage(event, player, plugin, messageManager);
+        if(event.getAttacker() instanceof Player){
+            Player player = (Player) event.getAttacker();
+            cancelAndMessage(event, player, plugin, messageManager);
+        }
     }
 
     @PermissionHandler

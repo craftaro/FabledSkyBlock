@@ -48,6 +48,7 @@ Settings:
         ExperienceOrbPickup: false
         Trapdoor: false
         Noteblock: false
+        Damage: true
     Member:
         Destroy: true
         Place: true
@@ -97,6 +98,7 @@ Settings:
         ExperienceOrbPickup: true
         Trapdoor: true
         Noteblock: true
+        Damage: true
     Operator:
         Invite: true
         Kick: true
@@ -158,13 +160,11 @@ Settings:
         Hopper: true
         EntityPlacement: true
         ExperienceOrbPickup: true
+        Damage: true
     Owner:
         NaturalMobSpawning: true
         MobGriefing: false
-        PvP: false
         Explosions: false
         FireSpread: true
         LeafDecay: true
         KeepItemsOnDeath: true
-        Damage: true
-        Hunger: true

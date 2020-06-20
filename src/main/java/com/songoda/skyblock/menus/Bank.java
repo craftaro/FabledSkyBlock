@@ -71,7 +71,7 @@ public class Bank {
             executors.put(MenuClickRegistry.RegistryKey.fromLanguageFile("Menu.Bank.Item.Deposit.Displayname", CompatibleMaterial.DIRT), (inst, player, e) -> {
                 inst.getSoundManager().playSound(player, CompatibleSound.ENTITY_BAT_TAKEOFF.getSound(), 1.0F, 1.0F);
                 //Deposit money
-                Island island = islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
+                Island island = islandManager.getIsland(player);
                 if (island != null) {
                     SelectInputMethod.getInstance().open(player, "Deposit", (action) -> {
                         if (action == InputMethodSelectlistener.InputMethod.CANCELED) {
@@ -153,18 +153,16 @@ public class Bank {
             executors.put(MenuClickRegistry.RegistryKey.fromLanguageFile("Menu.Bank.Item.Withdraw.Displayname", CompatibleMaterial.GLISTERING_MELON_SLICE), (inst, player, e) -> {
                 inst.getSoundManager().playSound(player, CompatibleSound.ENTITY_BAT_TAKEOFF.getSound(), 1.0F, 1.0F);
                 //Withdraw money
-                Island island = null;
-                island = islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
+                Island island;
+                island = islandManager.getIsland(player);
                 if (island != null) {
-                    Island finalIsland = island;
                     SelectInputMethod.getInstance().open(player, "Withdraw", (action) -> {
                         if (action == InputMethodSelectlistener.InputMethod.CANCELED) {
                             Bukkit.getScheduler().runTask(skyblock, () -> {
                                 this.open(player);
                             });
-                            return;
                         } else if (action == InputMethodSelectlistener.InputMethod.ALL) {
-                            withdraw(player, finalIsland, finalIsland.getBankBalance());
+                            withdraw(player, island, island.getBankBalance());
                         } else {
                                     ChatPrompt.showPrompt(skyblock, player, (event) -> {
                                                 if (event.getMessage().equals(""))
@@ -176,7 +174,7 @@ public class Bank {
                                                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Short4.Message"));
                                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                                 }
-                                                withdraw(player, finalIsland, amount);
+                                                withdraw(player, island, amount);
                                             });
                         }
                     });

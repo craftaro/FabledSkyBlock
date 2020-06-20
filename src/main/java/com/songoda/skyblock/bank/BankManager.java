@@ -81,6 +81,10 @@ public class BankManager {
     }
 
     public List<Transaction> getTransactionList(Player player) {
-        return log.get(player.getUniqueId());
+        return getTransactionList(player.getUniqueId());
+    }
+
+    public List<Transaction> getTransactionList(UUID uuid) {
+        return log.get(uuid);
     }
 }

@@ -255,7 +255,7 @@ public class PlayerData {
     }
 
     public void save() {
-        transactions = BankManager.getInstance().getTransactionList(getPlayer());
+        transactions = BankManager.getInstance().getTransactionList(getPlayerUUID());
         Config config = getConfig();
         FileConfiguration configLoad = config.getFileConfiguration();
         configLoad.set("Statistics.Island.Playtime", getPlaytime());
@@ -285,6 +285,10 @@ public class PlayerData {
     
     public Player getPlayer() {
         return Bukkit.getPlayer(uuid);
+    }
+
+    public UUID getPlayerUUID() {
+        return uuid;
     }
 
     public List<Transaction> getTransactions() {

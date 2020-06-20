@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class GuiPermissions extends Gui {
 
-    private SkyBlock plugin;
+    private final SkyBlock plugin;
     private final PermissionManager permissionManager;
     private final IslandRole role;
     private final Island island;
@@ -63,17 +63,13 @@ public class GuiPermissions extends Gui {
                 setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.MAP,
                         TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname")),
                         TextUtils.formatText(configLoad.getStringList("Menu.Settings.Visitor.Item.Welcome.Lore"))),
-                        (event) -> {
-                            guiManager.showGUI(event.player, new GuiWelcomeEditor(plugin, this, island));
-                        });
+                        (event) -> guiManager.showGUI(event.player, new GuiWelcomeEditor(plugin, this, island)));
 
             if (config.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
                 setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.PAPER,
                         TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Signature.Displayname")),
                         TextUtils.formatText(configLoad.getStringList("Menu.Settings.Visitor.Item.Signature.Lore"))),
-                        (event) -> {
-                            guiManager.showGUI(event.player, new GuiSignatureEditor(plugin, this, island));
-                        });
+                        (event) -> guiManager.showGUI(event.player, new GuiSignatureEditor(plugin, this, island)));
             }
 
             Visit visit = island.getVisit();

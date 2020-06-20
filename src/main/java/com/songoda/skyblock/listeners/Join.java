@@ -50,7 +50,8 @@ public class Join implements Listener {
             userCacheManager.saveAsync();
 
             try {
-                Island island = islandManager.loadIsland(player);
+                islandManager.loadIsland(player);
+                Island island = islandManager.getIsland(player);
                 boolean teleportedToIsland = false;
 
                 Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));

@@ -1145,6 +1145,18 @@ Menu:
             Displayname: '&aDoor Use'
           Jukebox:
             Displayname: '&aJukebox Use'
+          PvP:
+            Displayname: '&aPvP'
+          Noteblock:
+            Displayname: '&aNoteblock use'
+          Minecart:
+            Displayname: '&aMinecart'
+          Damage:
+            Displayname: '&aDamage'
+          Boat:
+            Displayname: '&aBoat'
+          Trample:
+            Displayname: '&aTrample'
           Bucket:
             Displayname: '&aBucket Use'
           SpawnEgg:
@@ -1502,6 +1514,18 @@ Menu:
                 - '&7Status&8: &cfalse'
             Milking:
               Displayname: '&aMilking'
+            PvP:
+              Displayname: '&aPvP'
+            Noteblock:
+              Displayname: '&aNoteblock use'
+            Minecart:
+              Displayname: '&aMinecart'
+            Damage:
+              Displayname: '&aDamage'
+            Boat:
+              Displayname: '&aBoat'
+            Trample:
+              Displayname: '&aTrample'
             Anvil:
               Displayname: '&aAnvil Use'
             Portal:

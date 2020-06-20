@@ -81,7 +81,7 @@ public class ExplosionsPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onTNTInteract(PlayerInteractEvent event) {
-        if(event.getItem().getType().equals(CompatibleMaterial.FLINT_AND_STEEL.getMaterial())
+        if(event.getItem() != null && event.getItem().getType().equals(CompatibleMaterial.FLINT_AND_STEEL.getMaterial())
                 && event.getClickedBlock().getType().equals(CompatibleMaterial.TNT.getBlockMaterial())){
             cancelAndMessage(event, event.getPlayer(), plugin, plugin.getMessageManager());
         }

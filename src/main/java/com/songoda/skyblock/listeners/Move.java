@@ -169,10 +169,16 @@ public class Move implements Listener {
             }
 
             // Load the island they are now on if one exists
-            if (player.hasPermission("fabledskyblock.bypass")) {
-                Island loadedIsland = islandManager.loadIslandAtLocation(player.getLocation());
-                if (loadedIsland != null) {
+            islandManager.loadIslandAtLocation(player.getLocation());
+            Island loadedIsland = islandManager.getIslandAtLocation(player.getLocation());
+            if (loadedIsland != null) {
+                if (player.hasPermission("fabledskyblock.bypass")) {
                     playerData.setIsland(loadedIsland.getOwnerUUID());
+                    return;
+                }
+
+                if(loadedIsland.isOpen()){
+                    loadedIsland.getVisit().addVisitor(player.getUniqueId());
                     return;
                 }
             }
@@ -235,7 +241,8 @@ public class Move implements Listener {
         final WorldManager worldManager = skyblock.getWorldManager();
         if(e.getTo() != null && e.getTo().getWorld() != null){
             e.getTo().getWorld().loadChunk(e.getTo().getChunk());
-            if(worldManager.isIslandWorld(e.getTo().getWorld()) && e.getTo().distance(e.getFrom()) > 1.0d){ // We should not care of self block tp
+            if(worldManager.isIslandWorld(e.getTo().getWorld())
+                    && (!e.getTo().getWorld().equals(e.getFrom().getWorld()) || e.getTo().distance(e.getFrom()) > 1.0d)){ // We should not care of self block tp
                 if(skyblock.getIslandManager().getIslandAtLocation(e.getTo()) == null){
                     e.setCancelled(true);
                     skyblock.getMessageManager().sendMessage(player,

@@ -18,6 +18,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,29 +40,32 @@ public final class LocationUtil {
         }
     }
 
-    public static Location getSafeLocation(Location loc){
+    public static @Nullable Location getSafeLocation(Location loc){
         boolean found = false;
-        Location locChecked = loc.clone();
-        loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
-        for(int i=loc.getBlockY(); i>=0 && !found; i--){
-            locChecked = locChecked.subtract(0d, 1d, 0d);
-            found = checkBlock(locChecked);
-        }
-        if(!found){
-            for(int i=loc.getBlockY(); i<256 && !found; i++){
-                locChecked = locChecked.add(0d, 1d, 0d);
+        Location locChecked = null;
+        if(loc != null && loc.getWorld() != null){
+            locChecked = loc.clone();
+            loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+            for(int i=loc.getBlockY(); i>=0 && !found; i--){
+                locChecked = locChecked.subtract(0d, 1d, 0d);
                 found = checkBlock(locChecked);
             }
-        }
-        if (found) {
-            locChecked = locChecked.add(0d,1d,0d);
-        } else {
-            locChecked = null;
+            if(!found){
+                for(int i=loc.getBlockY(); i<256 && !found; i++){
+                    locChecked = locChecked.add(0d, 1d, 0d);
+                    found = checkBlock(locChecked);
+                }
+            }
+            if (found) {
+                locChecked = locChecked.add(0d,1d,0d);
+            } else {
+                locChecked = null;
+            }
         }
         return locChecked;
     }
 
-    public static Location getDefinitiveLocation(Location loc){
+    public static @Nonnull Location getDefinitiveLocation(Location loc){
         Location locWorking = loc.clone();
         for(int i=locWorking.getBlockY(); i>=0; i--){
             if(!locWorking.getBlock().isEmpty()){

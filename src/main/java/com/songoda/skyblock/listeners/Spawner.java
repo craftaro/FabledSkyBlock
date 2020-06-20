@@ -46,7 +46,7 @@ public class Spawner implements Listener {
                         spawner.setMaxSpawnDelay(400);
                     } else {
                         try {
-                            Object MobSpawner = null;
+                            Object MobSpawner;
 
                             try {
                                 Field TileEntityMobSpawnerField = spawner.getClass().getDeclaredField("spawner");
