@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,31 +37,25 @@ import java.util.stream.Collectors;
 public class GuiBank extends Gui {
     private final SkyBlock plugin;
     private final BankManager bankManager;
-    private final PermissionManager permissionManager;
     private final Island island;
     private final FileConfiguration languageLoad;
-    private final FileConfiguration config;
-    private final Gui returnGui;
     private final boolean admin;
 
     public GuiBank(SkyBlock plugin, Island island, Gui returnGui, boolean admin) {
         super(2, returnGui);
         this.plugin = plugin;;
         this.bankManager = plugin.getBankManager();
-        this.permissionManager = plugin.getPermissionManager();
         this.island = island;
-        this.returnGui = returnGui;
         this.admin = admin;
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
-        this.config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
         setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
-        setTitle(TextUtils.formatText("Bank"));
+        setTitle(TextUtils.formatText(languageLoad.getString("Menu.Bank.Title")));
         paint();
     }
 
     @Override
-    public void onOpen(GuiManager manager, Player player) {
+    public void onOpen(@Nonnull GuiManager manager, @Nonnull Player player) {
         updateItem(13, // Balance
                 TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Balance.Displayname")),
                 TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Balance.Lore")
@@ -87,9 +82,7 @@ public class GuiBank extends Gui {
         });
 
         setButton(4, GuiUtils.createButtonItem(CompatibleMaterial.BOOK, // Transaction log
-                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Log.Displayname"))), (event) -> {
-            guiManager.showGUI(event.player, new GuiBankTransaction(plugin, island, this, admin));
-        });
+                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Log.Displayname"))), (event) -> guiManager.showGUI(event.player, new GuiBankTransaction(plugin, island, this, admin)));
 
         setButton(10, GuiUtils.createButtonItem(CompatibleMaterial.RED_DYE, // Deposit
                 TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Deposit.Displayname"))), (event -> {

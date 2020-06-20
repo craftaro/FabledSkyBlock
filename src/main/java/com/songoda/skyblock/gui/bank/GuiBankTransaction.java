@@ -114,7 +114,7 @@ public class GuiBankTransaction extends Gui {
                         im = is.getItemMeta();
                         if(im != null){
 
-                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Withdraw.DisplayName")
+                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Withdraw.Displayname")
                                     .replace("%dateTime", formatDate.format(transaction.timestamp))));
                             List<String> lore = new ArrayList<>();
                             switch (transaction.visibility){
@@ -140,7 +140,7 @@ public class GuiBankTransaction extends Gui {
                         im = is.getItemMeta();
                         if(im != null){
 
-                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Deposit.DisplayName")
+                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Deposit.Displayname")
                                     .replace("%dateTime", formatDate.format(transaction.timestamp))));
                             List<String> lore = new ArrayList<>();
                             switch (transaction.visibility){

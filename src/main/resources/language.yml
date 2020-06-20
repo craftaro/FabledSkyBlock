@@ -3316,10 +3316,10 @@ Menu:
         Lore: '&7Total transactions: %totalTransactions'
       Title: 'Transactions'
       Withdraw:
-        DisplayName: '&c%dateTime'
+        Displayname: '&c%dateTime'
         Format: '&7 %playerName withdrawn %amount'
       Deposit:
-        DisplayName: '&a%dateTime'
+        Displayname: '&a%dateTime'
         Format: '&7 %playerName deposited %amount'
       Admin: '&cAdmin&7'
       DateTimeFormat: 'dd/MM/yyyy HH:mm:ss'
