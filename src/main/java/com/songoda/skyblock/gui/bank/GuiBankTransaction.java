@@ -114,12 +114,12 @@ public class GuiBankTransaction extends Gui {
                         im = is.getItemMeta();
                         if(im != null){
 
-                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Withdraw.Displayname")
+                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Transactions.Withdraw.Displayname")
                                     .replace("%dateTime", formatDate.format(transaction.timestamp))));
                             List<String> lore = new ArrayList<>();
                             switch (transaction.visibility){
                                 case ADMIN:
-                                    name = languageLoad.getString("Menu.Bank.Word.Admin");
+                                    name = languageLoad.getString("Menu.Bank.Transactions.Admin");
                                     if(admin){
                                         name += " " + transaction.player.getName();
                                     }
@@ -128,7 +128,10 @@ public class GuiBankTransaction extends Gui {
                                     name = transaction.player.getName();
                                     break;
                             }
-                            lore.add(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Withdraw.Format")
+                            if(name == null){
+                                name = "null";
+                            }
+                            lore.add(TextUtils.formatText(languageLoad.getString("Menu.Bank.Transactions.Withdraw.Format")
                                     .replace("%playerName", name)
                                     .replace("%amount", String.valueOf(transaction.amount))));
                             im.setLore(lore);
@@ -140,8 +143,9 @@ public class GuiBankTransaction extends Gui {
                         im = is.getItemMeta();
                         if(im != null){
 
-                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Deposit.Displayname")
-                                    .replace("%dateTime", formatDate.format(transaction.timestamp))));
+                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Transactions.Deposit.Displayname")
+                                    .replace("%dateTime",
+                                            formatDate.format(transaction.timestamp))));
                             List<String> lore = new ArrayList<>();
                             switch (transaction.visibility){
                                 case ADMIN:
