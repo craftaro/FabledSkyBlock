@@ -240,7 +240,9 @@ public class Move implements Listener {
         final Player player = e.getPlayer();
         final WorldManager worldManager = skyblock.getWorldManager();
         if(e.getTo() != null && e.getTo().getWorld() != null){
-            e.getTo().getWorld().loadChunk(e.getTo().getChunk());
+            if(!e.isAsynchronous()){
+                e.getTo().getWorld().loadChunk(e.getTo().getChunk()); // Is that needed?
+            }
             if(worldManager.isIslandWorld(e.getTo().getWorld())
                     && (!e.getTo().getWorld().equals(e.getFrom().getWorld()) || e.getTo().distance(e.getFrom()) > 1.0d)){ // We should not care of self block tp
                 if(skyblock.getIslandManager().getIslandAtLocation(e.getTo()) == null){
