@@ -3198,21 +3198,43 @@ Menu:
     Title: 'Bank'
     Item:
       Exit:
-        Displayname: 'Exit'
-        Lore: 'Exits the Menu'
+        Displayname: '&cExit'
+        Lore: '&7Exits the Menu'
       Barrier:
         Displayname: '&cBank'
       Log:
-        Displayname: 'Transaction Log'
-        Empty: 'Looks like you haven''t got transactions'
+        Displayname: '&fTransaction Log'
+        Empty: '&7Looks like you haven''t got transactions'
       Deposit:
-        Displayname: 'Deposit'
-        Lore: 'Click to deposit your money. Everything or a custom ammount.'
+        Displayname: '&fDeposit'
+        Lore: '&7Click to deposit your money. Everything or a custom amount.'
       Withdraw:
-        Displayname: 'Withdraw'
-        Lore: 'Click to withdraw your money. Everything or a custom ammount.'
+        Displayname: '&fWithdraw'
+        Lore: '&7Click to withdraw your money. Everything or a custom amount.'
       Balance:
-        Displayname: 'Balance'
+        Displayname: '&fBalance'
+        Lore: '&7Bank balance: &6$%balance'
+      Next:
+        Displayname: '&aNext Page'
+      Last:
+        Displayname: '&aPrevious Page'
+    Transactions:
+      Info:
+        Displayname: '&fInfo'
+        Lore: '&7Total transactions: %totalTransactions'
+      Title: 'Transactions'
+      Withdraw:
+        DisplayName: '&c%dateTime'
+        Format: '&7 %playerName withdrawn %amount'
+      Deposit:
+        DisplayName: '&a%dateTime'
+        Format: '&7 %playerName deposited %amount'
+      Admin: '&cAdmin&7'
+      DateTimeFormat: 'dd/MM/yyyy HH:mm:ss'
+    Words:
+      Withdraw: 'Withdraw'
+      Deposit: 'Deposit'
+      Amount: 'Amount'
   Input:
     Title: 'Select amount.'
     Item:

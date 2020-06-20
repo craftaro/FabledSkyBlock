@@ -3,7 +3,6 @@ package com.songoda.skyblock.playerdata;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
-import com.songoda.skyblock.bank.Type;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;
 import com.songoda.skyblock.menus.MenuType;
@@ -59,12 +58,18 @@ public class PlayerData {
         FileConfiguration configLoad = getConfig().getFileConfiguration();
         for (int i = 0;i< configLoad.getInt("Bank.Transactions.Size");i++) {
             Transaction t = new Transaction();
-            t.action = Type.valueOf(configLoad.getString("Bank.Transactions."+i+".Action"));
-            t.ammount = Float.parseFloat(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Amount")));
+            t.action = Transaction.Type.valueOf(configLoad.getString("Bank.Transactions."+i+".Action"));
+            t.amount = Float.parseFloat(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Amount")));
             t.player = Bukkit.getOfflinePlayer(UUID.fromString(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Player"))));
             Date d = new Date();
             d.setTime(configLoad.getLong("Bank.Transactions."+i+".Date"));
             t.timestamp = d;
+            String visibility = configLoad.getString("Bank.Transactions."+i+".Visibility");
+            if(visibility != null){
+                t.visibility = Transaction.Visibility.valueOf(visibility);
+            } else {
+                t.visibility = Transaction.Visibility.USER; // Defaulting this as it's a new field
+            }
             transactions.add(t);
         }
     }
@@ -264,9 +269,10 @@ public class PlayerData {
             for (int i = 0; i < transactions.size(); i++) {
                 Transaction t = transactions.get(i);
                 configLoad.set("Bank.Transactions." + i + ".Action", t.action.name());
-                configLoad.set("Bank.Transactions." + i + ".Amount", t.ammount);
+                configLoad.set("Bank.Transactions." + i + ".Amount", t.amount);
                 configLoad.set("Bank.Transactions." + i + ".Player", t.player.getUniqueId().toString());
                 configLoad.set("Bank.Transactions." + i + ".Date", t.timestamp.getTime());
+                configLoad.set("Bank.Transactions." + i + ".Visibility", t.visibility.name());
             }
         }else {
             configLoad.set("Bank.Transactions.Size", 0);

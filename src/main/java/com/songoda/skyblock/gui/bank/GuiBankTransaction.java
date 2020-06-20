@@ -12,8 +12,11 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuiBankTransaction extends Gui {
@@ -24,14 +27,16 @@ public class GuiBankTransaction extends Gui {
     private final Gui returnGui;
     private final int transactions;
     private final List<Transaction> transactionList;
+    private final boolean admin;
 
-    public GuiBankTransaction(SkyBlock plugin, Island island, Gui returnGui) {
+    public GuiBankTransaction(SkyBlock plugin, Island island, Gui returnGui, boolean admin) {
         super(returnGui);
         this.plugin = plugin;
         this.bankManager = plugin.getBankManager();
         this.transactionList = bankManager.getTransactions(island.getOwnerUUID());
         this.transactions = this.transactionList.size();
         this.returnGui = returnGui;
+        this.admin = admin;
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
         this.config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
@@ -41,10 +46,10 @@ public class GuiBankTransaction extends Gui {
         } else if(transactions > 4*9){
             setRows(6);
         } else {
-            setRows(transactions%9+1);
+            setRows((int) (Math.ceil((double) transactions / 9d)+1));
         }
 
-        setTitle(TextUtils.formatText(languageLoad.getString("Menu.Settings.Title"))); // TODO Title
+        setTitle(TextUtils.formatText(languageLoad.getString("Menu.Bank.Transactions.Title")));
         setDefaultItem(null);
         paint();
     }
@@ -55,53 +60,114 @@ public class GuiBankTransaction extends Gui {
         setActionForRange(0, 0, 1, 8, null);
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
-                TextUtils.formatText(languageLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
+                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Exit.Displayname"))), (event) -> {
+            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            guiManager.showGUI(event.player, returnGui);
+        });
+
+        setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
+                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Exit.Displayname"))), (event) -> {
             CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
             guiManager.showGUI(event.player, returnGui);
         });
 
         setItem(4, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING, // Info
-                TextUtils.formatText(languageLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"))));
+                TextUtils.formatText(languageLoad.getString("Menu.Bank.Transactions.Info.Displayname")),
+                TextUtils.formatText(languageLoad.getString("Menu.Bank.Transactions.Info.Lore")
+                        .replace("%totalTransactions", String.valueOf(transactions)))));
 
-        this.pages = (int) Math.max(1, Math.ceil((double) transactions / 36d));
+        if(transactions > 0){
+            this.pages = (int) Math.max(1, Math.ceil((double) transactions / 36d));
 
-        if (page != 1)
-            setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                    TextUtils.formatText(languageLoad.getString("Menu.Settings.Categories.Item.Last.Displayname"))),
-                    (event) -> {
-                        page--;
-                        paint();
-                    });
+            if (page != 1)
+                setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                        TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Last.Displayname"))),
+                        (event) -> {
+                            page--;
+                            paint();
+                        });
 
-        if (page != pages)
-            setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                    TextUtils.formatText(languageLoad.getString("Menu.Settings.Categories.Item.Next.Displayname"))),
-                    (event) -> {
-                        page++;
-                        paint();
-                    });
+            if (page != pages)
+                setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                        TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Next.Displayname"))),
+                        (event) -> {
+                            page++;
+                            paint();
+                        });
 
-        for (int i = 9; i < 45; i++) { // TODO dynamic dimension!
-            int current = ((page - 1) * 36) - 9;
-            if (current + i >= transactions) {
-                setItem(i, null);
-                continue;
+            for (int i = 9; i < ((getRows()-1)*9)+9; i++) { // TODO check dynamic dimension!
+                int current = ((page - 1) * 36) - 9;
+                if (current + i >= transactions) {
+                    setItem(i, null);
+                    continue;
+                }
+                Transaction transaction = transactionList.get(current + i);
+                if (transaction == null) continue;
+
+                ItemStack is = null;
+                ItemMeta im;
+                String name = "";
+                SimpleDateFormat formatDate = new SimpleDateFormat(languageLoad.getString("Menu.Bank.Item.Transactions.DateTimeFormat", "dd/MM/yyyy HH:mm:ss"));
+                switch(transaction.action){
+                    case WITHDRAW:
+                        is = CompatibleMaterial.RED_DYE.getItem();
+                        im = is.getItemMeta();
+                        if(im != null){
+
+                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Withdraw.DisplayName")
+                                    .replace("%dateTime", formatDate.format(transaction.timestamp))));
+                            List<String> lore = new ArrayList<>();
+                            switch (transaction.visibility){
+                                case ADMIN:
+                                    name = languageLoad.getString("Menu.Bank.Word.Admin");
+                                    if(admin){
+                                        name += " " + transaction.player.getName();
+                                    }
+                                    break;
+                                case USER:
+                                    name = transaction.player.getName();
+                                    break;
+                            }
+                            lore.add(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Withdraw.Format")
+                                    .replace("%playerName", name)
+                                    .replace("%amount", String.valueOf(transaction.amount))));
+                            im.setLore(lore);
+                            is.setItemMeta(im);
+                        }
+                        break;
+                    case DEPOSIT:
+                        is = CompatibleMaterial.GREEN_DYE.getItem();
+                        im = is.getItemMeta();
+                        if(im != null){
+
+                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Transactions.Deposit.DisplayName")
+                                    .replace("%dateTime", formatDate.format(transaction.timestamp))));
+                            List<String> lore = new ArrayList<>();
+                            switch (transaction.visibility){
+                                case ADMIN:
+                                    name = languageLoad.getString("Menu.Bank.Word.Admin");
+                                    if(admin){
+                                        name += transaction.player.getName();
+                                    }
+                                    break;
+                                case USER:
+                                    name = transaction.player.getName();
+                                    break;
+                            }
+                            lore.add(TextUtils.formatText(languageLoad.getString("Menu.Bank.Transactions.Deposit.Format")
+                                    .replace("%playerName", name)
+                                    .replace("%amount", String.valueOf(transaction.amount))));
+                            im.setLore(lore);
+                            is.setItemMeta(im);
+                        }
+                        break;
+                }
+
+                setItem(i, is);
             }
-            Transaction transaction = transactionList.get(current + i);
-            if (transaction == null) continue;
-
-            ItemStack is = null;
-            switch(transaction.action){
-                case WITHDRAW:
-                    is = CompatibleMaterial.GREEN_DYE.getItem();
-                    break;
-                case DEPOSIT:
-                    is = CompatibleMaterial.RED_DYE.getItem();
-                    break;
-            }
-
-            // TODO set item meta
-            setItem(i, is);
+        } else {
+            setItem(31, CompatibleMaterial.BARRIER.getItem());
         }
+
     }
 }

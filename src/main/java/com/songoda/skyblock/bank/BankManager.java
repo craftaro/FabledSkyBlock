@@ -1,9 +1,14 @@
 package com.songoda.skyblock.bank;
 
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.utils.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -11,17 +16,14 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class BankManager {
     private static BankManager instance;
 
     public static BankManager getInstance() {return instance == null ? instance = new BankManager() : instance;}
 
-    private HashMap<UUID, List<Transaction>> log;
+    private final HashMap<UUID, List<Transaction>> log;
 
     public FileConfiguration lang;
 
@@ -100,5 +102,84 @@ public class BankManager {
 
     public List<Transaction> getTransactionList(UUID uuid) {
         return log.get(uuid);
+    }
+
+    public BankResponse deposit(Player player, Island island, double amt, boolean admin) {
+        SkyBlock skyblock = SkyBlock.getInstance();
+        FileManager fileManager = skyblock.getFileManager();
+
+        // Make sure the amount is positive
+        if (amt <= 0) {
+            return BankResponse.NEGATIVE_AMOUNT;
+        }
+
+        // If decimals aren't allowed, check for them
+        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+            int intAmt = (int) amt;
+            if (intAmt != amt) {
+                return BankResponse.DECIMALS_NOT_ALLOWED;
+            }
+        }
+
+        if(!admin) {
+            if (!EconomyManager.hasBalance(player, amt)) {
+                return BankResponse.NOT_ENOUGH_MONEY;
+            }
+
+            EconomyManager.withdrawBalance(player, amt);
+        }
+
+        island.addToBank(amt);
+        Transaction t = new Transaction();
+        t.player = player;
+        t.amount = (float) amt;
+        t.timestamp = Calendar.getInstance().getTime();
+        t.action = Transaction.Type.DEPOSIT;
+        t.visibility = admin ? Transaction.Visibility.ADMIN : Transaction.Visibility.USER;
+        this.addTransaction(player, t);
+        return BankResponse.SUCCESS;
+    }
+
+    public BankResponse withdraw(Player player, Island island, double amt, boolean admin) {
+        SkyBlock skyblock = SkyBlock.getInstance();
+        FileManager fileManager = skyblock.getFileManager();
+
+        // Make sure the amount is positive
+        if (amt <= 0) {
+            return BankResponse.NEGATIVE_AMOUNT;
+        }
+
+        // If decimals aren't allowed, check for them
+        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+            int intAmt = (int) amt;
+            if (intAmt != amt) {
+                return BankResponse.DECIMALS_NOT_ALLOWED;
+            }
+        }
+
+        if(!admin){
+            if (amt > island.getBankBalance()) {
+                return BankResponse.NOT_ENOUGH_MONEY;
+            }
+
+            EconomyManager.deposit(player, amt);
+        }
+
+        island.removeFromBank(amt);
+        Transaction t = new Transaction();
+        t.player = player;
+        t.amount = (float) amt;
+        t.timestamp = Calendar.getInstance().getTime();
+        t.action = Transaction.Type.WITHDRAW;
+        t.visibility = admin ? Transaction.Visibility.ADMIN : Transaction.Visibility.USER;
+        this.addTransaction(player, t);
+        return BankResponse.SUCCESS;
+    }
+
+    public enum BankResponse{
+        NOT_ENOUGH_MONEY,
+        DECIMALS_NOT_ALLOWED,
+        NEGATIVE_AMOUNT,
+        SUCCESS
     }
 }
