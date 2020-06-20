@@ -16,6 +16,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -111,6 +112,13 @@ public class Entity implements Listener {
             skyblock.getPermissionManager()
                     .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()), true);
 
+        } else if((event.getDamager() instanceof org.bukkit.entity.Projectile
+                    && ((Projectile) event.getDamager()).getShooter() instanceof Player)
+                && (event.getEntity().getType().equals(EntityType.ARMOR_STAND)
+                    || event.getEntity().getType().equals(EntityType.ITEM_FRAME))){
+            Player player = (Player) ((Projectile) event.getDamager()).getShooter();
+            skyblock.getPermissionManager()
+                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
         } else { // Make it work with all the entities, not just TNT
             org.bukkit.entity.Entity entity = event.getEntity();
 
