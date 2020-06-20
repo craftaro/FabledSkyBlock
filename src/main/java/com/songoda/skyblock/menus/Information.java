@@ -346,7 +346,7 @@ public class Information {
                                     new Placeholder[]{
                                             new Placeholder("%island_members",
                                                     "" + (islandMembers.size() + islandOperators.size() + 1)),
-                                            new Placeholder("%island_maxMembers", // %island_capacity
+                                            new Placeholder("%island_capacity", // %island_capacity
                                                     "" + island.getMaxMembers()),
                                             new Placeholder("%members", "" + islandMembers.size()),
                                             new Placeholder("%operators", "" + islandOperators.size())},

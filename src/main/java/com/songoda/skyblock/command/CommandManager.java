@@ -114,7 +114,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 new StructureCommand(),
                 new com.songoda.skyblock.command.commands.admin.UpgradeCommand(),
                 new StackableCommand(),
-                new AdminBank()
+                new AdminBank(),
+                new SetMaxMembers()
         );
     }
 

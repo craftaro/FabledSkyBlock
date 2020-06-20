@@ -60,7 +60,7 @@ public class Island {
         this.size = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getInt("Island.Size.Minimum");
         this.maxMembers = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
-                .getInt("Island.InitialMaxMembers", 3);
+                .getInt("Island.Member.Capacity", 3);
 
         if (this.size > 1000) {
             this.size = 50;

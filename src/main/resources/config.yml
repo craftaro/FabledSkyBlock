@@ -9,7 +9,6 @@ Sound:
     # When disabled all sounds will be disabled.
     Enable: true
 Island:
-    InitialMaxMembers: 3
     Size:
         # [!] Do not go over 1000 for both of these options.
         # The size of an Island when created.
@@ -91,6 +90,7 @@ Island:
                 Height: 60
     Member:
         # Max amount of players allowed to be in a team.
+        # Can be increased with Upgrades
         Capacity: 12
     Chat:
         # If island chat should be output to console

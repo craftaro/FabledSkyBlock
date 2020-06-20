@@ -1219,7 +1219,7 @@ public class Upgrade {
                                                 configLoad.getString("Menu.Admin.Upgrade.Members.Item.Tier.Displayname")
                                                         .replace("%tier", "" + tier)),
                                         configLoad.getStringList("Menu.Admin.Upgrade.Members.Item.Tier.Lore"),
-                                        new Placeholder[]{new Placeholder("%members", "" + upgrade.getValue()),
+                                        new Placeholder[]{new Placeholder("%maxMembers", "" + upgrade.getValue()),
                                                 new Placeholder("%cost",
                                                         NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
                                         null, null), i + 3);

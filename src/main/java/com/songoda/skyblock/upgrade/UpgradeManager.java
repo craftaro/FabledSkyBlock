@@ -26,7 +26,7 @@ public class UpgradeManager {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (Upgrade.Type typeList : Upgrade.Type.values()) {
-            if (typeList != Upgrade.Type.Size) {
+            if (typeList != Upgrade.Type.Size && typeList != Upgrade.Type.Members) {
                 List<Upgrade> upgrades = new ArrayList<>();
 
                 Upgrade upgrade = new Upgrade(configLoad.getDouble("Upgrades." + typeList.name() + ".Cost"));

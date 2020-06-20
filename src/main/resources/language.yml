@@ -1756,7 +1756,7 @@ Menu:
             - ''
             - '&eClick to manage tiers!'
           Members:
-            Displayname: '&aBorder Size'
+            Displayname: '&aMax Members'
             Lore:
               - '&7Increases the max amount'
               - '&7of Island members.'
@@ -1864,7 +1864,7 @@ Menu:
               - '&7Max members&8: &f%maxMembers'
               - '&7Cost&8: &f$%cost'
               - ''
-              - '&eLeft-Click to set size!'
+              - '&eLeft-Click to set value!'
               - '&eMiddle-Click to remove!'
               - '&eRight-Click to set cost!'
             Displayname: '&bTier #%tier'
