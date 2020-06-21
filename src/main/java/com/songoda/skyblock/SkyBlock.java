@@ -27,7 +27,6 @@ import com.songoda.skyblock.levelling.rework.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import com.songoda.skyblock.listeners.*;
 import com.songoda.skyblock.localization.LocalizationManager;
-import com.songoda.skyblock.menus.Rollback;
 import com.songoda.skyblock.menus.admin.Creator;
 import com.songoda.skyblock.menus.admin.Generator;
 import com.songoda.skyblock.menus.admin.Levelling;
@@ -190,8 +189,7 @@ public class SkyBlock extends SongodaPlugin {
         if (pluginManager.isPluginEnabled("EpicSpawners")) pluginManager.registerEvents(new EpicSpawners(this), this);
         if (pluginManager.isPluginEnabled("UltimateStacker"))
             pluginManager.registerEvents(new UltimateStacker(this), this);
-
-        pluginManager.registerEvents(new Rollback(), this);
+        
         pluginManager.registerEvents(new Levelling(), this);
         pluginManager.registerEvents(new Generator(), this);
         pluginManager.registerEvents(new Creator(), this);
