@@ -82,118 +82,20 @@ public class GuiBank extends Gui {
         });
 
         setButton(4, GuiUtils.createButtonItem(CompatibleMaterial.BOOK, // Transaction log
-                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Log.Displayname"))), (event) -> guiManager.showGUI(event.player, new GuiBankTransaction(plugin, island, this, admin)));
+                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Log.Displayname"))), (event) ->
+                guiManager.showGUI(event.player, new GuiBankTransaction(plugin, island, this, admin)));
 
-        setButton(10, GuiUtils.createButtonItem(CompatibleMaterial.RED_DYE, // Deposit
-                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Deposit.Displayname"))), (event -> {
-            AnvilGui gui = new AnvilGui(event.player, this);
-            gui.setAction((e -> {
-                MessageManager messageManager = plugin.getMessageManager();
-
-                double amount;
-                try {
-                    amount = Double.parseDouble(gui.getInputText().trim());
-                } catch (NumberFormatException e1) {
-                    messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short4.Message"));
-                    CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
-                    return;
-                }
-                BankManager.BankResponse response = bankManager.deposit(e.player, island, amount, admin);
-
-                switch(response){
-                    case NOT_ENOUGH_MONEY:
-                        messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short2.Message"));
-                        CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
-                        break;
-                    case DECIMALS_NOT_ALLOWED:
-                        messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short6.Message"));
-                        CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
-                        break;
-                    case NEGATIVE_AMOUNT:
-                        messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short5.Message"));
-                        CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
-                        break;
-                    case SUCCESS:
-                        CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.play(e.player);
-                        messageManager.sendMessage(e.player, Objects.requireNonNull(languageLoad.getString("Command.Island.Bank.Deposit.Message")).replace(
-                                "%amount%", NumberUtil.formatNumberByDecimal(amount)));
-                        break;
-                }
-
-                e.player.closeInventory();
-                // paint();
-                guiManager.showGUI(event.player, this);
-            }));
-
-            ItemStack input = CompatibleMaterial.PAPER.getItem();
-            ItemMeta im = input.getItemMeta();
-            if(im != null){
-                im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Words.Amount")));
-                input.setItemMeta(im);
-            }
-
-            gui.setInput(input);
-            gui.setTitle(TextUtils.formatText(languageLoad.getString("Menu.Bank.Words.Deposit")));
-            guiManager.showGUI(event.player, gui);
-        }));
+        setButton(10, GuiUtils.createButtonItem(CompatibleMaterial.GREEN_DYE, // Deposit
+                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Deposit.Displayname"))), (event) ->
+                guiManager.showGUI(event.player, new GuiBankSelector(plugin, island, this, GuiBankSelector.Type.DEPOSIT, admin)));
 
         setItem(13, GuiUtils.createButtonItem(CompatibleMaterial.GOLD_INGOT, // Balance
                 TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Balance.Displayname")),
                 TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Balance.Lore")
                         .replace("%balance", String.valueOf(island.getBankBalance())))));
 
-        setButton(16, GuiUtils.createButtonItem(CompatibleMaterial.GREEN_DYE, // WithDraw
-                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Withdraw.Displayname"))), (event) -> {
-            AnvilGui gui = new AnvilGui(event.player, this);
-            gui.setAction((e -> {
-                MessageManager messageManager = plugin.getMessageManager();
-
-                double amount;
-                try {
-                    amount = Double.parseDouble(gui.getInputText().trim());
-                } catch (NumberFormatException e1) {
-                    messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short4.Message"));
-                    CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
-                    return;
-                }
-
-                BankManager.BankResponse response = bankManager.withdraw(e.player, island, amount, admin);
-
-                switch(response){
-                    case NOT_ENOUGH_MONEY:
-                        messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short2.Message"));
-                        CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
-                        break;
-                    case DECIMALS_NOT_ALLOWED:
-                        messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short6.Message"));
-                        CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
-                        break;
-                    case NEGATIVE_AMOUNT:
-                        messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short5.Message"));
-                        CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
-                        break;
-                    case SUCCESS:
-                        CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.play(e.player);
-                        messageManager.sendMessage(e.player, Objects.requireNonNull(languageLoad.getString("Command.Island.Bank.Withdraw.Message")).replace(
-                                "%amount%", NumberUtil.formatNumberByDecimal(amount)));
-                        break;
-                }
-
-                e.player.closeInventory();
-                // paint();
-                guiManager.showGUI(event.player, this);
-            }));
-
-            ItemStack input = CompatibleMaterial.PAPER.getItem();
-            ItemMeta im = input.getItemMeta();
-            if(im != null){
-                im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Words.Amount")));
-                input.setItemMeta(im);
-            }
-
-            gui.setInput(input);
-            gui.setTitle(TextUtils.formatText(languageLoad.getString("Menu.Bank.Words.Withdraw")));
-            guiManager.showGUI(event.player, gui);
-        });
+        setButton(16, GuiUtils.createButtonItem(CompatibleMaterial.RED_DYE, // Withdraw
+                TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Withdraw.Displayname"))), (event) ->
+                guiManager.showGUI(event.player, new GuiBankSelector(plugin, island, this, GuiBankSelector.Type.WITHDRAW, admin)));
     }
 }

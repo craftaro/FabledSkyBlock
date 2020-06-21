@@ -3331,17 +3331,14 @@ Menu:
     Title: 'Select amount.'
     Item:
       All:
-        Displayname: 'All'
+        Displayname: '&fAll'
         Lore: '%action% all available.'
       Custom:
-        Displayname: 'Custom'
+        Displayname: '&fCustom'
         Lore: '%action% a custom amount.'
-      Barrier:
-        Displayname: ' '
-        Lore: ' '
       Exit:
-        Displayname: 'Exit'
-        Lore: "Closes the menu."
+        Displayname: '&cExit'
+        Lore: '&7Exits the Menu'
 Placeholder:
   fabledskyblock_leaderboard_votes:
     Empty:
