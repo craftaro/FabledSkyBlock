@@ -70,7 +70,7 @@ public class GuiBans extends Gui {
         if(bans.size() == 0){
             setItem(31, CompatibleMaterial.BARRIER.getItem());
         } else {
-            for (int i = 9; i < ((getRows()-2)*9)+18; i++) { // TODO check dynamic dimension!
+            for (int i = 9; i < ((getRows()-2)*9)+18; i++) { // TODO check dynamic dimension! - Arrows!
                 int current = ((page - 1) * 36) - 18;
                 if (current + i >= bans.size()) {
                     setItem(i, null);
@@ -109,7 +109,7 @@ public class GuiBans extends Gui {
 
                 setButton(i, is, e -> {
                     String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName()); // TODO Check if it actually works
-                    Bukkit.getServer().dispatchCommand(e.player, "island unban " + playerName);
+                    Bukkit.getServer().dispatchCommand(e.player, "island unban " + playerName); // TODO Command or APIs?
                 });
             }
         }

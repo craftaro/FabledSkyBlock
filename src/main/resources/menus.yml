@@ -79,7 +79,7 @@ GUI:
             Empty: 
                 Material: BARRIER
                 Position: 31
-                DisplayName: "&cBank"
+                DisplayName: "&cNo transactions"
                 Lore: []
             Info:
                 Material: PAINTING
@@ -103,12 +103,55 @@ GUI:
                 Material: ARROW
                 Position: 50
                 Displayname: '&a&lPrevious Page'
-                Lore: 
-                    - '&7 {PLAYERNAME} withdrawn {AMOUNT}'
+                Lore: []
             NextPage:
                 Material: ARROW
                 Position: 54
                 Displayname: '&a&lNext Page'
-                Lore: 
-                    - '&7 {PLAYERNAME} withdrawn {AMOUNT}'
+                Lore: []
+    Bans:
+        Title: '&8Island bans'
+        Exit1: 
+            Material: OAK_FENCE_GATE
+            Position: 0
+            DisplayName: "&cExit"
+            Lore: 
+                - "&7Exits the Menu"
+        Exit2: 
+            Material: OAK_FENCE_GATE
+            Position: 8
+            DisplayName: "&cExit"
+            Lore: 
+                - "&7Exits the Menu"
+        PrevPage:
+            Material: ARROW
+            Position: 50
+            Displayname: '&a&lPrevious Page'
+            Lore: []
+        NextPage:
+            Material: ARROW
+            Position: 54
+            Displayname: '&a&lNext Page'
+            Lore: []
+        Empty:
+            Material: BARRIER
+            Position: 31
+            Displayname: '&cNo banned users'
+            Lore: []
+        Head:
+            Displayname: '&a{PLAYERNAME}'
+            Lore: 
+                - ''
+                - '&eClick to Unban player!'
+        Info:
+            Material: PAINTING
+            Position: 4
+            Displayname: '&bInformations'
+            Lore: 
+                - '&7Prevent certain players'
+                - '&7from entering your Island'
+                - '&7by banning them.'
+                - ''
+                - '&eClick to ban a player!'
+        
         
