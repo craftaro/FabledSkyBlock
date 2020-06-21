@@ -66,7 +66,7 @@ public class GuiBankSelector extends Gui {
             event.player.closeInventory();
         });
 
-        String action = "";
+        String action;
         switch(type){
             case DEPOSIT:
                 action = "Deposit";

@@ -1,0 +1,114 @@
+GUI:
+    Bank:
+        Main:
+            Title: 'Bank'
+            Placeholder: 
+                Material: BLACK_STAINED_GLASS_PANE
+                DisplayName: "&fBank"
+                Lore: []
+            Exit1: 
+                Material: OAK_FENCE_GATE
+                Position: 0
+                DisplayName: "&cExit"
+                Lore: 
+                    - "&7Exits the Menu"
+            Exit2: 
+                Material: OAK_FENCE_GATE
+                Position: 8
+                DisplayName: "&cExit"
+                Lore: 
+                    - "&7Exits the Menu"
+            Transaction: 
+                Material: BOOK
+                Position: 4
+                DisplayName: "&fTransaction log"
+                Lore: 
+                    - "Click to view full log"
+            Balance: 
+                Material: GOLD_INGOT
+                Position: 13
+                DisplayName: "&fBalance"
+                Lore: 
+                    - "&7Bank balance: &6${BALANCE}"
+            Deposit: 
+                Material: GREEN_DYE
+                Position: 10
+                DisplayName: "&a{DATETIME}"
+                Lore: 
+                    - '&7Click to deposit your money. Everything or a custom amount.'
+            Withdraw:
+                Material: RED_DYE
+                Position: 16
+                DisplayName: "&c{DATETIME}"
+                Lore: 
+                    - '&7Click to withdraw your money. Everything or a custom amount.'
+        Selector:
+            Title: 'Select amount'
+            Placeholder: 
+                Material: BLACK_STAINED_GLASS_PANE
+                DisplayName: "&fBank"
+                Lore: []
+            Exit1: 
+                Material: OAK_FENCE_GATE
+                Position: 0
+                DisplayName: "&cExit"
+                Lore: 
+                    - "&7Exits the Menu"
+            Exit2: 
+                Material: OAK_FENCE_GATE
+                Position: 8
+                DisplayName: "&cExit"
+                Lore: 
+                    - "&7Exits the Menu"
+            All: 
+                Material: GOLD_BLOCK
+                Position: 2
+                DisplayName: "&fAll"
+                Lore: []
+            Custom: 
+                Material: PAPER
+                Position: 6
+                DisplayName: "&fCustom"
+                Lore: []
+        Transactions:
+            Title: 'Transactions'
+            Placeholder: 
+                Material: AIR
+                DisplayName: ""
+                Lore: []
+            Empty: 
+                Material: BARRIER
+                Position: 31
+                DisplayName: "&cBank"
+                Lore: []
+            Info:
+                Material: PAINTING
+                Position: 31
+                Displayname: '&fInfo'
+                Lore: 
+                    - '&7Total transactions: {TRANSACTIONS}'
+            Deposit:
+                Material: GREEN_DYE
+                Position: 31
+                Displayname: '&a%dateTime'
+                Lore: 
+                    - '&7 {PLAYERNAME} deposited {AMOUNT}'
+            Withdraw:
+                Material: RED_DYE
+                Position: 31
+                Displayname: '&c%dateTime'
+                Lore: 
+                    - '&7 {PLAYERNAME} withdrawn {AMOUNT}'
+            PrevPage:
+                Material: ARROW
+                Position: 50
+                Displayname: '&a&lPrevious Page'
+                Lore: 
+                    - '&7 {PLAYERNAME} withdrawn {AMOUNT}'
+            NextPage:
+                Material: ARROW
+                Position: 54
+                Displayname: '&a&lNext Page'
+                Lore: 
+                    - '&7 {PLAYERNAME} withdrawn {AMOUNT}'
+        

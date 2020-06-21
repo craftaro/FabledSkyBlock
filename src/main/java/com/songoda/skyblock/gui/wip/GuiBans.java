@@ -39,12 +39,16 @@ public class GuiBans extends Gui {
         this.island = island;
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
-        setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
+        setDefaultItem(null);
         setTitle(TextUtils.formatText("Bans"));
         paint();
     }
 
     public void paint() {
+        if (inventory != null)
+            inventory.clear();
+        setActionForRange(0, 0, 1, 8, null);
+
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Bans.Item.Exit.Displayname"))), (event) -> {
             CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
