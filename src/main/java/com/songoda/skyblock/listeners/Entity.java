@@ -423,6 +423,10 @@ public class Entity implements Listener {
                                 removeBlockFromLevel(island, block);
                             }
 
+                            if(skyblock.getCoreProtectAPI() != null) {
+                                skyblock.getCoreProtectAPI().logRemoval("#" + entity.getType().toString().toLowerCase(), block.getLocation(), material.getMaterial(), null);
+                            }
+
                             it.remove();
                             if(!removed){
                                 removed = true;
