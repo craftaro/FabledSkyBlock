@@ -212,6 +212,6 @@ public class Scoreboard {
             displayLine = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, displayLine);
         }
 
-        return displayLine.replace("§", "&"); // Returning unformatted line to avoid issues in next step
+        return displayLine.replace(String.valueOf(ChatColor.COLOR_CHAR), "&"); // Returning unformatted line to avoid issues in next step
     }
 }
