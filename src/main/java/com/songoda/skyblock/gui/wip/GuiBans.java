@@ -70,7 +70,25 @@ public class GuiBans extends Gui {
         if(bans.size() == 0){
             setItem(31, CompatibleMaterial.BARRIER.getItem());
         } else {
-            for (int i = 9; i < ((getRows()-2)*9)+18; i++) { // TODO check dynamic dimension! - Arrows!
+            this.pages = (int) Math.max(1, Math.ceil((double) bans.size() / 36d));
+
+            if (page != 1)
+                setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                        TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Last.Displayname"))),
+                        (event) -> {
+                            page--;
+                            paint();
+                        });
+
+            if (page != pages)
+                setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                        TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Next.Displayname"))),
+                        (event) -> {
+                            page++;
+                            paint();
+                        });
+
+            for (int i = 9; i < ((getRows()-2)*9)+18; i++) {
                 int current = ((page - 1) * 36) - 18;
                 if (current + i >= bans.size()) {
                     setItem(i, null);
