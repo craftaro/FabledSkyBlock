@@ -78,7 +78,7 @@ public class Block implements Listener {
                 CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
                 byte data = block.getData();
 
-                int droppedAmount = 0;
+                int droppedAmount;
                 if (event.getPlayer().isSneaking()) {
                     Location dropLoc = blockLocation.clone().add(0.5, 0.5, 0.5);
                     int count = stackable.getSize();
@@ -94,6 +94,10 @@ public class Block implements Listener {
                     block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5), new ItemStack(material.getMaterial(), 1, data));
                     stackable.takeOne();
                     droppedAmount = 1;
+                }
+
+                if(skyblock.getCoreProtectAPI() != null) {
+                    skyblock.getCoreProtectAPI().logRemoval(player.getName(), block.getLocation(), material.getMaterial(), null);
                 }
 
                 if (stackable.getSize() <= 1) {

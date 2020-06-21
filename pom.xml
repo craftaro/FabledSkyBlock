@@ -196,5 +196,11 @@
 			<scope>provided</scope>
 			<version>4.9.0.6</version>
 		</dependency>
+		<dependency>
+			<groupId>net</groupId>
+			<artifactId>coreprotect</artifactId>
+			<scope>provided</scope>
+			<version>2.18.2</version>
+		</dependency>
 	</dependencies>
 </project>

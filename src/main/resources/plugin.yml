@@ -5,7 +5,8 @@ api-version: 1.13
 description: A unique SkyBlock plugin
 author: Songoda
 authors: [Fabrimat]
-softdepend: [HolographicDisplays, Holograms, CMI, PlaceholderAPI, MVdWPlaceholderAPI, Vault, Reserve, LeaderHeads, EpicSpawners, WildStacker, UltimateStacker, WorldEdit, Residence]
+softdepend: [HolographicDisplays, Holograms, CMI, PlaceholderAPI, MVdWPlaceholderAPI, Vault, Reserve, LeaderHeads,
+             EpicSpawners, WildStacker, UltimateStacker, WorldEdit, Residence, CoreProtect]
 loadbefore: [Multiverse-Core, ProtocolLib]
 commands:
     island:

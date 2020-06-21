@@ -45,10 +45,13 @@ import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.visit.VisitTask;
 import com.songoda.skyblock.world.WorldManager;
 import com.songoda.skyblock.world.generator.VoidGenerator;
+import net.coreprotect.CoreProtect;
+import net.coreprotect.CoreProtectAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import java.io.File;
@@ -87,6 +90,8 @@ public class SkyBlock extends SongodaPlugin {
     private FabledChallenge fabledChallenge;
     private BankManager bankManager;
     private PermissionManager permissionManager;
+
+    private CoreProtectAPI coreProtectAPI;
 
     private final GuiManager guiManager = new GuiManager(this);
 
@@ -196,6 +201,8 @@ public class SkyBlock extends SongodaPlugin {
 
         this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
 
+        this.coreProtectAPI = loadCoreProtect();
+
         SkyBlockAPI.setImplementation(INSTANCE);
     }
 
@@ -238,6 +245,24 @@ public class SkyBlock extends SongodaPlugin {
         }
 
         HandlerList.unregisterAll(this);
+    }
+
+    private CoreProtectAPI loadCoreProtect() {
+        Plugin plugin = getServer().getPluginManager().getPlugin("CoreProtect");
+
+
+        if (plugin != null) { // Check before loading classes
+            if (plugin instanceof CoreProtect) { // Check that CoreProtect is loaded
+                CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
+                if (CoreProtect.isEnabled()) { // Check that the API is enabled
+                    if (CoreProtect.APIVersion() >= 6) { // Check that a compatible version of the API is loaded
+                        return CoreProtect;
+                    }
+                }
+            }
+        }
+        return null;
+
     }
 
     @Override
@@ -385,5 +410,9 @@ public class SkyBlock extends SongodaPlugin {
 
     public GuiManager getGuiManager() {
         return guiManager;
+    }
+
+    public CoreProtectAPI getCoreProtectAPI() {
+        return coreProtectAPI;
     }
 }

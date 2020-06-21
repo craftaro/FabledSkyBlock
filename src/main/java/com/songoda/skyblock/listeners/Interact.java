@@ -236,6 +236,10 @@ public class Interact implements Listener {
                     event.setCancelled(true);
                 }
 
+                if(skyblock.getCoreProtectAPI() != null && material != null) {
+                    skyblock.getCoreProtectAPI().logPlacement(player.getName(), location, material.getMaterial(), null);
+                }
+
                 if (player.getGameMode() != GameMode.CREATIVE)
                     ItemUtils.takeActiveItem(player, CompatibleHand.getHand(event), itemAmount);
 
