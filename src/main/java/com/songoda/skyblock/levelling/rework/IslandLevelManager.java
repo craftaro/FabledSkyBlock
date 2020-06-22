@@ -37,8 +37,10 @@ public final class IslandLevelManager {
     private Map<Island, IslandScan> inScan;
     private Map<CompatibleMaterial, Long> worth;
     private Map<CompatibleMaterial, AmountMaterialPair> cachedPairs;
+    private final SkyBlock plugin;
 
-    public IslandLevelManager() {
+    public IslandLevelManager(SkyBlock plugin) {
+        this.plugin = plugin;
         this.inScan = new HashMap<>();
         this.worth = new EnumMap<>(CompatibleMaterial.class);
         this.cachedPairs = new EnumMap<>(CompatibleMaterial.class);
@@ -46,8 +48,7 @@ public final class IslandLevelManager {
         reloadWorth();
     }
 
-    public void startScan(Player attemptScanner, Island island) {
-
+    public void startScan(Player attemptScanner, Island island){
         if (!Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTask(SkyBlock.getInstance(), () -> startScan(attemptScanner, island));
             return;
@@ -73,7 +74,7 @@ public final class IslandLevelManager {
             messageManager.sendMessage(attemptScanner, config.getString("Command.Island.Level.Scanning.Started.Message"));
         }
 
-        inScan.put(island, new IslandScan(island).start());
+        inScan.put(island, new IslandScan(plugin, island).start());
     }
 
     public boolean isScanning(Island island) {

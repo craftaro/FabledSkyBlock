@@ -93,6 +93,8 @@ public class SkyBlock extends SongodaPlugin {
 
     private CoreProtectAPI coreProtectAPI;
 
+    private boolean paper;
+
     private final GuiManager guiManager = new GuiManager(this);
 
     public static SkyBlock getInstance() {
@@ -106,6 +108,14 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onPluginEnable() {
+
+        paper = false;
+        try {
+            Class.forName("com.destroystokyo.paper.PaperConfig");
+            paper = true;
+            Bukkit.getLogger().info("Enabling Paper hooks");
+        } catch (ClassNotFoundException ignored) {}
+
         // Run Songoda Updater
         SongodaCore.registerPlugin(this, 17, CompatibleMaterial.GRASS_BLOCK);
 
@@ -135,7 +145,7 @@ public class SkyBlock extends SongodaPlugin {
 
         inviteManager = new InviteManager(this);
         biomeManager = new BiomeManager(this);
-        levellingManager = new IslandLevelManager();
+        levellingManager = new IslandLevelManager(this);
         commandManager = new CommandManager(this);
         structureManager = new StructureManager(this);
         soundManager = new SoundManager(this);
@@ -414,5 +424,9 @@ public class SkyBlock extends SongodaPlugin {
 
     public CoreProtectAPI getCoreProtectAPI() {
         return coreProtectAPI;
+    }
+
+    public boolean isPaper() {
+        return paper;
     }
 }

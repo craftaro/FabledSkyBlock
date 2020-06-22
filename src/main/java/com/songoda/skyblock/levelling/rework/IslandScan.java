@@ -12,10 +12,7 @@ import com.songoda.skyblock.levelling.ChunkUtil;
 import com.songoda.skyblock.levelling.rework.amount.AmountMaterialPair;
 import com.songoda.skyblock.levelling.rework.amount.BlockAmount;
 import com.songoda.skyblock.message.MessageManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -25,6 +22,7 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public final class IslandScan extends BukkitRunnable {
@@ -37,13 +35,15 @@ public final class IslandScan extends BukkitRunnable {
     private final Map<CompatibleMaterial, BlockAmount> amounts;
     private final Configuration language;
     private final int runEveryX;
+    private final SkyBlock plugin;
 
     private int totalScanned;
     private int blocksSize;
     private Queue<BlockInfo> blocks;
 
-    public IslandScan(Island island) {
+    public IslandScan(SkyBlock plugin, Island island) {
         if (island == null) throw new IllegalArgumentException("island cannot be null");
+        this.plugin = plugin;
         this.island = island;
         this.amounts = new EnumMap<>(CompatibleMaterial.class);
         this.language = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration();
@@ -62,16 +62,34 @@ public final class IslandScan extends BukkitRunnable {
 
         final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
 
-        populate(snapshots, IslandWorld.Normal);
-        if (hasNether) populate(snapshots, IslandWorld.Nether);
-        if (hasEnd) populate(snapshots, IslandWorld.End);
 
-        BlockScanner.startScanner(snapshots, (blocks) -> {
-            this.blocks = blocks;
-            this.blocksSize = blocks.size();
-            this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
+        if (skyblock.isPaper() && Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false)) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                populate(snapshots, IslandWorld.Normal, true);
+                if (hasNether) populate(snapshots, IslandWorld.Nether, true);
+                if (hasEnd) populate(snapshots, IslandWorld.End, true);
 
-        });
+                BlockScanner.startScanner(snapshots, (blocks) -> {
+                    this.blocks = blocks;
+                    this.blocksSize = blocks.size();
+                    this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
+
+                });
+            });
+        } else {
+            populate(snapshots, IslandWorld.Normal, false);
+            if (hasNether) populate(snapshots, IslandWorld.Nether, false);
+            if (hasEnd) populate(snapshots, IslandWorld.End, false);
+
+            BlockScanner.startScanner(snapshots, (blocks) -> {
+                this.blocks = blocks;
+                this.blocksSize = blocks.size();
+                this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
+
+            });
+        }
+
+
         return this;
     }
 
@@ -133,37 +151,49 @@ public final class IslandScan extends BukkitRunnable {
             SkyBlock.getInstance().getLevellingManager().stopScan(island);
         }
 
-        if (language.getBoolean("Command.Island.Level.Scanning.Progress.Should-Display-Message") && executions == 1 || totalScanned == blocksSize || executions % runEveryX == 0) {
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (language.getBoolean("Command.Island.Level.Scanning.Progress.Should-Display-Message") && executions == 1 || totalScanned == blocksSize || executions % runEveryX == 0) {
 
-            final double percent = ((double) totalScanned / (double) blocksSize) * 100;
+                final double percent = ((double) totalScanned / (double) blocksSize) * 100;
 
-            String message = language.getString("Command.Island.Level.Scanning.Progress.Message");
-            message = message.replace("%current_scanned_blocks%", String.valueOf(totalScanned));
-            message = message.replace("%max_blocks%", String.valueOf(blocksSize));
-            message = message.replace("%percent_whole%", String.valueOf((int) percent));
-            message = message.replace("%percent%", FORMATTER.format(percent));
+                String message = language.getString("Command.Island.Level.Scanning.Progress.Message");
+                message = message.replace("%current_scanned_blocks%", String.valueOf(totalScanned));
+                message = message.replace("%max_blocks%", String.valueOf(blocksSize));
+                message = message.replace("%percent_whole%", String.valueOf((int) percent));
+                message = message.replace("%percent%", FORMATTER.format(percent));
 
-            final boolean displayComplete = totalScanned == blocksSize && language.getBoolean("Command.Island.Level.Scanning.Finished.Should-Display-Message");
-            final MessageManager messageManager = SkyBlock.getInstance().getMessageManager();
+                final boolean displayComplete = totalScanned == blocksSize && language.getBoolean("Command.Island.Level.Scanning.Finished.Should-Display-Message");
+                final MessageManager messageManager = SkyBlock.getInstance().getMessageManager();
 
-            for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
+                for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
 
-                messageManager.sendMessage(player, message);
-                if (displayComplete)
-                    messageManager.sendMessage(player, language.getString("Command.Island.Level.Scanning.Finished.Message"));
+                    messageManager.sendMessage(player, message);
+                    if (displayComplete)
+                        messageManager.sendMessage(player, language.getString("Command.Island.Level.Scanning.Finished.Message"));
 
-                // Check for level ups
-                island.getLevel().checkLevelUp();
+                    // Check for level ups
+                    island.getLevel().checkLevelUp();
+                }
             }
-        }
-
+        });
     }
 
-    private void populate(Map<World, List<ChunkSnapshot>> snapshots, IslandWorld world) {
+    private void populate(Map<World, List<ChunkSnapshot>> snapshots, IslandWorld world, boolean paper) {
 
         final SkyBlock skyblock = SkyBlock.getInstance();
 
-        snapshots.put(skyblock.getWorldManager().getWorld(world), ChunkUtil.getChunksToScan(island, world).stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
+        ChunkUtil chunks = new ChunkUtil();
+        chunks.getChunksToScan(island, world, paper);
+
+        if(paper){
+            List<Chunk> positions = new LinkedList<>();
+            for(CompletableFuture<Chunk> chunk : chunks.asyncPositions){
+                positions.add(chunk.join());
+                snapshots.put(skyblock.getWorldManager().getWorld(world), positions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
+            }
+        } else {
+            snapshots.put(skyblock.getWorldManager().getWorld(world), chunks.syncPositions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
+        }
     }
 
     public Set<Location> getDoubleBlocks() {

@@ -18,6 +18,7 @@ import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.invite.Invite;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.removal.ChunkDeleteSplitter;
+import com.songoda.skyblock.levelling.ChunkUtil;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -56,6 +57,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class IslandManager {
@@ -556,22 +558,15 @@ public class IslandManager {
             }
         }
 
-        final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
-
-        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
-
-            final Location location = island.getLocation(worldList, IslandEnvironment.Island);
-
-            if (location == null) continue;
-
-            final World world = worldManager.getWorld(worldList);
-
-            final List<ChunkSnapshot> list = com.songoda.skyblock.levelling.ChunkUtil.getChunksToScan(island, worldList).stream().map(chunk -> chunk.getChunkSnapshot()).collect(Collectors.toList());
-
-            snapshots.put(world, list);
+        if (skyblock.isPaper() && Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false)) {
+            Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                startDeletition(island, worldManager);
+            });
+        } else {
+            startDeletition(island, worldManager);
         }
 
-        ChunkDeleteSplitter.startDeletion(snapshots);
+
 
         skyblock.getVisitManager().deleteIsland(island.getOwnerUUID());
         skyblock.getBanManager().deleteIsland(island.getOwnerUUID());
@@ -655,6 +650,40 @@ public class IslandManager {
 
         islandStorage.remove(island.getOwnerUUID());
         return true;
+    }
+
+    private void startDeletition(Island island, WorldManager worldManager) {
+        final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
+
+        for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
+
+            final Location location = island.getLocation(worldList, IslandEnvironment.Island);
+
+            if (location == null) continue;
+
+            final World world = worldManager.getWorld(worldList);
+
+            ChunkUtil chunks = new ChunkUtil();
+
+
+            if (skyblock.isPaper() && Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false)) {
+                chunks.getChunksToScan(island, worldList, true);
+                Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                    List<Chunk> positions = new LinkedList<>();
+                    for (CompletableFuture<Chunk> chunk : chunks.asyncPositions) {
+                        positions.add(chunk.join());
+                        snapshots.put(world, positions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList()));
+                    }
+                });
+            } else {
+                chunks.getChunksToScan(island, worldList, false);
+                final List<ChunkSnapshot> list = chunks.syncPositions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList());
+
+                snapshots.put(world, list);
+            }
+        }
+
+        ChunkDeleteSplitter.startDeletion(snapshots);
     }
 
     public synchronized void deleteIslandData(UUID uuid) {
