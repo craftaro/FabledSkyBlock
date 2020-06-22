@@ -90,10 +90,16 @@ public class GuiBankSelector extends Gui {
             switch(type){
                 case DEPOSIT:
                     amount = EconomyManager.getBalance(event.player);
+                    if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+                        amount = Math.floor(amount);
+                    }
                     response = bankManager.deposit(event.player, island, amount, admin);
                     break;
                 case WITHDRAW:
                     amount = island.getBankBalance();
+                    if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+                        amount = Math.floor(amount);
+                    }
                     response = bankManager.withdraw(event.player, island, amount, admin);
                     break;
                 default:
