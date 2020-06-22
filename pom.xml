@@ -60,12 +60,14 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
 							<shadedArtifactAttached>false</shadedArtifactAttached>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
 							<minimizeJar>true</minimizeJar>
 							<artifactSet>
 								<includes>
 									<include>com.songoda:SongodaCore</include>
+									<include>io.papermc:paperlib</include>
 								</includes>
 							</artifactSet>
 							<filters>
@@ -83,6 +85,10 @@
 									<pattern>com.songoda.core</pattern>
 									<shadedPattern>${project.groupId}.skyblock.core</shadedPattern>
 								</relocation>
+								<relocation>
+									<pattern>io.papermc.lib</pattern>
+									<shadedPattern>${project.groupId}.paperlib</shadedPattern>
+								</relocation>
 							</relocations>
 						</configuration>
 					</execution>
@@ -99,6 +105,10 @@
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<repository>
+			<id>papermc</id>
+			<url>https://papermc.io/repo/repository/maven-public/</url>
 		</repository>
 		<repository>
 			<id>minecraft-repo</id>
@@ -127,9 +137,27 @@
 	</repositories>
 	<dependencies>
 		<dependency>
+			<groupId>io.papermc</groupId>
+			<artifactId>paperlib</artifactId>
+			<version>1.0.3</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.destroystokyo.papermc</groupId>
 			<artifactId>paper</artifactId>
 			<version>1.15.2</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>io.papermc</groupId>
+					<artifactId>paperlib</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot</artifactId>
+			<version>1.15</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

@@ -63,7 +63,7 @@ public final class IslandScan extends BukkitRunnable {
         final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
 
 
-        if (skyblock.isPaper() && Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false)) {
+        if (skyblock.isPaperAsync()) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 populate(snapshots, IslandWorld.Normal, true);
                 if (hasNether) populate(snapshots, IslandWorld.Nether, true);

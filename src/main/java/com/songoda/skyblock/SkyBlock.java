@@ -45,6 +45,7 @@ import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.visit.VisitTask;
 import com.songoda.skyblock.world.WorldManager;
 import com.songoda.skyblock.world.generator.VoidGenerator;
+import io.papermc.lib.PaperLib;
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
 import org.bukkit.Bukkit;
@@ -94,6 +95,7 @@ public class SkyBlock extends SongodaPlugin {
     private CoreProtectAPI coreProtectAPI;
 
     private boolean paper;
+    private boolean paperAsync;
 
     private final GuiManager guiManager = new GuiManager(this);
 
@@ -110,11 +112,14 @@ public class SkyBlock extends SongodaPlugin {
     public void onPluginEnable() {
 
         paper = false;
-        /*try {
+        try {
             Class.forName("com.destroystokyo.paper.PaperConfig");
             paper = true;
-            Bukkit.getLogger().info("Enabling Paper hooks");
-        } catch (ClassNotFoundException ignored) {}*/
+            paperAsync = Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
+            this.getLogger().info("Enabling Paper hooks");
+        } catch (ClassNotFoundException ignored) {
+            PaperLib.suggestPaper(this);
+        }
 
         // Run Songoda Updater
         SongodaCore.registerPlugin(this, 17, CompatibleMaterial.GRASS_BLOCK);
@@ -428,5 +433,9 @@ public class SkyBlock extends SongodaPlugin {
 
     public boolean isPaper() {
         return paper;
+    }
+
+    public boolean isPaperAsync() {
+        return paperAsync;
     }
 }
