@@ -558,7 +558,7 @@ public class IslandManager {
             }
         }
 
-        if (skyblock.isPaper() && Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false)) {
+        if (skyblock.isPaperAsync()) {
             Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
                 startDeletition(island, worldManager);
             });
@@ -666,7 +666,7 @@ public class IslandManager {
             ChunkUtil chunks = new ChunkUtil();
 
 
-            if (skyblock.isPaper() && Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false)) {
+            if (skyblock.isPaperAsync()) {
                 chunks.getChunksToScan(island, worldList, true);
                 Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
                     List<Chunk> positions = new LinkedList<>();
