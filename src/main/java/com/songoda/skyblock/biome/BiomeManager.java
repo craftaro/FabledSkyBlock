@@ -1,10 +1,12 @@
 package com.songoda.skyblock.biome;
 
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.version.NMSUtil;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -12,8 +14,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Set;
 
 public class BiomeManager {
 
@@ -27,7 +27,7 @@ public class BiomeManager {
         Location location = island.getLocation(IslandWorld.Normal, IslandEnvironment.Island);
         int radius = (int) Math.ceil(island.getRadius());
 
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+        /*Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
             for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x++) {
                 for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z++) {
                     location.getWorld().setBiome(x, z, biome);
@@ -41,35 +41,54 @@ public class BiomeManager {
                     }
                 }
             });
-        });
+        });*/
 
-        /*Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
             long i = 0;
             for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x += 16) {
                 for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z += 16) {
                     int finalX = x;
                     int finalZ = z;
-                    Bukkit.getScheduler().runTaskLater(skyblock, () -> {
-                        Chunk chunk = location.getWorld().getChunkAt(finalX >> 4, finalZ >> 4);
-                        location.getWorld().loadChunk(chunk);
-                        for(int xx = 0; xx < 16; xx++){
-                            for(int zz = 0; zz < 16; zz++){
-                                chunk.getBlock(xx, 0, zz).setBiome(biome);
-                            }
-                        }
-                        updateBiome(island, chunk);
-                    }, i);
-                    i++;
+
+                    if(skyblock.isPaperAsync()){
+                        PaperLib.getChunkAtAsync(location.getWorld(), finalX >> 4, finalZ >> 4).thenAccept(chunk -> {
+                            setChunkBiome(island, biome, chunk);
+                        });
+                    } else {
+                        Bukkit.getScheduler().runTaskLater(skyblock, () -> {
+                            Chunk chunk = location.getWorld().getChunkAt(finalX >> 4, finalZ >> 4);
+                            setChunkBiome(island, biome, chunk);
+                        }, i);
+                        i++;
+                    }
                 }
             }
-        });*/
+        });
 
+    }
+
+    private void setChunkBiome(Island island, Biome biome, Chunk chunk) {
+        //location.getWorld().loadChunk(chunk);
+        for(int xx = 0; xx < 16; xx++){
+            for(int zz = 0; zz < 16; zz++){
+                if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_15)){
+                    for(int y = 0; y<256; y++){
+                        chunk.getBlock(xx, y, zz).setBiome(biome);
+                    }
+                } else {
+                    chunk.getBlock(xx, 128, zz).setBiome(biome);
+                }
+            }
+        }
+
+        updateBiomePacket(island, chunk);
     }
 
     private Class<?> packetPlayOutMapChunkClass;
     private Class<?> chunkClass;
 
-    private void updateBiome(Island island, Chunk chunk) {
+    private void updateBiomePacket(Island island, Chunk chunk) {
         if (packetPlayOutMapChunkClass == null) {
             packetPlayOutMapChunkClass = NMSUtil.getNMSClass("PacketPlayOutMapChunk");
             chunkClass = NMSUtil.getNMSClass("Chunk");
