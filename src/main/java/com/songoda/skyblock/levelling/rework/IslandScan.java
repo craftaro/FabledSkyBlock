@@ -186,11 +186,11 @@ public final class IslandScan extends BukkitRunnable {
         chunks.getChunksToScan(island, world, paper);
 
         if(paper){
-            List<Chunk> positions = new LinkedList<>();
+            List<ChunkSnapshot> positions = new LinkedList<>();
             for(CompletableFuture<Chunk> chunk : chunks.asyncPositions){
-                positions.add(chunk.join());
-                snapshots.put(skyblock.getWorldManager().getWorld(world), positions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
+                positions.add(chunk.join().getChunkSnapshot());
             }
+            snapshots.put(skyblock.getWorldManager().getWorld(world), positions);
         } else {
             snapshots.put(skyblock.getWorldManager().getWorld(world), chunks.syncPositions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
         }
