@@ -1168,6 +1168,8 @@ Menu:
             Displayname: '&aPvP'
           Noteblock:
             Displayname: '&aNoteblock use'
+          Cauldron:
+            Displayname: '&aCauldron use'
           Minecart:
             Displayname: '&aMinecart'
           Damage:
