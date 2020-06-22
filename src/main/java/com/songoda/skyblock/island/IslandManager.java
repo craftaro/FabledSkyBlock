@@ -41,6 +41,7 @@ import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.world.WorldManager;
+import io.papermc.lib.PaperLib;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -269,7 +270,7 @@ public class IslandManager {
         }
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
-            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+            PaperLib.teleportAsync(player, island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
             player.setFallDistance(0.0F);
         }, configLoad.getInt("Island.Creation.TeleportTimeout") * 20);
 
@@ -336,7 +337,7 @@ public class IslandManager {
 
 
         Bukkit.getScheduler().callSyncMethod(SkyBlock.getInstance(), () -> {
-            player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island));
+            PaperLib.teleportAsync(player, island.getLocation(IslandWorld.Normal, IslandEnvironment.Island));
             player.setGameMode(GameMode.SPECTATOR);
             return true;
         });
@@ -344,7 +345,7 @@ public class IslandManager {
         Bukkit.getScheduler().runTaskLater(skyblock, () -> {
             if (data.isPreview()) {
                 Location spawn = fileManager.getLocation(fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")), "Location.Spawn", true);
-                player.teleport(spawn);
+                PaperLib.teleportAsync(player, spawn);
                 player.setGameMode(GameMode.SURVIVAL);
                 data.setIsland(null);
                 islandStorage.remove(player.getUniqueId(), island);
@@ -558,15 +559,7 @@ public class IslandManager {
             }
         }
 
-        if (skyblock.isPaperAsync()) {
-            Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
-                startDeletition(island, worldManager);
-            });
-        } else {
-            startDeletition(island, worldManager);
-        }
-
-
+        startDeletition(island, worldManager);
 
         skyblock.getVisitManager().deleteIsland(island.getOwnerUUID());
         skyblock.getBanManager().deleteIsland(island.getOwnerUUID());
@@ -1113,7 +1106,7 @@ public class IslandManager {
         if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
             if(loc != null){
-                player.teleport(loc);
+                PaperLib.teleportAsync(player, loc);
                 if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);
                 }
@@ -1153,7 +1146,7 @@ public class IslandManager {
                     loc = LocationUtil.getSafeLocation(loc);
                 }
                 if(loc != null){
-                    player.teleport(loc);
+                    PaperLib.teleportAsync(player, loc);
                     if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                         player.setFallDistance(0.0F);
                     }

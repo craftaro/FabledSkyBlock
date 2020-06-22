@@ -12,6 +12,7 @@ import com.songoda.skyblock.utils.math.VectorUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.world.WorldManager;
+import io.papermc.lib.PaperLib;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
@@ -301,7 +302,7 @@ public final class LocationUtil {
             }
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                player.teleport(spawnLocation);
+                PaperLib.teleportAsync(player, spawnLocation);
                 player.setFallDistance(0.0F);
             });
         }

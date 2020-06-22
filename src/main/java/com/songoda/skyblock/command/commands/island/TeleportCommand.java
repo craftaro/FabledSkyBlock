@@ -14,6 +14,7 @@ import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -111,7 +112,7 @@ public class TeleportCommand extends SubCommand {
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
                 Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
                 LocationUtil.removeWaterFromLoc(skyblock, loc);
-                player.teleport(loc);
+                PaperLib.teleportAsync(player, loc);
 
                 if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);

@@ -14,6 +14,7 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
+import io.papermc.lib.PaperLib;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.data.Waterlogged;
@@ -209,7 +210,7 @@ public class Move implements Listener {
             }
         }
         if(loc != null){
-            player.teleport(loc);
+            PaperLib.teleportAsync(player, loc);
         } else {
             LocationUtil.teleportPlayerToSpawn(player);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',

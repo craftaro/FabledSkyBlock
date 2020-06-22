@@ -15,6 +15,7 @@ import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,6 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.awt.print.Paper;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -142,7 +144,8 @@ public class Portal implements Listener {
 
                 default:
                     IslandWorld toWorldF = toWorld;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> player.teleport(island.getLocation(toWorldF, spawnEnvironment)), 1L);
+
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> PaperLib.teleportAsync(player, island.getLocation(toWorldF, spawnEnvironment)), 1L);
                     soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                     player.setFallDistance(0.0F);
                     tick.setTick(1);
@@ -166,7 +169,7 @@ public class Portal implements Listener {
             if(safeLoc != null){
                 loc = safeLoc;
             }
-            player.teleport(loc);
+            PaperLib.teleportAsync(player, loc);
         }, 1L);
         soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
         player.setFallDistance(0.0F);

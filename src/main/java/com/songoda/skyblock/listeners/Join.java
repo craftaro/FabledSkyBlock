@@ -14,6 +14,7 @@ import com.songoda.skyblock.scoreboard.Scoreboard;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.usercache.UserCacheManager;
 import com.songoda.skyblock.utils.world.LocationUtil;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -60,7 +61,7 @@ public class Join implements Listener {
                 if (configLoad.getBoolean("Island.Join.Spawn")) {
                     LocationUtil.teleportPlayerToSpawn(player);
                 } else if (configLoad.getBoolean("Island.Join.Island") && island != null) {
-                    player.teleport(island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
+                    PaperLib.teleportAsync(player, island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
                     player.setFallDistance(0.0F);
                     teleportedToIsland = true;
                 }
