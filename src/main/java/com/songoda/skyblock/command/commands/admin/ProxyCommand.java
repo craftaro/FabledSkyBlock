@@ -41,9 +41,9 @@ public class ProxyCommand extends SubCommand {
         if (args.length == 1) {
             OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
 
-            UUID islandOwnerUUID = targetPlayerOffline.getOwner();
+            UUID userUUID = targetPlayerOffline.getUUID();
 
-            if (islandManager.getIsland(Bukkit.getOfflinePlayer(islandOwnerUUID)) != null) {
+            if (islandManager.getIsland(Bukkit.getOfflinePlayer(userUUID)) != null) {
                 if (islandManager.isPlayerProxyingAnotherPlayer(((Player)sender).getUniqueId())) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.Proxy.IsOffPlayer.Message")
@@ -57,7 +57,7 @@ public class ProxyCommand extends SubCommand {
                                     .replace("%player", targetPlayerOffline.getName()));
                     soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                    islandManager.addProxiedPlayer(((Player)sender).getUniqueId(), targetPlayerOffline.getUniqueId());
+                    islandManager.addProxiedPlayer(((Player)sender).getUniqueId(), userUUID);
                 }
             }
         } else if (args.length == 0){
