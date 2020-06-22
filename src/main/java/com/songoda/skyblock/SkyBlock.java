@@ -110,11 +110,11 @@ public class SkyBlock extends SongodaPlugin {
     public void onPluginEnable() {
 
         paper = false;
-        try {
+        /*try {
             Class.forName("com.destroystokyo.paper.PaperConfig");
             paper = true;
             Bukkit.getLogger().info("Enabling Paper hooks");
-        } catch (ClassNotFoundException ignored) {}
+        } catch (ClassNotFoundException ignored) {}*/
 
         // Run Songoda Updater
         SongodaCore.registerPlugin(this, 17, CompatibleMaterial.GRASS_BLOCK);

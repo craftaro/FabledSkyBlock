@@ -27,7 +27,7 @@ public class BiomeManager {
         Location location = island.getLocation(IslandWorld.Normal, IslandEnvironment.Island);
         int radius = (int) Math.ceil(island.getRadius());
 
-        /*Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
             for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x++) {
                 for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z++) {
                     location.getWorld().setBiome(x, z, biome);
@@ -41,9 +41,9 @@ public class BiomeManager {
                     }
                 }
             });
-        });*/
+        });
 
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+        /*Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
             long i = 0;
             for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x += 16) {
                 for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z += 16) {
@@ -62,7 +62,7 @@ public class BiomeManager {
                     i++;
                 }
             }
-        });
+        });*/
 
     }
 
