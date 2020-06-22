@@ -1,0 +1,497 @@
+Biomes:
+  BADLANDS:
+    DisplayName: 'Badlands'
+    DiplayItem:
+      Material: WHITE_TERRACOTTA
+      Data: 0
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  BADLANDS_PLATEAU:
+    DisplayName: 'Badlands Plateau'
+    DiplayItem:
+      Material: RED_TERRACOTTA
+      Data: 14
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  BAMBOO_JUNGLE:
+    DisplayName: 'Bamboo Jungle'
+    DiplayItem:
+      Material: BAMBOO
+      Data: 0
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  BAMBOO_JUNGLE_HILLS:
+    DisplayName: 'Bamboo Jungle Hills'
+    DiplayItem:
+      Material: BAMBOO
+      Data: 0
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  BASALT_DELTAS:
+    DisplayName: 'Basalt Deltas'
+    DiplayItem:
+      Material: BASALT
+      Data: 0
+    Permission: true
+    Normal: false
+    Nether: true
+    End: false
+  BEACH:
+    DisplayName: 'Beach'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  BIRCH_FOREST:
+    DisplayName: 'Birch Forest'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  BIRCH_FOREST_HILLS:
+    DisplayName: 'Birch Forest Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  COLD_OCEAN:
+    DisplayName: 'Cold Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  CRIMSON_FOREST:
+    DisplayName: 'Crimson Forest'
+    Permission: true
+    Normal: false
+    Nether: true
+    End: false
+  DARK_FOREST:
+    DisplayName: 'Dark Forest'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  DARK_FOREST_HILLS:
+    DisplayName: 'Dark Forest Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  DEEP_COLD_OCEAN:
+    DisplayName: 'Deep Cold Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  DEEP_FROZEN_OCEAN:
+    DisplayName: 'Deep Frozen Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  DEEP_LUKEWARM_OCEAN:
+    DisplayName: 'Deep Lukewarm Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  DEEP_OCEAN:
+    DisplayName: 'Deep Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  DEEP_WARM_OCEAN:
+    DisplayName: 'Deep Warm Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  DESERT:
+    DisplayName: 'Desert'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  DESERT_HILLS:
+    DisplayName: 'Desert Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  DESERT_LAKES:
+    DisplayName: 'Desert Lakes'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  END_BARRENS:
+    DisplayName: 'End Barrens'
+    Permission: true
+    Normal: false
+    Nether: false
+    End: end
+  END_HIGHLANDS:
+    DisplayName: 'End HighLands'
+    Permission: true
+    Normal: false
+    Nether: false
+    End: true
+  END_MIDLANDS:
+    DisplayName: 'End Midlands'
+    Permission: true
+    Normal: false
+    Nether: false
+    End: end
+  ERODED_BADLANDS:
+    DisplayName: 'Eroded Badlands'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  FLOWER_FOREST:
+    DisplayName: 'Flower Forest'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  FOREST:
+    DisplayName: 'Forest'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  FROZEN_OCEAN:
+    DisplayName: 'Frozen Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  FROZEN_RIVER:
+    DisplayName: 'Frozen River'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  GIANT_SPRUCE_TAIGA:
+    DisplayName: 'Giant Spruce Taiga'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  GIANT_SPRUCE_TAIGA_HILLS:
+    DisplayName: 'Giant Spruce Taiga Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  GIANT_TREE_TAIGA:
+    DisplayName: 'Giant Tree Taiga'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  GIANT_TREE_TAIGA_HILLS:
+    DisplayName: 'Giant Tree Taiga Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  GRAVELLY_MOUNTAINS:
+    DisplayName: 'Gravelly Mountains'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  ICE_SPIKES:
+    DisplayName: 'Ice Spikes'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  JUNGLE:
+    DisplayName: 'Jungle'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  JUNGLE_EDGE:
+    DisplayName: 'Jungle Edge'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  JUNGLE_HILLS:
+    DisplayName: 'Jungle Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  LUKEWARM_OCEAN:
+    DisplayName: 'Lukewarm Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  MODIFIED_BADLANDS_PLATEAU:
+    DisplayName: 'Modified Badlands Plateau'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  MODIFIED_GRAVELLY_MOUNTAINS:
+    DisplayName: 'Modified Gravelly Mountains'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  MODIFIED_JUNGLE:
+    DisplayName: 'Modified Jungle'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  MODIFIED_JUNGLE_EDGE:
+    DisplayName: 'Modified Jungle Edge'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  MODIFIED_WOODED_BADLANDS_PLATEAU:
+    DisplayName: 'Modified Wooden Badlands Plateau'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  MOUNTAINS:
+    DisplayName: 'Mountains'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  MOUNTAIN_EDGE:
+    DisplayName: 'Mountain Edge'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  MUSHROOM_FIELDS:
+    DisplayName: 'Mushroom Fields'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  MUSHROOM_FIELD_SHORE:
+    DisplayName: 'Mushroom Field Shore'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  # PRE-1.16
+  NETHER:
+    DisplayName: 'Nether'
+    Permission: true
+    Normal: false
+    Nether: true
+    End: false
+  NETHER_WASTES:
+    DisplayName: 'Nether Wastes'
+    Permission: true
+    Normal: false
+    Nether: true
+    End: false
+  OCEAN:
+    DisplayName: 'Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  PLAINS:
+    DisplayName: 'Plains'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  RIVER:
+    DisplayName: 'River'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SAVANNA:
+    DisplayName: 'Savanna'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SAVANNA_PLATEAU:
+    DisplayName: 'Savanna Plateau'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SHATTERED_SAVANNA:
+    DisplayName: 'Shattered Savanna'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SHATTERED_SAVANNA_PLATEAU:
+    DisplayName: 'Shattered Savanna Plateau'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SMALL_END_ISLANDS:
+    DisplayName: 'Small End Island'
+    Permission: true
+    Normal: false
+    Nether: false
+    End: true
+  SNOWY_BEACH:
+    DisplayName: 'Snowy Beach'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SNOWY_MOUNTAINS:
+    DisplayName: 'Snowy Mountains'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SNOWY_TAIGA:
+    DisplayName: 'Snowy Taiga'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SNOWY_TAIGA_HILLS:
+    DisplayName: 'Snowy Taiga Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SNOWY_TAIGA_MOUNTAINS:
+    DisplayName: 'Snowy Taiga Mountains'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SNOWY_TUNDRA:
+    DisplayName: 'Snowy Tundra'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SOUL_SAND_VALLEY:
+    DisplayName: 'Soul Sand Valley'
+    Permission: true
+    Normal: false
+    Nether: true
+    End: false
+  STONE_SHORE:
+    DisplayName: 'Stone Shore'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SUNFLOWER_PLAINS:
+    DisplayName: 'Sunflower Plains'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SWAMP:
+    DisplayName: 'Swamp'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  SWAMP_HILLS:
+    DisplayName: 'Swamp Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  TAIGA:
+    DisplayName: 'Taiga'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  TAIGA_HILLS:
+    DisplayName: 'Taiga Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  TAIGA_MOUNTAINS:
+    DisplayName: 'Taiga Mountains'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  TALL_BIRCH_FOREST:
+    DisplayName: 'Tall Birch Forest'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  TALL_BIRCH_HILLS:
+    DisplayName: 'Tall Birch Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  THE_END:
+    DisplayName: 'The End'
+    Permission: true
+    Normal: false
+    Nether: false
+    End: true
+  THE_VOID:
+    DisplayName: 'The Void'
+    Permission: true
+    Normal: false
+    Nether: false
+    End: true
+  WARM_OCEAN:
+    DisplayName: 'Warm Ocean'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  WARPED_FOREST:
+    DisplayName: 'Warped Forest'
+    Permission: true
+    Normal: false
+    Nether: true
+    End: false
+  WOODED_BADLANDS_PLATEAU:
+    DisplayName: 'Wooded Badlands Plateau'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  WOODED_HILLS:
+    DisplayName: 'Wooded Hills'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false
+  WOODED_MOUNTAINS:
+    DisplayName: 'Wooded Mountains'
+    Permission: true
+    Normal: true
+    Nether: false
+    End: false

@@ -67,6 +67,8 @@ public class FileManager {
         configFiles.put("language.yml", new File(skyblock.getDataFolder(), "language.yml"));
         configFiles.put("settings.yml", new File(skyblock.getDataFolder(), "settings.yml"));
         configFiles.put("upgrades.yml", new File(skyblock.getDataFolder(), "upgrades.yml"));
+        // configFiles.put("biomes.yml", new File(skyblock.getDataFolder(), "biomes.yml"));
+        // configFiles.put("menus.yml", new File(skyblock.getDataFolder(), "menus.yml"));
         configFiles.put("generators.yml", new File(skyblock.getDataFolder(), "generators.yml"));
         configFiles.put("stackables.yml", new File(skyblock.getDataFolder(), "stackables.yml"));
         configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
@@ -90,7 +92,9 @@ public class FileManager {
                     e.printStackTrace();
                 }
                 try (InputStream is = skyblock.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
-                    ByteStreams.copy(is, os);
+                    if(is != null){
+                        ByteStreams.copy(is, os);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -115,7 +119,9 @@ public class FileManager {
                 try {
                     configFile.createNewFile();
                     try (InputStream is = skyblock.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
-                        ByteStreams.copy(is, os);
+                        if(is != null){
+                            ByteStreams.copy(is, os);
+                        }
                     }
 
                     if (fileName.equals("worlds.yml")) {

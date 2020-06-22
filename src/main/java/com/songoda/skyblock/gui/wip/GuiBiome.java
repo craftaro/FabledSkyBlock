@@ -11,10 +11,18 @@ import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
+import com.songoda.skyblock.biome.BiomeManager;
+import com.songoda.skyblock.cooldown.Cooldown;
+import com.songoda.skyblock.cooldown.CooldownManager;
+import com.songoda.skyblock.cooldown.CooldownPlayer;
+import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.gui.bank.GuiBankSelector;
 import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandEnvironment;
+import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -55,6 +63,12 @@ public class GuiBiome extends Gui {
     }
 
     public void paint() {
+        SoundManager soundManager = plugin.getSoundManager();
+        BiomeManager biomeManager = plugin.getBiomeManager();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+
         if (inventory != null)
             inventory.clear();
         setActionForRange(0, 0, 1, 8, null);
@@ -75,12 +89,29 @@ public class GuiBiome extends Gui {
             setItem(i, CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
         }
 
-        List<CompatibleBiome> biomes = new ArrayList<>();
+        List<BiomeIcon> biomes = new ArrayList<>();
         for(CompatibleBiome biome : CompatibleBiome.getCompatibleBiomes()) {
             if(biome.isCompatible()
                     && player.hasPermission("fabledskyblock.biome." + biome.name().toLowerCase())
                     && config.getBoolean("Island.Biome." + world.name() + "." + biome.name(), false)){
-                biomes.add(biome);
+                BiomeIcon icon = new BiomeIcon(plugin,  biome);
+                switch(world){
+                    case Normal:
+                        if(icon.normal){
+                            biomes.add(icon);
+                        }
+                        break;
+                    case Nether:
+                        if(icon.nether){
+                            biomes.add(icon);
+                        }
+                        break;
+                    case End:
+                        if(icon.end){
+                            biomes.add(icon);
+                        }
+                        break;
+                }
             }
         }
 
@@ -109,13 +140,46 @@ public class GuiBiome extends Gui {
                     setItem(i, null);
                     continue;
                 }
-                CompatibleBiome transaction = biomes.get(current + i);
-                if (transaction == null) continue;
+                BiomeIcon icon = biomes.get(current + i);
+                if (icon == null) continue;
 
-                ItemStack is = null;
-                // TODO create the item
+                setButton(i, icon.displayItem, event -> {
+                    if (cooldownManager.hasPlayer(CooldownType.Biome, player) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
+                        CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome, player);
+                        Cooldown cooldown = cooldownPlayer.getCooldown();
 
-                setItem(i, is);
+                        if (cooldown.getTime() < 60) {
+                            messageManager.sendMessage(player,
+                                    languageLoad.getString("Island.Biome.Cooldown.Message")
+                                            .replace("%time",
+                                                    cooldown.getTime() + " " + languageLoad
+                                                            .getString("Island.Biome.Cooldown.Word.Second")));
+                        } else {
+                            long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
+                            messageManager.sendMessage(player,
+                                    languageLoad.getString("Island.Biome.Cooldown.Message")
+                                            .replace("%time", durationTime[2] + " "
+                                                    + languageLoad.getString("Island.Biome.Cooldown.Word.Minute")
+                                                    + " " + durationTime[3] + " "
+                                                    + languageLoad.getString("Island.Biome.Cooldown.Word.Second")));
+                        }
+
+                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+
+                        return;
+                    }
+                    cooldownManager.createPlayer(CooldownType.Biome, player);
+                    biomeManager.setBiome(island, icon.biome.getBiome());
+                    island.setBiome(icon.biome.getBiome());
+                    island.save();
+
+                    soundManager.playSound(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island),
+                            CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
+
+                    if (!islandManager.isPlayerAtIsland(island, player, IslandWorld.Normal)) {
+                        soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
+                    }
+                });
             }
         } else {
             setItem(31, CompatibleMaterial.BARRIER.getItem());
