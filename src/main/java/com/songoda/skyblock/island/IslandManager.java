@@ -654,7 +654,27 @@ public class IslandManager {
 
             final World world = worldManager.getWorld(worldList);
 
-            new ChunkLoader(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncPositions, syncPositions) -> {
+            if(skyblock.isPaperAsync()){
+                ChunkLoader.startChunkLoading(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncChunks, syncChunks) -> {
+                    List<Chunk> positions = new LinkedList<>();
+                    for (CompletableFuture<Chunk> chunk : asyncChunks) {
+                        positions.add(chunk.join());
+                    }
+                    snapshots.put(world, positions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList()));
+                    ChunkDeleteSplitter.startDeletion(snapshots);
+                });
+            } else {
+                ChunkLoader.startChunkLoading(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncChunks, syncChunks) -> {
+                    Bukkit.getScheduler().runTask(skyblock, () -> {
+                        final List<ChunkSnapshot> list = syncChunks.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList());
+
+                        snapshots.put(world, list);
+                        ChunkDeleteSplitter.startDeletion(snapshots);
+                    });
+                });
+            }
+
+            /*new ChunkLoader(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncPositions, syncPositions) -> {
                 if(skyblock.isPaperAsync()){
                     Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
                         List<Chunk> positions = new LinkedList<>();
@@ -670,7 +690,7 @@ public class IslandManager {
                     snapshots.put(world, list);
                     ChunkDeleteSplitter.startDeletion(snapshots);
                 }
-            });
+            });*/
         }
 
     }

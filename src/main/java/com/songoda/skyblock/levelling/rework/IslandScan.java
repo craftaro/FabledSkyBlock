@@ -65,32 +65,48 @@ public final class IslandScan extends BukkitRunnable {
 
         if (skyblock.isPaperAsync()) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                populate(snapshots, IslandWorld.Normal, true);
-                if (hasNether) populate(snapshots, IslandWorld.Nether, true);
-                if (hasEnd) populate(snapshots, IslandWorld.End, true);
+                initScan(skyblock, hasNether, hasEnd, snapshots);
+            });
+        } else {
+            initScan(skyblock, hasNether, hasEnd, snapshots);
+        }
 
-                BlockScanner.startScanner(snapshots, false, false, (blocks) -> {
+
+        return this;
+    }
+
+    private void initScan(SkyBlock skyblock, boolean hasNether, boolean hasEnd, Map<World, List<ChunkSnapshot>> snapshots) {
+        populate(snapshots, IslandWorld.Normal, skyblock.isPaperAsync(), () -> {
+
+            if (hasNether) {
+                populate(snapshots, IslandWorld.Nether, skyblock.isPaperAsync(), () -> {
+                    if (hasEnd) {
+                        populate(snapshots, IslandWorld.End, skyblock.isPaperAsync(), () -> {
+                            BlockScanner.startScanner(snapshots, true, true, false, (blocks) -> {
+                                this.blocks = blocks;
+                                this.blocksSize = blocks.size();
+                                this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
+
+                            });
+                        });
+                    } else {
+                        BlockScanner.startScanner(snapshots, true, true, false, (blocks) -> {
+                            this.blocks = blocks;
+                            this.blocksSize = blocks.size();
+                            this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
+
+                        });
+                    }
+                });
+            } else {
+                BlockScanner.startScanner(snapshots, true, true, false, (blocks) -> {
                     this.blocks = blocks;
                     this.blocksSize = blocks.size();
                     this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
 
                 });
-            });
-        } else {
-            populate(snapshots, IslandWorld.Normal, false);
-            if (hasNether) populate(snapshots, IslandWorld.Nether, false);
-            if (hasEnd) populate(snapshots, IslandWorld.End, false);
-
-            BlockScanner.startScanner(snapshots, false, false, (blocks) -> {
-                this.blocks = blocks;
-                this.blocksSize = blocks.size();
-                this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
-
-            });
-        }
-
-
-        return this;
+            }
+        });
     }
 
     private void finalizeBlocks() {
@@ -178,11 +194,11 @@ public final class IslandScan extends BukkitRunnable {
         });
     }
 
-    private void populate(Map<World, List<ChunkSnapshot>> snapshots, IslandWorld world, boolean paper) {
+    private void populate(Map<World, List<ChunkSnapshot>> snapshots, IslandWorld world, boolean paper, PopulateTask task) {
 
         final SkyBlock skyblock = SkyBlock.getInstance();
 
-        new ChunkLoader(island, IslandWorld.Normal, paper, (asyncPositions, syncPositions) -> {
+        ChunkLoader.startChunkLoading(island, IslandWorld.Normal, paper, (asyncPositions, syncPositions) -> {
             if(paper){
                 List<ChunkSnapshot> positions = new LinkedList<>();
                 for(CompletableFuture<Chunk> chunk : asyncPositions){
@@ -192,7 +208,12 @@ public final class IslandScan extends BukkitRunnable {
             } else {
                 snapshots.put(skyblock.getWorldManager().getWorld(world), syncPositions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
             }
+            task.onComplete();
         });
+    }
+
+    private interface PopulateTask {
+        void onComplete();
     }
 
     public Set<Location> getDoubleBlocks() {
