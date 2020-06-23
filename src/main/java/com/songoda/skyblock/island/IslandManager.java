@@ -673,24 +673,6 @@ public class IslandManager {
                     });
                 });
             }
-
-            /*new ChunkLoader(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncPositions, syncPositions) -> {
-                if(skyblock.isPaperAsync()){
-                    Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
-                        List<Chunk> positions = new LinkedList<>();
-                        for (CompletableFuture<Chunk> chunk : asyncPositions) {
-                            positions.add(chunk.join());
-                        }
-                        snapshots.put(world, positions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList()));
-                        ChunkDeleteSplitter.startDeletion(snapshots);
-                    });
-                } else {
-                    final List<ChunkSnapshot> list = syncPositions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList());
-
-                    snapshots.put(world, list);
-                    ChunkDeleteSplitter.startDeletion(snapshots);
-                }
-            });*/
         }
 
     }

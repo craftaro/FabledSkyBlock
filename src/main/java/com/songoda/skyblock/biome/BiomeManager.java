@@ -1,5 +1,6 @@
 package com.songoda.skyblock.biome;
 
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
@@ -61,19 +62,19 @@ public class BiomeManager {
             chunkClass = NMSUtil.getNMSClass("Chunk");
         }
 
-        for (Player all : skyblock.getIslandManager().getPlayersAtIsland(island, IslandWorld.Normal)) {
+        for (Player player : skyblock.getIslandManager().getPlayersAtIsland(island, IslandWorld.Normal)) {
             try {
-                if (NMSUtil.getVersionNumber() < 9) {
-                    NMSUtil.sendPacket(all,
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+                    NMSUtil.sendPacket(player,
+                            packetPlayOutMapChunkClass.getConstructor(chunkClass, int.class).newInstance(player
+                                            .getLocation().getChunk().getClass().getMethod("getHandle").invoke(chunk),
+                                    65535));
+                } else {
+                    NMSUtil.sendPacket(player,
                             packetPlayOutMapChunkClass.getConstructor(chunkClass, boolean.class, int.class)
-                                    .newInstance(all.getLocation().getChunk().getClass().getMethod("getHandle")
+                                    .newInstance(player.getLocation().getChunk().getClass().getMethod("getHandle")
                                             .invoke(chunk), true, 20));
-                    return;
                 }
-                NMSUtil.sendPacket(all,
-                        packetPlayOutMapChunkClass.getConstructor(chunkClass, int.class).newInstance(all
-                                        .getLocation().getChunk().getClass().getMethod("getHandle").invoke(chunk),
-                                65535));
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
