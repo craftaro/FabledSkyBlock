@@ -5,12 +5,12 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -29,8 +29,13 @@ public class ChunkLoader extends BukkitRunnable {
     private int minZ;
     private int maxX;
     private int maxZ;
+    private int chunkPerTick;
 
     private ChunkLoader(Island island, IslandWorld islandWorld, boolean paper, boolean chunkForChunk, ChunkForChunkScannerTask chunkTask) {
+        chunkPerTick = SkyBlock.getInstance().getFileManager()
+                .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
+                .getFileConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
+
         this.chunkTask = chunkTask;
         this.chunkForChunk = chunkForChunk;
         this.paper = paper;
@@ -60,6 +65,10 @@ public class ChunkLoader extends BukkitRunnable {
     }
 
     private ChunkLoader(Island island, IslandWorld islandWorld, boolean paper, boolean chunkForChunk, ChunkScannerTask generalTask) {
+        chunkPerTick = SkyBlock.getInstance().getFileManager()
+                .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
+                .getFileConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
+
         this.generalTask = generalTask;
         this.chunkForChunk = chunkForChunk;
         this.paper = paper;
@@ -90,7 +99,7 @@ public class ChunkLoader extends BukkitRunnable {
 
     @Override
     public void run() {
-        for(int i = 0; i < 50 || paper; i++){ // TODO Config for chunk per tick
+        for(int i = 0; i < chunkPerTick || paper; i++){
             if(x < maxX){
                 if(z < maxZ){
                     if(!chunkForChunk){

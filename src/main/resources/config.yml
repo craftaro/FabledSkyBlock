@@ -9,6 +9,10 @@ Sound:
     # When disabled all sounds will be disabled.
     Enable: true
 Island:
+    Performance:
+        # Chunk loading per tick affecting operations like island deletion, scan and biome changing.
+        # This option is ignored when using Paper's async chunk load
+        ChunkPerTick: 25
     Size:
         # [!] Do not go over 1000 for both of these options.
         # The size of an Island when created.
