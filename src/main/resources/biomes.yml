@@ -464,7 +464,7 @@ Biomes:
     Permission: true
     Normal: false
     Nether: false
-    End: true
+    End: false
   WARM_OCEAN:
     DisplayName: 'Warm Ocean'
     Permission: true
