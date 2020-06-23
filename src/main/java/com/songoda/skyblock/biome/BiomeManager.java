@@ -5,15 +5,15 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
+import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.utils.version.NMSUtil;
-import io.papermc.lib.PaperLib;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class BiomeManager {
 
@@ -26,6 +26,52 @@ public class BiomeManager {
     public void setBiome(Island island, Biome biome) {
         Location location = island.getLocation(IslandWorld.Normal, IslandEnvironment.Island);
         int radius = (int) Math.ceil(island.getRadius());
+
+        final List<ChunkSnapshot> snapshotList = new ArrayList<>(3);
+
+        if (location == null) return;
+
+        final World world = location.getWorld();
+
+
+            new ChunkLoader(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncPositions, syncPositions) -> {
+                if (skyblock.isPaperAsync()) {
+                    Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                        List<Chunk> positions = new LinkedList<>();
+                        for (CompletableFuture<Chunk> chunk : asyncPositions) {
+                            positions.add(chunk.join());
+                        }
+                        for(Chunk chunk : positions){
+                            setChunkBiome(biome, chunk);
+                            updateBiomePacket(island, chunk);
+                        }
+                        //positions.stream().map(Chunk::getChunkSnapshot).forEach(snapshotList::add);
+                    });
+
+                    //Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
+                    //snapshots.put(world, snapshotList);
+                    Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                        //ChunkBiomeSplitter.startUpdating(snapshots, biome, (chunk) -> {
+                        //    updateBiomePacket(island, chunk);
+                        //});
+
+                    });
+                } else {
+                    //syncPositions.stream().map(Chunk::getChunkSnapshot).forEach(snapshotList::add);
+
+                    //Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
+                    //snapshots.put(world, snapshotList);
+                    Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                        //ChunkBiomeSplitter.startUpdating(snapshots, biome, (chunk) -> {
+                        //    updateBiomePacket(island, chunk);
+                        //});
+                        for(Chunk chunk : syncPositions){
+                            setChunkBiome(biome, chunk);
+                            updateBiomePacket(island, chunk);
+                        }
+                    });
+                }
+            });
 
         /*Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
             for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x++) {
@@ -42,33 +88,56 @@ public class BiomeManager {
                 }
             });
         });*/
+        /*Bukkit.getScheduler().runTask(skyblock, () -> {
+            List<Chunk> chunks = new ArrayList<>();
 
-
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
-            long i = 0;
-            for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x += 16) {
-                for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z += 16) {
-                    int finalX = x;
-                    int finalZ = z;
-
-                    if(skyblock.isPaperAsync()){
-                        PaperLib.getChunkAtAsync(location.getWorld(), finalX >> 4, finalZ >> 4).thenAccept(chunk -> {
-                            setChunkBiome(island, biome, chunk);
-                        });
-                    } else {
-                        Bukkit.getScheduler().runTaskLater(skyblock, () -> {
-                            Chunk chunk = location.getWorld().getChunkAt(finalX >> 4, finalZ >> 4);
-                            setChunkBiome(island, biome, chunk);
-                        }, i);
-                        i++;
+            if(skyblock.isPaperAsync()){
+                Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                    for (int x = location.getBlockX() - radius; x < location.getBlockX() + radius; x += 16) {
+                        for (int z = location.getBlockZ() - radius; z < location.getBlockZ() + radius; z += 16) {
+                            try {
+                                Chunk chunk = PaperLib.getChunkAtAsync(location.getWorld(), x >> 4, z >> 4).get();
+                                setChunkBiome(biome, chunk);
+                                chunks.add(chunk);
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
-                }
-            }
-        });
+                    Bukkit.getScheduler().runTask(skyblock, () -> {
+                        for(Chunk chunk : chunks){
+                            updateBiomePacket(island, chunk);
+                        }
+                    });
+                });
+            } else {
+                int x = location.getBlockX() - radius;
+                Bukkit.getScheduler().runTaskTimer(skyblock, () -> {
 
+                }, 2L, 2L);
+                while (x < location.getBlockX() + radius) {
+                    int z = location.getBlockZ() - radius;
+                    while (z < location.getBlockZ() + radius) {
+                        chunks.add(location.getWorld().getChunkAt(x >> 4, z >> 4));
+                        z += 16;
+                    }
+                    x += 16;
+                }
+                Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                    for(Chunk chunk : chunks){
+                        setChunkBiome(biome, chunk);
+                    }
+                    Bukkit.getScheduler().runTask(skyblock, () -> {
+                        for(Chunk chunk : chunks){
+                            updateBiomePacket(island, chunk);
+                        }
+                    });
+                });
+            }
+        });*/
     }
 
-    private void setChunkBiome(Island island, Biome biome, Chunk chunk) {
+    private void setChunkBiome(Biome biome, Chunk chunk) {
         //location.getWorld().loadChunk(chunk);
         for(int xx = 0; xx < 16; xx++){
             for(int zz = 0; zz < 16; zz++){
@@ -77,12 +146,10 @@ public class BiomeManager {
                         chunk.getBlock(xx, y, zz).setBiome(biome);
                     }
                 } else {
-                    chunk.getBlock(xx, 128, zz).setBiome(biome);
+                    chunk.getBlock(xx, 0, zz).setBiome(biome);
                 }
             }
         }
-
-        updateBiomePacket(island, chunk);
     }
 
     private Class<?> packetPlayOutMapChunkClass;

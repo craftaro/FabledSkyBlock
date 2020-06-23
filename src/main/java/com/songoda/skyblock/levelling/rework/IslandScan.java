@@ -8,7 +8,7 @@ import com.songoda.skyblock.blockscanner.BlockScanner;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.levelling.ChunkUtil;
+import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.levelling.rework.amount.AmountMaterialPair;
 import com.songoda.skyblock.levelling.rework.amount.BlockAmount;
 import com.songoda.skyblock.message.MessageManager;
@@ -69,7 +69,7 @@ public final class IslandScan extends BukkitRunnable {
                 if (hasNether) populate(snapshots, IslandWorld.Nether, true);
                 if (hasEnd) populate(snapshots, IslandWorld.End, true);
 
-                BlockScanner.startScanner(snapshots, (blocks) -> {
+                BlockScanner.startScanner(snapshots, false, false, (blocks) -> {
                     this.blocks = blocks;
                     this.blocksSize = blocks.size();
                     this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
@@ -81,7 +81,7 @@ public final class IslandScan extends BukkitRunnable {
             if (hasNether) populate(snapshots, IslandWorld.Nether, false);
             if (hasEnd) populate(snapshots, IslandWorld.End, false);
 
-            BlockScanner.startScanner(snapshots, (blocks) -> {
+            BlockScanner.startScanner(snapshots, false, false, (blocks) -> {
                 this.blocks = blocks;
                 this.blocksSize = blocks.size();
                 this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
@@ -182,18 +182,17 @@ public final class IslandScan extends BukkitRunnable {
 
         final SkyBlock skyblock = SkyBlock.getInstance();
 
-        ChunkUtil chunks = new ChunkUtil();
-        chunks.getChunksToScan(island, world, paper);
-
-        if(paper){
-            List<ChunkSnapshot> positions = new LinkedList<>();
-            for(CompletableFuture<Chunk> chunk : chunks.asyncPositions){
-                positions.add(chunk.join().getChunkSnapshot());
+        new ChunkLoader(island, IslandWorld.Normal, paper, (asyncPositions, syncPositions) -> {
+            if(paper){
+                List<ChunkSnapshot> positions = new LinkedList<>();
+                for(CompletableFuture<Chunk> chunk : asyncPositions){
+                    positions.add(chunk.join().getChunkSnapshot());
+                }
+                snapshots.put(skyblock.getWorldManager().getWorld(world), positions);
+            } else {
+                snapshots.put(skyblock.getWorldManager().getWorld(world), syncPositions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
             }
-            snapshots.put(skyblock.getWorldManager().getWorld(world), positions);
-        } else {
-            snapshots.put(skyblock.getWorldManager().getWorld(world), chunks.syncPositions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
-        }
+        });
     }
 
     public Set<Location> getDoubleBlocks() {

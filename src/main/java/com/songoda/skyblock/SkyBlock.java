@@ -116,6 +116,7 @@ public class SkyBlock extends SongodaPlugin {
             Class.forName("com.destroystokyo.paper.PaperConfig");
             paper = true;
             paperAsync = Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
+            paperAsync = false;
             this.getLogger().info("Enabling Paper hooks");
         } catch (ClassNotFoundException ignored) {
             PaperLib.suggestPaper(this);

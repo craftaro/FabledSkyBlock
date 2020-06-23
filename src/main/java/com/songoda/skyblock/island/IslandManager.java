@@ -1,7 +1,6 @@
 package com.songoda.skyblock.island;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.google.common.base.Preconditions;
@@ -18,7 +17,7 @@ import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.invite.Invite;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.removal.ChunkDeleteSplitter;
-import com.songoda.skyblock.levelling.ChunkUtil;
+import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -53,7 +52,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -559,7 +557,7 @@ public class IslandManager {
             }
         }
 
-        startDeletition(island, worldManager);
+        startDeletion(island, worldManager);
 
         skyblock.getVisitManager().deleteIsland(island.getOwnerUUID());
         skyblock.getBanManager().deleteIsland(island.getOwnerUUID());
@@ -645,7 +643,7 @@ public class IslandManager {
         return true;
     }
 
-    private void startDeletition(Island island, WorldManager worldManager) {
+    private void startDeletion(Island island, WorldManager worldManager) {
         final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
 
         for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
@@ -656,27 +654,25 @@ public class IslandManager {
 
             final World world = worldManager.getWorld(worldList);
 
-            ChunkUtil chunks = new ChunkUtil();
-
-
-            if (skyblock.isPaperAsync()) {
-                chunks.getChunksToScan(island, worldList, true);
-                Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
-                    List<Chunk> positions = new LinkedList<>();
-                    for (CompletableFuture<Chunk> chunk : chunks.asyncPositions) {
-                        positions.add(chunk.join());
+            new ChunkLoader(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncPositions, syncPositions) -> {
+                if(skyblock.isPaperAsync()){
+                    Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                        List<Chunk> positions = new LinkedList<>();
+                        for (CompletableFuture<Chunk> chunk : asyncPositions) {
+                            positions.add(chunk.join());
+                        }
                         snapshots.put(world, positions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList()));
-                    }
-                });
-            } else {
-                chunks.getChunksToScan(island, worldList, false);
-                final List<ChunkSnapshot> list = chunks.syncPositions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList());
+                        ChunkDeleteSplitter.startDeletion(snapshots);
+                    });
+                } else {
+                    final List<ChunkSnapshot> list = syncPositions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList());
 
-                snapshots.put(world, list);
-            }
+                    snapshots.put(world, list);
+                    ChunkDeleteSplitter.startDeletion(snapshots);
+                }
+            });
         }
 
-        ChunkDeleteSplitter.startDeletion(snapshots);
     }
 
     public synchronized void deleteIslandData(UUID uuid) {

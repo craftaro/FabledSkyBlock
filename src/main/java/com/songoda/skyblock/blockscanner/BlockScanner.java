@@ -59,9 +59,12 @@ public final class BlockScanner extends BukkitRunnable {
     private final Queue<BlockInfo> blocks;
     private final ScannerTasks tasks;
 
-    private int scanY;
+    private boolean ignoreLiquids;
+    private boolean ignoreAir;
 
-    private BlockScanner(Map<World, List<ChunkSnapshot>> snapshots, ScannerTasks tasks) {
+    private BlockScanner(Map<World, List<ChunkSnapshot>> snapshots, boolean ignoreLiquids, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
+        this.ignoreLiquids = ignoreLiquids;
+        this.ignoreAir = ignoreAir;
         this.blocks = new ConcurrentLinkedQueue<>();
         this.tasks = tasks;
 
@@ -92,8 +95,15 @@ public final class BlockScanner extends BukkitRunnable {
 
             final ConfigurationSection liquidSection = config.getConfigurationSection("Island.World." + env + ".Liquid");
 
+            int startY;
+            if(ignoreY){
+                startY = 255;
+            } else {
+                startY = !ignoreLiquids && liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : 0;
+            }
+
             for (List<ChunkSnapshot> sub : parts) {
-               queueWork(world, liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : 0, sub);
+               queueWork(world, startY, sub);
             }
 
         }
@@ -102,8 +112,6 @@ public final class BlockScanner extends BukkitRunnable {
     }
 
     private void queueWork(World world, int scanY, List<ChunkSnapshot> subList) {
-
-
         Bukkit.getServer().getScheduler().runTaskAsynchronously(SkyBlock.getInstance(), () -> {
             for (ChunkSnapshot shot : subList) {
 
@@ -119,7 +127,13 @@ public final class BlockScanner extends BukkitRunnable {
                                     ? shot.getBlockType(x, y, z) : MaterialIDHelper.getLegacyMaterial(getBlockTypeID(shot, x, y, z)));
 
 
-                            if (type == null || type == CompatibleMaterial.AIR || type == CompatibleMaterial.WATER) continue;
+                            if(type == null){
+                                continue;
+                            } else if(type.equals(CompatibleMaterial.AIR) && ignoreAir){
+                                continue;
+                            } else if(type.equals(CompatibleMaterial.WATER) && ignoreLiquids){
+                                continue;
+                            }
 
                             blocks.add(new BlockInfo(world, x + (cX), y, z + (cZ)));
                         }
@@ -147,17 +161,17 @@ public final class BlockScanner extends BukkitRunnable {
         cancel();
     }
 
-    public static void startScanner(Map<World, List<ChunkSnapshot>> snapshots, ScannerTasks tasks) {
+    public static void startScanner(Map<World, List<ChunkSnapshot>> snapshots, boolean ignoreLiquids, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
 
         if (snapshots == null) throw new IllegalArgumentException("snapshots cannot be null");
         if (tasks == null) throw new IllegalArgumentException("tasks cannot be null");
 
-        final BlockScanner scanner = new BlockScanner(snapshots, tasks);
+        final BlockScanner scanner = new BlockScanner(snapshots, ignoreLiquids, ignoreAir, ignoreY, tasks);
 
         scanner.runTaskTimer(SkyBlock.getInstance(), 5, 5);
     }
 
-    public static interface ScannerTasks {
+    public interface ScannerTasks {
 
         void onComplete(Queue<BlockInfo> blocks);
 
