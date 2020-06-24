@@ -38,15 +38,4 @@ public class BrewingPermission extends ListeningPermission {
         if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.BREWING_STAND)
             cancelAndMessage(event, player, plugin, messageManager);
     }
-
-    @PermissionHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) return;
-        Player player = (Player)event.getDamager();
-        Entity entity = event.getEntity();
-
-        if (!(entity instanceof Monster)) return;
-
-        cancelAndMessage(event, player, plugin, messageManager);
-    }
 }

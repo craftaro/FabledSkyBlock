@@ -7,6 +7,7 @@ import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionPriority;
 import com.songoda.skyblock.permission.PermissionType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
@@ -32,8 +33,8 @@ public class MonsterHurtingPermission extends ListeningPermission {
 
         Entity entity = event.getEntity();
 
-        if (entity.getType() == EntityType.ARMOR_STAND || !(entity instanceof Monster)) return;
-
-        cancelAndMessage(event, player, plugin, messageManager);
+        if (entity instanceof Monster){
+            cancelAndMessage(event, player, plugin, messageManager);
+        }
     }
 }
