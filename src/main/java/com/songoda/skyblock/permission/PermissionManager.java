@@ -74,9 +74,7 @@ public class PermissionManager {
                 new MobHurtingPermission(plugin),
                 new ArmorStandUsePermission(plugin),
                 new MonsterHurtingPermission(plugin),
-                new PvpPermission(plugin),
                 new HangingDestroyPermission(plugin),
-                new DamagePermission(plugin),
                 new ExplosionsPermission(plugin),
                 new MobTamingPermission(plugin),
                 new MobGriefingPermission(plugin),
@@ -93,7 +91,6 @@ public class PermissionManager {
                 new VisitorPermission(),
                 new KickPermission(),
                 new BiomePermission(),
-                new KeepItemsOnDeathPermission(),
                 new UnbanPermission(),
                 new BanPermission(),
                 new BorderPermission(),
@@ -105,6 +102,21 @@ public class PermissionManager {
                 new MainSpawnPermission(),
                 new VisitorSpawnPermission());
 
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")){
+            registerPermission(new KeepItemsOnDeathPermission());
+        }
+    
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")){
+            registerPermission(new PvpPermission(plugin));
+        }
+    
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")){
+            registerPermission(new DamagePermission(plugin));
+        }
+    
         if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")){
             registerPermission(new HungerPermission(plugin));
