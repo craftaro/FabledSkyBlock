@@ -98,7 +98,7 @@ public class ChunkLoader extends BukkitRunnable {
     }
 
     @Override
-    public void run() {
+    public void run() { // TODO New algorithm that start from the center of the island
         for(int i = 0; i < chunkPerTick || paper; i++){
             if(x < maxX){
                 if(z < maxZ){

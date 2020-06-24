@@ -294,7 +294,7 @@ Island:
         # items in their inventory if they die at an island.
         Enable: true
     Settings:
-        # When any of these options are disabled, the setting will be removed from the 'Island Settings'
+        # When any of these options are disabled, the setting will be removed from the settings menu
         # menu.
         KeepItemsOnDeath:
             Enable: true
