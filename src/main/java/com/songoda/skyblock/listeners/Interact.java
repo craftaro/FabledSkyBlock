@@ -280,7 +280,7 @@ public class Interact implements Listener {
                 if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getBoolean("Island.Block.Obsidian.Enable")) {
 
-                    CompatibleSound.BLOCK_FIRE_EXTINGUISH.play(block.getWorld(), block.getLocation(), 1.0F, 1.0F);
+                    skyblock.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 1.0F);
                     block.setType(CompatibleMaterial.AIR.getBlockMaterial());
 
                     ItemUtils.takeActiveItem(player, CompatibleHand.getHand(event));
@@ -346,8 +346,8 @@ public class Interact implements Listener {
                                 }
                             }
                         }
-
-                        CompatibleSound.ENTITY_CHICKEN_EGG.play(player, 10.0F, 10.0F);
+    
+                        skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 10.0F, 10.0F);
 
                         event.setCancelled(true);
                         return;

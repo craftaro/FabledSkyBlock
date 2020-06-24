@@ -55,7 +55,7 @@ public class GuiPermissionsSelector extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(configLoad.getString("Menu." + admin + "Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            plugin.getSoundManager().playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 

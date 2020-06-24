@@ -9,6 +9,7 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
+import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ public class GuiBans extends Gui {
     private final SkyBlock plugin;
     private final BanManager banManager;
     private final PlayerDataManager playerDataManager;
+    private final SoundManager soundManager;
     private final Island island;
     private final FileConfiguration languageLoad;
 
@@ -34,8 +36,8 @@ public class GuiBans extends Gui {
         super(returnGui);
         this.plugin = plugin;
         this.playerDataManager = plugin.getPlayerDataManager();
-        ;
         this.banManager = plugin.getBanManager();
+        this.soundManager = plugin.getSoundManager();
         this.island = island;
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
@@ -51,13 +53,13 @@ public class GuiBans extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Bans.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Bans.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 

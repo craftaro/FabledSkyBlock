@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 public class GuiBank extends Gui {
     private final SkyBlock plugin;
     private final BankManager bankManager;
+    private final SoundManager soundManager;
     private final Island island;
     private final FileConfiguration languageLoad;
     private final boolean admin;
@@ -45,6 +46,7 @@ public class GuiBank extends Gui {
         super(2, returnGui);
         this.plugin = plugin;;
         this.bankManager = plugin.getBankManager();
+        this.soundManager = plugin.getSoundManager();
         this.island = island;
         this.admin = admin;
         this.languageLoad = plugin.getFileManager()
@@ -71,13 +73,13 @@ public class GuiBank extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 

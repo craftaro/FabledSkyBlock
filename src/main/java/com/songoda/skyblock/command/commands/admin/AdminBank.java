@@ -29,6 +29,7 @@ public class AdminBank extends SubCommand {
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
         FileManager fileManager = skyblock.getFileManager();
+        SoundManager soundManager = skyblock.getSoundManager();
 
         FileManager.Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
@@ -37,7 +38,7 @@ public class AdminBank extends SubCommand {
 
         if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Disabled.Message"));
-            CompatibleSound.BLOCK_ANVIL_LAND.play(player);
+            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             return;
         }
 
@@ -88,12 +89,12 @@ public class AdminBank extends SubCommand {
                     skyblock.getGuiManager().showGUI(player, new GuiBank(skyblock, island, null, true));
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.NullIsland.Message"));
-                    CompatibleSound.BLOCK_ANVIL_LAND.play(player);
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                 }
                 break;
             default:
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Unexpected.Message"));
-                CompatibleSound.BLOCK_ANVIL_LAND.play(player);
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
         }
     }
 

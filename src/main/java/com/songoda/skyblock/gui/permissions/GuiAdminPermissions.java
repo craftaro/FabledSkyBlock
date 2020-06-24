@@ -13,6 +13,7 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.permission.BasicPermission;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.permission.PermissionType;
+import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class GuiAdminPermissions extends Gui {
 
     private final PermissionManager permissionManager;
+    private final SoundManager soundManager;
     private final IslandRole role;
     private final FileConfiguration configLoad;
     private final FileManager.Config settingsConfig;
@@ -36,6 +38,7 @@ public class GuiAdminPermissions extends Gui {
     public GuiAdminPermissions(SkyBlock plugin, IslandRole role, Gui returnGui) {
         super(6, returnGui);
         this.permissionManager = plugin.getPermissionManager();
+        this.soundManager = plugin.getSoundManager();
         this.role = role;
         this.returnGui = returnGui;
         this.configLoad = plugin.getFileManager()
@@ -55,13 +58,13 @@ public class GuiAdminPermissions extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             guiManager.showGUI(event.player, returnGui);
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             guiManager.showGUI(event.player, returnGui);
         });
 

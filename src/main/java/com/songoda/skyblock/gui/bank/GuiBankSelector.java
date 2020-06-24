@@ -11,6 +11,7 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +23,7 @@ import java.util.Objects;
 public class GuiBankSelector extends Gui {
     private final SkyBlock plugin;
     private final BankManager bankManager;
+    private final SoundManager soundManager;
     private final Island island;
     private final FileConfiguration languageLoad;
     private final Type type;
@@ -38,6 +40,7 @@ public class GuiBankSelector extends Gui {
         this.plugin = plugin;
         this.type = type;
         this.bankManager = plugin.getBankManager();
+        this.soundManager = plugin.getSoundManager();
         this.island = island;
         this.returnGui = returnGui;
         this.admin = admin;
@@ -56,13 +59,13 @@ public class GuiBankSelector extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
@@ -109,18 +112,18 @@ public class GuiBankSelector extends Gui {
             switch(response){
                 case NOT_ENOUGH_MONEY:
                     messageManager.sendMessage(event.player, languageLoad.getString("Command.Island.Bank.Short2.Message"));
-                    CompatibleSound.BLOCK_ANVIL_LAND.play(event.player);
+                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     break;
                 case DECIMALS_NOT_ALLOWED:
                     messageManager.sendMessage(event.player, languageLoad.getString("Command.Island.Bank.Short6.Message"));
-                    CompatibleSound.BLOCK_ANVIL_LAND.play(event.player);
+                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     break;
                 case NEGATIVE_AMOUNT:
                     messageManager.sendMessage(event.player, languageLoad.getString("Command.Island.Bank.Short5.Message"));
-                    CompatibleSound.BLOCK_ANVIL_LAND.play(event.player);
+                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     break;
                 case SUCCESS:
-                    CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.play(event.player);
+                    soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
                     messageManager.sendMessage(event.player, Objects.requireNonNull(languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
                             "%amount%", NumberUtil.formatNumberByDecimal(amount)));
 
@@ -142,7 +145,7 @@ public class GuiBankSelector extends Gui {
                     amount = Double.parseDouble(gui.getInputText().trim());
                 } catch (NumberFormatException e1) {
                     messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short4.Message"));
-                    CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
+                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     return;
                 }
 
@@ -162,18 +165,18 @@ public class GuiBankSelector extends Gui {
                 switch(response){
                     case NOT_ENOUGH_MONEY:
                         messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short2.Message"));
-                        CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
+                        soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                         break;
                     case DECIMALS_NOT_ALLOWED:
                         messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short6.Message"));
-                        CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
+                        soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                         break;
                     case NEGATIVE_AMOUNT:
                         messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short5.Message"));
-                        CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
+                        soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                         break;
                     case SUCCESS:
-                        CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.play(e.player);
+                        soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
                         messageManager.sendMessage(e.player, Objects.requireNonNull(languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
                                 "%amount%", NumberUtil.formatNumberByDecimal(amount)));
                         break;

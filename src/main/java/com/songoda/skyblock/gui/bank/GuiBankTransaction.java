@@ -10,6 +10,7 @@ import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,6 +23,7 @@ import java.util.List;
 public class GuiBankTransaction extends Gui {
     private final SkyBlock plugin;
     private final BankManager bankManager;
+    private final SoundManager soundManager;
     private final FileConfiguration languageLoad;
     private final FileManager.Config config;
     private final Gui returnGui;
@@ -33,6 +35,7 @@ public class GuiBankTransaction extends Gui {
         super(returnGui);
         this.plugin = plugin;
         this.bankManager = plugin.getBankManager();
+        this.soundManager = plugin.getSoundManager();
         this.transactionList = bankManager.getTransactions(island.getOwnerUUID());
         this.transactions = this.transactionList.size();
         this.returnGui = returnGui;
@@ -61,13 +64,13 @@ public class GuiBankTransaction extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             guiManager.showGUI(event.player, returnGui);
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             guiManager.showGUI(event.player, returnGui);
         });
 

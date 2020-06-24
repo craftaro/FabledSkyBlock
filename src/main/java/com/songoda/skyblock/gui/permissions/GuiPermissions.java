@@ -15,6 +15,7 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.permission.BasicPermission;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.permission.PermissionType;
+import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -28,6 +29,7 @@ public class GuiPermissions extends Gui {
 
     private final SkyBlock plugin;
     private final PermissionManager permissionManager;
+    private final SoundManager soundManager;
     private final IslandRole role;
     private final Island island;
     private final FileConfiguration configLoad;
@@ -38,6 +40,7 @@ public class GuiPermissions extends Gui {
         super(6, returnGui);
         this.plugin = plugin;
         this.permissionManager = plugin.getPermissionManager();
+        this.soundManager = plugin.getSoundManager();
         this.role = role;
         this.island = island;
         this.returnGui = returnGui;
@@ -56,7 +59,7 @@ public class GuiPermissions extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             guiManager.showGUI(event.player, returnGui);
         });
 
@@ -94,10 +97,10 @@ public class GuiPermissions extends Gui {
                     (event -> {
                         if (island.isOpen()) {
                             plugin.getIslandManager().closeIsland(island);
-                            CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.play(event.player);
+                            soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
                         } else {
                             island.setOpen(true);
-                            CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.play(event.player);
+                            soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1f, 1f);
                         }
                         paint();
                     }));
@@ -105,7 +108,7 @@ public class GuiPermissions extends Gui {
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            CompatibleSound.BLOCK_CHEST_CLOSE.play(event.player);
+            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             guiManager.showGUI(event.player, returnGui);
         });
 
@@ -144,7 +147,7 @@ public class GuiPermissions extends Gui {
                 if (!hasPermission(island, event.player, role)) {
                     plugin.getMessageManager().sendMessage(event.player, configLoad
                             .getString("Command.Island.Settings.Permission.Change.Message"));
-                   CompatibleSound.BLOCK_ANVIL_LAND.play(event.player);
+                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
 
                     return;
                 }
