@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class GuiBans extends Gui {
-    private final SkyBlock plugin;
-    private final BanManager banManager;
     private final PlayerDataManager playerDataManager;
     private final SoundManager soundManager;
     private final Island island;
@@ -34,9 +32,7 @@ public class GuiBans extends Gui {
 
     public GuiBans(SkyBlock plugin, Island island, Gui returnGui) {
         super(returnGui);
-        this.plugin = plugin;
         this.playerDataManager = plugin.getPlayerDataManager();
-        this.banManager = plugin.getBanManager();
         this.soundManager = plugin.getSoundManager();
         this.island = island;
         this.languageLoad = plugin.getFileManager()
@@ -46,7 +42,7 @@ public class GuiBans extends Gui {
         paint();
     }
 
-    public void paint() {
+    public void paint() { // TODO Item to add ban
         if (inventory != null)
             inventory.clear();
         setActionForRange(0, 0, 1, 8, null);
