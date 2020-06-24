@@ -153,14 +153,21 @@ public class PlayerData {
         this.playTime = playTime;
     }
 
+    public boolean isScoreboard() {
+        return getConfig().getFileConfiguration().getBoolean("Scoreboard", true);
+    }
+
+    public void setScoreboard(boolean scoreboard) {
+        getConfig().getFileConfiguration().set("Scoreboard", scoreboard);
+    }
+    
     public boolean isPreview() {
         return preview;
     }
-
+    
     public void setPreview(boolean preview) {
         this.preview = preview;
     }
-
 
     public int getVisitTime() {
         return visitTime;

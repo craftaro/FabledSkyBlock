@@ -89,6 +89,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 new VisitCommand(),
                 new VisitorsCommand(),
                 new VoteCommand(),
+                new ScoreboardCommand(),
                 new WeatherCommand()
         );
 

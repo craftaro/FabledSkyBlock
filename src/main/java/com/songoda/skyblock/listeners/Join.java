@@ -105,41 +105,7 @@ public class Join implements Listener {
             cooldownManager.addCooldownPlayer(CooldownType.Deletion, cooldownManager.loadCooldownPlayer(CooldownType.Deletion, player));
 
             if (scoreboardManager != null) {
-                Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-                Scoreboard scoreboard = new Scoreboard(skyblock, player);
-                Island island = islandManager.getIsland(player);
-
-                if (island != null) {
-                    OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
-
-                    cooldownManager.addCooldownPlayer(CooldownType.Levelling, cooldownManager.loadCooldownPlayer(CooldownType.Levelling, offlinePlayer));
-                    cooldownManager.addCooldownPlayer(CooldownType.Ownership, cooldownManager.loadCooldownPlayer(CooldownType.Ownership, offlinePlayer));
-
-                    if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
-                        scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
-
-                        if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                            scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
-                        } else {
-                            scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
-                        }
-                    } else {
-                        scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Team.Displayname")));
-
-                        if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                            scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
-                        } else {
-                            scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-                        }
-
-                    }
-                } else {
-                    scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-                    scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
-                }
-
-                scoreboard.run();
-                scoreboardManager.storeScoreboard(player, scoreboard);
+                scoreboardManager.addPlayer(player);
             }
 
             Island island = islandManager.getIslandPlayerAt(player);

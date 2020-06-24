@@ -3,12 +3,17 @@ package com.songoda.skyblock.scoreboard;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.cooldown.CooldownManager;
+import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.playerdata.PlayerData;
+import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Objective;
@@ -23,6 +28,8 @@ public class ScoreboardManager extends BukkitRunnable {
     private final static int VERSION = NMSUtil.getVersionNumber();
     private final SkyBlock skyblock;
     private final Map<UUID, Scoreboard> scoreboardStorage = new HashMap<>();
+    
+    private final PlayerDataManager playerDataManager;
 
     private int runTicks = 0;
 
@@ -31,6 +38,7 @@ public class ScoreboardManager extends BukkitRunnable {
 
     public ScoreboardManager(SkyBlock skyblock) {
         this.skyblock = skyblock;
+        this.playerDataManager = skyblock.getPlayerDataManager();
         this.runTaskTimer(skyblock, 20, 40);
     }
 
@@ -95,42 +103,45 @@ public class ScoreboardManager extends BukkitRunnable {
          */
 
         for (Player player : players) {
-
-            final org.bukkit.scoreboard.Scoreboard playerBoard = player.getScoreboard();
-
-            for (Objective primaryObjective : objectives) {
-
-                Objective obj = playerBoard.getObjective(primaryObjective.getName());
-
-                if (obj == null)
-                    obj = playerBoard.registerNewObjective(primaryObjective.getName(), primaryObjective.getCriteria());
-
-                obj.setDisplayName(primaryObjective.getDisplayName());
-                obj.setDisplaySlot(primaryObjective.getDisplaySlot());
-                if (VERSION > 12) obj.setRenderType(primaryObjective.getRenderType());
-            }
-
-            for (Team primaryTeam : teams) {
-
-                Team obj = playerBoard.getTeam(primaryTeam.getName());
-
-                if (obj == null) obj = playerBoard.registerNewTeam(primaryTeam.getName());
-
-                obj.setAllowFriendlyFire(primaryTeam.allowFriendlyFire());
-                obj.setCanSeeFriendlyInvisibles(primaryTeam.canSeeFriendlyInvisibles());
-                if (VERSION > 11) obj.setColor(primaryTeam.getColor());
-                obj.setDisplayName(primaryTeam.getDisplayName());
-                obj.setNameTagVisibility(primaryTeam.getNameTagVisibility());
-                obj.setPrefix(primaryTeam.getPrefix());
-                obj.setSuffix(primaryTeam.getSuffix());
-
-                for (String primaryEntry : primaryTeam.getEntries()) {
-                    obj.addEntry(primaryEntry);
+    
+            PlayerData pd = playerDataManager.getPlayerData(player);
+            if(pd != null && pd.isScoreboard()){
+                final org.bukkit.scoreboard.Scoreboard playerBoard = player.getScoreboard();
+    
+                for (Objective primaryObjective : objectives) {
+        
+                    Objective obj = playerBoard.getObjective(primaryObjective.getName());
+        
+                    if (obj == null)
+                        obj = playerBoard.registerNewObjective(primaryObjective.getName(), primaryObjective.getCriteria());
+        
+                    obj.setDisplayName(primaryObjective.getDisplayName());
+                    obj.setDisplaySlot(primaryObjective.getDisplaySlot());
+                    if (VERSION > 12) obj.setRenderType(primaryObjective.getRenderType());
                 }
-
-                if (VERSION > 8) {
-                    for (Option option : Option.values()) {
-                        obj.setOption(option, primaryTeam.getOption(option));
+    
+                for (Team primaryTeam : teams) {
+        
+                    Team obj = playerBoard.getTeam(primaryTeam.getName());
+        
+                    if (obj == null) obj = playerBoard.registerNewTeam(primaryTeam.getName());
+        
+                    obj.setAllowFriendlyFire(primaryTeam.allowFriendlyFire());
+                    obj.setCanSeeFriendlyInvisibles(primaryTeam.canSeeFriendlyInvisibles());
+                    if (VERSION > 11) obj.setColor(primaryTeam.getColor());
+                    obj.setDisplayName(primaryTeam.getDisplayName());
+                    obj.setNameTagVisibility(primaryTeam.getNameTagVisibility());
+                    obj.setPrefix(primaryTeam.getPrefix());
+                    obj.setSuffix(primaryTeam.getSuffix());
+        
+                    for (String primaryEntry : primaryTeam.getEntries()) {
+                        obj.addEntry(primaryEntry);
+                    }
+        
+                    if (VERSION > 8) {
+                        for (Option option : Option.values()) {
+                            obj.setOption(option, primaryTeam.getOption(option));
+                        }
                     }
                 }
             }
@@ -210,5 +221,56 @@ public class ScoreboardManager extends BukkitRunnable {
 
     public boolean hasScoreboard(Player player) {
         return scoreboardStorage.containsKey(player.getUniqueId());
+    }
+    
+    public Map<UUID, Scoreboard> getScoreboardStorage() {
+        return this.scoreboardStorage;
+    }
+    
+    public void addPlayer(Player player){
+        CooldownManager cooldownManager = skyblock.getCooldownManager();
+        FileManager fileManager = skyblock.getFileManager();
+        IslandManager islandManager = skyblock.getIslandManager();
+        
+        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Scoreboard scoreboard = new Scoreboard(skyblock, player);
+        Island island = islandManager.getIsland(player);
+    
+        if (island != null) {
+            OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
+        
+            cooldownManager.addCooldownPlayer(CooldownType.Levelling, cooldownManager.loadCooldownPlayer(CooldownType.Levelling, offlinePlayer));
+            cooldownManager.addCooldownPlayer(CooldownType.Ownership, cooldownManager.loadCooldownPlayer(CooldownType.Ownership, offlinePlayer));
+        
+            if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
+                scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
+            
+                if (islandManager.getVisitorsAtIsland(island).size() == 0) {
+                    scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
+                } else {
+                    scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
+                }
+            } else {
+                scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Team.Displayname")));
+            
+                if (islandManager.getVisitorsAtIsland(island).size() == 0) {
+                    scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
+                } else {
+                    scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
+                }
+            
+            }
+        } else {
+            scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
+            scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
+        }
+    
+        scoreboard.run();
+        this.storeScoreboard(player, scoreboard);
+    }
+    
+    public void removePlayer(Player player){
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        this.scoreboardStorage.remove(player.getUniqueId());
     }
 }

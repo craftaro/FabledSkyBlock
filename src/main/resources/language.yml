@@ -7,6 +7,17 @@ ClassLocalization:
    Operator: 'Operator'
    Owner: 'Owner'
 Command:
+  Scoreboard:
+    Disabled:
+      Message: '&bSkyBlock &8| &aInfo&8: &eScoreboard disabled.'
+    Enabled:
+      Message: '&bSkyBlock &8| &aInfo&8: &eScoreboard enabled.'
+    Error:
+      Message: '&bSkyBlock &8| &cError&8: &eAn error occurred.'
+    GlobalDisable:
+      Message: '&bSkyBlock &8| &cError&8: &eScoreboard are globally disabled.'
+    Info:
+      Message: '&bSkyBlock &8| &aInfo&8: &eEnable or disabled the scoreboard.'
   Island:
     Bans:
       Owner:
