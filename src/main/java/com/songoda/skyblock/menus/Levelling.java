@@ -260,7 +260,14 @@ public class Levelling {
 
                 inventorySlot++;
 
-                long pointsEarned = materialAmount * pointsMultiplier;
+                long materialLimit = mainConfig.getFileConfiguration().getLong("Materials." + material + ".Limit", materialAmount);
+                long materialAmountCounted = Math.min(materialLimit, materialAmount);
+
+                if (materialLimit == -1)
+                    materialAmountCounted = materialAmount;
+
+                long pointsEarned = materialAmountCounted * pointsMultiplier;
+
 
                 String name = skyblock.getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(materials);
 
