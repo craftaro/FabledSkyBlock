@@ -12,12 +12,12 @@ Island:
     Performance:
         # Chunk loading per tick affecting operations like island deletion, scan and biome changing.
         # This option is ignored when using Paper's async chunk load
-        ChunkPerTick: 25
+        # You should increase this only if you have an SSD
+        ChunkPerTick: 15
     Size:
         # [!] Do not go over 1000 for both of these options.
         # The size of an Island when created.
         # [!] Do not go over the maximum.
-        # [!] Even numbers WILL create world border issues.
         Minimum: 100
         # The maximum size of an Island based on the permission node 'fabledskyblock.size.<size>'.
         Maximum: 200
@@ -166,7 +166,7 @@ Island:
             Lines: 6
             # Length allowed for each line
             Length: 30
-        # Max amount of players allowed at a Island. This also includes Island Members.
+        # Max amount of concurrent players allowed at an Island. This also includes Island Members.
         # [!] Set to -1 for unlimited capacity.
         Capacity: 25
         # Allow Island Operators or Owners to ban players from their Island.
