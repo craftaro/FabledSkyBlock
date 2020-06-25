@@ -3,20 +3,15 @@ package com.songoda.skyblock.gui.wip;
 import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;
-import com.songoda.core.hooks.EconomyManager;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.bank.BankManager;
-import com.songoda.skyblock.bank.Transaction;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.cooldown.Cooldown;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownPlayer;
 import com.songoda.skyblock.cooldown.CooldownType;
-import com.songoda.skyblock.gui.bank.GuiBankSelector;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandManager;
@@ -27,15 +22,9 @@ import com.songoda.skyblock.utils.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GuiBiome extends Gui {
     private final SkyBlock plugin;
@@ -87,10 +76,13 @@ public class GuiBiome extends Gui {
             event.player.closeInventory();
         });
     
+        List<String> lore = languageLoad.getStringList("Menu.Biome.Item.Info.Lore");
+        for (ListIterator<String> i = lore.listIterator(); i.hasNext(); ) {
+            i.set(TextUtils.formatText(i.next().replace("%biome_type", island.getBiomeName())));
+        }
+        
         setItem(4, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING, // Info
-                TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Info.Displayname")),
-                TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Info.Lore")
-                        .replace("%biome_type", island.getBiomeName()))));
+                TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Info.Displayname")), lore));
         
         for(int i=9; i<18; i++){
             setItem(i, CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
