@@ -260,7 +260,14 @@ public class Levelling {
 
                 inventorySlot++;
 
-                long pointsEarned = materialAmount * pointsMultiplier;
+                long materialLimit = mainConfig.getFileConfiguration().getLong("Materials." + material + ".Limit", -1);
+                long materialAmountCounted = Math.min(materialLimit, materialAmount);
+
+                if (materialLimit == -1)
+                    materialAmountCounted = materialAmount;
+
+                long pointsEarned = materialAmountCounted * pointsMultiplier;
+
 
                 String name = skyblock.getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(materials);
 
@@ -271,11 +278,15 @@ public class Levelling {
                 is.setAmount(Math.min(Math.toIntExact(materialAmount), 64));
                 is.setType(CompatibleMaterial.getMaterial(is).getMaterial());
 
+                 long finalMaterialAmountCounted = materialAmountCounted;
                 List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");
-                lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned)).replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)).replace("%material", name));
+                lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned)).replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
+                        .replace("%material", name).replace("%counted", NumberUtil.formatNumberByDecimal(finalMaterialAmountCounted)));
 
                 nInv.addItem(nInv.createItem(is, configLoad.getString("Menu.Levelling.Item.Material.Displayname").replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
-                        .replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)).replace("%material", name), lore, null, null, null), inventorySlot);
+                        .replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)).replace("%material", name).replace("%counted", NumberUtil.formatNumberByDecimal(finalMaterialAmountCounted))
+                        ,lore, null, null, null), inventorySlot);
+
             }
         }
 
