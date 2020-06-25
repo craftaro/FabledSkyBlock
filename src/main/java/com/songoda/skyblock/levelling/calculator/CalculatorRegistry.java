@@ -1,4 +1,4 @@
-package com.songoda.skyblock.levelling.rework.calculator;
+package com.songoda.skyblock.levelling.calculator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import org.bukkit.Material;
 
 public final class CalculatorRegistry {
 

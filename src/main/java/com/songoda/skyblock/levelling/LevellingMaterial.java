@@ -1,4 +1,4 @@
-package com.songoda.skyblock.levelling.rework;
+package com.songoda.skyblock.levelling;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.inventory.ItemStack;

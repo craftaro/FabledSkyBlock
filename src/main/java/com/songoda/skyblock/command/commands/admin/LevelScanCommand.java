@@ -5,7 +5,7 @@ import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.levelling.rework.IslandLevelManager;
+import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.Bukkit;

@@ -2,12 +2,13 @@ package com.songoda.skyblock.api.levelling;
 
 import com.google.common.base.Preconditions;
 import com.songoda.skyblock.api.island.Island;
+import com.songoda.skyblock.levelling.IslandLevelManager;
 
 public class LevellingManager {
 
-    private final com.songoda.skyblock.levelling.rework.IslandLevelManager levellingManager;
+    private final IslandLevelManager levellingManager;
 
-    public LevellingManager(com.songoda.skyblock.levelling.rework.IslandLevelManager levellingManager) {
+    public LevellingManager(IslandLevelManager levellingManager) {
         this.levellingManager = levellingManager;
     }
 

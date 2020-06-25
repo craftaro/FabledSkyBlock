@@ -1,4 +1,4 @@
-package com.songoda.skyblock.levelling.rework;
+package com.songoda.skyblock.levelling;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.levelling.calculator.Calculator;
+import com.songoda.skyblock.levelling.calculator.CalculatorRegistry;
+import com.songoda.skyblock.levelling.calculator.impl.EpicSpawnerCalculator;
+import com.songoda.skyblock.levelling.calculator.impl.UltimateStackerCalculator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -21,11 +25,7 @@ import org.bukkit.plugin.PluginManager;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.levelling.rework.amount.AmountMaterialPair;
-import com.songoda.skyblock.levelling.rework.calculator.Calculator;
-import com.songoda.skyblock.levelling.rework.calculator.CalculatorRegistry;
-import com.songoda.skyblock.levelling.rework.calculator.impl.EpicSpawnerCalculator;
-import com.songoda.skyblock.levelling.rework.calculator.impl.UltimateStackerCalculator;
+import com.songoda.skyblock.levelling.amount.AmountMaterialPair;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.StackableManager;
  

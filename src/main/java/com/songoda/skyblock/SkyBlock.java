@@ -23,7 +23,7 @@ import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.reward.RewardManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.levelling.rework.IslandLevelManager;
+import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import com.songoda.skyblock.listeners.*;
 import com.songoda.skyblock.localization.LocalizationManager;

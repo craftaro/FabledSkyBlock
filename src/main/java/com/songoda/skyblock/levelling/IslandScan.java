@@ -1,4 +1,4 @@
-package com.songoda.skyblock.levelling.rework;
+package com.songoda.skyblock.levelling;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
@@ -9,8 +9,8 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.blockscanner.ChunkLoader;
-import com.songoda.skyblock.levelling.rework.amount.AmountMaterialPair;
-import com.songoda.skyblock.levelling.rework.amount.BlockAmount;
+import com.songoda.skyblock.levelling.amount.AmountMaterialPair;
+import com.songoda.skyblock.levelling.amount.BlockAmount;
 import com.songoda.skyblock.message.MessageManager;
 import org.bukkit.*;
 import org.bukkit.configuration.Configuration;

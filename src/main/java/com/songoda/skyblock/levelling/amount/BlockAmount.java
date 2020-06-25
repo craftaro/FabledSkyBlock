@@ -1,4 +1,4 @@
-package com.songoda.skyblock.levelling.rework.amount;
+package com.songoda.skyblock.levelling.amount;
 
 public class BlockAmount {
 

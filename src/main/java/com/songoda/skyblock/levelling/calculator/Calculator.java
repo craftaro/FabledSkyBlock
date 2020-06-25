@@ -1,4 +1,4 @@
-package com.songoda.skyblock.levelling.rework.calculator;
+package com.songoda.skyblock.levelling.calculator;
 
 import org.bukkit.block.Block;
 

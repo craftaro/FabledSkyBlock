@@ -1,10 +1,10 @@
-package com.songoda.skyblock.levelling.rework.calculator.impl;
+package com.songoda.skyblock.levelling.calculator.impl;
 
 import org.bukkit.block.CreatureSpawner;
 
 import com.songoda.epicspawners.EpicSpawners;
 import com.songoda.epicspawners.spawners.spawner.Spawner;
-import com.songoda.skyblock.levelling.rework.calculator.SpawnerCalculator;
+import com.songoda.skyblock.levelling.calculator.SpawnerCalculator;
 
 public class EpicSpawnerCalculator implements SpawnerCalculator {
 

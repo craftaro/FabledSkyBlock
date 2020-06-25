@@ -21,7 +21,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.levelling.rework.IslandLevelManager;
+import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.upgrade.Upgrade.Type;
 import com.songoda.skyblock.utils.NumberUtil;

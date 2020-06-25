@@ -1,8 +1,8 @@
-package com.songoda.skyblock.levelling.rework.calculator.impl;
+package com.songoda.skyblock.levelling.calculator.impl;
 
 import org.bukkit.block.CreatureSpawner;
 
-import com.songoda.skyblock.levelling.rework.calculator.SpawnerCalculator;
+import com.songoda.skyblock.levelling.calculator.SpawnerCalculator;
 import com.songoda.ultimatestacker.UltimateStacker;
 import com.songoda.ultimatestacker.spawner.SpawnerStack;
 
