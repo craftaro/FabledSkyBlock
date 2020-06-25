@@ -3,1438 +3,2156 @@
 #   Points Earned
 Materials:
     ACACIA_BUTTON:
+        Limit: -1
         Points: 1
     ACACIA_DOOR:
+        Limit: -1
         Points: 1
     ACACIA_FENCE:
+        Limit: -1
         Points: 2
     ACACIA_FENCE_GATE:
+        Limit: -1
         Points: 4
     ACACIA_LEAVES:
+        Limit: -1
         Points: 0
     ACACIA_LOG:
+        Limit: -1
         Points: 0
     ACACIA_PLANKS:
+        Limit: -1
         Points: 1
     ACACIA_PRESSURE_PLATE:
+        Limit: -1
         Points: 2
     ACACIA_SAPLING:
+        Limit: -1
         Points: 1
     ACACIA_SLAB:
+        Limit: -1
         Points: 1
     ACACIA_STAIRS:
+        Limit: -1
         Points: 2
     ACACIA_TRAPDOOR:
+        Limit: -1
         Points: 3
     ACACIA_WOOD:
+        Limit: -1
         Points: 1
     ACTIVATOR_RAIL:
+        Limit: -1
         Points: 1
     ALLIUM:
+        Limit: -1
         Points: 1
     ANDESITE:
+        Limit: -1
         Points: 1
     ANDESITE_SLAB:
+        Limit: -1
         Points: 1
     ANDESITE_STAIRS:
+        Limit: -1
         Points: 1
     ANDESITE_WALL:
+        Limit: -1
         Points: 1
     ANVIL:
+        Limit: -1
         Points: 10
     ATTACHED_MELON_STEM:
+        Limit: -1
         Points: 1
     ATTACHED_PUMPKIN_STEM:
+        Limit: -1
         Points: 1
     AZURE_BLUET:
+        Limit: -1
         Points: 1
     BARRIER:
+        Limit: -1
         Points: 0
     BAMBOO:
+        Limit: -1
         Points: 1
     BAMBOO_SAPLING:
+        Limit: -1
         Points: 1
     BARREL:
+        Limit: -1
         Points: 1
     BEACON:
+        Limit: -1
         Points: 500
     BEDROCK:
+        Limit: -1
         Points: 0
     BEETROOTS:
+        Limit: -1
         Points: 1
     BELL:
+        Limit: -1
         Points: 7
     BIRCH_BUTTON:
+        Limit: -1
         Points: 1
     BIRCH_DOOR:
+        Limit: -1
         Points: 2
     BIRCH_FENCE:
+        Limit: -1
         Points: 2
     BIRCH_FENCE_GATE:
+        Limit: -1
         Points: 4
     BIRCH_LEAVES:
+        Limit: -1
         Points: 0
     BIRCH_LOG:
+        Limit: -1
         Points: 0
     BIRCH_PLANKS:
+        Limit: -1
         Points: 1
     BIRCH_PRESSURE_PLATE:
+        Limit: -1
         Points: 2
     BIRCH_SAPLING:
+        Limit: -1
         Points: 1
     BIRCH_SIGN:
+        Limit: -1
         Points: 6
     BIRCH_SLAB:
+        Limit: -1
         Points: 1
     BIRCH_STAIRS:
+        Limit: -1
         Points: 2
     BIRCH_TRAPDOOR:
+        Limit: -1
         Points: 3
     BIRCH_WALL_SIGN:
+        Limit: -1
         Points: 6
     BIRCH_WOOD:
+        Limit: -1
         Points: 1
     BLACK_BANNER:
+        Limit: -1
         Points: 2
     BLACK_BED:
+        Limit: -1
         Points: 6
     BLACK_CARPET:
+        Limit: -1
         Points: 1
     BLACK_CONCRETE:
+        Limit: -1
         Points: 3
     BLACK_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     BLACK_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     BLACK_SHULKER_BOX:
+        Limit: -1
         Points: 11
     BLACK_STAINED_GLASS:
+        Limit: -1
         Points: 2
     BLACK_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     BLACK_TERRACOTTA:
+        Limit: -1
         Points: 2
     BLACK_WALL_BANNER:
+        Limit: -1
         Points: 2
     BLACK_WOOL:
+        Limit: -1
         Points: 2
     BLAST_FURNACE:
+        Limit: -1
         Points: 6
     BLUE_BANNER:
+        Limit: -1
         Points: 2
     BLUE_BED:
+        Limit: -1
         Points: 6
     BLUE_CARPET:
+        Limit: -1
         Points: 1
     BLUE_CONCRETE:
+        Limit: -1
         Points: 3
     BLUE_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     BLUE_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     BLUE_ICE:
+        Limit: -1
         Points: 1
     BLUE_ORCHID:
+        Limit: -1
         Points: 1
     BLUE_SHULKER_BOX:
+        Limit: -1
         Points: 11
     BLUE_STAINED_GLASS:
+        Limit: -1
         Points: 2
     BLUE_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     BLUE_TERRACOTTA:
+        Limit: -1
         Points: 2
     BLUE_WALL_BANNER:
+        Limit: -1
         Points: 2
     BLUE_WOOL:
+        Limit: -1
         Points: 2
     BONE_BLOCK:
+        Limit: -1
         Points: 1
     BOOKSHELF:
+        Limit: -1
         Points: 5
     BRAIN_CORAL:
+        Limit: -1
         Points: 1
     BRAIN_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     BRAIN_CORAL_FAN:
+        Limit: -1
         Points: 1
     BRAIN_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     BREWING_STAND:
+        Limit: -1
         Points: 20
     BRICKS:
+        Limit: -1
         Points: 5
     BRICK_SLAB:
+        Limit: -1
         Points: 3
     BRICK_STAIRS:
+        Limit: -1
         Points: 5
     BRICK_WALL:
+        Limit: -1
         Points: 3
     BROWN_BANNER:
+        Limit: -1
         Points: 2
     BROWN_BED:
+        Limit: -1
         Points: 6
     BROWN_CARPET:
+        Limit: -1
         Points: 1
     BROWN_CONCRETE:
+        Limit: -1
         Points: 3
     BROWN_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     BROWN_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     BROWN_MUSHROOM:
+        Limit: -1
         Points: 1
     BROWN_MUSHROOM_BLOCK:
+        Limit: -1
         Points: 1
     BROWN_SHULKER_BOX:
+        Limit: -1
         Points: 11
     BROWN_STAINED_GLASS:
+        Limit: -1
         Points: 2
     BROWN_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     BROWN_TERRACOTTA:
+        Limit: -1
         Points: 2
     BROWN_WALL_BANNER:
+        Limit: -1
         Points: 2
     BROWN_WOOL:
+        Limit: -1
         Points: 1
     BUBBLE_COLUMN:
+        Limit: -1
         Points: 1
     BUBBLE_CORAL:
+        Limit: -1
         Points: 1
     BUBBLE_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     BUBBLE_CORAL_FAN:
+        Limit: -1
         Points: 1
     BUBBLE_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     CACTUS:
+        Limit: -1
         Points: 1
     CAMPFIRE:
+        Limit: -1
         Points: 2
     CAKE:
+        Limit: -1
         Points: 9
     CARROTS:
+        Limit: -1
         Points: 1
     CARTOGRAPHY_TABLE:
+        Limit: -1
         Points: 5
     CARVED_PUMPKIN:
+        Limit: -1
         Points: 2
     CAULDRON:
+        Limit: -1
         Points: 10
     CAVE_AIR:
+        Limit: -1
         Points: 0
     CHAIN_COMMAND_BLOCK:
+        Limit: -1
         Points: 0
     CHEST:
+        Limit: -1
         Points: 8
     CHIPPED_ANVIL:
+        Limit: -1
         Points: 9
     CHISELED_QUARTZ_BLOCK:
+        Limit: -1
         Points: 2
     CHISELED_RED_SANDSTONE:
+        Limit: -1
         Points: 2
     CHISELED_SANDSTONE:
+        Limit: -1
         Points: 2
     CHISELED_STONE_BRICKS:
+        Limit: -1
         Points: 2
     CHORUS_FLOWER:
+        Limit: -1
         Points: 1
     CHORUS_PLANT:
+        Limit: -1
         Points: 1
     CLAY:
+        Limit: -1
         Points: 2
     COAL_BLOCK:
+        Limit: -1
         Points: 9
     COAL_ORE:
+        Limit: -1
         Points: 1
     COARSE_DIRT:
+        Limit: -1
         Points: 2
     COBBLESTONE:
+        Limit: -1
         Points: 1
     COBBLESTONE_SLAB:
+        Limit: -1
         Points: 1
     COBBLESTONE_STAIRS:
+        Limit: -1
         Points: 2
     COBBLESTONE_WALL:
+        Limit: -1
         Points: 1
     COBWEB:
+        Limit: -1
         Points: 10
     COCOA:
+        Limit: -1
         Points: 1
     COMMAND_BLOCK:
+        Limit: -1
         Points: 0
     COMPARATOR:
+        Limit: -1
         Points: 10
     COMPOSTER:
+        Limit: -1
         Points: 4
     CONDUIT:
+        Limit: -1
         Points: 1
     CORNFLOWER:
+        Limit: -1
         Points: 1
     CRACKED_STONE_BRICKS:
+        Limit: -1
         Points: 2
     CRAFTING_TABLE:
+        Limit: -1
         Points: 1
     CREEPER_HEAD:
+        Limit: -1
         Points: 1
     CREEPER_WALL_HEAD:
+        Limit: -1
         Points: 1
     CUT_RED_SANDSTONE:
+        Limit: -1
         Points: 1
     CUT_RED_SANDSTONE_SLAB:
+        Limit: -1
         Points: 1
     CUT_SANDSTONE:
+        Limit: -1
         Points: 1
     CUT_SANDSTONE_SLAB:
+        Limit: -1
         Points: 1
     CYAN_BANNER:
+        Limit: -1
         Points: 2
     CYAN_BED:
+        Limit: -1
         Points: 6
     CYAN_CARPET:
+        Limit: -1
         Points: 1
     CYAN_CONCRETE:
+        Limit: -1
         Points: 3
     CYAN_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     CYAN_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     CYAN_SHULKER_BOX:
+        Limit: -1
         Points: 11
     CYAN_STAINED_GLASS:
+        Limit: -1
         Points: 2
     CYAN_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     CYAN_TERRACOTTA:
+        Limit: -1
         Points: 2
     CYAN_WALL_BANNER:
+        Limit: -1
         Points: 2
     CYAN_WOOL:
+        Limit: -1
         Points: 2
     DAMAGED_ANVIL:
+        Limit: -1
         Points: 5
     DANDELION:
+        Limit: -1
         Points: 1
     DARK_OAK_BUTTON:
+        Limit: -1
         Points: 1
     DARK_OAK_DOOR:
+        Limit: -1
         Points: 2
     DARK_OAK_FENCE:
+        Limit: -1
         Points: 2
     DARK_OAK_FENCE_GATE:
+        Limit: -1
         Points: 4
     DARK_OAK_LEAVES:
+        Limit: -1
         Points: 0
     DARK_OAK_LOG:
+        Limit: -1
         Points: 0
     DARK_OAK_PLANKS:
+        Limit: -1
         Points: 1
     DARK_OAK_PRESSURE_PLATE:
+        Limit: -1
         Points: 2
     DARK_OAK_SAPLING:
+        Limit: -1
         Points: 1
     DARK_OAK_SIGN:
+        Limit: -1
         Points: 6
     DARK_OAK_SLAB:
+        Limit: -1
         Points: 1
     DARK_OAK_STAIRS:
+        Limit: -1
         Points: 2
     DARK_OAK_TRAPDOOR:
+        Limit: -1
         Points: 3
     DARK_OAK_WALL_SIGN:
+        Limit: -1
         Points: 6
     DARK_OAK_WOOD:
+        Limit: -1
         Points: 1
     DARK_PRISMARINE:
+        Limit: -1
         Points: 1
     DARK_PRISMARINE_SLAB:
+        Limit: -1
         Points: 1
     DARK_PRISMARINE_STAIRS:
+        Limit: -1
         Points: 2
     DAYLIGHT_DETECTOR:
+        Limit: -1
         Points: 10
     DEAD_BRAIN_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     DEAD_BRAIN_CORAL_FAN:
+        Limit: -1
         Points: 1
     DEAD_BRAIN_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     DEAD_BUBBLE_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     DEAD_BUBBLE_CORAL_FAN:
+        Limit: -1
         Points: 1
     DEAD_BUBBLE_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     DEAD_BUSH:
+        Limit: -1
         Points: 1
     DEAD_FIRE_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     DEAD_FIRE_CORAL_FAN:
+        Limit: -1
         Points: 1
     DEAD_FIRE_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     DEAD_HORN_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     DEAD_HORN_CORAL_FAN:
+        Limit: -1
         Points: 1
     DEAD_HORN_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     DEAD_TUBE_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     DEAD_TUBE_CORAL_FAN:
+        Limit: -1
         Points: 1
     DEAD_TUBE_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     DETECTOR_RAIL:
+        Limit: -1
         Points: 10
     DIAMOND_BLOCK:
+        Limit: -1
         Points: 300
     DIAMOND_ORE:
+        Limit: -1
         Points: 1
     DIORITE:
+        Limit: -1
         Points: 1
     DIORITE_SLAB:
+        Limit: -1
         Points: 1
     DIORITE_STAIRS:
+        Limit: -1
         Points: 1
     DIORITE_WALL:
+        Limit: -1
         Points: 1
     DIRT:
+        Limit: -1
         Points: 3
     DISPENSER:
+        Limit: -1
         Points: 5
     DRAGON_EGG:
+        Limit: -1
         Points: 150
     DRAGON_HEAD:
+        Limit: -1
         Points: 1
     DRAGON_WALL_HEAD:
+        Limit: -1
         Points: 1
     DRIED_KELP_BLOCK:
+        Limit: -1
         Points: 1
     DROPPER:
+        Limit: -1
         Points: 4
     EMERALD_BLOCK:
+        Limit: -1
         Points: 150
     EMERALD_ORE:
+        Limit: -1
         Points: 1
     ENCHANTING_TABLE:
+        Limit: -1
         Points: 150
     ENDER_CHEST:
+        Limit: -1
         Points: 150
     END_GATEWAY:
+        Limit: -1
         Points: 0
     END_PORTAL:
+        Limit: -1
         Points: 0
     END_PORTAL_FRAME:
+        Limit: -1
         Points: 0
     END_ROD:
+        Limit: -1
         Points: 1
     END_STONE:
+        Limit: -1
         Points: 1
     END_STONE_BRICK_SLAB:
+        Limit: -1
         Points: 1
     END_STONE_BRICK_STAIRS:
+        Limit: -1
         Points: 1
     END_STONE_BRICK_WALL:
+        Limit: -1
         Points: 1
     END_STONE_BRICKS:
+        Limit: -1
         Points: 2
     FARMLAND:
+        Limit: -1
         Points: 1
     FERN:
+        Limit: -1
         Points: 1
     FIRE:
+        Limit: -1
         Points: 0
     FIRE_CORAL:
+        Limit: -1
         Points: 1
     FIRE_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     FIRE_CORAL_FAN:
+        Limit: -1
         Points: 1
     FIRE_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     FLETCHING_TABLE:
+        Limit: -1
         Points: 4
     FLOWER_POT:
+        Limit: -1
         Points: 1
     FROSTED_ICE:
+        Limit: -1
         Points: 1
     FURNACE:
+        Limit: -1
         Points: 8
     GLASS:
+        Limit: -1
         Points: 2
     GLASS_PANE:
+        Limit: -1
         Points: 1
     GLOWSTONE:
+        Limit: -1
         Points: 1
     GOLD_BLOCK:
+        Limit: -1
         Points: 150
     GOLD_ORE:
+        Limit: -1
         Points: 1
     GRANITE:
+        Limit: -1
         Points: 1
     GRANITE_SLAB:
+        Limit: -1
         Points: 1
     GRANITE_STAIRS:
+        Limit: -1
         Points: 1
     GRANITE_WALL:
+        Limit: -1
         Points: 1
     GRASS:
+        Limit: -1
         Points: 4
     GRASS_BLOCK:
+        Limit: -1
         Points: 4
     GRASS_PATH:
+        Limit: -1
         Points: 4
     GRAVEL:
+        Limit: -1
         Points: 1
     GRAY_BANNER:
+        Limit: -1
         Points: 2
     GRAY_BED:
+        Limit: -1
         Points: 6
     GRAY_CARPET:
+        Limit: -1
         Points: 1
     GRAY_CONCRETE:
+        Limit: -1
         Points: 3
     GRAY_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     GRAY_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     GRAY_SHULKER_BOX:
+        Limit: -1
         Points: 11
     GRAY_STAINED_GLASS:
+        Limit: -1
         Points: 2
     GRAY_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     GRAY_TERRACOTTA:
+        Limit: -1
         Points: 2
     GRAY_WALL_BANNER:
+        Limit: -1
         Points: 2
     GRAY_WOOL:
+        Limit: -1
         Points: 2
     GREEN_BANNER:
+        Limit: -1
         Points: 2
     GREEN_BED:
+        Limit: -1
         Points: 6
     GREEN_CARPET:
+        Limit: -1
         Points: 1
     GREEN_CONCRETE:
+        Limit: -1
         Points: 3
     GREEN_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     GREEN_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     GREEN_SHULKER_BOX:
+        Limit: -1
         Points: 11
     GREEN_STAINED_GLASS:
+        Limit: -1
         Points: 2
     GREEN_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     GREEN_TERRACOTTA:
+        Limit: -1
         Points: 2
     GREEN_WALL_BANNER:
+        Limit: -1
         Points: 2
     GREEN_WOOL:
+        Limit: -1
         Points: 2
     GRINDSTONE:
+        Limit: -1
         Points: 4
     HAY_BLOCK:
+        Limit: -1
         Points: 2
     HEAVY_WEIGHTED_PRESSURE_PLATE:
+        Limit: -1
         Points: 3
     HOPPER:
+        Limit: -1
         Points: 5
     HORN_CORAL:
+        Limit: -1
         Points: 1
     HORN_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     HORN_CORAL_FAN:
+        Limit: -1
         Points: 1
     HORN_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     ICE:
+        Limit: -1
         Points: 5
     INFESTED_CHISELED_STONE_BRICKS:
+        Limit: -1
         Points: 2
     INFESTED_COBBLESTONE:
+        Limit: -1
         Points: 1
     INFESTED_CRACKED_STONE_BRICKS:
+        Limit: -1
         Points: 2
     INFESTED_MOSSY_STONE_BRICKS:
+        Limit: -1
         Points: 2
     INFESTED_STONE:
+        Limit: -1
         Points: 1
     INFESTED_STONE_BRICKS:
+        Limit: -1
         Points: 2
     IRON_BARS:
+        Limit: -1
         Points: 2
     IRON_BLOCK:
+        Limit: -1
         Points: 10
     IRON_DOOR:
+        Limit: -1
         Points: 5
     IRON_ORE:
+        Limit: -1
         Points: 1
     IRON_TRAPDOOR:
+        Limit: -1
         Points: 4
     JACK_O_LANTERN:
+        Limit: -1
         Points: 2
     JIGSAW:
+        Limit: -1
         Points: 4
     JUKEBOX:
+        Limit: -1
         Points: 10
     JUNGLE_BUTTON:
+        Limit: -1
         Points: 1
     JUNGLE_DOOR:
+        Limit: -1
         Points: 2
     JUNGLE_FENCE:
+        Limit: -1
         Points: 2
     JUNGLE_FENCE_GATE:
+        Limit: -1
         Points: 4
     JUNGLE_LEAVES:
+        Limit: -1
         Points: 0
     JUNGLE_LOG:
+        Limit: -1
         Points: 0
     JUNGLE_PLANKS:
+        Limit: -1
         Points: 1
     JUNGLE_PRESSURE_PLATE:
+        Limit: -1
         Points: 2
     JUNGLE_SAPLING:
+        Limit: -1
         Points: 1
     JUNGLE_SIGN:
+        Limit: -1
         Points: 6
     JUNGLE_SLAB:
+        Limit: -1
         Points: 1
     JUNGLE_STAIRS:
+        Limit: -1
         Points: 2
     JUNGLE_TRAPDOOR:
+        Limit: -1
         Points: 3
     JUNGLE_WALL_SIGN:
+        Limit: -1
         Points: 6
     JUNGLE_WOOD:
+        Limit: -1
         Points: 1
     KELP:
+        Limit: -1
         Points: 1
     KELP_PLANT:
+        Limit: -1
         Points: 1
     LADDER:
+        Limit: -1
         Points: 2
     LANTERN:
+        Limit: -1
         Points: 3
     LAPIS_BLOCK:
+        Limit: -1
         Points: 10
     LAPIS_ORE:
+        Limit: -1
         Points: 1
     LARGE_FERN:
+        Limit: -1
         Points: 1
     LECTERN:
+        Limit: -1
         Points: 4
     LEVER:
+        Limit: -1
         Points: 1
     LIGHT_BLUE_BANNER:
+        Limit: -1
         Points: 2
     LIGHT_BLUE_BED:
+        Limit: -1
         Points: 6
     LIGHT_BLUE_CARPET:
+        Limit: -1
         Points: 1
     LIGHT_BLUE_CONCRETE:
+        Limit: -1
         Points: 2
     LIGHT_BLUE_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     LIGHT_BLUE_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     LIGHT_BLUE_SHULKER_BOX:
+        Limit: -1
         Points: 11
     LIGHT_BLUE_STAINED_GLASS:
+        Limit: -1
         Points: 2
     LIGHT_BLUE_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     LIGHT_BLUE_TERRACOTTA:
+        Limit: -1
         Points: 2
     LIGHT_BLUE_WALL_BANNER:
+        Limit: -1
         Points: 2
     LIGHT_BLUE_WOOL:
+        Limit: -1
         Points: 2
     LIGHT_GRAY_BANNER:
+        Limit: -1
         Points: 2
     LIGHT_GRAY_BED:
+        Limit: -1
         Points: 6
     LIGHT_GRAY_CARPET:
+        Limit: -1
         Points: 1
     LIGHT_GRAY_CONCRETE:
+        Limit: -1
         Points: 3
     LIGHT_GRAY_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     LIGHT_GRAY_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     LIGHT_GRAY_SHULKER_BOX:
+        Limit: -1
         Points: 11
     LIGHT_GRAY_STAINED_GLASS:
+        Limit: -1
         Points: 2
     LIGHT_GRAY_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     LIGHT_GRAY_TERRACOTTA:
+        Limit: -1
         Points: 2
     LIGHT_GRAY_WALL_BANNER:
+        Limit: -1
         Points: 2
     LIGHT_GRAY_WOOL:
+        Limit: -1
         Points: 2
     LIGHT_WEIGHTED_PRESSURE_PLATE:
+        Limit: -1
         Points: 3
     LILAC:
+        Limit: -1
         Points: 1
     LILY_OF_THE_VALLEY:
+        Limit: -1
         Points: 1
     LILY_PAD:
+        Limit: -1
         Points: 5
     LIME_BANNER:
+        Limit: -1
         Points: 2
     LIME_BED:
+        Limit: -1
         Points: 6
     LIME_CARPET:
+        Limit: -1
         Points: 1
     LIME_CONCRETE:
+        Limit: -1
         Points: 3
     LIME_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     LIME_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     LIME_SHULKER_BOX:
+        Limit: -1
         Points: 11
     LIME_STAINED_GLASS:
+        Limit: -1
         Points: 2
     LIME_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     LIME_TERRACOTTA:
+        Limit: -1
         Points: 2
     LIME_WALL_BANNER:
+        Limit: -1
         Points: 2
     LIME_WOOL:
+        Limit: -1
         Points: 2
     LOOM:
+        Limit: -1
         Points: 4
     MAGENTA_BANNER:
+        Limit: -1
         Points: 2
     MAGENTA_BED:
+        Limit: -1
         Points: 6
     MAGENTA_CARPET:
+        Limit: -1
         Points: 1
     MAGENTA_CONCRETE:
+        Limit: -1
         Points: 3
     MAGENTA_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     MAGENTA_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     MAGENTA_SHULKER_BOX:
+        Limit: -1
         Points: 11
     MAGENTA_STAINED_GLASS:
+        Limit: -1
         Points: 2
     MAGENTA_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     MAGENTA_TERRACOTTA:
+        Limit: -1
         Points: 2
     MAGENTA_WALL_BANNER:
+        Limit: -1
         Points: 2
     MAGENTA_WOOL:
+        Limit: -1
         Points: 2
     MAGMA_BLOCK:
+        Limit: -1
         Points: 1
     MELON:
+        Limit: -1
         Points: 1
     MELON_STEM:
+        Limit: -1
         Points: 1
     MOSSY_COBBLESTONE:
+        Limit: -1
         Points: 1
     MOSSY_COBBLESTONE_SLAB:
+        Limit: -1
         Points: 1
     MOSSY_COBBLESTONE_STAIRS:
+        Limit: -1
         Points: 1
     MOSSY_COBBLESTONE_WALL:
+        Limit: -1
         Points: 1
     MOSSY_STONE_BRICK_SLAB:
+        Limit: -1
         Points: 1
     MOSSY_STONE_BRICK_STAIRS:
+        Limit: -1
         Points: 1
     MOSSY_STONE_BRICK_WALL:
+        Limit: -1
         Points: 1
     MOSSY_STONE_BRICKS:
+        Limit: -1
         Points: 1
     MOVING_PISTON:
+        Limit: -1
         Points: 1
     MUSHROOM_STEM:
+        Limit: -1
         Points: 1
     MYCELIUM:
+        Limit: -1
         Points: 5
     NETHERRACK:
+        Limit: -1
         Points: 1
     NETHER_BRICK_WALL:
+        Limit: -1
         Points: 1
     NETHER_BRICKS:
+        Limit: -1
         Points: 2
     NETHER_BRICK_FENCE:
+        Limit: -1
         Points: 2
     NETHER_BRICK_SLAB:
+        Limit: -1
         Points: 1
     NETHER_BRICK_STAIRS:
+        Limit: -1
         Points: 2
     NETHER_PORTAL:
+        Limit: -1
         Points: 1
     NETHER_QUARTZ_ORE:
+        Limit: -1
         Points: 1
     NETHER_WART:
+        Limit: -1
         Points: 1
     NETHER_WART_BLOCK:
+        Limit: -1
         Points: 2
     NOTE_BLOCK:
+        Limit: -1
         Points: 10
     OAK_BUTTON:
+        Limit: -1
         Points: 1
     OAK_DOOR:
+        Limit: -1
         Points: 2
     OAK_FENCE:
+        Limit: -1
         Points: 2
     OAK_FENCE_GATE:
+        Limit: -1
         Points: 4
     OAK_LEAVES:
+        Limit: -1
         Points: 0
     OAK_LOG:
+        Limit: -1
         Points: 0
     OAK_PLANKS:
+        Limit: -1
         Points: 1
     OAK_PRESSURE_PLATE:
+        Limit: -1
         Points: 2
     OAK_SAPLING:
+        Limit: -1
         Points: 1
     OAK_SIGN:
+        Limit: -1
         Points: 6
     OAK_SLAB:
+        Limit: -1
         Points: 1
     OAK_STAIRS:
+        Limit: -1
         Points: 2
     OAK_TRAPDOOR:
+        Limit: -1
         Points: 3
     OAK_WALL_SIGN:
+        Limit: -1
         Points: 6
     OAK_WOOD:
+        Limit: -1
         Points: 1
     OBSERVER:
+        Limit: -1
         Points: 1
     OBSIDIAN:
+        Limit: -1
         Points: 10
     ORANGE_BANNER:
+        Limit: -1
         Points: 2
     ORANGE_BED:
+        Limit: -1
         Points: 6
     ORANGE_CARPET:
+        Limit: -1
         Points: 1
     ORANGE_CONCRETE:
+        Limit: -1
         Points: 3
     ORANGE_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     ORANGE_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     ORANGE_SHULKER_BOX:
+        Limit: -1
         Points: 11
     ORANGE_STAINED_GLASS:
+        Limit: -1
         Points: 2
     ORANGE_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     ORANGE_TERRACOTTA:
+        Limit: -1
         Points: 2
     ORANGE_TULIP:
+        Limit: -1
         Points: 1
     ORANGE_WALL_BANNER:
+        Limit: -1
         Points: 2
     ORANGE_WOOL:
+        Limit: -1
         Points: 2
     OXEYE_DAISY:
+        Limit: -1
         Points: 1
     PACKED_ICE:
+        Limit: -1
         Points: 5
     PEONY:
+        Limit: -1
         Points: 1
     PETRIFIED_OAK_SLAB:
+        Limit: -1
         Points: 1
     PINK_BANNER:
+        Limit: -1
         Points: 2
     PINK_BED:
+        Limit: -1
         Points: 6
     PINK_CARPET:
+        Limit: -1
         Points: 1
     PINK_CONCRETE:
+        Limit: -1
         Points: 3
     PINK_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     PINK_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     PINK_SHULKER_BOX:
+        Limit: -1
         Points: 11
     PINK_STAINED_GLASS:
+        Limit: -1
         Points: 2
     PINK_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     PINK_TERRACOTTA:
+        Limit: -1
         Points: 2
     PINK_TULIP:
+        Limit: -1
         Points: 1
     PINK_WALL_BANNER:
+        Limit: -1
         Points: 2
     PINK_WOOL:
+        Limit: -1
         Points: 2
     PISTON:
+        Limit: -1
         Points: 2
     PISTON_HEAD:
+        Limit: -1
         Points: 1
     PLAYER_HEAD:
+        Limit: -1
         Points: 1
     PLAYER_WALL_HEAD:
+        Limit: -1
         Points: 1
     PODZOL:
+        Limit: -1
         Points: 2
     POLISHED_ANDESITE:
+        Limit: -1
         Points: 1
     POLISHED_ANDESITE_SLAB:
+        Limit: -1
         Points: 1
     POLISHED_ANDESITE_STAIRS:
+        Limit: -1
         Points: 1
     POLISHED_DIORITE:
+        Limit: -1
         Points: 1
     POLISHED_DIORITE_SLAB:
+        Limit: -1
         Points: 1
     POLISHED_DIORITE_STAIRS:
+        Limit: -1
         Points: 1
     POLISHED_GRANITE:
+        Limit: -1
         Points: 1
     POLISHED_GRANITE_SLAB:
+        Limit: -1
         Points: 1
     POLISHED_GRANITE_STAIRS:
+        Limit: -1
         Points: 1
     POPPY:
+        Limit: -1
         Points: 1
     POTATOES:
+        Limit: -1
         Points: 1
     POTTED_ACACIA_SAPLING:
+        Limit: -1
         Points: 1
     POTTED_ALLIUM:
+        Limit: -1
         Points: 1
     POTTED_AZURE_BLUET:
+        Limit: -1
         Points: 1
     POTTED_BAMBOO:
+        Limit: -1
         Points: 1
     POTTED_BIRCH_SAPLING:
+        Limit: -1
         Points: 1
     POTTED_BLUE_ORCHID:
+        Limit: -1
         Points: 1
     POTTED_BROWN_MUSHROOM:
+        Limit: -1
         Points: 1
     POTTED_CACTUS:
+        Limit: -1
         Points: 1
     POTTED_CORNFLOWER:
+        Limit: -1
         Points: 1
     POTTED_DANDELION:
+        Limit: -1
         Points: 1
     POTTED_DARK_OAK_SAPLING:
+        Limit: -1
         Points: 1
     POTTED_DEAD_BUSH:
+        Limit: -1
         Points: 1
     POTTED_FERN:
+        Limit: -1
         Points: 1
     POTTED_JUNGLE_SAPLING:
+        Limit: -1
         Points: 1
     POTTED_LILY_OF_THE_VALLEY:
+        Limit: -1
         Points: 1
     POTTED_OAK_SAPLING:
+        Limit: -1
         Points: 1
     POTTED_ORANGE_TULIP:
+        Limit: -1
         Points: 1
     POTTED_OXEYE_DAISY:
+        Limit: -1
         Points: 1
     POTTED_PINK_TULIP:
+        Limit: -1
         Points: 1
     POTTED_POPPY:
+        Limit: -1
         Points: 1
     POTTED_RED_MUSHROOM:
+        Limit: -1
         Points: 1
     POTTED_RED_TULIP:
+        Limit: -1
         Points: 1
     POTTED_SPRUCE_SAPLING:
+        Limit: -1
         Points: 1
     POTTED_WHITE_TULIP:
+        Limit: -1
         Points: 1
     POTTED_WITHER_ROSE:
+        Limit: -1
         Points: 1
     POWERED_RAIL:
+        Limit: -1
         Points: 2
     PRISMARINE:
+        Limit: -1
         Points: 1
     PRISMARINE_BRICKS:
+        Limit: -1
         Points: 2
     PRISMARINE_BRICK_SLAB:
+        Limit: -1
         Points: 1
     PRISMARINE_BRICK_STAIRS:
+        Limit: -1
         Points: 2
     PRISMARINE_SLAB:
+        Limit: -1
         Points: 1
     PRISMARINE_STAIRS:
+        Limit: -1
         Points: 2
     PRISMARINE_WALL:
+        Limit: -1
         Points: 1
     PUMPKIN:
+        Limit: -1
         Points: 1
     PUMPKIN_STEM:
+        Limit: -1
         Points: 1
     PURPLE_BANNER:
+        Limit: -1
         Points: 2
     PURPLE_BED:
+        Limit: -1
         Points: 6
     PURPLE_CARPET:
+        Limit: -1
         Points: 1
     PURPLE_CONCRETE:
+        Limit: -1
         Points: 3
     PURPLE_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     PURPLE_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     PURPLE_SHULKER_BOX:
+        Limit: -1
         Points: 11
     PURPLE_STAINED_GLASS:
+        Limit: -1
         Points: 2
     PURPLE_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     PURPLE_TERRACOTTA:
+        Limit: -1
         Points: 2
     PURPLE_WALL_BANNER:
+        Limit: -1
         Points: 2
     PURPLE_WOOL:
+        Limit: -1
         Points: 2
     PURPUR_BLOCK:
+        Limit: -1
         Points: 1
     PURPUR_PILLAR:
+        Limit: -1
         Points: 1
     PURPUR_SLAB:
+        Limit: -1
         Points: 1
     PURPUR_STAIRS:
+        Limit: -1
         Points: 2
     QUARTZ_BLOCK:
+        Limit: -1
         Points: 1
     QUARTZ_PILLAR:
+        Limit: -1
         Points: 1
     QUARTZ_SLAB:
+        Limit: -1
         Points: 1
     QUARTZ_STAIRS:
+        Limit: -1
         Points: 2
     RAIL:
+        Limit: -1
         Points: 1
     REDSTONE_BLOCK:
+        Limit: -1
         Points: 10
     REDSTONE_LAMP:
+        Limit: -1
         Points: 10
     REDSTONE_ORE:
+        Limit: -1
         Points: 1
     REDSTONE_TORCH:
+        Limit: -1
         Points: 5
     REDSTONE_WALL_TORCH:
+        Limit: -1
         Points: 5
     REDSTONE_WIRE:
+        Limit: -1
         Points: 1
     RED_BED:
+        Limit: -1
         Points: 6
     RED_CARPET:
+        Limit: -1
         Points: 1
     RED_CONCRETE:
+        Limit: -1
         Points: 3
     RED_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     RED_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     RED_MUSHROOM:
+        Limit: -1
         Points: 1
     RED_MUSHROOM_BLOCK:
+        Limit: -1
         Points: 1
     RED_NETHER_BRICK_SLAB:
+        Limit: -1
         Points: 1
     RED_NETHER_BRICK_STAIRS:
+        Limit: -1
         Points: 1
     RED_NETHER_BRICK_WALL:
+        Limit: -1
         Points: 1
     RED_NETHER_BRICKS:
+        Limit: -1
         Points: 2
     RED_SAND:
+        Limit: -1
         Points: 1
     RED_SANDSTONE:
+        Limit: -1
         Points: 1
     RED_SANDSTONE_SLAB:
+        Limit: -1
         Points: 1
     RED_SANDSTONE_STAIRS:
+        Limit: -1
         Points: 2
     RED_SANDSTONE_WALL:
+        Limit: -1
         Points: 1
     RED_SHULKER_BOX:
+        Limit: -1
         Points: 11
     RED_STAINED_GLASS:
+        Limit: -1
         Points: 2
     RED_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     RED_TERRACOTTA:
+        Limit: -1
         Points: 2
     RED_TULIP:
+        Limit: -1
         Points: 1
     RED_WALL_BANNER:
+        Limit: -1
         Points: 2
     RED_WOOL:
+        Limit: -1
         Points: 1
     REPEATER:
+        Limit: -1
         Points: 6
     REPEATING_COMMAND_BLOCK:
+        Limit: -1
         Points: 0
     ROSE_BUSH:
+        Limit: -1
         Points: 1
     SAND:
+        Limit: -1
         Points: 1
     SANDSTONE:
+        Limit: -1
         Points: 1
     SANDSTONE_SLAB:
+        Limit: -1
         Points: 1
     SANDSTONE_STAIRS:
+        Limit: -1
         Points: 2
     SANDSTONE_WALL:
+        Limit: -1
         Points: 1
     SCAFFOLDING:
+        Limit: -1
         Points: 1
     SEAGRASS:
+        Limit: -1
         Points: 1
     SEA_LANTERN:
+        Limit: -1
         Points: 9
     SEA_PICKLE:
+        Limit: -1
         Points: 1
     SHULKER_BOX:
+        Limit: -1
         Points: 10
     SKELETON_SKULL:
+        Limit: -1
         Points: 10
     SKELETON_WALL_SKULL:
+        Limit: -1
         Points: 10
     SLIME_BLOCK:
+        Limit: -1
         Points: 10
     SMITHING_TABLE:
+        Limit: -1
         Points: 4
     SMOKER:
+        Limit: -1
         Points: 4
     SMOOTH_QUARTZ:
+        Limit: -1
         Points: 1
     SMOOTH_QUARTZ_SLAB:
+        Limit: -1
         Points: 1
     SMOOTH_QUARTZ_STAIRS:
+        Limit: -1
         Points: 1
     SMOOTH_RED_SANDSTONE:
+        Limit: -1
         Points: 1
     SMOOTH_SANDSTONE:
+        Limit: -1
         Points: 1
     SMOOTH_SANDSTONE_SLAB:
+        Limit: -1
         Points: 1
     SMOOTH_SANDSTONE_STAIRS:
+        Limit: -1
         Points: 1
     SMOOTH_STONE:
+        Limit: -1
         Points: 1
     SMOOTH_STONE_SLAB:
+        Limit: -1
         Points: 1
     SNOW:
+        Limit: -1
         Points: 1
     SNOW_BLOCK:
+        Limit: -1
         Points: 1
     SOUL_SAND:
+        Limit: -1
         Points: 1
     SPAWNER:
+        Limit: -1
         Points: 10
     SPAWNER_BAT:
+        Limit: -1
         Points: 10
     SPAWNER_BLAZE:
+        Limit: -1
         Points: 10
     SPAWNER_CAVE_SPIDER:
+        Limit: -1
         Points: 10
     SPAWNER_CHICKEN:
+        Limit: -1
         Points: 10
     SPAWNER_COD:
+        Limit: -1
         Points: 10
     SPAWNER_COW:
+        Limit: -1
         Points: 10
     SPAWNER_CREEPER:
+        Limit: -1
         Points: 10
     SPAWNER_DOLPHIN:
+        Limit: -1
         Points: 10
     SPAWNER_DONKEY:
+        Limit: -1
         Points: 10
     SPAWNER_DROWNED:
+        Limit: -1
         Points: 10
     SPAWNER_ELDER_GUARDIAN:
+        Limit: -1
         Points: 10
     SPAWNER_ENDER_DRAGON:
+        Limit: -1
         Points: 10
     SPAWNER_ENDERMAN:
+        Limit: -1
         Points: 10
     SPAWNER_ENDERMITE:
+        Limit: -1
         Points: 10
     SPAWNER_EVOKER:
+        Limit: -1
         Points: 10
     SPAWNER_GHAST:
+        Limit: -1
         Points: 10
     SPAWNER_GIANT:
+        Limit: -1
         Points: 10
     SPAWNER_GUARDIAN:
+        Limit: -1
         Points: 10
     SPAWNER_HORSE:
+        Limit: -1
         Points: 10
     SPAWNER_HUSK:
+        Limit: -1
         Points: 10
     SPAWNER_ILLUSIONER:
+        Limit: -1
         Points: 10
     SPAWNER_IRON_GOLEM:
+        Limit: -1
         Points: 10
     SPAWNER_LLAMA:
+        Limit: -1
         Points: 10
     SPAWNER_MAGMA_CUBE:
+        Limit: -1
         Points: 10
     SPAWNER_MULE:
+        Limit: -1
         Points: 10
     SPAWNER_MUSHROOM_COW:
+        Limit: -1
         Points: 10
     SPAWNER_OCELOT:
+        Limit: -1
         Points: 10
     SPAWNER_PARROT:
+        Limit: -1
         Points: 10
     SPAWNER_PHANTOM:
+        Limit: -1
         Points: 10
     SPAWNER_PIG:
+        Limit: -1
         Points: 10
     SPAWNER_PIG_ZOMBIE:
+        Limit: -1
         Points: 10
     SPAWNER_POLAR_BEAR:
+        Limit: -1
         Points: 10
     SPAWNER_PUFFERFISH:
+        Limit: -1
         Points: 10
     SPAWNER_RABBIT:
+        Limit: -1
         Points: 10
     SPAWNER_SALMON:
+        Limit: -1
         Points: 10
     SPAWNER_SHEEP:
+        Limit: -1
         Points: 10
     SPAWNER_SHULKER:
+        Limit: -1
         Points: 10
     SPAWNER_SILVERFISH:
+        Limit: -1
         Points: 10
     SPAWNER_SKELETON:
+        Limit: -1
         Points: 10
     SPAWNER_SKELETON_HORSE:
+        Limit: -1
         Points: 10
     SPAWNER_SLIME:
+        Limit: -1
         Points: 10
     SPAWNER_SNOWMAN:
+        Limit: -1
         Points: 10
     SPAWNER_SPIDER:
+        Limit: -1
         Points: 10
     SPAWNER_SQUID:
+        Limit: -1
         Points: 10
     SPAWNER_STRAY:
+        Limit: -1
         Points: 10
     SPAWNER_TROPICAL_FISH:
+        Limit: -1
         Points: 10
     SPAWNER_TURTLE:
+        Limit: -1
         Points: 10
     SPAWNER_VEX:
+        Limit: -1
         Points: 10
     SPAWNER_VILLAGER:
+        Limit: -1
         Points: 10
     SPAWNER_VINDICATOR:
+        Limit: -1
         Points: 10
     SPAWNER_WITCH:
+        Limit: -1
         Points: 10
     SPAWNER_WITHER:
+        Limit: -1
         Points: 10
     SPAWNER_WITHER_SKELETON:
+        Limit: -1
         Points: 10
     SPAWNER_WOLF:
+        Limit: -1
         Points: 10
     SPAWNER_ZOMBIE:
+        Limit: -1
         Points: 10
     SPAWNER_ZOMBIE_HORSE:
+        Limit: -1
         Points: 10
     SPAWNER_ZOMBIE_VILLAGER:
+        Limit: -1
         Points: 10
     SPONGE:
+        Limit: -1
         Points: 10
     SPRUCE_BUTTON:
+        Limit: -1
         Points: 1
     SPRUCE_DOOR:
+        Limit: -1
         Points: 2
     SPRUCE_FENCE:
+        Limit: -1
         Points: 2
     SPRUCE_FENCE_GATE:
+        Limit: -1
         Points: 4
     SPRUCE_LEAVES:
+        Limit: -1
         Points: 0
     SPRUCE_LOG:
+        Limit: -1
         Points: 0
     SPRUCE_PLANKS:
+        Limit: -1
         Points: 1
     SPRUCE_PRESSURE_PLATE:
+        Limit: -1
         Points: 2
     SPRUCE_SAPLING:
+        Limit: -1
         Points: 1
     SPRUCE_SIGN:
+        Limit: -1
         Points: 6
     SPRUCE_SLAB:
+        Limit: -1
         Points: 1
     SPRUCE_STAIRS:
+        Limit: -1
         Points: 2
     SPRUCE_TRAPDOOR:
+        Limit: -1
         Points: 3
     SPRUCE_WALL_SIGN:
+        Limit: -1
         Points: 6
     SPRUCE_WOOD:
+        Limit: -1
         Points: 1
     STICKY_PISTON:
+        Limit: -1
         Points: 1
     STONE:
+        Limit: -1
         Points: 1
     STONE_BRICKS:
+        Limit: -1
         Points: 2
     STONE_BRICK_SLAB:
+        Limit: -1
         Points: 1
     STONE_BRICK_STAIRS:
+        Limit: -1
         Points: 2
     STONE_BRICK_WALL:
+        Limit: -1
         Points: 1
     STONE_BUTTON:
+        Limit: -1
         Points: 1
     STONECUTTER:
+        Limit: -1
         Points: 4
     STONE_PRESSURE_PLATE:
+        Limit: -1
         Points: 2
     STONE_SLAB:
+        Limit: -1
         Points: 1
     STONE_STAIRS:
+        Limit: -1
         Points: 1
     STRIPPED_ACACIA_LOG:
+        Limit: -1
         Points: 0
     STRIPPED_ACACIA_WOOD:
+        Limit: -1
         Points: 1
     STRIPPED_BIRCH_LOG:
+        Limit: -1
         Points: 0
     STRIPPED_BIRCH_WOOD:
+        Limit: -1
         Points: 1
     STRIPPED_DARK_OAK_LOG:
+        Limit: -1
         Points: 0
     STRIPPED_DARK_OAK_WOOD:
+        Limit: -1
         Points: 1
     STRIPPED_JUNGLE_LOG:
+        Limit: -1
         Points: 0
     STRIPPED_JUNGLE_WOOD:
+        Limit: -1
         Points: 1
     STRIPPED_OAK_LOG:
+        Limit: -1
         Points: 0
     STRIPPED_OAK_WOOD:
+        Limit: -1
         Points: 1
     STRIPPED_SPRUCE_LOG:
+        Limit: -1
         Points: 0
     STRIPPED_SPRUCE_WOOD:
+        Limit: -1
         Points: 1
     SUGAR_CANE:
+        Limit: -1
         Points: 1
     SUNFLOWER:
+        Limit: -1
         Points: 1
     SWEET_BERRY_BUSH:
+        Limit: -1
         Points: 1
     TALL_GRASS:
+        Limit: -1
         Points: 1
     TALL_SEAGRASS:
+        Limit: -1
         Points: 1
     TERRACOTTA:
+        Limit: -1
         Points: 2
     TNT:
+        Limit: -1
         Points: 5
     TORCH:
+        Limit: -1
         Points: 1
     TRAPPED_CHEST:
+        Limit: -1
         Points: 10
     TRIPWIRE:
+        Limit: -1
         Points: 2
     TRIPWIRE_HOOK:
+        Limit: -1
         Points: 2
     TUBE_CORAL:
+        Limit: -1
         Points: 1
     TUBE_CORAL_BLOCK:
+        Limit: -1
         Points: 1
     TUBE_CORAL_FAN:
+        Limit: -1
         Points: 1
     TUBE_CORAL_WALL_FAN:
+        Limit: -1
         Points: 1
     TURTLE_EGG:
+        Limit: -1
         Points: 1
     VINE:
+        Limit: -1
         Points: 1
     VOID_AIR:
+        Limit: -1
         Points: 0
     WALL_TORCH:
+        Limit: -1
         Points: 1
     WET_SPONGE:
+        Limit: -1
         Points: 10
     WHEAT:
+        Limit: -1
         Points: 1
     WHITE_BANNER:
+        Limit: -1
         Points: 2
     WHITE_BED:
+        Limit: -1
         Points: 6
     WHITE_CARPET:
+        Limit: -1
         Points: 1
     WHITE_CONCRETE:
+        Limit: -1
         Points: 3
     WHITE_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     WHITE_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     WHITE_SHULKER_BOX:
+        Limit: -1
         Points: 11
     WHITE_STAINED_GLASS:
+        Limit: -1
         Points: 2
     WHITE_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     WHITE_TERRACOTTA:
+        Limit: -1
         Points: 2
     WHITE_TULIP:
+        Limit: -1
         Points: 1
     WHITE_WALL_BANNER:
+        Limit: -1
         Points: 2
     WHITE_WOOL:
+        Limit: -1
         Points: 3
     WITHER_ROSE:
+        Limit: -1
         Points: 1
     WITHER_SKELETON_SKULL:
+        Limit: -1
         Points: 10
     WITHER_SKELETON_WALL_SKULL:
+        Limit: -1
         Points: 10
     YELLOW_BANNER:
+        Limit: -1
         Points: 2
     YELLOW_BED:
+        Limit: -1
         Points: 6
     YELLOW_CARPET:
+        Limit: -1
         Points: 1
     YELLOW_CONCRETE:
+        Limit: -1
         Points: 2
     YELLOW_CONCRETE_POWDER:
+        Limit: -1
         Points: 2
     YELLOW_GLAZED_TERRACOTTA:
+        Limit: -1
         Points: 5
     YELLOW_SHULKER_BOX:
+        Limit: -1
         Points: 11
     YELLOW_STAINED_GLASS:
+        Limit: -1
         Points: 2
     YELLOW_STAINED_GLASS_PANE:
+        Limit: -1
         Points: 1
     YELLOW_TERRACOTTA:
+        Limit: -1
         Points: 2
     YELLOW_WALL_BANNER:
+        Limit: -1
         Points: 2
     YELLOW_WOOL:
+        Limit: -1
         Points: 2
     ZOMBIE_HEAD:
+        Limit: -1
         Points: 1
     ZOMBIE_WALL_HEAD:
+        Limit: -1
         Points: 1

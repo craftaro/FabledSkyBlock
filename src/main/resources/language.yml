@@ -2307,7 +2307,7 @@ Menu:
       Material:
         Displayname: '&7%material &8(&e+%points Points&8)'
         Lore:
-        - '&8(&e%blocks Blocks&8)'
+        - '&8(&e%blocks Blocks&8, &e%counted Counted&8)'
     Title: '&8Island Levelling'
   ControlPanel:
     Item:
