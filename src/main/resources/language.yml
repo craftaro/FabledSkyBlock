@@ -2574,8 +2574,6 @@ Menu:
     Item:
       Exit:
         Displayname: '&cExit Biome Selection'
-      Barrier:
-        Displayname: '&cSelect a Biome'
       Info:
         Displayname: '&bCurrent Biome'
         Lore:
@@ -2589,6 +2587,10 @@ Menu:
           Lore:
           - '&7Click to Set!'
           Displayname: '&aBiome: &e%biome_type'
+      Next:
+        Displayname: '&aNext Page >'
+      Previous:
+        Displayname: '&a< Previous Page'
     Title: '&8Select a Biome'
   Information:
     Categories:

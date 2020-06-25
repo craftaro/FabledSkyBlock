@@ -3,12 +3,16 @@ package com.songoda.skyblock.command.commands.island;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.gui.bank.GuiBank;
+import com.songoda.skyblock.gui.wip.GuiBiome;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.menus.Biome;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -34,7 +38,7 @@ public class BiomeCommand extends SubCommand {
         } else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
                 && skyblock.getPermissionManager().hasPermission(island,"Biome", IslandRole.Operator))
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            Biome.getInstance().open(player);
+            skyblock.getGuiManager().showGUI(player, new GuiBiome(skyblock, player, island, IslandWorld.Normal, null, false)); // TODO Nether and End support
             soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Biome.Permission.Message"));

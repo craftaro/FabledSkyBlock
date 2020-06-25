@@ -1,497 +1,567 @@
+# All the Minecraft Biomes
+# Use "Data" only on pre - 1.13
+# Normal: true means that the biome is available in the Overworld.
+# Nether and The End will come in future updates.
+
 Biomes:
   BADLANDS:
-    DisplayName: 'Badlands'
-    DiplayItem:
+    DisplayName: '&6Badlands'
+    DisplayItem:
       Material: WHITE_TERRACOTTA
       Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   BADLANDS_PLATEAU:
-    DisplayName: 'Badlands Plateau'
-    DiplayItem:
+    DisplayName: '&6Badlands Plateau'
+    DisplayItem:
       Material: RED_TERRACOTTA
       Data: 14
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   BAMBOO_JUNGLE:
-    DisplayName: 'Bamboo Jungle'
-    DiplayItem:
+    DisplayName: '&6Bamboo Jungle'
+    DisplayItem:
       Material: BAMBOO
       Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   BAMBOO_JUNGLE_HILLS:
-    DisplayName: 'Bamboo Jungle Hills'
-    DiplayItem:
-      Material: BAMBOO
+    DisplayName: '&6Bamboo Jungle Hills'
+    DisplayItem:
+      Material: SCAFFOLDING
       Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   BASALT_DELTAS:
-    DisplayName: 'Basalt Deltas'
-    DiplayItem:
+    DisplayName: '&6Basalt Deltas'
+    DisplayItem:
       Material: BASALT
       Data: 0
     Permission: true
     Normal: false
-    Nether: true
-    End: false
   BEACH:
-    DisplayName: 'Beach'
+    DisplayName: '&6Beach'
+    DisplayItem:
+      Material: SAND
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   BIRCH_FOREST:
-    DisplayName: 'Birch Forest'
+    DisplayName: '&6Birch Forest'
+    DisplayItem:
+      Material: BIRCH_SAPLING
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   BIRCH_FOREST_HILLS:
-    DisplayName: 'Birch Forest Hills'
+    DisplayName: '&6Birch Forest Hills'
+    DisplayItem:
+      Material: BIRCH_LEAVES
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   COLD_OCEAN:
-    DisplayName: 'Cold Ocean'
+    DisplayName: '&6Cold Ocean'
+    DisplayItem:
+      Material: SEAGRASS
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   CRIMSON_FOREST:
-    DisplayName: 'Crimson Forest'
+    DisplayName: '&6Crimson Forest'
+    DisplayItem:
+      Material: WEEPING_VINES
+      Data: 0
     Permission: true
     Normal: false
-    Nether: true
-    End: false
   DARK_FOREST:
-    DisplayName: 'Dark Forest'
+    DisplayName: '&6Dark Forest'
+    DisplayItem:
+      Material: DARK_OAK_SAPLING
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   DARK_FOREST_HILLS:
-    DisplayName: 'Dark Forest Hills'
+    DisplayName: '&6Dark Forest Hills'
+    DisplayItem:
+      Material: DARK_OAK_LEAVES
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   DEEP_COLD_OCEAN:
-    DisplayName: 'Deep Cold Ocean'
+    DisplayName: '&6Deep Cold Ocean'
+    DisplayItem:
+      Material: COD
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   DEEP_FROZEN_OCEAN:
-    DisplayName: 'Deep Frozen Ocean'
+    DisplayName: '&6Deep Frozen Ocean'
+    DisplayItem:
+      Material: ICE
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   DEEP_LUKEWARM_OCEAN:
-    DisplayName: 'Deep Lukewarm Ocean'
+    DisplayName: '&6Deep Lukewarm Ocean'
+    DisplayItem:
+      Material: PUFFERFISH
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   DEEP_OCEAN:
-    DisplayName: 'Deep Ocean'
+    DisplayName: '&6Deep Ocean'
+    DisplayItem:
+      Material: GRAVEL
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   DEEP_WARM_OCEAN:
-    DisplayName: 'Deep Warm Ocean'
+    DisplayName: '&6Deep Warm Ocean'
+    DisplayItem:
+      Material: TROPICAL_FISH
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   DESERT:
-    DisplayName: 'Desert'
+    DisplayName: '&6Desert'
+    DisplayItem:
+      Material: CACTUS
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   DESERT_HILLS:
-    DisplayName: 'Desert Hills'
+    DisplayName: '&6Desert Hills'
+    DisplayItem:
+      Material: RED_SAND
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   DESERT_LAKES:
-    DisplayName: 'Desert Lakes'
+    DisplayName: '&6Desert Lakes'
+    DisplayItem:
+      Material: SANDSTONE
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   END_BARRENS:
-    DisplayName: 'End Barrens'
+    DisplayName: '&6End Barrens'
+    DisplayItem:
+      Material: END_STONE
+      Data: 0
     Permission: true
     Normal: false
-    Nether: false
-    End: end
   END_HIGHLANDS:
-    DisplayName: 'End HighLands'
+    DisplayName: '&6End HighLands'
+    DisplayItem:
+      Material: END_STONE_BRICKS
+      Data: 0
     Permission: true
     Normal: false
-    Nether: false
-    End: true
   END_MIDLANDS:
-    DisplayName: 'End Midlands'
+    DisplayName: '&6End Midlands'
+    DisplayItem:
+      Material: PURPUR_BLOCK
+      Data: 0
     Permission: true
     Normal: false
-    Nether: false
-    End: end
   ERODED_BADLANDS:
-    DisplayName: 'Eroded Badlands'
+    DisplayName: '&6Eroded Badlands'
+    DisplayItem:
+      Material: PINK_TERRACOTTA
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   FLOWER_FOREST:
-    DisplayName: 'Flower Forest'
+    DisplayName: '&6Flower Forest'
+    DisplayItem:
+      Material: SUNFLOWER
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   FOREST:
-    DisplayName: 'Forest'
+    DisplayName: '&6Forest'
+    DisplayItem:
+      Material: APPLE
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   FROZEN_OCEAN:
-    DisplayName: 'Frozen Ocean'
+    DisplayName: '&6Frozen Ocean'
+    DisplayItem:
+      Material: ICE
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   FROZEN_RIVER:
-    DisplayName: 'Frozen River'
+    DisplayName: '&6Frozen River'
+    DisplayItem:
+      Material: COD
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   GIANT_SPRUCE_TAIGA:
-    DisplayName: 'Giant Spruce Taiga'
+    DisplayName: '&6Giant Spruce Taiga'
+    DisplayItem:
+      Material: SPRUCE_LOG
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   GIANT_SPRUCE_TAIGA_HILLS:
-    DisplayName: 'Giant Spruce Taiga Hills'
+    DisplayName: '&6Giant Spruce Taiga Hills'
+    DisplayItem:
+      Material: SPRUCE_LEAVES
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   GIANT_TREE_TAIGA:
     DisplayName: 'Giant Tree Taiga'
+    DisplayItem:
+      Material: SPRUCE_SAPLING
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   GIANT_TREE_TAIGA_HILLS:
-    DisplayName: 'Giant Tree Taiga Hills'
+    DisplayName: '&6Giant Tree Taiga Hills'
+    DisplayItem:
+      Material: SPRUCE_WOOD
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   GRAVELLY_MOUNTAINS:
-    DisplayName: 'Gravelly Mountains'
+    DisplayName: '&6Gravelly Mountains'
+    DisplayItem:
+      Material: GRAVEL
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   ICE_SPIKES:
-    DisplayName: 'Ice Spikes'
+    DisplayName: '&6Ice Spikes'
+    DisplayItem:
+      Material: PACKED_ICE
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   JUNGLE:
-    DisplayName: 'Jungle'
+    DisplayName: '&6Jungle'
+    DisplayItem:
+      Material: VINES
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   JUNGLE_EDGE:
-    DisplayName: 'Jungle Edge'
+    DisplayName: '&6Jungle Edge'
+    DisplayItem:
+      Material: JUNGLE_TREE_LOG
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   JUNGLE_HILLS:
-    DisplayName: 'Jungle Hills'
+    DisplayName: '&6Jungle Hills'
+    DisplayItem:
+      Material: JUNGLE_TREE_SAPLING
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   LUKEWARM_OCEAN:
-    DisplayName: 'Lukewarm Ocean'
+    DisplayName: '&6Lukewarm Ocean'
+    DisplayItem:
+      Material: KELP
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   MODIFIED_BADLANDS_PLATEAU:
-    DisplayName: 'Modified Badlands Plateau'
+    DisplayName: '&6Modified Badlands Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   MODIFIED_GRAVELLY_MOUNTAINS:
-    DisplayName: 'Modified Gravelly Mountains'
+    DisplayName: '&6Modified Gravelly Mountains'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   MODIFIED_JUNGLE:
-    DisplayName: 'Modified Jungle'
+    DisplayName: '&6Modified Jungle'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   MODIFIED_JUNGLE_EDGE:
-    DisplayName: 'Modified Jungle Edge'
+    DisplayName: '&6Modified Jungle Edge'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   MODIFIED_WOODED_BADLANDS_PLATEAU:
-    DisplayName: 'Modified Wooden Badlands Plateau'
+    DisplayName: '&6Modified Wooden Badlands Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   MOUNTAINS:
-    DisplayName: 'Mountains'
+    DisplayName: '&6Mountains'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   MOUNTAIN_EDGE:
-    DisplayName: 'Mountain Edge'
+    DisplayName: '&6Mountain Edge'
+    DisplayItem:
+      Material: DIORITE
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   MUSHROOM_FIELDS:
-    DisplayName: 'Mushroom Fields'
+    DisplayName: '&6Mushroom Fields'
+    DisplayItem:
+      Material: RED_MUSHROOM
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   MUSHROOM_FIELD_SHORE:
-    DisplayName: 'Mushroom Field Shore'
+    DisplayName: '&6Mushroom Field Shore'
+    DisplayItem:
+      Material: BROWN_MUSHROOM
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   # PRE-1.16
   NETHER:
-    DisplayName: 'Nether'
+    DisplayName: '&6Nether'
+    DisplayItem:
+      Material: NETHERRACK
+      Data: 0
     Permission: true
     Normal: false
-    Nether: true
-    End: false
   NETHER_WASTES:
-    DisplayName: 'Nether Wastes'
+    DisplayName: '&6Nether Wastes'
+    DisplayItem:
+      Material: NETHER_WART
+      Data: 0
     Permission: true
     Normal: false
-    Nether: true
-    End: false
   OCEAN:
-    DisplayName: 'Ocean'
+    DisplayName: '&6Ocean'
+    DisplayItem:
+      Material: SEA_LANTERN
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   PLAINS:
-    DisplayName: 'Plains'
+    DisplayName: '&6Plains'
+    DisplayItem:
+      Material: GRASS_BLOCK
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   RIVER:
-    DisplayName: 'River'
+    DisplayName: '&6River'
+    DisplayItem:
+      Material: SUGAR_CANE
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SAVANNA:
-    DisplayName: 'Savanna'
+    DisplayName: '&6Savanna'
+    DisplayItem:
+      Material: GRASS
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SAVANNA_PLATEAU:
-    DisplayName: 'Savanna Plateau'
+    DisplayName: '&6Savanna Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   SHATTERED_SAVANNA:
-    DisplayName: 'Shattered Savanna'
+    DisplayName: '&6Shattered Savanna'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   SHATTERED_SAVANNA_PLATEAU:
-    DisplayName: 'Shattered Savanna Plateau'
+    DisplayName: '&6Shattered Savanna Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   SMALL_END_ISLANDS:
-    DisplayName: 'Small End Island'
+    DisplayName: '&6Small End Island'
+    DisplayItem:
+      Material: PURPUR_PILLAR
+      Data: 0
     Permission: true
     Normal: false
-    Nether: false
-    End: true
   SNOWY_BEACH:
-    DisplayName: 'Snowy Beach'
+    DisplayName: '&6Snowy Beach'
+    DisplayItem:
+      Material: RABBIT_FOOT
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SNOWY_MOUNTAINS:
-    DisplayName: 'Snowy Mountains'
+    DisplayName: '&6Snowy Mountains'
+    DisplayItem:
+      Material: SNOW_BLOCK
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SNOWY_TAIGA:
-    DisplayName: 'Snowy Taiga'
+    DisplayName: '&6Snowy Taiga'
+    DisplayItem:
+      Material: SPRUCE_SAPLING
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SNOWY_TAIGA_HILLS:
-    DisplayName: 'Snowy Taiga Hills'
+    DisplayName: '&6Snowy Taiga Hills'
+    DisplayItem:
+      Material: SNOWBALL
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SNOWY_TAIGA_MOUNTAINS:
-    DisplayName: 'Snowy Taiga Mountains'
+    DisplayName: '&6Snowy Taiga Mountains'
+    DisplayItem:
+      Material: SWEET_BERRIES
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SNOWY_TUNDRA:
-    DisplayName: 'Snowy Tundra'
+    DisplayName: '&6Snowy Tundra'
+    DisplayItem:
+      Material: SNOW
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SOUL_SAND_VALLEY:
-    DisplayName: 'Soul Sand Valley'
+    DisplayName: '&6Soul Sand Valley'
+    DisplayItem:
+      Material: SOULSAND
+      Data: 0
     Permission: true
     Normal: false
-    Nether: true
-    End: false
   STONE_SHORE:
-    DisplayName: 'Stone Shore'
+    DisplayName: '&6Stone Shore'
+    DisplayItem:
+      Material: CLAY
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SUNFLOWER_PLAINS:
-    DisplayName: 'Sunflower Plains'
+    DisplayName: '&6Sunflower Plains'
+    DisplayItem:
+      Material: SUNFLOWER
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SWAMP:
-    DisplayName: 'Swamp'
+    DisplayName: '&6Swamp'
+    DisplayItem:
+      Material: LILYPAD
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   SWAMP_HILLS:
-    DisplayName: 'Swamp Hills'
+    DisplayName: '&6Swamp Hills'
+    DisplayItem:
+      Material: SLIME_BLOCK
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   TAIGA:
-    DisplayName: 'Taiga'
+    DisplayName: '&6Taiga'
+    DisplayItem:
+      Material: SPRUCE_WOOD
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   TAIGA_HILLS:
-    DisplayName: 'Taiga Hills'
+    DisplayName: '&6Taiga Hills'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   TAIGA_MOUNTAINS:
-    DisplayName: 'Taiga Mountains'
+    DisplayName: '&6Taiga Mountains'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   TALL_BIRCH_FOREST:
-    DisplayName: 'Tall Birch Forest'
+    DisplayName: '&6Tall Birch Forest'
+    DisplayItem:
+      Material: BIRCH_LOG
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   TALL_BIRCH_HILLS:
-    DisplayName: 'Tall Birch Hills'
+    DisplayName: '&6Tall Birch Hills'
+    DisplayItem:
+      Material: BIRCH_PLANKS
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   THE_END:
-    DisplayName: 'The End'
+    DisplayName: '&6The End'
+    DisplayItem:
+      Material: CHORUS_FRUIT
+      Data: 0
     Permission: true
     Normal: false
-    Nether: false
-    End: true
   THE_VOID:
-    DisplayName: 'The Void'
+    DisplayName: '&6The Void'
+    DisplayItem:
+      Material: BEDROCK
+      Data: 0
     Permission: true
     Normal: false
-    Nether: false
-    End: false
   WARM_OCEAN:
-    DisplayName: 'Warm Ocean'
+    DisplayName: '&6Warm Ocean'
+    DisplayItem:
+      Material: BRAIN_CORAL
+      Data: 0
     Permission: true
     Normal: true
-    Nether: false
-    End: false
   WARPED_FOREST:
-    DisplayName: 'Warped Forest'
+    DisplayName: '&6Warped Forest'
+    DisplayItem:
+      Material: WARPED_STEM
+      Data: 0
     Permission: true
     Normal: false
-    Nether: true
-    End: false
   WOODED_BADLANDS_PLATEAU:
-    DisplayName: 'Wooded Badlands Plateau'
+    DisplayName: '&6Wooded Badlands Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   WOODED_HILLS:
-    DisplayName: 'Wooded Hills'
+    DisplayName: '&6Wooded Hills'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false
   WOODED_MOUNTAINS:
-    DisplayName: 'Wooded Mountains'
+    DisplayName: '&6Wooded Mountains'
+    DisplayItem:
+      Material: STONE
+      Data: 0
     Permission: true
-    Normal: true
-    Nether: false
-    End: false
+    Normal: false

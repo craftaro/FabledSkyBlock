@@ -1137,29 +1137,26 @@ public class IslandManager {
                     }
                 }
             }
-
-            Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
-                Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
-                if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                    CompletableFuture<Location> safeLoc = LocationUtil.getSafeLocation(loc);
-                    if(safeLoc != null){
-                        loc = safeLoc.join();
-                    }
+            Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
+            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+                Location safeLoc = LocationUtil.getSafeLocation(loc);
+                if(safeLoc != null){
+                    loc = safeLoc;
                 }
-                if(loc != null){
-                    PaperLib.teleportAsync(player, loc);
-                    if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
-                        player.setFallDistance(0.0F);
-                    }
-                } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                    .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message")));
-                }
+            }
+            if(loc != null){
+                PaperLib.teleportAsync(player, loc);
                 if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);
                 }
-            });
+            } else {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message")));
+            }
+            if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
+                player.setFallDistance(0.0F);
+            }
 
             List<String> islandWelcomeMessage = island.getMessage(IslandMessage.Welcome);
 

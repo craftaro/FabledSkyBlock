@@ -67,7 +67,7 @@ public class FileManager {
         configFiles.put("language.yml", new File(skyblock.getDataFolder(), "language.yml"));
         configFiles.put("settings.yml", new File(skyblock.getDataFolder(), "settings.yml"));
         configFiles.put("upgrades.yml", new File(skyblock.getDataFolder(), "upgrades.yml"));
-        // configFiles.put("biomes.yml", new File(skyblock.getDataFolder(), "biomes.yml"));
+        configFiles.put("biomes.yml", new File(skyblock.getDataFolder(), "biomes.yml"));
         // configFiles.put("menus.yml", new File(skyblock.getDataFolder(), "menus.yml"));
         configFiles.put("generators.yml", new File(skyblock.getDataFolder(), "generators.yml"));
         configFiles.put("stackables.yml", new File(skyblock.getDataFolder(), "stackables.yml"));
@@ -102,10 +102,10 @@ public class FileManager {
             }
 
             if (configFile.exists()) {
-                if (fileName.equals("config.yml") || fileName.equals("language.yml") || fileName.equals("worlds.yml")) {
+                if (fileName.equals("config.yml") || fileName.equals("language.yml") || fileName.equals("worlds.yml") || fileName.equals("biomes.yml")) {
                     FileChecker fileChecker;
 
-                    if (fileName.equals("config.yml")) {
+                    if (fileName.equals("config.yml") || fileName.equals("biomes.yml")) {
                         fileChecker = new FileChecker(skyblock, this, fileName, true);
                     } else {
                         fileChecker = new FileChecker(skyblock, this, fileName, false);

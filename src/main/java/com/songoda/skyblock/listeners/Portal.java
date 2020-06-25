@@ -164,20 +164,18 @@ public class Portal implements Listener {
 
     private void teleportPlayerToWorld(Player player, SoundManager soundManager, Island island, IslandEnvironment spawnEnvironment, Tick tick, IslandWorld toWorld) {
         IslandWorld toWorldF = toWorld;
-        Bukkit.getScheduler().runTaskLaterAsynchronously(skyblock, () -> {
+        Bukkit.getScheduler().runTaskLater(skyblock, () -> {
             Location loc = island.getLocation(toWorldF, spawnEnvironment);
-            CompletableFuture<Location> tempSafeLoc = LocationUtil.getSafeLocation(loc);
+            Location tempSafeLoc = LocationUtil.getSafeLocation(loc);
             Location safeLoc = null;
             if(tempSafeLoc != null) {
-                safeLoc = tempSafeLoc.join();
+                safeLoc = tempSafeLoc;
             }
             if(safeLoc != null){
                 loc = safeLoc;
             }
             Location finalLoc = loc;
-            Bukkit.getScheduler().runTask(skyblock, () -> {
-                PaperLib.teleportAsync(player, finalLoc);
-            });
+            PaperLib.teleportAsync(player, finalLoc);
         }, 1L);
         soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
         player.setFallDistance(0.0F);

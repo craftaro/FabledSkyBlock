@@ -22,9 +22,8 @@ public class BiomeManager {
     }
 
     public void setBiome(Island island, Biome biome) {
-        Location location = island.getLocation(IslandWorld.Normal, IslandEnvironment.Island);
 
-        if (location == null) return;
+        if (island.getLocation(IslandWorld.Normal, IslandEnvironment.Island) == null) return;
 
         if(skyblock.isPaperAsync()){
             // We keep it sequentially in order to use less RAM
@@ -48,7 +47,13 @@ public class BiomeManager {
     private void setChunkBiome(Biome biome, Chunk chunk) {
         for(int xx = 0; xx < 16; xx++){
             for(int zz = 0; zz < 16; zz++){
-                chunk.getBlock(xx, 0, zz).setBiome(biome);
+                //if(ServerVersion.isServerVersionBelow(ServerVersion.V1_15)){
+                    chunk.getBlock(xx, 0, zz).setBiome(biome);
+                //} else {
+                //    for(int i = 0; i<256; i+=2){
+                //        chunk.getBlock(xx, i, zz).setBiome(biome);
+                //    }
+                //}
             }
         }
     }

@@ -42,31 +42,29 @@ public final class LocationUtil {
         }
     }
 
-    public static @Nullable CompletableFuture<Location> getSafeLocation(Location loc){
-        return CompletableFuture.supplyAsync(() -> {
-            boolean found = false;
-            Location locChecked = null;
-            if(loc != null && loc.getWorld() != null){
-                locChecked = loc.clone();
-                loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
-                for(int i=loc.getBlockY(); i>=0 && !found; i--){
-                    locChecked = locChecked.subtract(0d, 1d, 0d);
+    public static @Nullable Location getSafeLocation(Location loc){
+        boolean found = false;
+        Location locChecked = null;
+        if(loc != null && loc.getWorld() != null){
+            locChecked = loc.clone();
+            loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+            for(int i=loc.getBlockY(); i>=0 && !found; i--){
+                locChecked = locChecked.subtract(0d, 1d, 0d);
+                found = checkBlock(locChecked);
+            }
+            if(!found){
+                for(int i=loc.getBlockY(); i<256 && !found; i++){
+                    locChecked = locChecked.add(0d, 1d, 0d);
                     found = checkBlock(locChecked);
                 }
-                if(!found){
-                    for(int i=loc.getBlockY(); i<256 && !found; i++){
-                        locChecked = locChecked.add(0d, 1d, 0d);
-                        found = checkBlock(locChecked);
-                    }
-                }
-                if (found) {
-                    locChecked = locChecked.add(0d,1d,0d);
-                } else {
-                    locChecked = null;
-                }
             }
-            return locChecked;
-        });
+            if (found) {
+                locChecked = locChecked.add(0d,1d,0d);
+            } else {
+                locChecked = null;
+            }
+        }
+        return locChecked;
     }
 
     public static @Nonnull Location getDefinitiveLocation(Location loc){

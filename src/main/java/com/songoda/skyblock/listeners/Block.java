@@ -3,6 +3,7 @@ package com.songoda.skyblock.listeners;
 import com.google.common.collect.Lists;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.generator.Generator;
@@ -215,7 +216,7 @@ public class Block implements Listener {
         if(!player.hasPermission("fabledskyblock.bypass.netherplace") && !islandManager.isIslandWorldUnlocked(island, IslandWorld.Nether)){
             for(String s : Objects.requireNonNull(configLoad.getConfigurationSection("Island.Restrict.NetherBlocks")).getKeys(false)){
                 if(s.equalsIgnoreCase(block.getType().toString())){
-                    if(configLoad.getBoolean("Island.Restrict.NetherBlocks." + s)){
+                    if(configLoad.getBoolean("Island.Restrict.NetherBlocks." + s, false)){
                         skyblock.getMessageManager().sendMessage(player, Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
                                 .getFileConfiguration().getString("Island.Unlock.NetherBlocksPlace.Message")));
                         event.setCancelled(true);
@@ -326,24 +327,31 @@ public class Block implements Listener {
             Collection<Entity> entities = block.getWorld().getNearbyEntities(block.getLocation(), 1d, 1d, 1d);
             if(entities.size() > 0){
                 for(Entity ent : entities){
+    
                     boolean witherSkeleton;
-                    if (NMSUtil.getVersionNumber() > 10) {
+                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
                         witherSkeleton = ent.getType().equals(EntityType.WITHER_SKELETON);
                     } else {
                         witherSkeleton = ent instanceof Skeleton && ((Skeleton) ent).getSkeletonType().equals(Skeleton.SkeletonType.WITHER);
                     }
-                    if (ent.getType().equals(EntityType.PIG_ZOMBIE) ||
-                        ent.getType().equals(EntityType.BLAZE) ||
-                        ent.getType().equals(EntityType.MAGMA_CUBE) ||
-                        ent.getType().equals(EntityType.WITHER) ||
-                        ent.getType().equals(EntityType.GHAST) ||
-                        witherSkeleton) {
-                        if(block.getRelative(event.getFace().getOppositeFace()).getType().equals(Material.WATER)){
-                            event.setCancelled(true);
-                            event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
-                            event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
+                    if((((ent instanceof Blaze || ent instanceof MagmaCube) || ent instanceof Wither) || ent instanceof Ghast) || witherSkeleton){
+                        event.setCancelled(true);
+                        event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
+                        event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
+                    } else {
+                        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
+                            if(((ent instanceof Piglin || ent instanceof Hoglin) || ent instanceof Strider) || ent instanceof Zoglin) {
+                                event.setCancelled(true);
+                                event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
+                                event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
+                            }
+                        } else {
+                            if(ent instanceof PigZombie) {
+                                event.setCancelled(true);
+                                event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
+                                event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
+                            }
                         }
-                        break;
                     }
                 }
             }

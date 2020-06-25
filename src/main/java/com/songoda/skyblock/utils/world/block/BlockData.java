@@ -34,6 +34,7 @@ public class BlockData {
     private String skullOwner = "Notch";
     private String skullType = SkullType.PLAYER.toString();
     private String facing;
+    private int charges = 0;
 
     private Map<Integer, String> inventory = new HashMap<>();
 
@@ -312,5 +313,13 @@ public class BlockData {
 
     public void setExactTeleport(boolean exactTeleport) {
         this.exactTeleport = exactTeleport;
+    }
+    
+    public int getCharges() {
+        return charges;
+    }
+    
+    public void setCharges(int charges) {
+        this.charges = charges;
     }
 }

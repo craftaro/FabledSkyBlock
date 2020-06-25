@@ -70,22 +70,20 @@ public class PortalPermission extends ListeningPermission {
         }
     }
 
-    private CompletableFuture<Location> getToLocation(Location from, Player player) {
-        return CompletableFuture.supplyAsync(() -> {
-            IslandManager islandManager = plugin.getIslandManager();
-            Island island = islandManager.getIslandAtLocation(from);
-            Location to = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
-            if(island.hasRole(IslandRole.Visitor, player.getUniqueId())){
-                CompletableFuture<Location> safeLoc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-                if(safeLoc != null) {
-                    to = safeLoc.join();
-                }
-                if(to == null){
-                    to = LocationUtil.getSpawnLocation();
-                }
+    private Location getToLocation(Location from, Player player) {
+        IslandManager islandManager = plugin.getIslandManager();
+        Island island = islandManager.getIslandAtLocation(from);
+        Location to = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
+        if(island.hasRole(IslandRole.Visitor, player.getUniqueId())){
+            Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+            if(safeLoc != null) {
+                to = safeLoc;
             }
-            return to;
-        });
+            if(to == null){
+                to = LocationUtil.getSpawnLocation();
+            }
+        }
+        return to;
     }
 }
 

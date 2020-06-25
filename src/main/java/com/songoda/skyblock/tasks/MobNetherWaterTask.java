@@ -1,6 +1,7 @@
 package com.songoda.skyblock.tasks;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -19,10 +20,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -57,20 +55,29 @@ public class MobNetherWaterTask  extends BukkitRunnable {
                 if(plugin.getWorldManager().isIslandWorld(world) && plugin.getWorldManager().getIslandWorld(world).equals(IslandWorld.Nether)){
                     for(Entity ent : world.getEntities()) {
                         boolean witherSkeleton;
-                        if (NMSUtil.getVersionNumber() > 10) {
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
                             witherSkeleton = ent.getType().equals(EntityType.WITHER_SKELETON);
                         } else {
                             witherSkeleton = ent instanceof Skeleton && ((Skeleton) ent).getSkeletonType().equals(Skeleton.SkeletonType.WITHER);
                         }
-                        if (ent.getType().equals(EntityType.PIG_ZOMBIE) ||
-                                ent.getType().equals(EntityType.BLAZE) ||
-                                ent.getType().equals(EntityType.MAGMA_CUBE) ||
-                                ent.getType().equals(EntityType.WITHER) ||
-                                ent.getType().equals(EntityType.GHAST) ||
-                                witherSkeleton) {
+                        if((((ent instanceof Blaze || ent instanceof MagmaCube) || ent instanceof Wither) || ent instanceof Ghast) || witherSkeleton){
                             Block block = ent.getLocation().getBlock();
                             removeWater(world, block);
                             removeWater(world, block.getRelative(BlockFace.UP));
+                        } else {
+                            if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
+                                if(((ent instanceof Piglin || ent instanceof Hoglin) || ent instanceof Strider) || ent instanceof Zoglin) {
+                                    Block block = ent.getLocation().getBlock();
+                                    removeWater(world, block);
+                                    removeWater(world, block.getRelative(BlockFace.UP));
+                                }
+                            } else {
+                                if(ent instanceof PigZombie) {
+                                    Block block = ent.getLocation().getBlock();
+                                    removeWater(world, block);
+                                    removeWater(world, block.getRelative(BlockFace.UP));
+                                }
+                            }
                         }
                     }
                 }

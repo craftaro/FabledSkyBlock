@@ -182,10 +182,6 @@ Island:
             Type: Plains
         Cooldown:
             Time: 900
-        # If the Nether/End biomes should be allowed in the overworld
-        AllowOtherWorldlyBiomes:
-            Nether: true
-            End: true
     Weather:
         Default:
             # The weather and time will operate the same weather and time as the world.
@@ -355,6 +351,7 @@ Island:
         BlazeImmuneToWaterInNether: false
     Restrict:
         # Blocks that can be placed only if the island has nether unlocked
+        # You may add/remove as many as you want
         NetherBlocks:
             NETHERRACK: true
             SOUL_SAND: true
@@ -377,7 +374,63 @@ Island:
             NETHER_WART_BLOCK: true
             WITHER_SKELETON_SKULL: true
             WITHER_ROSE: true
+            CRIMSON_NYLIUM: true
+            WARPED_NYLIUM: true
+            CRIMSON_PLANKS: true
+            WARPED_PLANKS: true
+            NETHER_GOLD_ORE: true
+            CRIMSTON_STEM: true
+            WARPED_STEM: true
+            STRIPPED_CRIMSON_STEM: true
+            STRIPPED_WARPED_STEM: true
+            STRIPPED_CRIMSON_HYPHAE: true
+            STRIPPED_WARPED_HYPHAE: true
+            CRIMSON_HYPHAE: true
+            WARPED_HYPHAE: true
+            CRIMSON_FUNGUS: true
+            WARPED_FUNGUS: true
+            CRIMSON_ROOTS: true
+            WARPED_ROOTS: true
+            NETHER_SPROUTS: true
+            WEEPING_VINES: true
+            TWISTING_VINES: true
+            SOUL_OIL: true
+            BASALT: true
+            POLISHED_BASALT: true
+            SOUL_TORCH: true
+            CRIMSON_TRAPDOOR: true
+            WARPED_TRAPDOOR: true
+            CHAIN: true
+            CRIMSON_FENCE_GATE: true
+            WARPED_FENCE_GATE: true
+            CRACKED_NETHER_BRICKS: true
+            BLACKSTONE_WALL: true
+            POLISHED_BLACKSTONE_WALL: true
+            POLISHED_BLACKSTONE_BRICK_WALL: true
+            CRIMSON_BUTTON: true
+            WARPED_BUTTON: true
+            POLISHED_BLACKSTONE_BUTTON: true
+            SOUL_CAMPFIRE: true
+            SHROOMLIGHT: true
+            LODESTONE: true
+            NETHERITE_BLOCK: true
+            ANCIENT_DEBRIS: true
+            CRYING_OBSIDIAN: true
+            BLACKSTONE: true
+            BLACKSTONE_SLAB: true
+            BLACKSTONE_STAIRS: true
+            GLIDED_BLACKSTONE: true
+            POLISHED_BLACKSTONE: true
+            POLISHED_BLACKSTONE_SLAB: true
+            POLISHED_BLACKSTONE_STAIRS: true
+            CHISELED_POLISHED_BLACKSTONE: true
+            POLISHED_BLACKSTONE_BRICKS: true
+            POLISHED_BLACKSTONE_BRICK_SLAB: true
+            POLISHED_BLACKSTONE_BRICK_STAIRS: true
+            CRACKED_POLISHED_BLACKSTONE_BRICKS: true
+            RESPAWN_ANCHOR: true
         # Blocks that can be placed only if the island has The End unlocked
+        # You may add/remove as many as you want
         EndBlocks:
             END_STONE: true
             END_STONE_BRICKS: true

@@ -8,7 +8,9 @@ import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class FirePermission extends ListeningPermission {
@@ -29,7 +31,21 @@ public class FirePermission extends ListeningPermission {
 
         Player player = event.getPlayer();
 
-        if (CompatibleMaterial.getMaterial(player.getTargetBlock(null, 5)) == CompatibleMaterial.FIRE)
+        if (CompatibleMaterial.getMaterial(player.getTargetBlock(null, 5)).equals(CompatibleMaterial.FIRE))
             cancelAndMessage(event, player, plugin, messageManager);
+    }
+    
+    @PermissionHandler
+    public void onProjectileHit(BlockIgniteEvent event) {
+        Player player = null;
+        if(event.getPlayer() != null){
+            player = event.getPlayer();
+        } else if(event.getIgnitingEntity() instanceof Projectile && ((Projectile) event.getIgnitingEntity()).getShooter() instanceof Player) {
+            player = (Player) ((Projectile) event.getIgnitingEntity()).getShooter();
+        }
+        
+        if(player != null) {
+            cancelAndMessage(event, player, plugin, messageManager);
+        }
     }
 }

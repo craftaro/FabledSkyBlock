@@ -194,41 +194,37 @@ public class Move implements Listener {
     }
 
     private void teleportPlayerToIslandSpawn(Player player, IslandWorld world, Island island) {
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
-            Location loc = null;
-            if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                    CompletableFuture<Location> safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
-                    if(safeLoc != null){
-                        loc = safeLoc.join();
-                    }
-                } else {
-                    loc = island.getLocation(world, IslandEnvironment.Main);
-                    LocationUtil.removeWaterFromLoc(skyblock, loc);
+        Location loc = null;
+        if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
+                || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+                Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
+                if(safeLoc != null){
+                    loc = safeLoc;
                 }
             } else {
-                if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                    CompletableFuture<Location> safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
-                    if(safeLoc != null){
-                        loc = safeLoc.join();
-                    }
-                } else {
-                    loc = island.getLocation(world, IslandEnvironment.Visitor);
-                }
+                loc = island.getLocation(world, IslandEnvironment.Main);
+                LocationUtil.removeWaterFromLoc(skyblock, loc);
             }
-            Location finalLoc = loc;
-            Bukkit.getScheduler().runTask(skyblock, () -> {
-                if(finalLoc != null){
-                    PaperLib.teleportAsync(player, finalLoc);
-                } else {
-                    LocationUtil.teleportPlayerToSpawn(player);
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                                    .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message")));
+        } else {
+            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+                Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
+                if(safeLoc != null){
+                    loc = safeLoc;
                 }
-            });
-        });
+            } else {
+                loc = island.getLocation(world, IslandEnvironment.Visitor);
+            }
+        }
+        Location finalLoc = loc;
+        if(finalLoc != null){
+            PaperLib.teleportAsync(player, finalLoc);
+        } else {
+            LocationUtil.teleportPlayerToSpawn(player);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                            .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message")));
+        }
     }
 
     private void teleportPlayerToIslandSpawn(Player player, Island island) {

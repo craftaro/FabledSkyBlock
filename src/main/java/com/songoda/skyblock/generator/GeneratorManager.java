@@ -37,10 +37,6 @@ public class GeneratorManager {
         if (configLoad.getString("Generators") == null)
             return;
 
-        CompatibleMaterial[] oreMaterials = new CompatibleMaterial[]{CompatibleMaterial.COAL, CompatibleMaterial.CHARCOAL, CompatibleMaterial.DIAMOND,
-                CompatibleMaterial.IRON_INGOT, CompatibleMaterial.GOLD_INGOT, CompatibleMaterial.EMERALD};
-        Random rnd = new Random();
-
         for (String generatorList : configLoad.getConfigurationSection("Generators").getKeys(false)) {
             if (configLoad.getString("Generators." + generatorList + ".Name") == null)
                 continue;
@@ -55,10 +51,18 @@ public class GeneratorManager {
                     }
                 }
             }
+            
+            Random rnd = new Random();
+            CompatibleMaterial icon;
+            if(!generatorMaterials.isEmpty()) {
+                icon = generatorMaterials.get(rnd.nextInt(generatorMaterials.size())).getMaterials();
+            } else {
+                icon = CompatibleMaterial.STONE;
+            }
 
             generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
                     IslandWorld.valueOf(configLoad.getString("Generators." + generatorList + ".World", "Normal")),
-                    oreMaterials[rnd.nextInt(oreMaterials.length)], generatorMaterials,
+                    icon, generatorMaterials,
                     configLoad.getBoolean("Generators." + generatorList + ".Permission")));
         }
     }
