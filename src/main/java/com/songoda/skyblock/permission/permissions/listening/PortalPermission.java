@@ -17,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.concurrent.CompletableFuture;
+
 public class PortalPermission extends ListeningPermission {
 
     private final SkyBlock plugin;
@@ -68,17 +70,22 @@ public class PortalPermission extends ListeningPermission {
         }
     }
 
-    private Location getToLocation(Location from, Player player) {
-        IslandManager islandManager = plugin.getIslandManager();
-        Island island = islandManager.getIslandAtLocation(from);
-        Location to = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
-        if(island.hasRole(IslandRole.Visitor, player.getUniqueId())){
-            to = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-            if(to == null){
-                to = LocationUtil.getSpawnLocation();
+    private CompletableFuture<Location> getToLocation(Location from, Player player) {
+        return CompletableFuture.supplyAsync(() -> {
+            IslandManager islandManager = plugin.getIslandManager();
+            Island island = islandManager.getIslandAtLocation(from);
+            Location to = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
+            if(island.hasRole(IslandRole.Visitor, player.getUniqueId())){
+                CompletableFuture<Location> safeLoc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+                if(safeLoc != null) {
+                    to = safeLoc.join();
+                }
+                if(to == null){
+                    to = LocationUtil.getSpawnLocation();
+                }
             }
-        }
-        return to;
+            return to;
+        });
     }
 }
 

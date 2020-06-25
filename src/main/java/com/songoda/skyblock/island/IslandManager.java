@@ -1138,10 +1138,13 @@ public class IslandManager {
                 }
             }
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+            Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
                 Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
                 if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                    loc = LocationUtil.getSafeLocation(loc);
+                    CompletableFuture<Location> safeLoc = LocationUtil.getSafeLocation(loc);
+                    if(safeLoc != null){
+                        loc = safeLoc.join();
+                    }
                 }
                 if(loc != null){
                     PaperLib.teleportAsync(player, loc);

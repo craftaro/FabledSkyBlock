@@ -31,6 +31,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class Portal implements Listener {
 
@@ -163,13 +164,20 @@ public class Portal implements Listener {
 
     private void teleportPlayerToWorld(Player player, SoundManager soundManager, Island island, IslandEnvironment spawnEnvironment, Tick tick, IslandWorld toWorld) {
         IslandWorld toWorldF = toWorld;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(skyblock, () -> {
             Location loc = island.getLocation(toWorldF, spawnEnvironment);
-            Location safeLoc = LocationUtil.getSafeLocation(loc);
+            CompletableFuture<Location> tempSafeLoc = LocationUtil.getSafeLocation(loc);
+            Location safeLoc = null;
+            if(tempSafeLoc != null) {
+                safeLoc = tempSafeLoc.join();
+            }
             if(safeLoc != null){
                 loc = safeLoc;
             }
-            PaperLib.teleportAsync(player, loc);
+            Location finalLoc = loc;
+            Bukkit.getScheduler().runTask(skyblock, () -> {
+                PaperLib.teleportAsync(player, finalLoc);
+            });
         }, 1L);
         soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
         player.setFallDistance(0.0F);

@@ -29,6 +29,7 @@ import org.bukkit.potion.PotionEffect;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class Move implements Listener {
 
@@ -193,30 +194,41 @@ public class Move implements Listener {
     }
 
     private void teleportPlayerToIslandSpawn(Player player, IslandWorld world, Island island) {
-        Location loc;
-        if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+            Location loc = null;
+            if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
+                    || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+                if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+                    CompletableFuture<Location> safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
+                    if(safeLoc != null){
+                        loc = safeLoc.join();
+                    }
+                } else {
+                    loc = island.getLocation(world, IslandEnvironment.Main);
+                    LocationUtil.removeWaterFromLoc(skyblock, loc);
+                }
             } else {
-                loc = island.getLocation(world, IslandEnvironment.Main);
-                LocationUtil.removeWaterFromLoc(skyblock, loc);
+                if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+                    CompletableFuture<Location> safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
+                    if(safeLoc != null){
+                        loc = safeLoc.join();
+                    }
+                } else {
+                    loc = island.getLocation(world, IslandEnvironment.Visitor);
+                }
             }
-        } else {
-            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                loc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
-            } else {
-                loc = island.getLocation(world, IslandEnvironment.Visitor);
-            }
-        }
-        if(loc != null){
-            PaperLib.teleportAsync(player, loc);
-        } else {
-            LocationUtil.teleportPlayerToSpawn(player);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    Objects.requireNonNull(skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
-                            .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message"))));
-        }
+            Location finalLoc = loc;
+            Bukkit.getScheduler().runTask(skyblock, () -> {
+                if(finalLoc != null){
+                    PaperLib.teleportAsync(player, finalLoc);
+                } else {
+                    LocationUtil.teleportPlayerToSpawn(player);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                    .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message")));
+                }
+            });
+        });
     }
 
     private void teleportPlayerToIslandSpawn(Player player, Island island) {
