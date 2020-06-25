@@ -7,12 +7,10 @@
 	<artifactId>skyblock</artifactId>
 	<version>2.3.2</version>
 	<packaging>jar</packaging>
-	
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	<</properties>
-
+	</properties>
 	<build>
 		<defaultGoal>clean install</defaultGoal>
 		<finalName>FabledSkyblock-${project.version}</finalName>
