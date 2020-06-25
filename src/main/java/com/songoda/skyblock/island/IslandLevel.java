@@ -78,8 +78,15 @@ public class IslandLevel {
             if (current == null) continue;
 
             long pointsRequired = current.getLong("Points", 0);
+            long blockAmount = entry.getValue();
 
-            if (pointsRequired != 0) pointsEarned = pointsEarned + (entry.getValue() * pointsRequired);
+            long materialLimit = current.getLong("Limit", -1);
+            long materialAmountCounted = Math.min(materialLimit, blockAmount);
+
+            if (materialLimit == -1)
+                materialAmountCounted = blockAmount;
+
+            if (pointsRequired != 0) pointsEarned = pointsEarned + (materialAmountCounted * pointsRequired);
 
         }
 
@@ -99,12 +106,17 @@ public class IslandLevel {
         if (current == null) return 0;
 
         Long boxedAmount = this.materials.get(material);
-
         if (boxedAmount == null) return 0;
+
+        long materialLimit = current.getLong("Limit", -1);
+        long materialAmountCounted = Math.min(materialLimit, boxedAmount);
+
+        if (materialLimit == -1)
+            materialAmountCounted = boxedAmount;
 
         long pointsRequired = current.getLong("Points");
 
-        return pointsRequired == 0 ? 0 : boxedAmount * pointsRequired;
+        return pointsRequired == 0 ? 0 : materialAmountCounted * pointsRequired;
     }
 
     public long getLevel() {
