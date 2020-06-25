@@ -401,6 +401,8 @@ Island:
             CRIMSON_TRAPDOOR: true
             WARPED_TRAPDOOR: true
             CHAIN: true
+            CRIMSON_DOOR: true
+            WARPED_DOOR: true
             CRIMSON_FENCE_GATE: true
             WARPED_FENCE_GATE: true
             CRACKED_NETHER_BRICKS: true
@@ -410,6 +412,7 @@ Island:
             CRIMSON_BUTTON: true
             WARPED_BUTTON: true
             POLISHED_BLACKSTONE_BUTTON: true
+            SOUL_LANTERN: true
             SOUL_CAMPFIRE: true
             SHROOMLIGHT: true
             LODESTONE: true
