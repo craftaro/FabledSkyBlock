@@ -9,14 +9,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.levelling.calculator.Calculator;
 import com.songoda.skyblock.levelling.calculator.CalculatorRegistry;
 import com.songoda.skyblock.levelling.calculator.impl.EpicSpawnerCalculator;
 import com.songoda.skyblock.levelling.calculator.impl.UltimateStackerCalculator;
+import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -210,5 +214,49 @@ public final class IslandLevelManager {
 
         return new AmountMaterialPair(compMaterial, amount + stackSize);
     }
-
+    
+    public void updateLevel(Island island, Location location) {
+        // Fix a bug in Paper 1.8.8 when using ViaVersion on a 1.12.2 client.
+        // BUG: Player can infinitely increase their level by placing a block at their
+        // feet.
+        // It doesn't take the block away but still increments the level.
+        // This doesn't happen in Spigot, but does happen in PaperSpigot due to a
+        // BlockPlaceEvent being incorrectly fired.
+        // The solution is to wait a tick to make sure that the block was actually
+        // placed.
+        // This shouldn't cause any issues besides the task number being increased
+        // insanely fast.
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)){
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                updateLevelLocation(island, location);
+            });
+        } else {
+            updateLevelLocation(island, location);
+        }
+    }
+    
+    private void updateLevelLocation(Island island, Location location) {
+        Block block = location.getBlock();
+        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+        
+        if (material == null || material == CompatibleMaterial.AIR) return;
+        
+        if (material == CompatibleMaterial.SPAWNER) {
+            if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
+                return;
+    
+            CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
+    
+            if (spawner != null)
+                material = CompatibleMaterial.getBlockMaterial(spawner.getMaterial());
+        }
+        
+        long materialAmount = 0;
+        IslandLevel level = island.getLevel();
+        
+        if (level.hasMaterial(material.name()))
+            materialAmount = level.getMaterialAmount(material.name());
+        
+        level.setMaterialAmount(material.name(), materialAmount + 1);
+    }
 }
