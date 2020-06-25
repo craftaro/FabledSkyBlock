@@ -260,7 +260,7 @@ public class Levelling {
 
                 inventorySlot++;
 
-                long materialLimit = mainConfig.getFileConfiguration().getLong("Materials." + material + ".Limit", materialAmount);
+                long materialLimit = mainConfig.getFileConfiguration().getLong("Materials." + material + ".Limit", -1);
                 long materialAmountCounted = Math.min(materialLimit, materialAmount);
 
                 if (materialLimit == -1)
