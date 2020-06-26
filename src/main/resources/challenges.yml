@@ -324,9 +324,9 @@ challenges:
         # LEVEL:<level> ==> the player's island needs to be at least <level> level
         # NEAR:<EntityType> <amount> ==> <amount> of <EntityType> must be next to the player
         # POTION:<PotionType> <data> <amount>
+        # data must be: 0 = normal potion, 1 = extended, 2 = ++, 3 = splash, 4 = splash extended, 5 = splash ++, 6 = lingering, 7 = lingering extended, 8 = lingering ++
         # BANK:<amount> requires amount from the island's bank
         # ECO:<amount> requires amount from the player's balance
-        # data must be: 0 = normal potion, 1 = extended, 2 = ++, 3 = splash, 4 = splash extended, 5 = splash ++, 6 = lingering, 7 = lingering extended, 8 = lingering ++
         require:
           - 'ITEM:cobblestone 128'
         # The reward
