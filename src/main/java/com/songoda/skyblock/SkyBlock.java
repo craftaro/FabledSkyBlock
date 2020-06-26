@@ -3,6 +3,7 @@ package com.songoda.skyblock;
 import com.songoda.core.SongodaCore;
 import com.songoda.core.SongodaPlugin;
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.configuration.Config;
 import com.songoda.core.gui.GuiManager;
 import com.songoda.core.hooks.EconomyManager;
@@ -110,14 +111,19 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onPluginEnable() {
-
-        paper = false;
+        if(ServerVersion.isServerVersionAbove(ServerVersion.V1_16)) {
+            this.getLogger().warning("This Minecraft version is not supported. Disabling...");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        
         try {
             Class.forName("com.destroystokyo.paper.PaperConfig");
             paper = true;
             paperAsync = Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
             this.getLogger().info("Enabling Paper hooks");
         } catch (ClassNotFoundException ignored) {
+            paper = false;
             PaperLib.suggestPaper(this);
         }
 
