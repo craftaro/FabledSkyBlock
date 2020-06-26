@@ -5,6 +5,7 @@ import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.utils.item.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -149,35 +151,55 @@ public class Challenge {
 
 			@Override
 			public boolean has(Player p, Object obj) {
-				// Check if player has specific item in his inventory
-				ItemStack is = (ItemStack) obj;
-				return p.getInventory().containsAtLeast(new ItemStack(is.getType()), is.getAmount());
+				boolean ignoreLore = SkyBlock.getInstance().getFileManager()
+						.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
+						.getFileConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
+				if(obj instanceof ItemStack){
+					// Check if player has specific item in his inventory
+					ItemStack is = (ItemStack) obj;
+					if(ignoreLore){
+						return p.getInventory().contains(is.getType(), is.getAmount());
+					}
+					return p.getInventory().containsAtLeast(new ItemStack(is.getType()), is.getAmount());
+				}
+				return false;
 			}
 
 			@Override
 			public void executeRequire(Player p, Object obj) {
+				boolean ignoreLore = SkyBlock.getInstance().getFileManager()
+						.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
+						.getFileConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
+				
 				if(obj instanceof ItemStack){
 					// Remove specific item in player's inventory
 					ItemStack is = (ItemStack) obj;
-					//p.getInventory().removeItem(new ItemStack(is.getType(), is.getAmount()));
 					int toRemove = is.getAmount();
 					for(ItemStack jis : p.getInventory().getContents()) {
-						if(jis != null && jis.isSimilar(is)) {
-							if(jis.getAmount() <= toRemove) {
-								toRemove -= jis.getAmount();
-								jis.setAmount(0);
+						if(jis != null) {
+							boolean isItem;
+							if(ignoreLore){
+								isItem = jis.getType().equals(is.getType());
 							} else {
-								jis.setAmount(jis.getAmount() - toRemove);
-								toRemove = 0;
+								isItem = jis.isSimilar(is);
 							}
-						}
-						if(toRemove <= 0) {
-							p.updateInventory();
-							break;
+							
+							if(isItem) {
+								if(jis.getAmount() <= toRemove) {
+									toRemove -= jis.getAmount();
+									jis.setAmount(0);
+								} else {
+									jis.setAmount(jis.getAmount() - toRemove);
+									toRemove = 0;
+								}
+							}
+							if(toRemove <= 0) {
+								p.updateInventory();
+								break;
+							}
 						}
 					}
 				}
-				// TODO LOG
 			}
 
 			@Override
@@ -188,7 +210,6 @@ public class Challenge {
 						.addItem(new ItemStack(is.getType(), is.getAmount()));
 				for (ItemStack restIs : rest.values())
 					p.getWorld().dropItem(p.getLocation(), restIs);
-				// TODO LOG
 			}
 		},
 		CMD {
