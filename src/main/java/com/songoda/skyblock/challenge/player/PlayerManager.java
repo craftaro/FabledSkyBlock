@@ -173,10 +173,12 @@ public class PlayerManager {
 		done.put(c, count + 1);
 		addChallenge(uuid, c);
 		// Take items
-		for (Peer<Type, Object> peer : c.getRequires())
+		for (Peer<Type, Object> peer : c.getRequires()) {
 			peer.getKey().executeRequire(p, peer.getValue());
-		for (Peer<Type, Object> peer : c.getRewards())
+		}
+		for (Peer<Type, Object> peer : c.getRewards()) {
 			peer.getKey().executeReward(p, peer.getValue());
+		}
 		// Ok, send message
 		String broadcast = ChatColor.translateAlternateColorCodes('&',
 				SkyBlock.getInstance().getFileManager()

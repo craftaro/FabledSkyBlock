@@ -324,12 +324,15 @@ challenges:
         # LEVEL:<level> ==> the player's island needs to be at least <level> level
         # NEAR:<EntityType> <amount> ==> <amount> of <EntityType> must be next to the player
         # POTION:<PotionType> <data> <amount>
+        # BANK:<amount>
+        # ECO:<amount>
         # data must be: 0 = normal potion, 1 = extended, 2 = ++, 3 = splash, 4 = splash extended, 5 = splash ++, 6 = lingering, 7 = lingering extended, 8 = lingering ++
         require:
           - 'ITEM:cobblestone 128'
         # The reward
         # ITEM:<item> <count> means the player will have <count> <item> when the challenge is done
         # CMD:<cmd> means a command will be executed by the console when the challenge is done
+        # BANK:<amount>
         reward:
           - 'CMD:eco give {player} 100'
           - 'ITEM:iron_ingot 20'
@@ -565,7 +568,8 @@ challenges:
           - 'ITEM:cake 5'
           - 'ITEM:pumpkin_pie 16'
         reward:
-          - 'CMD:eco give {player} 300'
+          - 'CMD:eco give {player} 150'
+          - 'BANK:150'
           - 'ITEM:diamond 10'
           - 'ITEM:cow_spawn_egg 1'
         maxtimes: 1
@@ -583,7 +587,8 @@ challenges:
             - '&c&lRewards:'
             - '&e- 10 diamonds'
             - '&e- 1 cow spawn egg'
-            - '&e- 300 $'
+            - '&e- 150 $'
+            - '&e- 150 $ to the bank island'
       '2':
         id: 2
         name: '&2Hunter'
@@ -1077,6 +1082,7 @@ challenges:
         name: '&2The Neighbours'
         require:
           - 'NEAR:villager 10'
+          - 'BANK:100'
         reward:
           - 'CMD:eco give {player} 1000'
           - 'ITEM:diamond_block 16'
@@ -1091,6 +1097,7 @@ challenges:
           lore:
             - '&c&lFor this challenge, you''ll need:'
             - '&e- Have 10 villagers in your proximity'
+            - '&e- 100 $ in the island bank'
             - '&c&lRewards:'
             - '&e- 16 diamond blocks'
             - '&e- 1000 $'
@@ -1820,6 +1827,7 @@ challenges:
         id: 8
         name: '&4THE IMPOSSIBLE CHALLENGE'
         require:
+          - 'ECO:10000'
           - 'ITEM:bedrock 64'
         reward:
           - 'CMD:eco give {player} 0'
