@@ -6,7 +6,7 @@ description: A unique SkyBlock plugin
 author: Songoda
 authors: [Fabrimat]
 softdepend: [HolographicDisplays, Holograms, CMI, PlaceholderAPI, MVdWPlaceholderAPI, Vault, Reserve, LeaderHeads,
-             EpicSpawners, WildStacker, UltimateStacker, WorldEdit, Residence, CoreProtect]
+             EpicSpawners, WildStacker, UltimateStacker, WorldEdit, Residence, CoreProtect, CMIEInjector]
 loadbefore: [Multiverse-Core, ProtocolLib]
 commands:
     island:
