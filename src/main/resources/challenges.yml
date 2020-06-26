@@ -324,15 +324,15 @@ challenges:
         # LEVEL:<level> ==> the player's island needs to be at least <level> level
         # NEAR:<EntityType> <amount> ==> <amount> of <EntityType> must be next to the player
         # POTION:<PotionType> <data> <amount>
-        # BANK:<amount>
-        # ECO:<amount>
+        # BANK:<amount> requires amount from the island's bank
+        # ECO:<amount> requires amount from the player's balance
         # data must be: 0 = normal potion, 1 = extended, 2 = ++, 3 = splash, 4 = splash extended, 5 = splash ++, 6 = lingering, 7 = lingering extended, 8 = lingering ++
         require:
           - 'ITEM:cobblestone 128'
         # The reward
         # ITEM:<item> <count> means the player will have <count> <item> when the challenge is done
         # CMD:<cmd> means a command will be executed by the console when the challenge is done
-        # BANK:<amount>
+        # BANK:<amount> gives amount to the island's bank
         reward:
           - 'CMD:eco give {player} 100'
           - 'ITEM:iron_ingot 20'
