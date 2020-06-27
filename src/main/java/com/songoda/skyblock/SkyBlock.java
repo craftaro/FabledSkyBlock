@@ -121,8 +121,6 @@ public class SkyBlock extends SongodaPlugin {
         if(paper = ServerProject.isServer(ServerProject.PAPER)){
             paperAsync = Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
             this.getLogger().info("Enabling Paper hooks");
-        } else {
-            PaperLib.suggestPaper(this);
         }
 
         // Run Songoda Updater
