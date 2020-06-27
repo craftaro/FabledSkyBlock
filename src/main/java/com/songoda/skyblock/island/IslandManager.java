@@ -4,6 +4,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.google.common.base.Preconditions;
+import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
@@ -272,23 +273,23 @@ public class IslandManager {
             player.setFallDistance(0.0F);
         }, configLoad.getInt("Island.Creation.TeleportTimeout") * 20);
 
-        String biomeName = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase();
-        SBiome sBiome;
+        /*String biomeName = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase();
+        CompatibleBiome cBiome;
         try {
-            sBiome = SBiome.valueOf(biomeName);
+            cBiome = CompatibleBiome.valueOf(biomeName);
         } catch (Exception ex) {
-            sBiome = SBiome.PLAINS;
+            cBiome = CompatibleBiome.PLAINS;
         }
-        Biome biome = sBiome.getBiome();
+        Biome biome = cBiome.getBiome();
 
         Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
-            skyblock.getBiomeManager().setBiome(island, biome);
+            skyblock.getBiomeManager().setBiome(island, biome, null);
             if (structure.getCommands() != null) {
                 for (String commandList : structure.getCommands()) {
                     Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));
                 }
             }
-        }, 20L);
+        }, 20L);*/
 
         // Recalculate island level after 5 seconds
         if (configLoad.getBoolean("Island.Levelling.ScanAutomatically"))
@@ -662,7 +663,7 @@ public class IslandManager {
                     }
                     snapshots.put(world, positions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList()));
                     ChunkDeleteSplitter.startDeletion(snapshots);
-                });
+                }, null);
             } else {
                 ChunkLoader.startChunkLoading(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncChunks, syncChunks) -> {
                     Bukkit.getScheduler().runTask(skyblock, () -> {
@@ -671,7 +672,7 @@ public class IslandManager {
                         snapshots.put(world, list);
                         ChunkDeleteSplitter.startDeletion(snapshots);
                     });
-                });
+                }, null);
             }
         }
 

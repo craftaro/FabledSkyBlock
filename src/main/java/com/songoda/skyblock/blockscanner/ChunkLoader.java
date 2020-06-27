@@ -24,21 +24,25 @@ public class ChunkLoader extends BukkitRunnable {
     private boolean chunkForChunk;
     private boolean paper;
     private World world;
+    private Island island;
     private int x;
     private int z;
     private int minZ;
     private int maxX;
     private int maxZ;
     private int chunkPerTick;
+    private CompleteTask completeTask;
 
-    private ChunkLoader(Island island, IslandWorld islandWorld, boolean paper, boolean chunkForChunk, ChunkForChunkScannerTask chunkTask) {
+    private ChunkLoader(Island island, IslandWorld islandWorld, boolean paper, boolean chunkForChunk, ChunkForChunkScannerTask chunkTask, CompleteTask complete) {
         chunkPerTick = SkyBlock.getInstance().getFileManager()
                 .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
                 .getFileConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
 
+        this.completeTask = complete;
         this.chunkTask = chunkTask;
         this.chunkForChunk = chunkForChunk;
         this.paper = paper;
+        this.island = island;
         Location islandLocation = island.getLocation(islandWorld, IslandEnvironment.Island);
 
         if (islandLocation == null) return;
@@ -64,14 +68,16 @@ public class ChunkLoader extends BukkitRunnable {
         }
     }
 
-    private ChunkLoader(Island island, IslandWorld islandWorld, boolean paper, boolean chunkForChunk, ChunkScannerTask generalTask) {
+    private ChunkLoader(Island island, IslandWorld islandWorld, boolean paper, boolean chunkForChunk, ChunkScannerTask generalTask, CompleteTask complete) {
         chunkPerTick = SkyBlock.getInstance().getFileManager()
                 .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
                 .getFileConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
-
+    
+        this.completeTask = complete;
         this.generalTask = generalTask;
         this.chunkForChunk = chunkForChunk;
         this.paper = paper;
+        this.island = island;
         Location islandLocation = island.getLocation(islandWorld, IslandEnvironment.Island);
 
         if (islandLocation == null) return;
@@ -129,18 +135,21 @@ public class ChunkLoader extends BukkitRunnable {
                 if(generalTask != null) {
                     generalTask.onComplete(asyncPositions, syncPositions);
                 }
+                if(completeTask != null) {
+                    completeTask.onComplete(island);
+                }
                 this.cancel();
                 return;
             }
         }
     }
 
-    public static void startChunkLoading(Island island, IslandWorld islandWorld, boolean paper, ChunkScannerTask task){
-        new ChunkLoader(island, islandWorld, paper, false, task);
+    public static void startChunkLoading(Island island, IslandWorld islandWorld, boolean paper, ChunkScannerTask task, CompleteTask complete){
+        new ChunkLoader(island, islandWorld, paper, false, task, complete);
     }
 
-    public static void startChunkLoadingPerChunk(Island island, IslandWorld islandWorld, boolean paper, ChunkForChunkScannerTask task){
-        new ChunkLoader(island, islandWorld, paper, true, task);
+    public static void startChunkLoadingPerChunk(Island island, IslandWorld islandWorld, boolean paper, ChunkForChunkScannerTask task, CompleteTask complete){
+        new ChunkLoader(island, islandWorld, paper, true, task, complete);
     }
 
     public interface ChunkScannerTask {
@@ -153,5 +162,9 @@ public class ChunkLoader extends BukkitRunnable {
 
         void onChunkComplete(CompletableFuture<Chunk> asyncChunk, Chunk syncChunk);
 
+    }
+    
+    public interface CompleteTask {
+        void onComplete(Island island);
     }
 }

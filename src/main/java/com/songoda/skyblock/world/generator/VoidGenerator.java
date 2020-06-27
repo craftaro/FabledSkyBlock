@@ -1,30 +1,42 @@
 package com.songoda.skyblock.world.generator;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
+import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.island.IslandWorld;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class VoidGenerator extends ChunkGenerator {
 
     @Override
-    public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biome) {
+    public @Nonnull ChunkData generateChunkData(@Nonnull World world, @Nonnull Random random, int chunkX, int chunkZ, @Nonnull BiomeGrid biomeGrid) {
         final ChunkData chunkData = createChunkData(world);
 
         final SkyBlock skyblock = SkyBlock.getInstance();
         final Configuration configLoad = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
+        
+        /*if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
+            setChunkBiome3D(CompatibleBiome.valueOf(configLoad
+                    .getString("Island.Biome.Default.Type").toUpperCase()).getBiome(), biomeGrid);
+        } else {
+            setChunkBiome2D(CompatibleBiome.valueOf(configLoad
+                    .getString("Island.Biome.Default.Type").toUpperCase()).getBiome(), biomeGrid);
+        }*/
+        
 
         for (IslandWorld worldList : IslandWorld.values()) {
             if (world.getEnvironment() == World.Environment.NETHER
@@ -67,6 +79,28 @@ public class VoidGenerator extends ChunkGenerator {
             for (int z = 0; z < 16; z++) {
                 for (int y = 0; y < height; y++) {
                     chunkData.setBlock(x, y, z, material);
+                }
+            }
+        }
+    }
+    
+    private void setChunkBiome3D(Biome biome, BiomeGrid grid) {
+        for(int x = 0; x < 16; x++){
+            for(int z = 0; z < 16; z++){
+                for(int y = 0; y<256; y++){
+                    if(!grid.getBiome(x, y, z).equals(biome)){
+                        grid.setBiome(x, y, z, biome);
+                    }
+                }
+            }
+        }
+    }
+    
+    private void setChunkBiome2D(Biome biome, BiomeGrid grid) {
+        for(int x = 0; x < 16; x++){
+            for(int z = 0; z < 16; z++){
+                if(!grid.getBiome(x, z).equals(biome)){
+                    grid.setBiome(x, z, biome);
                 }
             }
         }

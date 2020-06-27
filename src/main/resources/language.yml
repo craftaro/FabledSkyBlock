@@ -830,6 +830,10 @@ Command:
         Message: '&f&oOpens the Island Biome menu.'
       Permission:
         Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to change your Island''s biome.'
+      InProgress:
+        Message: '&bSkyBlock &8| &cError&8: &eA biome update is still in progress for this Island.'
+      Completed:
+        Message: '&bSkyBlock &8| &aInfo&8: &eThe biome update is now complete'
       Owner:
         Message: '&bSkyBlock &8| &cError&8: &eYou are not an Island Owner.'
     Visitors:

@@ -3,6 +3,7 @@ package com.songoda.skyblock;
 import com.songoda.core.SongodaCore;
 import com.songoda.core.SongodaPlugin;
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerProject;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.configuration.Config;
 import com.songoda.core.gui.GuiManager;
@@ -117,13 +118,10 @@ public class SkyBlock extends SongodaPlugin {
             return;
         }
         
-        try {
-            Class.forName("com.destroystokyo.paper.PaperConfig");
-            paper = true;
+        if(paper = ServerProject.isServer(ServerProject.PAPER)){
             paperAsync = Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
             this.getLogger().info("Enabling Paper hooks");
-        } catch (ClassNotFoundException ignored) {
-            paper = false;
+        } else {
             PaperLib.suggestPaper(this);
         }
 
@@ -229,6 +227,10 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onPluginDisable() {
+        if (this.biomeManager != null) {
+            this.biomeManager.onDisable();
+        }
+        
         if (this.userCacheManager != null) {
             this.userCacheManager.onDisable();
         }

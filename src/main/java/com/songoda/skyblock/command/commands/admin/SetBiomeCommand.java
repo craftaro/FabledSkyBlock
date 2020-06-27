@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -43,7 +44,11 @@ public class SetBiomeCommand extends SubCommand {
 
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-
+    
+        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
+            messageManager.sendMessage(sender, "&bSkyBlock &8| &6Warning&8: &eThis feature is not supported on this Minecraft version yet. Use at your own risk.");
+        }
+        
         if (args.length == 2) {
             String biomeName = args[1].toUpperCase().trim();
 
@@ -76,7 +81,7 @@ public class SetBiomeCommand extends SubCommand {
                 } else {
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
-                        biomeManager.setBiome(island, biome.getBiome());
+                        biomeManager.setBiome(island, biome.getBiome(), null);
                         island.setBiome(biome.getBiome());
                     } else {
                         islandManager.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
@@ -86,7 +91,7 @@ public class SetBiomeCommand extends SubCommand {
                                     configLoad.getString("Command.Island.Admin.SetBiome.Island.Data.Message"));
                             soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         } else {
-                            biomeManager.setBiome(island, biome.getBiome());
+                            biomeManager.setBiome(island, biome.getBiome(), null);
                             island.setBiome(biome.getBiome());
                         }
                     }

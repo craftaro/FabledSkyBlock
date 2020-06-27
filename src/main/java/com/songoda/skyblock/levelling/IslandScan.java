@@ -209,7 +209,7 @@ public final class IslandScan extends BukkitRunnable {
                 snapshots.put(skyblock.getWorldManager().getWorld(world), syncPositions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
             }
             task.onComplete();
-        });
+        }, null);
     }
 
     private interface PopulateTask {

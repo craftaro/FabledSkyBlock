@@ -136,7 +136,7 @@ public class Biome {
                         SBiome selectedBiomeType = SBiome.getFromGuiIcon(is.getType(), is.getData().getData());
 
                         cooldownManager.createPlayer(CooldownType.Biome, player);
-                        biomeManager.setBiome(island, selectedBiomeType.getBiome());
+                        biomeManager.setBiome(island, selectedBiomeType.getBiome(), null);
                         island.setBiome(selectedBiomeType.getBiome());
                         island.save();
 
