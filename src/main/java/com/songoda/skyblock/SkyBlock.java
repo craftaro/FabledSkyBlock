@@ -225,10 +225,6 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onPluginDisable() {
-        if (this.biomeManager != null) {
-            this.biomeManager.onDisable();
-        }
-        
         if (this.userCacheManager != null) {
             this.userCacheManager.onDisable();
         }

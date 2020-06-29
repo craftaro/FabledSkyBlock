@@ -15,20 +15,15 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class BiomeManager {
 
     private final SkyBlock skyblock;
     private final List<Island> updatingIslands;
-    private final List<ExecutorService> pools;
 
     public BiomeManager(SkyBlock skyblock) {
         this.skyblock = skyblock;
         this.updatingIslands = new ArrayList<>();
-        this.pools = new ArrayList<>();
     }
     
     public boolean isUpdating(Island island) {
@@ -50,12 +45,10 @@ public class BiomeManager {
 
         if(skyblock.isPaperAsync()){
             // We keep it sequentially in order to use less RAM
-            ExecutorService threadPool = Executors.newFixedThreadPool(4);
-            pools.add(threadPool);
             ChunkLoader.startChunkLoadingPerChunk(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncChunk, syncChunk) -> {
                 Chunk chunk = asyncChunk.join();
                 if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
-                    setChunkBiome3D(island, biome, chunk, threadPool);
+                    setChunkBiome3D(island, biome, chunk);
                 } else {
                     setChunkBiome2D(island, biome, chunk);
                 }
@@ -64,25 +57,23 @@ public class BiomeManager {
                 if(task != null) {
                     task.onCompleteUpdate();
                 }
-                threadPool.shutdown();
-                pools.remove(threadPool);
             }));
         } else {
-            ExecutorService threadPool = Executors.newFixedThreadPool(4);
-            pools.add(threadPool);
-            ChunkLoader.startChunkLoadingPerChunk(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncChunk, syncChunk) -> {
-                if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
-                    setChunkBiome3D(island, biome, syncChunk, threadPool);
-                } else {
-                    setChunkBiome2D(island, biome, syncChunk);
-                }
+            ChunkLoader.startChunkLoading(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncChunks, syncChunks) -> {
+                Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                    for(Chunk chunk : syncChunks){
+                        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
+                            setChunkBiome3D(island, biome, chunk);
+                        } else {
+                            setChunkBiome2D(island, biome, chunk);
+                        }
+                    }
+                });
             }, (island1 -> {
                 removeUpdatingIsland(island1);
                 if(task != null) {
                     task.onCompleteUpdate();
                 }
-                threadPool.shutdown();
-                pools.remove(threadPool);
             }));
         }
     }
@@ -98,20 +89,15 @@ public class BiomeManager {
         updateBiomePacket(island, chunk);
     }
     
-    private void setChunkBiome3D(Island island, Biome biome, Chunk chunk, ExecutorService pool) {
-        for(int i = 0; i<256; i+=16){
-            int finalI = i;
-            pool.execute(() -> {
-                for(int x = 0; x < 16; x++){
-                    for(int z = 0; z < 16; z++){
-                        for(int y = 0; y<16; y++){
-                            chunk.getWorld().setBiome(x, y * finalI, z, biome);
-                            if(!chunk.getWorld().getBiome(x, y * finalI, z).equals(biome)){
-                            }
-                        }
+    private void setChunkBiome3D(Island island, Biome biome, Chunk chunk) {
+        for(int x = 0; x < 16; x++){
+            for(int z = 0; z < 16; z++){
+                //for(int y = 0; y<256; y++){
+                    if(!chunk.getWorld().getBiome(x, 0, z).equals(biome)){
+                        chunk.getWorld().setBiome(x, 0, z, biome);
                     }
-                }
-            });
+                //}
+            }
         }
         updateBiomePacket(island, chunk);
     }
@@ -149,12 +135,6 @@ public class BiomeManager {
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
             }
-        }
-    }
-    
-    public void onDisable() {
-        for(ExecutorService pool : pools){
-            pool.shutdownNow();
         }
     }
     
