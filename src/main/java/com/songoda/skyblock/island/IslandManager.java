@@ -273,7 +273,7 @@ public class IslandManager {
             player.setFallDistance(0.0F);
         }, configLoad.getInt("Island.Creation.TeleportTimeout") * 20);
 
-        /*String biomeName = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase();
+        String biomeName = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase();
         CompatibleBiome cBiome;
         try {
             cBiome = CompatibleBiome.valueOf(biomeName);
@@ -289,7 +289,7 @@ public class IslandManager {
                     Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));
                 }
             }
-        }, 20L);*/
+        }, 20L);
 
         // Recalculate island level after 5 seconds
         if (configLoad.getBoolean("Island.Levelling.ScanAutomatically"))
