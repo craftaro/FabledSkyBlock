@@ -164,7 +164,13 @@ public class Interact implements Listener {
             } else {
                 heldType = CompatibleMaterial.AIR;
             }
-
+    
+            if (stackableManager != null && block != null && stackableManager.isStacked(block.getLocation())) {
+                if(blockType.equals(CompatibleMaterial.DRAGON_EGG)){
+                    event.setCancelled(true);
+                }
+            }
+            
             if (stackableManager != null && stackableManager.isStackableMaterial(heldType) && blockType == heldType
                     && !player.isSneaking() && skyblock.getPermissionManager().hasPermission(player, island, "Place")
                     && (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission")
