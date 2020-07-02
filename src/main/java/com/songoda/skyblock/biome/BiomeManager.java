@@ -48,7 +48,7 @@ public class BiomeManager {
             ChunkLoader.startChunkLoadingPerChunk(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncChunk, syncChunk) -> {
                 Chunk chunk = asyncChunk.join();
                 if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
-                    setChunkBiome3D(island, biome, chunk);
+                    setChunkBiome2D(island, biome, chunk); // 2D for the moment
                 } else {
                     setChunkBiome2D(island, biome, chunk);
                 }
@@ -63,7 +63,7 @@ public class BiomeManager {
                 Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
                     for(Chunk chunk : syncChunks){
                         if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
-                            setChunkBiome3D(island, biome, chunk);
+                            setChunkBiome2D(island, biome, chunk); // 2D for the moment
                         } else {
                             setChunkBiome2D(island, biome, chunk);
                         }
@@ -89,14 +89,15 @@ public class BiomeManager {
         updateBiomePacket(island, chunk);
     }
     
+    // Do not use - Too laggy
     private void setChunkBiome3D(Island island, Biome biome, Chunk chunk) {
         for(int x = 0; x < 16; x++){
             for(int z = 0; z < 16; z++){
-                //for(int y = 0; y<256; y++){
-                    if(!chunk.getWorld().getBiome(x, 0, z).equals(biome)){
-                        chunk.getWorld().setBiome(x, 0, z, biome);
+                for(int y = 0; y<256; y++){
+                    if(!chunk.getWorld().getBiome(x, y, z).equals(biome)){
+                        chunk.getWorld().setBiome(x, y, z, biome);
                     }
-                //}
+                }
             }
         }
         updateBiomePacket(island, chunk);

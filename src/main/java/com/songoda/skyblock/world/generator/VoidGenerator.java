@@ -30,7 +30,7 @@ public class VoidGenerator extends ChunkGenerator {
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
         
         if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
-            setChunkBiome3D(CompatibleBiome.valueOf(configLoad
+            setChunkBiome2D(CompatibleBiome.valueOf(configLoad // 2D for the moment
                     .getString("Island.Biome.Default.Type").toUpperCase()).getBiome(), biomeGrid);
         } else {
             setChunkBiome2D(CompatibleBiome.valueOf(configLoad
@@ -84,14 +84,15 @@ public class VoidGenerator extends ChunkGenerator {
         }
     }
     
+    // Do not use - Too laggy
     private void setChunkBiome3D(Biome biome, BiomeGrid grid) {
         for(int x = 0; x < 16; x++){
             for(int z = 0; z < 16; z++){
-                //for(int y = 0; y<256; y++){
-                    if(!grid.getBiome(x, 0, z).equals(biome)){
-                        grid.setBiome(x, 0, z, biome);
+                for(int y = 0; y<256; y++){
+                    if(!grid.getBiome(x, y, z).equals(biome)){
+                        grid.setBiome(x, y, z, biome);
                     }
-                //}
+                }
             }
         }
     }
