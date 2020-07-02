@@ -111,8 +111,10 @@ public class TeleportCommand extends SubCommand {
 
             Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
                 Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
-                LocationUtil.removeWaterFromLoc(skyblock, loc);
-                PaperLib.teleportAsync(player, loc);
+                PaperLib.getChunkAtAsync(loc).thenRun((() -> {
+                    LocationUtil.removeWaterFromLoc(skyblock, loc);
+                    PaperLib.teleportAsync(player, loc);
+                }));
 
                 if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);
