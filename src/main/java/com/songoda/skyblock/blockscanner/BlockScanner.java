@@ -58,11 +58,13 @@ public final class BlockScanner extends BukkitRunnable {
     private final int threadCount;
     private final Queue<BlockInfo> blocks;
     private final ScannerTasks tasks;
-
+    
     private boolean ignoreLiquids;
+    private boolean ignoreLiquidsY;
     private boolean ignoreAir;
 
-    private BlockScanner(Map<World, List<ChunkSnapshot>> snapshots, boolean ignoreLiquids, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
+    private BlockScanner(Map<World, List<ChunkSnapshot>> snapshots, boolean ignoreLiquids, boolean ignoreLiquidsY, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
+        this.ignoreLiquidsY = ignoreLiquidsY;
         this.ignoreLiquids = ignoreLiquids;
         this.ignoreAir = ignoreAir;
         this.blocks = new ConcurrentLinkedQueue<>();
@@ -99,7 +101,7 @@ public final class BlockScanner extends BukkitRunnable {
             if(ignoreY){
                 startY = 255;
             } else {
-                startY = !ignoreLiquids && liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : 0;
+                startY = !ignoreLiquidsY && liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : 0;
             }
 
             for (List<ChunkSnapshot> sub : parts) {
@@ -161,12 +163,12 @@ public final class BlockScanner extends BukkitRunnable {
         cancel();
     }
 
-    public static void startScanner(Map<World, List<ChunkSnapshot>> snapshots, boolean ignoreLiquids, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
+    public static void startScanner(Map<World, List<ChunkSnapshot>> snapshots, boolean ignoreLiquids, boolean ignoreLiquidsY, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
 
         if (snapshots == null) throw new IllegalArgumentException("snapshots cannot be null");
         if (tasks == null) throw new IllegalArgumentException("tasks cannot be null");
 
-        final BlockScanner scanner = new BlockScanner(snapshots, ignoreLiquids, ignoreAir, ignoreY, tasks);
+        final BlockScanner scanner = new BlockScanner(snapshots, ignoreLiquids, ignoreLiquidsY, ignoreAir, ignoreY, tasks);
 
         scanner.runTaskTimer(SkyBlock.getInstance(), 5, 5);
     }

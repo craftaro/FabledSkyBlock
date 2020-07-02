@@ -82,7 +82,7 @@ public final class IslandScan extends BukkitRunnable {
                 populate(snapshots, IslandWorld.Nether, skyblock.isPaperAsync(), () -> {
                     if (hasEnd) {
                         populate(snapshots, IslandWorld.End, skyblock.isPaperAsync(), () -> {
-                            BlockScanner.startScanner(snapshots, true, true, false, (blocks) -> {
+                            BlockScanner.startScanner(snapshots, true, true, true, false, (blocks) -> {
                                 this.blocks = blocks;
                                 this.blocksSize = blocks.size();
                                 this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
@@ -90,7 +90,7 @@ public final class IslandScan extends BukkitRunnable {
                             });
                         });
                     } else {
-                        BlockScanner.startScanner(snapshots, true, true, false, (blocks) -> {
+                        BlockScanner.startScanner(snapshots, true, true, true, false, (blocks) -> {
                             this.blocks = blocks;
                             this.blocksSize = blocks.size();
                             this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
@@ -99,7 +99,7 @@ public final class IslandScan extends BukkitRunnable {
                     }
                 });
             } else {
-                BlockScanner.startScanner(snapshots, true, true, false, (blocks) -> {
+                BlockScanner.startScanner(snapshots, true, true, true, false, (blocks) -> {
                     this.blocks = blocks;
                     this.blocksSize = blocks.size();
                     this.runTaskTimer(SkyBlock.getInstance(), 20, 20);

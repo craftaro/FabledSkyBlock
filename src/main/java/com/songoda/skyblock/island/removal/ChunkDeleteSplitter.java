@@ -27,7 +27,7 @@ public class ChunkDeleteSplitter extends BukkitRunnable {
     }
 
     private void start() {
-        BlockScanner.startScanner(snapshots, true, true, false, (blocks) -> {
+        BlockScanner.startScanner(snapshots, false, true, true, false, (blocks) -> {
             this.blocks = blocks;
             this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
         });
