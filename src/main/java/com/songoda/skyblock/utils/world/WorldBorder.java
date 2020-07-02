@@ -1,8 +1,11 @@
 package com.songoda.skyblock.utils.world;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.songoda.core.compatibility.ServerVersion;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -35,16 +38,17 @@ public final class WorldBorder {
     }
 
     public static void send(Player player, Color color, double size, Location centerLocation) {
+        size +=2;
         try {
             if (centerLocation == null || centerLocation.getWorld() == null)
                 return;
-
+            
             if (size % 2 == 1)
                 size++;
 
             Object worldBorder = worldBorderClass.getConstructor().newInstance();
 
-            if (NMSUtil.getVersionNumber() >= 9) {
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                 Object craftWorld = craftWorldClass.cast(centerLocation.getWorld());
                 Method getHandleMethod = craftWorld.getClass().getMethod("getHandle");
                 Object worldServer = getHandleMethod.invoke(craftWorld);
@@ -73,7 +77,7 @@ public final class WorldBorder {
             Object packet = packetPlayOutWorldBorderConstructor.newInstance(worldBorder,
                     Enum.valueOf((Class<Enum>) packetPlayOutWorldBorderEnumClass, "INITIALIZE"));
             NMSUtil.sendPacket(player, packet);
-        } catch (Exception e) {
+        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }

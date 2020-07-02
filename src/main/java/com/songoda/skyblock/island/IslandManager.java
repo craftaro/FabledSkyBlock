@@ -1532,7 +1532,7 @@ public class IslandManager {
                     }
 
                     for (Player all : getPlayersAtIsland(island)) {
-                        WorldBorder.send(all, island.getBorderColor(), island.getSize()+2, island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island));
+                        WorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island));
                     }
                 }
             }
