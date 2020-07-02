@@ -260,10 +260,11 @@ public class PermissionManager {
     }
 
     public boolean hasPermission(Location location, String permission, IslandRole islandRole) {
-        if (location == null)
-            return false;
-        return plugin.getIslandManager().getIslandAtLocation(location)
-                .hasPermission(islandRole, getPermission(permission));
+        Island island = plugin.getIslandManager().getIslandAtLocation(location);
+        if(island != null) {
+            return island.hasPermission(islandRole, getPermission(permission));
+        }
+        return true; // Return true as there is no island, we don't have to modify the normal world behavior
     }
 
     public boolean hasPermission(Island island, String permission, IslandRole islandRole) {
