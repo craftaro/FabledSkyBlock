@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils.world;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -36,16 +37,16 @@ public final class LocationUtil {
             Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
             if(tempLoc.getBlock().getType().equals(Material.WATER)){
                 tempLoc.getBlock().setType(Material.AIR);
-            } else if(NMSUtil.getVersionNumber() > 13){
+            } else if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)){
                 LocationUtil113.removeWaterLoggedFromLocation(tempLoc);
             }
         }
     }
 
-    public static @Nullable Location getSafeLocation(Location loc){
+    public static @Nullable Location getSafeLocation(@Nonnull Location loc){
         boolean found = false;
         Location locChecked = null;
-        if(loc != null && loc.getWorld() != null){
+        if(loc.getWorld() != null){
             locChecked = loc.clone();
             loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
             for(int i=loc.getBlockY(); i>=0 && !found; i--){
@@ -67,7 +68,7 @@ public final class LocationUtil {
         return locChecked;
     }
 
-    public static @Nonnull Location getDefinitiveLocation(Location loc){
+    public static @Nonnull Location getDefinitiveLocation(@Nonnull Location loc){
         Location locWorking = loc.clone();
         for(int i=locWorking.getBlockY(); i>=0; i--){
             if(!locWorking.getBlock().isEmpty()){
