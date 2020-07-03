@@ -4,7 +4,11 @@ import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
+import io.papermc.lib.PaperLib;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -29,12 +33,13 @@ public class VoidGenerator extends ChunkGenerator {
         final Configuration configLoad = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
         
+        Biome biome = CompatibleBiome.valueOf(configLoad // 2D for the moment
+                .getString("Island.Biome.Default.Type").toUpperCase()).getBiome();
+        
         if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
-            setChunkBiome2D(CompatibleBiome.valueOf(configLoad // 2D for the moment
-                    .getString("Island.Biome.Default.Type").toUpperCase()).getBiome(), biomeGrid);
+            setChunkBiome3D(biome, biomeGrid, world);
         } else {
-            setChunkBiome2D(CompatibleBiome.valueOf(configLoad
-                    .getString("Island.Biome.Default.Type").toUpperCase()).getBiome(), biomeGrid);
+            setChunkBiome2D(biome, biomeGrid);
         }
         
 
@@ -85,13 +90,11 @@ public class VoidGenerator extends ChunkGenerator {
     }
     
     // Do not use - Too laggy
-    private void setChunkBiome3D(Biome biome, BiomeGrid grid) {
+    private void setChunkBiome3D(Biome biome, BiomeGrid grid, World world) {
         for(int x = 0; x < 16; x++){
             for(int z = 0; z < 16; z++){
-                for(int y = 0; y<256; y++){
-                    if(!grid.getBiome(x, y, z).equals(biome)){
-                        grid.setBiome(x, y, z, biome);
-                    }
+                for(int y = 0; y < world.getMaxHeight(); ++y) {
+                    grid.setBiome(z, y, z, biome);
                 }
             }
         }

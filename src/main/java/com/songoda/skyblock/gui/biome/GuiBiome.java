@@ -1,4 +1,4 @@
-package com.songoda.skyblock.gui.wip;
+package com.songoda.skyblock.gui.biome;
 
 import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
@@ -176,12 +176,14 @@ public class GuiBiome extends Gui {
                     cooldownManager.createPlayer(CooldownType.Biome, player);
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         biomeManager.setBiome(island, icon.biome.getBiome(), () -> {
-                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Biome.Completed.Message"));
-                            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                            if(languageLoad.getBoolean("Command.Island.Biome.Completed.Should-Display-Message")){
+                                messageManager.sendMessage(player, languageLoad.getString("Command.Island.Biome.Completed.Message"));
+                                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                            }
                         });
+                        island.setBiome(icon.biome.getBiome());
                         island.save();
                     });
-                    island.setBiome(icon.biome.getBiome());
 
                     soundManager.playSound(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island),
                             CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);

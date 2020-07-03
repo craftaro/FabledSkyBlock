@@ -834,8 +834,13 @@ Command:
         Message: '&bSkyBlock &8| &cError&8: &eA biome update is still in progress for this Island.'
       Completed:
         Message: '&bSkyBlock &8| &aInfo&8: &eThe biome update is now complete'
+        Should-Display-Message: true
       Owner:
         Message: '&bSkyBlock &8| &cError&8: &eYou are not an Island Owner.'
+      Progress:
+        Message: '&fUpdated &a%current_updated_chunks%&f/&b%max_chunks% &fchunks ( &a%percent%&f%&f )'
+        Should-Display-Message: true
+        Display-Every-X-Updates: 20
     Visitors:
       Info:
         Message: '&f&oOpens the Island Visitors menu.'

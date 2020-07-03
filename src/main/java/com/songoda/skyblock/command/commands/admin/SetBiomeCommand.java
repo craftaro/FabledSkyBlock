@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.biome.BiomeManager;
@@ -11,6 +12,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.version.SBiome;
 import org.bukkit.Bukkit;
@@ -55,10 +57,10 @@ public class SetBiomeCommand extends SubCommand {
         if (args.length == 2) {
             String biomeName = args[1].toUpperCase().trim();
 
-            SBiome biome = null;
-            for (SBiome sbiome : SBiome.values()) {
-                if (sbiome.isAvailable() && sbiome.name().equals(biomeName)) {
-                    biome = sbiome;
+            CompatibleBiome biome = null;
+            for (CompatibleBiome cbiome : CompatibleBiome.values()) {
+                if (cbiome.isCompatible() && cbiome.name().equals(biomeName)) {
+                    biome = cbiome;
                     break;
                 }
             }
@@ -94,15 +96,17 @@ public class SetBiomeCommand extends SubCommand {
                                     configLoad.getString("Command.Island.Admin.SetBiome.Island.Data.Message"));
                             soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         } else {
-                            biomeManager.setBiome(island, biome.getBiome(), null);
-                            island.setBiome(biome.getBiome());
+                            CompatibleBiome finalBiome = biome;
+                            biomeManager.setBiome(island, biome.getBiome(), () -> {
+                                island.setBiome(finalBiome.getBiome());
+                            });
                         }
                     }
 
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetBiome.Set.Message")
                                     .replace("%player", targetPlayerName)
-                                    .replace("%biome", biome.getFormattedBiomeName()));
+                                    .replace("%biome", StringUtil.capitalizeWord(biome.getBiome().name().replaceAll("_", " "))));
                     soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                 }
             } else {

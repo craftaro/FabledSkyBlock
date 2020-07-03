@@ -282,14 +282,14 @@ public class IslandManager {
         }
         Biome biome = cBiome.getBiome();
 
-        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+        /*Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
             skyblock.getBiomeManager().setBiome(island, biome, null);
             if (structure.getCommands() != null) {
                 for (String commandList : structure.getCommands()) {
                     Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));
                 }
             }
-        }, 20L);
+        }, 20L);*/
 
         // Recalculate island level after 5 seconds
         if (configLoad.getBoolean("Island.Levelling.ScanAutomatically"))

@@ -1,4 +1,4 @@
-package com.songoda.skyblock.gui.wip;
+package com.songoda.skyblock.gui.biome;
 
 import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
