@@ -31,11 +31,7 @@ public class BiomeCommand extends SubCommand {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
-    
-        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
-            messageManager.sendMessage(player, "&bSkyBlock &8| &6Warning&8: &eThis feature is not supported on this Minecraft version yet. Use at your own risk.");
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        }
+        
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Biome.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);

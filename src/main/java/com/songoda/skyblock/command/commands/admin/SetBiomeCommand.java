@@ -46,13 +46,6 @@ public class SetBiomeCommand extends SubCommand {
 
         Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-    
-        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
-            messageManager.sendMessage(sender, "&bSkyBlock &8| &6Warning&8: &eThis feature is not supported on this Minecraft version yet. Use at your own risk.");
-            if(sender instanceof Player) {
-                soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-            }
-        }
         
         if (args.length == 2) {
             String biomeName = args[1].toUpperCase().trim();
