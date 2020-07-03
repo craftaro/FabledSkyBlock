@@ -31,7 +31,8 @@ public class FirePermission extends ListeningPermission {
 
         Player player = event.getPlayer();
 
-        if (CompatibleMaterial.getMaterial(player.getTargetBlock(null, 5)).equals(CompatibleMaterial.FIRE))
+        CompatibleMaterial targetMaterial = CompatibleMaterial.getMaterial(player.getTargetBlock(null, 5));
+        if (targetMaterial != null && targetMaterial.equals(CompatibleMaterial.FIRE))
             cancelAndMessage(event, player, plugin, messageManager);
     }
     
