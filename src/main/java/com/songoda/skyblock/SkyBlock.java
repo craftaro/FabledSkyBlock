@@ -19,8 +19,6 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.confirmation.ConfirmationTask;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.generator.GeneratorManager;
-import com.songoda.skyblock.permission.PermissionManager;
-import com.songoda.skyblock.tasks.HologramTask;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.reward.RewardManager;
@@ -33,6 +31,7 @@ import com.songoda.skyblock.menus.admin.Creator;
 import com.songoda.skyblock.menus.admin.Generator;
 import com.songoda.skyblock.menus.admin.Levelling;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.PlaceholderManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.playtime.PlaytimeTask;
@@ -40,6 +39,7 @@ import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.structure.StructureManager;
+import com.songoda.skyblock.tasks.HologramTask;
 import com.songoda.skyblock.tasks.MobNetherWaterTask;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.usercache.UserCacheManager;
@@ -47,7 +47,6 @@ import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.visit.VisitTask;
 import com.songoda.skyblock.world.WorldManager;
 import com.songoda.skyblock.world.generator.VoidGenerator;
-import io.papermc.lib.PaperLib;
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
 import org.bukkit.Bukkit;
@@ -208,7 +207,8 @@ public class SkyBlock extends SongodaPlugin {
         pluginManager.registerEvents(new Piston(this), this);
         pluginManager.registerEvents(new FallBreak(this), this);
 
-        if (pluginManager.isPluginEnabled("EpicSpawners")) pluginManager.registerEvents(new EpicSpawners(this), this);
+        if (pluginManager.isPluginEnabled("EpicSpawners"))
+            pluginManager.registerEvents(new EpicSpawners(this), this);
         if (pluginManager.isPluginEnabled("UltimateStacker"))
             pluginManager.registerEvents(new UltimateStacker(this), this);
         
