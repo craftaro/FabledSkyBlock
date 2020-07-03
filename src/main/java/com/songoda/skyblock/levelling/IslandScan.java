@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 public final class IslandScan extends BukkitRunnable {
 
     private static final NumberFormat FORMATTER = NumberFormat.getInstance();
-    ;
 
     private final Set<Location> doubleBlocks;
     private final Island island;
