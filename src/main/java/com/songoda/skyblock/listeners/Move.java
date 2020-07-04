@@ -179,7 +179,7 @@ public class Move implements Listener {
                     return;
                 }
 
-                if(loadedIsland.isOpen()){
+                if(loadedIsland.isOpen() || loadedIsland.isPlayerWhitelisted(player)){
                     loadedIsland.getVisit().addVisitor(player.getUniqueId());
                     return;
                 }

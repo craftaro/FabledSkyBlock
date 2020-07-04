@@ -145,6 +145,7 @@ public class Visit {
                         if (visitManager.hasIsland(targetPlayerUUID)) {
                             com.songoda.skyblock.visit.Visit visit = visitManager.getIsland(targetPlayerUUID);
                             boolean isCoopPlayer = false;
+                            boolean isWhitelistedPlayer = false;
                             org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer()
                                     .getOfflinePlayer(targetPlayerUUID);
 
@@ -152,9 +153,12 @@ public class Visit {
                                 if (islandManager.getIsland(offlinePlayer).isCoopPlayer(player.getUniqueId())) {
                                     isCoopPlayer = true;
                                 }
+                                if (islandManager.getIsland(offlinePlayer).isPlayerWhitelisted(player.getUniqueId())) {
+                                    isWhitelistedPlayer = true;
+                                }
                             }
 
-                            if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass")
+                            if (isCoopPlayer || isWhitelistedPlayer || player.hasPermission("fabledskyblock.bypass")
                                     || player.hasPermission("fabledskyblock.bypass.*")
                                     || player.hasPermission("fabledskyblock.*") || visit.isOpen()) {
                                 if (!islandManager.containsIsland(targetPlayerUUID)) {

@@ -62,14 +62,18 @@ public class TeleportCommand extends SubCommand {
                 if (visitManager.hasIsland(islandOwnerUUID)) {
                     Visit visit = visitManager.getIsland(islandOwnerUUID);
                     boolean isCoopPlayer = false;
+                    boolean isWhitelistedPlayer = false;
 
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         if (islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).isCoopPlayer(player.getUniqueId())) {
                             isCoopPlayer = true;
                         }
+                        if (islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).isPlayerWhitelisted(player.getUniqueId())) {
+                            isWhitelistedPlayer = true;
+                        }
                     }
 
-                    if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass") || player.hasPermission("fabledskyblock.bypass.*") || player.hasPermission("fabledskyblock.*") || visit.isOpen()) {
+                    if (isCoopPlayer || isWhitelistedPlayer || player.hasPermission("fabledskyblock.bypass") || player.hasPermission("fabledskyblock.bypass.*") || player.hasPermission("fabledskyblock.*") || visit.isOpen()) {
                         if (!islandManager.containsIsland(islandOwnerUUID)) {
                             islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                         }

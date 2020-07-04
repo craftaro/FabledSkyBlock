@@ -1189,9 +1189,9 @@ public class IslandManager {
             islandOwnerPlayerName = islandOwnerPlayer.getName();
         }
 
-        for (UUID visitorList : getVisitorsAtIsland(island)) {
-            if (!island.isCoopPlayer(visitorList)) {
-                Player targetPlayer = Bukkit.getServer().getPlayer(visitorList);
+        for (UUID visitor : getVisitorsAtIsland(island)) {
+            if (!island.isCoopPlayer(visitor) && !island.isPlayerWhitelisted(visitor)) {
+                Player targetPlayer = Bukkit.getServer().getPlayer(visitor);
                 LocationUtil.teleportPlayerToSpawn(targetPlayer);
                 messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", islandOwnerPlayerName));
             }

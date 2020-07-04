@@ -10,7 +10,6 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.BasicPermission;
-import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.Upgrade;
@@ -26,7 +25,6 @@ import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,9 +37,10 @@ public class Island {
     private final SkyBlock skyblock;
     private final com.songoda.skyblock.api.island.Island apiWrapper;
 
-    private Map<IslandRole, List<IslandPermission>> islandPermissions = new HashMap<>();
-    private List<IslandLocation> islandLocations = new ArrayList<>();
-    private Map<UUID, IslandCoop> coopPlayers = new HashMap<>();
+    private final Map<IslandRole, List<IslandPermission>> islandPermissions = new HashMap<>();
+    private final List<IslandLocation> islandLocations = new ArrayList<>();
+    private final Map<UUID, IslandCoop> coopPlayers = new HashMap<>();
+    private final Set<UUID> whitelistedPlayers = new HashSet<>();
 
     private UUID islandUUID;
     private UUID ownerUUID;
@@ -187,6 +186,12 @@ public class Island {
                 }
 
                 islandPermissions.put(roleList, permissions);
+            }
+    
+            if (configLoad.getString("Whitelist") != null) {
+                for (String whitelistedUUID : configLoad.getStringList("Whitelist")) {
+                    whitelistedPlayers.add(UUID.fromString(whitelistedUUID));
+                }
             }
         } else {
             FileConfiguration configLoad = config.getFileConfiguration();
@@ -841,6 +846,8 @@ public class Island {
 
         Config config = fileManager
                 .getConfig(new File(skyblock.getDataFolder().toString() + "/island-data", ownerUUID.toString() + ".yml"));
+    
+        config.getFileConfiguration().set("Whitelist", whitelistedPlayers);
 
         try {
             config.getFileConfiguration().save(config.getFile());
@@ -925,6 +932,32 @@ public class Island {
 
     public com.songoda.skyblock.api.island.Island getAPIWrapper() {
         return apiWrapper;
+    }
+    
+    public void addWhitelistedPlayer(UUID uuid) {
+        this.whitelistedPlayers.add(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+    }
+    
+    public boolean isPlayerWhitelisted(UUID uuid) {
+        return this.whitelistedPlayers.contains(uuid);
+    }
+    
+    public void removeWhitelistedPlayer(UUID uuid) {
+        this.whitelistedPlayers.remove(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+    }
+    
+    public void addWhitelistedPlayer(Player player) {
+        this.addWhitelistedPlayer(player.getUniqueId());
+    }
+    
+    public boolean isPlayerWhitelisted(Player player) {
+        return this.isPlayerWhitelisted(player.getUniqueId());
+    }
+    
+    public void removeWhitelistedPlayer(Player player) {
+        this.removeWhitelistedPlayer(player.getUniqueId());
     }
 
 }

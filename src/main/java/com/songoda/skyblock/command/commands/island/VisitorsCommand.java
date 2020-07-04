@@ -30,9 +30,6 @@ public class VisitorsCommand extends SubCommand {
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Visitors.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        } else if (!island.isOpen()) {
-            messageManager.sendMessage(player, configLoad.getString("Command.Island.Visitors.Closed.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (islandManager.getVisitorsAtIsland(island).size() == 0) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Visitors.Visitors.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
