@@ -50,8 +50,7 @@ public class KickAllCommand extends SubCommand {
                         Player targetPlayer = Bukkit.getServer().getPlayer(islandVisitorList);
 
                         if (targetPlayer != null &&
-                                (targetPlayer.hasPermission("fabledskyblock.bypass.ban") ||
-                                        targetPlayer.hasPermission("fabledskyblock.bypass.kick")))
+                                (targetPlayer.hasPermission("fabledskyblock.bypass.kick")))
                             continue;
 
                         IslandKickEvent islandKickEvent = new IslandKickEvent(island.getAPIWrapper(),
