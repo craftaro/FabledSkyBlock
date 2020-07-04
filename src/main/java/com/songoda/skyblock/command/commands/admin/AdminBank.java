@@ -44,57 +44,56 @@ public class AdminBank extends SubCommand {
 
         if (args.length < 1) {
             skyblock.getGuiManager().showGUI(player, new GuiBank(skyblock, island, null, true));
-            return;
-        }
-
-        switch (args[0].toLowerCase()) {
-            case "balance":
-                if (args.length >= 3) {
-                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(island.getOwnerUUID())))));
-                } else {
-                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(args[1])))));
-                }
-                return;
-            case "deposit":
-                if (args.length >= 3) {
-                    islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).addToBank(Double.parseDouble(args[2]));
-                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesDeposit.Message").replace("%player%",args[1]).replace("%ammount%",EconomyManager.formatEconomy(Double.parseDouble(args[2]))));
-                }else {
-                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
-                }
-                return;
-            case "withdraw":
-                if (args.length >= 3) {
-                    islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).removeFromBank(Double.parseDouble(args[2]));
-                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesWithdraw.Message").replace("%player%",args[1]).replace("%ammount%",EconomyManager.formatEconomy(Double.parseDouble(args[2]))));
-                }else {
-                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
-                }
-                return;
-            case "open":
-                if(args.length == 2){
-                    Player targetPlayer = Bukkit.getServer().getPlayer(args[1]);
-                    UUID islandOwnerUUID;
-
-                    if (targetPlayer == null) {
-                        OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[1]);
-                        islandOwnerUUID = targetPlayerOffline.getOwner();
+        } else {
+            switch (args[0].toLowerCase()) {
+                case "balance":
+                    if (args.length >= 3) {
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(island.getOwnerUUID())))));
                     } else {
-                        islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(args[1])))));
                     }
-
-                    island = islandManager.getIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
-                }
-                if (island != null){
-                    skyblock.getGuiManager().showGUI(player, new GuiBank(skyblock, island, null, true));
-                } else {
-                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.NullIsland.Message"));
+                    return;
+                case "deposit":
+                    if (args.length >= 3) {
+                        islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).addToBank(Double.parseDouble(args[2]));
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesDeposit.Message").replace("%player%",args[1]).replace("%ammount%",EconomyManager.formatEconomy(Double.parseDouble(args[2]))));
+                    }else {
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
+                    }
+                    return;
+                case "withdraw":
+                    if (args.length >= 3) {
+                        islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).removeFromBank(Double.parseDouble(args[2]));
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesWithdraw.Message").replace("%player%",args[1]).replace("%ammount%",EconomyManager.formatEconomy(Double.parseDouble(args[2]))));
+                    }else {
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
+                    }
+                    return;
+                case "open":
+                    if(args.length == 2){
+                        Player targetPlayer = Bukkit.getServer().getPlayer(args[1]);
+                        UUID islandOwnerUUID;
+                
+                        if (targetPlayer == null) {
+                            OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[1]);
+                            islandOwnerUUID = targetPlayerOffline.getOwner();
+                        } else {
+                            islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
+                        }
+                
+                        island = islandManager.getIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                    }
+                    if (island != null){
+                        skyblock.getGuiManager().showGUI(player, new GuiBank(skyblock, island, null, true));
+                    } else {
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.NullIsland.Message"));
+                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    }
+                    break;
+                default:
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Unexpected.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
-                }
-                break;
-            default:
-                messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Unexpected.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            }
         }
     }
 
