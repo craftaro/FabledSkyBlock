@@ -319,6 +319,11 @@ Island:
         Enable: true
     Generator:
         Enable: true
+        # Check permissions of all the online player in the island or just
+        # the nearest player to the generator
+        CheckOnlyNearestPlayer: false
+        # Ignore visitors in permission check, also who has "fabledskyblock.generator.anywhere" permission
+        IgnoreVisitors: false
     Stackable:
         Enable: true
         # fabledskyblock.stackables
