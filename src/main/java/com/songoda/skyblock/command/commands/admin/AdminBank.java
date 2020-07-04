@@ -49,15 +49,15 @@ public class AdminBank extends SubCommand {
 
         switch (args[0].toLowerCase()) {
             case "balance":
-                if (args.length <2) {
-                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(args[1])))));
-                }else {
+                if (args.length >= 3) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(island.getOwnerUUID())))));
+                } else {
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + EconomyManager.formatEconomy(EconomyManager.getBalance(Bukkit.getOfflinePlayer(args[1])))));
                 }
                 return;
             case "deposit":
                 if (args.length >= 3) {
-                    islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Objects.requireNonNull(Bukkit.getPlayer(args[1])).getUniqueId())).addToBank(Double.parseDouble(args[2]));
+                    islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).addToBank(Double.parseDouble(args[2]));
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesDeposit.Message").replace("%player%",args[1]).replace("%ammount%",EconomyManager.formatEconomy(Double.parseDouble(args[2]))));
                 }else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
@@ -154,6 +154,6 @@ public class AdminBank extends SubCommand {
 
     @Override
     public String[] getArguments() {
-        return new String[0];
+        return new String[]{"withdraw", "deposit", "balance", "open"};
     }
 }

@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 
 public class GuiBank extends Gui {
     private final SkyBlock plugin;
-    private final BankManager bankManager;
     private final SoundManager soundManager;
     private final Island island;
     private final FileConfiguration languageLoad;
@@ -45,15 +44,16 @@ public class GuiBank extends Gui {
     public GuiBank(SkyBlock plugin, Island island, Gui returnGui, boolean admin) {
         super(2, returnGui);
         this.plugin = plugin;;
-        this.bankManager = plugin.getBankManager();
         this.soundManager = plugin.getSoundManager();
         this.island = island;
         this.admin = admin;
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
-        setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
-        setTitle(TextUtils.formatText(languageLoad.getString("Menu.Bank.Title")));
-        paint();
+        if(island != null) {
+            setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
+            setTitle(TextUtils.formatText(languageLoad.getString("Menu.Bank.Title")));
+            paint();
+        }
     }
 
     @Override
