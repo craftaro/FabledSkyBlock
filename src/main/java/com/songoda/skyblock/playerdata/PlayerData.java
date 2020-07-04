@@ -33,6 +33,8 @@ public class PlayerData {
     private Object sort;
 
     private Area area;
+    
+    private boolean chatSpy;
 
     private boolean chat;
     private boolean preview;
@@ -52,6 +54,8 @@ public class PlayerData {
 
         area = new Area();
 
+        chatSpy = getConfig().getFileConfiguration().getBoolean("ChatSpy", false);
+        
         chat = false;
         preview = false;
         transactions = new ArrayList<>();
@@ -306,5 +310,14 @@ public class PlayerData {
 
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+    
+    public boolean isChatSpy() {
+        return chatSpy;
+    }
+    
+    public void setChatSpy(boolean chatSpy) {
+        this.chatSpy = chatSpy;
+        getConfig().getFileConfiguration().set("ChatSpy", chatSpy);
     }
 }

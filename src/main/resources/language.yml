@@ -176,6 +176,13 @@ Command:
           Message: 'Succesfully removed %ammount% from %player%''s island'
         SuccesDeposit:
           Message: 'Succesfully added %ammount% to %player%''s island'
+      ChatSpy:
+        Info:
+          Message: '&f&oToggle island chat spy.'
+        Enabled:
+          Message: '&bSkyBlock &8| &aInfo&8: &eChat spy enabled.'
+        Disabled:
+          Message: '&bSkyBlock &8| &aInfo&8: &eChat spy disabled.'
       Reload:
         Info:
           Message: '&f&oReload all loaded files.'
@@ -3542,6 +3549,13 @@ Island:
       Message: '&8[&bSkyBlock &8| &dChat&8] %role &e%player&8: &f%message'
     Untoggled:
       Message: '&bSkyBlock &8| &aInfo&8: &eThe Island chat has been untoggled because there are no Island Members online. Chat messages will now be visible for all players.'
+    Spy:
+      Format:
+        Role:
+          Member: '&a[Member]'
+          Operator: '&b[Operator]'
+          Owner: '&c[Owner]'
+        Message: '&8[&bSkyBlock &8| &dChatSpy&8] [&7%islandOwner&8] &e%player&8: &f%message'
   SpawnProtection:
     Break:
       Message: '&bSkyBlock &8| &cError&8: &eYou cannot break the spawn point of the Island.'

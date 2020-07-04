@@ -11,6 +11,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.PlaceholderManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
+import com.songoda.skyblock.utils.player.OfflinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -88,7 +89,20 @@ public class Chat implements Listener {
                         String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
                                 islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())))
                                 .replace("%message", islandChatEvent.getMessage());
-                        targetPlayer.sendMessage(message);
+                        messageManager.sendMessage(targetPlayer, message);
+                    }
+                    
+                    for(Player targetPlayer : Bukkit.getServer().getOnlinePlayers()){
+                        if(targetPlayer.hasPermission("fabledskyblock.admin.chatspy")) {
+                            PlayerData pd = playerDataManager.getPlayerData(targetPlayer);
+                            if(pd != null && pd.isChatSpy()) {
+                                String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
+                                        islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())))
+                                        .replace("%islandOwner", new OfflinePlayer(island.getOwnerUUID()).getName())
+                                        .replace("%message", islandChatEvent.getMessage());
+                                messageManager.sendMessage(targetPlayer, message);
+                            }
+                        }
                     }
 
                     if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
