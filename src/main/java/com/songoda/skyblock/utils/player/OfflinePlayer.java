@@ -12,6 +12,7 @@ import java.util.UUID;
 public class OfflinePlayer {
 
     private UUID uuid;
+    org.bukkit.OfflinePlayer bukkitOfflinePlayer;
 
     private String name;
     private String memberSince;
@@ -24,12 +25,11 @@ public class OfflinePlayer {
     public OfflinePlayer(String name) {
         SkyBlock skyblock = SkyBlock.getInstance();
         UserCacheManager userCacheManager = skyblock.getUserCacheManager();
+        
+        bukkitOfflinePlayer = Bukkit.getServer().getOfflinePlayer(name);
 
-        @SuppressWarnings("deprecation")
-        org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(name);
-
-        this.name = offlinePlayer.getName();
-        this.uuid = offlinePlayer.getUniqueId();
+        this.name = bukkitOfflinePlayer.getName();
+        this.uuid = bukkitOfflinePlayer.getUniqueId();
 
         if (this.uuid == null && userCacheManager.hasUser(name)) {
             this.uuid = userCacheManager.getUser(name);
@@ -50,10 +50,10 @@ public class OfflinePlayer {
     public OfflinePlayer(UUID uuid) {
         SkyBlock skyblock = SkyBlock.getInstance();
         UserCacheManager userCacheManager = skyblock.getUserCacheManager();
+    
+        bukkitOfflinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
 
-        org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
-
-        this.name = offlinePlayer.getName();
+        this.name = bukkitOfflinePlayer.getName();
         this.uuid = uuid;
 
         if (this.name == null && userCacheManager.hasUser(uuid)) {
@@ -102,5 +102,9 @@ public class OfflinePlayer {
 
     public int getPlaytime() {
         return playtime;
+    }
+    
+    public org.bukkit.OfflinePlayer getBukkitOfflinePlayer() {
+        return bukkitOfflinePlayer;
     }
 }

@@ -95,7 +95,7 @@ public class Chat implements Listener {
                     for(Player targetPlayer : Bukkit.getServer().getOnlinePlayers()){
                         if(targetPlayer.hasPermission("fabledskyblock.admin.chatspy")) {
                             PlayerData pd = playerDataManager.getPlayerData(targetPlayer);
-                            if(pd != null && pd.isChatSpy()) {
+                            if(pd != null && pd.isChatSpy() && (pd.isGlobalChatSpy() || pd.isChatSpyIsland(island))) {
                                 String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
                                         islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())))
                                         .replace("%islandOwner", new OfflinePlayer(island.getOwnerUUID()).getName())

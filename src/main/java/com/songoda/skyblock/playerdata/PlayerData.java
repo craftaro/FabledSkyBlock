@@ -5,6 +5,7 @@ import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;
+import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.menus.MenuType;
 import com.songoda.skyblock.utils.structure.Area;
 
@@ -17,7 +18,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class PlayerData {
-
+    
+    private final SkyBlock skyblock;
     private UUID uuid;
     private UUID islandOwnerUUID;
     private UUID ownershipUUID;
@@ -35,6 +37,7 @@ public class PlayerData {
     private Area area;
     
     private boolean chatSpy;
+    private Set<UUID> spiedIslands;
 
     private boolean chat;
     private boolean preview;
@@ -44,6 +47,8 @@ public class PlayerData {
     private List<Transaction> transactions;
 
     public PlayerData(Player player) {
+        this.skyblock = SkyBlock.getInstance();
+        
         uuid = player.getUniqueId();
         islandOwnerUUID = null;
 
@@ -55,6 +60,12 @@ public class PlayerData {
         area = new Area();
 
         chatSpy = getConfig().getFileConfiguration().getBoolean("ChatSpy", false);
+    
+        if (getConfig().getFileConfiguration().getString("ChatSpiedIslands") != null) {
+            for (String islandUUID : getConfig().getFileConfiguration().getStringList("ChatSpiedIslands")) {
+                spiedIslands.add(UUID.fromString(islandUUID));
+            }
+        }
         
         chat = false;
         preview = false;
@@ -270,7 +281,7 @@ public class PlayerData {
         }
     }
 
-    public void save() {
+    public synchronized void save() {
         transactions = BankManager.getInstance().getTransactionList(getPlayerUUID());
         Config config = getConfig();
         FileConfiguration configLoad = config.getFileConfiguration();
@@ -288,6 +299,10 @@ public class PlayerData {
         }else {
             configLoad.set("Bank.Transactions.Size", 0);
         }
+    
+        configLoad.set("ChatSpy", chatSpy);
+        configLoad.set("ChatSpiedIslands", spiedIslands);
+        
         try {
             configLoad.save(config.getFile());
         } catch (IOException e) {
@@ -318,6 +333,41 @@ public class PlayerData {
     
     public void setChatSpy(boolean chatSpy) {
         this.chatSpy = chatSpy;
-        getConfig().getFileConfiguration().set("ChatSpy", chatSpy);
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+    }
+    
+    public void addChatSpyIsland(UUID uuid) {
+        spiedIslands.add(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+    }
+    
+    public boolean isChatSpyIsland(UUID uuid) {
+        return spiedIslands.contains(uuid);
+    }
+    
+    public void removeChatSpyIsland(UUID uuid) {
+        spiedIslands.remove(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+    }
+    
+    public void addChatSpyIsland(Island island) {
+        this.addChatSpyIsland(island.getOwnerUUID());
+    }
+    
+    public boolean isChatSpyIsland(Island island) {
+        return this.isChatSpyIsland(island.getOwnerUUID());
+    }
+    
+    public void removeChatSpyIsland(Island island) {
+        this.removeChatSpyIsland(island.getOwnerUUID());
+    }
+    
+    public boolean isGlobalChatSpy() {
+        return spiedIslands.isEmpty();
+    }
+    
+    public void enableGlobalChatSpy() {
+        spiedIslands.clear();
+        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
     }
 }
