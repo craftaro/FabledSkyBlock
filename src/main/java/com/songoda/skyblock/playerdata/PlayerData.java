@@ -350,6 +350,10 @@ public class PlayerData {
         Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
     }
     
+    public Set<UUID> getChatSpyIslands() {
+        return new HashSet<>(spiedIslands);
+    }
+    
     public void addChatSpyIsland(Island island) {
         this.addChatSpyIsland(island.getOwnerUUID());
     }

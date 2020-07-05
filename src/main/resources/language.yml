@@ -183,6 +183,27 @@ Command:
           Message: '&bSkyBlock &8| &aInfo&8: &eChat spy enabled.'
         Disabled:
           Message: '&bSkyBlock &8| &aInfo&8: &eChat spy disabled.'
+        GlobalEnabled:
+          Message: '&bSkyBlock &8| &aInfo&8: &eEnabled global chat spy.'
+        GlobalAlreadyEnabled:
+          Message: '&bSkyBlock &8| &cError&8: &eGlobal chat spy already enabled.'
+        Add:
+          Message: '&bSkyBlock &8| &aInfo&8: &eAdded %owner''s island to chat spy.'
+        Remove:
+          Message: '&bSkyBlock &8| &aInfo&8: &eRemoved %owner''s island to chat spy.'
+        NullIsland:
+          Message: '&bSkyBlock &8| &cError&8: &ePlayer does not have an island.'
+        InvalidArgNumber:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid arguments number.'
+        List:
+          Start:
+            Message: '&bSkyBlock &8| &aInfo&8: &eCurrently spied island''s chats:'
+          List:
+            Message: '&a- &e%owner'
+          End:
+            Message: '&a---------'
+          Empty:
+            Message: '&bSkyBlock &8| &aInfo&8: &eYou are not spying on any island''s chat. Global mode is enabled.'
       Reload:
         Info:
           Message: '&f&oReload all loaded files.'

@@ -18,6 +18,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.Set;
 import java.util.UUID;
 
 public class ChatSpyCommand extends SubCommand {
@@ -45,39 +46,57 @@ public class ChatSpyCommand extends SubCommand {
                 case "global":
                     if(!playerData.isGlobalChatSpy()){
                         playerData.enableGlobalChatSpy();
-                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
+                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.GlobalEnabled.Message"));
                     } else {
-                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
+                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.GlobalAlreadyEnabled.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     }
                     break;
                 case "add":
                     if(args.length > 2){
-                        Island island = islandManager.getIslandByPlayer(new OfflinePlayer(UUID.fromString(args[1])).getBukkitOfflinePlayer());
+                        OfflinePlayer offlinePlayer = new OfflinePlayer(args[1]);
+                        Island island = islandManager.getIslandByPlayer(offlinePlayer.getBukkitOfflinePlayer());
                         if(island != null) {
                             playerData.addChatSpyIsland(island);
+                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Add.Message"));
+                        } else {
+                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.NullIsland.Message"));
                         }
                     } else {
-                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.Bank.Unexpected.Message"));
+                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.InvalidArgNumber.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     }
                     break;
                 case "remove":
                     if(args.length > 2){
-                        Island island = islandManager.getIslandByPlayer(new OfflinePlayer(UUID.fromString(args[1])).getBukkitOfflinePlayer());
+                        OfflinePlayer offlinePlayer = new OfflinePlayer(args[1]);
+                        Island island = islandManager.getIslandByPlayer(offlinePlayer.getBukkitOfflinePlayer());
                         if(island != null) {
                             playerData.removeChatSpyIsland(island);
+                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Remove.Message"));
+                        } else {
+                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.NullIsland.Message"));
                         }
                     } else {
-                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.Bank.Unexpected.Message"));
+                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.InvalidArgNumber.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     }
                     break;
                 case "list":
-                    
+                    Set<UUID> uuidSet = playerData.getChatSpyIslands();
+                    if(!uuidSet.isEmpty()){
+                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.List.Start.Message"));
+                        for(UUID uuid : uuidSet) {
+                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.List.List.Message")
+                                    .replace("%owner", new OfflinePlayer(uuid).getName()));
+                        }
+                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.List.End.Message"));
+                    } else {
+                        messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.List.Empty.Message"));
+                    }
                     break;
                 default:
-                    messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.Bank.Unexpected.Message"));
+                    messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.InvalidArgNumber.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     break;
             }
@@ -118,6 +137,6 @@ public class ChatSpyCommand extends SubCommand {
     
     @Override
     public String[] getArguments() {
-        return new String[0];
+        return new String[]{"toggle", "global", "add", "remove", "list"};
     }
 }
