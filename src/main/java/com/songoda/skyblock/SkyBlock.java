@@ -49,6 +49,7 @@ import com.songoda.skyblock.world.WorldManager;
 import com.songoda.skyblock.world.generator.VoidGenerator;
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.HandlerList;
@@ -94,7 +95,8 @@ public class SkyBlock extends SongodaPlugin {
     private PermissionManager permissionManager;
 
     private CoreProtectAPI coreProtectAPI;
-
+    private Permission vaultPermission;
+    
     private boolean paper;
     private boolean paperAsync;
 
@@ -222,7 +224,11 @@ public class SkyBlock extends SongodaPlugin {
         pluginManager.registerEvents(new Creator(), this);
 
         this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
-
+    
+        if (pluginManager.isPluginEnabled("Vault")) {
+            this.vaultPermission = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
+        }
+        
         this.coreProtectAPI = loadCoreProtect();
 
         SkyBlockAPI.setImplementation(INSTANCE);
@@ -444,5 +450,9 @@ public class SkyBlock extends SongodaPlugin {
 
     public boolean isPaperAsync() {
         return paperAsync;
+    }
+    
+    public Permission getVaultPermission() {
+        return vaultPermission;
     }
 }
