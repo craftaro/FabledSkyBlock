@@ -621,32 +621,50 @@ public class Block implements Listener {
                 possiblePlayers.sort(Comparator.comparingDouble(a -> a.getLocation().distance(block.getLocation())));
             }
     
+            boolean onlyOwner = config.getBoolean("Island.Generator.CheckOnlyOwnerPermissions", false);
+            
             double distance = possiblePlayers.get(0).getLocation().distance(block.getLocation());
             // Find highest generator available
             for (Generator generator : generators) {
-                for (Player player : possiblePlayers) {
-                    if(player.getLocation().distance(block.getLocation()) > distance){
-                        break;
+                if(onlyOwner && skyblock.getVaultPermission() != null) {
+                    OfflinePlayer owner = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
+                    if(skyblock.getVaultPermission().playerHas(block.getWorld().getName(), owner, generator.getPermission()) ||
+                            skyblock.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.generator.*") ||
+                            skyblock.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.*")) {
+                        if (applyGenerator(event, block, worldManager, islandLevelManager, island, state, generatorManager, generator))
+                            return;
                     }
-                    if (generator.isPermission()) {
-                        if (!player.hasPermission(generator.getPermission()) && !player.hasPermission("fabledskyblock.generator.*") && !player.hasPermission("fabledskyblock.*")) {
-                            continue;
+                } else {
+                    for (Player player : possiblePlayers) {
+                        if(nearestPlayer && player.getLocation().distance(block.getLocation()) > distance){
+                            break;
                         }
-                    }
-            
-                    if(worldManager.getIslandWorld(event.getBlock().getWorld()).equals(generator.getIsWorld())){
-                        org.bukkit.block.BlockState genState = generatorManager.generateBlock(generator, block);
-                        state.setType(genState.getType());
-                
-                        if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) state.setData(genState.getData());
-                        islandLevelManager.updateLevel(island, genState.getLocation());
-                        return;
+                        if (generator.isPermission()) {
+                            if (!player.hasPermission(generator.getPermission()) && !player.hasPermission("fabledskyblock.generator.*") && !player.hasPermission("fabledskyblock.*")) {
+                                continue;
+                            }
+                        }
+        
+                        if (applyGenerator(event, block, worldManager, islandLevelManager, island, state, generatorManager, generator))
+                            return;
                     }
                 }
             }
         }
     }
+    
+    private boolean applyGenerator(BlockFormEvent event, org.bukkit.block.Block block, WorldManager worldManager, IslandLevelManager islandLevelManager, Island island, BlockState state, GeneratorManager generatorManager, Generator generator) {
+        if(worldManager.getIslandWorld(event.getBlock().getWorld()).equals(generator.getIsWorld())){
+            BlockState genState = generatorManager.generateBlock(generator, block);
+            state.setType(genState.getType());
 
+            if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) state.setData(genState.getData());
+            islandLevelManager.updateLevel(island, genState.getLocation());
+            return true;
+        }
+        return false;
+    }
+    
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event) {
         org.bukkit.block.Block block = event.getBlock();

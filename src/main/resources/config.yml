@@ -319,6 +319,9 @@ Island:
         Enable: true
     Generator:
         Enable: true
+        # Check only the island owner's permissions
+        # it requires Vault installed
+        CheckOnlyOwnerPermissions: false
         # Check permissions of all the online player in the island or just
         # the nearest player to the generator
         CheckOnlyNearestPlayer: false
