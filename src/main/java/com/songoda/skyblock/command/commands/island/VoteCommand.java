@@ -9,6 +9,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -68,13 +69,13 @@ public class VoteCommand extends SubCommand {
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             } else {
                 Visit visit = visitManager.getIsland(islandOwnerUUID);
+                if (!islandManager.containsIsland(islandOwnerUUID)) {
+                    islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
+                }
+    
+                Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 
-                if (visit.isOpen()) {
-                    if (!islandManager.containsIsland(islandOwnerUUID)) {
-                        islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
-                    }
-
-                    Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
+                if (visit.getStatus().equals(IslandStatus.OPEN)) {
 
                     if (island.hasRole(IslandRole.Member, player.getUniqueId())
                             || island.hasRole(IslandRole.Operator, player.getUniqueId())

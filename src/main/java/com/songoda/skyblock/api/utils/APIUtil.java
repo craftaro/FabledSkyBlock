@@ -57,6 +57,32 @@ public final class APIUtil {
 
         return null;
     }
+    
+    public static com.songoda.skyblock.island.IslandStatus toImplementation(IslandStatus status) {
+        switch (status) {
+            case OPEN:
+                return com.songoda.skyblock.island.IslandStatus.OPEN;
+            case CLOSED:
+                return com.songoda.skyblock.island.IslandStatus.CLOSED;
+            case WHITELISTED:
+                return com.songoda.skyblock.island.IslandStatus.WHITELISTED;
+        }
+        
+        return null;
+    }
+    
+    public static IslandStatus fromImplementation(com.songoda.skyblock.island.IslandStatus status) {
+        switch (status) {
+            case OPEN:
+                return IslandStatus.OPEN;
+            case CLOSED:
+                return IslandStatus.CLOSED;
+            case WHITELISTED:
+                return IslandStatus.WHITELISTED;
+        }
+        
+        return null;
+    }
 
     public static com.songoda.skyblock.island.IslandRole toImplementation(IslandRole role) {
         switch (role) {

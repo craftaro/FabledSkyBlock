@@ -5,6 +5,7 @@ import com.songoda.skyblock.ban.Ban;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandLocation;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -24,11 +25,11 @@ public class Visit {
     private int safeLevel;
     private double islandBankBalance;
     private List<String> islandSignature;
-
-    private boolean open;
+    
+    private IslandStatus status;
 
     protected Visit(SkyBlock skyblock, UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize,
-                    int islandMembers, double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
+                    int islandMembers, double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, IslandStatus status) {
         this.skyblock = skyblock;
         this.islandOwnerUUID = islandOwnerUUID;
         this.islandLocations = islandLocations;
@@ -38,7 +39,7 @@ public class Visit {
         this.safeLevel = safeLevel;
         this.islandLevel = islandLevel;
         this.islandSignature = islandSignature;
-        this.open = open;
+        this.status = status;
     }
 
     public UUID getOwnerUUID() {
@@ -203,14 +204,6 @@ public class Visit {
         this.islandSignature = islandSignature;
     }
 
-    public boolean isOpen() {
-        return open;
-    }
-
-    public void setOpen(boolean open) {
-        this.open = open;
-    }
-
     public Ban getBan() {
         return skyblock.getBanManager().getIsland(getOwnerUUID());
     }
@@ -224,5 +217,13 @@ public class Visit {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public IslandStatus getStatus() {
+        return status;
+    }
+    
+    public void setStatus(IslandStatus status) {
+        this.status = status;
     }
 }

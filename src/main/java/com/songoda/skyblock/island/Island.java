@@ -45,6 +45,7 @@ public class Island {
     private UUID islandUUID;
     private UUID ownerUUID;
     private IslandLevel level;
+    private IslandStatus status;
     private int size;
     private int maxMembers;
     private boolean deleted = false;
@@ -193,11 +194,33 @@ public class Island {
                     whitelistedPlayers.add(UUID.fromString(whitelistedUUID));
                 }
             }
+    
+            if(configLoad.getString("Visitor.Open", null).equalsIgnoreCase("true") ||
+                    configLoad.getString("Visitor.Open", null).equalsIgnoreCase("false")) {
+                if(configLoad.getBoolean("Visitor.Open")) {
+                    status = IslandStatus.OPEN;
+                } else {
+                    status = IslandStatus.CLOSED;
+                }
+                configLoad.set("Visitor.Open", null);
+            } else {
+                IslandStatus status = IslandStatus.valueOf(configLoad.getString("Visitor.Status"));
+                switch (status){
+                    case OPEN:
+                    case CLOSED:
+                    case WHITELISTED:
+                        this.status = status;
+                        break;
+                    default:
+                        this.status = IslandStatus.WHITELISTED;
+                        break;
+                }
+            }
         } else {
             FileConfiguration configLoad = config.getFileConfiguration();
 
             configLoad.set("UUID", islandUUID.toString());
-            configLoad.set("Visitor.Open", mainConfigLoad.getBoolean("Island.Visitor.Open"));
+            configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status"));
             configLoad.set("Border.Enable", mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Default", false));
             configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
             configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
@@ -742,22 +765,24 @@ public class Island {
     public void removeFromBank(double value) {
         addToBank(-value);
     }
-
-    public boolean isOpen() {
-        return skyblock.getFileManager().getConfig(
-                new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
-                .getFileConfiguration().getBoolean("Visitor.Open");
+    
+    public IslandStatus getStatus() {
+        return this.status;
     }
-
-    public void setOpen(boolean open) {
-        IslandOpenEvent islandOpenEvent = new IslandOpenEvent(getAPIWrapper(), open);
+    
+    public void setStatus(IslandStatus status) {
+        IslandOpenEvent islandOpenEvent = new IslandOpenEvent(getAPIWrapper(), status.equals(IslandStatus.OPEN));
         Bukkit.getServer().getPluginManager().callEvent(islandOpenEvent);
-
-        if (!islandOpenEvent.isCancelled()) {
-            skyblock.getFileManager().getConfig(
-                    new File(new File(skyblock.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
-                    .getFileConfiguration().set("Visitor.Open", open);
-            getVisit().setOpen(open);
+        if(islandOpenEvent.isCancelled()) {
+            return;
+        }
+    
+        IslandStatusChangeEvent islandStatusChangeEvent = new IslandStatusChangeEvent(getAPIWrapper(), APIUtil.fromImplementation(status));
+        Bukkit.getServer().getPluginManager().callEvent(islandStatusChangeEvent);
+        if(!islandStatusChangeEvent.isCancelled()) {
+            this.status = status;
+            getVisit().setStatus(status);
+            // TODO Save to config
         }
     }
 

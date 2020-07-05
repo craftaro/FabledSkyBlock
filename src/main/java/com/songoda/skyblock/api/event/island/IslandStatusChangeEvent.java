@@ -1,25 +1,23 @@
 package com.songoda.skyblock.api.event.island;
 
 import com.songoda.skyblock.api.island.Island;
+import com.songoda.skyblock.api.island.IslandStatus;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-@Deprecated
-public class IslandOpenEvent extends IslandEvent implements Cancellable {
+public class IslandStatusChangeEvent extends IslandEvent implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
-    private final boolean open;
+    private final IslandStatus status;
     private boolean cancelled = false;
-    
-    @Deprecated
-    public IslandOpenEvent(Island island, boolean open) {
+
+    public IslandStatusChangeEvent(Island island, IslandStatus status) {
         super(island);
-        this.open = open;
+        this.status = status;
     }
-    
-    @Deprecated
-    public boolean isOpen() {
-        return open;
+
+    public IslandStatus getStatus() {
+        return status;
     }
 
     @Override

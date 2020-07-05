@@ -12,6 +12,7 @@ import com.songoda.skyblock.gui.GuiWelcomeEditor;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandPermission;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.permission.BasicPermission;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.permission.PermissionType;
@@ -78,10 +79,19 @@ public class GuiPermissions extends Gui {
             }
 
             Visit visit = island.getVisit();
-            List<String> welcomeLore = TextUtils.formatText(configLoad.getStringList(
-                    island.isOpen()
-                            ? "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Closed.Lore"
-                            : "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Open.Lore"));
+            String configAddress = "";
+            switch (island.getStatus()) {
+                case OPEN:
+                    configAddress = "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Open.Lore";
+                    break;
+                case CLOSED:
+                    configAddress = "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Closed.Lore";
+                    break;
+                case WHITELISTED:
+                    configAddress = "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Whitelisted.Lore";
+                    break;
+            }
+            List<String> welcomeLore = TextUtils.formatText(configLoad.getStringList(configAddress));
 
             List<String> welcomeFinal = new ArrayList<>();
 
@@ -95,12 +105,19 @@ public class GuiPermissions extends Gui {
                     TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname")),
                     welcomeFinal),
                     (event -> {
-                        if (island.isOpen()) {
-                            plugin.getIslandManager().closeIsland(island);
-                            soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
-                        } else {
-                            island.setOpen(true);
-                            soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1f, 1f);
+                        switch (island.getStatus()) {
+                            case OPEN:
+                                plugin.getIslandManager().whitelistIsland(island);
+                                soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
+                                break;
+                            case CLOSED:
+                                plugin.getIslandManager().closeIsland(island);
+                                soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
+                                break;
+                            case WHITELISTED:
+                                island.setStatus(IslandStatus.OPEN);
+                                soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1f, 1f);
+                                break;
                         }
                         paint();
                     }));

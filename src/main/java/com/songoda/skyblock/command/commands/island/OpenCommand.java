@@ -6,6 +6,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -35,11 +36,11 @@ public class OpenCommand extends SubCommand {
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                 || (island.hasRole(IslandRole.Operator, player.getUniqueId())
                 && permissionManager.hasPermission(island, "Visitor", IslandRole.Operator))) {
-            if (island.isOpen()) {
+            if (island.getStatus().equals(IslandStatus.OPEN)) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Open.Already.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             } else {
-                island.setOpen(true);
+                island.setStatus(IslandStatus.OPEN);
 
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Open.Opened.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);

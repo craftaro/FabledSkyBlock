@@ -3,10 +3,7 @@ package com.songoda.skyblock.visit;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandLevel;
-import com.songoda.skyblock.island.IslandLocation;
-import com.songoda.skyblock.island.IslandWorld;
+import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.world.LocationUtil;
@@ -92,7 +89,7 @@ public class VisitManager {
                                         + configLoad.getStringList("Operators").size() + 1,
                                 configLoad.getDouble("Bank.Balance", 0),
                                 getIslandSafeLevel(islandOwnerUUID), new IslandLevel(islandOwnerUUID, skyblock),
-                                islandSignature, configLoad.getBoolean("Visitor.Open"));
+                                islandSignature, IslandStatus.valueOf(configLoad.getString("Visitor.Status")));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -190,7 +187,7 @@ public class VisitManager {
             UUID islandOwnerUUID = it.next();
             Visit visit = visitIslands.get(islandOwnerUUID);
 
-            if (!visit.isOpen()) {
+            if (!visit.getStatus().equals(IslandStatus.OPEN)) {
                 visitIslands.remove(islandOwnerUUID);
             }
         }
@@ -199,9 +196,9 @@ public class VisitManager {
     }
 
     public void createIsland(UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize, int islandMembers,
-                             double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
+                             double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, IslandStatus status) {
         visitStorage.put(islandOwnerUUID, new Visit(skyblock, islandOwnerUUID, islandLocations, islandSize,
-                islandMembers, islandBankBalance, safeLevel, islandLevel, islandSignature, open));
+                islandMembers, islandBankBalance, safeLevel, islandLevel, islandSignature, status));
     }
 
     public void addIsland(UUID islandOwnerUUID, Visit visit) {

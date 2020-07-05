@@ -8,6 +8,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -76,7 +77,7 @@ public class Information {
                 }
 
                 if (viewer.getType() == Information.Viewer.Type.Visitors) {
-                    if (island.isOpen()) {
+                    if (!island.getStatus().equals(IslandStatus.CLOSED)) {
                         if (islandManager.getVisitorsAtIsland(island).size() == 0) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Island.Information.Visitors.Message"));

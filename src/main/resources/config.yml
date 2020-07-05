@@ -145,8 +145,8 @@ Island:
         # even if it's open.
         # [!] Enabling will prevent possible memory leak issues affecting performance.
         Unload: false
-        # Upon Island creation is the Island open to visit?
-        Open: false
+        # The island status upon island creation (Open, Closed, Whitelisted)
+        Status: Whitelisted
         # Allow players to vote for Islands. This will filter Islands with more votes first
         # in the Visit Island menu.
         Vote: true

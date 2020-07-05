@@ -3,10 +3,7 @@ package com.songoda.skyblock.command.commands.island;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandEnvironment;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandWorld;
+import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -68,12 +65,17 @@ public class TeleportCommand extends SubCommand {
                         if (islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).isCoopPlayer(player.getUniqueId())) {
                             isCoopPlayer = true;
                         }
-                        if (islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).isPlayerWhitelisted(player.getUniqueId())) {
+                        if (visit.getStatus().equals(IslandStatus.WHITELISTED) && islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).isPlayerWhitelisted(player.getUniqueId())) {
                             isWhitelistedPlayer = true;
                         }
                     }
 
-                    if (isCoopPlayer || isWhitelistedPlayer || player.hasPermission("fabledskyblock.bypass") || player.hasPermission("fabledskyblock.bypass.*") || player.hasPermission("fabledskyblock.*") || visit.isOpen()) {
+                    if (visit.getStatus().equals(IslandStatus.OPEN) ||
+                            isCoopPlayer ||
+                            isWhitelistedPlayer ||
+                            player.hasPermission("fabledskyblock.bypass") ||
+                            player.hasPermission("fabledskyblock.bypass.*") ||
+                            player.hasPermission("fabledskyblock.*")) {
                         if (!islandManager.containsIsland(islandOwnerUUID)) {
                             islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                         }

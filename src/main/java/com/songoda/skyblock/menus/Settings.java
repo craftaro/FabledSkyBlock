@@ -286,12 +286,19 @@ public class Settings {
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
                                 .getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
-                            if (island14.isOpen()) {
-                                islandManager.closeIsland(island14);
-                                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
-                            } else {
-                                island14.setOpen(true);
-                                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);
+                            switch (island14.getStatus()) {
+                                case OPEN:
+                                    islandManager.whitelistIsland(island14);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
+                                    break;
+                                case CLOSED:
+                                    island14.setStatus(IslandStatus.OPEN);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);
+                                    break;
+                                case WHITELISTED:
+                                    islandManager.closeIsland(island14);
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
+                                    break;
                             }
 
                             Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
@@ -349,46 +356,73 @@ public class Settings {
                         }
 
                         if (config.getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
-                            if (visit.isOpen()) {
-                                nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
-                                        configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
-                                        configLoad.getStringList(
-                                                "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Open.Lore"),
-                                        new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
-                                                new Placeholder("%votes", "" + visit.getVoters().size()),
-                                                new Placeholder("%visitors",
-                                                        "" + islandManager.getVisitorsAtIsland(island).size())},
-                                        null, null), 4);
-                            } else {
-                                nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
-                                        configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
-                                        configLoad.getStringList(
-                                                "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Closed.Lore"),
-                                        new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
-                                                new Placeholder("%votes", "" + visit.getVoters().size()),
-                                                new Placeholder("%visitors",
-                                                        "" + islandManager.getVisitorsAtIsland(island).size())},
-                                        null, null), 4);
+                            switch (visit.getStatus()){
+                                case OPEN:
+                                    nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
+                                            configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
+                                            configLoad.getStringList(
+                                                    "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Open.Lore"),
+                                            new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
+                                                    new Placeholder("%votes", "" + visit.getVoters().size()),
+                                                    new Placeholder("%visitors",
+                                                            "" + islandManager.getVisitorsAtIsland(island).size())},
+                                            null, null), 4);
+                                    break;
+                                case CLOSED:
+                                    nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
+                                            configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
+                                            configLoad.getStringList(
+                                                    "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Closed.Lore"),
+                                            new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
+                                                    new Placeholder("%votes", "" + visit.getVoters().size()),
+                                                    new Placeholder("%visitors",
+                                                            "" + islandManager.getVisitorsAtIsland(island).size())},
+                                            null, null), 4);
+                                    break;
+                                case WHITELISTED:
+                                    nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
+                                            configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
+                                            configLoad.getStringList(
+                                                    "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Whitelisted.Lore"),
+                                            new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
+                                                    new Placeholder("%votes", "" + visit.getVoters().size()),
+                                                    new Placeholder("%visitors",
+                                                            "" + islandManager.getVisitorsAtIsland(island).size())},
+                                            null, null), 4);
+                                    break;
                             }
                         } else {
-                            if (visit.isOpen()) {
-                                nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
-                                        configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
-                                        configLoad.getStringList(
-                                                "Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Open.Lore"),
-                                        new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
-                                                new Placeholder("%visitors",
-                                                        "" + islandManager.getVisitorsAtIsland(island).size())},
-                                        null, null), 4);
-                            } else {
-                                nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
-                                        configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
-                                        configLoad.getStringList(
-                                                "Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Closed.Lore"),
-                                        new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
-                                                new Placeholder("%visitors",
-                                                        "" + islandManager.getVisitorsAtIsland(island).size())},
-                                        null, null), 4);
+                            switch (visit.getStatus()){
+                                case OPEN:
+                                    nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
+                                            configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
+                                            configLoad.getStringList(
+                                                    "Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Open.Lore"),
+                                            new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
+                                                    new Placeholder("%visitors",
+                                                            "" + islandManager.getVisitorsAtIsland(island).size())},
+                                            null, null), 4);
+                                    break;
+                                case CLOSED:
+                                    nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
+                                            configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
+                                            configLoad.getStringList(
+                                                    "Menu.Settings.Visitor.Item.Statistics.Vote.Disabled.Closed.Lore"),
+                                            new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
+                                                    new Placeholder("%visitors",
+                                                            "" + islandManager.getVisitorsAtIsland(island).size())},
+                                            null, null), 4);
+                                    break;
+                                case WHITELISTED:
+                                    nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
+                                            configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
+                                            configLoad.getStringList(
+                                                    "Menu.Settings.Visitor.Item.Statistics.Vote.Whitelisted.Closed.Lore"),
+                                            new Placeholder[]{new Placeholder("%visits", "" + visit.getVisitors().size()),
+                                                    new Placeholder("%visitors",
+                                                            "" + islandManager.getVisitorsAtIsland(island).size())},
+                                            null, null), 4);
+                                    break;
                             }
                         }
 
@@ -1049,12 +1083,19 @@ public class Settings {
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
-                                if (island15.isOpen()) {
-                                    islandManager.closeIsland(island15);
-                                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
-                                } else {
-                                    island15.setOpen(true);
-                                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);
+                                switch (island15.getStatus()) {
+                                    case OPEN:
+                                        islandManager.whitelistIsland(island15);
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
+                                        break;
+                                    case CLOSED:
+                                        island15.setStatus(IslandStatus.OPEN);
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);
+                                        break;
+                                    case WHITELISTED:
+                                        islandManager.closeIsland(island15);
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
+                                        break;
                                 }
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,
@@ -1300,12 +1341,19 @@ public class Settings {
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
-                                if (island12.isOpen()) {
-                                    islandManager.closeIsland(island12);
-                                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
-                                } else {
-                                    island12.setOpen(true);
-                                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);
+                                switch (island12.getStatus()) {
+                                    case OPEN:
+                                        islandManager.whitelistIsland(island12);
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
+                                        break;
+                                    case CLOSED:
+                                        island12.setStatus(IslandStatus.OPEN);
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);
+                                        break;
+                                    case WHITELISTED:
+                                        islandManager.closeIsland(island12);
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
+                                        break;
                                 }
 
                                 Bukkit.getServer().getScheduler().runTaskLater(skyblock,

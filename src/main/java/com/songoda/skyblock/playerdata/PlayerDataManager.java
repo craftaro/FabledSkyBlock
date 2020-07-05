@@ -171,8 +171,8 @@ public class PlayerDataManager {
                             islandManager.updateFlight(player);
 
                             return;
-                        } else if (island.isOpen() || island.isCoopPlayer(player.getUniqueId())) {
-                            if (!island.isOpen() && island.isCoopPlayer(player.getUniqueId())) {
+                        } else if (!island.getStatus().equals(IslandStatus.CLOSED) || island.isCoopPlayer(player.getUniqueId())) {
+                            if (island.getStatus().equals(IslandStatus.CLOSED) && island.isCoopPlayer(player.getUniqueId())) {
                                 if (islandManager.removeCoopPlayers(island, null)) {
                                     return;
                                 }
@@ -253,8 +253,8 @@ public class PlayerDataManager {
                             island = islandManager.getIsland(offlinePlayer);
 
                             if (island != null) {
-                                if (island.isOpen() || island.isCoopPlayer(player.getUniqueId())) {
-                                    if (!island.isOpen() && island.isCoopPlayer(player.getUniqueId())) {
+                                if (!island.getStatus().equals(IslandStatus.CLOSED) || island.isCoopPlayer(player.getUniqueId())) {
+                                    if (island.getStatus().equals(IslandStatus.CLOSED) && island.isCoopPlayer(player.getUniqueId())) {
                                         if (islandManager.removeCoopPlayers(island, null)) {
                                             islandManager.unloadIsland(island, Bukkit.getServer().getOfflinePlayer(visitIslandList));
 

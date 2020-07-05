@@ -9,6 +9,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -153,14 +154,15 @@ public class Visit {
                                 if (islandManager.getIsland(offlinePlayer).isCoopPlayer(player.getUniqueId())) {
                                     isCoopPlayer = true;
                                 }
-                                if (islandManager.getIsland(offlinePlayer).isPlayerWhitelisted(player.getUniqueId())) {
+                                if (visit.getStatus().equals(IslandStatus.WHITELISTED) &&
+                                        islandManager.getIsland(offlinePlayer).isPlayerWhitelisted(player.getUniqueId())) {
                                     isWhitelistedPlayer = true;
                                 }
                             }
 
-                            if (isCoopPlayer || isWhitelistedPlayer || player.hasPermission("fabledskyblock.bypass")
+                            if (visit.getStatus().equals(IslandStatus.OPEN) || isCoopPlayer || isWhitelistedPlayer || player.hasPermission("fabledskyblock.bypass")
                                     || player.hasPermission("fabledskyblock.bypass.*")
-                                    || player.hasPermission("fabledskyblock.*") || visit.isOpen()) {
+                                    || player.hasPermission("fabledskyblock.*")) {
                                 if (!islandManager.containsIsland(targetPlayerUUID)) {
                                     islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
                                 }

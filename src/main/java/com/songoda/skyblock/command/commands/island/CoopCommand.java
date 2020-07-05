@@ -4,10 +4,7 @@ import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandCoop;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.menus.Coop;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
@@ -85,7 +82,8 @@ public class CoopCommand extends SubCommand {
                     } else if (island.isCoopPlayer(targetPlayerUUID)) {
                         if (targetPlayer != null) {
                             if (islandManager.getVisitorsAtIsland(island).contains(targetPlayerUUID)) {
-                                if (!island.isOpen()) {
+                                if (!(island.getStatus().equals(IslandStatus.OPEN) ||
+                                        (island.getStatus().equals(IslandStatus.WHITELISTED) && island.isPlayerWhitelisted(player)))) {
                                     LocationUtil.teleportPlayerToSpawn(targetPlayer);
 
                                     messageManager.sendMessage(targetPlayer,

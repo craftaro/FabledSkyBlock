@@ -239,7 +239,7 @@ public class IslandManager {
                     new IslandLocation[]{island.getIslandLocation(IslandWorld.Normal, IslandEnvironment.Island), island.getIslandLocation(IslandWorld.Nether, IslandEnvironment.Island),
                             island.getIslandLocation(IslandWorld.End, IslandEnvironment.Island)},
                     island.getSize(), island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1, island.getBankBalance(), visitManager.getIslandSafeLevel(island.getOwnerUUID()), island.getLevel(),
-                    island.getMessage(IslandMessage.Signature), island.isOpen());
+                    island.getMessage(IslandMessage.Signature), island.getStatus());
         }
 
         if (!banManager.hasIsland(island.getOwnerUUID())) banManager.createIsland(island.getOwnerUUID());
@@ -743,7 +743,7 @@ public class IslandManager {
                             new IslandLocation[]{island.getIslandLocation(IslandWorld.Normal, IslandEnvironment.Island), island.getIslandLocation(IslandWorld.Nether, IslandEnvironment.Island),
                                     island.getIslandLocation(IslandWorld.End, IslandEnvironment.Island)},
                             island.getSize(), island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1, island.getBankBalance(), visitManager.getIslandSafeLevel(island.getOwnerUUID()),
-                            island.getLevel(), island.getMessage(IslandMessage.Signature), island.isOpen());
+                            island.getLevel(), island.getMessage(IslandMessage.Signature), island.getStatus());
                 }
 
                 if (!banManager.hasIsland(island.getOwnerUUID())) {
@@ -900,7 +900,7 @@ public class IslandManager {
             int nonIslandMembers = islandVisitors - getCoopPlayersAtIsland(island).size();
 
             if (nonIslandMembers <= 0) {
-                if (island.isOpen()) {
+                if (island.getStatus().equals(IslandStatus.OPEN)) {
                     return;
                 } else if (player != null) {
                     removeCoopPlayers(island, player.getUniqueId());
@@ -1177,7 +1177,7 @@ public class IslandManager {
         Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        island.setOpen(false);
+        island.setStatus(IslandStatus.CLOSED);
 
         UUID islandOwnerUUID = island.getOwnerUUID();
         Player islandOwnerPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
@@ -1190,10 +1190,37 @@ public class IslandManager {
         }
 
         for (UUID visitor : getVisitorsAtIsland(island)) {
-            if (!island.isCoopPlayer(visitor) && !island.isPlayerWhitelisted(visitor)) {
+            if (!island.isCoopPlayer(visitor)) {
                 Player targetPlayer = Bukkit.getServer().getPlayer(visitor);
                 LocationUtil.teleportPlayerToSpawn(targetPlayer);
                 messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", islandOwnerPlayerName));
+            }
+        }
+    }
+    
+    public void whitelistIsland(Island island) {
+        MessageManager messageManager = skyblock.getMessageManager();
+        
+        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
+        
+        island.setStatus(IslandStatus.WHITELISTED);
+        
+        UUID islandOwnerUUID = island.getOwnerUUID();
+        Player islandOwnerPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
+        String islandOwnerPlayerName;
+        
+        if (islandOwnerPlayer == null) {
+            islandOwnerPlayerName = new OfflinePlayer(islandOwnerUUID).getName();
+        } else {
+            islandOwnerPlayerName = islandOwnerPlayer.getName();
+        }
+        
+        for (UUID visitor : getVisitorsAtIsland(island)) {
+            if (!island.isCoopPlayer(visitor) && !island.isPlayerWhitelisted(visitor)) {
+                Player targetPlayer = Bukkit.getServer().getPlayer(visitor);
+                LocationUtil.teleportPlayerToSpawn(targetPlayer);
+                messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Whitelisted.Island.Message").replace("%player", islandOwnerPlayerName)); // TODO
             }
         }
     }

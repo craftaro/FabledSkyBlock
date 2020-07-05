@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.island.IslandStatus;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -90,7 +91,7 @@ public class PlaceholderManager {
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_island_isopen.Empty.Message"));
             } else {
-                if (island.isOpen()) {
+                if (island.getStatus().equals(IslandStatus.OPEN)) { // TODO Update to Status
                     return ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Placeholder.fabledskyblock_island_isopen.Open.Message"));
                 } else {

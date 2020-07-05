@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.permission.PermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -84,7 +85,7 @@ public class KickCommand extends SubCommand {
                             } else if (island.getOwnerUUID().equals(targetPlayerUUID)) {
                                 messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Role.Owner.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                            } else if (island.isOpen() && islandVisitors.contains(targetPlayerUUID)) {
+                            } else if (!island.getStatus().equals(IslandStatus.CLOSED) && islandVisitors.contains(targetPlayerUUID)) {
                                 if (island.isCoopPlayer(targetPlayerUUID)) {
                                     messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Cooped.Message"));
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -205,19 +206,27 @@ public class KickCommand extends SubCommand {
                                     }
                                 }
                             } else {
-                                if (island.isOpen()) {
-                                    messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Occupant.Visit.Open.Message"));
-                                } else {
-                                    messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Occupant.Visit.Closed.Message"));
+                                switch (island.getStatus()){
+                                    case OPEN:
+                                    case WHITELISTED:
+                                        messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Occupant.Visit.Open.Message"));
+                                        break;
+                                    case CLOSED:
+                                        messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Occupant.Visit.Closed.Message"));
+                                        break;
                                 }
 
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             }
                         } else {
-                            if (island.isOpen()) {
-                                messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Permission.Visit.Open.Message"));
-                            } else {
-                                messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Permission.Visit.Closed.Message"));
+                            switch (island.getStatus()){
+                                case OPEN:
+                                case WHITELISTED:
+                                    messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Permission.Visit.Open.Message"));
+                                    break;
+                                case CLOSED:
+                                    messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Kick.Permission.Visit.Closed.Message"));
+                                    break;
                             }
 
                             soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);

@@ -10,6 +10,7 @@ import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -106,11 +107,11 @@ public class ConfirmCommand extends SubCommand {
                                             .getString("Command.Island.Confirmation.Ownership.Member.Message"));
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                 }
-                            } else if (confirmation == Confirmation.Reset) {
+                            } else if (confirmation.equals(Confirmation.Reset)) {
                                 playerData.setConfirmation(null);
                                 playerData.setConfirmationTime(0);
-                            } else if (confirmation == Confirmation.Deletion) {
-                                if (island.isOpen()) {
+                            } else if (confirmation.equals(Confirmation.Deletion)) {
+                                if (island.getStatus().equals(IslandStatus.OPEN)) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.Confirmation.Deletion.Open.Message"));
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);

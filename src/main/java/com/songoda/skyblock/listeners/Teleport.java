@@ -10,6 +10,7 @@ import com.songoda.skyblock.api.island.Island;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -98,7 +99,9 @@ public class Teleport implements Listener {
             if (island != null) {
                 if (!island.getOwnerUUID().equals(playerData.getOwner())) {
                     if (!player.hasPermission("fabledskyblock.bypass") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
-                        if (!island.isOpen() && !island.isCoopPlayer(player.getUniqueId()) && !island.isPlayerWhitelisted(player)) {
+                        if (!island.getStatus().equals(IslandStatus.OPEN) &&
+                                !island.isCoopPlayer(player.getUniqueId()) &&
+                                !(island.getStatus().equals(IslandStatus.WHITELISTED) && island.isPlayerWhitelisted(player))) {
                             event.setCancelled(true);
 
                             messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Plugin.Message"));

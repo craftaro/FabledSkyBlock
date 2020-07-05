@@ -39,10 +39,16 @@ public final class ControlPanel {
 
                 final Island island = SkyBlock.getInstance().getIslandManager().getIsland((Player) player);
 
-                if (island.isOpen()) {
-                    Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island close"), 1L);
-                } else {
-                    Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island open"), 1L);
+                switch (island.getStatus()) {
+                    case OPEN:
+                        Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island whitelist on"), 1L);
+                        break;
+                    case CLOSED:
+                        Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island open"), 1L);
+                        break;
+                    case WHITELISTED:
+                        Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island close"), 1L);
+                        break;
                 }
             });
 

@@ -6,6 +6,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.command.ConsoleCommandSender;
@@ -33,16 +34,25 @@ public class PublicCommand extends SubCommand {
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                 || (island.hasRole(IslandRole.Operator, player.getUniqueId())
                 && skyblock.getPermissionManager().hasPermission(island, "Visitor", IslandRole.Operator))) {
-            if (island.isOpen()) {
-                islandManager.closeIsland(island);
-
-                messageManager.sendMessage(player, configLoad.getString("Command.Island.Public.Private.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
-            } else {
-                island.setOpen(true);
-
-                messageManager.sendMessage(player, configLoad.getString("Command.Island.Public.Public.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);
+            switch (island.getStatus()) {
+                case OPEN:
+                    islandManager.whitelistIsland(island);
+    
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Public.Restricted.Message"));
+                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
+                    break;
+                case CLOSED:
+                    islandManager.closeIsland(island);
+    
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Public.Private.Message"));
+                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
+                    break;
+                case WHITELISTED:
+                    island.setStatus(IslandStatus.OPEN);
+    
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Public.Public.Message"));
+                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);
+                    break;
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Public.Permission.Message"));
