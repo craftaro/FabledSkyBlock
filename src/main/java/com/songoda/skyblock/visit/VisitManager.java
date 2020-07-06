@@ -72,7 +72,25 @@ public class VisitManager {
                         if (configLoad.getString("Size") != null) {
                             size = configLoad.getInt("Size");
                         }
-
+    
+                        IslandStatus status;
+                        String open = configLoad.getString("Visitor.Open", null);
+                        if(open != null && (open.equalsIgnoreCase("true") ||
+                                open.equalsIgnoreCase("false"))) {
+                            if(configLoad.getBoolean("Visitor.Open")) {
+                                status = IslandStatus.OPEN;
+                            } else {
+                                status = IslandStatus.CLOSED;
+                            }
+                            configLoad.set("Visitor.Open", null);
+                        } else {
+                            if(configLoad.getString("Visitor.Status") != null) {
+                                status = IslandStatus.getEnum(configLoad.getString("Visitor.Status"));
+                            } else {
+                                status = IslandStatus.WHITELISTED;
+                            }
+                        }
+                        
                         createIsland(islandOwnerUUID,
                                 new IslandLocation[]{
                                         new IslandLocation(IslandWorld.Normal, null,
@@ -89,7 +107,8 @@ public class VisitManager {
                                         + configLoad.getStringList("Operators").size() + 1,
                                 configLoad.getDouble("Bank.Balance", 0),
                                 getIslandSafeLevel(islandOwnerUUID), new IslandLevel(islandOwnerUUID, skyblock),
-                                islandSignature, IslandStatus.valueOf(configLoad.getString("Visitor.Status")));
+                                islandSignature,
+                                status);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

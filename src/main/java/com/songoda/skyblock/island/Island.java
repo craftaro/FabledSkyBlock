@@ -195,32 +195,31 @@ public class Island {
                 }
             }
     
-            if(configLoad.getString("Visitor.Open", null).equalsIgnoreCase("true") ||
-                    configLoad.getString("Visitor.Open", null).equalsIgnoreCase("false")) {
+            String open = configLoad.getString("Visitor.Open", null);
+            if(open != null && (open.equalsIgnoreCase("true") ||
+                    open.equalsIgnoreCase("false"))) {
                 if(configLoad.getBoolean("Visitor.Open")) {
                     status = IslandStatus.OPEN;
                 } else {
                     status = IslandStatus.CLOSED;
                 }
                 configLoad.set("Visitor.Open", null);
+                configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status"));
+                save();
             } else {
-                IslandStatus status = IslandStatus.valueOf(configLoad.getString("Visitor.Status"));
-                switch (status){
-                    case OPEN:
-                    case CLOSED:
-                    case WHITELISTED:
-                        this.status = status;
-                        break;
-                    default:
-                        this.status = IslandStatus.WHITELISTED;
-                        break;
+                if(configLoad.getString("Visitor.Status") != null) {
+                    status = IslandStatus.getEnum(configLoad.getString("Visitor.Status"));
+                } else {
+                    status = IslandStatus.WHITELISTED;
+                    configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status"));
+                    save();
                 }
             }
         } else {
             FileConfiguration configLoad = config.getFileConfiguration();
 
             configLoad.set("UUID", islandUUID.toString());
-            configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status"));
+            configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status").toUpperCase());
             configLoad.set("Border.Enable", mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Default", false));
             configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
             configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
@@ -242,6 +241,8 @@ public class Island {
                 islandPermissions.put(roleList, permissions);
             }
 
+            status = IslandStatus.getEnum(mainConfigLoad.getString("Island.Visitor.Status"));
+            
             save();
 
             Player onlinePlayer = Bukkit.getServer().getPlayer(ownerUUID);
@@ -782,7 +783,7 @@ public class Island {
         if(!islandStatusChangeEvent.isCancelled()) {
             this.status = status;
             getVisit().setStatus(status);
-            // TODO Save to config
+            Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
         }
     }
 
@@ -872,7 +873,8 @@ public class Island {
         Config config = fileManager
                 .getConfig(new File(skyblock.getDataFolder().toString() + "/island-data", ownerUUID.toString() + ".yml"));
     
-        config.getFileConfiguration().set("Whitelist", whitelistedPlayers);
+        config.getFileConfiguration().set("Whitelist", new ArrayList<>(whitelistedPlayers));
+        config.getFileConfiguration().set("Visitor.Status", status.toString());
 
         try {
             config.getFileConfiguration().save(config.getFile());
