@@ -15,9 +15,10 @@ Island:
         # You should increase this only if you have an SSD
         ChunkPerTick: 15
     Size:
-        # [!] Do not go over 1000 for both of these options.
-        # The size of an Island when created.
-        # [!] Do not go over the maximum.
+        # Warning: The maximum is capped at 1000
+        # Warning: Only even numbers are accepted
+        # Warning: Do not go over the maximum
+        # The size of an Island when created
         Minimum: 100
         # The maximum size of an Island based on the permission node 'fabledskyblock.size.<size>'.
         Maximum: 200

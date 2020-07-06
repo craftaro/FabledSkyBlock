@@ -65,6 +65,10 @@ public class Island {
         if (this.size > 1000) {
             this.size = 50;
         }
+    
+        if(this.size % 2 != 0) {
+            this.size += 1;
+        }
 
         if (player.isOnline()) {
             int customSize = PlayerUtils.getNumberFromPermission(player.getPlayer(), "fabledskyblock.size", 0);
@@ -77,8 +81,17 @@ public class Island {
 
                 if (minimumSize < 0 || minimumSize > 1000)
                     minimumSize = 50;
+    
+                if(minimumSize % 2 != 0) {
+                    minimumSize += 1;
+                }
+                
                 if (maximumSize < 0 || maximumSize > 1000)
                     maximumSize = 100;
+                
+                if(maximumSize % 2 != 0) {
+                    maximumSize += 1;
+                }
 
                 size = Math.max(minimumSize, Math.min(customSize, maximumSize));
             }
