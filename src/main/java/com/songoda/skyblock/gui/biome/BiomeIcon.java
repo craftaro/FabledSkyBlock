@@ -32,7 +32,11 @@ public class BiomeIcon {
         }
         byte tempData = (byte) biomeConfig.getInt("Biomes." + biome.name() + ".DisplayItem.Data", 0);
         
-        this.displayItem = CompatibleMaterial.getMaterial(tempMat.getMaterial(), tempData).getItem();
+        CompatibleMaterial displayMaterial = CompatibleMaterial.getMaterial(tempMat.getMaterial(), tempData);
+        if(displayMaterial == null) {
+            displayMaterial = CompatibleMaterial.STONE;
+        }
+        this.displayItem = displayMaterial.getItem();
         ItemMeta im = displayItem.getItemMeta();
         if(im != null){
             im.setDisplayName(ChatColor.translateAlternateColorCodes('&', biomeConfig.getString("Biomes." + biome.name() + ".DisplayName", biome.name())));
