@@ -3392,7 +3392,6 @@ Menu:
     Words:
       Withdraw: 'Withdraw'
       Deposit: 'Deposit'
-      Amount: 'Amount'
   Input:
     Title: 'Select amount.'
     Item:

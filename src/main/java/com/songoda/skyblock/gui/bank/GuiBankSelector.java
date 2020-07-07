@@ -185,21 +185,13 @@ public class GuiBankSelector extends Gui {
                 e.player.closeInventory();
                 guiManager.showGUI(event.player, returnGui);
             }));
-
-            ItemStack input = CompatibleMaterial.PAPER.getItem();
-            ItemMeta im = input.getItemMeta();
-            if(im != null){
-                im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Bank.Words.Amount")));
-                input.setItemMeta(im);
-            }
-
-            gui.setInput(input);
+            
             switch(type){
                 case DEPOSIT:
-                    gui.setTitle(TextUtils.formatText(languageLoad.getString("Menu.Bank.Words.Deposit")));
+                    gui.setTitle(languageLoad.getString("Menu.Bank.Words.Deposit"));
                     break;
                 case WITHDRAW:
-                    gui.setTitle(TextUtils.formatText(languageLoad.getString("Menu.Bank.Words.Withdraw")));
+                    gui.setTitle(languageLoad.getString("Menu.Bank.Words.Withdraw"));
                     break;
             }
             guiManager.showGUI(event.player, gui);
