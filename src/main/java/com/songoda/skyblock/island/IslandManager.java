@@ -876,8 +876,7 @@ public class IslandManager {
 
                             scoreboard.run();
                         }
-                    } catch (Exception e) {
-                    }
+                    } catch (Exception ignored) {}
                 }
 
                 unloadIsland = false;
