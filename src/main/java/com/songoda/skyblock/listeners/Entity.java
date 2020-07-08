@@ -115,9 +115,7 @@ public class Entity implements Listener {
                     .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()), true);
 
         } else if((event.getDamager() instanceof org.bukkit.entity.Projectile
-                    && ((Projectile) event.getDamager()).getShooter() instanceof Player)
-                && (event.getEntity().getType().equals(EntityType.ARMOR_STAND)
-                    || event.getEntity().getType().equals(EntityType.ITEM_FRAME))){
+                    && ((Projectile) event.getDamager()).getShooter() instanceof Player)){
             Player player = (Player) ((Projectile) event.getDamager()).getShooter();
             skyblock.getPermissionManager()
                     .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
