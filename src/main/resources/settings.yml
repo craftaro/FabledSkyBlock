@@ -166,8 +166,8 @@ Settings:
         Damage: true
     Owner:
         NaturalMobSpawning: true
-        MobGriefing: false
-        Explosions: false
+        MobGriefing: true
+        Explosions: true
         FireSpread: true
         LeafDecay: true
         KeepItemsOnDeath: true
