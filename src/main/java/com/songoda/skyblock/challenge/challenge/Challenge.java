@@ -1,6 +1,7 @@
 package com.songoda.skyblock.challenge.challenge;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
@@ -187,7 +188,7 @@ public class Challenge {
 							if(isItem) {
 								if(jis.getAmount() <= toRemove) {
 									toRemove -= jis.getAmount();
-									jis.setAmount(0);
+									p.getInventory().remove(jis);
 								} else {
 									jis.setAmount(jis.getAmount() - toRemove);
 									toRemove = 0;
