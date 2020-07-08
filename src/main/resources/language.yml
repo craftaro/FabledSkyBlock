@@ -24,10 +24,10 @@ Command:
         Message: '&f&oManage your island''s whitelist.'
       Permission:
         Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to manage the island''s whitelist''.'
-      On:
+      Enabled:
         Message: '&bSkyBlock &8| &aInfo&8: &eWhitelist enabled.'
-      Off:
-        Message: '&bSkyBlock &8| &aInfo&8: &eWhitelist disabled. The island is now closed'
+      Disabled:
+        Message: '&bSkyBlock &8| &aInfo&8: &eWhitelist disabled. The island is now closed.'
       Added:
         Message: '&bSkyBlock &8| &aInfo&8: &eAdded %player to the island''s whitelist.'
       Removed:
@@ -44,7 +44,7 @@ Command:
         Start:
           Message: '&bSkyBlock &8| &aInfo&8: &eCurrent island''s whitelist:'
         List:
-          Message: '&a- &e%owner'
+          Message: '&a- &e%player'
         End:
           Message: '&a---------'
         Empty:

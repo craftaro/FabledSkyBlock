@@ -10,6 +10,7 @@ import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -43,18 +44,18 @@ public class WhitelistCommand extends SubCommand {
                 && skyblock.getPermissionManager().hasPermission(island, "Visitor", IslandRole.Operator))) {
             if(args.length == 1) {
                 if(args[0].equalsIgnoreCase("on")){
-                    island.setStatus(IslandStatus.WHITELISTED);
-                    messageManager.sendMessage(player, languageLoad.getString("Command.Island.Whitelist.On.Message"));
+                    messageManager.sendMessage(player, languageLoad.getString("Command.Island.Whitelist.Enabled.Message"));
+                    islandManager.whitelistIsland(island);
                 } else if(args[0].equalsIgnoreCase("off")){
-                    island.setStatus(IslandStatus.CLOSED);
-                    messageManager.sendMessage(player, languageLoad.getString("Command.Island.Whitelist.Off.Message"));
+                    messageManager.sendMessage(player, languageLoad.getString("Command.Island.Whitelist.Disabled.Message"));
+                    islandManager.closeIsland(island);
                 } else if(args[0].equalsIgnoreCase("list")){
                     Set<UUID> whitelistedPlayers = island.getWhitelistedPlayers();
                     if(!whitelistedPlayers.isEmpty()){
                         messageManager.sendMessage(player, languageLoad.getString("Command.Island.Whitelist.List.Start.Message"));
                         for(UUID uuid : whitelistedPlayers) {
                             messageManager.sendMessage(player, languageLoad.getString("Command.Island.Whitelist.List.List.Message")
-                                    .replace("%owner", new OfflinePlayer(uuid).getName()));
+                                    .replace("%player", new OfflinePlayer(uuid).getName()));
                         }
                         messageManager.sendMessage(player, languageLoad.getString("Command.Island.Whitelist.List.End.Message"));
                     } else {
