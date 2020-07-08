@@ -116,7 +116,6 @@ public class Chat implements Listener {
     
     @EventHandler(priority = EventPriority.MONITOR,ignoreCancelled = true)
     public void onIslandChat(PlayerIslandChatEvent event) {
-        PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
         PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
         MessageManager messageManager = skyblock.getMessageManager();
         IslandManager islandManager = skyblock.getIslandManager();
@@ -140,8 +139,7 @@ public class Chat implements Listener {
         if(islandRole == null) {
             islandRole = "";
         }
-    
-    
+        
         for (UUID islandMembersOnlineList : islandManager.getMembersOnline(island)) {
             Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
             String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
@@ -152,7 +150,9 @@ public class Chat implements Listener {
         
         // Spy
         for(Player targetPlayer : Bukkit.getServer().getOnlinePlayers()){
-            if(!targetPlayer.equals(event.getPlayer()) && targetPlayer.hasPermission("fabledskyblock.admin.chatspy")) {
+            if(!targetPlayer.equals(event.getPlayer()) &&
+                    !islandManager.getMembersOnline(island).contains(targetPlayer.getUniqueId()) &&
+                    targetPlayer.hasPermission("fabledskyblock.admin.chatspy")) {
                 PlayerData pd = playerDataManager.getPlayerData(targetPlayer);
                 if(pd != null && pd.isChatSpy() && (pd.isGlobalChatSpy() || pd.isChatSpyIsland(island))) {
                     String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
