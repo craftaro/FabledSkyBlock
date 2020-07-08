@@ -57,17 +57,15 @@ public class RemoveUpgradeCommand extends SubCommand {
                 islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
                 targetPlayerName = targetPlayer.getName();
             }
-
-            Upgrade.Type upgrade = null;
-
-            for (Upgrade.Type upgradeList : Upgrade.Type.values()) {
-                if (upgradeList != Upgrade.Type.Size) {
-                    if (args[1].toUpperCase().equals(upgradeList.name().toUpperCase())) {
-                        upgrade = upgradeList;
-
-                        break;
-                    }
+    
+            Upgrade.Type upgrade;
+            try {
+                upgrade = Upgrade.Type.valueOf(args[1].toUpperCase());
+                if(upgrade.equals(Upgrade.Type.Size) || upgrade.equals(Upgrade.Type.Members)){
+                    upgrade = null;
                 }
+            } catch(IllegalArgumentException e) {
+                upgrade = null;
             }
 
             if (islandOwnerUUID == null) {
