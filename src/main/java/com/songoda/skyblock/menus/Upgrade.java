@@ -522,367 +522,383 @@ public class Upgrade {
             ItemStack potion = new ItemStack(Material.POTION);
             int NMSVersion = NMSUtil.getVersionNumber();
 
-            upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Speed);
-
-            if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
-                com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
-
-                if (NMSVersion > 8) {
-                    PotionMeta pm = (PotionMeta) potion.getItemMeta();
-
-                    if (NMSVersion > 9) {
-                        pm.setBasePotionData(new PotionData(PotionType.SPEED));
+            if(player.hasPermission("fabledskyblock.upgrade." + com.songoda.skyblock.upgrade.Upgrade.Type.Speed.name().toLowerCase())) {
+                upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Speed);
+    
+                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
+                    com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
+        
+                    if (NMSVersion > 8) {
+                        PotionMeta pm = (PotionMeta) potion.getItemMeta();
+            
+                        if (NMSVersion > 9) {
+                            pm.setBasePotionData(new PotionData(PotionType.SPEED));
+                        } else {
+                            pm.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1, 0), true);
+                        }
+            
+                        potion.setItemMeta(pm);
                     } else {
-                        pm.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1, 0), true);
+                        potion = new ItemStack(Material.POTION, 1, (short) 8194);
                     }
-
-                    potion.setItemMeta(pm);
-                } else {
-                    potion = new ItemStack(Material.POTION, 1, (short) 8194);
-                }
-
-                if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Speed)) {
-                    nInv.addItem(nInv.createItem(potion,
-                            ChatColor.translateAlternateColorCodes('&',
-                                    configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
-                            configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimed.Lore"),
-                            new Placeholder[]{
-                                    new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                    new Placeholder("%status",
-                                            getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Speed))},
-                            null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
-                } else {
-                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+        
+                    if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Speed)) {
                         nInv.addItem(nInv.createItem(potion,
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimable.Lore"),
+                                configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%status",
+                                                getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Speed))},
                                 null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
                     } else {
-                        nInv.addItem(nInv.createItem(potion,
-                                ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Speed.Unclaimable.Lore"),
-                                new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
-                                null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
+                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+                            nInv.addItem(nInv.createItem(potion,
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
+                        } else {
+                            nInv.addItem(nInv.createItem(potion,
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Speed.Unclaimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
+                        }
                     }
                 }
             }
-
-            upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Jump);
-
-            if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
-                com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
-
-                if (NMSVersion > 8) {
-                    potion = new ItemStack(Material.POTION);
-                    PotionMeta pm = (PotionMeta) potion.getItemMeta();
-
-                    if (NMSVersion > 9) {
-                        pm.setBasePotionData(new PotionData(PotionType.JUMP));
+    
+            if(player.hasPermission("fabledskyblock.upgrade." + com.songoda.skyblock.upgrade.Upgrade.Type.Jump.name().toLowerCase())) {
+                upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Jump);
+    
+                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
+                    com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
+        
+                    if (NMSVersion > 8) {
+                        potion = new ItemStack(Material.POTION);
+                        PotionMeta pm = (PotionMeta) potion.getItemMeta();
+            
+                        if (NMSVersion > 9) {
+                            pm.setBasePotionData(new PotionData(PotionType.JUMP));
+                        } else {
+                            pm.addCustomEffect(new PotionEffect(PotionEffectType.JUMP, 1, 0), true);
+                        }
+            
+                        potion.setItemMeta(pm);
                     } else {
-                        pm.addCustomEffect(new PotionEffect(PotionEffectType.JUMP, 1, 0), true);
+                        potion = new ItemStack(Material.POTION, 1, (short) 8203);
                     }
-
-                    potion.setItemMeta(pm);
-                } else {
-                    potion = new ItemStack(Material.POTION, 1, (short) 8203);
-                }
-
-                if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Jump)) {
-                    nInv.addItem(nInv.createItem(potion,
-                            ChatColor.translateAlternateColorCodes('&',
-                                    configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
-                            configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimed.Lore"),
-                            new Placeholder[]{
-                                    new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                    new Placeholder("%status",
-                                            getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Jump))},
-                            null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
-                } else {
-                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+        
+                    if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Jump)) {
                         nInv.addItem(nInv.createItem(potion,
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimable.Lore"),
+                                configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%status",
+                                                getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Jump))},
                                 null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
                     } else {
-                        nInv.addItem(nInv.createItem(potion,
-                                ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Jump.Unclaimable.Lore"),
-                                new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
-                                null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
+                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+                            nInv.addItem(nInv.createItem(potion,
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
+                        } else {
+                            nInv.addItem(nInv.createItem(potion,
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Jump.Unclaimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
+                        }
                     }
                 }
             }
-
-            upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Crop);
-
-            if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
-                com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
-
-                if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Crop)) {
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
-                            ChatColor.translateAlternateColorCodes('&',
-                                    configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
-                            configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimed.Lore"),
-                            new Placeholder[]{
-                                    new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                    new Placeholder("%status",
-                                            getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Crop))},
-                            null, null), 3);
-                } else {
-                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+    
+            if(player.hasPermission("fabledskyblock.upgrade." + com.songoda.skyblock.upgrade.Upgrade.Type.Crop.name().toLowerCase())) {
+                upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Crop);
+    
+                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
+                    com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
+        
+                    if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Crop)) {
                         nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimable.Lore"),
+                                configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%status",
+                                                getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Crop))},
                                 null, null), 3);
                     } else {
-                        nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
-                                ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Crop.Unclaimable.Lore"),
-                                new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
-                                null, null), 3);
+                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+                            nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, null), 3);
+                        } else {
+                            nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Crop.Unclaimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, null), 3);
+                        }
                     }
                 }
             }
-
-            upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Fly);
-
-            if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
-                com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
-
-                if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Fly)) {
-                    nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
-                            ChatColor.translateAlternateColorCodes('&',
-                                    configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
-                            configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimed.Lore"),
-                            new Placeholder[]{
-                                    new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                    new Placeholder("%status",
-                                            getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Fly))},
-                            null, null), 4);
-                } else {
-                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+    
+            if(player.hasPermission("fabledskyblock.upgrade." + com.songoda.skyblock.upgrade.Upgrade.Type.Fly.name().toLowerCase())) {
+                upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Fly);
+    
+                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
+                    com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
+        
+                    if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Fly)) {
                         nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimable.Lore"),
+                                configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%status",
+                                                getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Fly))},
                                 null, null), 4);
                     } else {
-                        nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
-                                ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Fly.Unclaimable.Lore"),
-                                new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
-                                null, null), 4);
+                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+                            nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, null), 4);
+                        } else {
+                            nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Fly.Unclaimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, null), 4);
+                        }
                     }
                 }
             }
-
-            upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Drops);
-
-            if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
-                com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
-
-                if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Drops)) {
-                    nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
-                            ChatColor.translateAlternateColorCodes('&',
-                                    configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
-                            configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimed.Lore"),
-                            new Placeholder[]{
-                                    new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                    new Placeholder("%status",
-                                            getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Drops))},
-                            null, null), 5);
-                } else {
-                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+    
+            if(player.hasPermission("fabledskyblock.upgrade." + com.songoda.skyblock.upgrade.Upgrade.Type.Drops.name().toLowerCase())) {
+                upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Drops);
+    
+                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
+                    com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
+        
+                    if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Drops)) {
                         nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimable.Lore"),
-                                new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
-                                null, null), 5);
-                    } else {
-                        nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
-                                ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Drops.Unclaimable.Lore"),
-                                new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
-                                null, null), 5);
-                    }
-                }
-            }
-
-            upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Members);
-
-            if (upgrades != null && upgrades.size() > 0) {
-                for (int i = 0; i < upgrades.size(); i++) {
-                    com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(i);
-                    int tier = i + 1;
-
-                    if (tier != upgrades.size()) {
-                        if (upgrade.getValue() <= island.getMaxMembers()) {
-                            continue;
-                        }
-                    }
-
-                    if (island.getMaxMembers() >= upgrade.getValue()) {
-                        nInv.addItem(nInv.createItem(new ItemStack(Material.BOOKSHELF),
-                                ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Upgrade.Item.Members.Displayname").replace("%tier",
-                                                "" + tier)),
-                                configLoad.getStringList("Menu.Upgrade.Item.Members.Claimed.Lore"),
+                                configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimed.Lore"),
                                 new Placeholder[]{
                                         new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                        new Placeholder("%tier", "" + tier),
-                                        new Placeholder("%maxMembers", "" + upgrade.getValue())},
-                                null, null), 6);
+                                        new Placeholder("%status",
+                                                getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Drops))},
+                                null, null), 5);
                     } else {
                         if (EconomyManager.hasBalance(player, upgrade.getCost())) {
-                            nInv.addItem(
-                                    nInv.createItem(new ItemStack(Material.BOOKSHELF),
-                                            ChatColor.translateAlternateColorCodes('&',
-                                                    configLoad.getString("Menu.Upgrade.Item.Members.Displayname")
-                                                            .replace("%tier", "" + tier)),
-                                            configLoad.getStringList("Menu.Upgrade.Item.Members.Claimable.Lore"),
-                                            new Placeholder[]{
-                                                    new Placeholder("%cost",
-                                                            NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                                    new Placeholder("%tier", "" + tier),
-                                                    new Placeholder("%maxMembers", "" + upgrade.getValue())},
-                                            null, null),
-                                    6);
+                            nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, null), 5);
                         } else {
-                            nInv.addItem(
-                                    nInv.createItem(new ItemStack(Material.BOOKSHELF),
-                                            ChatColor.translateAlternateColorCodes('&',
-                                                    configLoad.getString("Menu.Upgrade.Item.Members.Displayname")
-                                                            .replace("%tier", "" + tier)),
-                                            configLoad.getStringList("Menu.Upgrade.Item.Members.Unclaimable.Lore"),
-                                            new Placeholder[]{
-                                                    new Placeholder("%cost",
-                                                            NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                                    new Placeholder("%tier", "" + tier),
-                                                    new Placeholder("%maxMembers", "" + upgrade.getValue())},
-                                            null, null),
-                                    6);
+                            nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Drops.Unclaimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, null), 5);
                         }
                     }
-
-                    break;
                 }
             }
-
-            upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Size);
-
-            if (upgrades != null && upgrades.size() > 0) {
-                for (int i = 0; i < upgrades.size(); i++) {
-                    com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(i);
-                    int tier = i + 1;
-
-                    if (tier != upgrades.size()) {
-                        if (upgrade.getValue() <= island.getSize()) {
-                            continue;
+    
+            if(player.hasPermission("fabledskyblock.upgrade." + com.songoda.skyblock.upgrade.Upgrade.Type.Members.name().toLowerCase())) {
+                upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Members);
+    
+                if (upgrades != null && upgrades.size() > 0) {
+                    for (int i = 0; i < upgrades.size(); i++) {
+                        com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(i);
+                        int tier = i + 1;
+            
+                        if (tier != upgrades.size()) {
+                            if (upgrade.getValue() <= island.getMaxMembers()) {
+                                continue;
+                            }
                         }
-                    }
-
-                    if (island.getSize() >= upgrade.getValue()) {
-                        nInv.addItem(nInv.createItem(new ItemStack(Material.BEACON),
-                                ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Upgrade.Item.Size.Displayname").replace("%tier",
-                                                "" + tier)),
-                                configLoad.getStringList("Menu.Upgrade.Item.Size.Claimed.Lore"),
-                                new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                        new Placeholder("%tier", "" + tier),
-                                        new Placeholder("%size", "" + upgrade.getValue())},
-                                null, null), 7);
-                    } else {
-                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
-                            nInv.addItem(
-                                    nInv.createItem(new ItemStack(Material.BEACON),
-                                            ChatColor.translateAlternateColorCodes('&',
-                                                    configLoad.getString("Menu.Upgrade.Item.Size.Displayname")
-                                                            .replace("%tier", "" + tier)),
-                                            configLoad.getStringList("Menu.Upgrade.Item.Size.Claimable.Lore"),
-                                            new Placeholder[]{
-                                                    new Placeholder("%cost",
-                                                            NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                                    new Placeholder("%tier", "" + tier),
-                                                    new Placeholder("%size", "" + upgrade.getValue())},
-                                            null, null),
-                                    7);
+            
+                        if (island.getMaxMembers() >= upgrade.getValue()) {
+                            nInv.addItem(nInv.createItem(new ItemStack(Material.BOOKSHELF),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Members.Displayname").replace("%tier",
+                                                    "" + tier)),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Members.Claimed.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                            new Placeholder("%tier", "" + tier),
+                                            new Placeholder("%maxMembers", "" + upgrade.getValue())},
+                                    null, null), 6);
                         } else {
-                            nInv.addItem(
-                                    nInv.createItem(new ItemStack(Material.BEACON),
-                                            ChatColor.translateAlternateColorCodes('&',
-                                                    configLoad.getString("Menu.Upgrade.Item.Size.Displayname")
-                                                            .replace("%tier", "" + tier)),
-                                            configLoad.getStringList("Menu.Upgrade.Item.Size.Unclaimable.Lore"),
-                                            new Placeholder[]{
-                                                    new Placeholder("%cost",
-                                                            NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                                    new Placeholder("%tier", "" + tier),
-                                                    new Placeholder("%size", "" + upgrade.getValue())},
-                                            null, null),
-                                    7);
+                            if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+                                nInv.addItem(
+                                        nInv.createItem(new ItemStack(Material.BOOKSHELF),
+                                                ChatColor.translateAlternateColorCodes('&',
+                                                        configLoad.getString("Menu.Upgrade.Item.Members.Displayname")
+                                                                .replace("%tier", "" + tier)),
+                                                configLoad.getStringList("Menu.Upgrade.Item.Members.Claimable.Lore"),
+                                                new Placeholder[]{
+                                                        new Placeholder("%cost",
+                                                                NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                        new Placeholder("%tier", "" + tier),
+                                                        new Placeholder("%maxMembers", "" + upgrade.getValue())},
+                                                null, null),
+                                        6);
+                            } else {
+                                nInv.addItem(
+                                        nInv.createItem(new ItemStack(Material.BOOKSHELF),
+                                                ChatColor.translateAlternateColorCodes('&',
+                                                        configLoad.getString("Menu.Upgrade.Item.Members.Displayname")
+                                                                .replace("%tier", "" + tier)),
+                                                configLoad.getStringList("Menu.Upgrade.Item.Members.Unclaimable.Lore"),
+                                                new Placeholder[]{
+                                                        new Placeholder("%cost",
+                                                                NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                        new Placeholder("%tier", "" + tier),
+                                                        new Placeholder("%maxMembers", "" + upgrade.getValue())},
+                                                null, null),
+                                        6);
+                            }
                         }
+            
+                        break;
                     }
-
-                    break;
                 }
             }
-
-            upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner);
-
-            if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
-                com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
-
-                if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner)) {
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
-                            ChatColor.translateAlternateColorCodes('&',
-                                    configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
-                            configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimed.Lore"),
-                            new Placeholder[]{
-                                    new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
-                                    new Placeholder("%status",
-                                            getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner))},
-                            null, null), 8);
-                } else {
-                    if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+    
+            if(player.hasPermission("fabledskyblock.upgrade." + com.songoda.skyblock.upgrade.Upgrade.Type.Size.name().toLowerCase())) {
+                upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Size);
+    
+                if (upgrades != null && upgrades.size() > 0) {
+                    for (int i = 0; i < upgrades.size(); i++) {
+                        com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(i);
+                        int tier = i + 1;
+            
+                        if (tier != upgrades.size()) {
+                            if (upgrade.getValue() <= island.getSize()) {
+                                continue;
+                            }
+                        }
+            
+                        if (island.getSize() >= upgrade.getValue()) {
+                            nInv.addItem(nInv.createItem(new ItemStack(Material.BEACON),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Size.Displayname").replace("%tier",
+                                                    "" + tier)),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Size.Claimed.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                            new Placeholder("%tier", "" + tier),
+                                            new Placeholder("%size", "" + upgrade.getValue())},
+                                    null, null), 7);
+                        } else {
+                            if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+                                nInv.addItem(
+                                        nInv.createItem(new ItemStack(Material.BEACON),
+                                                ChatColor.translateAlternateColorCodes('&',
+                                                        configLoad.getString("Menu.Upgrade.Item.Size.Displayname")
+                                                                .replace("%tier", "" + tier)),
+                                                configLoad.getStringList("Menu.Upgrade.Item.Size.Claimable.Lore"),
+                                                new Placeholder[]{
+                                                        new Placeholder("%cost",
+                                                                NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                        new Placeholder("%tier", "" + tier),
+                                                        new Placeholder("%size", "" + upgrade.getValue())},
+                                                null, null),
+                                        7);
+                            } else {
+                                nInv.addItem(
+                                        nInv.createItem(new ItemStack(Material.BEACON),
+                                                ChatColor.translateAlternateColorCodes('&',
+                                                        configLoad.getString("Menu.Upgrade.Item.Size.Displayname")
+                                                                .replace("%tier", "" + tier)),
+                                                configLoad.getStringList("Menu.Upgrade.Item.Size.Unclaimable.Lore"),
+                                                new Placeholder[]{
+                                                        new Placeholder("%cost",
+                                                                NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                        new Placeholder("%tier", "" + tier),
+                                                        new Placeholder("%size", "" + upgrade.getValue())},
+                                                null, null),
+                                        7);
+                            }
+                        }
+            
+                        break;
+                    }
+                }
+            }
+    
+            if(player.hasPermission("fabledskyblock.upgrade." + com.songoda.skyblock.upgrade.Upgrade.Type.Spawner.name().toLowerCase())) {
+                upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner);
+    
+                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
+                    com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
+        
+                    if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner)) {
                         nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimable.Lore"),
+                                configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%status",
+                                                getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner))},
                                 null, null), 8);
                     } else {
-                        nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
-                                ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
-                                configLoad.getStringList("Menu.Upgrade.Item.Spawner.Unclaimable.Lore"),
-                                new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
-                                null, null), 8);
+                        if (EconomyManager.hasBalance(player, upgrade.getCost())) {
+                            nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, null), 8);
+                        } else {
+                            nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
+                                    configLoad.getStringList("Menu.Upgrade.Item.Spawner.Unclaimable.Lore"),
+                                    new Placeholder[]{
+                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                    null, null), 8);
+                        }
                     }
                 }
             }
