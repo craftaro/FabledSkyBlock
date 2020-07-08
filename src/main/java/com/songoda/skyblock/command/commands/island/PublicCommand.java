@@ -41,13 +41,13 @@ public class PublicCommand extends SubCommand {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Public.Restricted.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
                     break;
-                case CLOSED:
+                case WHITELISTED:
                     islandManager.closeIsland(island);
     
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Public.Private.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
                     break;
-                case WHITELISTED:
+                case CLOSED:
                     island.setStatus(IslandStatus.OPEN);
     
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Public.Public.Message"));
@@ -77,7 +77,7 @@ public class PublicCommand extends SubCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[]{"pub", "private", "pri"};
+        return new String[]{"pub", "private", "pri", "restricted", "res"};
     }
 
     @Override

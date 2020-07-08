@@ -19,6 +19,36 @@ Command:
     Info:
       Message: '&bSkyBlock &8| &aInfo&8: &eEnable or disabled the scoreboard.'
   Island:
+    Whitelist:
+      Info:
+        Message: '&f&oManage your island''s whitelist.'
+      Permission:
+        Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to manage the island''s whitelist''.'
+      On:
+        Message: '&bSkyBlock &8| &aInfo&8: &eWhitelist enabled.'
+      Off:
+        Message: '&bSkyBlock &8| &aInfo&8: &eWhitelist disabled. The island is now closed'
+      Added:
+        Message: '&bSkyBlock &8| &aInfo&8: &eAdded %player to the island''s whitelist.'
+      Removed:
+        Message: '&bSkyBlock &8| &aInfo&8: &eRemoved %player from the island''s whitelist.'
+      AlreadyAdded:
+        Message: '&bSkyBlock &8| &aInfo&8: &e%player is already whitelisted.'
+      NotWhitelisted:
+        Message: '&bSkyBlock &8| &aInfo&8: &e%player is not whitelisted.'
+      PlayerNotFound:
+        Message: '&bSkyBlock &8| &cError&8: &ePlayer %player has not been found.'
+      InvalidArgNumber:
+        Message: '&bSkyBlock &8| &cError&8: &eInvalid arguments number.'
+      List:
+        Start:
+          Message: '&bSkyBlock &8| &aInfo&8: &eCurrent island''s whitelist:'
+        List:
+          Message: '&a- &e%owner'
+        End:
+          Message: '&a---------'
+        Empty:
+          Message: '&bSkyBlock &8| &aInfo&8: &eYour island''s whitelist is currently empty.'
     Bans:
       Owner:
         Message: '&bSkyBlock &8| &cError&8: &eYou are not an Island Owner.'

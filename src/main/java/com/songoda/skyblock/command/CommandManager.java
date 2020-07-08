@@ -90,7 +90,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 new VisitorsCommand(),
                 new VoteCommand(),
                 new ScoreboardCommand(),
-                new WeatherCommand()
+                new WeatherCommand(),
+                new WhitelistCommand()
         );
 
         adminCommands = Arrays.asList(

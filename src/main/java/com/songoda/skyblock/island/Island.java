@@ -886,7 +886,11 @@ public class Island {
         Config config = fileManager
                 .getConfig(new File(skyblock.getDataFolder().toString() + "/island-data", ownerUUID.toString() + ".yml"));
     
-        config.getFileConfiguration().set("Whitelist", new ArrayList<>(whitelistedPlayers));
+        List<String> tempWhitelist = new ArrayList<>();
+        for(UUID uuid : whitelistedPlayers) {
+            tempWhitelist.add(uuid.toString());
+        }
+        config.getFileConfiguration().set("Whitelist", tempWhitelist);
         config.getFileConfiguration().set("Visitor.Status", status.toString());
 
         try {
@@ -986,6 +990,10 @@ public class Island {
     public void removeWhitelistedPlayer(UUID uuid) {
         this.whitelistedPlayers.remove(uuid);
         Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+    }
+    
+    public Set<UUID> getWhitelistedPlayers() {
+        return new HashSet<>(whitelistedPlayers);
     }
     
     public void addWhitelistedPlayer(Player player) {
