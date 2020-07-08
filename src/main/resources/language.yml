@@ -33,9 +33,9 @@ Command:
       Removed:
         Message: '&bSkyBlock &8| &aInfo&8: &eRemoved %player from the island''s whitelist.'
       AlreadyAdded:
-        Message: '&bSkyBlock &8| &aInfo&8: &e%player is already whitelisted.'
+        Message: '&bSkyBlock &8| &cError&8: &e%player is already whitelisted.'
       NotWhitelisted:
-        Message: '&bSkyBlock &8| &aInfo&8: &e%player is not whitelisted.'
+        Message: '&bSkyBlock &8| &cError&8: &e%player is not whitelisted.'
       PlayerNotFound:
         Message: '&bSkyBlock &8| &cError&8: &ePlayer %player has not been found.'
       InvalidArgNumber:
