@@ -46,8 +46,7 @@ public class Upgrade {
 
         return instance;
     }
-
-    @SuppressWarnings("deprecation")
+    
     public void open(Player player) {
         SkyBlock skyblock = SkyBlock.getInstance();
 
