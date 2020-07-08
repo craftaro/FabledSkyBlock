@@ -231,6 +231,15 @@ public class PlaceholderManager {
                         configLoad.getString("Placeholder.fabledskyblock_island_members.Non-empty.Message")
                                 .replace("%placeholder", "" + island.getRole(IslandRole.Member).size()));
             }
+        } else if (placeholder.equalsIgnoreCase("fabledskyblock_island_maxmembers")) {
+            if (island == null) {
+                return ChatColor.translateAlternateColorCodes('&',
+                        configLoad.getString("Placeholder.fabledskyblock_island_maxmembers.Empty.Message"));
+            } else {
+                return ChatColor.translateAlternateColorCodes('&',
+                        configLoad.getString("Placeholder.fabledskyblock_island_maxmembers.Non-empty.Message")
+                                .replace("%placeholder", "" + island.getMaxMembers()));
+            }
         } else if (placeholder.equalsIgnoreCase("fabledskyblock_island_operators")) {
             if (island == null) {
                 return ChatColor.translateAlternateColorCodes('&',
@@ -426,6 +435,7 @@ public class PlaceholderManager {
         placeholders.add("fabledskyblock_island_bans");
         placeholders.add("fabledskyblock_island_members_total");
         placeholders.add("fabledskyblock_island_members");
+        placeholders.add("fabledskyblock_island_maxmembers");
         placeholders.add("fabledskyblock_island_operators");
         placeholders.add("fabledskyblock_island_coops");
         placeholders.add("fabledskyblock_island_coops_total");
