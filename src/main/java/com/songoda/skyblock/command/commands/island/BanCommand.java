@@ -47,8 +47,8 @@ public class BanCommand extends SubCommand {
                             || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && permissionManager.hasPermission(island, "Ban", IslandRole.Operator))) {
                         Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
-                        UUID targetPlayerUUID = null;
-                        String targetPlayerName = null;
+                        UUID targetPlayerUUID;
+                        String targetPlayerName;
 
                         if (targetPlayer == null) {
                             OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);

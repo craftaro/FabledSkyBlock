@@ -11,29 +11,31 @@ import java.util.UUID;
 
 public class OfflinePlayer {
 
-    private UUID uuid;
+    private final UUID uuid;
     org.bukkit.OfflinePlayer bukkitOfflinePlayer;
 
     private String name;
-    private String memberSince;
-    private String lastOnline;
+    private final String memberSince;
+    private final String lastOnline;
     private UUID owner = null;
-    private String[] texture;
+    private final String[] texture;
 
-    private int playtime;
+    private final int playtime;
 
     public OfflinePlayer(String name) {
         SkyBlock skyblock = SkyBlock.getInstance();
         UserCacheManager userCacheManager = skyblock.getUserCacheManager();
         
         bukkitOfflinePlayer = Bukkit.getServer().getOfflinePlayer(name);
-
-        this.name = bukkitOfflinePlayer.getName();
-        this.uuid = bukkitOfflinePlayer.getUniqueId();
-
-        if (this.uuid == null && userCacheManager.hasUser(name)) {
+        
+        if (userCacheManager.hasUser(name)) {
             this.uuid = userCacheManager.getUser(name);
+            bukkitOfflinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
+        } else {
+            this.uuid = bukkitOfflinePlayer.getUniqueId();
         }
+    
+        this.name = bukkitOfflinePlayer.getName();
 
         FileConfiguration configLoad = YamlConfiguration.loadConfiguration(
                 new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
