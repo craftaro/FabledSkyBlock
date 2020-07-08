@@ -302,7 +302,11 @@ public class PlayerData {
         }
     
         configLoad.set("ChatSpy", chatSpy);
-        configLoad.set("ChatSpiedIslands", spiedIslands);
+        List<String> tempSpiedIslands = new ArrayList<>();
+        for(UUID uuid : spiedIslands){
+            tempSpiedIslands.add(uuid.toString());
+        }
+        configLoad.set("ChatSpiedIslands", tempSpiedIslands);
         
         try {
             configLoad.save(config.getFile());
