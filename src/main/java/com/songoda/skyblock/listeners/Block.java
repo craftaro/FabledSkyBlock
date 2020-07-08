@@ -628,12 +628,31 @@ public class Block implements Listener {
             for (Generator generator : generators) {
                 if(onlyOwner && skyblock.getVaultPermission() != null) {
                     OfflinePlayer owner = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
-                    if(skyblock.getVaultPermission().playerHas(block.getWorld().getName(), owner, generator.getPermission()) ||
-                            skyblock.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.generator.*") ||
-                            skyblock.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.*")) {
-                        if (applyGenerator(event, block, worldManager, islandLevelManager, island, state, generatorManager, generator))
-                            return;
-                    }
+                    event.setCancelled(true);
+                    World finalWorld = event.getBlock().getWorld();
+                    Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                        if(skyblock.getVaultPermission().playerHas(block.getWorld().getName(), owner, generator.getPermission()) ||
+                                skyblock.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.generator.*") ||
+                                skyblock.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.*")) {
+                            Bukkit.getScheduler().runTask(skyblock, () -> {
+                                if(worldManager.getIslandWorld(finalWorld).equals(generator.getIsWorld())){
+                                    BlockState genState = generatorManager.generateBlock(generator, block);
+                                    block.setType(genState.getType());
+                                    
+                                    if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
+                                        BlockState tempState = block.getState();
+                                        tempState.setData(genState.getData());
+                                        tempState.update(true, true);
+                                    }
+                                    islandLevelManager.updateLevel(island, genState.getLocation());
+                                }
+                            });
+                        } else {
+                            Bukkit.getScheduler().runTask(skyblock, () -> {
+                                block.setType(CompatibleMaterial.COBBLESTONE.getMaterial());
+                            });
+                        }
+                    });
                 } else {
                     for (Player player : possiblePlayers) {
                         if(nearestPlayer && player.getLocation().distance(block.getLocation()) > distance){
@@ -645,7 +664,7 @@ public class Block implements Listener {
                             }
                         }
         
-                        if (applyGenerator(event, block, worldManager, islandLevelManager, island, state, generatorManager, generator))
+                        if (applyGenerator(event.getBlock().getWorld(), block, worldManager, islandLevelManager, island, state, generatorManager, generator))
                             return;
                     }
                 }
@@ -653,8 +672,8 @@ public class Block implements Listener {
         }
     }
     
-    private boolean applyGenerator(BlockFormEvent event, org.bukkit.block.Block block, WorldManager worldManager, IslandLevelManager islandLevelManager, Island island, BlockState state, GeneratorManager generatorManager, Generator generator) {
-        if(worldManager.getIslandWorld(event.getBlock().getWorld()).equals(generator.getIsWorld())){
+    private boolean applyGenerator(World world, org.bukkit.block.Block block, WorldManager worldManager, IslandLevelManager islandLevelManager, Island island, BlockState state, GeneratorManager generatorManager, Generator generator) {
+        if(worldManager.getIslandWorld(world).equals(generator.getIsWorld())){
             BlockState genState = generatorManager.generateBlock(generator, block);
             state.setType(genState.getType());
 
