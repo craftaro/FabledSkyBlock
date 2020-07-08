@@ -60,6 +60,7 @@ public class PlayerData {
         area = new Area();
 
         chatSpy = getConfig().getFileConfiguration().getBoolean("ChatSpy", false);
+        spiedIslands = new HashSet<>();
     
         if (getConfig().getFileConfiguration().getString("ChatSpiedIslands") != null) {
             for (String islandUUID : getConfig().getFileConfiguration().getStringList("ChatSpiedIslands")) {

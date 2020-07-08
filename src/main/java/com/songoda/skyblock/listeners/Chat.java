@@ -66,21 +66,21 @@ public class Chat implements Listener {
             if (playerData.isChat()) {
                 event.setCancelled(true);
 
-                Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
+                Config language = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+                FileConfiguration languageLoad = language.getFileConfiguration();
 
                 String islandRole = "";
 
                 if (island.hasRole(IslandRole.Member, player.getUniqueId())) {
-                    islandRole = configLoad.getString("Island.Chat.Format.Role.Member");
+                    islandRole = languageLoad.getString("Island.Chat.Format.Role.Member");
                 } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
-                    islandRole = configLoad.getString("Island.Chat.Format.Role.Operator");
+                    islandRole = languageLoad.getString("Island.Chat.Format.Role.Operator");
                 } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                    islandRole = configLoad.getString("Island.Chat.Format.Role.Owner");
+                    islandRole = languageLoad.getString("Island.Chat.Format.Role.Owner");
                 }
 
                 PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, island.getAPIWrapper(),
-                        event.getMessage(), configLoad.getString("Island.Chat.Format.Message"));
+                        event.getMessage(), languageLoad.getString("Island.Chat.Format.Message"));
                 Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
 
                 if (!islandChatEvent.isCancelled()) {
@@ -111,6 +111,62 @@ public class Chat implements Listener {
                     }
                 }
             }
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.MONITOR,ignoreCancelled = true)
+    public void onIslandChat(PlayerIslandChatEvent event) {
+        PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
+        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
+        MessageManager messageManager = skyblock.getMessageManager();
+        IslandManager islandManager = skyblock.getIslandManager();
+        FileManager fileManager = skyblock.getFileManager();
+        
+        Island island = event.getIsland().getIsland();
+        Player player = event.getPlayer();
+    
+        Config language = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileConfiguration languageLoad = language.getFileConfiguration();
+    
+        String islandRole = null;
+    
+        if (island.hasRole(IslandRole.Member, player.getUniqueId())) {
+            islandRole = languageLoad.getString("Island.Chat.Format.Role.Member");
+        } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
+            islandRole = languageLoad.getString("Island.Chat.Format.Role.Operator");
+        } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+            islandRole = languageLoad.getString("Island.Chat.Format.Role.Owner");
+        }
+        if(islandRole == null) {
+            islandRole = "";
+        }
+    
+    
+        for (UUID islandMembersOnlineList : islandManager.getMembersOnline(island)) {
+            Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
+            String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
+                    event.getFormat().replace("%role", islandRole).replace("%player", player.getName())))
+                    .replace("%message", event.getMessage());
+            messageManager.sendMessage(targetPlayer, message);
+        }
+        
+        // Spy
+        for(Player targetPlayer : Bukkit.getServer().getOnlinePlayers()){
+            if(!targetPlayer.equals(event.getPlayer()) && targetPlayer.hasPermission("fabledskyblock.admin.chatspy")) {
+                PlayerData pd = playerDataManager.getPlayerData(targetPlayer);
+                if(pd != null && pd.isChatSpy() && (pd.isGlobalChatSpy() || pd.isChatSpyIsland(island))) {
+                    String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
+                            languageLoad.getString("Island.Chat.Spy.Format.Message").replace("%role", islandRole).replace("%player", player.getName())))
+                            .replace("%islandOwner", new OfflinePlayer(island.getOwnerUUID()).getName())
+                            .replace("%message", event.getMessage());
+                    messageManager.sendMessage(targetPlayer, message);
+                }
+            }
+        }
+    
+        if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
+            messageManager.sendMessage(Bukkit.getConsoleSender(), event.getFormat().replace("%role", islandRole).replace("%player", player.getName())
+                    .replace("%message", event.getMessage()));
         }
     }
 }

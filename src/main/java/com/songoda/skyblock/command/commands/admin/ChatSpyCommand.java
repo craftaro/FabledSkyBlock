@@ -53,12 +53,13 @@ public class ChatSpyCommand extends SubCommand {
                     }
                     break;
                 case "add":
-                    if(args.length > 2){
+                    if(args.length == 2){
                         OfflinePlayer offlinePlayer = new OfflinePlayer(args[1]);
                         Island island = islandManager.getIslandByPlayer(offlinePlayer.getBukkitOfflinePlayer());
                         if(island != null) {
                             playerData.addChatSpyIsland(island);
-                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Add.Message"));
+                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Add.Message")
+                                    .replace("%owner", new OfflinePlayer(island.getOwnerUUID()).getName()));
                         } else {
                             messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.NullIsland.Message"));
                         }
@@ -68,12 +69,13 @@ public class ChatSpyCommand extends SubCommand {
                     }
                     break;
                 case "remove":
-                    if(args.length > 2){
+                    if(args.length == 2){
                         OfflinePlayer offlinePlayer = new OfflinePlayer(args[1]);
                         Island island = islandManager.getIslandByPlayer(offlinePlayer.getBukkitOfflinePlayer());
                         if(island != null) {
                             playerData.removeChatSpyIsland(island);
-                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Remove.Message"));
+                            messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Remove.Message")
+                                    .replace("%owner", new OfflinePlayer(island.getOwnerUUID()).getName()));
                         } else {
                             messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.NullIsland.Message"));
                         }
