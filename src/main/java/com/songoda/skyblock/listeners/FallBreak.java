@@ -83,21 +83,18 @@ public class FallBreak implements Listener {
             }
         }, 2L, 1L);
     }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onSpawnFallingBlock(EntitySpawnEvent event) {
+    
+    @EventHandler
+    public void onFallingBlockModify(EntityChangeBlockEvent event) {
         if(event.getEntity() instanceof FallingBlock) {
             WorldManager worldManager = plugin.getWorldManager();
             if (worldManager.isIslandWorld(event.getEntity().getLocation().getWorld())) {
-                fallingBlocks.add((FallingBlock) event.getEntity());
+                if (!event.getTo().equals(CompatibleMaterial.AIR.getMaterial())){
+                    fallingBlocks.remove((FallingBlock) event.getEntity());
+                } else if(!event.isCancelled()) {
+                    fallingBlocks.add((FallingBlock) event.getEntity());
+                }
             }
-        }
-    }
-    
-    @EventHandler
-    public void onDespawnFallingBlock(EntityChangeBlockEvent event) {
-        if(event.getEntity() instanceof FallingBlock && !event.getTo().equals(CompatibleMaterial.AIR.getMaterial())) {
-            fallingBlocks.remove((FallingBlock) event.getEntity());
         }
     }
 }
