@@ -1,79 +1,103 @@
 package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.world.WorldManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 
 import java.io.File;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class FallBreak implements Listener {
 
     private final SkyBlock plugin;
+    
+    private final Set<FallingBlock> fallingBlocks;
 
     public FallBreak(SkyBlock plugin) {
         this.plugin = plugin;
+        this.fallingBlocks = new HashSet<>();
+        
+        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            if(!fallingBlocks.isEmpty()) {
+                int counter = 0;
+                IslandManager islandManager = plugin.getIslandManager();
+                WorldManager worldManager = plugin.getWorldManager();
+                FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+                FileConfiguration configLoad = config.getFileConfiguration();
+                Iterator<FallingBlock> iterator = fallingBlocks.iterator();
+                while(iterator.hasNext()) {
+                    FallingBlock ent = iterator.next();
+                    if(ent.isDead()) {
+                        if (worldManager.isIslandWorld(ent.getLocation().getWorld()) && configLoad.getBoolean("Island.Block.Level.Enable")) {
+                            Island island = islandManager.getIslandAtLocation(ent.getLocation());
+        
+                            if (island != null) {
+                                CompatibleMaterial material = null;
+                                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                                    material = CompatibleMaterial.getMaterial(ent.getBlockData().getMaterial());
+                                } else {
+                                    try {
+                                        material = CompatibleMaterial.getMaterial((Material) ent.getClass().getMethod("getMaterial").invoke(ent));
+                                    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+    
+                                if (material != null) {
+                                    IslandLevel level = island.getLevel();
+    
+                                    if (level.hasMaterial(material.name())) {
+                                        long materialAmount = level.getMaterialAmount(material.name());
+        
+                                        if (materialAmount <= 1)
+                                            level.removeMaterial(material.name());
+                                        else
+                                            level.setMaterialAmount(material.name(), materialAmount - 1);
+                                    }
+                                }
+                            }
+                        }
+                        iterator.remove();
+                    }
+                    if(++counter > 50) { // Limit 50 checks per tick
+                        break;
+                    }
+                }
+            }
+        }, 2L, 1L);
     }
 
-    /*
-     * Removes island points when a block is broken by falling.
-     * Checks for items spawning (because there's no other event called)
-     * Then looks for the falling block (in a radius of 1), which should still be present on the event call.
-     *
-     * Couldn't find any other way to do this.
-     * */
+    @EventHandler(ignoreCancelled = true)
+    public void onSpawnFallingBlock(EntitySpawnEvent event) {
+        if(event.getEntity() instanceof FallingBlock) {
+            WorldManager worldManager = plugin.getWorldManager();
+            if (worldManager.isIslandWorld(event.getEntity().getLocation().getWorld())) {
+                fallingBlocks.add((FallingBlock) event.getEntity());
+            }
+        }
+    }
+    
     @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event) {
-
-        // Basic world and island checks
-        IslandManager islandManager = plugin.getIslandManager();
-        WorldManager worldManager = plugin.getWorldManager();
-
-        if (!worldManager.isIslandWorld(event.getEntity().getWorld())) return;
-
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
-
-        if (!configLoad.getBoolean("Island.Block.Level.Enable")) return;
-
-        Island island = islandManager.getIslandAtLocation(event.getLocation());
-
-        if (island == null) return;
-
-        // Get entities in radius and look for our block
-        List<Entity> entities = event.getEntity().getNearbyEntities(1, 1, 1);
-
-        for (Entity e : entities) {
-            if (!(e instanceof FallingBlock)) continue;
-
-            FallingBlock fallingBlock = (FallingBlock) e;
-
-            // Get the block material
-            CompatibleMaterial material = CompatibleMaterial.getMaterial(fallingBlock.getMaterial());
-
-            if (material == null) continue;
-
-            // Update count in the level
-            IslandLevel level = island.getLevel();
-
-            if (!level.hasMaterial(material.name())) continue;
-
-            long materialAmount = level.getMaterialAmount(material.name());
-
-            if (materialAmount <= 1)
-                level.removeMaterial(material.name());
-            else
-                level.setMaterialAmount(material.name(), materialAmount - 1);
+    public void onDespawnFallingBlock(EntityChangeBlockEvent event) {
+        if(event.getEntity() instanceof FallingBlock && !event.getTo().equals(CompatibleMaterial.AIR.getMaterial())) {
+            fallingBlocks.remove((FallingBlock) event.getEntity());
         }
     }
 }
