@@ -921,7 +921,7 @@ public class Upgrade {
                                                                 size);
 
                                                         Bukkit.getServer().getScheduler()
-                                                                .runTaskLater(skyblock,
+                                                                .runTaskLater(plugin,
                                                                         () -> open(player), 1L);
                                                     }
 
@@ -963,7 +963,7 @@ public class Upgrade {
                                 if (event.getClick() == ClickType.LEFT) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> {
                                                 AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                                     if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -1049,14 +1049,14 @@ public class Upgrade {
                                                                     .get(tier).setValue(size);
                                                             fileManager
                                                                     .getConfig(
-                                                                            new File(skyblock.getDataFolder(),
+                                                                            new File(plugin.getDataFolder(),
                                                                                     "upgrades.yml"))
                                                                     .getFileConfiguration()
                                                                     .set("Upgrades.Members." + tier + ".Value",
                                                                             size);
 
                                                             Bukkit.getServer().getScheduler()
-                                                                    .runTaskLater(skyblock,
+                                                                    .runTaskLater(plugin,
                                                                             () -> open(player), 1L);
                                                         }
 
@@ -1131,7 +1131,7 @@ public class Upgrade {
                                                                         1.0F);
 
                                                                 Bukkit.getServer().getScheduler()
-                                                                        .runTaskLater(skyblock,
+                                                                        .runTaskLater(plugin,
                                                                                 () -> open(player), 1L);
 
                                                                 return;
@@ -1146,14 +1146,14 @@ public class Upgrade {
                                                                     .get(tier).setCost(cost);
                                                             fileManager
                                                                     .getConfig(
-                                                                            new File(skyblock.getDataFolder(),
+                                                                            new File(plugin.getDataFolder(),
                                                                                     "upgrades.yml"))
                                                                     .getFileConfiguration()
                                                                     .set("Upgrades.Members." + tier + ".Cost",
                                                                             cost);
 
                                                             Bukkit.getServer().getScheduler()
-                                                                    .runTaskLater(skyblock,
+                                                                    .runTaskLater(plugin,
                                                                             () -> open(player), 1L);
                                                         }
 
