@@ -9,6 +9,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -41,8 +42,12 @@ public class PlayerManager {
 
 	public HashMap<Challenge, Integer> getPlayer(UUID uuid) {
 		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
-				.getBoolean("Island.Challenge.PerIsland", true)) {
-			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+				.getBoolean("Island.Challenge.PerIsland", false)) {
+			OfflinePlayer player = Bukkit.getPlayer(uuid);
+			if(player == null) {
+				player = Bukkit.getOfflinePlayer(uuid);
+			}
+			Island is = plugin.getIslandManager().getIsland(player);
 			if(is != null){
 				uuid = is.getOwnerUUID();
 			}
@@ -99,10 +104,18 @@ public class PlayerManager {
 	 */
 	public void unloadPlayer(UUID uuid) {
 		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
-				.getBoolean("Island.Challenge.PerIsland", true)) {
-			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+				.getBoolean("Island.Challenge.PerIsland", false)) {
+			OfflinePlayer player = Bukkit.getPlayer(uuid);
+			if(player == null) {
+				player = Bukkit.getOfflinePlayer(uuid);
+			}
+			Island is = plugin.getIslandManager().getIsland(player);
 			if(is != null){
-				uuid = is.getOwnerUUID();
+				if (!plugin.getIslandManager().getMembersOnline(is).isEmpty()) {
+					return;
+				} else {
+					uuid = is.getOwnerUUID();
+				}
 			}
 		}
 		islands.remove(uuid);
