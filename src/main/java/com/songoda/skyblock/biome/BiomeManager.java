@@ -9,6 +9,7 @@ import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BiomeManager {
+    
+    final ServerVersion ASYNC_OBFUSCATOR_VERSION = ServerVersion.V1_9;
 
     private final SkyBlock plugin;
     private final List<Island> updatingIslands;
@@ -59,10 +62,15 @@ public class BiomeManager {
             ChunkLoader.startChunkLoadingPerChunk(island, IslandWorld.Normal, plugin.isPaperAsync(), (asyncChunk, syncChunk) -> {
                 Chunk chunk = asyncChunk.join();
                 if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
-                    setChunkBiome3D(island, biome, chunk); // 2D for the moment
+                    setChunkBiome3D(biome, chunk); // 2D for the moment
                 } else {
-                    setChunkBiome2D(island, biome, chunk);
+                    try {
+                        setChunkBiome2D(biome, chunk);
+                    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
+                updateBiomePacket(island, chunk);
                 
                 progress.getAndIncrement();
                 
@@ -92,9 +100,16 @@ public class BiomeManager {
                     int progress = 0;
                     for(Chunk chunk : syncChunks){
                         if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
-                            setChunkBiome3D(island, biome, chunk); // 2D for the moment
+                            setChunkBiome3D(biome, chunk); // 2D for the moment
                         } else {
-                            setChunkBiome2D(island, biome, chunk);
+                            try {
+                                setChunkBiome2D(biome, chunk);
+                            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if(ServerVersion.isServerVersionAtLeast(ASYNC_OBFUSCATOR_VERSION)) {
+                            updateBiomePacket(island, chunk);
                         }
                         progress++;
     
@@ -113,6 +128,11 @@ public class BiomeManager {
                             }
                         }
                     }
+                    if(ServerVersion.isServerVersionBelow(ASYNC_OBFUSCATOR_VERSION)) {
+                        for(Chunk chunk : syncChunks){
+                            updateBiomePacket(island, chunk);
+                        }
+                    }
                 });
             }, (island1 -> {
                 removeUpdatingIsland(island1);
@@ -123,17 +143,16 @@ public class BiomeManager {
         }
     }
 
-    private void setChunkBiome2D(Island island, Biome biome, Chunk chunk) {
+    private void setChunkBiome2D(Biome biome, Chunk chunk) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         for(int x = chunk.getX() << 4; x < (chunk.getX()<< 4)+16; x++){
             for(int z = chunk.getZ() << 4; z < (chunk.getZ()<< 4)+16; z++){
-                chunk.getWorld().setBiome(x, z, biome);
+                World.class.getMethod("setBiome", int.class, int.class, Biome.class).invoke(chunk.getWorld(), x, z, biome);
             }
         }
-        updateBiomePacket(island, chunk);
     }
     
     // Do not use - Too laggy
-    private void setChunkBiome3D(Island island, Biome biome, Chunk chunk) {
+    private void setChunkBiome3D(Biome biome, Chunk chunk) {
         for(int x = chunk.getX() << 4; x < (chunk.getX()<< 4)+16; x++){
             for(int z = chunk.getZ() << 4; z < (chunk.getZ()<< 4)+16; z++){
                 for(int y = 0; y < chunk.getWorld().getMaxHeight(); ++y) {
@@ -141,7 +160,6 @@ public class BiomeManager {
                 }
             }
         }
-        updateBiomePacket(island, chunk);
     }
 
     
