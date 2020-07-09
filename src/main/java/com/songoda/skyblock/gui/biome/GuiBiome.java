@@ -20,6 +20,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -94,21 +95,28 @@ public class GuiBiome extends Gui {
         List<BiomeIcon> biomes = new ArrayList<>();
         for(CompatibleBiome biome : CompatibleBiome.getCompatibleBiomes()) {
             if(biome.isCompatible()){
+                try { // Hotfix for core misconfiguration
+                    biome.getBiome();
+                } catch (IllegalArgumentException ex) {
+                    continue;
+                }
                 BiomeIcon icon = new BiomeIcon(plugin,  biome);
-                if(!icon.permission || player.hasPermission("fabledskyblock.biome." + biome.name().toLowerCase())){
-                    switch(world){
+                if (icon.biome != null &&
+                        (!icon.permission ||
+                                player.hasPermission("fabledskyblock.biome." + biome.name().toLowerCase()))) {
+                    switch (world) {
                         case Normal:
-                            if(icon.normal){
+                            if (icon.normal) {
                                 biomes.add(icon);
                             }
                             break;
                         case Nether:
-                            if(icon.nether){
+                            if (icon.nether) {
                                 biomes.add(icon);
                             }
                             break;
                         case End:
-                            if(icon.end){
+                            if (icon.end) {
                                 biomes.add(icon);
                             }
                             break;
@@ -118,10 +126,10 @@ public class GuiBiome extends Gui {
         }
 
         if(biomes.size() > 0){
-            biomes.sort(Comparator.comparing(m -> m.biome));
-            
+            biomes.sort(Comparator.comparing(m -> m.biome.name()));
+    
             this.pages = (int) Math.max(1, Math.ceil((double) biomes.size() / 27d));
-
+    
             if (page != 1)
                 setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
                         TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Last.Displayname"))),
@@ -129,7 +137,7 @@ public class GuiBiome extends Gui {
                             page--;
                             paint();
                         });
-
+    
             if (page != pages)
                 setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
                         TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Next.Displayname"))),
@@ -145,7 +153,11 @@ public class GuiBiome extends Gui {
                     continue;
                 }
                 BiomeIcon icon = biomes.get(current + i);
-                if (icon == null) continue;
+                if (icon == null ||
+                        icon.biome == null ||
+                        icon.biome.getBiome() == null) {
+                    continue;
+                }
 
                 if(icon.biome.getBiome().equals(island.getBiome())){
                     icon.enchant();
