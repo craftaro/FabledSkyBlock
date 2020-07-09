@@ -14,24 +14,24 @@ import java.io.File;
 
 public class Death implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Death(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Death(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        if (plugin.getWorldManager().isIslandWorld(player.getWorld())) {
+            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             boolean keepInventory = false;
 
             if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
-                if (skyblock.getPermissionManager().hasPermission(player.getLocation(),"KeepItemsOnDeath",
+                if (plugin.getPermissionManager().hasPermission(player.getLocation(),"KeepItemsOnDeath",
                         IslandRole.Owner)) {
                     keepInventory = true;
                 }
@@ -45,7 +45,7 @@ public class Death implements Listener {
             }
 
             if (configLoad.getBoolean("Island.Death.AutoRespawn")) {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     player.spigot().respawn();
                     player.setFallDistance(0.0F);
                     player.setFireTicks(0);

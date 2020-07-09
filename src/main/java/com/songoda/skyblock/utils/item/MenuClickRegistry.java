@@ -1,20 +1,15 @@
 package com.songoda.skyblock.utils.item;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.utils.StringUtil;
+import com.songoda.skyblock.utils.item.nInventoryUtil.ClickEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.utils.StringUtil;
-import com.songoda.skyblock.utils.item.nInventoryUtil.ClickEvent;
+import java.io.File;
+import java.util.*;
  
 
 public final class MenuClickRegistry {
@@ -72,7 +67,7 @@ public final class MenuClickRegistry {
 
     public static interface MenuExecutor {
 
-        void onClick(SkyBlock skyblock, Player clicker, ClickEvent e);
+        void onClick(SkyBlock plugin, Player clicker, ClickEvent e);
 
     }
 

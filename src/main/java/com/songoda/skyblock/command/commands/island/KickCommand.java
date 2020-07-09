@@ -1,19 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
-import java.util.UUID;
-
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.skyblock.island.IslandStatus;
-import com.songoda.skyblock.permission.PermissionManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
 import com.songoda.skyblock.api.event.island.IslandKickEvent;
 import com.songoda.skyblock.api.utils.APIUtil;
 import com.songoda.skyblock.command.SubCommand;
@@ -22,7 +9,9 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.scoreboard.Scoreboard;
@@ -30,23 +19,33 @@ import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.world.LocationUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
+import java.util.UUID;
 
 public class KickCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
-            PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-            ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
-            MessageManager messageManager = skyblock.getMessageManager();
-            IslandManager islandManager = skyblock.getIslandManager();
-            SoundManager soundManager = skyblock.getSoundManager();
-            FileManager fileManager = skyblock.getFileManager();
-            PermissionManager permissionManager = skyblock.getPermissionManager();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+            ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+            MessageManager messageManager = plugin.getMessageManager();
+            IslandManager islandManager = plugin.getIslandManager();
+            SoundManager soundManager = plugin.getSoundManager();
+            FileManager fileManager = plugin.getFileManager();
+            PermissionManager permissionManager = plugin.getPermissionManager();
 
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
-            Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
 
             if (args.length == 1) {
                 Island island = islandManager.getIsland(player);
@@ -93,7 +92,7 @@ public class KickCommand extends SubCommand {
                                     IslandKickEvent islandKickEvent = new IslandKickEvent(island.getAPIWrapper(), APIUtil.fromImplementation(IslandRole.Visitor),
                                             Bukkit.getServer().getOfflinePlayer(targetPlayerUUID), player);
 
-                                    Bukkit.getScheduler().runTask(skyblock, () -> Bukkit.getServer().getPluginManager().callEvent(islandKickEvent));
+                                    Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(islandKickEvent));
 
                                     if (!islandKickEvent.isCancelled()) {
                                         LocationUtil.teleportPlayerToSpawn(targetPlayer);
@@ -117,7 +116,7 @@ public class KickCommand extends SubCommand {
                                 IslandKickEvent islandKickEvent = new IslandKickEvent(island.getAPIWrapper(), APIUtil.fromImplementation(islandRole),
                                         Bukkit.getServer().getOfflinePlayer(targetPlayerUUID), player);
 
-                                Bukkit.getScheduler().runTask(skyblock, () -> Bukkit.getServer().getPluginManager().callEvent(islandKickEvent));
+                                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(islandKickEvent));
 
                                 if (!islandKickEvent.isCancelled()) {
                                     messageManager.sendMessage(player,
@@ -125,7 +124,7 @@ public class KickCommand extends SubCommand {
                                     soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
                                     if (targetPlayer == null) {
-                                        Config config = fileManager.getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), targetPlayerUUID.toString() + ".yml"));
+                                        Config config = fileManager.getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), targetPlayerUUID.toString() + ".yml"));
                                         FileConfiguration configLoad = config.getFileConfiguration();
 
                                         configLoad.set("Statistics.Island.Playtime", null);
@@ -182,7 +181,7 @@ public class KickCommand extends SubCommand {
 
                                                 if (targetPlayerData.isChat()) {
                                                     targetPlayerData.setChat(false);
-                                                    messageManager.sendMessage(targetPlayer, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration()
+                                                    messageManager.sendMessage(targetPlayer, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration()
                                                             .getString("Island.Chat.Untoggled.Message"));
                                                 }
                                             }

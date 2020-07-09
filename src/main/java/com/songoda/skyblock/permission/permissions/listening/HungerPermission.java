@@ -8,8 +8,6 @@ import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
-import java.io.File;
-
 public class HungerPermission extends ListeningPermission {
 
     private final SkyBlock plugin;

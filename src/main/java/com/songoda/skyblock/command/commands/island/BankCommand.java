@@ -19,15 +19,15 @@ public class BankCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")) {
+        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Disabled.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             return;
@@ -37,12 +37,12 @@ public class BankCommand extends SubCommand {
         island = islandManager.getIsland(player);
 
         if (island == null) {
-            skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
-            skyblock.getMessageManager().sendMessage(player, configLoad.getString("Command.Bank.Unknown"));
+            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+            plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Bank.Unknown"));
             return;
         }
-
-        skyblock.getGuiManager().showGUI(player, new GuiBank(skyblock, island, null, false));
+    
+        plugin.getGuiManager().showGUI(player, new GuiBank(plugin, island, null, false));
     }
 
     @Override

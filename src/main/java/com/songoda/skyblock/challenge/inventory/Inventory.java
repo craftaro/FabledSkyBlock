@@ -3,14 +3,14 @@
  */
 package com.songoda.skyblock.challenge.inventory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class Inventory {
 	public static final String TICK = "tick";

@@ -20,27 +20,27 @@ import java.util.logging.Level;
 
 public class MVdWPlaceholder {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public MVdWPlaceholder(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public MVdWPlaceholder(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     public void register() {
-        PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
-        LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+        PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
+        LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         List<Leaderboard> leaderboardLevelPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Level);
         List<Leaderboard> leaderboardBankPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Bank);
         List<Leaderboard> leaderboardVotesPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Votes);
 
-        PlaceholderAPI.registerPlaceholder(skyblock, "fabledskyblock_islands", event -> "" + skyblock.getVisitManager().getIslands().size());
+        PlaceholderAPI.registerPlaceholder(plugin, "fabledskyblock_islands", event -> "" + plugin.getVisitManager().getIslands().size());
 
         for (int i = 0; i < 10; i++) {
-            PlaceholderAPI.registerPlaceholder(skyblock, "fabledskyblock_leaderboard_votes_" + (i + 1),
+            PlaceholderAPI.registerPlaceholder(plugin, "fabledskyblock_leaderboard_votes_" + (i + 1),
                     event -> {
                         int index = Integer.valueOf(event.getPlaceholder().replace("fabledskyblock_leaderboard_votes_", ""));
 
@@ -68,7 +68,7 @@ public class MVdWPlaceholder {
                                 configLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Empty.Message"));
                     });
 
-            PlaceholderAPI.registerPlaceholder(skyblock, "fabledskyblock_leaderboard_bank_" + (i + 1),
+            PlaceholderAPI.registerPlaceholder(plugin, "fabledskyblock_leaderboard_bank_" + (i + 1),
                     event -> {
                         int index = Integer.valueOf(event.getPlaceholder().replace("fabledskyblock_leaderboard_bank_", ""));
 
@@ -96,7 +96,7 @@ public class MVdWPlaceholder {
                                 configLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Empty.Message"));
                     });
 
-            PlaceholderAPI.registerPlaceholder(skyblock, "fabledskyblock_leaderboard_level_" + (i + 1),
+            PlaceholderAPI.registerPlaceholder(plugin, "fabledskyblock_leaderboard_level_" + (i + 1),
                     event -> {
                         int index = Integer.valueOf(event.getPlaceholder().replace("fabledskyblock_leaderboard_level_", ""));
 
@@ -127,7 +127,7 @@ public class MVdWPlaceholder {
         }
 
         for (String placeholderList : placeholderManager.getPlaceholders()) {
-            PlaceholderAPI.registerPlaceholder(skyblock, placeholderList, event -> {
+            PlaceholderAPI.registerPlaceholder(plugin, placeholderList, event -> {
             	try {
             		Player player = event.getPlayer();
             		

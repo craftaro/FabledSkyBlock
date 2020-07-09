@@ -11,7 +11,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-
 import com.songoda.skyblock.utils.world.WorldBorder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -36,14 +35,14 @@ public class Border {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+        FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                 .getFileConfiguration();
 
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -55,14 +54,14 @@ public class Border {
 
                 return;
             } else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && skyblock.getPermissionManager().hasPermission(island,"Border", IslandRole.Operator))
+                    && plugin.getPermissionManager().hasPermission(island,"Border", IslandRole.Operator))
                     || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Border.Permission.Message"));
                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 return;
-            } else if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+            } else if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                     .getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Disabled.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -88,7 +87,7 @@ public class Border {
                 islandManager.updateBorder(island);
                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
             } else if ((is.getType() == CompatibleMaterial.LIGHT_BLUE_DYE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName()
                     .equals(ChatColor.translateAlternateColorCodes('&',
@@ -105,7 +104,7 @@ public class Border {
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
             } else if ((is.getType() == CompatibleMaterial.LIME_DYE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName()
@@ -123,7 +122,7 @@ public class Border {
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
             } else if ((is.getType() == CompatibleMaterial.RED_DYE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName()
@@ -141,7 +140,7 @@ public class Border {
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
             }
         });
@@ -231,6 +230,6 @@ public class Border {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Border.Title")));
         nInv.setType(InventoryType.HOPPER);
 
-        Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
     }
 }

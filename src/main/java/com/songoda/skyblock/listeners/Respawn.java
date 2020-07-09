@@ -19,22 +19,22 @@ import java.util.logging.Level;
 
 public class Respawn implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Respawn(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Respawn(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
-        FileManager fileManager = skyblock.getFileManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (worldManager.isIslandWorld(player.getWorld())) {
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getBoolean("Island.Death.Respawn.Island")) {
@@ -63,7 +63,7 @@ public class Respawn implements Listener {
                 }
             }
 
-            config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
+            config = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
 
             if (config.getFileConfiguration().getString("Location.Spawn") == null) {
                 Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");

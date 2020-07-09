@@ -1,40 +1,33 @@
 package com.songoda.skyblock.stackable;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
+import java.io.File;
+import java.util.*;
  
 
 public class StackableManager {
 
     // ToDO: Should pobably be a GUI for this
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private Set<CompatibleMaterial> stackableMaterials = EnumSet.noneOf(CompatibleMaterial.class);
     private Map<Location, Stackable> stacks = new HashMap<>();
 
-    public StackableManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public StackableManager(SkyBlock plugin) {
+        this.plugin = plugin;
         registerStackables();
     }
 
     public void registerStackables() {
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "stackables.yml"));
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "stackables.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         List<String> stackableList = configLoad.getStringList("Stackables");
@@ -68,13 +61,13 @@ public class StackableManager {
 
     @SuppressWarnings("deprecation")
     public void loadSavedStackables() {
-        final File path = new File(skyblock.getDataFolder(), "island-data");
+        final File path = new File(plugin.getDataFolder(), "island-data");
         final File[] files = path.listFiles();
 
         if (files == null) return;
 
         for (File file : files) {
-            final FileConfiguration config = skyblock.getFileManager().getConfig(file).getFileConfiguration();
+            final FileConfiguration config = plugin.getFileManager().getConfig(file).getFileConfiguration();
 
             ConfigurationSection stackableSection = config.getConfigurationSection("Stackables");
 

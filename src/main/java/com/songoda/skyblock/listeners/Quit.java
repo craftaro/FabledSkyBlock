@@ -2,7 +2,6 @@ package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.challenge.challenge.ChallengeManager;
 import com.songoda.skyblock.challenge.player.PlayerManager;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownType;
@@ -30,23 +29,23 @@ import java.util.UUID;
 
 public class Quit implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Quit(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Quit(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             Player player = event.getPlayer();
 
-            PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-            CooldownManager cooldownManager = skyblock.getCooldownManager();
-            MessageManager messageManager = skyblock.getMessageManager();
-            InviteManager inviteManager = skyblock.getInviteManager();
-            IslandManager islandManager = skyblock.getIslandManager();
-            PlayerManager challengePlayerManager = skyblock.getFabledChallenge().getPlayerManager();
+            PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+            CooldownManager cooldownManager = plugin.getCooldownManager();
+            MessageManager messageManager = plugin.getMessageManager();
+            InviteManager inviteManager = plugin.getInviteManager();
+            IslandManager islandManager = plugin.getIslandManager();
+            PlayerManager challengePlayerManager = plugin.getFabledChallenge().getPlayerManager();
 
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
@@ -76,8 +75,8 @@ public class Quit implements Listener {
                             if (targetPlayerData.isChat()) {
                                 targetPlayerData.setChat(false);
                                 messageManager.sendMessage(targetPlayer,
-                                        skyblock.getFileManager()
-                                                .getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                        plugin.getFileManager()
+                                                .getConfig(new File(plugin.getDataFolder(), "language.yml"))
                                                 .getFileConfiguration().getString("Island.Chat.Untoggled.Message"));
                             }
                         }
@@ -85,7 +84,7 @@ public class Quit implements Listener {
                 }
 
                 final Island is = island;
-                Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> islandManager.unloadIsland(is, player));
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> islandManager.unloadIsland(is, player));
             }
 
             cooldownManager.setCooldownPlayer(CooldownType.Biome, player);
@@ -101,7 +100,7 @@ public class Quit implements Listener {
             playerDataManager.unloadPlayerData(player);
 
             boolean offline = true;
-            if(island != null && skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+            if(island != null && plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                     .getBoolean("Island.Challenge.PerIsland", false)){
                 if(island.getRole(IslandRole.Member) != null){
                     for(UUID uuid : island.getRole(IslandRole.Member)){
@@ -131,7 +130,7 @@ public class Quit implements Listener {
             }
 
             for (Island islandList : islandManager.getCoopIslands(player)) {
-                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                         .getBoolean("Island.Coop.Unload") || islandList.getCoopType(player.getUniqueId()) == IslandCoop.TEMP) {
                     islandList.removeCoopPlayer(player.getUniqueId());
                 }
@@ -144,7 +143,7 @@ public class Quit implements Listener {
                         && !island.hasRole(IslandRole.Operator, player.getUniqueId())
                         && !island.hasRole(IslandRole.Owner, player.getUniqueId())) {
                     final Island is = island;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> islandManager.unloadIsland(is, null));
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> islandManager.unloadIsland(is, null));
                 }
             }
 
@@ -154,11 +153,11 @@ public class Quit implements Listener {
 
                 if (targetPlayer != null) {
                     messageManager.sendMessage(targetPlayer,
-                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                            plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
                                     .getFileConfiguration()
                                     .getString("Command.Island.Invite.Invited.Sender.Disconnected.Message")
                                     .replace("%player", player.getName()));
-                    skyblock.getSoundManager().playSound(targetPlayer,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    plugin.getSoundManager().playSound(targetPlayer,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 }
 
                 inviteManager.removeInvite(player.getUniqueId());

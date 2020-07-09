@@ -14,7 +14,6 @@ import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -47,16 +46,16 @@ public class Upgrade {
 
     @SuppressWarnings("deprecation")
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        UpgradeManager upgradeManager = skyblock.getUpgradeManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        UpgradeManager upgradeManager = plugin.getUpgradeManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player) && playerDataManager.getPlayerData(player).getViewer() != null) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                     .getFileConfiguration();
             Viewer viewer = (Upgrade.Viewer) playerDataManager.getPlayerData(player).getViewer();
 
@@ -118,7 +117,7 @@ public class Upgrade {
 
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     } else if ((is.getType() == Material.BOOKSHELF) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Members.Displayname"))))) {
@@ -127,7 +126,7 @@ public class Upgrade {
 
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     } else if ((is.getType() == CompatibleMaterial.SPAWNER.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName()
                             .equals(ChatColor.translateAlternateColorCodes('&', configLoad
@@ -150,10 +149,10 @@ public class Upgrade {
                                         .getPlayerData(player).getViewer()).getUpgrade();
 
                                 boolean enabled = upgrade.isEnabled();
-                                Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
                                         () -> {
                                             Config config = fileManager.getConfig(new File(
-                                                    skyblock.getDataFolder(), "upgrades.yml"));
+                                                    plugin.getDataFolder(), "upgrades.yml"));
                                             FileConfiguration configLoad1 = config
                                                     .getFileConfiguration();
 
@@ -171,11 +170,11 @@ public class Upgrade {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else if (event.getClick() == ClickType.RIGHT) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                                 AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                     if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
                                         if (!(player.hasPermission("fabledskyblock.admin.upgrade")
@@ -211,10 +210,10 @@ public class Upgrade {
                                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(),
                                                     1.0F, 1.0F);
 
-                                            Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
+                                            Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
                                                     () -> {
                                                         Config config = fileManager.getConfig(new File(
-                                                                skyblock.getDataFolder(), "upgrades.yml"));
+                                                                plugin.getDataFolder(), "upgrades.yml"));
                                                         FileConfiguration configLoad1 = config
                                                                 .getFileConfiguration();
 
@@ -230,7 +229,7 @@ public class Upgrade {
                                                     });
 
                                             Bukkit.getServer().getScheduler()
-                                                    .runTaskLater(skyblock, () -> open(player), 1L);
+                                                    .runTaskLater(plugin, () -> open(player), 1L);
                                         }
 
                                         event1.setWillClose(true);
@@ -378,7 +377,7 @@ public class Upgrade {
                         configLoad.getString("Menu.Admin.Upgrade.Upgrades.Title")));
                 nInv.setRows(1);
 
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             } else if (viewer.getType() == Upgrade.Viewer.Type.Size) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                     if (!(player.hasPermission("fabledskyblock.admin.upgrade") || player.hasPermission("fabledskyblock.admin.*")
@@ -401,7 +400,7 @@ public class Upgrade {
                             playerData.setViewer(new Viewer(Viewer.Type.Upgrades, null));
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
                                 .getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Admin.Upgrade.Size.Item.Information.Displayname"))))) {
@@ -418,7 +417,7 @@ public class Upgrade {
                             } else {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> {
                                             AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                                 if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -451,7 +450,7 @@ public class Upgrade {
                                                                         1.0F);
 
                                                                 Bukkit.getServer().getScheduler()
-                                                                        .runTaskLater(skyblock,
+                                                                        .runTaskLater(plugin,
                                                                                 () -> open(player), 1L);
 
                                                                 return;
@@ -495,7 +494,7 @@ public class Upgrade {
                                                                 size);
 
                                                         Bukkit.getServer().getScheduler()
-                                                                .runTaskLater(skyblock,
+                                                                .runTaskLater(plugin,
                                                                         () -> open(player), 1L);
                                                     }
 
@@ -537,7 +536,7 @@ public class Upgrade {
                                 if (event.getClick() == ClickType.LEFT) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> {
                                                 AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                                     if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -580,7 +579,7 @@ public class Upgrade {
                                                                         1.0F);
 
                                                                 Bukkit.getServer().getScheduler()
-                                                                        .runTaskLater(skyblock,
+                                                                        .runTaskLater(plugin,
                                                                                 () -> open(player), 1L);
 
                                                                 return;
@@ -623,14 +622,14 @@ public class Upgrade {
                                                                     .get(tier).setValue(size);
                                                             fileManager
                                                                     .getConfig(
-                                                                            new File(skyblock.getDataFolder(),
+                                                                            new File(plugin.getDataFolder(),
                                                                                     "upgrades.yml"))
                                                                     .getFileConfiguration()
                                                                     .set("Upgrades.Size." + tier + ".Value",
                                                                             size);
 
                                                             Bukkit.getServer().getScheduler()
-                                                                    .runTaskLater(skyblock,
+                                                                    .runTaskLater(plugin,
                                                                             () -> open(player), 1L);
                                                         }
 
@@ -660,7 +659,7 @@ public class Upgrade {
                                 } else if (event.getClick() == ClickType.RIGHT) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> {
                                                 AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                                     if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -705,7 +704,7 @@ public class Upgrade {
                                                                         1.0F);
 
                                                                 Bukkit.getServer().getScheduler()
-                                                                        .runTaskLater(skyblock,
+                                                                        .runTaskLater(plugin,
                                                                                 () -> open(player), 1L);
 
                                                                 return;
@@ -720,14 +719,14 @@ public class Upgrade {
                                                                     .get(tier).setCost(cost);
                                                             fileManager
                                                                     .getConfig(
-                                                                            new File(skyblock.getDataFolder(),
+                                                                            new File(plugin.getDataFolder(),
                                                                                     "upgrades.yml"))
                                                                     .getFileConfiguration()
                                                                     .set("Upgrades.Size." + tier + ".Cost",
                                                                             cost);
 
                                                             Bukkit.getServer().getScheduler()
-                                                                    .runTaskLater(skyblock,
+                                                                    .runTaskLater(plugin,
                                                                             () -> open(player), 1L);
                                                         }
 
@@ -758,7 +757,7 @@ public class Upgrade {
                                 }
                             }
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         }
                     }
                 });
@@ -805,7 +804,7 @@ public class Upgrade {
                         configLoad.getString("Menu.Admin.Upgrade.Size.Title")));
                 nInv.setRows(1);
 
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             } else if (viewer.getType() == Viewer.Type.Members) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                     if (!(player.hasPermission("fabledskyblock.admin.upgrade") || player.hasPermission("fabledskyblock.admin.*")
@@ -828,7 +827,7 @@ public class Upgrade {
                             playerData.setViewer(new Viewer(Viewer.Type.Upgrades, null));
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
                                 .getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Admin.Upgrade.Members.Item.Information.Displayname"))))) {
@@ -845,7 +844,7 @@ public class Upgrade {
                             } else {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> {
                                             AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                                 if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -878,7 +877,7 @@ public class Upgrade {
                                                                         1.0F);
 
                                                                 Bukkit.getServer().getScheduler()
-                                                                        .runTaskLater(skyblock,
+                                                                        .runTaskLater(plugin,
                                                                                 () -> open(player), 1L);
 
                                                                 return;
@@ -1007,7 +1006,7 @@ public class Upgrade {
                                                                         1.0F);
 
                                                                 Bukkit.getServer().getScheduler()
-                                                                        .runTaskLater(skyblock,
+                                                                        .runTaskLater(plugin,
                                                                                 () -> open(player), 1L);
 
                                                                 return;
@@ -1087,7 +1086,7 @@ public class Upgrade {
                                 } else if (event.getClick() == ClickType.RIGHT) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> {
                                                 AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                                     if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -1185,7 +1184,7 @@ public class Upgrade {
                                 }
                             }
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         }
                     }
                 });
@@ -1232,15 +1231,15 @@ public class Upgrade {
                         configLoad.getString("Menu.Admin.Upgrade.Members.Title")));
                 nInv.setRows(1);
 
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             }
         }
     }
 
     private String getStatus(com.songoda.skyblock.upgrade.Upgrade upgrade) {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+        SkyBlock plugin = SkyBlock.getInstance();
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
 
         if (upgrade.isEnabled()) {
             return configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Word.Disable");

@@ -21,12 +21,12 @@ public class SetHologramCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        HologramTask hologramManager = skyblock.getHologramTask();
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        HologramTask hologramManager = plugin.getHologramTask();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -46,11 +46,11 @@ public class SetHologramCommand extends SubCommand {
 
             if (hologramType != null) {
                 fileManager.setLocation(
-                        fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml")),
+                        fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml")),
                         "Location.Hologram.Leaderboard." + hologramType.name(), player.getLocation(), true);
 
 
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+                Bukkit.getServer().getScheduler().runTask(plugin, () -> {
                     HologramType hologramType1 = HologramType.valueOf(WordUtils.capitalize(args[0].toLowerCase()));
                     Hologram hologram = hologramManager.getHologram(hologramType1);
 

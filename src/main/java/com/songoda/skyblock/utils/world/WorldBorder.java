@@ -1,15 +1,13 @@
 package com.songoda.skyblock.utils.world;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import com.songoda.core.compatibility.ServerVersion;
-import org.bukkit.Bukkit;
+import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.songoda.skyblock.utils.version.NMSUtil;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public final class WorldBorder {
 

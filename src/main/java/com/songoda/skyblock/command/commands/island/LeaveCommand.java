@@ -28,16 +28,16 @@ public class LeaveCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         PlayerData playerData = playerDataManager.getPlayerData(player);
 
-        Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
 
         Island island = islandManager.getIsland(player);
 
@@ -83,7 +83,7 @@ public class LeaveCommand extends SubCommand {
                             if (targetPlayerData.isChat()) {
                                 targetPlayerData.setChat(false);
                                 messageManager.sendMessage(targetPlayer,
-                                        fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                        fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                                                 .getFileConfiguration().getString("Island.Chat.Untoggled.Message"));
                             }
                         }

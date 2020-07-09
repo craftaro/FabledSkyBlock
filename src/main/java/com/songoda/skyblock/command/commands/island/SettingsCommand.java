@@ -20,12 +20,12 @@ public class SettingsCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -39,7 +39,7 @@ public class SettingsCommand extends SubCommand {
                     && (permissionManager.hasPermission(island, "Visitor", IslandRole.Operator)
                     || permissionManager.hasPermission(island, "Member", IslandRole.Operator)))
                     || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                skyblock.getGuiManager().showGUI(player, new GuiPermissionsSelector(skyblock, island, null));
+                plugin.getGuiManager().showGUI(player, new GuiPermissionsSelector(plugin, island, null));
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
             } else{
                 messageManager.sendMessage(player,

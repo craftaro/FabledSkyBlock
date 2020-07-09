@@ -17,7 +17,6 @@ import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -45,16 +44,16 @@ public class Members {
     }
 
     public void open(Player player, Members.Type type, Members.Sort sort) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                     .getFileConfiguration();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -70,7 +69,7 @@ public class Members {
                     Island island = islandManager.getIsland(player);
 
                     if (island == null) {
-                        skyblock.getMessageManager().sendMessage(player,
+                        plugin.getMessageManager().sendMessage(player,
                                 configLoad.getString("Command.Island.Members.Owner.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
@@ -111,7 +110,7 @@ public class Members {
 
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, (Type) playerData.getType(),
                                 (Sort) playerData.getSort()), 1L);
                     } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
@@ -133,14 +132,14 @@ public class Members {
                             playerData.setPage(MenuType.MEMBERS, playerData.getPage(MenuType.MEMBERS) - 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, (Type) playerData.getType(),
                                     (Sort) playerData.getSort()), 1L);
                         } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
                                 '&', configLoad.getString("Menu.Members.Item.Next.Displayname")))) {
                             playerData.setPage(MenuType.MEMBERS, playerData.getPage(MenuType.MEMBERS) + 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(),
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, (Type) playerData.getType(),
                                     (Sort) playerData.getSort()), 1L);
                         } else {
                             String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
@@ -166,7 +165,7 @@ public class Members {
                                                     "island demote " + playerName);
                                         }
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                                 () -> open(player, (Type) playerData.getType(),
                                                         (Sort) playerData.getSort()), 3L);
 
@@ -174,7 +173,7 @@ public class Members {
                                     } else if (event.getClick() == ClickType.RIGHT) {
                                         Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                                 () -> open(player, (Type) playerData.getType(),
                                                         (Sort) playerData.getSort()), 3L);
 
@@ -184,7 +183,7 @@ public class Members {
                                         && permissionManager.hasPermission(island, "Kick", IslandRole.Operator)) {
                                     Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> open(player, (Type) playerData.getType(),
                                                     (Sort) playerData.getSort()), 3L);
 
@@ -229,11 +228,11 @@ public class Members {
                     if (targetPlayer == null) {
                         sortedPlaytimes.put(YamlConfiguration
                                 .loadConfiguration(
-                                        new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
+                                        new File(new File(plugin.getDataFolder().toString() + "/player-data"),
                                                 displayedMemberList.toString() + ".yml"))
                                 .getInt("Statistics.Island.Playtime"), displayedMemberList);
                     } else {
-                        sortedPlaytimes.put(skyblock.getPlayerDataManager().getPlayerData(targetPlayer).getPlaytime(),
+                        sortedPlaytimes.put(plugin.getPlayerDataManager().getPlayerData(targetPlayer).getPlaytime(),
                                 displayedMemberList);
                     }
                 }
@@ -255,14 +254,14 @@ public class Members {
                                     .put(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
                                                     .parse(YamlConfiguration
                                                             .loadConfiguration(new File(
-                                                                    new File(skyblock.getDataFolder().toString()
+                                                                    new File(plugin.getDataFolder().toString()
                                                                             + "/player-data"),
                                                                     displayedMemberList.toString() + ".yml"))
                                                             .getString("Statistics.Island.Join")),
                                             displayedMemberList);
                         } else {
                             sortedDates.put(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(
-                                    skyblock.getPlayerDataManager().getPlayerData(targetPlayer).getMemberSince()),
+                                    plugin.getPlayerDataManager().getPlayerData(targetPlayer).getMemberSince()),
                                     displayedMemberList);
                         }
                     } catch (ParseException e) {
@@ -290,7 +289,7 @@ public class Members {
                                     .put(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
                                                     .parse(YamlConfiguration
                                                             .loadConfiguration(new File(
-                                                                    new File(skyblock.getDataFolder().toString()
+                                                                    new File(plugin.getDataFolder().toString()
                                                                             + "/player-data"),
                                                                     displayedMemberList.toString() + ".yml"))
                                                             .getString("Statistics.Island.LastOnline")),
@@ -334,7 +333,7 @@ public class Members {
                             new Placeholder("%island_members",
                                     "" + (islandMembers.size() + islandOperators.size() + 1)),
                             new Placeholder("%island_capacity",
-                                    "" + fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                    "" + fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                             .getFileConfiguration().getInt("Island.Member.Capacity")),
                             new Placeholder("%members", "" + islandMembers.size()),
                             new Placeholder("%operators", "" + islandOperators.size())},
@@ -408,7 +407,7 @@ public class Members {
                         } else {
                             playerName = targetPlayer.getName();
 
-                            playerData = skyblock.getPlayerDataManager().getPlayerData(targetPlayer);
+                            playerData = plugin.getPlayerDataManager().getPlayerData(targetPlayer);
                             playerTexture = playerData.getTexture();
                             islandPlaytime = playerData.getPlaytime();
                             playTimeDurationTime = NumberUtil.getDuration(Integer.valueOf(islandPlaytime));
@@ -579,7 +578,7 @@ public class Members {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Members.Title")));
             nInv.setRows(6);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
         }
     }
 

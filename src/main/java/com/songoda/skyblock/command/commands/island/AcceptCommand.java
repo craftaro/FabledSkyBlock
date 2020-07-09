@@ -32,20 +32,20 @@ public class AcceptCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         PlayerData playerData = playerDataManager.getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
-            InviteManager inviteManager = skyblock.getInviteManager();
+            InviteManager inviteManager = plugin.getInviteManager();
 
             if (inviteManager.hasInvite(player.getUniqueId())) {
                 Invite invite = inviteManager.getInvite(player.getUniqueId());
@@ -99,7 +99,7 @@ public class AcceptCommand extends SubCommand {
                             island.save();
 
                             if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()
-                                    + 1) >= fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                    + 1) >= fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getInt("Island.Member.Capacity")) {
                                 Map<UUID, Invite> invites = inviteManager.getInvites();
 
@@ -123,8 +123,8 @@ public class AcceptCommand extends SubCommand {
                                     }
                                 }
                             }
-
-                            skyblock.getVisitManager().getIsland(invite.getOwnerUUID())
+    
+                            plugin.getVisitManager().getIsland(invite.getOwnerUUID())
                                     .removeVoter(player.getUniqueId());
 
                             for (Player all : Bukkit.getOnlinePlayers()) {

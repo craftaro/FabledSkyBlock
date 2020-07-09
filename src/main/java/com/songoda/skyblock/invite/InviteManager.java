@@ -11,8 +11,8 @@ public class InviteManager {
 
     private Map<UUID, Invite> inviteStorage = new HashMap<>();
 
-    public InviteManager(SkyBlock skyblock) {
-        new InviteTask(this, skyblock).runTaskTimerAsynchronously(skyblock, 0L, 20L);
+    public InviteManager(SkyBlock plugin) {
+        new InviteTask(this, plugin).runTaskTimerAsynchronously(plugin, 0L, 20L);
     }
 
     public Invite createInvite(Player player, Player sender, UUID owner, int time) {

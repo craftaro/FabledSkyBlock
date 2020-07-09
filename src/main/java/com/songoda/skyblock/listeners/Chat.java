@@ -26,28 +26,28 @@ import java.util.UUID;
 
 public class Chat implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Chat(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Chat(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
 
-        PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
             Island island = null;
 
             if (playerData.getOwner() != null) {
-                island = skyblock.getIslandManager().getIsland(player);
+                island = plugin.getIslandManager().getIsland(player);
             }
 
             String messageFormat = event.getFormat();
@@ -66,7 +66,7 @@ public class Chat implements Listener {
             if (playerData.isChat()) {
                 event.setCancelled(true);
 
-                Config language = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+                Config language = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
                 FileConfiguration languageLoad = language.getFileConfiguration();
 
                 String islandRole = "";
@@ -105,7 +105,7 @@ public class Chat implements Listener {
                         }
                     }
 
-                    if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
+                    if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
                         messageManager.sendMessage(Bukkit.getConsoleSender(), islandChatEvent.getFormat().replace("%role", islandRole).replace("%player", player.getName())
                                 .replace("%message", islandChatEvent.getMessage()));
                     }
@@ -116,15 +116,15 @@ public class Chat implements Listener {
     
     @EventHandler(priority = EventPriority.MONITOR,ignoreCancelled = true)
     public void onIslandChat(PlayerIslandChatEvent event) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        FileManager fileManager = plugin.getFileManager();
         
         Island island = event.getIsland().getIsland();
         Player player = event.getPlayer();
     
-        Config language = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config language = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration languageLoad = language.getFileConfiguration();
     
         String islandRole = null;
@@ -164,7 +164,7 @@ public class Chat implements Listener {
             }
         }
     
-        if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
+        if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
             messageManager.sendMessage(Bukkit.getConsoleSender(), event.getFormat().replace("%role", islandRole).replace("%player", player.getName())
                     .replace("%message", event.getMessage()));
         }

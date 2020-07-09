@@ -17,8 +17,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.*;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -42,28 +42,28 @@ import java.util.*;
 
 public class Entity implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
     private Set<UUID> preventFireTicks = new HashSet<>();
 
-    public Entity(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Entity(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onFireWorkBoom(EntityDamageByEntityEvent event) {
         if (event.getDamager().getType() == EntityType.FIREWORK
-                && skyblock.getWorldManager().isIslandWorld(event.getEntity().getWorld()))
+                && plugin.getWorldManager().isIslandWorld(event.getEntity().getWorld()))
             event.setCancelled(true);
     }
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
         if(event.getEntity() instanceof Blaze){
-            WorldManager worldManager = skyblock.getWorldManager();
+            WorldManager worldManager = plugin.getWorldManager();
 
-            Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if(configLoad.getBoolean("Island.Nether.BlazeImmuneToWaterInNether", false) &&
@@ -75,9 +75,9 @@ public class Entity implements Listener {
         } else if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
 
-            if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
+            if (plugin.getWorldManager().isIslandWorld(player.getWorld())) {
                 // Check permissions.
-                skyblock.getPermissionManager().processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
+                plugin.getPermissionManager().processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
             }
 
             // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
@@ -91,16 +91,16 @@ public class Entity implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
             org.bukkit.entity.Entity entity = event.getEntity();
 
-            if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
+            if (plugin.getWorldManager().isIslandWorld(entity.getWorld())) {
 
                 // Check permissions.
-                skyblock.getPermissionManager()
+                plugin.getPermissionManager()
                         .processPermission(event, player, islandManager.getIslandAtLocation(entity.getLocation()));
             }
 
@@ -111,19 +111,19 @@ public class Entity implements Listener {
             Player player = (Player) event.getEntity();
 
             // Check permissions.
-            skyblock.getPermissionManager()
+            plugin.getPermissionManager()
                     .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()), true);
 
         } else if((event.getDamager() instanceof org.bukkit.entity.Projectile
                     && ((Projectile) event.getDamager()).getShooter() instanceof Player)){
             Player player = (Player) ((Projectile) event.getDamager()).getShooter();
-            skyblock.getPermissionManager()
+            plugin.getPermissionManager()
                     .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
         } else { // Make it work with all the entities, not just TNT
             org.bukkit.entity.Entity entity = event.getEntity();
 
             // Check permissions.
-            skyblock.getPermissionManager()
+            plugin.getPermissionManager()
                     .processPermission(event, islandManager.getIslandAtLocation(entity.getLocation()));
         }
 
@@ -147,12 +147,12 @@ public class Entity implements Listener {
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
         Player player = event.getPlayer();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
-            IslandManager islandManager = skyblock.getIslandManager();
+        if (plugin.getWorldManager().isIslandWorld(player.getWorld())) {
+            IslandManager islandManager = plugin.getIslandManager();
             Island island = islandManager.getIslandAtLocation(event.getEntity().getLocation());
 
             // Check permissions.
-            skyblock.getPermissionManager().processPermission(event, player, island);
+            plugin.getPermissionManager().processPermission(event, player, island);
         }
     }
 
@@ -164,14 +164,14 @@ public class Entity implements Listener {
     @EventHandler
     public void onEntityTarget(EntityTargetEvent event) {
         org.bukkit.entity.Entity entity = event.getEntity();
-        WorldManager worldManager = skyblock.getWorldManager();
+        WorldManager worldManager = plugin.getWorldManager();
         if (!worldManager.isIslandWorld(entity.getWorld())) return;
 
         org.bukkit.entity.Entity target = event.getTarget();
         // Somehow the target can be null, thanks Spigot.
         if (target == null) return;
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
         Island entityIsland = islandManager.getIslandAtLocation(entity.getLocation());
         Island targetIsland = islandManager.getIslandAtLocation(target.getLocation());
         // Event not related to Skyblock islands.
@@ -191,11 +191,11 @@ public class Entity implements Listener {
     @EventHandler
     public void onStackableInteract(PlayerArmorStandManipulateEvent event) {
         Player player = event.getPlayer();
-        if (!skyblock.getWorldManager().isIslandWorld(player.getWorld())) return;
-        IslandManager islandManager = skyblock.getIslandManager();
+        if (!plugin.getWorldManager().isIslandWorld(player.getWorld())) return;
+        IslandManager islandManager = plugin.getIslandManager();
 
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(event, player,
+        if (!plugin.getPermissionManager().processPermission(event, player,
                 islandManager.getIslandAtLocation(event.getRightClicked().getLocation())))
             return;
 
@@ -216,11 +216,11 @@ public class Entity implements Listener {
     @EventHandler
     public void onHangingPlace(HangingPlaceEvent event) {
         Player player = event.getPlayer();
-        if (!skyblock.getWorldManager().isIslandWorld(player.getWorld())) return;
-        IslandManager islandManager = skyblock.getIslandManager();
+        if (!plugin.getWorldManager().isIslandWorld(player.getWorld())) return;
+        IslandManager islandManager = plugin.getIslandManager();
 
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, player,
+        plugin.getPermissionManager().processPermission(event, player,
                 islandManager.getIslandAtLocation(event.getEntity().getLocation()));
     }
 
@@ -228,11 +228,11 @@ public class Entity implements Listener {
     public void onHangingBreak(HangingBreakEvent event) {
         Hanging hanging = event.getEntity();
 
-        if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
-        IslandManager islandManager = skyblock.getIslandManager();
+        if (!plugin.getWorldManager().isIslandWorld(hanging.getWorld())) return;
+        IslandManager islandManager = plugin.getIslandManager();
 
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, null,
+        plugin.getPermissionManager().processPermission(event, null,
                 islandManager.getIslandAtLocation(hanging.getLocation()));
     }
 
@@ -240,15 +240,15 @@ public class Entity implements Listener {
     public void onHangingBreak(HangingBreakByEntityEvent event) {
         Hanging hanging = event.getEntity();
 
-        if (!skyblock.getWorldManager().isIslandWorld(hanging.getWorld())) return;
-        IslandManager islandManager = skyblock.getIslandManager();
+        if (!plugin.getWorldManager().isIslandWorld(hanging.getWorld())) return;
+        IslandManager islandManager = plugin.getIslandManager();
 
         Player p = null;
         if(event.getRemover() instanceof Player){
             p = (Player) event.getRemover();
         }
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, p,
+        plugin.getPermissionManager().processPermission(event, p,
                 islandManager.getIslandAtLocation(hanging.getLocation()));
     }
 
@@ -259,11 +259,11 @@ public class Entity implements Listener {
 
         LivingEntity entity = event.getEntity();
 
-        if (!skyblock.getWorldManager().isIslandWorld(entity.getWorld())) return;
-        IslandManager islandManager = skyblock.getIslandManager();
+        if (!plugin.getWorldManager().isIslandWorld(entity.getWorld())) return;
+        IslandManager islandManager = plugin.getIslandManager();
 
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, (Player) event.getOwner(),
+        plugin.getPermissionManager().processPermission(event, (Player) event.getOwner(),
                 islandManager.getIslandAtLocation(entity.getLocation()));
     }
 
@@ -276,16 +276,16 @@ public class Entity implements Listener {
             return;
         }
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
 
         Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
 
-        if (island == null || !skyblock.getWorldManager().isIslandWorld(entity.getWorld())) return;
+        if (island == null || !plugin.getWorldManager().isIslandWorld(entity.getWorld())) return;
 
         if (event.isCancelled()) return;
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
@@ -297,7 +297,7 @@ public class Entity implements Listener {
         if ((LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0, 1, 0))
                 || LocationUtil.isLocationLocation(block.getLocation(),
                 island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0, 1, 0)))
-                && skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                && plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
@@ -329,17 +329,17 @@ public class Entity implements Listener {
         if (entity instanceof FallingBlock) return;
 
         // Check entities interacting with spawn
-        if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world) && skyblock.getFileManager()
-                .getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+        if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world) && plugin.getFileManager()
+                .getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
         }
 
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, null, island);
+        plugin.getPermissionManager().processPermission(event, null, island);
 
 
-        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+        if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Block.Level.Enable"))
             return;
 
@@ -368,24 +368,24 @@ public class Entity implements Listener {
     public void onEntityExplode(EntityExplodeEvent event) {
         org.bukkit.entity.Entity entity = event.getEntity();
 
-        WorldManager worldManager = skyblock.getWorldManager();
-        IslandManager islandManager = skyblock.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
-        if (skyblock.getWorldManager().isIslandWorld(entity.getWorld())) {
+        if (plugin.getWorldManager().isIslandWorld(entity.getWorld())) {
             // Check permissions.
             Island island = islandManager.getIslandAtLocation(entity.getLocation());
-            skyblock.getPermissionManager().processPermission(event, null, island);
+            plugin.getPermissionManager().processPermission(event, null, island);
 
             if (!event.isCancelled()) {
 
-                StackableManager stackableManager = skyblock.getStackableManager();
+                StackableManager stackableManager = plugin.getStackableManager();
 
                 boolean removed;
                 Iterator<org.bukkit.block.Block> it = event.blockList().iterator();
                 while (it.hasNext()){
                     removed = false;
                     org.bukkit.block.Block block = it.next();
-                    if (SkyBlock.getInstance().getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                    if (SkyBlock.getInstance().getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                             .getBoolean("Island.Spawn.Protection")) {
                         IslandWorld world = worldManager.getIslandWorld(event.getEntity().getWorld());
                         if (LocationUtil.isLocationLocation(block.getLocation(),
@@ -405,7 +405,7 @@ public class Entity implements Listener {
 
                             int removedAmount = (int) (Math.random() * Math.min(64, stackable.getSize()-1));
                             stackable.take(removedAmount);
-                            Bukkit.getScheduler().runTask(skyblock, () -> {
+                            Bukkit.getScheduler().runTask(plugin, () -> {
                                 block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5),
                                         new ItemStack(material.getMaterial(), (int) (Math.random() * removedAmount), data));
                             });
@@ -414,15 +414,15 @@ public class Entity implements Listener {
                                 stackableManager.removeStack(stackable);
                             }
 
-                            Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
                             FileConfiguration configLoad = config.getFileConfiguration();
 
                             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
                                 removeBlockFromLevel(island, block);
                             }
 
-                            if(skyblock.getCoreProtectAPI() != null) {
-                                skyblock.getCoreProtectAPI().logRemoval("#" + entity.getType().toString().toLowerCase(), block.getLocation(), material.getMaterial(), null);
+                            if(plugin.getCoreProtectAPI() != null) {
+                                plugin.getCoreProtectAPI().logRemoval("#" + entity.getType().toString().toLowerCase(), block.getLocation(), material.getMaterial(), null);
                             }
 
                             it.remove();
@@ -431,7 +431,7 @@ public class Entity implements Listener {
                             }
                         }
                     }
-                    if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                    if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                             .getBoolean("Island.Block.Level.Enable")) {
                         if(!removed){
                             removeBlockFromLevel(island, block);
@@ -491,13 +491,13 @@ public class Entity implements Listener {
 
         if (livingEntity.hasMetadata("SkyBlock")) return;
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
-        if (skyblock.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
+        if (plugin.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
             Island island = islandManager.getIslandAtLocation(livingEntity.getLocation());
 
             if (island != null) {
-                List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
+                List<Upgrade> upgrades = plugin.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
 
                 if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Drops)) {
                     Set<ItemStack> dontMultiply = new HashSet<>();
@@ -534,11 +534,11 @@ public class Entity implements Listener {
             return;
 
         Player player = (Player) event.getTarget();
-        if (!skyblock.getWorldManager().isIslandWorld(player.getWorld())) return;
-        IslandManager islandManager = skyblock.getIslandManager();
+        if (!plugin.getWorldManager().isIslandWorld(player.getWorld())) return;
+        IslandManager islandManager = plugin.getIslandManager();
 
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, player,
+        plugin.getPermissionManager().processPermission(event, player,
                 islandManager.getIslandAtLocation(event.getEntity().getLocation()));
     }
 
@@ -565,23 +565,23 @@ public class Entity implements Listener {
 
         Location entityLocation = entity.getLocation();
 
-        Island island = skyblock.getIslandManager().getIslandAtLocation(entityLocation);
+        Island island = plugin.getIslandManager().getIslandAtLocation(entityLocation);
 
         if (island == null) return;
 
-        EntityLimitaton limits = skyblock.getLimitationHandler().getInstance(EntityLimitaton.class);
+        EntityLimitaton limits = plugin.getLimitationHandler().getInstance(EntityLimitaton.class);
         EntityType type = entity.getType();
 
         if (limits.isBeingTracked(type)) {
-            FileManager fileManager = skyblock.getFileManager();
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileManager fileManager = plugin.getFileManager();
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             boolean isSplit = event.getSpawnReason().equals(SpawnReason.SLIME_SPLIT);
             boolean splitBypass = configLoad.getBoolean("Island.Challenge.PerIsland", true);
 
             if(!isSplit || !splitBypass){
-                long count = limits.getEntityCount(island, skyblock.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
+                long count = limits.getEntityCount(island, plugin.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
                 if (limits.hasTooMuch(count + 1, type)) {
                     entity.remove();
                     event.setCancelled(true);
@@ -594,13 +594,13 @@ public class Entity implements Listener {
 
         if (!CHECKED_REASONS.contains(spawnReason)) return;
 
-        if (!skyblock.getWorldManager().isIslandWorld(entity.getWorld())) return;
-        if (skyblock.getPermissionManager().hasPermission(null, island, "NaturalMobSpawning")) return;
+        if (!plugin.getWorldManager().isIslandWorld(entity.getWorld())) return;
+        if (plugin.getPermissionManager().hasPermission(null, island, "NaturalMobSpawning")) return;
         if (spawnReason != SpawnReason.JOCKEY && spawnReason != SpawnReason.MOUNT) {
             entity.remove(); // Older versions ignore the event being cancelled, so this fixes that issue.
             return;
         }
-        Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             if (NMSUtil.getVersionNumber() > 10) { // getPassengers() was added in 1.11
                 for (org.bukkit.entity.Entity passenger : entity.getPassengers())
                     passenger.remove();
@@ -615,16 +615,16 @@ public class Entity implements Listener {
     @EventHandler
     public void onDamageVehicle(VehicleDamageEvent event) {
         if (!(event.getAttacker() instanceof Player)) {
-            IslandManager islandManager = skyblock.getIslandManager();
-            skyblock.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
+            IslandManager islandManager = plugin.getIslandManager();
+            plugin.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
         }
     }
 
     @EventHandler
     public void onDestroyVehicle(VehicleDestroyEvent event) {
         if (!(event.getAttacker() instanceof Player)) {
-            IslandManager islandManager = skyblock.getIslandManager();
-            skyblock.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
+            IslandManager islandManager = plugin.getIslandManager();
+            plugin.getPermissionManager().processPermission(event, null, islandManager.getIslandAtLocation(event.getVehicle().getLocation()));
         }
     }
 

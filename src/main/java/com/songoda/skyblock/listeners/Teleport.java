@@ -35,29 +35,29 @@ import java.util.UUID;
 
 public class Teleport implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Teleport(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Teleport(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        WorldManager worldManager = skyblock.getWorldManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if(worldManager.isIslandWorld(event.getFrom().getWorld())
                  || (event.getTo() != null && worldManager.isIslandWorld(event.getTo().getWorld()))) {
-            Bukkit.getScheduler().runTaskLater(skyblock, () -> islandManager.updateFlight(player), 1L);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> islandManager.updateFlight(player), 1L);
         }
         islandManager.loadPlayer(player);
 
@@ -87,7 +87,7 @@ public class Teleport implements Listener {
             com.songoda.skyblock.island.Island island = islandManager.getIslandAtLocation(event.getTo());
 
             // Check permissions.
-            if (!skyblock.getPermissionManager().processPermission(event, player, island))
+            if (!plugin.getPermissionManager().processPermission(event, player, island))
                 return;
         }
 
@@ -108,7 +108,7 @@ public class Teleport implements Listener {
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
-                        } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
+                        } else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
                             event.setCancelled(true);
 
                             messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Teleport.Message"));
@@ -136,7 +136,7 @@ public class Teleport implements Listener {
 
                 if (worldManager.getIslandWorld(event.getTo().getWorld()) == IslandWorld.Normal) {
                     if (!island.isWeatherSynchronized()) {
-                        player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+                        player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                         player.setPlayerWeather(island.getWeather());
                     }
                 }
@@ -187,7 +187,7 @@ public class Teleport implements Listener {
 
     @EventHandler
     public void onEntityTeleport(EntityPortalEvent e) {
-        WorldManager worldManager = skyblock.getWorldManager();
+        WorldManager worldManager = plugin.getWorldManager();
 
         // Do not handle player
         if (e.getEntityType() == EntityType.PLAYER)

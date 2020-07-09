@@ -9,7 +9,6 @@ import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
-
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,12 +21,12 @@ public class ValueCommand extends SubCommand {
     @SuppressWarnings("deprecation")
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        IslandLevelManager levellingManager = skyblock.getLevellingManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        IslandLevelManager levellingManager = plugin.getLevellingManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (player.getItemInHand() == null) {
@@ -38,7 +37,7 @@ public class ValueCommand extends SubCommand {
 
             if (materials != null && levellingManager.hasWorth(materials)) {
                 long worth = levellingManager.getWorth(materials);
-                double level = (double) worth / (double) fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
+                double level = (double) worth / (double) fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Value.Value.Message").replace("%material", WordUtils.capitalizeFully(materials.name().toLowerCase().replace("_", " ")))

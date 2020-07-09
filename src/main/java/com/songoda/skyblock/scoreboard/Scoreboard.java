@@ -1,16 +1,5 @@
 package com.songoda.skyblock.scoreboard;
 
-import java.util.*;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Team;
-
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
@@ -20,6 +9,18 @@ import com.songoda.skyblock.localization.type.Localization;
 import com.songoda.skyblock.placeholder.PlaceholderManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Team;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class Scoreboard {
 
@@ -167,9 +168,9 @@ public class Scoreboard {
     }
 
     private String replaceDisplayLine(String displayLine) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
         displayLine = displayLine.replace("%players_online", String.valueOf(Bukkit.getServer().getOnlinePlayers().size()));
         displayLine = displayLine.replace("%players_max", String.valueOf(Bukkit.getServer().getMaxPlayers()));
@@ -187,7 +188,7 @@ public class Scoreboard {
                 String islandRole = "";
 
                 
-                Localization<IslandRole> locale = skyblock.getLocalizationManager().getLocalizationFor(IslandRole.class);
+                Localization<IslandRole> locale = plugin.getLocalizationManager().getLocalizationFor(IslandRole.class);
                 
                 if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
                     islandRole = locale.getLocale(IslandRole.Owner);
@@ -206,7 +207,7 @@ public class Scoreboard {
                     .replace("%island_size", ChatColor.RED + "0").replace("%island_radius", ChatColor.RED + "0");
         }
 
-        PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
+        PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
 
         if (placeholderManager.isPlaceholderAPIEnabled()) {
             displayLine = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, displayLine);

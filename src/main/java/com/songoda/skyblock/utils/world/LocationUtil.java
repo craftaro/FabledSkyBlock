@@ -14,7 +14,10 @@ import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.world.WorldManager;
 import io.papermc.lib.PaperLib;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -26,7 +29,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public final class LocationUtil {
@@ -276,13 +278,13 @@ public final class LocationUtil {
     }
 
     public static void teleportPlayerToSpawn(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
-        FileManager fileManager = skyblock.getFileManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
 
         if (config.getFileConfiguration().getString("Location.Spawn") == null) {
             Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");
@@ -303,7 +305,7 @@ public final class LocationUtil {
                 }
             }
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> {
                 PaperLib.teleportAsync(player, spawnLocation);
                 player.setFallDistance(0.0F);
             });
@@ -311,11 +313,11 @@ public final class LocationUtil {
     }
 
     public static Location getSpawnLocation() {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
 
         if (config.getFileConfiguration().getString("Location.Spawn") != null) {
             Location location = fileManager.getLocation(config, "Location.Spawn", true);

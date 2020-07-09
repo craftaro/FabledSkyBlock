@@ -4,11 +4,7 @@ import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
-import io.papermc.lib.PaperLib;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -29,12 +25,11 @@ public class VoidGenerator extends ChunkGenerator {
     public @Nonnull ChunkData generateChunkData(@Nonnull World world, @Nonnull Random random, int chunkX, int chunkZ, @Nonnull BiomeGrid biomeGrid) {
         final ChunkData chunkData = createChunkData(world);
 
-        final SkyBlock skyblock = SkyBlock.getInstance();
-        final Configuration configLoad = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
+        final SkyBlock plugin = SkyBlock.getInstance();
+        final Configuration configLoad = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
         
-        Biome biome = CompatibleBiome.valueOf(configLoad // 2D for the moment
-                .getString("Island.Biome.Default.Type").toUpperCase()).getBiome();
+        Biome biome = CompatibleBiome.valueOf(configLoad.getString("Island.Biome.Default.Type").toUpperCase()).getBiome();
         
         if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
             setChunkBiome3D(biome, biomeGrid, world);

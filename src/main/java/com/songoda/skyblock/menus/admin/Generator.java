@@ -48,14 +48,14 @@ public class Generator implements Listener {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        GeneratorManager generatorManager = skyblock.getGeneratorManager();
-        FileManager fileManager = skyblock.getFileManager();
+        GeneratorManager generatorManager = plugin.getGeneratorManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         nInventoryUtil nInv = new nInventoryUtil(player, null);
@@ -173,10 +173,9 @@ public class Generator implements Listener {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Generator.Title")));
         nInv.setRows(6);
 
-        Bukkit.getServer().getScheduler().runTask(skyblock, nInv::open);
+        Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
     }
-
-    @SuppressWarnings("deprecation")
+    
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
@@ -184,14 +183,14 @@ public class Generator implements Listener {
 
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
 
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        GeneratorManager generatorManager = skyblock.getGeneratorManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        GeneratorManager generatorManager = plugin.getGeneratorManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         String inventoryName = "";
@@ -209,7 +208,7 @@ public class Generator implements Listener {
             return;
         event.setCancelled(true);
 
-        PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
         if (!(player.hasPermission("fabledskyblock.admin.generator") || player.hasPermission("fabledskyblock.admin.*")
                 || player.hasPermission("fabledskyblock.*"))) {
@@ -253,7 +252,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
 
                 return;
             }
@@ -286,9 +285,9 @@ public class Generator implements Listener {
                                         .replace("%generator", event1.getName()));
                         soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+                        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                             Config config14 = fileManager
-                                    .getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
+                                    .getConfig(new File(plugin.getDataFolder(), "generators.yml"));
                             FileConfiguration configLoad14 = config14.getFileConfiguration();
 
                             configLoad14.set("Generators." + event1.getName() + ".Name", event1.getName());
@@ -302,7 +301,7 @@ public class Generator implements Listener {
 
                         player.closeInventory();
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     }
 
                     event1.setWillClose(true);
@@ -334,7 +333,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
             } else {
                 String name = ((Generator.Viewer) playerData.getViewer()).getName();
 
@@ -349,9 +348,9 @@ public class Generator implements Listener {
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                    Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                         Config config1 = fileManager
-                                .getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
+                                .getConfig(new File(plugin.getDataFolder(), "generators.yml"));
                         FileConfiguration configLoad1 = config1.getFileConfiguration();
 
                         configLoad1.set("Generators." + generator.getName() + ".Permission",
@@ -366,7 +365,7 @@ public class Generator implements Listener {
 
                     player.closeInventory();
 
-                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 } else {
                     playerData.setViewer(null);
 
@@ -376,7 +375,7 @@ public class Generator implements Listener {
 
                     player.closeInventory();
 
-                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
             }
 
@@ -400,7 +399,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
 
                 return;
             } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
@@ -410,7 +409,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
 
                 return;
             }
@@ -490,9 +489,9 @@ public class Generator implements Listener {
                                                         1.0F, 1.0F);
 
                                                 Bukkit.getServer().getScheduler()
-                                                        .runTaskAsynchronously(skyblock, () -> {
+                                                        .runTaskAsynchronously(plugin, () -> {
                                                             Config config12 = fileManager.getConfig(
-                                                                    new File(skyblock.getDataFolder(),
+                                                                    new File(plugin.getDataFolder(),
                                                                             "generators.yml"));
                                                             FileConfiguration configLoad12 = config12
                                                                     .getFileConfiguration();
@@ -513,7 +512,7 @@ public class Generator implements Listener {
                                                 player.closeInventory();
 
                                                 Bukkit.getServer().getScheduler()
-                                                        .runTaskLater(skyblock, () -> open(player), 1L);
+                                                        .runTaskLater(plugin, () -> open(player), 1L);
                                             }
                                         }
 
@@ -536,10 +535,10 @@ public class Generator implements Listener {
                             } else if (event.getClick() == ClickType.RIGHT) {
                                 generator.getGeneratorMaterials().remove(generatorMaterialList);
 
-                                Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
                                         () -> {
                                             Config config15 = fileManager.getConfig(
-                                                    new File(skyblock.getDataFolder(), "generators.yml"));
+                                                    new File(plugin.getDataFolder(), "generators.yml"));
                                             FileConfiguration configLoad15 = config15.getFileConfiguration();
 
                                             configLoad15.set(
@@ -557,7 +556,7 @@ public class Generator implements Listener {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                                 player.closeInventory();
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
                             }
 
@@ -593,9 +592,9 @@ public class Generator implements Listener {
                                     .replace("%generator", generator.getName()));
                     soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                    Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                         Config config16 = fileManager
-                                .getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
+                                .getConfig(new File(plugin.getDataFolder(), "generators.yml"));
                         FileConfiguration configLoad16 = config16.getFileConfiguration();
 
                         configLoad16.set("Generators." + generator.getName() + ".Materials."
@@ -610,7 +609,7 @@ public class Generator implements Listener {
 
                     player.closeInventory();
 
-                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
 
                 return;
@@ -623,7 +622,7 @@ public class Generator implements Listener {
 
                 player.closeInventory();
 
-                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
             }
 
             return;
@@ -640,7 +639,7 @@ public class Generator implements Listener {
 
                         player.closeInventory();
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     } else if (event.getClick() == ClickType.RIGHT) {
                         generatorManager.removeGenerator(generatorList);
 
@@ -649,9 +648,9 @@ public class Generator implements Listener {
                                         .replace("%generator", generatorList.getName()));
                         soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+                        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                             Config config13 = fileManager
-                                    .getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
+                                    .getConfig(new File(plugin.getDataFolder(), "generators.yml"));
                             FileConfiguration configLoad13 = config13.getFileConfiguration();
 
                             configLoad13.set("Generators." + generatorList.getName(), null);
@@ -665,7 +664,7 @@ public class Generator implements Listener {
 
                         player.closeInventory();
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     }
 
                     return;

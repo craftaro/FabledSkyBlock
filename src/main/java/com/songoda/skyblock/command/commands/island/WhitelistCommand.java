@@ -6,11 +6,9 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -23,15 +21,15 @@ public class WhitelistCommand extends SubCommand {
     
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        FileManager fileManager = skyblock.getFileManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        FileManager fileManager = plugin.getFileManager();
+        SoundManager soundManager = plugin.getSoundManager();
     
-        FileManager.Config language = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileManager.Config language = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration languageLoad = language.getFileConfiguration();
         
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
         
         Island island = islandManager.getIsland(player);
@@ -41,7 +39,7 @@ public class WhitelistCommand extends SubCommand {
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                 || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && skyblock.getPermissionManager().hasPermission(island, "Visitor", IslandRole.Operator))) {
+                && plugin.getPermissionManager().hasPermission(island, "Visitor", IslandRole.Operator))) {
             if(args.length == 1) {
                 if(args[0].equalsIgnoreCase("on")){
                     messageManager.sendMessage(player, languageLoad.getString("Command.Island.Whitelist.Enabled.Message"));

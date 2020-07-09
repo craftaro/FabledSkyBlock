@@ -19,20 +19,20 @@ import java.io.File;
 
 public class InviteTask extends BukkitRunnable {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private final InviteManager inviteManager;
 
-    protected InviteTask(InviteManager inviteManager, SkyBlock skyblock) {
+    protected InviteTask(InviteManager inviteManager, SkyBlock plugin) {
         this.inviteManager = inviteManager;
-        this.skyblock = skyblock;
+        this.plugin = plugin;
     }
 
     @Override
     public void run() {
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (Player all : Bukkit.getOnlinePlayers()) {

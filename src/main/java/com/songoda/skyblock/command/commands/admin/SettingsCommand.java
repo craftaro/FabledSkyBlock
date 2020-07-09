@@ -11,9 +11,9 @@ public class SettingsCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        SoundManager soundManager = skyblock.getSoundManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        skyblock.getGuiManager().showGUI(player, new GuiPermissionsSelector(skyblock, null, null));
+        plugin.getGuiManager().showGUI(player, new GuiPermissionsSelector(plugin, null, null));
         soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
     }
 

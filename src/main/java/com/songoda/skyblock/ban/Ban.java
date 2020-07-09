@@ -32,12 +32,12 @@ public class Ban {
     }
 
     public Set<UUID> getBans() {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
         Set<UUID> islandBans = new HashSet<>();
 
-        for (String islandBanList : skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
+        for (String islandBanList : plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration().getStringList("Bans")) {
 
@@ -52,18 +52,18 @@ public class Ban {
     }
 
     public void addBan(UUID issuer, UUID banned) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
         IslandBanEvent islandBanEvent = new IslandBanEvent(
-                skyblock.getIslandManager().getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID))
+                plugin.getIslandManager().getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID))
                         .getAPIWrapper(),
                 Bukkit.getServer().getOfflinePlayer(issuer), Bukkit.getServer().getOfflinePlayer(banned));
-        Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> Bukkit.getServer().getPluginManager().callEvent(islandBanEvent));
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(islandBanEvent));
 
         if (!islandBanEvent.isCancelled()) {
             List<String> islandBans = new ArrayList<>();
-            FileConfiguration configLoad = skyblock.getFileManager()
-                    .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
+            FileConfiguration configLoad = plugin.getFileManager()
+                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
                             islandOwnerUUID.toString() + ".yml"))
                     .getFileConfiguration();
 
@@ -77,11 +77,11 @@ public class Ban {
     }
 
     public void removeBan(UUID uuid) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
         List<String> islandBans = new ArrayList<>();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
@@ -94,16 +94,16 @@ public class Ban {
         configLoad.set("Bans", islandBans);
 
         Bukkit.getServer().getPluginManager()
-                .callEvent(new IslandUnbanEvent(skyblock.getIslandManager()
+                .callEvent(new IslandUnbanEvent(plugin.getIslandManager()
                         .getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).getAPIWrapper(),
                         Bukkit.getServer().getOfflinePlayer(uuid)));
     }
 
     public void save() {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        Config config = skyblock.getFileManager().getConfig(new File(
-                new File(skyblock.getDataFolder().toString() + "/ban-data"), islandOwnerUUID.toString() + ".yml"));
+        Config config = plugin.getFileManager().getConfig(new File(
+                new File(plugin.getDataFolder().toString() + "/ban-data"), islandOwnerUUID.toString() + ".yml"));
 
         try {
             config.getFileConfiguration().save(config.getFile());

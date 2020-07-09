@@ -5,19 +5,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class LeaderboardTask extends BukkitRunnable {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public LeaderboardTask(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public LeaderboardTask(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @Override
     public void run() {
-        LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+        LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
         leaderboardManager.clearLeaderboard();
         leaderboardManager.resetLeaderboard();
         leaderboardManager.setupLeaderHeads();
-
-        skyblock.getHologramTask().updateHologram();
+    
+        plugin.getHologramTask().updateHologram();
     }
 }

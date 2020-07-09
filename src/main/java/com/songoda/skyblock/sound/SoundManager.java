@@ -12,15 +12,15 @@ import java.io.File;
 
 public class SoundManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public SoundManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public SoundManager(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     public void playSound(CommandSender sender, Sound sound, float volume, float pitch) {
         if (sender instanceof Player) {
-            Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getBoolean("Sound.Enable")) {
@@ -31,7 +31,7 @@ public class SoundManager {
     }
 
     public void playSound(Location location, Sound sound, float volume, float pitch) {
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Sound.Enable")) {

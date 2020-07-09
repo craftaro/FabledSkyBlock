@@ -11,7 +11,7 @@ public class LevelCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        SoundManager soundManager = skyblock.getSoundManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
         Levelling.getInstance().open(player);
         soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);

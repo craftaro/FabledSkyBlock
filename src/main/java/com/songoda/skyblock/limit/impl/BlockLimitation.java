@@ -6,7 +6,6 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.limit.EnumLimitation;
 import com.songoda.skyblock.utils.player.PlayerUtil;
-import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

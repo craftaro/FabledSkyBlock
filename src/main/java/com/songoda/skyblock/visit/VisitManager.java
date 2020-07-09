@@ -18,11 +18,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class VisitManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private HashMap<UUID, Visit> visitStorage = new HashMap<>();
 
-    public VisitManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public VisitManager(SkyBlock plugin) {
+        this.plugin = plugin;
 
         loadIslands();
     }
@@ -36,12 +36,12 @@ public class VisitManager {
     }
 
     public void loadIslands() {
-        WorldManager worldManager = skyblock.getWorldManager();
-        FileManager fileManager = skyblock.getFileManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Visitor.Unload")) {
-            File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
+            File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
 
             if (!configFile.exists()) return;
 
@@ -106,7 +106,7 @@ public class VisitManager {
                                 configLoad.getStringList("Members").size()
                                         + configLoad.getStringList("Operators").size() + 1,
                                 configLoad.getDouble("Bank.Balance", 0),
-                                getIslandSafeLevel(islandOwnerUUID), new IslandLevel(islandOwnerUUID, skyblock),
+                                getIslandSafeLevel(islandOwnerUUID), new IslandLevel(islandOwnerUUID, plugin),
                                 islandSignature,
                                 status);
                     } catch (Exception e) {
@@ -123,13 +123,13 @@ public class VisitManager {
         visit.getLevel().setOwnerUUID(uuid2);
         visit.save();
 
-        File oldVisitDataFile = new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        File oldVisitDataFile = new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                 uuid1.toString() + ".yml");
-        File newVisitDataFile = new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        File newVisitDataFile = new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                 uuid2.toString() + ".yml");
 
-        skyblock.getFileManager().unloadConfig(oldVisitDataFile);
-        skyblock.getFileManager().unloadConfig(newVisitDataFile);
+        plugin.getFileManager().unloadConfig(oldVisitDataFile);
+        plugin.getFileManager().unloadConfig(newVisitDataFile);
 
         oldVisitDataFile.renameTo(newVisitDataFile);
 
@@ -138,14 +138,14 @@ public class VisitManager {
     }
 
     public void removeVisitors(Island island, VisitManager.Removal removal) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        FileManager.Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        for (UUID visitorList : skyblock.getIslandManager().getVisitorsAtIsland(island)) {
+        for (UUID visitorList : plugin.getIslandManager().getVisitorsAtIsland(island)) {
             Player targetPlayer = Bukkit.getServer().getPlayer(visitorList);
 
             LocationUtil.teleportPlayerToSpawn(targetPlayer);
@@ -157,13 +157,13 @@ public class VisitManager {
     }
 
     public int getIslandSafeLevel(UUID islandOwnerUUID) {
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
         FileManager.Config settingDataConfig = new FileManager.Config(fileManager,
-                new File(skyblock.getDataFolder().toString() + "/setting-data", islandOwnerUUID.toString() + ".yml"));
+                new File(plugin.getDataFolder().toString() + "/setting-data", islandOwnerUUID.toString() + ".yml"));
         FileConfiguration settingDataConfigLoad = settingDataConfig.getFileConfiguration();
 
-        FileManager.Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileManager.Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();
 
         int safeLevel = 0;
@@ -216,7 +216,7 @@ public class VisitManager {
 
     public void createIsland(UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize, int islandMembers,
                              double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, IslandStatus status) {
-        visitStorage.put(islandOwnerUUID, new Visit(skyblock, islandOwnerUUID, islandLocations, islandSize,
+        visitStorage.put(islandOwnerUUID, new Visit(plugin, islandOwnerUUID, islandLocations, islandSize,
                 islandMembers, islandBankBalance, safeLevel, islandLevel, islandSignature, status));
     }
 
@@ -232,8 +232,8 @@ public class VisitManager {
 
     public void unloadIsland(UUID islandOwnerUUID) {
         if (hasIsland(islandOwnerUUID)) {
-            skyblock.getFileManager()
-                    .unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+            plugin.getFileManager()
+                    .unloadConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                             islandOwnerUUID.toString() + ".yml"));
             visitStorage.remove(islandOwnerUUID);
         }
@@ -241,8 +241,8 @@ public class VisitManager {
 
     public void deleteIsland(UUID islandOwnerUUID) {
         if (hasIsland(islandOwnerUUID)) {
-            skyblock.getFileManager()
-                    .deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+            plugin.getFileManager()
+                    .deleteConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                             islandOwnerUUID.toString() + ".yml"));
             visitStorage.remove(islandOwnerUUID);
         }

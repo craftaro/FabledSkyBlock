@@ -14,8 +14,6 @@ import com.songoda.skyblock.visit.VisitManager;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.data.Waterlogged;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -27,13 +25,13 @@ public class TeleportCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        VisitManager visitManager = skyblock.getVisitManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        VisitManager visitManager = plugin.getVisitManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -115,10 +113,10 @@ public class TeleportCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Yourself.Message"));
             soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> {
                 Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
                 PaperLib.getChunkAtAsync(loc).thenRun((() -> {
-                    LocationUtil.removeWaterFromLoc(skyblock, loc);
+                    LocationUtil.removeWaterFromLoc(plugin, loc);
                     PaperLib.teleportAsync(player, loc);
                 }));
 

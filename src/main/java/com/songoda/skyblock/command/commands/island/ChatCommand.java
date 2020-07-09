@@ -23,12 +23,12 @@ public class ChatCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -65,11 +65,11 @@ public class ChatCommand extends SubCommand {
         } else {
             if (playerDataManager.hasPlayerData(player)) {
                 if (playerData.getOwner() != null) {
-                    island = skyblock.getIslandManager().getIsland(player);
+                    island = plugin.getIslandManager().getIsland(player);
                 }
 
                 Island finalIsland = island;
-                Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                     PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, finalIsland.getAPIWrapper(),
                             String.join(" ", args), configLoad.getString("Island.Chat.Format.Message"));
                     Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);

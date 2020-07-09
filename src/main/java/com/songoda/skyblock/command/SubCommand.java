@@ -10,12 +10,12 @@ import java.io.File;
 
 public abstract class SubCommand {
 
-    protected final SkyBlock skyblock;
+    protected final SkyBlock plugin;
     protected final String info;
 
     public SubCommand() {
-        this.skyblock = SkyBlock.getInstance();
-        this.info = ChatColor.translateAlternateColorCodes('&', this.skyblock.getFileManager().getConfig(new File(this.skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString(this.getInfoMessagePath()));
+        this.plugin = SkyBlock.getInstance();
+        this.info = ChatColor.translateAlternateColorCodes('&', this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString(this.getInfoMessagePath()));
     }
 
     public abstract void onCommandByPlayer(Player player, String[] args);

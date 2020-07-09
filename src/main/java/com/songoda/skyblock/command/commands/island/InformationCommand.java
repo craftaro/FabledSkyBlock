@@ -22,13 +22,13 @@ public class InformationCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             UUID islandOwnerUUID = null;
@@ -57,7 +57,7 @@ public class InformationCommand extends SubCommand {
                 return;
             }
 
-            PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+            PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
             if (islandOwnerUUID == null) {
                 if (islandManager.getIsland(player) == null) {

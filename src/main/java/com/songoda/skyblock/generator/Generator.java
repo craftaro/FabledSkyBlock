@@ -3,7 +3,6 @@ package com.songoda.skyblock.generator;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.island.IslandWorld;
 
-
 import java.util.List;
 
 public class Generator {

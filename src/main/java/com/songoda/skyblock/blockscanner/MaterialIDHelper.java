@@ -1,11 +1,10 @@
 package com.songoda.skyblock.blockscanner;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Material;
 
-import com.songoda.skyblock.utils.version.NMSUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public final class MaterialIDHelper {

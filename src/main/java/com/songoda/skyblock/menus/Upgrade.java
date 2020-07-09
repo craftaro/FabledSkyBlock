@@ -17,7 +17,6 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,16 +47,16 @@ public class Upgrade {
     }
     
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        UpgradeManager upgradeManager = skyblock.getUpgradeManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        UpgradeManager upgradeManager = plugin.getUpgradeManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+        FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                 .getFileConfiguration();
 
         if (!EconomyManager.isEnabled()) {
@@ -108,7 +107,7 @@ public class Upgrade {
 
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
                             } else {
                                 List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
@@ -127,7 +126,7 @@ public class Upgrade {
                                         island.setUpgrade(player,
                                                 com.songoda.skyblock.upgrade.Upgrade.Type.Speed, true);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                                 () -> open(player), 1L);
                                     } else {
                                         messageManager.sendMessage(player,
@@ -163,7 +162,7 @@ public class Upgrade {
 
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
                             } else {
                                 List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
@@ -182,7 +181,7 @@ public class Upgrade {
                                         island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Jump,
                                                 true);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                                 () -> open(player), 1L);
                                     } else {
                                         messageManager.sendMessage(player,
@@ -214,7 +213,7 @@ public class Upgrade {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else {
                             List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
                                     .getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Crop);
@@ -232,7 +231,7 @@ public class Upgrade {
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Crop,
                                             true);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> open(player), 1L);
                                 } else {
                                     messageManager.sendMessage(player,
@@ -265,7 +264,7 @@ public class Upgrade {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else {
                             List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
                                     .getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Fly);
@@ -285,7 +284,7 @@ public class Upgrade {
 
                                     islandManager.updateFlightAtIsland(island);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> open(player), 1L);
                                 } else {
                                     messageManager.sendMessage(player,
@@ -317,7 +316,7 @@ public class Upgrade {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else {
                             List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
                                     .getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Drops);
@@ -335,7 +334,7 @@ public class Upgrade {
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Drops,
                                             true);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> open(player), 1L);
                                 } else {
                                     messageManager.sendMessage(player,
@@ -383,7 +382,7 @@ public class Upgrade {
                                                     island.getAPIWrapper(), player, APIUtil.fromImplementation(
                                                     com.songoda.skyblock.upgrade.Upgrade.Type.Members)));
 
-                                            Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                            Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                                     () -> open(player), 1L);
                                         } else {
                                             messageManager.sendMessage(player,
@@ -437,7 +436,7 @@ public class Upgrade {
                                                     island.getAPIWrapper(), player, APIUtil.fromImplementation(
                                                     com.songoda.skyblock.upgrade.Upgrade.Type.Size)));
 
-                                            Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                            Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                                     () -> open(player), 1L);
                                         } else {
                                             messageManager.sendMessage(player,
@@ -475,7 +474,7 @@ public class Upgrade {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else {
                             List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
                                     .getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner);
@@ -493,7 +492,7 @@ public class Upgrade {
                                     island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner,
                                             true);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> open(player), 1L);
                                 } else {
                                     messageManager.sendMessage(player,
@@ -909,9 +908,9 @@ public class Upgrade {
     }
 
     private String getStatus(Island island, com.songoda.skyblock.upgrade.Upgrade.Type type) {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+        SkyBlock plugin = SkyBlock.getInstance();
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
         String upgradeStatus;
 
         if (island.isUpgrade(type)) {

@@ -1,12 +1,11 @@
 package com.songoda.skyblock.challenge.player;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.challenge.challenge.Challenge;
+import com.songoda.skyblock.challenge.challenge.Challenge.Type;
+import com.songoda.skyblock.challenge.challenge.ChallengeCategory;
+import com.songoda.skyblock.challenge.challenge.Peer;
+import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,26 +13,26 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.challenge.challenge.Challenge;
-import com.songoda.skyblock.challenge.challenge.Challenge.Type;
-import com.songoda.skyblock.challenge.challenge.ChallengeCategory;
-import com.songoda.skyblock.challenge.challenge.Peer;
-import com.songoda.skyblock.config.FileManager.Config;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class PlayerManager {
-	private SkyBlock skyblock;
+	private SkyBlock plugin;
 	private HashMap<UUID, HashMap<Challenge, Integer>> islands;
 	private File playersDirectory;
 
-	public PlayerManager(SkyBlock skyblock) {
-		this.skyblock = skyblock;
+	public PlayerManager(SkyBlock plugin) {
+		this.plugin = plugin;
 		islands = new HashMap<>();
-		playersDirectory = new File(skyblock.getDataFolder(), "challenge-data");
+		playersDirectory = new File(plugin.getDataFolder(), "challenge-data");
 		if (!playersDirectory.exists())
 			playersDirectory.mkdirs();
 
-		Bukkit.getScheduler().runTask(skyblock, () -> {
+		Bukkit.getScheduler().runTask(plugin, () -> {
 			for(Player p : Bukkit.getServer().getOnlinePlayers()){
 				loadPlayer(p.getUniqueId());
 			}
@@ -41,9 +40,9 @@ public class PlayerManager {
 	}
 
 	public HashMap<Challenge, Integer> getPlayer(UUID uuid) {
-		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
-			Island is = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
 				uuid = is.getOwnerUUID();
 			}
@@ -58,14 +57,14 @@ public class PlayerManager {
 	 *                 The uuid of specific player
 	 */
 	public void loadPlayer(UUID uuid) {
-		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
-			Island is = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
 				uuid = is.getOwnerUUID();
 			}
 		}
-		Config config = skyblock.getFileManager().getConfig(new File(playersDirectory,
+		Config config = plugin.getFileManager().getConfig(new File(playersDirectory,
 				uuid.toString() + ".yml"));
 		FileConfiguration fileConfig = config.getFileConfiguration();
 		HashMap<Challenge, Integer> challenges = new HashMap<>();
@@ -73,7 +72,7 @@ public class PlayerManager {
 		Set<String> strs = (section != null) ? section.getKeys(false) : new HashSet<>();
 		for (String k : strs) {
 			int id = fileConfig.getInt("challenges." + k + ".id");
-			ChallengeCategory cc = skyblock.getFabledChallenge().getChallengeManager().getChallenge(id);
+			ChallengeCategory cc = plugin.getFabledChallenge().getChallengeManager().getChallenge(id);
 			// WTF
 			if (cc == null)
 				continue;
@@ -99,15 +98,15 @@ public class PlayerManager {
 	 *                 The uuid of specific player
 	 */
 	public void unloadPlayer(UUID uuid) {
-		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
-			Island is = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
 				uuid = is.getOwnerUUID();
 			}
 		}
 		islands.remove(uuid);
-		skyblock.getFileManager().unloadConfig(new File(playersDirectory,
+		plugin.getFileManager().unloadConfig(new File(playersDirectory,
 				uuid.toString() + ".yml"));
 
 	}
@@ -125,9 +124,9 @@ public class PlayerManager {
 		if (c == null)
 			return false;
 		UUID uuid = p.getUniqueId();
-		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
-			Island is = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
 				uuid = is.getOwnerUUID();
 			}
@@ -161,9 +160,9 @@ public class PlayerManager {
 		if (!canDoChallenge(p, c))
 			return false;
 		UUID uuid = p.getUniqueId();
-		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
-			Island is = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
 				uuid = is.getOwnerUUID();
 			}
@@ -192,14 +191,14 @@ public class PlayerManager {
 	}
 
 	public void addChallenge(UUID uuid, Challenge c) {
-		if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
-			Island is = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
 				uuid = is.getOwnerUUID();
 			}
 		}
-		Config config = skyblock.getFileManager().getConfig(new File(playersDirectory,
+		Config config = plugin.getFileManager().getConfig(new File(playersDirectory,
 				uuid.toString() + ".yml"));
 		FileConfiguration fileConfig = config.getFileConfiguration();
 		int ccId = c.getCategory().getId();
@@ -231,16 +230,16 @@ public class PlayerManager {
 		if (challenges != null) {
 			return challenges.getOrDefault(c, 0);
 		} else {
-			if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+			if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
 					.getBoolean("Island.Challenge.PerIsland", true)) {
-				Island is = skyblock.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
+				Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 				if(is != null){
 					uuid = is.getOwnerUUID();
 				}
 			}
 
 			// Not connected, check in file
-			Config config = skyblock.getFileManager().getConfig(new File(playersDirectory,
+			Config config = plugin.getFileManager().getConfig(new File(playersDirectory,
 					uuid.toString() + ".yml"));
 			FileConfiguration fileConfig = config.getFileConfiguration();
 			int ccId = c.getCategory().getId();

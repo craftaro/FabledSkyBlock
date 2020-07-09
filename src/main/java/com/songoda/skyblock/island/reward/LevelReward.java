@@ -19,10 +19,10 @@ public class LevelReward {
     public LevelReward() {
     }
 
-    public void give(Player player, SkyBlock skyblock, long level) {
+    public void give(Player player, SkyBlock plugin, long level) {
 
         if (islandBalance > 0) {
-            Island island = skyblock.getIslandManager().getIsland(player);
+            Island island = plugin.getIslandManager().getIsland(player);
             island.addToBank(islandBalance);
         }
 
@@ -34,8 +34,8 @@ public class LevelReward {
                 cmd = cmd.replace("%level%", String.valueOf(level))
                         .replace("%player%", player.getName())
                         .trim();
-
-                skyblock.getServer().dispatchCommand(skyblock.getConsole(), cmd);
+    
+                plugin.getServer().dispatchCommand(plugin.getConsole(), cmd);
             }
         }
     }

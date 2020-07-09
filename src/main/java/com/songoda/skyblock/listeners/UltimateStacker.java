@@ -5,7 +5,6 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
-
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.world.WorldManager;
 import com.songoda.ultimatestacker.events.SpawnerBreakEvent;
@@ -20,24 +19,24 @@ import java.io.File;
 
 public class UltimateStacker implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public UltimateStacker(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public UltimateStacker(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onSpawnerPlace(SpawnerPlaceEvent event) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
-            IslandManager islandManager = skyblock.getIslandManager();
-            WorldManager worldManager = skyblock.getWorldManager();
+            IslandManager islandManager = plugin.getIslandManager();
+            WorldManager worldManager = plugin.getWorldManager();
 
             Location location = event.getBlock().getLocation();
             if (!worldManager.isIslandWorld(location.getWorld())) return;
 
             Island island = islandManager.getIslandAtLocation(location);
 
-            FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
@@ -58,15 +57,15 @@ public class UltimateStacker implements Listener {
 
     @EventHandler
     public void onSpawnerBreak(SpawnerBreakEvent event) {
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
 
         Location location = event.getBlock().getLocation();
         if (!worldManager.isIslandWorld(location.getWorld())) return;
 
         Island island = islandManager.getIslandAtLocation(location);
 
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {

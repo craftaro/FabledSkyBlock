@@ -8,20 +8,20 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 
 public class Inventory implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Inventory(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Inventory(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
         Player player = (Player) event.getPlayer();
 
-        if (skyblock.getWorldManager().isIslandWorld(player.getWorld())) {
+        if (plugin.getWorldManager().isIslandWorld(player.getWorld())) {
             // Check permissions.
-            skyblock.getPermissionManager().processPermission(event, player,
-                    skyblock.getIslandManager().getIsland(player));
+            plugin.getPermissionManager().processPermission(event, player,
+                    plugin.getIslandManager().getIsland(player));
         }
     }
 }

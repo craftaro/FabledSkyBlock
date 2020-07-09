@@ -37,20 +37,20 @@ public class Creator {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        CooldownManager cooldownManager = skyblock.getCooldownManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         List<Structure> availableStructures = new ArrayList<>();
 
-        for (Structure structureList : skyblock.getStructureManager().getStructures()) {
+        for (Structure structureList : plugin.getStructureManager().getStructures()) {
             if (structureList.getDisplayname() == null || structureList.getDisplayname().isEmpty()
                     || structureList.getOverworldFile() == null || structureList.getOverworldFile().isEmpty()
                     || structureList.getNetherFile() == null || structureList.getNetherFile().isEmpty()) {
@@ -70,9 +70,9 @@ public class Creator {
         int inventoryRows = 0;
 
         if (availableStructures.size() == 0) {
-            skyblock.getMessageManager().sendMessage(player,
+            plugin.getMessageManager().sendMessage(player,
                     configLoad.getString("Island.Creator.Selector.None.Message"));
-            skyblock.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return;
         } else if (availableStructures.size() <= 9) {
@@ -97,10 +97,10 @@ public class Creator {
                 return;
             }
 
-            Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+            Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                 ItemStack is = event.getItem();
 
-                for (Structure structureList : skyblock.getStructureManager().getStructures()) {
+                for (Structure structureList : plugin.getStructureManager().getStructures()) {
                     if ((is.getType() == structureList.getMaterial().getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName()
                             .equals(ChatColor.translateAlternateColorCodes('&', configLoad
@@ -115,7 +115,7 @@ public class Creator {
                                         configLoad.getString("Island.Creator.Selector.Permission.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
 
                                 return;
@@ -123,7 +123,7 @@ public class Creator {
                         }
 
                         if (!fileManager.isFileExist(
-                                new File(new File(skyblock.getDataFolder().toString() + "/" +
+                                new File(new File(plugin.getDataFolder().toString() + "/" +
                                         (structureList.getOverworldFile().endsWith(".structure") ? "structures" : "schematics")),
                                         structureList.getOverworldFile()))) {
                             messageManager.sendMessage(player,
@@ -135,7 +135,7 @@ public class Creator {
 
                             return;
                         } else if (!fileManager.isFileExist(
-                                new File(new File(skyblock.getDataFolder().toString() + "/" +
+                                new File(new File(plugin.getDataFolder().toString() + "/" +
                                         (structureList.getNetherFile().endsWith(".structure") ? "structures" : "schematics")),
                                         structureList.getNetherFile()))) {
                             messageManager.sendMessage(player,
@@ -147,7 +147,7 @@ public class Creator {
 
                             return;
                         } else if (!fileManager.isFileExist(
-                                new File(new File(skyblock.getDataFolder().toString() + "/" +
+                                new File(new File(plugin.getDataFolder().toString() + "/" +
                                         (structureList.getEndFile().endsWith(".structure") ? "structures" : "schematics")),
                                         structureList.getEndFile()))) {
                             messageManager.sendMessage(player,
@@ -158,7 +158,7 @@ public class Creator {
                             event.setWillDestroy(false);
 
                             return;
-                        } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                        } else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                 .getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
                                 && cooldownManager.hasPlayer(CooldownType.Creation, player)) {
                             CooldownPlayer cooldownPlayer = cooldownManager
@@ -239,6 +239,6 @@ public class Creator {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Title")));
         nInv.setRows(inventoryRows);
 
-        Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
     }
 }

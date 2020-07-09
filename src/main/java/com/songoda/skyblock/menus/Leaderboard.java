@@ -12,7 +12,6 @@ import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,14 +38,14 @@ public class Leaderboard {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             Viewer viewer = (Viewer) playerDataManager.getPlayerData(player).getViewer();
@@ -92,7 +91,7 @@ public class Leaderboard {
 
                         soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     }
                 });
 
@@ -110,7 +109,7 @@ public class Leaderboard {
                                 null),
                         1);
 
-                if(fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")){
+                if(fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")){
                     nInv.addItem(
                             nInv.createItem(new ItemStack(Material.GOLD_INGOT), configLoad
                                             .getString(
@@ -140,7 +139,7 @@ public class Leaderboard {
                         configLoad.getString("Menu.Leaderboard." + viewer.getType().name() + ".Title")));
                 nInv.setType(InventoryType.HOPPER);
 
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             } else {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                     if (playerDataManager.hasPlayerData(player)) {
@@ -153,14 +152,14 @@ public class Leaderboard {
                             } else if (is.getItemMeta().getDisplayName()
                                     .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                             .getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname")))) {
-                                if (skyblock.getFileManager()
-                                        .getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                if (plugin.getFileManager()
+                                        .getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                         .getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
                                     playerDataManager.getPlayerData(player)
                                             .setViewer(new Viewer(Viewer.Type.Browse));
                                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                                 } else {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                                 }
@@ -195,7 +194,7 @@ public class Leaderboard {
                         }
 
                         if (leaderboardPosition != -1) {
-                            List<com.songoda.skyblock.leaderboard.Leaderboard> leaderboardIslands = skyblock
+                            List<com.songoda.skyblock.leaderboard.Leaderboard> leaderboardIslands = plugin
                                     .getLeaderboardManager().getLeaderboard(
                                             com.songoda.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
 
@@ -204,7 +203,7 @@ public class Leaderboard {
                                 Visit visit = leaderboard.getVisit();
 
                                 OfflinePlayer offlinePlayer = new OfflinePlayer(visit.getOwnerUUID());
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> Bukkit.dispatchCommand(player, "island teleport " + offlinePlayer.getName()));
+                                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.dispatchCommand(player, "island teleport " + offlinePlayer.getName()));
                             }
 
                             event.setWillClose(false);
@@ -220,7 +219,7 @@ public class Leaderboard {
                     }
                 });
 
-                if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                         .getBoolean("Island.Visitor.Vote")) {
                     nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                             configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname"), null, null,
@@ -231,7 +230,7 @@ public class Leaderboard {
                             null, null), 0, 8);
                 }
 
-                List<com.songoda.skyblock.leaderboard.Leaderboard> leaderboardIslands = skyblock
+                List<com.songoda.skyblock.leaderboard.Leaderboard> leaderboardIslands = plugin
                         .getLeaderboardManager().getLeaderboard(
                                 com.songoda.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
 
@@ -338,7 +337,7 @@ public class Leaderboard {
                                 viewer.getType().name())));
                 nInv.setRows(6);
 
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             }
         }
     }

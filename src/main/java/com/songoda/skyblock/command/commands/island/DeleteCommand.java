@@ -33,15 +33,15 @@ public class DeleteCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        CooldownManager cooldownManager = skyblock.getCooldownManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -50,7 +50,7 @@ public class DeleteCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Owner.Message"));
             soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+            if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                     .getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
                     && cooldownManager.hasPlayer(CooldownType.Deletion, player)) {
                 CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Deletion, player);
@@ -81,7 +81,7 @@ public class DeleteCommand extends SubCommand {
                         configLoad.getString("Command.Island.Delete.Confirmation.Pending.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
             } else {
-                int confirmationTime = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                int confirmationTime = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getInt("Island.Confirmation.Timeout");
 
                 playerData.setConfirmation(Confirmation.Deletion);

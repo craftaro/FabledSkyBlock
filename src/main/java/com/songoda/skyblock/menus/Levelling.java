@@ -1,23 +1,7 @@
 package com.songoda.skyblock.menus;
 
-import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.songoda.core.compatibility.CompatibleSound;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -38,6 +22,21 @@ import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+
+import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Levelling {
 
@@ -52,21 +51,21 @@ public class Levelling {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        IslandLevelManager levellingManager = skyblock.getLevellingManager();
-        CooldownManager cooldownManager = skyblock.getCooldownManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        IslandLevelManager levellingManager = plugin.getLevellingManager();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (!playerDataManager.hasPlayerData(player))
             return;
 
-        PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
-        FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+        FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
 
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
             if (islandManager.getIsland(player) == null) {
@@ -135,7 +134,7 @@ public class Levelling {
                     return;
                 }
 
-                Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Processing.Message"));
                     soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
@@ -143,18 +142,18 @@ public class Levelling {
                     levellingManager.startScan(player, island);
                 });
             } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
-                PlayerData playerData1 = skyblock.getPlayerDataManager().getPlayerData(player);
+                PlayerData playerData1 = plugin.getPlayerDataManager().getPlayerData(player);
 
                 if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Previous.Displayname")))) {
                     playerData1.setPage(MenuType.LEVELLING, playerData1.getPage(MenuType.LEVELLING) - 1);
                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Next.Displayname")))) {
                     playerData1.setPage(MenuType.LEVELLING, playerData1.getPage(MenuType.LEVELLING) + 1);
                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 } else {
                     soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
 
@@ -176,8 +175,8 @@ public class Levelling {
         List<String> testIslandMaterialKeysOrdered = testIslandMaterials.keySet().stream().sorted().collect(Collectors.toList());
         LinkedHashMap<String, Long> islandMaterials = new LinkedHashMap<>();
 
-        Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
-        Config settingsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
+        Config settingsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
 
         // Filter out ItemStacks that can't be displayed in the inventory
         Inventory testInventory = Bukkit.createInventory(null, 9);
@@ -269,7 +268,7 @@ public class Levelling {
                 long pointsEarned = materialAmountCounted * pointsMultiplier;
 
 
-                String name = skyblock.getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(materials);
+                String name = plugin.getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(materials);
 
                 if (materials == CompatibleMaterial.FARMLAND && NMSUtil.getVersionNumber() < 9)
                     materials = CompatibleMaterial.DIRT;
@@ -293,6 +292,6 @@ public class Levelling {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Title")));
         nInv.setRows(6);
 
-        Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
     }
 }

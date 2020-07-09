@@ -5,10 +5,10 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandLevelChangeEvent;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.blockscanner.BlockScanner;
+import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.levelling.amount.AmountMaterialPair;
 import com.songoda.skyblock.levelling.amount.BlockAmount;
 import com.songoda.skyblock.message.MessageManager;
@@ -51,10 +51,10 @@ public final class IslandScan extends BukkitRunnable {
     }
 
     public IslandScan start() {
-        final SkyBlock skyblock = SkyBlock.getInstance();
+        final SkyBlock plugin = SkyBlock.getInstance();
 
-        final FileConfiguration config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
-        final FileConfiguration islandData = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), this.island.getOwnerUUID().toString() + ".yml")).getFileConfiguration();
+        final FileConfiguration config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
+        final FileConfiguration islandData = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), this.island.getOwnerUUID().toString() + ".yml")).getFileConfiguration();
 
         final boolean hasNether = config.getBoolean("Island.World.Nether.Enable") && islandData.getBoolean("Unlocked.Nether", false);
         final boolean hasEnd = config.getBoolean("Island.World.End.Enable") && islandData.getBoolean("Unlocked.End", false);
@@ -62,25 +62,25 @@ public final class IslandScan extends BukkitRunnable {
         final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
 
 
-        if (skyblock.isPaperAsync()) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                initScan(skyblock, hasNether, hasEnd, snapshots);
+        if (plugin.isPaperAsync()) {
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+                initScan(plugin, hasNether, hasEnd, snapshots);
             });
         } else {
-            initScan(skyblock, hasNether, hasEnd, snapshots);
+            initScan(plugin, hasNether, hasEnd, snapshots);
         }
 
 
         return this;
     }
 
-    private void initScan(SkyBlock skyblock, boolean hasNether, boolean hasEnd, Map<World, List<ChunkSnapshot>> snapshots) {
-        populate(snapshots, IslandWorld.Normal, skyblock.isPaperAsync(), () -> {
+    private void initScan(SkyBlock plugin, boolean hasNether, boolean hasEnd, Map<World, List<ChunkSnapshot>> snapshots) {
+        populate(snapshots, IslandWorld.Normal, plugin.isPaperAsync(), () -> {
 
             if (hasNether) {
-                populate(snapshots, IslandWorld.Nether, skyblock.isPaperAsync(), () -> {
+                populate(snapshots, IslandWorld.Nether, plugin.isPaperAsync(), () -> {
                     if (hasEnd) {
-                        populate(snapshots, IslandWorld.End, skyblock.isPaperAsync(), () -> {
+                        populate(snapshots, IslandWorld.End, plugin.isPaperAsync(), () -> {
                             BlockScanner.startScanner(snapshots, true, true, true, false, (blocks) -> {
                                 this.blocks = blocks;
                                 this.blocksSize = blocks.size();
@@ -195,7 +195,7 @@ public final class IslandScan extends BukkitRunnable {
 
     private void populate(Map<World, List<ChunkSnapshot>> snapshots, IslandWorld world, boolean paper, PopulateTask task) {
 
-        final SkyBlock skyblock = SkyBlock.getInstance();
+        final SkyBlock plugin = SkyBlock.getInstance();
 
         ChunkLoader.startChunkLoading(island, IslandWorld.Normal, paper, (asyncPositions, syncPositions) -> {
             if(paper){
@@ -203,9 +203,9 @@ public final class IslandScan extends BukkitRunnable {
                 for(CompletableFuture<Chunk> chunk : asyncPositions){
                     positions.add(chunk.join().getChunkSnapshot());
                 }
-                snapshots.put(skyblock.getWorldManager().getWorld(world), positions);
+                snapshots.put(plugin.getWorldManager().getWorld(world), positions);
             } else {
-                snapshots.put(skyblock.getWorldManager().getWorld(world), syncPositions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
+                snapshots.put(plugin.getWorldManager().getWorld(world), syncPositions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
             }
             task.onComplete();
         }, null);

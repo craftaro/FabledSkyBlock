@@ -16,7 +16,6 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
- 
 import com.songoda.skyblock.utils.version.SBiome;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,18 +41,18 @@ public class Biome {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        CooldownManager cooldownManager = skyblock.getCooldownManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
-        BiomeManager biomeManager = skyblock.getBiomeManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
+        BiomeManager biomeManager = plugin.getBiomeManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration langConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+            FileConfiguration langConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 Island island = islandManager.getIsland(player);
@@ -147,7 +146,7 @@ public class Biome {
                             soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
                         }
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     }
                 }
             });
@@ -172,7 +171,7 @@ public class Biome {
                     null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-            FileConfiguration settings = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
+            FileConfiguration settings = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
 
             boolean allowNetherBiome = settings.getBoolean("Island.Biome.AllowOtherWorldlyBiomes.Nether");
             boolean allowEndBiome = settings.getBoolean("Island.Biome.AllowOtherWorldlyBiomes.End");
@@ -214,7 +213,7 @@ public class Biome {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', langConfig.getString("Menu.Biome.Title")));
             nInv.setRows(4);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
         }
     }
 }

@@ -26,7 +26,7 @@ import java.util.*;
 public class ScoreboardManager extends BukkitRunnable {
 
     private final static int VERSION = NMSUtil.getVersionNumber();
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private final Map<UUID, Scoreboard> scoreboardStorage = new HashMap<>();
     
     private final PlayerDataManager playerDataManager;
@@ -36,10 +36,10 @@ public class ScoreboardManager extends BukkitRunnable {
     private final List<String> teamNames = new ArrayList<>();
     private final List<String> objectiveNames = new ArrayList<>();
 
-    public ScoreboardManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
-        this.playerDataManager = skyblock.getPlayerDataManager();
-        this.runTaskTimer(skyblock, 20, 40);
+    public ScoreboardManager(SkyBlock plugin) {
+        this.plugin = plugin;
+        this.playerDataManager = plugin.getPlayerDataManager();
+        this.runTaskTimer(plugin, 20, 40);
     }
 
     @SuppressWarnings("deprecation")
@@ -150,9 +150,9 @@ public class ScoreboardManager extends BukkitRunnable {
 
     public void updateScoreboards(boolean createNew) {
 
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable"))
+        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable"))
             return;
 
         for (Player all : Bukkit.getOnlinePlayers()) {
@@ -164,15 +164,15 @@ public class ScoreboardManager extends BukkitRunnable {
                 scoreboard = getScoreboard(all);
             else {
                 if (createNew) {
-                    scoreboard = new Scoreboard(skyblock, all);
+                    scoreboard = new Scoreboard(plugin, all);
                     store = true;
                 }
             }
 
             if (scoreboard == null) continue;
 
-            IslandManager islandManager = skyblock.getIslandManager();
-            Config language = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            IslandManager islandManager = plugin.getIslandManager();
+            Config language = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
             Island island = islandManager.getIsland(all);
 
             if (island == null) {
@@ -228,12 +228,12 @@ public class ScoreboardManager extends BukkitRunnable {
     }
     
     public void addPlayer(Player player){
-        CooldownManager cooldownManager = skyblock.getCooldownManager();
-        FileManager fileManager = skyblock.getFileManager();
-        IslandManager islandManager = skyblock.getIslandManager();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        FileManager fileManager = plugin.getFileManager();
+        IslandManager islandManager = plugin.getIslandManager();
         
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
-        Scoreboard scoreboard = new Scoreboard(skyblock, player);
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Scoreboard scoreboard = new Scoreboard(plugin, player);
         Island island = islandManager.getIsland(player);
     
         if (island != null) {

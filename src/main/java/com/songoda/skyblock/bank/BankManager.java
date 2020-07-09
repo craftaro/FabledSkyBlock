@@ -1,21 +1,13 @@
 package com.songoda.skyblock.bank;
 
-import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.NumberUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class BankManager {
@@ -28,8 +20,8 @@ public class BankManager {
     public FileConfiguration lang;
 
     public BankManager() {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        SkyBlock plugin = SkyBlock.getInstance();
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         lang = config.getFileConfiguration();
         log = new HashMap<>();
         loadTransactions();
@@ -105,8 +97,8 @@ public class BankManager {
     }
 
     public BankResponse deposit(Player player, Island island, double amt, boolean admin) {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        FileManager fileManager = skyblock.getFileManager();
+        SkyBlock plugin = SkyBlock.getInstance();
+        FileManager fileManager = plugin.getFileManager();
 
         // Make sure the amount is positive
         if (amt <= 0) {
@@ -114,7 +106,7 @@ public class BankManager {
         }
 
         // If decimals aren't allowed, check for them
-        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
             int intAmt = (int) amt;
             if (intAmt != amt) {
                 return BankResponse.DECIMALS_NOT_ALLOWED;
@@ -141,8 +133,8 @@ public class BankManager {
     }
 
     public BankResponse withdraw(Player player, Island island, double amt, boolean admin) {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        FileManager fileManager = skyblock.getFileManager();
+        SkyBlock plugin = SkyBlock.getInstance();
+        FileManager fileManager = plugin.getFileManager();
 
         // Make sure the amount is positive
         if (amt <= 0) {
@@ -150,7 +142,7 @@ public class BankManager {
         }
 
         // If decimals aren't allowed, check for them
-        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
             int intAmt = (int) amt;
             if (intAmt != amt) {
                 return BankResponse.DECIMALS_NOT_ALLOWED;

@@ -8,7 +8,6 @@ import com.songoda.skyblock.confirmation.Confirmation;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.menus.MenuType;
 import com.songoda.skyblock.utils.structure.Area;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -19,7 +18,7 @@ import java.util.*;
 
 public class PlayerData {
     
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private UUID uuid;
     private UUID islandOwnerUUID;
     private UUID ownershipUUID;
@@ -47,7 +46,7 @@ public class PlayerData {
     private List<Transaction> transactions;
 
     public PlayerData(Player player) {
-        this.skyblock = SkyBlock.getInstance();
+        this.plugin = SkyBlock.getInstance();
         
         uuid = player.getUniqueId();
         islandOwnerUUID = null;
@@ -316,8 +315,8 @@ public class PlayerData {
     }
 
     private Config getConfig() {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        return skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+        SkyBlock plugin = SkyBlock.getInstance();
+        return plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
     }
     
     public Player getPlayer() {
@@ -338,12 +337,12 @@ public class PlayerData {
     
     public void setChatSpy(boolean chatSpy) {
         this.chatSpy = chatSpy;
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
     }
     
     public void addChatSpyIsland(UUID uuid) {
         spiedIslands.add(uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
     }
     
     public boolean isChatSpyIsland(UUID uuid) {
@@ -352,7 +351,7 @@ public class PlayerData {
     
     public void removeChatSpyIsland(UUID uuid) {
         spiedIslands.remove(uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
     }
     
     public Set<UUID> getChatSpyIslands() {
@@ -377,6 +376,6 @@ public class PlayerData {
     
     public void enableGlobalChatSpy() {
         spiedIslands.clear();
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, this::save);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
     }
 }

@@ -11,10 +11,10 @@ import java.util.List;
 
 public class MessageManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public MessageManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public MessageManager(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     public void sendMessage(CommandSender sender, String message) {
@@ -22,7 +22,7 @@ public class MessageManager {
         if (message == null) return;
 
         if (sender instanceof Player) {
-            PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
+            PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
             Player player = (Player) sender;
 
             if (placeholderManager.isPlaceholderAPIEnabled()) {
@@ -60,7 +60,7 @@ public class MessageManager {
     }
 
     public String replaceMessage(Player player, String message) {
-        PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
+        PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
 
         if (placeholderManager.isPlaceholderAPIEnabled()) {
             message = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message.replace("&", "clr")).replace("clr", "&");

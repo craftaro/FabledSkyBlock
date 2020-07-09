@@ -1,18 +1,6 @@
 package com.songoda.skyblock.challenge.inventory.inv;
 
-import java.util.HashMap;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-
 import com.songoda.core.compatibility.CompatibleSound;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-
 import com.songoda.skyblock.challenge.FabledChallenge;
 import com.songoda.skyblock.challenge.challenge.Challenge;
 import com.songoda.skyblock.challenge.challenge.ChallengeCategory;
@@ -22,7 +10,17 @@ import com.songoda.skyblock.challenge.defaultinv.Item;
 import com.songoda.skyblock.challenge.inventory.ClickableItem;
 import com.songoda.skyblock.challenge.inventory.Inventory;
 import com.songoda.skyblock.challenge.inventory.InventoryProvider;
+import org.bukkit.Bukkit;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.logging.Level;
 
 public class ChallengeInventory implements InventoryProvider {
 	public static final String CATEGORY = "ChallengeCategory";

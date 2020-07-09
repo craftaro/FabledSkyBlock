@@ -2,7 +2,6 @@ package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.utils.LocationUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -26,21 +25,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.awt.print.Paper;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 public class Portal implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
     private Map<UUID, Tick> tickCounter = new HashMap<>();
 
-    public Portal(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Portal(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -49,7 +46,7 @@ public class Portal implements Listener {
         org.bukkit.block.Block from = event.getFrom().getBlock();
         org.bukkit.block.Block to = event.getTo().getBlock();
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
         if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) return;
 
@@ -58,7 +55,7 @@ public class Portal implements Listener {
         if (island == null) return;
 
         // Check permissions.
-        skyblock.getPermissionManager().processPermission(event, player,
+        plugin.getPermissionManager().processPermission(event, player,
                 islandManager.getIslandAtLocation(event.getTo()));
     }
 
@@ -69,11 +66,11 @@ public class Portal implements Listener {
         Player player = (Player) event.getEntity();
         org.bukkit.block.Block block = event.getLocation().getBlock();
 
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        WorldManager worldManager = skyblock.getWorldManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (!worldManager.isIslandWorld(player.getWorld())) return;
 
@@ -81,7 +78,7 @@ public class Portal implements Listener {
 
         if (island == null) return;
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         IslandEnvironment spawnEnvironment;
@@ -111,7 +108,7 @@ public class Portal implements Listener {
                 tick.setLast(System.currentTimeMillis());
             }
             if (tick.getTick() >= 100) {
-                messageManager.sendMessage(player, fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Portal.Stuck.Message"));
+                messageManager.sendMessage(player, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Portal.Stuck.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                 LocationUtil.teleportPlayerToSpawn(player);
                 return;
@@ -122,7 +119,7 @@ public class Portal implements Listener {
 
         PlayerEnterPortalEvent playerEnterPortalEvent = new PlayerEnterPortalEvent(player, player.getLocation()); // TODO Why?? - Fabrimat
         // Check permissions.
-        boolean perms = !skyblock.getPermissionManager().processPermission(playerEnterPortalEvent,
+        boolean perms = !plugin.getPermissionManager().processPermission(playerEnterPortalEvent,
                 player, island);
 
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
@@ -146,7 +143,7 @@ public class Portal implements Listener {
                 default:
                     IslandWorld toWorldF = toWorld;
 
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(skyblock, () -> PaperLib.teleportAsync(player, island.getLocation(toWorldF, spawnEnvironment)), 1L);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> PaperLib.teleportAsync(player, island.getLocation(toWorldF, spawnEnvironment)), 1L);
                     soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                     player.setFallDistance(0.0F);
                     tick.setTick(1);
@@ -164,7 +161,7 @@ public class Portal implements Listener {
 
     private void teleportPlayerToWorld(Player player, SoundManager soundManager, Island island, IslandEnvironment spawnEnvironment, Tick tick, IslandWorld toWorld) {
         IslandWorld toWorldF = toWorld;
-        Bukkit.getScheduler().runTaskLater(skyblock, () -> {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Location loc = island.getLocation(toWorldF, spawnEnvironment);
             Location tempSafeLoc = LocationUtil.getSafeLocation(loc);
             Location safeLoc = null;

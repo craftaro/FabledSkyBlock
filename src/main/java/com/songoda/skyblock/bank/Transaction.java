@@ -1,6 +1,5 @@
 package com.songoda.skyblock.bank;
 
-import com.songoda.skyblock.menus.Ownership;
 import org.bukkit.OfflinePlayer;
 
 import java.util.Date;

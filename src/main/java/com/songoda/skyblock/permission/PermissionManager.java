@@ -7,12 +7,10 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.permission.event.Stoppable;
 import com.songoda.skyblock.permission.permissions.basic.*;
 import com.songoda.skyblock.permission.permissions.listening.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.io.File;
 import java.io.IOException;

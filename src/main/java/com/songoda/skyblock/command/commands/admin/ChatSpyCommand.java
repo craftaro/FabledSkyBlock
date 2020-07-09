@@ -1,10 +1,8 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.gui.bank.GuiBank;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
@@ -12,7 +10,6 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -25,13 +22,13 @@ public class ChatSpyCommand extends SubCommand {
     
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        FileManager fileManager = skyblock.getFileManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        FileManager fileManager = plugin.getFileManager();
+        SoundManager soundManager = plugin.getSoundManager();
     
-        FileManager.Config language = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileManager.Config language = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration languageLoad = language.getFileConfiguration();
         
         PlayerData playerData = playerDataManager.getPlayerData(player);

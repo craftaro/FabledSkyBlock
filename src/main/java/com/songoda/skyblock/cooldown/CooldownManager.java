@@ -12,23 +12,18 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CooldownManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
     private Map<CooldownType, List<CooldownPlayer>> cooldownStorage = new EnumMap<>(CooldownType.class);
 
-    public CooldownManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public CooldownManager(SkyBlock plugin) {
+        this.plugin = plugin;
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
         for (CooldownType cooldownTypeList : CooldownType.getTypes()) {
             List<CooldownPlayer> cooldownPlayers = new ArrayList<>();
@@ -58,7 +53,7 @@ public class CooldownManager {
             cooldownStorage.put(cooldownTypeList, cooldownPlayers);
         }
 
-        new CooldownTask(this).runTaskTimerAsynchronously(skyblock, 0L, 20L);
+        new CooldownTask(this).runTaskTimerAsynchronously(plugin, 0L, 20L);
     }
 
     public void onDisable() {
@@ -70,16 +65,16 @@ public class CooldownManager {
 
     public CooldownPlayer loadCooldownPlayer(CooldownType cooldownType, OfflinePlayer player) {
         if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-            Config config = skyblock.getFileManager()
-                    .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+            Config config = plugin.getFileManager()
+                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getString("Island." + cooldownType.name() + ".Cooldown") != null) {
                 return new CooldownPlayer(player.getUniqueId(), new Cooldown(configLoad.getInt("Island." + cooldownType.name() + ".Cooldown")));
             }
         } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-            Config config = skyblock.getFileManager()
-                    .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
+            Config config = plugin.getFileManager()
+                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getString(cooldownType.name() + ".Cooldown") != null) {
@@ -91,7 +86,7 @@ public class CooldownManager {
     }
 
     public void createPlayer(CooldownType cooldownType, OfflinePlayer player) {
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
         List<CooldownPlayer> cooldowns = cooldownStorage.get(cooldownType);
 
@@ -100,11 +95,11 @@ public class CooldownManager {
         int time = 0;
 
         if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-            time = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+            time = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                     .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
 
             Config config = fileManager
-                    .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
             File configFile = config.getFile();
             FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -116,11 +111,11 @@ public class CooldownManager {
                 e.printStackTrace();
             }
         } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-            time = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+            time = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                     .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
 
-            Config config = skyblock.getFileManager()
-                    .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
+            Config config = plugin.getFileManager()
+                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
             File configFile = config.getFile();
             FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -140,13 +135,13 @@ public class CooldownManager {
         for (Iterator<CooldownPlayer> it = getCooldownPlayersOrEmptyList(cooldownType).iterator(); it.hasNext();) {
             if (it.next().getUUID().equals(player.getUniqueId())) {
                 if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-                    skyblock.getFileManager()
-                            .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
+                    plugin.getFileManager()
+                            .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"),
                                     player.getUniqueId().toString() + ".yml"))
                             .getFileConfiguration().set("Island." + cooldownType.name() + ".Cooldown", null);
                 } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-                    skyblock.getFileManager().getConfig(
-                            new File(new File(skyblock.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"))
+                    plugin.getFileManager().getConfig(
+                            new File(new File(plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"))
                             .getFileConfiguration().set(cooldownType.name() + ".Cooldown", null);
                 }
                 it.remove();
@@ -198,13 +193,13 @@ public class CooldownManager {
         for (CooldownPlayer cooldownPlayerList : getCooldownPlayersOrEmptyList(cooldownType)) {
             if (cooldownPlayerList.getUUID().equals(player.getUniqueId())) {
                 if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-                    skyblock.getFileManager()
-                            .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"),
+                    plugin.getFileManager()
+                            .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"),
                                     player.getUniqueId().toString() + ".yml"))
                             .getFileConfiguration().set("Island." + cooldownType + ".Cooldown", cooldownPlayerList.getCooldown().getTime());
                 } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-                    skyblock.getFileManager()
-                            .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"),
+                    plugin.getFileManager()
+                            .getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"),
                                     player.getUniqueId().toString() + ".yml"))
                             .getFileConfiguration().set(cooldownType.name() + ".Cooldown", cooldownPlayerList.getCooldown().getTime());
                 }
@@ -223,11 +218,11 @@ public class CooldownManager {
         Config config = null;
 
         if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-            config = skyblock.getFileManager()
-                    .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+            config = plugin.getFileManager()
+                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
         } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-            config = skyblock.getFileManager()
-                    .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
+            config = plugin.getFileManager()
+                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
         }
 
         if (config != null) {

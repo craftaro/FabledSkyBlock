@@ -33,17 +33,17 @@ public class ConfirmCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        StructureManager structureManager = skyblock.getStructureManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        StructureManager structureManager = plugin.getStructureManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (playerData.getConfirmationTime() > 0) {
@@ -100,7 +100,7 @@ public class ConfirmCommand extends SubCommand {
                                     islandManager.giveOwnership(island,
                                             Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
 
-                                    skyblock.getCooldownManager().createPlayer(CooldownType.Ownership,
+                                    plugin.getCooldownManager().createPlayer(CooldownType.Ownership,
                                             Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                                 } else {
                                     messageManager.sendMessage(player, configLoad

@@ -12,8 +12,8 @@ public class CreateCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
         if (playerDataManager.hasPlayerData(player)) {
             playerDataManager.getPlayerData(player).setViewer(null);

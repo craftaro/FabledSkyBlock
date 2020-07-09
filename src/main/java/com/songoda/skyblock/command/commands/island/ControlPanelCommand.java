@@ -15,13 +15,13 @@ public class ControlPanelCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        SoundManager soundManager = skyblock.getSoundManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (skyblock.getIslandManager().getIsland(player) == null) {
-            skyblock.getMessageManager().sendMessage(player,
+        if (plugin.getIslandManager().getIsland(player) == null) {
+            plugin.getMessageManager().sendMessage(player,
                     configLoad.getString("Command.Island.ControlPanel.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {

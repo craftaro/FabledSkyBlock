@@ -1,11 +1,11 @@
 package com.songoda.skyblock.levelling.calculator;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.songoda.core.compatibility.CompatibleMaterial;
 
 public final class CalculatorRegistry {
 

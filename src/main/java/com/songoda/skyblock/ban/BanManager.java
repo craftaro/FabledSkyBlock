@@ -19,11 +19,11 @@ import java.util.UUID;
 
 public class BanManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private Map<UUID, Ban> banStorage = new HashMap<>();
 
-    public BanManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public BanManager(SkyBlock plugin) {
+        this.plugin = plugin;
 
         loadIslands();
     }
@@ -37,11 +37,11 @@ public class BanManager {
     }
 
     public void loadIslands() {
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Visitor.Unload")) {
-            File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
+            File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
 
             if (configFile.exists()) {
                 for (File fileList : configFile.listFiles()) {
@@ -53,14 +53,14 @@ public class BanManager {
     }
 
     public void transfer(UUID uuid1, UUID uuid2) {
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
         Ban ban = getIsland(uuid1);
         ban.save();
 
-        File oldBanDataFile = new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
+        File oldBanDataFile = new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
                 uuid1.toString() + ".yml");
-        File newBanDataFile = new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
+        File newBanDataFile = new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
                 uuid2.toString() + ".yml");
 
         fileManager.unloadConfig(oldBanDataFile);
@@ -73,14 +73,14 @@ public class BanManager {
     }
 
     public void removeVisitor(Island island) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        for (UUID visitorList : skyblock.getIslandManager().getVisitorsAtIsland(island)) {
+        for (UUID visitorList : plugin.getIslandManager().getVisitorsAtIsland(island)) {
             Player targetPlayer = Bukkit.getServer().getPlayer(visitorList);
 
             LocationUtil.teleportPlayerToSpawn(targetPlayer);
@@ -116,7 +116,7 @@ public class BanManager {
 
     public void unloadIsland(UUID islandOwnerUUID) {
         if (hasIsland(islandOwnerUUID)) {
-            skyblock.getFileManager().unloadConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
+            plugin.getFileManager().unloadConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
                     islandOwnerUUID.toString() + ".yml"));
             banStorage.remove(islandOwnerUUID);
         }
@@ -124,7 +124,7 @@ public class BanManager {
 
     public void deleteIsland(UUID islandOwnerUUID) {
         if (hasIsland(islandOwnerUUID)) {
-            skyblock.getFileManager().deleteConfig(new File(new File(skyblock.getDataFolder().toString() + "/ban-data"),
+            plugin.getFileManager().deleteConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
                     islandOwnerUUID.toString() + ".yml"));
             banStorage.remove(islandOwnerUUID);
         }

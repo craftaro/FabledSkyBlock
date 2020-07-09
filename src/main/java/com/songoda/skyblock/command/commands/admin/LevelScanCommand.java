@@ -30,13 +30,13 @@ public class LevelScanCommand extends SubCommand {
     }
 
     private void onCommand(CommandSender sender, String[] args) {
-        IslandLevelManager levellingManager = skyblock.getLevellingManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        IslandLevelManager levellingManager = plugin.getLevellingManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        FileManager.Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 0) {

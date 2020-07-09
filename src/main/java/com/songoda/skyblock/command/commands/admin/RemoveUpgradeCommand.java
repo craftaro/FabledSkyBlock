@@ -35,13 +35,13 @@ public class RemoveUpgradeCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 2) {
@@ -88,7 +88,7 @@ public class RemoveUpgradeCommand extends SubCommand {
 
                     island.removeUpgrade(upgrade);
                 } else {
-                    File islandDataFile = new File(skyblock.getDataFolder().toString() + "/island-data",
+                    File islandDataFile = new File(plugin.getDataFolder().toString() + "/island-data",
                             islandOwnerUUID.toString() + ".yml");
 
                     if (!fileManager.isFileExist(islandDataFile)) {

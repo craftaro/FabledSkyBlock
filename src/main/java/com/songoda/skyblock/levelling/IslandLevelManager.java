@@ -1,21 +1,20 @@
 package com.songoda.skyblock.levelling;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.blockscanner.BlockInfo;
+import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
+import com.songoda.skyblock.levelling.amount.AmountMaterialPair;
 import com.songoda.skyblock.levelling.calculator.Calculator;
 import com.songoda.skyblock.levelling.calculator.CalculatorRegistry;
 import com.songoda.skyblock.levelling.calculator.impl.EpicSpawnerCalculator;
 import com.songoda.skyblock.levelling.calculator.impl.UltimateStackerCalculator;
+import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
+import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -26,14 +25,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.blockscanner.BlockInfo;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.levelling.amount.AmountMaterialPair;
-import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.stackable.StackableManager;
- 
-import com.songoda.skyblock.utils.version.NMSUtil;
+import java.io.File;
+import java.util.*;
+import java.util.Map.Entry;
 
 public final class IslandLevelManager {
 
@@ -242,7 +236,9 @@ public final class IslandLevelManager {
         if (material == null || material == CompatibleMaterial.AIR) return;
         
         if (material == CompatibleMaterial.SPAWNER) {
-            if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") || Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
+            if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") ||
+                    Bukkit.getPluginManager().isPluginEnabled("UltimateStacker") ||
+                    Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
                 return;
     
             CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());

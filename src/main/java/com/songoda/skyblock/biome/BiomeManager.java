@@ -22,13 +22,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class BiomeManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private final List<Island> updatingIslands;
     private final FileConfiguration language;
     private final int runEveryX;
 
-    public BiomeManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public BiomeManager(SkyBlock plugin) {
+        this.plugin = plugin;
         this.updatingIslands = new ArrayList<>();
         this.language = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration();
         this.runEveryX = language.getInt("Command.Island.Biome.Progress.Display-Every-X-Updates");
@@ -51,12 +51,12 @@ public class BiomeManager {
 
         if (island.getLocation(IslandWorld.Normal, IslandEnvironment.Island) == null) return;
 
-        if(skyblock.isPaperAsync()){
+        if(plugin.isPaperAsync()){
             // We keep it sequentially in order to use less RAM
             int chunkAmount = (int) Math.ceil(Math.pow(island.getSize()/16d, 2d));
             AtomicInteger progress = new AtomicInteger();
             
-            ChunkLoader.startChunkLoadingPerChunk(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncChunk, syncChunk) -> {
+            ChunkLoader.startChunkLoadingPerChunk(island, IslandWorld.Normal, plugin.isPaperAsync(), (asyncChunk, syncChunk) -> {
                 Chunk chunk = asyncChunk.join();
                 if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
                     setChunkBiome3D(island, biome, chunk); // 2D for the moment
@@ -77,7 +77,7 @@ public class BiomeManager {
                     message = message.replace("%percent%", NumberFormat.getInstance().format(percent));
     
                     for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
-                        skyblock.getMessageManager().sendMessage(player, message);
+                        plugin.getMessageManager().sendMessage(player, message);
                     }
                 }
             }, (island1 -> {
@@ -87,8 +87,8 @@ public class BiomeManager {
                 }
             }));
         } else {
-            ChunkLoader.startChunkLoading(island, IslandWorld.Normal, skyblock.isPaperAsync(), (asyncChunks, syncChunks) -> {
-                Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+            ChunkLoader.startChunkLoading(island, IslandWorld.Normal, plugin.isPaperAsync(), (asyncChunks, syncChunks) -> {
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                     int progress = 0;
                     for(Chunk chunk : syncChunks){
                         if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
@@ -109,7 +109,7 @@ public class BiomeManager {
                             message = message.replace("%percent%", NumberFormat.getInstance().format(percent));
         
                             for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
-                                skyblock.getMessageManager().sendMessage(player, message);
+                                plugin.getMessageManager().sendMessage(player, message);
                             }
                         }
                     }
@@ -153,7 +153,7 @@ public class BiomeManager {
         packetPlayOutMapChunkClass = NMSUtil.getNMSClass("PacketPlayOutMapChunk");
         chunkClass = NMSUtil.getNMSClass("Chunk");
     
-        for (Player player : skyblock.getIslandManager().getPlayersAtIsland(island, IslandWorld.Normal)) {
+        for (Player player : plugin.getIslandManager().getPlayersAtIsland(island, IslandWorld.Normal)) {
             try {
                 if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                     if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {

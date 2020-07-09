@@ -15,7 +15,7 @@ import java.util.*;
 
 public class Visit {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private final IslandLevel islandLevel;
     private UUID islandOwnerUUID;
     private String islandOwnerName;
@@ -28,9 +28,9 @@ public class Visit {
     
     private IslandStatus status;
 
-    protected Visit(SkyBlock skyblock, UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize,
+    protected Visit(SkyBlock plugin, UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize,
                     int islandMembers, double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, IslandStatus status) {
-        this.skyblock = skyblock;
+        this.plugin = plugin;
         this.islandOwnerUUID = islandOwnerUUID;
         this.islandLocations = islandLocations;
         this.islandSize = islandSize;
@@ -110,8 +110,8 @@ public class Visit {
     public Set<UUID> getVisitors() {
         Set<UUID> islandVisitors = new HashSet<>();
 
-        for (String islandVisitorList : skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        for (String islandVisitorList : plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration().getStringList("Visitors")) {
             islandVisitors.add(UUID.fromString(islandVisitorList));
@@ -122,8 +122,8 @@ public class Visit {
 
     public void addVisitor(UUID uuid) {
         List<String> islandVisitors = new ArrayList<>();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
@@ -137,8 +137,8 @@ public class Visit {
 
     public void removeVisitor(UUID uuid) {
         List<String> islandVisitors = new ArrayList<>();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
@@ -157,8 +157,8 @@ public class Visit {
     public Set<UUID> getVoters() {
         Set<UUID> islandVoters = new HashSet<>();
 
-        for (String islandVisitorList : skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        for (String islandVisitorList : plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration().getStringList("Voters")) {
             islandVoters.add(UUID.fromString(islandVisitorList));
@@ -169,8 +169,8 @@ public class Visit {
 
     public void addVoter(UUID uuid) {
         List<String> islandVoters = new ArrayList<>();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
@@ -182,8 +182,8 @@ public class Visit {
 
     public void removeVoter(UUID uuid) {
         List<String> islandVoters = new ArrayList<>();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
@@ -205,12 +205,12 @@ public class Visit {
     }
 
     public Ban getBan() {
-        return skyblock.getBanManager().getIsland(getOwnerUUID());
+        return plugin.getBanManager().getIsland(getOwnerUUID());
     }
 
     public void save() {
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(
-                new File(skyblock.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(
+                new File(plugin.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
 
         try {
             config.getFileConfiguration().save(config.getFile());

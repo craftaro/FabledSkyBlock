@@ -10,8 +10,6 @@ import com.songoda.skyblock.utils.ChatComponent;
 import com.songoda.skyblock.utils.Compression;
 import com.songoda.skyblock.utils.structure.StructureUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
-import java.io.*;
-import java.util.Base64;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -22,16 +20,21 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.logging.Level;
 
 public class StructureCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
@@ -140,7 +143,7 @@ public class StructureCommand extends SubCommand {
                 return;
             } else if (args[0].equalsIgnoreCase("save")) {
                 if (args.length == 2) {
-                    PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+                    PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
                     Location position1Location = playerData.getArea().getPosition(1);
                     Location position2Location = playerData.getArea().getPosition(2);
@@ -171,7 +174,7 @@ public class StructureCommand extends SubCommand {
                     } else {
                         try {
                             File configFile = new File(
-                                    skyblock.getDataFolder().toString() + "/structures/" + args[1] + ".structure");
+                                    plugin.getDataFolder().toString() + "/structures/" + args[1] + ".structure");
                             StructureUtil.saveStructure(configFile, player.getLocation(),
                                     StructureUtil.getFixedLocations(position1Location, position2Location));
 
@@ -198,7 +201,7 @@ public class StructureCommand extends SubCommand {
 
             } else if (args[0].equalsIgnoreCase("convert")) {
                 if (args.length == 2) {
-                    File structureFile = new File(new File(skyblock.getDataFolder().toString() + "/structures"), args[1]);
+                    File structureFile = new File(new File(plugin.getDataFolder().toString() + "/structures"), args[1]);
                     if (!structureFile.exists()) {
                         messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Admin.Structure.Convert.Invalid.Message")

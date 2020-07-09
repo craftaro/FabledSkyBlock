@@ -1,45 +1,43 @@
 package com.songoda.skyblock.placeholder;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.skyblock.island.IslandStatus;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.invite.Invite;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.upgrade.Upgrade.Type;
 import com.songoda.skyblock.utils.NumberUtil;
- 
 import com.songoda.skyblock.visit.VisitManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlaceholderManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
     private boolean PlaceholderAPI = false;
     private boolean MVdWPlaceholderAPI = false;
 
-    public PlaceholderManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public PlaceholderManager(SkyBlock plugin) {
+        this.plugin = plugin;
 
-        PluginManager pluginManager = skyblock.getServer().getPluginManager();
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
 
         if (pluginManager.getPlugin("PlaceholderAPI") != null) {
             PlaceholderAPI = true;
@@ -52,11 +50,11 @@ public class PlaceholderManager {
 
     public void registerPlaceholders() {
         if (PlaceholderAPI) {
-            new EZPlaceholder(skyblock).register();
+            new EZPlaceholder(plugin).register();
         }
 
         if (MVdWPlaceholderAPI) {
-            new MVdWPlaceholder(skyblock).register();
+            new MVdWPlaceholder(plugin).register();
         }
     }
 
@@ -69,13 +67,13 @@ public class PlaceholderManager {
     }
 
     public String getPlaceholder(Player player, String placeholder) {
-        IslandManager islandManager = skyblock.getIslandManager();
-        VisitManager visitManager = skyblock.getVisitManager();
-        IslandLevelManager levellingManager = skyblock.getLevellingManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        VisitManager visitManager = plugin.getVisitManager();
+        IslandLevelManager levellingManager = plugin.getLevellingManager();
 
         Island island = islandManager.getIsland(player);
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (placeholder.equalsIgnoreCase("fabledskyblock_island_exists")) {
@@ -148,7 +146,7 @@ public class PlaceholderManager {
                     if (island.hasRole(roleList, player.getUniqueId())) {
                         return ChatColor.translateAlternateColorCodes('&',
                                 configLoad.getString("Placeholder.fabledskyblock_island_role.Non-empty.Message")
-                                        .replace("%placeholder", skyblock.getLocalizationManager().getLocalizationFor(IslandRole.class).getLocale(roleList)));
+                                        .replace("%placeholder", plugin.getLocalizationManager().getLocalizationFor(IslandRole.class).getLocale(roleList)));
                     }
                 }
             }
@@ -281,7 +279,7 @@ public class PlaceholderManager {
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_island_invites.Empty.Message"));
             } else {
-                Map<UUID, Invite> invites = skyblock.getInviteManager().getInvites();
+                Map<UUID, Invite> invites = plugin.getInviteManager().getInvites();
                 int invitedPlayers = 0;
 
                 for (int i = 0; i < invites.size(); i++) {
@@ -320,7 +318,7 @@ public class PlaceholderManager {
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Empty.Message"));
             } else {
-                LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+                LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
                 int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Level);
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Non-empty.Message")
@@ -331,7 +329,7 @@ public class PlaceholderManager {
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Empty.Message"));
             } else {
-                LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+                LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
                 int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Bank);
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Non-empty.Message")
@@ -342,7 +340,7 @@ public class PlaceholderManager {
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Empty.Message"));
             } else {
-                LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+                LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
                 int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Votes);
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Non-empty.Message")

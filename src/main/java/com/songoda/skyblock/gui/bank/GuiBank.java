@@ -2,37 +2,18 @@ package com.songoda.skyblock.gui.bank;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiManager;
 import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.bank.BankManager;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.gui.GuiSignatureEditor;
-import com.songoda.skyblock.gui.GuiWelcomeEditor;
 import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandMessage;
-import com.songoda.skyblock.island.IslandPermission;
-import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.permission.BasicPermission;
-import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.visit.Visit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class GuiBank extends Gui {
     private final SkyBlock plugin;

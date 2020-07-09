@@ -1,11 +1,10 @@
 package com.songoda.skyblock.utils.item;
 
- 
+
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.*;

@@ -33,15 +33,15 @@ import java.util.List;
 
 public class CommandManager implements CommandExecutor, TabCompleter {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private List<SubCommand> islandCommands;
     private List<SubCommand> adminCommands;
 
-    public CommandManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
-
-        skyblock.getCommand("island").setExecutor(this);
-        skyblock.getCommand("island").setTabCompleter(this);
+    public CommandManager(SkyBlock plugin) {
+        this.plugin = plugin;
+    
+        plugin.getCommand("island").setExecutor(this);
+        plugin.getCommand("island").setTabCompleter(this);
 
         registerSubCommands();
     }
@@ -125,11 +125,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (command.getName().equalsIgnoreCase("island")) {
-            MessageManager messageManager = skyblock.getMessageManager();
-            SoundManager soundManager = skyblock.getSoundManager();
-            FileManager fileManager = skyblock.getFileManager();
+            MessageManager messageManager = plugin.getMessageManager();
+            SoundManager soundManager = plugin.getSoundManager();
+            FileManager fileManager = plugin.getFileManager();
 
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             Player player = null;
@@ -142,8 +142,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 if (player == null) {
                     sendConsoleHelpCommands(sender);
                 } else {
-                    if (skyblock.getIslandManager().getIsland(player) == null) {
-                        Bukkit.getServer().getScheduler().runTask(skyblock, () -> Bukkit.getServer().dispatchCommand(sender, "island create"));
+                    if (plugin.getIslandManager().getIsland(player) == null) {
+                        Bukkit.getServer().getScheduler().runTask(plugin, () -> Bukkit.getServer().dispatchCommand(sender, "island create"));
                     } else {
                         boolean canUseControlPanel = player.hasPermission("fabledskyblock.*")
                                 || player.hasPermission("fabledskyblock.island.*")
@@ -182,7 +182,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                     int page = -1;
 
-                    if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                    if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                             .getFileConfiguration().getBoolean("Command.Help.List")) {
                         page = 1;
 
@@ -220,7 +220,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                         int page = -1;
 
-                        if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                 .getFileConfiguration().getBoolean("Command.Help.List")) {
                             page = 1;
 
@@ -395,21 +395,21 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     }
 
     public void sendPlayerHelpCommands(Player player, List<SubCommand> subCommands, int page, boolean isAdmin) {
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         int pageSize = 7;
 
         int nextEndIndex = subCommands.size() - page * pageSize, index = page * pageSize - pageSize,
                 endIndex = index >= subCommands.size() ? subCommands.size() - 1 : index + pageSize;
-        boolean showAlises = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+        boolean showAlises = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Command.Help.Aliases.Enable");
 
         if (nextEndIndex <= -7) {
-            skyblock.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Help.Page.Message"));
-            skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Help.Page.Message"));
+            plugin.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
             return;
         }
@@ -482,7 +482,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     }
                 }
             } else {
-                skyblock.getMessageManager().sendMessage(player, helpLines);
+                plugin.getMessageManager().sendMessage(player, helpLines);
             }
         }
 
@@ -537,7 +537,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
         }
 
-        skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+        plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
     }
 
     public void sendConsoleHelpCommands(CommandSender sender) {

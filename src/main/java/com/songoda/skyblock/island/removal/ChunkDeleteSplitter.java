@@ -1,20 +1,18 @@
 package com.songoda.skyblock.island.removal;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.blockscanner.BlockInfo;
+import com.songoda.skyblock.blockscanner.BlockScanner;
 import org.bukkit.ChunkSnapshot;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.blockscanner.BlockInfo;
-import com.songoda.skyblock.blockscanner.BlockScanner;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 public class ChunkDeleteSplitter extends BukkitRunnable {
 

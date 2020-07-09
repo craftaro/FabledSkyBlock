@@ -1,11 +1,10 @@
 package com.songoda.skyblock.localization.type.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.songoda.skyblock.localization.type.Localization;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.songoda.skyblock.localization.type.Localization;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class BlankLocalization extends Localization<Object> {
 

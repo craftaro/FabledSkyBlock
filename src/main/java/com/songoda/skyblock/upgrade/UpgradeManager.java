@@ -16,13 +16,13 @@ import java.util.*;
 
 public class UpgradeManager {
 
-    private SkyBlock skyblock;
+    private SkyBlock plugin;
     private Map<Upgrade.Type, List<Upgrade>> upgradeStorage = new HashMap<>();
 
-    public UpgradeManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public UpgradeManager(SkyBlock plugin) {
+        this.plugin = plugin;
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "upgrades.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "upgrades.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         for (Upgrade.Type typeList : Upgrade.Type.values()) {
@@ -83,7 +83,7 @@ public class UpgradeManager {
     public void addUpgrade(Upgrade.Type type, int value) {
         List<Upgrade> upgrades = new ArrayList<>();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "upgrades.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "upgrades.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getString("Upgrades.Size") != null) {
@@ -133,7 +133,7 @@ public class UpgradeManager {
                 List<Upgrade> upgrades = upgradeStorage.get(type);
                 upgrades.remove(upgradeList);
 
-                Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "upgrades.yml"));
+                Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "upgrades.yml"));
                 FileConfiguration configLoad = config.getFileConfiguration();
 
                 configLoad.set("Upgrades.Size", null);
@@ -176,8 +176,8 @@ public class UpgradeManager {
     }
 
     private void applyUpgrades() {
-        IslandManager islandManager = skyblock.getIslandManager();
-        UpgradeManager upgradeManager = skyblock.getUpgradeManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        UpgradeManager upgradeManager = plugin.getUpgradeManager();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             Island island = islandManager.getIslandAtLocation(player.getLocation());

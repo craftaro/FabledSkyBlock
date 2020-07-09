@@ -7,21 +7,15 @@ import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandPermission;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.permission.BasicPermission;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.permission.PermissionType;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.visit.Visit;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

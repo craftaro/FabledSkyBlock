@@ -13,19 +13,19 @@ import java.util.Map.Entry;
 
 public class TopLevel extends DataCollector {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public TopLevel(SkyBlock skyblock) {
-        super("toplevels", skyblock.getDescription().getName(), BoardType.DEFAULT, "&bTop Level", "toplevel",
+    public TopLevel(SkyBlock plugin) {
+        super("toplevels", plugin.getDescription().getName(), BoardType.DEFAULT, "&bTop Level", "toplevel",
                 Arrays.asList(ChatColor.DARK_GRAY + "-=+=-", ChatColor.AQUA + "{name}", ChatColor.WHITE + "{amount} Level", ChatColor.DARK_GRAY + "-=+=-"), true, UUID.class);
 
-        this.skyblock = skyblock;
+        this.plugin = plugin;
     }
 
     @Override
     public List<Entry<?, Double>> requestAll() {
 
-        List<Leaderboard> leaderboards = skyblock.getLeaderboardManager().getLeaderboard(Leaderboard.Type.Level);
+        List<Leaderboard> leaderboards = plugin.getLeaderboardManager().getLeaderboard(Leaderboard.Type.Level);
         Map<UUID, Double> topLevels = new HashMap<>(leaderboards.size());
 
         for (int i = 0; i < leaderboards.size(); i++) {

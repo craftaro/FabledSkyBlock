@@ -13,7 +13,6 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,21 +41,21 @@ public class Settings {
     }
 
     public void open(Player player, Settings.Type menuType, IslandRole role, Settings.Panel panel) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
             Island island = islandManager.getIsland(player);
 
-            Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = skyblock.getFileManager()
-                    .getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+            Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+            FileConfiguration configLoad = plugin.getFileManager()
+                    .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
 
             if (menuType == Settings.Type.Categories) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -89,7 +88,7 @@ public class Settings {
                                 && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
                                 '&',
                                 configLoad.getString("Menu.Settings.Categories.Item.Coop.Displayname"))))) {
-                            if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                            if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Coop.Enable")) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Coop.Disabled.Message"));
@@ -112,7 +111,7 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Coop, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Coop, null), 1L);
                         } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Settings.Categories.Item.Visitor.Displayname"))))) {
@@ -130,7 +129,7 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&', configLoad
@@ -149,7 +148,7 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Member, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Member, null), 1L);
                         } else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta()) && (is.getItemMeta()
                                 .getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Settings.Categories.Item.Operator.Displayname"))))) {
@@ -166,7 +165,7 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Operator, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Operator, null), 1L);
                         } else if ((is.getType() == CompatibleMaterial.OAK_SAPLING.getMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&', configLoad
@@ -185,7 +184,7 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Owner, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Owner, null), 1L);
                         }
                     }
                 });
@@ -200,7 +199,7 @@ public class Settings {
                         configLoad.getString("Menu.Settings.Categories.Item.Operator.Displayname"),
                         configLoad.getStringList("Menu.Settings.Categories.Item.Operator.Lore"), null, null, null), 4);
 
-                if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+                if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                         .getBoolean("Island.Coop.Enable")) {
                     nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                             configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"), null, null, null,
@@ -224,7 +223,7 @@ public class Settings {
                         configLoad.getString("Menu.Settings.Categories.Title")));
                 nInv.setRows(1);
 
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             } else if (menuType == Settings.Type.Role && role != null) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                     if (playerDataManager.hasPlayerData(player)) {
@@ -251,7 +250,7 @@ public class Settings {
 
                             return;
                         } else if (role == IslandRole.Coop) {
-                            if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                            if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Coop.Enable")) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Coop.Disabled.Message"));
@@ -269,20 +268,20 @@ public class Settings {
                                         "Menu.Settings." + role.name() + ".Item.Return.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Categories, null, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Categories, null, null), 1L);
                         } else if ((is.getType() == Material.PAPER) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Settings.Visitor.Item.Signature.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Panel, null, Panel.Signature), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Panel, null, Panel.Signature), 1L);
                         } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Panel, null, Panel.Welcome), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Panel, null, Panel.Welcome), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
                                 .getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                         .getString("Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
@@ -301,7 +300,7 @@ public class Settings {
                                     break;
                             }
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                         } else if (is.hasItemMeta()) {
                             String roleName = getRoleName(role);
 
@@ -337,15 +336,15 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, Type.Role, role, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, role, null), 1L);
                         }
                     }
                 });
 
                 if (role == IslandRole.Visitor || role == IslandRole.Member || role == IslandRole.Coop) {
                     if (role == IslandRole.Visitor) {
-                        Config config = skyblock.getFileManager()
-                                .getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                        Config config = plugin.getFileManager()
+                                .getConfig(new File(plugin.getDataFolder(), "config.yml"));
                         Visit visit = island.getVisit();
 
                         if (config.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
@@ -1037,7 +1036,7 @@ public class Settings {
                         configLoad.getString("Menu.Settings." + role.name() + ".Item.Return.Displayname"), null, null,
                         null, null), 0, 8);
 
-                Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             } else if (menuType == Settings.Type.Panel) {
                 if (panel == Settings.Panel.Welcome) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -1059,8 +1058,8 @@ public class Settings {
                                 return;
                             }
 
-                            if (!skyblock.getFileManager()
-                                    .getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                            if (!plugin.getFileManager()
+                                    .getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable")) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Settings.Visitor.Welcome.Disabled.Message"));
@@ -1077,7 +1076,7 @@ public class Settings {
                                             "Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))))) {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                             } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
@@ -1098,7 +1097,7 @@ public class Settings {
                                         break;
                                 }
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                             } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
                                     .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -1111,8 +1110,8 @@ public class Settings {
                                     .getDisplayName()
                                     .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname"))))) {
-                                if (island15.getMessage(IslandMessage.Welcome).size() >= skyblock.getFileManager()
-                                        .getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                if (island15.getMessage(IslandMessage.Welcome).size() >= plugin.getFileManager()
+                                        .getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                         .getFileConfiguration().getInt("Island.Visitor.Welcome.Lines")) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
@@ -1121,7 +1120,7 @@ public class Settings {
                                 } else {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> {
                                                 AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                                     if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -1155,8 +1154,8 @@ public class Settings {
                                                             event1.setWillDestroy(true);
 
                                                             return;
-                                                        } else if (!skyblock.getFileManager()
-                                                                .getConfig(new File(skyblock.getDataFolder(),
+                                                        } else if (!plugin.getFileManager()
+                                                                .getConfig(new File(plugin.getDataFolder(),
                                                                         "config.yml"))
                                                                 .getFileConfiguration()
                                                                 .getBoolean("Island.Visitor.Welcome.Enable")) {
@@ -1173,8 +1172,8 @@ public class Settings {
                                                             return;
                                                         }
 
-                                                        Config config1 = skyblock.getFileManager()
-                                                                .getConfig(new File(skyblock.getDataFolder(),
+                                                        Config config1 = plugin.getFileManager()
+                                                                .getConfig(new File(plugin.getDataFolder(),
                                                                         "config.yml"));
                                                         FileConfiguration configLoad1 = config1
                                                                 .getFileConfiguration();
@@ -1199,7 +1198,7 @@ public class Settings {
                                                         }
 
                                                         Bukkit.getServer().getScheduler()
-                                                                .runTaskLater(skyblock,
+                                                                .runTaskLater(plugin,
                                                                         () -> open(player,
                                                                                 Type.Panel,
                                                                                 null,
@@ -1240,7 +1239,7 @@ public class Settings {
                                             island15.getMessageAuthor(IslandMessage.Welcome), welcomeMessage);
                                     soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F, 1.0F);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> open(player, Type.Panel, null, Panel.Welcome), 1L);
                                 }
                             }
@@ -1296,7 +1295,7 @@ public class Settings {
                             configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title")));
                     nInv.setType(InventoryType.HOPPER);
 
-                    Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+                    Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
                 } else if (panel == Settings.Panel.Signature) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                         if (playerDataManager.hasPlayerData(player)) {
@@ -1317,8 +1316,8 @@ public class Settings {
                                 return;
                             }
 
-                            if (!skyblock.getFileManager()
-                                    .getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                            if (!plugin.getFileManager()
+                                    .getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Settings.Visitor.Signature.Disabled.Message"));
@@ -1335,7 +1334,7 @@ public class Settings {
                                             "Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"))))) {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                             } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
@@ -1356,7 +1355,7 @@ public class Settings {
                                         break;
                                 }
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                             } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
                                     .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -1369,8 +1368,8 @@ public class Settings {
                                     .getDisplayName()
                                     .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Displayname"))))) {
-                                if (island12.getMessage(IslandMessage.Signature).size() >= skyblock.getFileManager()
-                                        .getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                if (island12.getMessage(IslandMessage.Signature).size() >= plugin.getFileManager()
+                                        .getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                         .getFileConfiguration().getInt("Island.Visitor.Signature.Lines")) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
@@ -1379,7 +1378,7 @@ public class Settings {
                                 } else {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> {
                                                 AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                                     if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
@@ -1413,8 +1412,8 @@ public class Settings {
                                                             event1.setWillDestroy(true);
 
                                                             return;
-                                                        } else if (!skyblock.getFileManager()
-                                                                .getConfig(new File(skyblock.getDataFolder(),
+                                                        } else if (!plugin.getFileManager()
+                                                                .getConfig(new File(plugin.getDataFolder(),
                                                                         "config.yml"))
                                                                 .getFileConfiguration().getBoolean(
                                                                         "Island.Visitor.Signature.Enable")) {
@@ -1431,8 +1430,8 @@ public class Settings {
                                                             return;
                                                         }
 
-                                                        Config config1 = skyblock.getFileManager()
-                                                                .getConfig(new File(skyblock.getDataFolder(),
+                                                        Config config1 = plugin.getFileManager()
+                                                                .getConfig(new File(plugin.getDataFolder(),
                                                                         "config.yml"));
                                                         FileConfiguration configLoad1 = config1
                                                                 .getFileConfiguration();
@@ -1457,7 +1456,7 @@ public class Settings {
                                                         }
 
                                                         Bukkit.getServer().getScheduler()
-                                                                .runTaskLater(skyblock,
+                                                                .runTaskLater(plugin,
                                                                         () -> open(player,
                                                                                 Type.Panel,
                                                                                 null,
@@ -1498,7 +1497,7 @@ public class Settings {
                                             island12.getMessageAuthor(IslandMessage.Signature), signatureMessage);
                                     soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F, 1.0F);
 
-                                    Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> open(player, Type.Panel, null,
                                                     Panel.Signature), 1L);
                                 }
@@ -1556,17 +1555,17 @@ public class Settings {
                             configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")));
                     nInv.setType(InventoryType.HOPPER);
 
-                    Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+                    Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
                 }
             }
         }
     }
 
     private ItemStack createItem(Island island, IslandRole role, String setting, ItemStack is) {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
+        SkyBlock plugin = SkyBlock.getInstance();
+        PermissionManager permissionManager = plugin.getPermissionManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         List<String> itemLore = new ArrayList<>();

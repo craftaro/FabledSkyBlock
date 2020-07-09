@@ -3,10 +3,10 @@
  */
 package com.songoda.skyblock.challenge.inventory;
 
+import org.bukkit.event.inventory.InventoryCloseEvent;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bukkit.event.inventory.InventoryCloseEvent;
 
 public interface InventoryProvider {
 

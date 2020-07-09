@@ -7,17 +7,17 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownType;
-import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandEnvironment;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
-import com.songoda.skyblock.scoreboard.Scoreboard;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.usercache.UserCacheManager;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,23 +29,23 @@ import java.lang.reflect.Method;
 
 public class Join implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Join(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Join(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             Player player = event.getPlayer();
 
-            ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
-            PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-            UserCacheManager userCacheManager = skyblock.getUserCacheManager();
-            CooldownManager cooldownManager = skyblock.getCooldownManager();
-            IslandManager islandManager = skyblock.getIslandManager();
-            FileManager fileManager = skyblock.getFileManager();
+            ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+            PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+            UserCacheManager userCacheManager = plugin.getUserCacheManager();
+            CooldownManager cooldownManager = plugin.getCooldownManager();
+            IslandManager islandManager = plugin.getIslandManager();
+            FileManager fileManager = plugin.getFileManager();
 
             userCacheManager.addUser(player.getUniqueId(), player.getName());
             userCacheManager.saveAsync();
@@ -55,13 +55,13 @@ public class Join implements Listener {
                 Island island = islandManager.getIsland(player);
                 boolean teleportedToIsland = false;
 
-                Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
                 FileConfiguration configLoad = config.getFileConfiguration();
 
                 if (configLoad.getBoolean("Island.Join.Spawn")) {
                     LocationUtil.teleportPlayerToSpawn(player);
                 } else if (configLoad.getBoolean("Island.Join.Island") && island != null) {
-                    Bukkit.getScheduler().runTask(skyblock, () -> {
+                    Bukkit.getScheduler().runTask(plugin, () -> {
                         PaperLib.teleportAsync(player, island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));
                         player.setFallDistance(0.0F);
                     });

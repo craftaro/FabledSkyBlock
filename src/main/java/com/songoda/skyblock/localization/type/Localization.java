@@ -1,9 +1,9 @@
 package com.songoda.skyblock.localization.type;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.util.Map;
 import java.util.Objects;
-
-import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class Localization<T> {
 

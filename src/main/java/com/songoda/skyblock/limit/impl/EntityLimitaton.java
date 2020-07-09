@@ -1,15 +1,14 @@
 package com.songoda.skyblock.limit.impl;
 
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandEnvironment;
+import com.songoda.skyblock.island.IslandWorld;
+import com.songoda.skyblock.limit.EnumLimitation;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandEnvironment;
-import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.limit.EnumLimitation;
 
 public final class EntityLimitaton extends EnumLimitation<EntityType> {
 

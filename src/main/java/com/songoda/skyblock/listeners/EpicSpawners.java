@@ -8,7 +8,6 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
-
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -23,17 +22,17 @@ import java.io.File;
 
 public class EpicSpawners implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public EpicSpawners(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public EpicSpawners(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSpawnerPlace(SpawnerPlaceEvent event) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
-            IslandManager islandManager = skyblock.getIslandManager();
-            WorldManager worldManager = skyblock.getWorldManager();
+            IslandManager islandManager = plugin.getIslandManager();
+            WorldManager worldManager = plugin.getWorldManager();
 
             Location location = event.getSpawner().getLocation();
             if (!worldManager.isIslandWorld(location.getWorld())) return;
@@ -43,7 +42,7 @@ public class EpicSpawners implements Listener {
             int amount = event.getSpawner().getFirstStack().getStackSize();
             EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
-            FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
@@ -67,8 +66,8 @@ public class EpicSpawners implements Listener {
         if (event.getChange() != SpawnerChangeEvent.ChangeType.STACK_SIZE)
             return;
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
 
         Location location = event.getSpawner().getLocation();
         if (!worldManager.isIslandWorld(location.getWorld())) return;
@@ -78,7 +77,7 @@ public class EpicSpawners implements Listener {
         int amount = event.getStackSize() - event.getOldStackSize();
         EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
@@ -102,8 +101,8 @@ public class EpicSpawners implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSpawnerBreak(SpawnerBreakEvent event) {
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
 
         Location location = event.getSpawner().getLocation();
         if (!worldManager.isIslandWorld(location.getWorld())) return;
@@ -113,7 +112,7 @@ public class EpicSpawners implements Listener {
         int amount = event.getSpawner().getFirstStack().getStackSize();
         EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {

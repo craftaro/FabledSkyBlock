@@ -19,7 +19,6 @@ import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -45,17 +44,17 @@ public class Coop {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             String normal = configLoad.getString("Menu.Coop.Item.Word.Normal");
@@ -72,7 +71,7 @@ public class Coop {
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
-                    } else if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                    } else if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                             .getFileConfiguration().getBoolean("Island.Coop.Enable")) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Coop.Disabled.Message"));
@@ -100,7 +99,7 @@ public class Coop {
                             configLoad.getString("Menu.Coop.Item.Information.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                 if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
 
@@ -154,13 +153,13 @@ public class Coop {
                             playerData.setPage(MenuType.COOP, playerData.getPage(MenuType.COOP) - 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
                                 '&', configLoad.getString("Menu.Coop.Item.Next.Displayname")))) {
                             playerData.setPage(MenuType.COOP, playerData.getPage(MenuType.COOP) + 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else {
                             if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
                                     && permissionManager.hasPermission(island, "CoopPlayers", IslandRole.Operator))
@@ -174,7 +173,7 @@ public class Coop {
                                 
                                 Bukkit.getServer().dispatchCommand(player, "island coop " + playerName);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 3L);
                             } else {
                                 messageManager.sendMessage(player,
@@ -270,7 +269,7 @@ public class Coop {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Coop.Title")));
             nInv.setRows(6);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, nInv::open);
+            Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
         }
     }
 }

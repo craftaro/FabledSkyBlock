@@ -1,7 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -22,12 +21,12 @@ public class BiomeCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        BiomeManager biomeManager = skyblock.getBiomeManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        BiomeManager biomeManager = plugin.getBiomeManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -36,13 +35,13 @@ public class BiomeCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Biome.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && skyblock.getPermissionManager().hasPermission(island,"Biome", IslandRole.Operator))
+                && plugin.getPermissionManager().hasPermission(island,"Biome", IslandRole.Operator))
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             if(biomeManager.isUpdating(island)){
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Biome.InProgress.Message"));
                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             } else {
-                skyblock.getGuiManager().showGUI(player, new GuiBiome(skyblock, player, island, IslandWorld.Normal, null, false)); // TODO Nether and End support
+                plugin.getGuiManager().showGUI(player, new GuiBiome(plugin, player, island, IslandWorld.Normal, null, false)); // TODO Nether and End support
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
             }
         } else {

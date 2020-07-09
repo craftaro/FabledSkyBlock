@@ -1,14 +1,13 @@
 package com.songoda.skyblock.limit;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.configuration.Configuration;
-
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.limit.impl.EntityLimitaton;
+import org.bukkit.configuration.Configuration;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class LimitationInstanceHandler {
 

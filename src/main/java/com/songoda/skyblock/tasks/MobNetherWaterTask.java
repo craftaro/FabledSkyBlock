@@ -2,30 +2,19 @@ package com.songoda.skyblock.tasks;
 
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.hologram.Hologram;
-import com.songoda.skyblock.hologram.HologramType;
-import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.leaderboard.Leaderboard;
-import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.utils.NumberUtil;
-import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.world.LocationUtil;
-import com.songoda.skyblock.visit.Visit;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MobNetherWaterTask  extends BukkitRunnable {
 

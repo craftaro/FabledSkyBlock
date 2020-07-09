@@ -1,9 +1,9 @@
 package com.songoda.skyblock.challenge.player;
 
+import com.songoda.skyblock.challenge.challenge.Challenge;
+
 import java.util.HashMap;
 import java.util.UUID;
-
-import com.songoda.skyblock.challenge.challenge.Challenge;
 
 public class PlayerChallenge {
 	private UUID uuid;

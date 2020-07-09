@@ -1,12 +1,12 @@
 package com.songoda.skyblock.utils.player;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.UUID;
-
-import com.google.gson.Gson;
 
 public final class NameFetcher {
 

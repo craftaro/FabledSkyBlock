@@ -10,7 +10,6 @@ import com.songoda.skyblock.permission.PermissionType;
 import com.songoda.skyblock.permission.event.events.ProjectileLaunchByPlayerEvent;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 
 public class FishingPermission extends ListeningPermission {
 

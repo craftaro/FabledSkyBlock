@@ -16,24 +16,24 @@ import java.util.List;
 
 public class Spawner implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Spawner(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Spawner(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
     public void onSpawnSpawn(SpawnerSpawnEvent event) {
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
         CreatureSpawner spawner = event.getSpawner();
         org.bukkit.Location location = spawner.getBlock().getLocation();
 
-        if (skyblock.getWorldManager().isIslandWorld(location.getWorld())) {
+        if (plugin.getWorldManager().isIslandWorld(location.getWorld())) {
             Island island = islandManager.getIslandAtLocation(location);
 
             if (island != null) {
-                List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Spawner);
+                List<Upgrade> upgrades = plugin.getUpgradeManager().getUpgrades(Upgrade.Type.Spawner);
 
                 if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
                         && island.isUpgrade(Upgrade.Type.Spawner)) {

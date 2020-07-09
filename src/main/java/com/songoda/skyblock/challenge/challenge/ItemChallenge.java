@@ -1,18 +1,16 @@
 package com.songoda.skyblock.challenge.challenge;
 
-import java.io.File;
-import java.util.List;
-import java.util.UUID;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
 
 public class ItemChallenge {
 	private Challenge challenge;

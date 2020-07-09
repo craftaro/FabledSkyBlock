@@ -1,10 +1,8 @@
 package com.songoda.skyblock.challenge.defaultinv;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,16 +11,17 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager.Config;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultInventory {
 	private final Item defaultItem = new Item(new ItemStack(Material.AIR));
 	private int size;
 	private Item[][] items;
 
-	public DefaultInventory(SkyBlock skyblock) {
-		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "challenges.yml"));
+	public DefaultInventory(SkyBlock plugin) {
+		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "challenges.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 		size = configLoad.getInt("inventory.size");
 		items = new Item[9][size];

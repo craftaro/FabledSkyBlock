@@ -4,7 +4,6 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
-
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.block.Block;
@@ -22,16 +21,16 @@ import java.util.Random;
 
 public class GeneratorManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private List<Generator> generatorStorage = new ArrayList<>();
 
-    public GeneratorManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public GeneratorManager(SkyBlock plugin) {
+        this.plugin = plugin;
         registerGenerators();
     }
 
     public void registerGenerators() {
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "generators.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getString("Generators") == null)
@@ -123,7 +122,7 @@ public class GeneratorManager {
         CompatibleMaterial materials = getRandomMaterials(generator);
         if (materials == null) return block.getState();
         
-        skyblock.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 10.0F);
+        plugin.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 10.0F);
 
 
         if (NMSUtil.getVersionNumber() > 12) {

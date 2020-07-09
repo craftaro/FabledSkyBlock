@@ -16,7 +16,6 @@ import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,21 +42,21 @@ public class Ownership {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                     .getFileConfiguration();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (playerDataManager.hasPlayerData(player)) {
-                    PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+                    PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
                     Island island = islandManager.getIsland(player);
 
                     if (island == null) {
@@ -104,7 +103,7 @@ public class Ownership {
                             configLoad.getString("Menu.Ownership.Item.Assign.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                 if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
                                     if (playerDataManager.hasPlayerData(player)) {
@@ -127,7 +126,7 @@ public class Ownership {
                                             return;
                                         }
 
-                                        Bukkit.getScheduler().runTask(skyblock, () -> Bukkit.getServer().dispatchCommand(player,
+                                        Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getServer().dispatchCommand(player,
                                                 "island ownership " + event1.getName()));
                                     }
                                 } else {
@@ -159,7 +158,7 @@ public class Ownership {
 
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
 
                                 return;
@@ -167,7 +166,7 @@ public class Ownership {
                                 island.setPassword(null);
                                 soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
 
                                 return;
@@ -181,7 +180,7 @@ public class Ownership {
 
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event12 -> {
                                 if (event12.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
                                     if (playerDataManager.hasPlayerData(player)) {
@@ -210,7 +209,7 @@ public class Ownership {
                                                 1.0F);
 
                                         Bukkit.getServer().getScheduler()
-                                                .runTaskLater(skyblock, () -> open(player), 1L);
+                                                .runTaskLater(plugin, () -> open(player), 1L);
                                     }
                                 } else {
                                     event12.setWillClose(false);
@@ -231,7 +230,7 @@ public class Ownership {
                 }
             });
 
-            Island island = skyblock.getIslandManager().getIsland(player);
+            Island island = plugin.getIslandManager().getIsland(player);
 
             UUID originalOwnerUUID = island.getOriginalOwnerUUID();
 
@@ -287,7 +286,7 @@ public class Ownership {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Ownership.Title")));
             nInv.setType(InventoryType.HOPPER);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
         }
     }
 

@@ -1,5 +1,12 @@
 package com.songoda.skyblock.usercache;
 
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.utils.player.NameFetcher;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -7,27 +14,19 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.utils.player.NameFetcher;
-
 public final class UserCacheManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private final Config config;
 
-    public UserCacheManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
-        this.config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "usercache.yml"));
+    public UserCacheManager(SkyBlock plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "usercache.yml"));
 
-        final FileManager fileManager = skyblock.getFileManager();
-        final File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
+        final FileManager fileManager = plugin.getFileManager();
+        final File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
 
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             if (configFile.exists()) {
                 int usersIgnored = 0;
 
@@ -129,7 +128,7 @@ public final class UserCacheManager {
     }
 
     public void saveAsync() {
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> save());
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> save());
     }
 
     public synchronized void save() {

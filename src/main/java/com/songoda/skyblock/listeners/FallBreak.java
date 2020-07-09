@@ -19,10 +19,10 @@ import java.util.List;
 
 public class FallBreak implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public FallBreak(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public FallBreak(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     /*
@@ -36,12 +36,12 @@ public class FallBreak implements Listener {
     public void onItemSpawn(ItemSpawnEvent event) {
 
         // Basic world and island checks
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
 
         if (!worldManager.isIslandWorld(event.getEntity().getWorld())) return;
 
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (!configLoad.getBoolean("Island.Block.Level.Enable")) return;

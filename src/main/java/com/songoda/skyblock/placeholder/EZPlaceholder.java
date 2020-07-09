@@ -19,10 +19,10 @@ import java.util.List;
 
 public class EZPlaceholder extends PlaceholderExpansion {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public EZPlaceholder(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public EZPlaceholder(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     public String getIdentifier() {
@@ -34,11 +34,11 @@ public class EZPlaceholder extends PlaceholderExpansion {
     }
 
     public String getAuthor() {
-        return skyblock.getDescription().getAuthors().get(0);
+        return plugin.getDescription().getAuthors().get(0);
     }
 
     public String getVersion() {
-        return skyblock.getDescription().getVersion();
+        return plugin.getDescription().getVersion();
     }
 
     public boolean persist() {
@@ -46,10 +46,10 @@ public class EZPlaceholder extends PlaceholderExpansion {
     }
 
     public String onPlaceholderRequest(Player player, String identifier) {
-        PlaceholderManager placeholderManager = skyblock.getPlaceholderManager();
-        LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+        PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
+        LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         List<Leaderboard> leaderboardLevelPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Level);
@@ -58,7 +58,7 @@ public class EZPlaceholder extends PlaceholderExpansion {
 
 
         if (identifier.equalsIgnoreCase("islands")) {
-            return "" + skyblock.getVisitManager().getIslands().size();
+            return "" + plugin.getVisitManager().getIslands().size();
         } else {
             for (int i = 0; i < 10; i++) {
                 if (identifier.equalsIgnoreCase("leaderboard_votes_" + (i + 1))) {

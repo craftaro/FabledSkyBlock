@@ -23,8 +23,8 @@ public class OfflinePlayer {
     private final int playtime;
 
     public OfflinePlayer(String name) {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        UserCacheManager userCacheManager = skyblock.getUserCacheManager();
+        SkyBlock plugin = SkyBlock.getInstance();
+        UserCacheManager userCacheManager = plugin.getUserCacheManager();
         
         bukkitOfflinePlayer = Bukkit.getServer().getOfflinePlayer(name);
         
@@ -38,7 +38,7 @@ public class OfflinePlayer {
         this.name = bukkitOfflinePlayer.getName();
 
         FileConfiguration configLoad = YamlConfiguration.loadConfiguration(
-                new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+                new File(new File(plugin.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
         texture = new String[]{configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value")};
         playtime = configLoad.getInt("Statistics.Island.Playtime");
         memberSince = configLoad.getString("Statistics.Island.Join");
@@ -50,8 +50,8 @@ public class OfflinePlayer {
     }
 
     public OfflinePlayer(UUID uuid) {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        UserCacheManager userCacheManager = skyblock.getUserCacheManager();
+        SkyBlock plugin = SkyBlock.getInstance();
+        UserCacheManager userCacheManager = plugin.getUserCacheManager();
     
         bukkitOfflinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
 
@@ -63,7 +63,7 @@ public class OfflinePlayer {
         }
 
         FileConfiguration configLoad = YamlConfiguration.loadConfiguration(
-                new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+                new File(new File(plugin.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
         texture = new String[]{configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value")};
         playtime = configLoad.getInt("Statistics.Island.Playtime");
         memberSince = configLoad.getString("Statistics.Island.Join");

@@ -14,7 +14,6 @@ import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -39,17 +38,17 @@ public class Weather {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                     .getFileConfiguration();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -119,7 +118,7 @@ public class Weather {
                                 all.resetPlayerTime();
                                 all.resetPlayerWeather();
                                 all.setPlayerTime(island.getTime(),
-                                        fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                        fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                                 .getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                 all.setPlayerWeather(island.getWeather());
                             }
@@ -127,7 +126,7 @@ public class Weather {
 
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     } else if ((is.getType() == Material.GHAST_TEAR) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Weather.Item.Weather.Displayname"))))) {
@@ -142,7 +141,7 @@ public class Weather {
                                 all.resetPlayerTime();
                                 all.resetPlayerWeather();
                                 all.setPlayerTime(island.getTime(),
-                                        fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                        fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                                 .getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                 all.setPlayerWeather(island.getWeather());
                             }
@@ -150,7 +149,7 @@ public class Weather {
 
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     } else if ((is.getType() == Material.TRIPWIRE_HOOK) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Weather.Item.Synchronised.Displayname"))))) {
@@ -162,7 +161,7 @@ public class Weather {
 
                             for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
                                 all.setPlayerTime(islandTime,
-                                        fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                        fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                                 .getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                 all.setPlayerWeather(islandWeather);
                             }
@@ -177,7 +176,7 @@ public class Weather {
 
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     }
                 }
             });
@@ -263,7 +262,7 @@ public class Weather {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Weather.Title")));
             nInv.setType(InventoryType.HOPPER);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
         }
     }
 }
