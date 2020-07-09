@@ -6,7 +6,7 @@ public abstract class Manager {
     
     protected SkyBlock plugin;
     
-    Manager(SkyBlock plugin) {
+    public Manager(SkyBlock plugin) {
         this.plugin = plugin;
     }
     
