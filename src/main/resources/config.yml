@@ -12,7 +12,7 @@ Island:
     Performance:
         # Chunk loading per tick affecting operations like island deletion, scan and biome changing.
         # This option is ignored when using Paper's async chunk load
-        # You should increase this only if you have an SSD
+        # You should increase this only if you have a SSD
         ChunkPerTick: 15
     Size:
         # Warning: The maximum is capped at 1000
