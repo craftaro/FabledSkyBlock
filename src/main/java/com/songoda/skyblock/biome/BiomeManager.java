@@ -129,9 +129,11 @@ public class BiomeManager {
                         }
                     }
                     if(ServerVersion.isServerVersionBelow(ASYNC_OBFUSCATOR_VERSION)) {
-                        for(Chunk chunk : syncChunks){
-                            updateBiomePacket(island, chunk);
-                        }
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            for(Chunk chunk : syncChunks){
+                                updateBiomePacket(island, chunk);
+                            }
+                        });
                     }
                 });
             }, (island1 -> {
