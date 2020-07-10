@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public abstract class BasicPermission {
     private final CompatibleMaterial icon;
     private final PermissionType type;
 
-    protected BasicPermission(String name, CompatibleMaterial icon, PermissionType type) {
+    protected BasicPermission(@Nonnull String name, @Nonnull CompatibleMaterial icon, @Nonnull PermissionType type) {
         this.name = name;
         this.icon = icon;
         this.type = type;
