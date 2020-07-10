@@ -231,7 +231,18 @@ public final class IslandLevelManager {
     
     private void updateLevelLocation(Island island, Location location) {
         Block block = location.getBlock();
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+        CompatibleMaterial material = null;
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (block.getType().toString().toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER;
+                    break;
+            }
+        }
+        if(material == null) {
+            material = CompatibleMaterial.getMaterial(block);
+        }
         
         if (material == null || material == CompatibleMaterial.AIR) return;
         

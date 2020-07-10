@@ -1,6 +1,7 @@
 package com.songoda.skyblock.limit.impl;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
@@ -45,11 +46,11 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
         for (String key : keys) {
             final String enumName = key.toUpperCase(Locale.ENGLISH);
-            final CompatibleMaterial type = CompatibleMaterial.getMaterial(enumName);
+            CompatibleMaterial type = CompatibleMaterial.getMaterial(enumName);
 
             if (type == null)
                 throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
-
+    
             getMap().put(type, loadFrom.getLong(key));
         }
 
@@ -64,7 +65,18 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
         if (player.hasPermission("fabledskyblock.limit.block.*")) return -1;
 
-        final CompatibleMaterial material = CompatibleMaterial.getMaterial(type);
+        CompatibleMaterial material = null;
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (type.toString().toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER;
+                    break;
+            }
+        }
+        if(material == null) {
+            material = CompatibleMaterial.getMaterial(type);
+        }
 
         if (material == null) return -1;
 
@@ -78,7 +90,6 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
     }
 
     public boolean isBlockLimitExceeded(Material type, Location loc, long limit) {
-
         if (limit == -1) return false;
 
         final IslandManager islandManager = SkyBlock.getInstance().getIslandManager();
@@ -88,7 +99,19 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
         if (type == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
             totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {
-            totalPlaced = island.getLevel().getMaterialAmount(CompatibleMaterial.getMaterial(type).name());
+            CompatibleMaterial material = null;
+            if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+                switch (type.toString().toUpperCase()) {
+                    case "DIODE_BLOCK_OFF":
+                    case "DIODE_BLOCK_ON":
+                        material = CompatibleMaterial.REPEATER;
+                        break;
+                }
+            }
+            if(material == null) {
+                material = CompatibleMaterial.getMaterial(type);
+            }
+            totalPlaced = island.getLevel().getMaterialAmount(material.name());
         }
 
         return limit <= totalPlaced;

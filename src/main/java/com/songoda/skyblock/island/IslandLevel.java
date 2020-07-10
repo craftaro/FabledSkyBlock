@@ -1,6 +1,8 @@
 package com.songoda.skyblock.island;
 
 import com.google.common.base.Strings;
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.reward.LevelReward;
@@ -94,6 +96,15 @@ public class IslandLevel {
     }
 
     public long getMaterialPoints(String material) {
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (material.toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER.name();
+                    break;
+            }
+        }
+        
         Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -186,6 +197,15 @@ public class IslandLevel {
     }
 
     public void setMaterialAmount(String material, long amount) {
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (material.toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER.name();
+                    break;
+            }
+        }
+        
         plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml")).getFileConfiguration()
                 .set("Levelling.Materials." + material + ".Amount", amount);
 
@@ -193,10 +213,27 @@ public class IslandLevel {
     }
 
     public long getMaterialAmount(String material) {
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (material.toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER.name();
+                    break;
+            }
+        }
         return this.materials.getOrDefault(material, 0l);
     }
 
     public void removeMaterial(String material) {
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (material.toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER.name();
+                    break;
+            }
+        }
+        
         plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml")).getFileConfiguration()
                 .set("Levelling.Materials." + material, null);
 

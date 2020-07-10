@@ -44,8 +44,7 @@ public class Block implements Listener {
     public Block(SkyBlock plugin) {
         this.plugin = plugin;
     }
-
-    @SuppressWarnings("deprecation")
+    
     @EventHandler(priority = EventPriority.LOW)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
@@ -74,7 +73,18 @@ public class Block implements Listener {
         if (stackableManager != null && stackableManager.isStacked(blockLocation)) {
             Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getMaterial(block));
             if (stackable != null) {
-                CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+                CompatibleMaterial material = null;
+                if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+                    switch (block.getType().toString().toUpperCase()) {
+                        case "DIODE_BLOCK_OFF":
+                        case "DIODE_BLOCK_ON":
+                            material = CompatibleMaterial.REPEATER;
+                            break;
+                    }
+                }
+                if(material == null) {
+                    material = CompatibleMaterial.getMaterial(block);
+                }
                 byte data = block.getData();
 
                 int droppedAmount;
@@ -141,8 +151,19 @@ public class Block implements Listener {
         }
 
         if (event.isCancelled() || !configLoad.getBoolean("Island.Block.Level.Enable")) return;
-
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+        
+        CompatibleMaterial material = null;
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (block.getType().toString().toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER;
+                    break;
+            }
+        }
+        if(material == null) {
+            material = CompatibleMaterial.getMaterial(block);
+        }
 
         if (material == null) return;
 
@@ -273,7 +294,18 @@ public class Block implements Listener {
         long limit = limits.getBlockLimit(player, block);
 
         if (limits.isBlockLimitExceeded(block, limit)) {
-            CompatibleMaterial material = CompatibleMaterial.getMaterial(block.getType());
+            CompatibleMaterial material = null;
+            if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+                switch (block.getType().toString().toUpperCase()) {
+                    case "DIODE_BLOCK_OFF":
+                    case "DIODE_BLOCK_ON":
+                        material = CompatibleMaterial.REPEATER;
+                        break;
+                }
+            }
+            if(material == null) {
+                material = CompatibleMaterial.getMaterial(block);
+            }
 
             plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
                     .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
@@ -287,7 +319,7 @@ public class Block implements Listener {
 
         if (event.getBlock().getType() == CompatibleMaterial.END_PORTAL_FRAME.getMaterial()
                 && event.getPlayer().getItemInHand().getType() == CompatibleMaterial.ENDER_EYE.getMaterial()) return;
-    
+        
         islandLevelManager.updateLevel(island, blockLoc);
     }
 
