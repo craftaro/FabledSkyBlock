@@ -50,7 +50,7 @@ public class InviteCommand extends SubCommand {
                 Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
 
                 if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()
-                        + 1) >= mainConfig.getFileConfiguration().getInt("Island.Member.Capacity")) {
+                        + 1) >= island.getMaxMembers()) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Capacity.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else {

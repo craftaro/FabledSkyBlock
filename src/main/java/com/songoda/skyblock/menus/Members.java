@@ -333,8 +333,7 @@ public class Members {
                             new Placeholder("%island_members",
                                     "" + (islandMembers.size() + islandOperators.size() + 1)),
                             new Placeholder("%island_capacity",
-                                    "" + fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                            .getFileConfiguration().getInt("Island.Member.Capacity")),
+                                    "" + island.getMaxMembers()),
                             new Placeholder("%members", "" + islandMembers.size()),
                             new Placeholder("%operators", "" + islandOperators.size())},
                     null, null), 4);
