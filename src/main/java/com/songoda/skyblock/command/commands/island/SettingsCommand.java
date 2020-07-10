@@ -39,7 +39,7 @@ public class SettingsCommand extends SubCommand {
                     && (permissionManager.hasPermission(island, "Visitor", IslandRole.Operator)
                     || permissionManager.hasPermission(island, "Member", IslandRole.Operator)))
                     || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                plugin.getGuiManager().showGUI(player, new GuiPermissionsSelector(plugin, island, null));
+                plugin.getGuiManager().showGUI(player, new GuiPermissionsSelector(plugin, player, island, null));
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
             } else{
                 messageManager.sendMessage(player,

@@ -13,7 +13,7 @@ public class SettingsCommand extends SubCommand {
     public void onCommandByPlayer(Player player, String[] args) {
         SoundManager soundManager = plugin.getSoundManager();
 
-        plugin.getGuiManager().showGUI(player, new GuiPermissionsSelector(plugin, null, null));
+        plugin.getGuiManager().showGUI(player, new GuiPermissionsSelector(plugin, player, null, null));
         soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
     }
 

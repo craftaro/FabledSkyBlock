@@ -10,6 +10,7 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandRole;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,7 +18,7 @@ import java.io.File;
 
 public class GuiPermissionsSelector extends Gui {
 
-    public GuiPermissionsSelector(@Nonnull SkyBlock plugin, @Nullable Island island, @Nullable Gui returnGui) {
+    public GuiPermissionsSelector(@Nonnull SkyBlock plugin, @Nullable Player player, @Nullable Island island, @Nullable Gui returnGui) {
         super(1, returnGui);
         setDefaultItem(null);
 
@@ -34,21 +35,21 @@ public class GuiPermissionsSelector extends Gui {
                 TextUtils.formatText(configLoad.getStringList("Menu." + admin + "Settings.Categories.Item.Visitor.Lore"))), (event) ->
                 guiManager.showGUI(event.player, island == null ?
                         new GuiAdminPermissions(plugin, IslandRole.Visitor, this) :
-                        new GuiPermissions(plugin, island, IslandRole.Visitor, this)));
+                        new GuiPermissions(plugin, player, island, IslandRole.Visitor, this)));
 
         setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING,
                 TextUtils.formatText(configLoad.getString("Menu." + admin + "Settings.Categories.Item.Member.Displayname")),
                 TextUtils.formatText(configLoad.getStringList("Menu." + admin + "Settings.Categories.Item.Member.Lore"))), (event) ->
                 guiManager.showGUI(event.player, island == null ?
                         new GuiAdminPermissions(plugin, IslandRole.Member, this) :
-                        new GuiPermissions(plugin, island, IslandRole.Member, this)));
+                        new GuiPermissions(plugin, player, island, IslandRole.Member, this)));
 
         setButton(4, GuiUtils.createButtonItem(CompatibleMaterial.ITEM_FRAME,
                 TextUtils.formatText(configLoad.getString("Menu." + admin + "Settings.Categories.Item.Operator.Displayname")),
                 TextUtils.formatText(configLoad.getStringList("Menu." + admin + "Settings.Categories.Item.Operator.Lore"))), (event) ->
                 guiManager.showGUI(event.player, island == null ?
                     new GuiAdminPermissions(plugin, IslandRole.Operator, this) :
-                    new GuiPermissions(plugin, island, IslandRole.Operator, this)));
+                    new GuiPermissions(plugin, player, island, IslandRole.Operator, this)));
 
         boolean isCoop = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Coop.Enable");
@@ -65,14 +66,14 @@ public class GuiPermissionsSelector extends Gui {
                             TextUtils.formatText(configLoad.getStringList("Menu.Settings.Categories.Item.Coop.Lore"))), (event) ->
                             guiManager.showGUI(event.player, island == null ?
                                     new GuiAdminPermissions(plugin, IslandRole.Coop, this) :
-                                    new GuiPermissions(plugin, island, IslandRole.Coop, this)));
+                                    new GuiPermissions(plugin, player, island, IslandRole.Coop, this)));
 
         setButton(isCoop ? 7 : 8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_SAPLING.getItem(),
                 TextUtils.formatText(configLoad.getString("Menu." + admin + "Settings.Categories.Item.Owner.Displayname")),
                         TextUtils.formatText(configLoad.getStringList("Menu." + admin + "Settings.Categories.Item.Owner.Lore"))), (event) ->
                         guiManager.showGUI(event.player, island == null ?
                                 new GuiAdminPermissions(plugin, IslandRole.Owner, this) :
-                                new GuiPermissions(plugin, island, IslandRole.Owner, this)));
+                                new GuiPermissions(plugin, player, island, IslandRole.Owner, this)));
 
     }
 }

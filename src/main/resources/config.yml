@@ -291,6 +291,9 @@ Island:
         # items in their inventory if they die at an island.
         Enable: true
     Settings:
+        # With this option true the players will need fabledskyblock.settings.<role>.<settingName> permission
+        # Roles and settings name can be found in the settings.yml file
+        Permission: false
         # When any of these options are disabled, the setting will be removed from the settings menu
         # menu.
         KeepItemsOnDeath:
