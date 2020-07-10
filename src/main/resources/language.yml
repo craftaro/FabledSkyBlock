@@ -3437,168 +3437,168 @@ Menu:
 Placeholder:
   fabledskyblock_leaderboard_votes:
     Empty:
-      Message: '&f&oUnclaimed'
+      Message: 'Unclaimed'
     Non-empty:
-      Message: '&f[%position] %player [%votes]'
+      Message: '[%position] %player [%votes]'
   fabledskyblock_leaderboard_bank:
     Empty:
-      Message: '&f&oUnclaimed'
+      Message: 'Unclaimed'
     Non-empty:
-      Message: '&f[%position] %player [$%balance]'
+      Message: '[%position] %player [$%balance]'
   fabledskyblock_island_exists:
     Exists:
-      Message: '&atrue'
+      Message: 'true'
     Not-exists:
-      Message: '&cfalse'
+      Message: 'false'
   fabledskyblock_island_members:
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_island_coops:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_leaderboard_level:
     Empty:
-      Message: '&f&oUnclaimed'
+      Message: 'Unclaimed'
     Non-empty:
-      Message: '&f[%position] %player [%level]'
+      Message: '[%position] %player [%level]'
   fabledskyblock_island_visitors:
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_island_size:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_maxmembers:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_time:
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_island_bank_balance_formatted:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_owner:
     Non-empty:
       Yourself:
-        Message: '&fYou'
+        Message: 'You'
       Other:
-        Message: '&f%placeholder'
+        Message: '%placeholder'
     Empty:
-      Message: '&f&oNone'
+      Message: '&oNone'
   fabledskyblock_island_leaderboard_bank_rank:
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_island_bans:
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_island_coops_total:
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_island_invites:
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_island_level_block_count:
     Invalid:
-      Message: '&cInvalid Type'
+      Message: 'Invalid Type'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_island_weather:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_role:
     Empty:
-      Message: '&f&oNone'
+      Message: '&oNone'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_operators:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_bank_balance:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_biome:
     Empty:
-      Message: '&f&oNone'
+      Message: '&oNone'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_level_formatted:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_members_total:
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_island_level_block_points:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Invalid:
-      Message: '&cInvalid Type'
+      Message: 'Invalid Type'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_isopen:
     Closed:
-      Message: '&cfalse'
+      Message: 'false'
     Open:
-      Message: '&atrue'
+      Message: 'true'
     Empty:
-      Message: '&cfalse'
+      Message: 'false'
   fabledskyblock_island_votes:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_radius:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_leaderboard_votes_rank:
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
     Empty:
-      Message: '&c0'
+      Message: '0'
   fabledskyblock_level_block_value:
     Invalid:
-      Message: '&cInvalid Type'
+      Message: 'Invalid Type'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
   fabledskyblock_island_leaderboard_level_rank:
     Empty:
-      Message: '&c0'
+      Message: '0'
     Non-empty:
-      Message: '&f%placeholder'
+      Message: '%placeholder'
 Island:
   Limit:
     Block:
