@@ -2246,7 +2246,7 @@ Menu:
       Statistics:
         Lore:
         - '&bIsland Members:'
-        - '&e%island_members/%island_maxMembers'
+        - '&e%island_members/%island_capacity'
         - ''
         - '&bMembers:'
         - '&e%members'
