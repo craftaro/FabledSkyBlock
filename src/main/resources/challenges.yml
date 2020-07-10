@@ -529,7 +529,7 @@ challenges:
             - '&e- 24 pumpkin seeds'
             - '&e- 24 melon seeds'
             - '&e- 24 wheat seeds'
-            - '&c&lEt tu gagneras :'
+            - '&c&lRewards:'
             - '&e- 1 sponge'
             - '&e- 150 $'
       '9':
@@ -617,7 +617,7 @@ challenges:
             - '&e- 1 stack of gunpowder'
             - '&e- 1 stack of arrows'
             - '&e- 1 stack of bones'
-            - '&c&lEt tu gagneras :'
+             - '&c&lRewards:'
             - '&e- 16 iron ingots'
             - '&e- 8 redstone blocks'
             - '&e- 250 $'
@@ -911,7 +911,7 @@ challenges:
             - '&e- 10 ghast tears'
             - '&e- 24 magma cream'
             - '&e- 1 stack of magma blocks'
-            - '&c&lEt tu gagneras :'
+            - '&c&lRewards:'
             - '&e- 1 spawner'
             - '&e- 500 $'
       '4':
