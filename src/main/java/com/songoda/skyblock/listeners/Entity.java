@@ -1,6 +1,7 @@
 package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -34,7 +35,6 @@ import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -44,20 +44,20 @@ public class Entity implements Listener {
 
     private final SkyBlock plugin;
 
-    private Set<UUID> preventFireTicks = new HashSet<>();
+    private final Set<UUID> preventFireTicks = new HashSet<>();
 
     public Entity(SkyBlock plugin) {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onFireWorkBoom(EntityDamageByEntityEvent event) {
         if (event.getDamager().getType() == EntityType.FIREWORK
                 && plugin.getWorldManager().isIslandWorld(event.getEntity().getWorld()))
             event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         IslandManager islandManager = plugin.getIslandManager();
         if(event.getEntity() instanceof Blaze){
@@ -88,62 +88,52 @@ public class Entity implements Listener {
             }
         }
     }
-
-    @EventHandler
+    
+    @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         IslandManager islandManager = plugin.getIslandManager();
-
-        if (event.getDamager() instanceof Player) {
-            Player player = (Player) event.getDamager();
-            org.bukkit.entity.Entity entity = event.getEntity();
-
-            if (plugin.getWorldManager().isIslandWorld(entity.getWorld())) {
-
-                // Check permissions.
-                plugin.getPermissionManager()
-                        .processPermission(event, player, islandManager.getIslandAtLocation(entity.getLocation()));
+    
+        org.bukkit.entity.Entity victim = event.getEntity();
+        Island island = islandManager.getIslandAtLocation(victim.getLocation());
+    
+        if(island != null) {
+            org.bukkit.entity.Entity attacker = event.getDamager();
+            if(attacker instanceof Projectile && ((Projectile) attacker).getShooter() instanceof org.bukkit.entity.Entity) {
+                attacker = (org.bukkit.entity.Entity) ((Projectile) attacker).getShooter();
             }
-
-            return;
-        }
-
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-
-            // Check permissions.
-            plugin.getPermissionManager()
-                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()), true);
-
-        } else if((event.getDamager() instanceof org.bukkit.entity.Projectile
-                    && ((Projectile) event.getDamager()).getShooter() instanceof Player)){
-            Player player = (Player) ((Projectile) event.getDamager()).getShooter();
-            plugin.getPermissionManager()
-                    .processPermission(event, player, islandManager.getIslandAtLocation(player.getLocation()));
-        } else { // Make it work with all the entities, not just TNT
-            org.bukkit.entity.Entity entity = event.getEntity();
-
-            // Check permissions.
-            plugin.getPermissionManager()
-                    .processPermission(event, islandManager.getIslandAtLocation(entity.getLocation()));
-        }
-
-        // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
-        // the shot entity isn't damaged
-        if (event.isCancelled() && event.getDamager() instanceof Arrow
-                && ((Arrow) event.getDamager()).getShooter() instanceof Player) {
-            Arrow arrow = (Arrow) event.getDamager();
-            if (arrow.getFireTicks() != 0) {
-                preventFireTicks.add(event.getEntity().getUniqueId());
-                new BukkitRunnable() {
-                    public void run() {
-                        preventFireTicks.remove(event.getEntity().getUniqueId());
-                    }
-                }.runTaskLater(SkyBlock.getInstance(), 5L);
+    
+            if(victim instanceof Player && attacker instanceof Player) { // PVP
+                if(plugin.getPermissionManager()
+                        .processPermission(event, (Player) attacker, island)) {
+                    plugin.getPermissionManager()
+                            .processPermission(event, (Player) victim, island);
+                }
+            } else if(victim instanceof Player) { // EVP
+                plugin.getPermissionManager()
+                        .processPermission(event, (Player) victim, island, true);
+            } else if(attacker instanceof Player) { // PVE
+                plugin.getPermissionManager()
+                        .processPermission(event, (Player) attacker, island);
+            } else { // EVE
+                plugin.getPermissionManager()
+                        .processPermission(event, island);
+            }
+    
+            // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
+            // the shot entity isn't damaged
+            if (event.isCancelled() && event.getDamager() instanceof Arrow) {
+                Arrow arrow = (Arrow) event.getDamager();
+                if (arrow.getFireTicks() != 0) {
+                    preventFireTicks.add(event.getEntity().getUniqueId());
+                    Bukkit.getScheduler().runTaskLater(plugin,
+                            () -> preventFireTicks.remove(event.getEntity().getUniqueId()),
+                            5L);
+                }
             }
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
         Player player = event.getPlayer();
 
@@ -161,7 +151,7 @@ public class Entity implements Listener {
      *
      * @author LimeGlass
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityTarget(EntityTargetEvent event) {
         org.bukkit.entity.Entity entity = event.getEntity();
         WorldManager worldManager = plugin.getWorldManager();
@@ -184,11 +174,10 @@ public class Entity implements Listener {
         // Both entities are on different islands.
         if (!entityIsland.getIslandUUID().equals(targetIsland.getIslandUUID())) {
             event.setCancelled(true);
-            return;
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onStackableInteract(PlayerArmorStandManipulateEvent event) {
         Player player = event.getPlayer();
         if (!plugin.getWorldManager().isIslandWorld(player.getWorld())) return;
@@ -213,18 +202,20 @@ public class Entity implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onHangingPlace(HangingPlaceEvent event) {
         Player player = event.getPlayer();
-        if (!plugin.getWorldManager().isIslandWorld(player.getWorld())) return;
-        IslandManager islandManager = plugin.getIslandManager();
-
-        // Check permissions.
-        plugin.getPermissionManager().processPermission(event, player,
-                islandManager.getIslandAtLocation(event.getEntity().getLocation()));
+        if (player != null) {
+            if (!plugin.getWorldManager().isIslandWorld(player.getWorld())) return;
+            IslandManager islandManager = plugin.getIslandManager();
+    
+            // Check permissions.
+            plugin.getPermissionManager().processPermission(event, player,
+                    islandManager.getIslandAtLocation(event.getEntity().getLocation()));
+        }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onHangingBreak(HangingBreakEvent event) {
         Hanging hanging = event.getEntity();
 
@@ -236,7 +227,7 @@ public class Entity implements Listener {
                 islandManager.getIslandAtLocation(hanging.getLocation()));
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onHangingBreak(HangingBreakByEntityEvent event) {
         Hanging hanging = event.getEntity();
 
@@ -252,7 +243,7 @@ public class Entity implements Listener {
                 islandManager.getIslandAtLocation(hanging.getLocation()));
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityTaming(EntityTameEvent event) {
         if (!(event.getOwner() instanceof Player))
             return;
@@ -267,8 +258,7 @@ public class Entity implements Listener {
                 islandManager.getIslandAtLocation(entity.getLocation()));
     }
 
-    @EventHandler
-    @SuppressWarnings("deprecation")
+    @EventHandler(ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         org.bukkit.entity.Entity entity = event.getEntity();
 
@@ -315,7 +305,7 @@ public class Entity implements Listener {
                     try {
                         Method getBlockDataMethod = FallingBlock.class.getMethod("getBlockData");
                         byte data = (byte) getBlockDataMethod.invoke(fallingBlock);
-                        if (fallingBlock.getMaterial().name().endsWith("ANVIL")) {
+                        if (fallingBlock.getMaterial().name().endsWith("ANVIL")) { // TODO Reflection
                             data = (byte) Math.ceil(data / 4.0);
                         }
                         fallingBlock.getWorld().dropItemNaturally(fallingBlock.getLocation(), new ItemStack(fallingBlock.getMaterial(), 1, data));
@@ -345,8 +335,8 @@ public class Entity implements Listener {
 
         removeBlockFromLevel(island, block);
         CompatibleMaterial materials;
-
-        if (event.getTo() != null && event.getTo() != Material.AIR) {
+        
+        if (event.getTo() != Material.AIR) {
             materials = CompatibleMaterial.getBlockMaterial(event.getTo());
             ;
 
@@ -364,7 +354,7 @@ public class Entity implements Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntityExplode(EntityExplodeEvent event) {
         org.bukkit.entity.Entity entity = event.getEntity();
 
@@ -463,7 +453,7 @@ public class Entity implements Listener {
         removeBlockFromLevel(island, CompatibleMaterial.getBlockMaterial(block.getType()));
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity livingEntity = event.getEntity();
 
@@ -472,20 +462,20 @@ public class Entity implements Listener {
             return;
         }
 
-        if (NMSUtil.getVersionNumber() > 9) {
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10)) {
             if (livingEntity instanceof Donkey || livingEntity instanceof Mule || livingEntity instanceof ElderGuardian)
                 return;
         }
 
-        if (NMSUtil.getVersionNumber() > 10) {
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
             if (livingEntity instanceof Evoker) return;
         }
 
-        if (NMSUtil.getVersionNumber() > 11) {
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
             if (livingEntity instanceof Llama) return;
         }
 
-        if (NMSUtil.getVersionNumber() > 13) {
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
             if (livingEntity instanceof Ravager || livingEntity instanceof Illager) return;
         }
 
@@ -528,7 +518,7 @@ public class Entity implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
         if (!(event.getTarget() instanceof Player))
             return;
@@ -554,9 +544,8 @@ public class Entity implements Listener {
         if (raid != null) CHECKED_REASONS.add(raid);
 
     }
-
-    @SuppressWarnings("deprecation")
-    @EventHandler
+    
+    @EventHandler(ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         if (entity instanceof ArmorStand) return;
@@ -601,10 +590,10 @@ public class Entity implements Listener {
             return;
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            if (NMSUtil.getVersionNumber() > 10) { // getPassengers() was added in 1.11
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) { // getPassengers() was added in 1.11
                 for (org.bukkit.entity.Entity passenger : entity.getPassengers())
                     passenger.remove();
-            } else {
+            } else { // TODO Reflection
                 if (entity.getPassenger() != null) entity.getPassenger().remove();
             }
             entity.remove();
@@ -612,7 +601,7 @@ public class Entity implements Listener {
         event.setCancelled(true); // For other plugin API reasons.
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onDamageVehicle(VehicleDamageEvent event) {
         if (!(event.getAttacker() instanceof Player)) {
             IslandManager islandManager = plugin.getIslandManager();
@@ -620,7 +609,7 @@ public class Entity implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onDestroyVehicle(VehicleDestroyEvent event) {
         if (!(event.getAttacker() instanceof Player)) {
             IslandManager islandManager = plugin.getIslandManager();
