@@ -23,15 +23,14 @@ import org.bukkit.scoreboard.Team.Option;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreboardManager {
     
     private final SkyBlock plugin;
-    private final Map<UUID, Scoreboard> scoreboardStorage = new HashMap<>();
+    private final Map<UUID, Scoreboard> scoreboardStorage = new ConcurrentHashMap<>();
     
     private final PlayerDataManager playerDataManager;
-
-    private int runTicks = 0;
 
     private final List<String> teamNames = new ArrayList<>();
     private final List<String> objectiveNames = new ArrayList<>();
@@ -43,7 +42,7 @@ public class ScoreboardManager {
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateScoreboards,  20L, 40L);
     }
 
-    private void updateScoreboards() {
+    private synchronized void updateScoreboards() {
         final org.bukkit.scoreboard.Scoreboard primary = Bukkit.getScoreboardManager().getMainScoreboard();
         final Set<Objective> objectives = primary.getObjectives();
         final Set<Team> teams = primary.getTeams();
@@ -148,7 +147,7 @@ public class ScoreboardManager {
         }
     }
 
-    public void reloadScoreboards(boolean createNew) {
+    public synchronized void reloadScoreboards(boolean createNew) {
 
         FileManager fileManager = plugin.getFileManager();
 
@@ -207,11 +206,11 @@ public class ScoreboardManager {
         return str != null ? ChatColor.translateAlternateColorCodes('&', str) : null;
     }
 
-    public void storeScoreboard(Player player, Scoreboard scoreboard) {
+    public synchronized void storeScoreboard(Player player, Scoreboard scoreboard) {
         scoreboardStorage.put(player.getUniqueId(), scoreboard);
     }
 
-    public Scoreboard getScoreboard(Player player) {
+    public synchronized Scoreboard getScoreboard(Player player) {
         if (scoreboardStorage.containsKey(player.getUniqueId())) {
             return scoreboardStorage.get(player.getUniqueId());
         }
@@ -219,15 +218,15 @@ public class ScoreboardManager {
         return null;
     }
 
-    public boolean hasScoreboard(Player player) {
+    public synchronized boolean hasScoreboard(Player player) {
         return scoreboardStorage.containsKey(player.getUniqueId());
     }
     
-    public Map<UUID, Scoreboard> getScoreboardStorage() {
+    public synchronized Map<UUID, Scoreboard> getScoreboardStorage() {
         return this.scoreboardStorage;
     }
     
-    public void addPlayer(Player player){
+    public synchronized void addPlayer(Player player){
         CooldownManager cooldownManager = plugin.getCooldownManager();
         FileManager fileManager = plugin.getFileManager();
         IslandManager islandManager = plugin.getIslandManager();
@@ -269,7 +268,7 @@ public class ScoreboardManager {
         this.storeScoreboard(player, scoreboard);
     }
     
-    public void removePlayer(Player player){
+    public synchronized void removePlayer(Player player){
         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         this.scoreboardStorage.remove(player.getUniqueId());
     }
