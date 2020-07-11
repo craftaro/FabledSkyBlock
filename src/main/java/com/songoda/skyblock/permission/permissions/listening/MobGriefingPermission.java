@@ -5,9 +5,11 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
@@ -73,22 +75,12 @@ public class MobGriefingPermission extends ListeningPermission {
             event.setCancelled(true);
         }
     }
-
-    /*@PermissionHandler // TODO ? - Fabrimat
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Entity entity = event.getEntity();
-        EntityType type = event.getEntityType();
-
-        if (type == EntityType.ARMOR_STAND || type == EntityType.PLAYER || entity instanceof Monster) return;
-
-        Player player;
-        if (event.getDamager() instanceof Player)
-            player = (Player)event.getDamager();
-        else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player)
-            player = (Player) ((Projectile) event.getDamager()).getShooter();
-        else return;
-
-        cancelAndMessage(event, player, plugin, messageManager);
-    }*/
+    
+    @PermissionHandler
+    public void onMobChangeBlock(EntityChangeBlockEvent event) {
+        if(event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player)) {
+            event.setCancelled(true);
+        }
+    }
 }
 
