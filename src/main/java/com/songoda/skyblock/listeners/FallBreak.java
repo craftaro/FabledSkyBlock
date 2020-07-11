@@ -79,7 +79,7 @@ public class FallBreak implements Listener {
                     }
                 }
             }
-        }, 2L, 1L);
+        }, 2L, 2L);
     }
     
     @EventHandler
