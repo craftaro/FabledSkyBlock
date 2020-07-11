@@ -1,5 +1,6 @@
 package com.songoda.skyblock.scoreboard;
 
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -23,9 +24,8 @@ import org.bukkit.scoreboard.Team.Option;
 import java.io.File;
 import java.util.*;
 
-public class ScoreboardManager extends BukkitRunnable {
-
-    private final static int VERSION = NMSUtil.getVersionNumber();
+public class ScoreboardManager {
+    
     private final SkyBlock plugin;
     private final Map<UUID, Scoreboard> scoreboardStorage = new HashMap<>();
     
@@ -39,48 +39,41 @@ public class ScoreboardManager extends BukkitRunnable {
     public ScoreboardManager(SkyBlock plugin) {
         this.plugin = plugin;
         this.playerDataManager = plugin.getPlayerDataManager();
-        this.runTaskTimer(plugin, 20, 40);
+        Bukkit.getScheduler().runTask(plugin, () -> reloadScoreboards(true));
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateScoreboards,  20L, 40L);
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void run() {
-
-        if (runTicks++ == 0) {
-            updateScoreboards(true);
-            return;
-        }
-
+    private void updateScoreboards() {
         final org.bukkit.scoreboard.Scoreboard primary = Bukkit.getScoreboardManager().getMainScoreboard();
-        final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         final Set<Objective> objectives = primary.getObjectives();
         final Set<Team> teams = primary.getTeams();
-
-        for (Player player : players) {
-
-            /*
-             * Unregister all teams or objectives that are no longer present in the main
-             * scoreboard.
-             */
-
-            final org.bukkit.scoreboard.Scoreboard board = player.getScoreboard();
-
-            for (String name : objectiveNames) {
-
-                if (primary.getObjective(name) != null) continue;
-
-                final Objective objective = board.getObjective(name);
-
-                if (objective != null) objective.unregister();
-            }
-
-            for (String name : teamNames) {
-
-                if (primary.getTeam(name) != null) continue;
-
-                final Team team = board.getTeam(name);
-
-                if (team != null) team.unregister();
+    
+        /*
+         * Unregister all teams or objectives that are no longer present in the main
+         * scoreboard.
+         */
+        for (UUID uuid : scoreboardStorage.keySet()) {
+            Player player = Bukkit.getPlayer(uuid);
+            if(player != null) {
+                final org.bukkit.scoreboard.Scoreboard board = player.getScoreboard();
+    
+                for (String name : objectiveNames) {
+        
+                    if (primary.getObjective(name) != null) continue;
+        
+                    final Objective objective = board.getObjective(name);
+        
+                    if (objective != null) objective.unregister();
+                }
+    
+                for (String name : teamNames) {
+        
+                    if (primary.getTeam(name) != null) continue;
+        
+                    final Team team = board.getTeam(name);
+        
+                    if (team != null) team.unregister();
+                }
             }
         }
 
@@ -90,57 +83,64 @@ public class ScoreboardManager extends BukkitRunnable {
 
         objectiveNames.clear();
         teamNames.clear();
+        
+        for(Objective objective : objectives) {
+            if (primary.getObjective(objective.getName()) != null) {
+                objectiveNames.add(objective.getName());
+            }
+        }
 
-        objectives.forEach(objective -> {
-            if (primary.getObjective(objective.getName()) != null) objectiveNames.add(objective.getName());
-        });
-        teams.forEach(team -> {
-            if (primary.getTeam(team.getName()) != null) teamNames.add(team.getName());
-        });
-
+        for(Team team : teams) {
+            if (primary.getTeam(team.getName()) != null) {
+                teamNames.add(team.getName());
+            }
+        }
+        
         /*
          * Update or add any missing information to the player's scoreboard.
          */
-
-        for (Player player : players) {
     
-            PlayerData pd = playerDataManager.getPlayerData(player);
-            if(pd != null && pd.isScoreboard()){
-                final org.bukkit.scoreboard.Scoreboard playerBoard = player.getScoreboard();
-    
-                for (Objective primaryObjective : objectives) {
+        for (UUID uuid : scoreboardStorage.keySet()) {
+            Player player = Bukkit.getPlayer(uuid);
+            if(player != null) {
+                PlayerData pd = playerDataManager.getPlayerData(player);
+                if(pd != null && pd.isScoreboard()){
+                    final org.bukkit.scoreboard.Scoreboard playerBoard = player.getScoreboard();
         
-                    Objective obj = playerBoard.getObjective(primaryObjective.getName());
-        
-                    if (obj == null)
-                        obj = playerBoard.registerNewObjective(primaryObjective.getName(), primaryObjective.getCriteria());
-        
-                    obj.setDisplayName(primaryObjective.getDisplayName());
-                    obj.setDisplaySlot(primaryObjective.getDisplaySlot());
-                    if (VERSION > 12) obj.setRenderType(primaryObjective.getRenderType());
-                }
-    
-                for (Team primaryTeam : teams) {
-        
-                    Team obj = playerBoard.getTeam(primaryTeam.getName());
-        
-                    if (obj == null) obj = playerBoard.registerNewTeam(primaryTeam.getName());
-        
-                    obj.setAllowFriendlyFire(primaryTeam.allowFriendlyFire());
-                    obj.setCanSeeFriendlyInvisibles(primaryTeam.canSeeFriendlyInvisibles());
-                    if (VERSION > 11) obj.setColor(primaryTeam.getColor());
-                    obj.setDisplayName(primaryTeam.getDisplayName());
-                    obj.setNameTagVisibility(primaryTeam.getNameTagVisibility());
-                    obj.setPrefix(primaryTeam.getPrefix());
-                    obj.setSuffix(primaryTeam.getSuffix());
-        
-                    for (String primaryEntry : primaryTeam.getEntries()) {
-                        obj.addEntry(primaryEntry);
+                    for (Objective primaryObjective : objectives) {
+            
+                        Objective obj = playerBoard.getObjective(primaryObjective.getName());
+            
+                        if (obj == null)
+                            obj = playerBoard.registerNewObjective(primaryObjective.getName(), primaryObjective.getCriteria());
+            
+                        obj.setDisplayName(primaryObjective.getDisplayName());
+                        obj.setDisplaySlot(primaryObjective.getDisplaySlot());
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) obj.setRenderType(primaryObjective.getRenderType());
                     }
         
-                    if (VERSION > 8) {
-                        for (Option option : Option.values()) {
-                            obj.setOption(option, primaryTeam.getOption(option));
+                    for (Team primaryTeam : teams) {
+            
+                        Team obj = playerBoard.getTeam(primaryTeam.getName());
+            
+                        if (obj == null) obj = playerBoard.registerNewTeam(primaryTeam.getName());
+            
+                        obj.setAllowFriendlyFire(primaryTeam.allowFriendlyFire());
+                        obj.setCanSeeFriendlyInvisibles(primaryTeam.canSeeFriendlyInvisibles());
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) obj.setColor(primaryTeam.getColor());
+                        obj.setDisplayName(primaryTeam.getDisplayName());
+                        obj.setNameTagVisibility(primaryTeam.getNameTagVisibility());
+                        obj.setPrefix(primaryTeam.getPrefix());
+                        obj.setSuffix(primaryTeam.getSuffix());
+            
+                        for (String primaryEntry : primaryTeam.getEntries()) {
+                            obj.addEntry(primaryEntry);
+                        }
+            
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+                            for (Option option : Option.values()) {
+                                obj.setOption(option, primaryTeam.getOption(option));
+                            }
                         }
                     }
                 }
@@ -148,7 +148,7 @@ public class ScoreboardManager extends BukkitRunnable {
         }
     }
 
-    public void updateScoreboards(boolean createNew) {
+    public void reloadScoreboards(boolean createNew) {
 
         FileManager fileManager = plugin.getFileManager();
 

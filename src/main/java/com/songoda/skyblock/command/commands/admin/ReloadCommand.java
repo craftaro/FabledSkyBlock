@@ -68,7 +68,7 @@ public class ReloadCommand extends SubCommand {
                 plugin.setScoreboardManager(new ScoreboardManager(plugin));
             }
         } else {
-            plugin.getScoreboardManager().updateScoreboards(false);
+            plugin.getScoreboardManager().reloadScoreboards(false);
         }
 
         if (plugin.getGeneratorManager() == null) {
