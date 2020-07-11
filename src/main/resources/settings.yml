@@ -170,4 +170,4 @@ Settings:
         Explosions: true
         FireSpread: true
         LeafDecay: true
-        KeepItemsOnDeath: true
+        KeepItemsOnDeath: false
