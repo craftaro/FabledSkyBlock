@@ -186,7 +186,7 @@ public class Challenge {
 							if(isItem) {
 								if(jis.getAmount() <= toRemove) {
 									toRemove -= jis.getAmount();
-									p.getInventory().remove(jis);
+									p.getInventory().removeItem(jis);
 								} else {
 									jis.setAmount(jis.getAmount() - toRemove);
 									toRemove = 0;
