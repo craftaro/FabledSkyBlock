@@ -47,6 +47,9 @@ Materials:
     ALLIUM:
         Limit: -1
         Points: 1
+    ANCIENT_DEBRIES:
+        Limit: -1
+        Points: 2
     ANDESITE:
         Limit: -1
         Points: 1
@@ -83,6 +86,9 @@ Materials:
     BARREL:
         Limit: -1
         Points: 1
+    BASALT:
+        Limit: -1
+        Points: 2
     BEACON:
         Limit: -1
         Points: 500
@@ -90,6 +96,12 @@ Materials:
         Limit: -1
         Points: 0
     BEETROOTS:
+        Limit: -1
+        Points: 1
+    BEE_NEST:
+        Limit: -1
+        Points: 1
+    BEEHIVE:
         Limit: -1
         Points: 1
     BELL:
@@ -176,6 +188,18 @@ Materials:
     BLACK_WOOL:
         Limit: -1
         Points: 2
+    BLACKSTONE:
+        Limit: -1
+        Points: 2
+    BLACKSTONE_STAIRS:
+        Limit: -1
+        Points: 5
+    BLACKSTONE_WALL:
+        Limit: -1
+        Points: 5
+    BLASTSTONE_SLAB:
+        Limit: -1
+        Points: 1
     BLAST_FURNACE:
         Limit: -1
         Points: 6
@@ -335,6 +359,9 @@ Materials:
     CAVE_AIR:
         Limit: -1
         Points: 0
+    CHAIN:
+        Limit: -1
+        Points: 1
     CHAIN_COMMAND_BLOCK:
         Limit: -1
         Points: 0
@@ -344,6 +371,12 @@ Materials:
     CHIPPED_ANVIL:
         Limit: -1
         Points: 9
+    CHISELED_NETHER_BRICKS:
+        Limit: -1
+        Points: 2
+    CHISELED_POLISHED_BLACKSTONE:
+        Limit: -1
+        Points: 2
     CHISELED_QUARTZ_BLOCK:
         Limit: -1
         Points: 2
@@ -407,6 +440,12 @@ Materials:
     CORNFLOWER:
         Limit: -1
         Points: 1
+    CRACKED_NETHER_BRICKS:
+        Limit: -1
+        Points: 2
+    CRACKED_POLISHED_BLACKSTONE_BRICKS:
+        Limit: -1
+        Points: 2
     CRACKED_STONE_BRICKS:
         Limit: -1
         Points: 2
@@ -417,6 +456,54 @@ Materials:
         Limit: -1
         Points: 1
     CREEPER_WALL_HEAD:
+        Limit: -1
+        Points: 1
+    CRIMSON_BUTTON:
+        Limit: -1
+        Points: 1
+    CRIMSON_DOOR:
+        Limit: -1
+        Points: 1
+    CRIMSON_FENCE:
+        Limit: -1
+        Points: 1
+    CRIMSON_FENCE_GATE:
+        Limit: -1
+        Points: 1
+    CRIMSON_FUNGUS:
+        Limit: -1
+        Points: 1
+    CRIMSON_HYPHAE:
+        Limit: -1
+        Points: 1
+    CRIMSON_NYLIUM:
+        Limit: -1
+        Points: 1
+    CRIMSON_PLANKS:
+        Limit: -1
+        Points: 1
+    CRIMSON_PRESSURE_PLATE:
+        Limit: -1
+        Points: 1
+    CRIMSON_ROOTS:
+        Limit: -1
+        Points: 1
+    CRIMSON_SIGN:
+        Limit: -1
+        Points: 1
+    CRIMSON_SLAB:
+        Limit: -1
+        Points: 1
+    CRIMSON_STAIRS:
+        Limit: -1
+        Points: 1
+    CRIMSON_STEM:
+        Limit: -1
+        Points: 1
+    CRIMSON_TRAPDOOR:
+        Limit: -1
+        Points: 1
+    CRIMSON_WALL_SIGN:
         Limit: -1
         Points: 1
     CUT_RED_SANDSTONE:
@@ -431,6 +518,9 @@ Materials:
     CUT_SANDSTONE_SLAB:
         Limit: -1
         Points: 1
+    CRYING_OBSIDIAN:
+        Limit: -1
+        Points: 20
     CYAN_BANNER:
         Limit: -1
         Points: 2
@@ -698,6 +788,9 @@ Materials:
     GLASS_PANE:
         Limit: -1
         Points: 1
+    GILDED_BLACKSTONE:
+        Limit: -1
+        Points: 2
     GLOWSTONE:
         Limit: -1
         Points: 1
@@ -810,6 +903,12 @@ Materials:
         Limit: -1
         Points: 2
     HEAVY_WEIGHTED_PRESSURE_PLATE:
+        Limit: -1
+        Points: 3
+    HONEY_BLOCK:
+        Limit: -1
+        Points: 2
+    HONEYCOMB_BLOCK:
         Limit: -1
         Points: 3
     HOPPER:
@@ -1064,6 +1163,9 @@ Materials:
     LIME_WOOL:
         Limit: -1
         Points: 2
+    LODESTONE:
+        Limit: -1
+        Points: 15
     LOOM:
         Limit: -1
         Points: 4
@@ -1163,10 +1265,16 @@ Materials:
     NETHER_BRICK_STAIRS:
         Limit: -1
         Points: 2
+    NETHER_GOLD_ORE:
+        Limit: -1
+        Points: 2
     NETHER_PORTAL:
         Limit: -1
         Points: 1
     NETHER_QUARTZ_ORE:
+        Limit: -1
+        Points: 1
+    NETHER_SPROUTS:
         Limit: -1
         Points: 1
     NETHER_WART:
@@ -1175,6 +1283,9 @@ Materials:
     NETHER_WART_BLOCK:
         Limit: -1
         Points: 2
+    NETHERITE_BLOCK:
+        Limit: -1
+        Points: 1
     NOTE_BLOCK:
         Limit: -1
         Points: 10
@@ -1343,6 +1454,39 @@ Materials:
     POLISHED_ANDESITE_STAIRS:
         Limit: -1
         Points: 1
+    POLISHED_BASALT:
+        Limit: -1
+        Points: 3
+    POLISHED_BLACKSTONE:
+        Limit: -1
+        Points: 3
+    POLISHED_BLACKSTONE_BRICKS:
+        Limit: -1
+        Points: 5
+    POLISHED_BLACKSTONE_BRICK_SLAB:
+        Limit: -1
+        Points: 2
+    POLISHED_BLACKSTONE_BRICK_STAIRS:
+        Limit: -1
+        Points: 3
+    POLISHED_BLACKSTONE_BRICK_WALL:
+        Limit: -1
+        Points: 2
+    POLISHED_BLACKSTONE_BUTTON:
+        Limit: -1
+        Points: 1
+    POLISHED_BLACKSTONE_PRESSURE_PLATE:
+        Limit: -1
+        Points: 1
+    POLISHED_BLACKSTONE_SLAB:
+        Limit: -1
+        Points: 1
+    POLISHED_BLACKSTONE_STAIRS:
+        Limit: -1
+        Points: 2
+    POLISHED_BLACKSTONE_WALL:
+        Limit: -1
+        Points: 3
     POLISHED_DIORITE:
         Limit: -1
         Points: 1
@@ -1523,6 +1667,9 @@ Materials:
     QUARTZ_BLOCK:
         Limit: -1
         Points: 1
+    QUARTZ_BRICKS:
+        Limit: -1
+        Points: 1
     QUARTZ_PILLAR:
         Limit: -1
         Points: 1
@@ -1628,6 +1775,9 @@ Materials:
     REPEATING_COMMAND_BLOCK:
         Limit: -1
         Points: 0
+    RESPAWN_ANCHOR:
+        Limit: -1
+        Points: 20
     ROSE_BUSH:
         Limit: -1
         Points: 1
@@ -1658,6 +1808,9 @@ Materials:
     SEA_PICKLE:
         Limit: -1
         Points: 1
+    SHROOMLIGHT:
+        Limit: -1
+        Points: 2
     SHULKER_BOX:
         Limit: -1
         Points: 10
@@ -1709,9 +1862,24 @@ Materials:
     SNOW_BLOCK:
         Limit: -1
         Points: 1
+    SOUL_CAMPFIRE:
+        Limit: -1
+        Points: 1
+    SOUL_LANTERN:
+        Limit: -1
+        Points: 1
     SOUL_SAND:
         Limit: -1
         Points: 1
+    SOUL_SOIL:
+        Limit: -1
+        Points: 1
+    SOUL_TORCH:
+        Limit: -1
+        Points: 0
+    SOUL_WALL_TORCH:
+        Limit: -1
+        Points: 0
     SPAWNER:
         Limit: -1
         Points: 10
@@ -1979,6 +2147,12 @@ Materials:
     STRIPPED_BIRCH_WOOD:
         Limit: -1
         Points: 1
+    STRIPPED_CRIMSON_HYPHAE:
+        Limit: -1
+        Points: 0
+    STRIPPED_CRIMSON_STEM:
+        Limit: -1
+        Points: 0
     STRIPPED_DARK_OAK_LOG:
         Limit: -1
         Points: 0
@@ -2003,6 +2177,12 @@ Materials:
     STRIPPED_SPRUCE_WOOD:
         Limit: -1
         Points: 1
+    STRIPPED_WARPED_HYPHAE:
+        Limit: -1
+        Points: 0
+    STRIPPED_WARPED_STEM:
+        Limit: -1
+        Points: 0
     SUGAR_CANE:
         Limit: -1
         Points: 1
@@ -2016,6 +2196,9 @@ Materials:
         Limit: -1
         Points: 1
     TALL_SEAGRASS:
+        Limit: -1
+        Points: 1
+    TARGET:
         Limit: -1
         Points: 1
     TERRACOTTA:
@@ -2051,6 +2234,12 @@ Materials:
     TURTLE_EGG:
         Limit: -1
         Points: 1
+    TWISTING_VINES:
+        Limit: -1
+        Points: 1
+    TWISTING_VINES_PLANT:
+        Limit: -1
+        Points: 1
     VINE:
         Limit: -1
         Points: 1
@@ -2058,6 +2247,63 @@ Materials:
         Limit: -1
         Points: 0
     WALL_TORCH:
+        Limit: -1
+        Points: 1
+    WARPED_BUTTON:
+        Limit: -1
+        Points: 1
+    WARPED_DOOR:
+        Limit: -1
+        Points: 1
+    WARPED_FENCE:
+        Limit: -1
+        Points: 1
+    WARPED_FENCE_GATE:
+        Limit: -1
+        Points: 1
+    WARPED_FUNGUS:
+        Limit: -1
+        Points: 1
+    WARPED_HYPHAE:
+        Limit: -1
+        Points: 1
+    WARPED_NYLIUM:
+        Limit: -1
+        Points: 1
+    WARPED_PLANKS:
+        Limit: -1
+        Points: 1
+    WARPED_PRESSURE_PLATE:
+        Limit: -1
+        Points: 1
+    WARPED_ROOTS:
+        Limit: -1
+        Points: 1
+    WARPED_SIGN:
+        Limit: -1
+        Points: 1
+    WARPED_SLAB:
+        Limit: -1
+        Points: 1
+    WARPED_STAIRS:
+        Limit: -1
+        Points: 1
+    WARPED_STEM:
+        Limit: -1
+        Points: 1
+    WARPED_TRAPDOOR:
+        Limit: -1
+        Points: 1
+    WARPED_WALL_SIGN:
+        Limit: -1
+        Points: 1
+    WARPED_WART_BLOCK:
+        Limit: -1
+        Points: 1
+    WEEPING_VINES:
+        Limit: -1
+        Points: 1
+    WEEPING_VINES_PLANT:
         Limit: -1
         Points: 1
     WET_SPONGE:
