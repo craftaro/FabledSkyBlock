@@ -44,7 +44,7 @@ public class Island {
 
     private UUID islandUUID;
     private UUID ownerUUID;
-    private IslandLevel level;
+    private final IslandLevel level;
     private IslandStatus status;
     private int size;
     private int maxMembers;
@@ -242,6 +242,7 @@ public class Island {
             configLoad.set("Weather.Time", mainConfigLoad.getInt("Island.Weather.Default.Time"));
             configLoad.set("Weather.Weather", mainConfigLoad.getString("Island.Weather.Default.Weather").toUpperCase());
             configLoad.set("Ownership.Original", ownerUUID.toString());
+            configLoad.set("Size", size);
 
             for (IslandRole roleList : IslandRole.getRoles()) {
                 List<BasicPermission> allPermissions = plugin.getPermissionManager().getPermissions();
@@ -258,7 +259,6 @@ public class Island {
 
             status = IslandStatus.getEnum(mainConfigLoad.getString("Island.Visitor.Status"));
             
-            save();
 
             Player onlinePlayer = Bukkit.getServer().getPlayer(ownerUUID);
 
@@ -272,7 +272,9 @@ public class Island {
             playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
             playerData.save();
         }
-
+    
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        
         if (!mainConfigLoad.getBoolean("Island.Coop.Unload")) {
             File coopDataFile = new File(plugin.getDataFolder().toString() + "/coop-data",
                     getOwnerUUID().toString() + ".yml");
