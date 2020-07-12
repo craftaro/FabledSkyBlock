@@ -38,14 +38,24 @@ public class ItemChallenge {
 	}
 
 	public ItemStack createItem(UUID player, int amount) {
+		FileManager.Config langConfig = SkyBlock.getInstance().getFileManager()
+				.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"));
+		FileConfiguration langConfigLoad = langConfig.getFileConfiguration();
+		
 		ItemStack is = type.getItem();
 		is.setAmount(this.amount);
 		// Air
 		ItemMeta im = is.getItemMeta();
 		if (im != null) {
+			String maxAmount;
+			if(challenge.getMaxTimes() == Integer.MAX_VALUE) {
+				maxAmount = langConfigLoad.getString("Challenge.Inventory.Unlimited.Message");
+			} else {
+				maxAmount = String.valueOf(challenge.getMaxTimes());
+			}
 			im.setDisplayName(ChatColor.translateAlternateColorCodes('&',
 					itemTitle.replace("%challenge", challenge.getName()).replace("%amount", Integer.toString(amount))
-							.replace("%max", Integer.toString(challenge.getMaxTimes()))));
+							.replace("%max", maxAmount)));
 			im.setLore(lore);
 			is.setItemMeta(im);
 		}

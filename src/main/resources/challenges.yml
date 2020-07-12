@@ -337,8 +337,8 @@ challenges:
           - 'CMD:eco give {player} 100'
           - 'ITEM:iron_ingot 10'
           - 'ITEM:name_tag 1'
-        # The maximum amount of time this challenge is repeatable
-        maxtimes: 5
+        # The maximum amount of time this challenge is repeatable. Unlimited for endless challenge
+        maxtimes: Unlimited
         # If true, broadcast a message when this challenge is completed
         showInChat: true
         item:

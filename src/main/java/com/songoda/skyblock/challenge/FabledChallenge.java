@@ -11,13 +11,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class FabledChallenge {
-	private SkyBlock plugin;
-	private ChallengeManager challengeManager;
-	private PlayerManager playerManager;
+	private final SkyBlock plugin;
+	private final ChallengeManager challengeManager;
+	private final PlayerManager playerManager;
 	// I use my own inventory api bc it's hard to implement inventories with the
-	private InventoryManager inventoryManager;
-	private DefaultInventory defaultInventory;
-	private ChallengeInventory challengeInventory;
+	private final InventoryManager inventoryManager;
+	private final DefaultInventory defaultInventory;
+	private final ChallengeInventory challengeInventory;
 
 	public FabledChallenge(SkyBlock plugin) {
 		this.plugin = plugin;

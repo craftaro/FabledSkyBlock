@@ -3874,6 +3874,8 @@ Hologram:
     Message: '%blocks: %amount'
 Challenge:
   Inventory:
+    Unlimited:
+      Message: 'Unlimited'
     Item:
       Title: '%challenge &e%amount &6/ &e%max'
   Broadcast: '&bSkyBlock &8| &6%player &7has completed challenge %challenge (%amount
