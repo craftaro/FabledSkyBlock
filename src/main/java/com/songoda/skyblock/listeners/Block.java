@@ -199,7 +199,6 @@ public class Block implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
@@ -215,12 +214,24 @@ public class Block implements Listener {
         Island island = islandManager.getIslandAtLocation(blockLoc);
 
         // Check permissions.
-        if (!plugin.getPermissionManager().processPermission(event, player, island))
+        if (!plugin.getPermissionManager().processPermission(event, player, island)){
             return;
+        }
 
         if (island == null) {
             event.setCancelled(true);
             return;
+        }
+    
+        if(ServerVersion.isServerVersionAbove(ServerVersion.V1_8)) {
+            if(event instanceof BlockMultiPlaceEvent) {
+                for(BlockState blockState : ((BlockMultiPlaceEvent) event).getReplacedBlockStates()) {
+                    if(!island.equals(islandManager.getIslandAtLocation(blockState.getLocation()))) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+            }
         }
 
         if (islandLevelManager.isScanning(island)) {
