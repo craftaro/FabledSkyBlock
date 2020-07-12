@@ -6,7 +6,6 @@ import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.gui.GuiSignatureEditor;
 import com.songoda.skyblock.gui.GuiWelcomeEditor;
 import com.songoda.skyblock.island.Island;
@@ -23,7 +22,6 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
