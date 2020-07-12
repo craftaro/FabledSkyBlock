@@ -49,17 +49,17 @@ public class BiomeManager {
         updatingIslands.remove(island);
     }
 
-    public void setBiome(Island island, Biome biome, CompleteTask task) {
+    public void setBiome(Island island, IslandWorld world, Biome biome, CompleteTask task) {
         addUpdatingIsland(island);
 
-        if (island.getLocation(IslandWorld.Normal, IslandEnvironment.Island) == null) return;
+        if (island.getLocation(world, IslandEnvironment.Island) == null) return;
 
         if(plugin.isPaperAsync()){
             // We keep it sequentially in order to use less RAM
             int chunkAmount = (int) Math.ceil(Math.pow(island.getSize()/16d, 2d));
             AtomicInteger progress = new AtomicInteger();
             
-            ChunkLoader.startChunkLoadingPerChunk(island, IslandWorld.Normal, plugin.isPaperAsync(), (asyncChunk, syncChunk) -> {
+            ChunkLoader.startChunkLoadingPerChunk(island, world, plugin.isPaperAsync(), (asyncChunk, syncChunk) -> {
                 Chunk chunk = asyncChunk.join();
                 if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
                     setChunkBiome3D(biome, chunk); // 2D for the moment
@@ -95,7 +95,7 @@ public class BiomeManager {
                 }
             }));
         } else {
-            ChunkLoader.startChunkLoading(island, IslandWorld.Normal, plugin.isPaperAsync(), (asyncChunks, syncChunks) -> {
+            ChunkLoader.startChunkLoading(island, world, plugin.isPaperAsync(), (asyncChunks, syncChunks) -> {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                     int progress = 0;
                     for(Chunk chunk : syncChunks){

@@ -189,7 +189,7 @@ public class GuiBiome extends Gui {
                     }
                     cooldownManager.createPlayer(CooldownType.Biome, player);
                     Bukkit.getScheduler().runTask(plugin, () -> {
-                        biomeManager.setBiome(island, icon.biome.getBiome(), () -> {
+                        biomeManager.setBiome(island, IslandWorld.Normal, icon.biome.getBiome(), () -> {
                             if(languageLoad.getBoolean("Command.Island.Biome.Completed.Should-Display-Message")){
                                 messageManager.sendMessage(player, languageLoad.getString("Command.Island.Biome.Completed.Message"));
                                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
