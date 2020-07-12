@@ -56,6 +56,7 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
     }
 
+    @Deprecated
     public long getBlockLimit(Player player, Block block) {
         return this.getBlockLimit(player, block.getType());
     }

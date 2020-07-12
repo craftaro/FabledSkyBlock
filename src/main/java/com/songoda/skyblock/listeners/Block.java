@@ -302,7 +302,7 @@ public class Block implements Listener {
 
         BlockLimitation limits = plugin.getLimitationHandler().getInstance(BlockLimitation.class);
 
-        long limit = limits.getBlockLimit(player, block);
+        long limit = limits.getBlockLimit(player, block.getType());
 
         if (limits.isBlockLimitExceeded(block, limit)) {
             CompatibleMaterial material = null;
