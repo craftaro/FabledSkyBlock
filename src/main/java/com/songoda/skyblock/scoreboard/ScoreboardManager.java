@@ -39,112 +39,118 @@ public class ScoreboardManager {
         this.plugin = plugin;
         this.playerDataManager = plugin.getPlayerDataManager();
         Bukkit.getScheduler().runTask(plugin, () -> reloadScoreboards(true));
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateScoreboards,  20L, 40L);
+        Bukkit.getScheduler().runTaskTimer(plugin, this::updateScoreboards,  20L, 40L);
     }
 
     private synchronized void updateScoreboards() {
-        final org.bukkit.scoreboard.Scoreboard primary = Bukkit.getScoreboardManager().getMainScoreboard();
-        final Set<Objective> objectives = primary.getObjectives();
-        final Set<Team> teams = primary.getTeams();
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            final org.bukkit.scoreboard.Scoreboard primary = Bukkit.getScoreboardManager().getMainScoreboard();
+            final Set<Objective> objectives = primary.getObjectives();
+            final Set<Team> teams = primary.getTeams();
     
-        /*
-         * Unregister all teams or objectives that are no longer present in the main
-         * scoreboard.
-         */
-        for (UUID uuid : scoreboardStorage.keySet()) {
-            Player player = Bukkit.getPlayer(uuid);
-            if(player != null) {
-                final org.bukkit.scoreboard.Scoreboard board = player.getScoreboard();
-    
-                for (String name : objectiveNames) {
-        
-                    if (primary.getObjective(name) != null) continue;
-        
-                    final Objective objective = board.getObjective(name);
-        
-                    if (objective != null) objective.unregister();
-                }
-    
-                for (String name : teamNames) {
-        
-                    if (primary.getTeam(name) != null) continue;
-        
-                    final Team team = board.getTeam(name);
-        
-                    if (team != null) team.unregister();
-                }
-            }
-        }
-
-        /*
-         * Update the objective/team names.
-         */
-
-        objectiveNames.clear();
-        teamNames.clear();
-        
-        for(Objective objective : objectives) {
-            if (primary.getObjective(objective.getName()) != null) {
-                objectiveNames.add(objective.getName());
-            }
-        }
-
-        for(Team team : teams) {
-            if (primary.getTeam(team.getName()) != null) {
-                teamNames.add(team.getName());
-            }
-        }
-        
-        /*
-         * Update or add any missing information to the player's scoreboard.
-         */
-    
-        for (UUID uuid : scoreboardStorage.keySet()) {
-            Player player = Bukkit.getPlayer(uuid);
-            if(player != null) {
-                PlayerData pd = playerDataManager.getPlayerData(player);
-                if(pd != null && pd.isScoreboard()){
-                    final org.bukkit.scoreboard.Scoreboard playerBoard = player.getScoreboard();
-        
-                    for (Objective primaryObjective : objectives) {
+            /*
+             * Unregister all teams or objectives that are no longer present in the main
+             * scoreboard.
+             */
+            for (UUID uuid : scoreboardStorage.keySet()) {
+                Player player = Bukkit.getPlayer(uuid);
+                if(player != null) {
+                    final org.bukkit.scoreboard.Scoreboard board = player.getScoreboard();
             
-                        Objective obj = playerBoard.getObjective(primaryObjective.getName());
-            
-                        if (obj == null)
-                            obj = playerBoard.registerNewObjective(primaryObjective.getName(), primaryObjective.getCriteria());
-            
-                        obj.setDisplayName(primaryObjective.getDisplayName());
-                        obj.setDisplaySlot(primaryObjective.getDisplaySlot());
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) obj.setRenderType(primaryObjective.getRenderType());
+                    for (String name : objectiveNames) {
+                
+                        if (primary.getObjective(name) != null) continue;
+                
+                        final Objective objective = board.getObjective(name);
+                
+                        if (objective != null) objective.unregister();
                     }
-        
-                    for (Team primaryTeam : teams) {
             
-                        Team obj = playerBoard.getTeam(primaryTeam.getName());
-            
-                        if (obj == null) obj = playerBoard.registerNewTeam(primaryTeam.getName());
-            
-                        obj.setAllowFriendlyFire(primaryTeam.allowFriendlyFire());
-                        obj.setCanSeeFriendlyInvisibles(primaryTeam.canSeeFriendlyInvisibles());
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) obj.setColor(primaryTeam.getColor());
-                        obj.setDisplayName(primaryTeam.getDisplayName());
-                        obj.setNameTagVisibility(primaryTeam.getNameTagVisibility());
-                        obj.setPrefix(primaryTeam.getPrefix());
-                        obj.setSuffix(primaryTeam.getSuffix());
-            
-                        for (String primaryEntry : primaryTeam.getEntries()) {
-                            obj.addEntry(primaryEntry);
-                        }
-            
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
-                            for (Option option : Option.values()) {
-                                obj.setOption(option, primaryTeam.getOption(option));
+                    for (String name : teamNames) {
+                
+                        if (primary.getTeam(name) != null) continue;
+                
+                        final Team team = board.getTeam(name);
+                
+                        if (team != null) team.unregister();
+                    }
+                }
+            }
+    
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                /*
+                 * Update the objective/team names.
+                 */
+    
+                objectiveNames.clear();
+                teamNames.clear();
+    
+                for(Objective objective : objectives) {
+                    if (primary.getObjective(objective.getName()) != null) {
+                        objectiveNames.add(objective.getName());
+                    }
+                }
+    
+                for(Team team : teams) {
+                    if (primary.getTeam(team.getName()) != null) {
+                        teamNames.add(team.getName());
+                    }
+                }
+    
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    /*
+                     * Update or add any missing information to the player's scoreboard.
+                     */
+    
+                    for (UUID uuid : scoreboardStorage.keySet()) {
+                        Player player = Bukkit.getPlayer(uuid);
+                        if(player != null) {
+                            PlayerData pd = playerDataManager.getPlayerData(player);
+                            if(pd != null && pd.isScoreboard()){
+                                final org.bukkit.scoreboard.Scoreboard playerBoard = player.getScoreboard();
+                
+                                for (Objective primaryObjective : objectives) {
+                    
+                                    Objective obj = playerBoard.getObjective(primaryObjective.getName());
+                    
+                                    if (obj == null)
+                                        obj = playerBoard.registerNewObjective(primaryObjective.getName(), primaryObjective.getCriteria());
+                    
+                                    obj.setDisplayName(primaryObjective.getDisplayName());
+                                    obj.setDisplaySlot(primaryObjective.getDisplaySlot());
+                                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) obj.setRenderType(primaryObjective.getRenderType());
+                                }
+                
+                                for (Team primaryTeam : teams) {
+                    
+                                    Team obj = playerBoard.getTeam(primaryTeam.getName());
+                    
+                                    if (obj == null) obj = playerBoard.registerNewTeam(primaryTeam.getName());
+                    
+                                    obj.setAllowFriendlyFire(primaryTeam.allowFriendlyFire());
+                                    obj.setCanSeeFriendlyInvisibles(primaryTeam.canSeeFriendlyInvisibles());
+                                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) obj.setColor(primaryTeam.getColor());
+                                    obj.setDisplayName(primaryTeam.getDisplayName());
+                                    obj.setNameTagVisibility(primaryTeam.getNameTagVisibility());
+                                    obj.setPrefix(primaryTeam.getPrefix());
+                                    obj.setSuffix(primaryTeam.getSuffix());
+                    
+                                    for (String primaryEntry : primaryTeam.getEntries()) {
+                                        obj.addEntry(primaryEntry);
+                                    }
+                    
+                                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+                                        for (Option option : Option.values()) {
+                                            obj.setOption(option, primaryTeam.getOption(option));
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
-        }
+                });
+            });
+        });
     }
 
     public synchronized void reloadScoreboards(boolean createNew) {
