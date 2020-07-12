@@ -672,7 +672,7 @@ public class Block implements Listener {
                 if(onlyOwner && plugin.getVaultPermission() != null) {
                     OfflinePlayer owner = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
                     event.setCancelled(true);
-                    World finalWorld = event.getBlock().getWorld();
+                    org.bukkit.World finalWorld = event.getBlock().getWorld();
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                         if(plugin.getVaultPermission().playerHas(block.getWorld().getName(), owner, generator.getPermission()) ||
                                 plugin.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.generator.*") ||
@@ -715,7 +715,7 @@ public class Block implements Listener {
         }
     }
     
-    private boolean applyGenerator(World world, org.bukkit.block.Block block, WorldManager worldManager, IslandLevelManager islandLevelManager, Island island, BlockState state, GeneratorManager generatorManager, Generator generator) {
+    private boolean applyGenerator(org.bukkit.World world, org.bukkit.block.Block block, WorldManager worldManager, IslandLevelManager islandLevelManager, Island island, BlockState state, GeneratorManager generatorManager, Generator generator) {
         if(worldManager.getIslandWorld(world).equals(generator.getIsWorld())){
             BlockState genState = generatorManager.generateBlock(generator, block);
             state.setType(genState.getType());
