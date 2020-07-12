@@ -106,6 +106,6 @@ public class UnlockCommand extends SubCommand {
 
     @Override
     public String[] getArguments() {
-        return new String[0];
+        return new String[]{"Nether", "End"};
     }
 }
