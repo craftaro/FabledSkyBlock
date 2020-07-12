@@ -124,6 +124,8 @@ public class Island {
 
             if (configLoad.getString("Size") != null) {
                 size = configLoad.getInt("Size");
+            } else {
+                configLoad.set("Size", size);
             }
 
             if (configLoad.getString("Settings") != null) {
