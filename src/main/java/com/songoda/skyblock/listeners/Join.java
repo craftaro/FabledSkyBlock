@@ -94,7 +94,7 @@ public class Join implements Listener {
 
                 PlayerData playerData = playerDataManager.getPlayerData(player);
                 playerData.setTexture(playerTexture[0], playerTexture[1]);
-                playerData.save();
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, playerData::save);
             } else {
                 playerDataManager.createPlayerData(player);
                 playerDataManager.loadPlayerData(player);
@@ -106,7 +106,7 @@ public class Join implements Listener {
             cooldownManager.addCooldownPlayer(CooldownType.Creation, cooldownManager.loadCooldownPlayer(CooldownType.Creation, player));
             cooldownManager.addCooldownPlayer(CooldownType.Deletion, cooldownManager.loadCooldownPlayer(CooldownType.Deletion, player));
 
-            if (scoreboardManager != null) {
+            if (scoreboardManager != null && playerDataManager.getPlayerData(player).isScoreboard()) {
                 scoreboardManager.addPlayer(player);
             }
 
