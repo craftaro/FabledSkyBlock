@@ -67,13 +67,18 @@ public class ChatCommand extends SubCommand {
                 if (playerData.getOwner() != null) {
                     island = plugin.getIslandManager().getIsland(player);
                 }
-
-                Island finalIsland = island;
-                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                    PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, finalIsland.getAPIWrapper(),
-                            String.join(" ", args), configLoad.getString("Island.Chat.Format.Message"));
-                    Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
-                });
+    
+                if (island != null) {
+                    Island finalIsland = island;
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                        PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, finalIsland.getAPIWrapper(),
+                                String.join(" ", args), configLoad.getString("Island.Chat.Format.Message"));
+                        Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
+                    });
+                } else {
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Owner.Message"));
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                }
             }
         }
     }
