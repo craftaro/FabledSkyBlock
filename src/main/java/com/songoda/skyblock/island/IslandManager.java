@@ -1606,6 +1606,10 @@ public class IslandManager {
     public boolean isPlayerProxyingAnotherPlayer(UUID proxying, UUID proxied) {
         return islandProxies.containsKey(proxying) && islandProxies.get(proxying) == proxied;
     }
+    
+    public UUID getPlayerProxyingAnotherPlayer(UUID proxying) {
+        return islandProxies.get(proxying);
+    }
 
     public void addProxiedPlayer(UUID toProxy, UUID proxied) {
         islandProxies.put(toProxy, proxied);

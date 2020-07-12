@@ -692,11 +692,9 @@ public class Island {
     }
 
     public boolean hasRole(IslandRole role, UUID uuid) {
-        if (role == IslandRole.Owner) {
-            return getOwnerUUID().equals(uuid) || plugin.getIslandManager().isPlayerProxyingAnotherPlayer(uuid, getOwnerUUID());
-        }
-
-        return getRole(role).contains(uuid);
+        return getRole(role).contains(uuid) ||
+                (plugin.getIslandManager().getPlayerProxyingAnotherPlayer(uuid) != null &&
+                        getRole(role).contains(plugin.getIslandManager().getPlayerProxyingAnotherPlayer(uuid)));
     }
 
     public void setUpgrade(Player player, Upgrade.Type type, boolean status) {
