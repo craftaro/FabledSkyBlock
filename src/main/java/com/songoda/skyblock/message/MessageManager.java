@@ -19,7 +19,8 @@ public class MessageManager {
 
     public void sendMessage(CommandSender sender, String message) {
 
-        if (message == null) return;
+        if (message == null || message.equals("")) return;
+        
 
         if (sender instanceof Player) {
             PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
