@@ -37,6 +37,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -65,12 +66,11 @@ public class Entity implements Listener {
 
             Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
-
-            if(configLoad.getBoolean("Island.Nether.BlazeImmuneToWaterInNether", false) &&
-                    worldManager.getIslandWorld(event.getEntity().getWorld()).equals(IslandWorld.Nether)){
-                if(event.getCause().equals(DamageCause.DROWNING)){
-                    event.setCancelled(true);
-                }
+    
+            if (configLoad.getBoolean("Island.Nether.BlazeImmuneToWaterInNether", false) &&
+                    worldManager.getIslandWorld(event.getEntity().getWorld()).equals(IslandWorld.Nether) &&
+                    event.getCause().equals(DamageCause.DROWNING)) {
+                event.setCancelled(true);
             }
         } else if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
@@ -118,17 +118,14 @@ public class Entity implements Listener {
                 plugin.getPermissionManager()
                         .processPermission(event, island);
             }
-    
+            
             // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
             // the shot entity isn't damaged
-            if (event.isCancelled() && event.getDamager() instanceof Arrow) {
-                Arrow arrow = (Arrow) event.getDamager();
-                if (arrow.getFireTicks() != 0) {
-                    preventFireTicks.add(event.getEntity().getUniqueId());
-                    Bukkit.getScheduler().runTaskLater(plugin,
-                            () -> preventFireTicks.remove(event.getEntity().getUniqueId()),
-                            5L);
-                }
+            if (event.isCancelled() && event.getDamager() instanceof Arrow && event.getDamager().getFireTicks() != 0) {
+                preventFireTicks.add(event.getEntity().getUniqueId());
+                Bukkit.getScheduler().runTaskLater(plugin,
+                        () -> preventFireTicks.remove(victim.getUniqueId()),
+                        5L);
             }
         }
     }
@@ -298,18 +295,19 @@ public class Entity implements Listener {
                 && configLoad.getBoolean("Island.Spawn.Protection")) {
             FallingBlock fallingBlock = (FallingBlock) event.getEntity();
             if (fallingBlock.getDropItem()) {
-                if (NMSUtil.getVersionNumber() > 12) {
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                     fallingBlock.getWorld().dropItemNaturally(fallingBlock.getLocation(),
                             new ItemStack(fallingBlock.getBlockData().getMaterial(), 1));
                 } else {
                     try {
                         Method getBlockDataMethod = FallingBlock.class.getMethod("getBlockData");
                         byte data = (byte) getBlockDataMethod.invoke(fallingBlock);
-                        if (fallingBlock.getMaterial().name().endsWith("ANVIL")) { // TODO Reflection
+                        if (fallingBlock.getMaterial().name().endsWith("ANVIL")) {
                             data = (byte) Math.ceil(data / 4.0);
                         }
                         fallingBlock.getWorld().dropItemNaturally(fallingBlock.getLocation(), new ItemStack(fallingBlock.getMaterial(), 1, data));
-                    } catch (Exception ignored) {
+                    } catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                        e.printStackTrace();
                     }
                 }
             }
