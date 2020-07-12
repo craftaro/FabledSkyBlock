@@ -335,7 +335,7 @@ challenges:
         # BANK:<amount> gives amount to the island's bank
         reward:
           - 'CMD:eco give {player} 100'
-          - 'ITEM:iron_ingot 20'
+          - 'ITEM:iron_ingot 10'
           - 'ITEM:name_tag 1'
         # The maximum amount of time this challenge is repeatable
         maxtimes: 5
@@ -355,7 +355,7 @@ challenges:
             - '&c&lFor this challenge, you''ll need:'
             - '&e- 2 stacks of cobblestone'
             - '&c&lReward:'
-            - '&e- 20 iron ingots'
+            - '&e- 10 iron ingots'
             - '&e- 1 name tag'
             - '&e- 100 $'
       '2':
@@ -617,7 +617,7 @@ challenges:
             - '&e- 1 stack of gunpowder'
             - '&e- 1 stack of arrows'
             - '&e- 1 stack of bones'
-             - '&c&lRewards:'
+            - '&c&lRewards:'
             - '&e- 16 iron ingots'
             - '&e- 8 redstone blocks'
             - '&e- 250 $'
