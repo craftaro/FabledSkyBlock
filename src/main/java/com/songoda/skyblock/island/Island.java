@@ -339,7 +339,7 @@ public class Island {
     }
 
     public double getRadius() {
-        return (size / 2) + 0.5;
+        return (size / 2d) + 0.5d;
     }
 
     public boolean hasPassword() {
