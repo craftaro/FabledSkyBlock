@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
@@ -37,6 +38,8 @@ public abstract class ListeningPermission extends BasicPermission {
     public void onBreak(BlockBreakEvent event) {}
 
     public void onPlace(BlockPlaceEvent event) {}
+    
+    public void onMultiPlace(BlockMultiPlaceEvent event) {}
 
     public void onVehicleDamage(VehicleDamageEvent event) {}
 
