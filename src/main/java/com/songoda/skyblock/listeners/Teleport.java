@@ -55,8 +55,7 @@ public class Teleport implements Listener {
         Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if(worldManager.isIslandWorld(event.getFrom().getWorld())
-                 || (event.getTo() != null && worldManager.isIslandWorld(event.getTo().getWorld()))) {
+        if(worldManager.isIslandWorld(event.getFrom().getWorld()) || worldManager.isIslandWorld(event.getTo().getWorld())) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> islandManager.updateFlight(player), 1L);
         }
         islandManager.loadPlayer(player);
