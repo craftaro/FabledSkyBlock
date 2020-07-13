@@ -1,5 +1,6 @@
 package com.songoda.skyblock.scoreboard;
 
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
@@ -70,7 +71,14 @@ public class Scoreboard {
                         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
                         String formattedDisplayName = ChatColor.translateAlternateColorCodes('&', replaceDisplayName(displayName));
-                        int max = NMSUtil.getVersionNumber() > 8 ? 32 : 16;
+                        int max;
+                        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+                            max = 16;
+                        } else if(ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
+                            max = 32;
+                        } else {
+                            max = 128;
+                        }
                         if (formattedDisplayName.length() > max) {
                             obj.setDisplayName(ChatColor.RED + "Too long...");
                         } else {
