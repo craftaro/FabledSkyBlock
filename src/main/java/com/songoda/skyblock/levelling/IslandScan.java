@@ -196,19 +196,15 @@ public final class IslandScan extends BukkitRunnable {
     private void populate(Map<World, List<ChunkSnapshot>> snapshots, IslandWorld world, boolean paper, PopulateTask task) {
 
         final SkyBlock plugin = SkyBlock.getInstance();
-
-        ChunkLoader.startChunkLoading(island, IslandWorld.Normal, paper, (asyncPositions, syncPositions) -> {
-            if(paper){
-                List<ChunkSnapshot> positions = new LinkedList<>();
-                for(CompletableFuture<Chunk> chunk : asyncPositions){
-                    positions.add(chunk.join().getChunkSnapshot());
-                }
-                snapshots.put(plugin.getWorldManager().getWorld(world), positions);
-            } else {
-                snapshots.put(plugin.getWorldManager().getWorld(world), syncPositions.stream().map(org.bukkit.Chunk::getChunkSnapshot).collect(Collectors.toList()));
-            }
+    
+        List<ChunkSnapshot> positions = new LinkedList<>();
+        
+        ChunkLoader.startChunkLoadingPerChunk(island, IslandWorld.Normal, paper, (chunkCompletableFuture) ->
+                positions.add(chunkCompletableFuture.join().getChunkSnapshot()),
+                value -> {
+            snapshots.put(plugin.getWorldManager().getWorld(world), positions);
             task.onComplete();
-        }, null);
+        });
     }
 
     private interface PopulateTask {

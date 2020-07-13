@@ -57,12 +57,10 @@ public final class BlockScanner extends BukkitRunnable {
     private final Queue<BlockInfo> blocks;
     private final ScannerTasks tasks;
     
-    private boolean ignoreLiquids;
-    private boolean ignoreLiquidsY;
-    private boolean ignoreAir;
+    private final boolean ignoreLiquids;
+    private final boolean ignoreAir;
 
     private BlockScanner(Map<World, List<ChunkSnapshot>> snapshots, boolean ignoreLiquids, boolean ignoreLiquidsY, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
-        this.ignoreLiquidsY = ignoreLiquidsY;
         this.ignoreLiquids = ignoreLiquids;
         this.ignoreAir = ignoreAir;
         this.blocks = new ConcurrentLinkedQueue<>();
@@ -105,7 +103,6 @@ public final class BlockScanner extends BukkitRunnable {
             for (List<ChunkSnapshot> sub : parts) {
                queueWork(world, startY, sub);
             }
-
         }
 
         this.threadCount = threadCount;

@@ -53,96 +53,46 @@ public class BiomeManager {
         addUpdatingIsland(island);
 
         if (island.getLocation(world, IslandEnvironment.Island) == null) return;
-
-        if(plugin.isPaperAsync()){
-            // We keep it sequentially in order to use less RAM
-            int chunkAmount = (int) Math.ceil(Math.pow(island.getSize()/16d, 2d));
-            AtomicInteger progress = new AtomicInteger();
+    
+        // We keep it sequentially in order to use less RAM
+        int chunkAmount = (int) Math.ceil(Math.pow(island.getSize()/16d, 2d));
+        AtomicInteger progress = new AtomicInteger();
+    
+        ChunkLoader.startChunkLoadingPerChunk(island, world, plugin.isPaperAsync(), (futureChunk) -> {
+            Chunk chunk = futureChunk.join();
+            if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
+                setChunkBiome3D(biome, chunk);
+            } else {
+                try {
+                    setChunkBiome2D(biome, chunk);
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+            updateBiomePacket(island, chunk);
+        
+            progress.getAndIncrement();
+        
+            if(language.getBoolean("Command.Island.Biome.Progress.Should-Display-Message") &&
+                    progress.get() == 1 || progress.get() == chunkAmount || progress.get() % runEveryX == 0){
+                final double percent = ((double) progress.get() / (double) chunkAmount) * 100;
             
-            ChunkLoader.startChunkLoadingPerChunk(island, world, plugin.isPaperAsync(), (asyncChunk, syncChunk) -> {
-                Chunk chunk = asyncChunk.join();
-                if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
-                    setChunkBiome3D(biome, chunk); // 2D for the moment
-                } else {
-                    try {
-                        setChunkBiome2D(biome, chunk);
-                    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+                String message = language.getString("Command.Island.Biome.Progress.Message");
+                message = message.replace("%current_updated_chunks%", String.valueOf(progress.get()));
+                message = message.replace("%max_chunks%", String.valueOf(chunkAmount));
+                message = message.replace("%percent_whole%", String.valueOf((int) percent));
+                message = message.replace("%percent%", NumberFormat.getInstance().format(percent));
+            
+                for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
+                    plugin.getMessageManager().sendMessage(player, message);
                 }
-                updateBiomePacket(island, chunk);
-                
-                progress.getAndIncrement();
-                
-                if(language.getBoolean("Command.Island.Biome.Progress.Should-Display-Message") &&
-                        progress.get() == 1 || progress.get() == chunkAmount || progress.get() % runEveryX == 0){
-                    final double percent = ((double) progress.get() / (double) chunkAmount) * 100;
-    
-                    String message = language.getString("Command.Island.Biome.Progress.Message");
-                    message = message.replace("%current_updated_chunks%", String.valueOf(progress.get()));
-                    message = message.replace("%max_chunks%", String.valueOf(chunkAmount));
-                    message = message.replace("%percent_whole%", String.valueOf((int) percent));
-                    message = message.replace("%percent%", NumberFormat.getInstance().format(percent));
-    
-                    for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
-                        plugin.getMessageManager().sendMessage(player, message);
-                    }
-                }
-            }, (island1 -> {
-                removeUpdatingIsland(island1);
-                if(task != null) {
-                    task.onCompleteUpdate();
-                }
-            }));
-        } else {
-            ChunkLoader.startChunkLoading(island, world, plugin.isPaperAsync(), (asyncChunks, syncChunks) -> {
-                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                    int progress = 0;
-                    for(Chunk chunk : syncChunks){
-                        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
-                            setChunkBiome3D(biome, chunk); // 2D for the moment
-                        } else {
-                            try {
-                                setChunkBiome2D(biome, chunk);
-                            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if(ServerVersion.isServerVersionAtLeast(ASYNC_OBFUSCATOR_VERSION)) {
-                            updateBiomePacket(island, chunk);
-                        }
-                        progress++;
-    
-                        if(language.getBoolean("Command.Island.Biome.Progress.Should-Display-Message") &&
-                                progress == 1 || progress == syncChunks.size() || progress % runEveryX == 0){
-                            final double percent = ((double) progress / (double) syncChunks.size()) * 100;
-        
-                            String message = language.getString("Command.Island.Biome.Progress.Message");
-                            message = message.replace("%current_updated_chunks%", String.valueOf(progress));
-                            message = message.replace("%max_chunks%", String.valueOf(syncChunks.size()));
-                            message = message.replace("%percent_whole%", String.valueOf((int) percent));
-                            message = message.replace("%percent%", NumberFormat.getInstance().format(percent));
-        
-                            for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
-                                plugin.getMessageManager().sendMessage(player, message);
-                            }
-                        }
-                    }
-                    if(ServerVersion.isServerVersionBelow(ASYNC_OBFUSCATOR_VERSION)) {
-                        Bukkit.getScheduler().runTask(plugin, () -> {
-                            for(Chunk chunk : syncChunks){
-                                updateBiomePacket(island, chunk);
-                            }
-                        });
-                    }
-                });
-            }, (island1 -> {
-                removeUpdatingIsland(island1);
-                if(task != null) {
-                    task.onCompleteUpdate();
-                }
-            }));
-        }
+            }
+        }, (island1 -> {
+            removeUpdatingIsland(island1);
+            if(task != null) {
+                task.onCompleteUpdate();
+            }
+        }));
     }
 
     private void setChunkBiome2D(Biome biome, Chunk chunk) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {

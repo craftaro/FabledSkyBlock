@@ -177,8 +177,8 @@ public class IslandManager {
                     }
                     posX = posX * offset;
                     posY = posY * offset;
-                    islandPositionList.setX((double) posX);
-                    islandPositionList.setZ((double) posY);
+                    islandPositionList.setX(posX);
+                    islandPositionList.setZ(posY);
                     // Check if there was an island at this position
                     int oldFormatPos = oldSystemIslands.get(world);
                     Location islandLocation = new org.bukkit.Location(plugin.getWorldManager().getWorld(world), islandPositionList.getX(), islandHeight, islandPositionList.getZ());
@@ -281,15 +281,14 @@ public class IslandManager {
         }
         Biome biome = cBiome.getBiome();
 
-        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
-            plugin.getBiomeManager().setBiome(island, IslandWorld.Normal, biome, () -> {
-                if (structure.getCommands() != null) {
-                    for (String commandList : structure.getCommands()) {
-                        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));
-                    }
+        Bukkit.getServer().getScheduler().runTaskLater(plugin, () ->
+                plugin.getBiomeManager().setBiome(island, IslandWorld.Normal, biome, () -> {
+            if (structure.getCommands() != null) {
+                for (String commandList : structure.getCommands()) {
+                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));
                 }
-            });
-        }, 20L);
+            }
+        }), 20L);
 
         // Recalculate island level after 5 seconds
         if (configLoad.getBoolean("Island.Levelling.ScanAutomatically"))
@@ -654,26 +653,15 @@ public class IslandManager {
             if (location == null) continue;
 
             final World world = worldManager.getWorld(worldList);
-
-            if(plugin.isPaperAsync()){
-                ChunkLoader.startChunkLoading(island, IslandWorld.Normal, plugin.isPaperAsync(), (asyncChunks, syncChunks) -> {
-                    List<Chunk> positions = new LinkedList<>();
-                    for (CompletableFuture<Chunk> chunk : asyncChunks) {
-                        positions.add(chunk.join());
-                    }
-                    snapshots.put(world, positions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList()));
-                    ChunkDeleteSplitter.startDeletion(snapshots);
-                }, null);
-            } else {
-                ChunkLoader.startChunkLoading(island, IslandWorld.Normal, plugin.isPaperAsync(), (asyncChunks, syncChunks) -> {
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        final List<ChunkSnapshot> list = syncChunks.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList());
-
-                        snapshots.put(world, list);
-                        ChunkDeleteSplitter.startDeletion(snapshots);
-                    });
-                }, null);
-            }
+    
+            ChunkLoader.startChunkLoading(island, IslandWorld.Normal, plugin.isPaperAsync(), (chunks) -> {
+                List<Chunk> positions = new LinkedList<>();
+                for (CompletableFuture<Chunk> chunk : chunks) {
+                    positions.add(chunk.join());
+                }
+                snapshots.put(world, positions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList()));
+                ChunkDeleteSplitter.startDeletion(snapshots);
+            }, null);
         }
 
     }
@@ -826,8 +814,6 @@ public class IslandManager {
                     Location islandLocation = fileManager.getLocation(config, "Location.Normal.Island", false);
 
                     if (LocationUtil.isLocationAtLocationRadius(location, islandLocation, size)) {
-                        UUID islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
-                        // return this.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
                         return;
                     }
                 } catch (Exception e) {
@@ -835,8 +821,6 @@ public class IslandManager {
                 }
             }
         }
-
-        return;
     }
 
     public void unloadIsland(Island island, org.bukkit.OfflinePlayer player) {

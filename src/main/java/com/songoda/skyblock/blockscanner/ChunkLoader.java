@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ChunkLoader extends BukkitRunnable {
-    public final List<CompletableFuture<Chunk>> asyncPositions = new LinkedList<>();
-    public final List<Chunk> syncPositions = new LinkedList<>();
+    public final List<CompletableFuture<Chunk>> positions = new LinkedList<>();
 
     private ChunkScannerTask generalTask;
     private ChunkForChunkScannerTask chunkTask;
@@ -60,7 +59,7 @@ public class ChunkLoader extends BukkitRunnable {
 
         x = minX;
         z = minZ;
-
+    
         if(paper){
             this.runTaskAsynchronously(SkyBlock.getInstance());
         } else {
@@ -109,20 +108,10 @@ public class ChunkLoader extends BukkitRunnable {
             if(x < maxX){
                 if(z < maxZ){
                     if(!chunkForChunk){
-                        if(paper){
-                            asyncPositions.add(PaperLib.getChunkAtAsync(world, x >> 4, z >> 4));
-                        } else {
-                            syncPositions.add(world.getChunkAt(x >> 4, z >> 4));
-                        }
+                        positions.add(PaperLib.getChunkAtAsync(world, x >> 4, z >> 4));
                     } else {
-                        if(paper){
-                            if(chunkTask != null) {
-                                chunkTask.onChunkComplete(PaperLib.getChunkAtAsync(world, x >> 4, z >> 4), null);
-                            }
-                        } else {
-                            if(chunkTask != null) {
-                                chunkTask.onChunkComplete(null, world.getChunkAt(x >> 4, z >> 4));
-                            }
+                        if(chunkTask != null) {
+                            chunkTask.onChunkComplete(PaperLib.getChunkAtAsync(world, x >> 4, z >> 4));
                         }
                     }
 
@@ -133,7 +122,7 @@ public class ChunkLoader extends BukkitRunnable {
                 }
             } else {
                 if(generalTask != null) {
-                    generalTask.onComplete(asyncPositions, syncPositions);
+                    generalTask.onComplete(positions);
                 }
                 if(completeTask != null) {
                     completeTask.onComplete(island);
@@ -153,15 +142,11 @@ public class ChunkLoader extends BukkitRunnable {
     }
 
     public interface ChunkScannerTask {
-
-        void onComplete(List<CompletableFuture<Chunk>> asyncChunks, List<Chunk> syncChunks);
-
+        void onComplete(List<CompletableFuture<Chunk>> chunks);
     }
 
     public interface ChunkForChunkScannerTask {
-
-        void onChunkComplete(CompletableFuture<Chunk> asyncChunk, Chunk syncChunk);
-
+        void onChunkComplete(CompletableFuture<Chunk> chunk);
     }
     
     public interface CompleteTask {
