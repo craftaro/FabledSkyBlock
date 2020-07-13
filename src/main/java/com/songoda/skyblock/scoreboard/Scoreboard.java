@@ -74,10 +74,8 @@ public class Scoreboard {
                         int max;
                         if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
                             max = 16;
-                        } else if(ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
-                            max = 32;
                         } else {
-                            max = 128;
+                            max = 32;
                         }
                         if (formattedDisplayName.length() > max) {
                             obj.setDisplayName(ChatColor.RED + "Too long...");
