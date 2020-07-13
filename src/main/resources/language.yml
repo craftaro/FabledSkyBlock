@@ -201,7 +201,7 @@ Command:
         Balance:
           Message: ' %player% have %bal%.'
         Info:
-          Message: '&bSkyBlock &8| &cError&8: /island admin bank [<Deposit|Withdraw|Balance>] [Player]'
+          Message: '&f&oManage a player''s island bank.'
         SuccesWithdraw:
           Message: 'Succesfully removed %ammount% from %player%''s island'
         SuccesDeposit:
@@ -276,7 +276,7 @@ Command:
         Set:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have set &d%player''s &eIsland biome to &d%biome&e.'
         Info:
-          Message: '&f&oSets the size of a player''s Island.'
+          Message: '&f&oSets the biome of a player''s Island.'
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin setbiome <player> <biome>'
         InvalidBiome:
