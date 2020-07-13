@@ -1,10 +1,10 @@
 package com.songoda.skyblock.blockscanner;
 
-import com.sk89q.worldedit.bukkit.paperlib.PaperLib;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
