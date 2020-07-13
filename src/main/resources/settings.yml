@@ -167,6 +167,7 @@ Settings:
     Owner:
         NaturalMobSpawning: true
         MobGriefing: true
+        IronGolems: true
         Explosions: true
         FireSpread: true
         LeafDecay: true

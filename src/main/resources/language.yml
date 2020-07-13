@@ -1323,6 +1323,8 @@ Menu:
             Displayname: '&aLeaf Decay'
           MobGriefing:
             Displayname: '&aMob Griefing'
+          IronGolems:
+            Displayname: '&aIron Golems'
           Status:
             Enabled:
               Lore:
@@ -1793,6 +1795,8 @@ Menu:
               Displayname: '&aNatural Mob Spawning'
             MobGriefing:
               Displayname: '&aMob Griefing'
+            IronGolems:
+              Displayname: '&aIron Golems'
             PvP:
               Displayname: '&aPvP'
             Explosions:
