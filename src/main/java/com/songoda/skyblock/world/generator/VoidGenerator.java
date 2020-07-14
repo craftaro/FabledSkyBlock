@@ -29,29 +29,30 @@ public class VoidGenerator extends ChunkGenerator {
         final Configuration configLoad = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
         
-        Biome biome;
-        
-        switch (world.getEnvironment()) {
-            case NORMAL:
-                biome = CompatibleBiome.valueOf(configLoad.getString("Island.Biome.Default.Type", "PLAINS").toUpperCase()).getBiome();
-                break;
-            case NETHER:
-                biome = CompatibleBiome.NETHER_WASTES.getBiome();
-                break;
-            case THE_END:
-                biome = CompatibleBiome.THE_END.getBiome();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + world.getEnvironment());
+        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+            Biome biome;
+    
+            switch (world.getEnvironment()) {
+                case NORMAL:
+                    biome = CompatibleBiome.valueOf(configLoad.getString("Island.Biome.Default.Type", "PLAINS").toUpperCase()).getBiome();
+                    break;
+                case NETHER:
+                    biome = CompatibleBiome.NETHER_WASTES.getBiome();
+                    break;
+                case THE_END:
+                    biome = CompatibleBiome.THE_END.getBiome();
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + world.getEnvironment());
+            }
+    
+            if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
+                setChunkBiome3D(biome, biomeGrid, world);
+            } else {
+                setChunkBiome2D(biome, biomeGrid);
+            }
         }
         
-        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
-            setChunkBiome3D(biome, biomeGrid, world);
-        } else {
-            setChunkBiome2D(biome, biomeGrid);
-        }
-        
-
         for (IslandWorld worldList : IslandWorld.values()) {
             if (world.getEnvironment() == World.Environment.NETHER
                     || world.getEnvironment() == World.Environment.NORMAL
