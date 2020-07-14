@@ -114,9 +114,7 @@ public class SkyBlock extends SongodaPlugin {
     @Override
     public void onPluginEnable() {
         if(ServerVersion.isServerVersionAbove(ServerVersion.V1_16)) {
-            this.getLogger().warning("This Minecraft version is not supported. Disabling...");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
+            this.getLogger().warning("This Minecraft version is not officially supported.");
         }
         
         if(paper = ServerProject.isServer(ServerProject.PAPER)){
