@@ -30,11 +30,10 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public final class IslandLevelManager {
-
-    private final static int VERSION = NMSUtil.getVersionNumber();
-    private Map<Island, IslandScan> inScan;
-    private Map<CompatibleMaterial, Long> worth;
-    private Map<CompatibleMaterial, AmountMaterialPair> cachedPairs;
+    
+    private final Map<Island, IslandScan> inScan;
+    private final Map<CompatibleMaterial, Long> worth;
+    private final Map<CompatibleMaterial, AmountMaterialPair> cachedPairs;
     private final SkyBlock plugin;
 
     public IslandLevelManager(SkyBlock plugin) {

@@ -2,8 +2,8 @@ package com.songoda.skyblock.placeholder;
 
 public class Placeholder {
 
-    private String placeholder;
-    private String result;
+    private final String placeholder;
+    private final String result;
 
     public Placeholder(String placeholder, String result) {
         this.placeholder = placeholder;
