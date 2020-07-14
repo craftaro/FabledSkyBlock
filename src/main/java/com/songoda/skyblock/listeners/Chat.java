@@ -38,9 +38,6 @@ public class Chat implements Listener {
 
         PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
