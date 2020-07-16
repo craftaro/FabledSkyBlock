@@ -1,6 +1,6 @@
 package com.songoda.skyblock.island.reward;
 
-import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import org.bukkit.entity.Player;
@@ -20,6 +20,7 @@ public class LevelReward {
     }
 
     public void give(Player player, SkyBlock plugin, long level) {
+        Economy economy = plugin.getEconomyManager().getEconomy();
 
         if (islandBalance > 0) {
             Island island = plugin.getIslandManager().getIsland(player);
@@ -27,7 +28,7 @@ public class LevelReward {
         }
 
         if (money > 0)
-            EconomyManager.deposit(player, money);
+            economy.deposit(player, money);
 
         if (!commands.isEmpty()) {
             for (String cmd : commands) {

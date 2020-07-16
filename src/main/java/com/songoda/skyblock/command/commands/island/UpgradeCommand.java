@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.menus.Upgrade;
@@ -19,6 +19,7 @@ public class UpgradeCommand extends SubCommand {
     public void onCommandByPlayer(Player player, String[] args) {
         MessageManager messageManager = plugin.getMessageManager();
         SoundManager soundManager = plugin.getSoundManager();
+        Economy economy = plugin.getEconomyManager().getEconomy();
 
         Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
@@ -28,7 +29,7 @@ public class UpgradeCommand extends SubCommand {
                     configLoad.getString("Command.Island.Upgrade.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
-            if (!EconomyManager.isEnabled()) {
+            if (!economy.isEnabled()) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Upgrade.Disabled.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 return;

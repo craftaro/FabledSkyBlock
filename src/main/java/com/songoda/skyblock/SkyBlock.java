@@ -7,7 +7,6 @@ import com.songoda.core.compatibility.ServerProject;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.configuration.Config;
 import com.songoda.core.gui.GuiManager;
-import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.bank.BankManager;
@@ -18,6 +17,7 @@ import com.songoda.skyblock.command.commands.SkyBlockCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.confirmation.ConfirmationTask;
 import com.songoda.skyblock.cooldown.CooldownManager;
+import com.songoda.skyblock.economy.EconomyManager;
 import com.songoda.skyblock.generator.GeneratorManager;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
@@ -77,6 +77,7 @@ public class SkyBlock extends SongodaPlugin {
     private InviteManager inviteManager;
     private BiomeManager biomeManager;
     private IslandLevelManager levellingManager;
+    private com.songoda.skyblock.economy.EconomyManager economyManager;
     private CommandManager commandManager;
     private StructureManager structureManager;
     private StackableManager stackableManager;
@@ -131,7 +132,7 @@ public class SkyBlock extends SongodaPlugin {
         SongodaCore.registerPlugin(this, 17, CompatibleMaterial.GRASS_BLOCK);
 
         // Load Economy
-        EconomyManager.load();
+        economyManager = new EconomyManager(this);
 
         // Load Holograms
         com.songoda.core.hooks.HologramManager.load(this);
@@ -180,7 +181,7 @@ public class SkyBlock extends SongodaPlugin {
         rewardManager = new RewardManager(this);
         rewardManager.loadRewards();
 
-        bankManager = new BankManager();
+        bankManager = new BankManager(this);
 
         new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
         new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -226,6 +227,18 @@ public class SkyBlock extends SongodaPlugin {
     
         if (pluginManager.isPluginEnabled("Vault")) {
             this.vaultPermission = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
+        }
+    
+        switch (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getString("Economy.Manager", "Default")) {
+            case "Vault":
+                getEconomyManager().setEconomy("Vault");
+                break;
+            case "PlayerPoints":
+                getEconomyManager().setEconomy("PlayerPoints");
+                break;
+            case "Reserve":
+                getEconomyManager().setEconomy("Reserve");
+                break;
         }
         
         this.coreProtectAPI = loadCoreProtect();
@@ -453,5 +466,9 @@ public class SkyBlock extends SongodaPlugin {
     
     public Permission getVaultPermission() {
         return vaultPermission;
+    }
+    
+    public EconomyManager getEconomyManager() {
+        return economyManager;
     }
 }

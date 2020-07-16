@@ -8,6 +8,9 @@ Command:
 Sound:
     # When disabled all sounds will be disabled.
     Enable: true
+Economy:
+    # Possible managers: Default, Vault, PlayerPoints and Reserve
+    Manager: Default
 Island:
     Performance:
         # Chunk loading per tick affecting operations like island deletion, scan and biome changing.

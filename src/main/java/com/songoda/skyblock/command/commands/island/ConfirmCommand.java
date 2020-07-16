@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -39,6 +39,7 @@ public class ConfirmCommand extends SubCommand {
         IslandManager islandManager = plugin.getIslandManager();
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
+        Economy economy = plugin.getEconomyManager().getEconomy();
 
         if (playerDataManager.hasPlayerData(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
@@ -127,15 +128,15 @@ public class ConfirmCommand extends SubCommand {
                                         return;
                                     }
 
-                                    if (EconomyManager.isEnabled() && island.getStructure() != null
+                                    if (economy.isEnabled() && island.getStructure() != null
                                             && !island.getStructure().isEmpty()
                                             && structureManager.containsStructure(island.getStructure())) {
                                         Structure structure = structureManager.getStructure(island.getStructure());
                                         double deletionCost = structure.getDeletionCost();
 
                                         if (deletionCost != 0.0D) {
-                                            if (EconomyManager.hasBalance(player, deletionCost)) {
-                                                EconomyManager.withdrawBalance(player, deletionCost);
+                                            if (economy.hasBalance(player, deletionCost)) {
+                                                economy.withdrawBalance(player, deletionCost);
                                             } else {
                                                 messageManager.sendMessage(player,
                                                         configLoad.getString(

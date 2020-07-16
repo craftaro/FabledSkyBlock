@@ -5,7 +5,7 @@ import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;
-import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.hooks.economies.Economy;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
@@ -50,6 +50,7 @@ public class GuiBankSelector extends Gui {
     }
 
     public void paint() {
+        Economy economy = plugin.getEconomyManager().getEconomy();
         if (inventory != null)
             inventory.clear();
         setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
@@ -90,7 +91,7 @@ public class GuiBankSelector extends Gui {
 
             switch(type){
                 case DEPOSIT:
-                    amount = EconomyManager.getBalance(event.player);
+                    amount = economy.getBalance(event.player);
                     if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
                         amount = Math.floor(amount);
                     }

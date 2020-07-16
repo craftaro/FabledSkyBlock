@@ -1,8 +1,9 @@
 package com.songoda.skyblock.bank;
 
-import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.economy.EconomyManager;
 import com.songoda.skyblock.island.Island;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -11,16 +12,15 @@ import java.io.File;
 import java.util.*;
 
 public class BankManager {
-    private static BankManager instance;
-
-    public static BankManager getInstance() {return instance == null ? instance = new BankManager() : instance;}
 
     private final HashMap<UUID, List<Transaction>> log;
+    
+    private final SkyBlock plugin;
 
     public FileConfiguration lang;
 
-    public BankManager() {
-        SkyBlock plugin = SkyBlock.getInstance();
+    public BankManager(SkyBlock plugin) {
+        this.plugin = plugin;
         FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         lang = config.getFileConfiguration();
         log = new HashMap<>();
@@ -76,14 +76,16 @@ public class BankManager {
     }
 
     public List<String> getBalanceLore(Player player) {
+        Economy economy = plugin.getEconomyManager().getEconomy();
+        
         List<String> result = new ArrayList<>();
         result.add("Some error occurred while loading your balance!");
         Island island = SkyBlock.getInstance().getIslandManager().getIsland(player);
         result.add("If this is null then its a easy to fix bug: "+island.toString());
         if (island != null) {
             result.clear();
-            result.add(player.getDisplayName()+"'s balance is "+EconomyManager.formatEconomy(EconomyManager.getBalance(player)));
-            result.add(player.getDisplayName()+"'s island has "+EconomyManager.formatEconomy(island.getBankBalance()));
+            result.add(player.getDisplayName()+"'s balance is "+economy.formatEconomy(economy.getBalance(player)));
+            result.add(player.getDisplayName()+"'s island has "+ economy.formatEconomy(island.getBankBalance()));
         }
         return result;
     }
@@ -97,7 +99,7 @@ public class BankManager {
     }
 
     public BankResponse deposit(Player player, Island island, double amt, boolean admin) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        Economy economy = plugin.getEconomyManager().getEconomy();
         FileManager fileManager = plugin.getFileManager();
 
         // Make sure the amount is positive
@@ -114,11 +116,11 @@ public class BankManager {
         }
 
         if(!admin) {
-            if (!EconomyManager.hasBalance(player, amt)) {
+            if (!economy.hasBalance(player, amt)) {
                 return BankResponse.NOT_ENOUGH_MONEY;
             }
-
-            EconomyManager.withdrawBalance(player, amt);
+    
+            economy.withdrawBalance(player, amt);
         }
 
         island.addToBank(amt);
@@ -133,7 +135,7 @@ public class BankManager {
     }
 
     public BankResponse withdraw(Player player, Island island, double amt, boolean admin) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        Economy economy = plugin.getEconomyManager().getEconomy();
         FileManager fileManager = plugin.getFileManager();
 
         // Make sure the amount is positive
@@ -153,8 +155,8 @@ public class BankManager {
             if (amt > island.getBankBalance()) {
                 return BankResponse.NOT_ENOUGH_MONEY;
             }
-
-            EconomyManager.deposit(player, amt);
+    
+            economy.deposit(player, amt);
         }
 
         island.removeFromBank(amt);

@@ -282,7 +282,7 @@ public class PlayerData {
     }
 
     public synchronized void save() {
-        transactions = BankManager.getInstance().getTransactionList(getPlayerUUID());
+        transactions = plugin.getBankManager().getTransactionList(getPlayerUUID());
         Config config = getConfig();
         FileConfiguration configLoad = config.getFileConfiguration();
         configLoad.set("Statistics.Island.Playtime", getPlaytime());

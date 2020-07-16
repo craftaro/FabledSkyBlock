@@ -1,7 +1,7 @@
 package com.songoda.skyblock.challenge.challenge;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.island.Island;
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class Challenge {
+	
 	private final ChallengeCategory category;
 	private final int id;
 	private final String name;
@@ -492,23 +493,26 @@ public class Challenge {
 			
 			@Override
 			public boolean has(Player p, Object obj) {
+				Economy economy = SkyBlock.getInstance().getEconomyManager().getEconomy();
 				if (obj instanceof Number) {
-					return EconomyManager.getBalance(p) >= ((Number) obj).doubleValue();
+					return economy.getBalance(p) >= ((Number) obj).doubleValue();
 				}
 				return false;
 			}
 			
 			@Override
 			public void executeRequire(Player p, Object obj) {
+				Economy economy = SkyBlock.getInstance().getEconomyManager().getEconomy();
 				if (obj instanceof Number && ((Number) obj).doubleValue() > 0) {
-					EconomyManager.withdrawBalance(p, ((Number) obj).doubleValue());
+					economy.withdrawBalance(p, ((Number) obj).doubleValue());
 				}
 			}
 			
 			@Override
 			public void executeReward(Player p, Object obj) {
+				Economy economy = SkyBlock.getInstance().getEconomyManager().getEconomy();
 				if (obj instanceof Number && ((Number) obj).doubleValue() > 0) {
-					EconomyManager.deposit(p, ((Number) obj).doubleValue());
+					economy.deposit(p, ((Number) obj).doubleValue());
 				}
 			}
 		},
