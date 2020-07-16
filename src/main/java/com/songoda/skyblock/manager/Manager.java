@@ -1,6 +1,7 @@
 package com.songoda.skyblock.manager;
 
 import com.songoda.skyblock.SkyBlock;
+import org.bukkit.entity.Player;
 
 public abstract class Manager {
     
@@ -13,11 +14,15 @@ public abstract class Manager {
     /**
      * Reloads the Manager's settings
      */
-    public abstract void reload();
+    public void reload() {};
     
     /**
      * Cleans up the Manager's resources
      */
-    public abstract void disable();
+    public void disable() {};
+    
+    public void triggerPlayerLogin(Player player) {}
+    
+    public void triggerPlayerLogout(Player player) {}
     
 }
