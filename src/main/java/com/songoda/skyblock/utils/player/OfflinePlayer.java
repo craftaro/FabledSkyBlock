@@ -58,8 +58,12 @@ public class OfflinePlayer {
         this.name = bukkitOfflinePlayer.getName();
         this.uuid = uuid;
 
-        if (this.name == null && userCacheManager.hasUser(uuid)) {
-            this.name = userCacheManager.getUser(uuid);
+        if (this.name == null) {
+            if(userCacheManager.hasUser(uuid)) {
+                this.name = userCacheManager.getUser(uuid);
+            } else {
+                this.name = "Unknown";
+            }
         }
 
         FileConfiguration configLoad = YamlConfiguration.loadConfiguration(
