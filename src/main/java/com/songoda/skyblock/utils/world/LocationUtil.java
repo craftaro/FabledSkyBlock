@@ -72,7 +72,7 @@ public final class LocationUtil {
 
     public static @Nonnull Location getDefinitiveLocation(@Nonnull Location loc){
         Location locWorking = loc.clone();
-        for(int i=locWorking.getBlockY(); i>=0; i--){
+        for(locWorking.setY(locWorking.getBlockY()); locWorking.getBlockY()>=0; locWorking.setY(locWorking.getBlockY()-1)){
             if(!locWorking.getBlock().isEmpty()){
                 if(locWorking.getBlock().getType().equals(CompatibleMaterial.WATER.getMaterial()) ||
                         (NMSUtil.getVersionNumber() > 13 && locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
