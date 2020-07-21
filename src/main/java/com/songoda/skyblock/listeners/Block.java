@@ -246,24 +246,28 @@ public class Block implements Listener {
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
 
         if(!player.hasPermission("fabledskyblock.bypass.netherplace") && !islandManager.isIslandWorldUnlocked(island, IslandWorld.Nether)){
-            for(String s : Objects.requireNonNull(configLoad.getConfigurationSection("Island.Restrict.NetherBlocks")).getKeys(false)){
-                if(s.equalsIgnoreCase(block.getType().toString())){
-                    if(configLoad.getBoolean("Island.Restrict.NetherBlocks." + s, false)){
-                        plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Island.Unlock.NetherBlocksPlace.Message")));
-                        event.setCancelled(true);
+            if(configLoad.getConfigurationSection("Island.Restrict.NetherBlocks") != null) {
+                for(String s : configLoad.getConfigurationSection("Island.Restrict.NetherBlocks").getKeys(false)){
+                    if(s.equalsIgnoreCase(block.getType().toString())){
+                        if(configLoad.getBoolean("Island.Restrict.NetherBlocks." + s, false)){
+                            plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
+                                    .getFileConfiguration().getString("Island.Unlock.NetherBlocksPlace.Message")));
+                            event.setCancelled(true);
+                        }
                     }
                 }
             }
         }
 
         if(!player.hasPermission("fabledskyblock.bypass.endplace") && !islandManager.isIslandWorldUnlocked(island, IslandWorld.End)){
-            for(String s : Objects.requireNonNull(configLoad.getConfigurationSection("Island.Restrict.EndBlocks")).getKeys(false)){
-                if(s.equalsIgnoreCase(block.getType().toString())){
-                    if(configLoad.getBoolean("Island.Restrict.EndBlocks." + s)){
-                        plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Island.Unlock.EndBlocksPlace.Message")));
-                        event.setCancelled(true);
+            if(configLoad.getConfigurationSection("Island.Restrict.EndBlocks") != null) {
+                for(String s : configLoad.getConfigurationSection("Island.Restrict.EndBlocks").getKeys(false)){
+                    if(s.equalsIgnoreCase(block.getType().toString())){
+                        if(configLoad.getBoolean("Island.Restrict.EndBlocks." + s)){
+                            plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
+                                    .getFileConfiguration().getString("Island.Unlock.EndBlocksPlace.Message")));
+                            event.setCancelled(true);
+                        }
                     }
                 }
             }
