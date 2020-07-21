@@ -1,5 +1,6 @@
 package com.songoda.skyblock.island;
 
+import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.utils.PlayerUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -468,9 +469,9 @@ public class Island {
     }
 
     public Biome getBiome() {
-        return Biome.valueOf(plugin.getFileManager().getConfig(
+        return CompatibleBiome.valueOf(plugin.getFileManager().getConfig(
                 new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
-                .getFileConfiguration().getString("Biome.Type"));
+                .getFileConfiguration().getString("Biome.Type")).getBiome();
     }
 
     public void setBiome(Biome biome) {
