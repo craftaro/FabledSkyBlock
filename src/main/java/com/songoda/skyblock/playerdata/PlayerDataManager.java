@@ -232,7 +232,7 @@ public class PlayerDataManager {
                     Visit visit = visitIslands.get(visitIslandList);
                     IslandLocation location = visit.getLocation(world);
 
-                    if (location != null && LocationUtil.isLocationAtLocationRadius(player.getLocation(), location.getLocation(), visit.getRadius())) {
+                    if (location != null && LocationUtil.isLocationInLocationRadius(player.getLocation(), location.getLocation(), visit.getRadius())) {
                         Player targetPlayer = Bukkit.getServer().getPlayer(visitIslandList);
                         String targetPlayerName;
 

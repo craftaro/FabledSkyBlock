@@ -66,10 +66,6 @@ public class Island {
         if (this.size > 1000) {
             this.size = 50;
         }
-    
-        if(this.size % 2 != 0) {
-            this.size += 1;
-        }
 
         if (player.isOnline()) {
             int customSize = PlayerUtils.getNumberFromPermission(player.getPlayer(), "fabledskyblock.size", 0);
@@ -336,7 +332,7 @@ public class Island {
         if (size > 1000 || size < 0) {
             size = 50;
         }
-
+        
         this.size = size;
         plugin.getFileManager().getConfig(
                 new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
@@ -344,7 +340,7 @@ public class Island {
     }
 
     public double getRadius() {
-        return (size / 2d) + 0.5d;
+        return (((size%2==0) ? size : (size-1d)) / 2d);
     }
 
     public boolean hasPassword() {
@@ -457,15 +453,11 @@ public class Island {
 
         Location islandLocation = getLocation(worldManager.getIslandWorld(blockLocation.getWorld()), IslandEnvironment.Island);
         double halfSize = Math.floor(getRadius());
-
-        if (blockLocation.getBlockX() > (islandLocation.getBlockX() + halfSize)
-                || blockLocation.getBlockX() < (islandLocation.getBlockX() - halfSize - 1)
-                || blockLocation.getBlockZ() > (islandLocation.getBlockZ() + halfSize)
-                || blockLocation.getBlockZ() < (islandLocation.getBlockZ() - halfSize - 1)) {
-            return false;
-        }
-
-        return true;
+    
+        return !(blockLocation.getBlockX() > (islandLocation.getBlockX() + halfSize))
+                && !(blockLocation.getBlockX() < (islandLocation.getBlockX() - halfSize - 1))
+                && !(blockLocation.getBlockZ() > (islandLocation.getBlockZ() + halfSize))
+                && !(blockLocation.getBlockZ() < (islandLocation.getBlockZ() - halfSize - 1));
     }
 
     public Biome getBiome() {

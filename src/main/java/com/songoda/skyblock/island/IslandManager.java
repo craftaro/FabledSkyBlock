@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions;
 import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.ban.BanManager;
@@ -63,10 +64,10 @@ public class IslandManager {
 
     private final SkyBlock plugin;
 
-    private List<IslandPosition> islandPositions = new ArrayList<>();
-    private Map<UUID, UUID> islandProxies = new HashMap<>();
-    private Map<UUID, Island> islandStorage = new HashMap<>();
-    private int offset;
+    private final List<IslandPosition> islandPositions = new ArrayList<>();
+    private final Map<UUID, UUID> islandProxies = new HashMap<>();
+    private final Map<UUID, Island> islandStorage = new HashMap<>();
+    private final int offset;
 
     private HashMap<IslandWorld, Integer> oldSystemIslands;
 
@@ -813,7 +814,7 @@ public class IslandManager {
 
                     Location islandLocation = fileManager.getLocation(config, "Location.Normal.Island", false);
 
-                    if (LocationUtil.isLocationAtLocationRadius(location, islandLocation, size)) {
+                    if (LocationUtil.isLocationInLocationRadius(location, islandLocation, size)) {
                         return;
                     }
                 } catch (Exception e) {
@@ -1395,9 +1396,13 @@ public class IslandManager {
                             return;
                         }
                     }
-
+    
+                    double increment = island.getSize() % 2 != 0 ? 0.5d : 0.0d;
+                    
                     if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
-                        WorldBorder.send(player, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(player.getWorld()), IslandEnvironment.Island));
+                        WorldBorder.send(player, island.getBorderColor(), island.getSize(),
+                                island.getLocation(worldManager.getIslandWorld(player.getWorld()),
+                                        IslandEnvironment.Island).clone().add(increment, 0, increment));
                     } else {
                         WorldBorder.send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
                     }
@@ -1534,29 +1539,25 @@ public class IslandManager {
 
         if (island.isBorder()) {
             if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+                double increment = island.getSize() % 2 != 0 ? 0.5d : 0.0d;
+                
                 for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
-                    if (worldList == IslandWorld.Nether) {
-                        if (NMSUtil.getVersionNumber() < 13) {
-                            continue;
+                    if (worldList != IslandWorld.Nether || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                        for (Player all : getPlayersAtIsland(island)) {
+                            WorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island).clone().add(increment, 0, increment));
                         }
                     }
-
-                    for (Player all : getPlayersAtIsland(island)) {
-                        WorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island));
-                    }
+    
                 }
             }
         } else {
             for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
-                if (worldList == IslandWorld.Nether) {
-                    if (NMSUtil.getVersionNumber() < 13) {
-                        continue;
+                if (worldList != IslandWorld.Nether || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                    for (Player all : getPlayersAtIsland(island)) {
+                        WorldBorder.send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));
                     }
                 }
-
-                for (Player all : getPlayersAtIsland(island)) {
-                    WorldBorder.send(all, null, 1.4999992E7D, new org.bukkit.Location(all.getWorld(), 0, 0, 0));
-                }
+    
             }
         }
     }
@@ -1623,9 +1624,14 @@ public class IslandManager {
 
     public boolean isLocationAtIsland(Island island, org.bukkit.Location location, IslandWorld world) {
         Location islandLocation = island.getLocation(world, IslandEnvironment.Island);
-        if (islandLocation == null) return false;
-
-        return LocationUtil.isLocationAtLocationRadius(location.clone().add(0.5, 0, 0.5), islandLocation, island.getRadius() + 1);
+        if (islandLocation != null && location.getWorld().equals(islandLocation.getWorld())) {
+            double locIncrement = island.getSize() % 2d != 0d ? 0.50d + Double.MIN_VALUE : -Double.MIN_VALUE;
+            return LocationUtil.isLocationInLocationRadius(
+                    islandLocation.clone().add(locIncrement, 0d, locIncrement),
+                    location.toCenterLocation(),
+                    island.getRadius() + Math.round(locIncrement));
+        }
+        return false;
     }
 
     public Island getIslandByPlayer(org.bukkit.OfflinePlayer player) {

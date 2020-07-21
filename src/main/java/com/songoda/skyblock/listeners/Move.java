@@ -149,7 +149,7 @@ public class Move implements Listener {
                             }
                         }
                     } else {
-                        if (!LocationUtil.isLocationAtLocationRadius(island.getLocation(world, IslandEnvironment.Island), to, island.getRadius())) {
+                        if(!islandManager.isLocationAtIsland(island, to)) {
                             teleportPlayerToIslandSpawn(player, world, island);
                             Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
                             FileConfiguration configLoad = config.getFileConfiguration();

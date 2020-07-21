@@ -148,16 +148,15 @@ public final class LocationUtil {
                 || isLocationLocation(location2.subtract(0, 1, 0), location1);
     }
 
-    public static boolean isLocationAtLocationRadius(Location location1, Location location2, double radius) {
+    public static boolean isLocationInLocationRadius(Location location1, Location location2, double radius) {
         if (location1 == null || location2 == null || location1.getWorld() == null || location2.getWorld() == null
                 || !location1.getWorld().getName().equals(location2.getWorld().getName())) {
             return false;
         }
-
         double x = Math.abs(location1.getX() - location2.getX());
         double z = Math.abs(location1.getZ() - location2.getZ());
-
-        return x <= radius && z <= radius;
+        
+        return x < radius && z < radius;
     }
 
     public static List<Location> getLocations(Location minLocation, Location maxLocation) {

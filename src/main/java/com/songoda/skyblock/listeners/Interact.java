@@ -145,7 +145,9 @@ public class Interact implements Listener {
         StackableManager stackableManager = plugin.getStackableManager();
         IslandLevelManager levellingManager = plugin.getLevellingManager();
 
-        Island island = islandManager.getIslandAtLocation(player.getLocation());
+        Island island = (block != null) ?
+                islandManager.getIslandAtLocation(block.getLocation()) :
+                islandManager.getIslandAtLocation(player.getLocation());
         if (island == null) {
             event.setCancelled(true);
             return;

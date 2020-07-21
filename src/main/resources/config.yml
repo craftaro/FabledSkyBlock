@@ -19,12 +19,11 @@ Island:
         ChunkPerTick: 15
     Size:
         # Warning: The maximum is capped at 1000
-        # Warning: Only even numbers are accepted
         # Warning: Do not go over the maximum
         # The size of an Island when created
-        Minimum: 100
+        Minimum: 51
         # The maximum size of an Island based on the permission node 'fabledskyblock.size.<size>'.
-        Maximum: 200
+        Maximum: 1000
     Creation:
         # Rather than opening the 'Island Creator' menu. Create an island
         # as soon as a player performs the '/island' or '/island create'
