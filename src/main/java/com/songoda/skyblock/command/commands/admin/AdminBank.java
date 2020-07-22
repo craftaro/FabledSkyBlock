@@ -43,7 +43,12 @@ public class AdminBank extends SubCommand {
         }
 
         if (args.length < 1) {
-            plugin.getGuiManager().showGUI(player, new GuiBank(plugin, island, null, true));
+            if (island != null){
+                plugin.getGuiManager().showGUI(player, new GuiBank(plugin, island, null, true));
+            } else {
+                messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.NullIsland.Message"));
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            }
         } else {
             switch (args[0].toLowerCase()) {
                 case "balance":
