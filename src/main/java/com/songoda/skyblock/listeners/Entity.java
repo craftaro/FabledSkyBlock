@@ -490,7 +490,7 @@ public class Entity implements Listener {
                 if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Drops)) {
                     Set<ItemStack> dontMultiply = new HashSet<>();
 
-                    if (NMSUtil.getVersionNumber() > 8) {
+                    if (ServerVersion.isServerVersionAbove(ServerVersion.V1_8)) {
                         EntityEquipment equipment = livingEntity.getEquipment();
                         if (equipment != null) {
                             for (ItemStack item : event.getDrops()) {
@@ -502,9 +502,16 @@ public class Entity implements Listener {
                             }
                         }
 
-                        if (livingEntity instanceof Pig) {
-                            Pig pig = (Pig) livingEntity;
-                            if (pig.hasSaddle()) dontMultiply.add(new ItemStack(Material.SADDLE, 1));
+                        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                            if (livingEntity instanceof Steerable) {
+                                Steerable steerable = (Steerable) livingEntity;
+                                if (steerable.hasSaddle()) dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
+                            }
+                        } else {
+                            if (livingEntity instanceof Pig) {
+                                Pig pig = (Pig) livingEntity;
+                                if (pig.hasSaddle()) dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
+                            }
                         }
                     }
 
