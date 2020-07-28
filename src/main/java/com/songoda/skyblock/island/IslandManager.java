@@ -1629,7 +1629,7 @@ public class IslandManager {
             double locIncrement = island.getSize() % 2d != 0d ? 0.50d + Double.MIN_VALUE : -Double.MIN_VALUE;
             return LocationUtil.isLocationInLocationRadius(
                     islandLocation.clone().add(locIncrement, 0d, locIncrement),
-                    location.toCenterLocation(),
+                    LocationUtil.toCenterLocation(location),
                     island.getRadius() + Math.round(locIncrement));
         }
         return false;

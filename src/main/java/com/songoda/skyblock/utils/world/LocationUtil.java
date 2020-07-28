@@ -369,4 +369,12 @@ public final class LocationUtil {
             return rndLoc;
         }
     }
+    
+    public static Location toCenterLocation(Location loc) {
+        Location centerLoc = loc.clone();
+        centerLoc.setX((double)loc.getBlockX() + 0.5D);
+        centerLoc.setY((double)loc.getBlockY() + 0.5D);
+        centerLoc.setZ((double)loc.getBlockZ() + 0.5D);
+        return centerLoc;
+    }
 }
