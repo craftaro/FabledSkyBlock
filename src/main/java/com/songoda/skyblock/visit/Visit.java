@@ -8,11 +8,13 @@ import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandLocation;
 import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.island.IslandWorld;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Visit {
 
@@ -24,8 +26,9 @@ public class Visit {
     private int islandSize;
     private int islandMembers;
     private int safeLevel;
-    private double islandBankBalance;
+    private final double islandBankBalance;
     private List<String> islandSignature;
+    private final Set<UUID> islandVisitors;
     
     private IslandStatus status;
 
@@ -41,6 +44,16 @@ public class Visit {
         this.islandLevel = islandLevel;
         this.islandSignature = islandSignature;
         this.status = status;
+        this.islandVisitors = new HashSet<>();
+    
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
+                        islandOwnerUUID.toString() + ".yml"))
+                .getFileConfiguration();
+    
+        for (String visitor : configLoad.getStringList("Visitors")) {
+            islandVisitors.add(FastUUID.parseUUID(visitor));
+        }
     }
 
     public UUID getOwnerUUID() {
@@ -109,46 +122,17 @@ public class Visit {
     }
 
     public Set<UUID> getVisitors() {
-        Set<UUID> islandVisitors = new HashSet<>();
-
-        for (String islandVisitorList : plugin.getFileManager()
-                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
-                        islandOwnerUUID.toString() + ".yml"))
-                .getFileConfiguration().getStringList("Visitors")) {
-            islandVisitors.add(FastUUID.parseUUID(islandVisitorList));
-        }
-
         return islandVisitors;
     }
 
     public void addVisitor(UUID uuid) {
-        List<String> islandVisitors = new ArrayList<>();
-        FileConfiguration configLoad = plugin.getFileManager()
-                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
-                        islandOwnerUUID.toString() + ".yml"))
-                .getFileConfiguration();
-
-        for (String islandVisitorList : configLoad.getStringList("Visitors")) {
-            islandVisitors.add(islandVisitorList);
-        }
-
-        islandVisitors.add(FastUUID.toString(uuid));
-        configLoad.set("Visitors", islandVisitors);
+        islandVisitors.add(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
     }
 
     public void removeVisitor(UUID uuid) {
-        List<String> islandVisitors = new ArrayList<>();
-        FileConfiguration configLoad = plugin.getFileManager()
-                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
-                        islandOwnerUUID.toString() + ".yml"))
-                .getFileConfiguration();
-
-        for (String islandVisitorList : configLoad.getStringList("Visitors")) {
-            islandVisitors.add(islandVisitorList);
-        }
-
-        islandVisitors.remove(FastUUID.toString(uuid));
-        configLoad.set("Visitors", islandVisitors);
+        islandVisitors.remove(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
     }
 
     public boolean isVoter(UUID uuid) {
@@ -209,10 +193,12 @@ public class Visit {
         return plugin.getBanManager().getIsland(getOwnerUUID());
     }
 
-    public void save() {
+    public synchronized void save() {
         FileManager.Config config = plugin.getFileManager().getConfig(new File(
                 new File(plugin.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
-
+    
+        config.getFileConfiguration().set("Visitors", new ArrayList<>(islandVisitors.stream().map(UUID::toString).collect(Collectors.toSet())));
+        
         try {
             config.getFileConfiguration().save(config.getFile());
         } catch (IOException e) {
