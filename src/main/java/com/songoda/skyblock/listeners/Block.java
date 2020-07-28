@@ -653,9 +653,9 @@ public class Block implements Listener {
                     island.hasRole(IslandRole.Member, player.getUniqueId()) ||
                     island.hasRole(IslandRole.Coop, player.getUniqueId()) ||
                     island.hasRole(IslandRole.Operator, player.getUniqueId()) ||
-                    (visitors.contains(player.getUniqueId()) &&
-                            player.hasPermission("fabledskyblock.generator.anywhere") &&
-                            !ignoreVisitors);
+                    (!ignoreVisitors &&
+                            visitors.contains(player.getUniqueId()) &&
+                            player.hasPermission("fabledskyblock.generator.anywhere"));
 
             if (isMember && islandManager.isLocationAtIsland(island, player.getLocation(), world)) {
                 possiblePlayers.add(player);
