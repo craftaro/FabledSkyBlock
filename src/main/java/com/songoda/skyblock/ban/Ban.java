@@ -1,5 +1,6 @@
 package com.songoda.skyblock.ban;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandBanEvent;
 import com.songoda.skyblock.api.event.island.IslandUnbanEvent;
@@ -38,10 +39,10 @@ public class Ban {
 
         for (String islandBanList : plugin.getFileManager()
                 .getConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
-                        islandOwnerUUID.toString() + ".yml"))
+                        FastUUID.toString(islandOwnerUUID) + ".yml"))
                 .getFileConfiguration().getStringList("Bans")) {
 
-            UUID uuid = UUID.fromString(islandBanList);
+            UUID uuid = FastUUID.parseUUID(islandBanList);
             if (!Bukkit.getOfflinePlayer(uuid).hasPlayedBefore())
                 continue;
 
@@ -64,7 +65,7 @@ public class Ban {
             List<String> islandBans = new ArrayList<>();
             FileConfiguration configLoad = plugin.getFileManager()
                     .getConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
-                            islandOwnerUUID.toString() + ".yml"))
+                            FastUUID.toString(islandOwnerUUID) + ".yml"))
                     .getFileConfiguration();
 
             for (String islandBanList : configLoad.getStringList("Bans")) {
@@ -86,7 +87,7 @@ public class Ban {
                 .getFileConfiguration();
 
         for (String islandBanList : configLoad.getStringList("Bans")) {
-            if (!uuid.toString().equals(islandBanList)) {
+            if (!FastUUID.toString(uuid).equals(islandBanList)) {
                 islandBans.add(islandBanList);
             }
         }

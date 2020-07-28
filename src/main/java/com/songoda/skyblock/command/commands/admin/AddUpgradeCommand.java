@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -89,7 +90,7 @@ public class AddUpgradeCommand extends SubCommand {
                     island.setUpgrade(null, upgrade, true);
                 } else {
                     File islandDataFile = new File(plugin.getDataFolder().toString() + "/island-data",
-                            islandOwnerUUID.toString() + ".yml");
+                            FastUUID.toString(islandOwnerUUID) + ".yml");
 
                     if (!fileManager.isFileExist(islandDataFile)) {
                         messageManager.sendMessage(sender,

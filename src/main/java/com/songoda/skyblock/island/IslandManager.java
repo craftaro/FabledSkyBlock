@@ -3,6 +3,7 @@ package com.songoda.skyblock.island;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.eatthepath.uuid.FastUUID;
 import com.google.common.base.Preconditions;
 import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
@@ -669,15 +670,15 @@ public class IslandManager {
 
     public synchronized void deleteIslandData(UUID uuid) {
         FileManager fileManager = plugin.getFileManager();
-        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/island-data", uuid.toString() + ".yml"));
-        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/ban-data", uuid.toString() + ".yml"));
-        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/coop-data", uuid.toString() + ".yml"));
-        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/level-data", uuid.toString() + ".yml"));
-        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/setting-data", uuid.toString() + ".yml"));
-        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/visit-data", uuid.toString() + ".yml"));
+        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/island-data", FastUUID.toString(uuid) + ".yml"));
+        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/ban-data", FastUUID.toString(uuid) + ".yml"));
+        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/coop-data", FastUUID.toString(uuid) + ".yml"));
+        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/level-data", FastUUID.toString(uuid) + ".yml"));
+        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/setting-data", FastUUID.toString(uuid) + ".yml"));
+        fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/visit-data", FastUUID.toString(uuid) + ".yml"));
         if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Challenge.PerIsland", true)){
-            fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/challenge-data", uuid.toString() + ".yml"));
+            fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/challenge-data", FastUUID.toString(uuid) + ".yml"));
         }
     }
 
@@ -702,7 +703,7 @@ public class IslandManager {
             islandOwnerUUID = player.getUniqueId();
         } else {
             if (configLoad.getString("Island.Owner") != null) {
-                islandOwnerUUID = UUID.fromString(configLoad.getString("Island.Owner"));
+                islandOwnerUUID = FastUUID.parseUUID(configLoad.getString("Island.Owner"));
             }
         }
 
@@ -1263,7 +1264,7 @@ public class IslandManager {
     }
 
     public boolean isIslandExist(UUID uuid) {
-        return plugin.getFileManager().isFileExist(new File(new File(plugin.getDataFolder().toString() + "/island-data"), uuid.toString() + ".yml"));
+        return plugin.getFileManager().isFileExist(new File(new File(plugin.getDataFolder().toString() + "/island-data"), FastUUID.toString(uuid) + ".yml"));
     }
 
     /*

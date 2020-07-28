@@ -1,5 +1,6 @@
 package com.songoda.skyblock.island;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.utils.PlayerUtils;
@@ -108,7 +109,7 @@ public class Island {
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getString("UUID") != null) {
-                islandUUID = UUID.fromString(configLoad.getString("UUID"));
+                islandUUID = FastUUID.parseUUID(configLoad.getString("UUID"));
             } else {
                 configLoad.set("UUID", islandUUID.toString());
             }
@@ -203,7 +204,7 @@ public class Island {
     
             if (configLoad.getString("Whitelist") != null) {
                 for (String whitelistedUUID : configLoad.getStringList("Whitelist")) {
-                    whitelistedPlayers.add(UUID.fromString(whitelistedUUID));
+                    whitelistedPlayers.add(FastUUID.parseUUID(whitelistedUUID));
                 }
             }
     
@@ -282,7 +283,7 @@ public class Island {
 
                 if (coopDataConfigLoad.getString("CoopPlayers") != null) {
                     for (String coopPlayerList : coopDataConfigLoad.getStringList("CoopPlayers")) {
-                        coopPlayers.put(UUID.fromString(coopPlayerList), IslandCoop.NORMAL);
+                        coopPlayers.put(FastUUID.parseUUID(coopPlayerList), IslandCoop.NORMAL);
                     }
                 }
             }
@@ -305,7 +306,7 @@ public class Island {
     }
 
     public UUID getOriginalOwnerUUID() {
-        return UUID.fromString(plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
+        return FastUUID.parseUUID(plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
                 .getFileConfiguration().getString("Ownership.Original"));
     }
 
@@ -592,7 +593,7 @@ public class Island {
 
             if (configLoad.getString(role.name() + "s") != null) {
                 for (String playerList : configLoad.getStringList(role.name() + "s")) {
-                    islandRoles.add(UUID.fromString(playerList));
+                    islandRoles.add(FastUUID.parseUUID(playerList));
                 }
             }
         }
@@ -642,7 +643,7 @@ public class Island {
                     islandMembers = configLoad.getStringList(role.name() + "s");
                 }
 
-                islandMembers.add(uuid.toString());
+                islandMembers.add(FastUUID.toString(uuid));
                 configLoad.set(role.name() + "s", islandMembers);
 
                 try {
@@ -670,7 +671,7 @@ public class Island {
                 FileConfiguration configLoad = config.getFileConfiguration();
                 List<String> islandMembers = configLoad.getStringList(role.name() + "s");
 
-                islandMembers.remove(uuid.toString());
+                islandMembers.remove(FastUUID.toString(uuid));
                 configLoad.set(role.name() + "s", islandMembers);
 
                 try {
@@ -883,7 +884,7 @@ public class Island {
     
         List<String> tempWhitelist = new ArrayList<>();
         for(UUID uuid : whitelistedPlayers) {
-            tempWhitelist.add(uuid.toString());
+            tempWhitelist.add(FastUUID.toString(uuid));
         }
         config.getFileConfiguration().set("Whitelist", tempWhitelist);
         config.getFileConfiguration().set("Visitor.Status", status.toString());

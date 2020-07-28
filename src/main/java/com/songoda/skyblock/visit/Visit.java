@@ -1,5 +1,6 @@
 package com.songoda.skyblock.visit;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.ban.Ban;
 import com.songoda.skyblock.config.FileManager;
@@ -114,7 +115,7 @@ public class Visit {
                 .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration().getStringList("Visitors")) {
-            islandVisitors.add(UUID.fromString(islandVisitorList));
+            islandVisitors.add(FastUUID.parseUUID(islandVisitorList));
         }
 
         return islandVisitors;
@@ -131,7 +132,7 @@ public class Visit {
             islandVisitors.add(islandVisitorList);
         }
 
-        islandVisitors.add(uuid.toString());
+        islandVisitors.add(FastUUID.toString(uuid));
         configLoad.set("Visitors", islandVisitors);
     }
 
@@ -146,7 +147,7 @@ public class Visit {
             islandVisitors.add(islandVisitorList);
         }
 
-        islandVisitors.remove(uuid.toString());
+        islandVisitors.remove(FastUUID.toString(uuid));
         configLoad.set("Visitors", islandVisitors);
     }
 
@@ -161,7 +162,7 @@ public class Visit {
                 .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration().getStringList("Voters")) {
-            islandVoters.add(UUID.fromString(islandVisitorList));
+            islandVoters.add(FastUUID.parseUUID(islandVisitorList));
         }
 
         return islandVoters;
@@ -176,7 +177,7 @@ public class Visit {
 
         islandVoters.addAll(configLoad.getStringList("Voters"));
 
-        islandVoters.add(uuid.toString());
+        islandVoters.add(FastUUID.toString(uuid));
         configLoad.set("Voters", islandVoters);
     }
 
@@ -188,7 +189,7 @@ public class Visit {
                 .getFileConfiguration();
 
         for (String islandVoterList : configLoad.getStringList("Voters")) {
-            if (!uuid.toString().equals(islandVoterList)) {
+            if (!FastUUID.toString(uuid).equals(islandVoterList)) {
                 islandVoters.add(islandVoterList);
             }
         }

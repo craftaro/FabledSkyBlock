@@ -647,12 +647,13 @@ public class Block implements Listener {
         
         // Filter valid players on the island.
         List<Player> possiblePlayers = new ArrayList<>();
+        Set<UUID> visitors = island.getVisit().getVisitors();
         for (Player player : Bukkit.getOnlinePlayers()) {
             boolean isMember = island.hasRole(IslandRole.Owner, player.getUniqueId()) ||
                     island.hasRole(IslandRole.Member, player.getUniqueId()) ||
                     island.hasRole(IslandRole.Coop, player.getUniqueId()) ||
                     island.hasRole(IslandRole.Operator, player.getUniqueId()) ||
-                    (island.getVisit().getVisitors().contains(player.getUniqueId()) &&
+                    (visitors.contains(player.getUniqueId()) &&
                             player.hasPermission("fabledskyblock.generator.anywhere") &&
                             !ignoreVisitors);
 

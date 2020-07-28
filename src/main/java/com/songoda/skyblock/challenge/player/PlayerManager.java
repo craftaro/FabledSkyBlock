@@ -1,5 +1,6 @@
 package com.songoda.skyblock.challenge.player;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.challenge.challenge.Challenge;
 import com.songoda.skyblock.challenge.challenge.Challenge.Type;
@@ -70,7 +71,7 @@ public class PlayerManager {
 			}
 		}
 		Config config = plugin.getFileManager().getConfig(new File(playersDirectory,
-				uuid.toString() + ".yml"));
+				FastUUID.toString(uuid) + ".yml"));
 		FileConfiguration fileConfig = config.getFileConfiguration();
 		HashMap<Challenge, Integer> challenges = new HashMap<>();
 		ConfigurationSection section = fileConfig.getConfigurationSection("challenges");
@@ -120,7 +121,7 @@ public class PlayerManager {
 		}
 		islands.remove(uuid);
 		plugin.getFileManager().unloadConfig(new File(playersDirectory,
-				uuid.toString() + ".yml"));
+				FastUUID.toString(uuid) + ".yml"));
 
 	}
 
@@ -212,7 +213,7 @@ public class PlayerManager {
 			}
 		}
 		Config config = plugin.getFileManager().getConfig(new File(playersDirectory,
-				uuid.toString() + ".yml"));
+				FastUUID.toString(uuid) + ".yml"));
 		FileConfiguration fileConfig = config.getFileConfiguration();
 		int ccId = c.getCategory().getId();
 		int cId = c.getId();
@@ -223,7 +224,7 @@ public class PlayerManager {
 		fileConfig.set("challenges." + ccId + ".challenges." + cId + ".id", cId);
 		fileConfig.set("challenges." + ccId + ".challenges." + cId + ".count", count);
 		try {
-			fileConfig.save(new File(playersDirectory, uuid.toString() + ".yml"));
+			fileConfig.save(new File(playersDirectory, FastUUID.toString(uuid) + ".yml"));
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -253,7 +254,7 @@ public class PlayerManager {
 
 			// Not connected, check in file
 			Config config = plugin.getFileManager().getConfig(new File(playersDirectory,
-					uuid.toString() + ".yml"));
+					FastUUID.toString(uuid) + ".yml"));
 			FileConfiguration fileConfig = config.getFileConfiguration();
 			int ccId = c.getCategory().getId();
 			int cId = c.getId();

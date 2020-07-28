@@ -1,5 +1,6 @@
 package com.songoda.skyblock.usercache;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -45,14 +46,14 @@ public final class UserCacheManager {
                         final String ownerUUIDString = fileName.substring(0, fileName.indexOf('.'));
 
                         Set<UUID> islandMembers = new HashSet<>();
-                        islandMembers.add(UUID.fromString(ownerUUIDString));
+                        islandMembers.add(FastUUID.parseUUID(ownerUUIDString));
 
                         for (String memberList : configLoad.getStringList("Members")) {
-                            islandMembers.add(UUID.fromString(memberList));
+                            islandMembers.add(FastUUID.parseUUID(memberList));
                         }
 
                         for (String operatorList : configLoad.getStringList("Operators")) {
-                            islandMembers.add(UUID.fromString(operatorList));
+                            islandMembers.add(FastUUID.parseUUID(operatorList));
                         }
 
                         for (UUID islandMemberList : islandMembers) {
@@ -86,14 +87,14 @@ public final class UserCacheManager {
     }
 
     public void addUser(UUID uuid, String name) {
-        config.getFileConfiguration().set(uuid.toString(), name);
+        config.getFileConfiguration().set(FastUUID.toString(uuid), name);
     }
 
     public String getUser(UUID uuid) {
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (configLoad.getString(uuid.toString()) != null) {
-            return configLoad.getString(uuid.toString());
+        if (configLoad.getString(FastUUID.toString(uuid)) != null) {
+            return configLoad.getString(FastUUID.toString(uuid));
         }
 
         return null;
@@ -104,7 +105,7 @@ public final class UserCacheManager {
 
         for (String userList : configLoad.getConfigurationSection("").getKeys(false)) {
             if (configLoad.getString(userList).equalsIgnoreCase(name)) {
-                return UUID.fromString(userList);
+                return FastUUID.parseUUID(userList);
             }
         }
 
@@ -112,7 +113,7 @@ public final class UserCacheManager {
     }
 
     public boolean hasUser(UUID uuid) {
-        return config.getFileConfiguration().getString(uuid.toString()) != null;
+        return config.getFileConfiguration().getString(FastUUID.toString(uuid)) != null;
     }
 
     public boolean hasUser(String name) {

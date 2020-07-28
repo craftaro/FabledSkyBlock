@@ -1,5 +1,6 @@
 package com.songoda.skyblock.stackable;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -56,7 +57,7 @@ public class StackableManager {
      * section.get("Location"); org.bukkit.Material material =
      * org.bukkit.Material.valueOf(section.getString("Material")); int size =
      * section.getInt("Size"); if (size == 0) continue; this.addStack(new
-     * Stackable(UUID.fromString(uuid), location, material, size)); } } }
+     * Stackable(FastUUID.parseUUID(uuid), location, material, size)); } } }
      */
 
     @SuppressWarnings("deprecation")
@@ -89,7 +90,7 @@ public class StackableManager {
 
                 if (size == 0) continue;
 
-                this.addStack(new Stackable(UUID.fromString(key), loc, type, size));
+                this.addStack(new Stackable(FastUUID.parseUUID(key), loc, type, size));
 
             }
 

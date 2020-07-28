@@ -1,5 +1,6 @@
 package com.songoda.skyblock.playerdata;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
@@ -63,7 +64,7 @@ public class PlayerData {
     
         if (getConfig().getFileConfiguration().getString("ChatSpiedIslands") != null) {
             for (String islandUUID : getConfig().getFileConfiguration().getStringList("ChatSpiedIslands")) {
-                spiedIslands.add(UUID.fromString(islandUUID));
+                spiedIslands.add(FastUUID.parseUUID(islandUUID));
             }
         }
         
@@ -75,7 +76,7 @@ public class PlayerData {
             Transaction t = new Transaction();
             t.action = Transaction.Type.valueOf(configLoad.getString("Bank.Transactions."+i+".Action"));
             t.amount = Float.parseFloat(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Amount")));
-            t.player = Bukkit.getOfflinePlayer(UUID.fromString(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Player"))));
+            t.player = Bukkit.getOfflinePlayer(FastUUID.parseUUID(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Player"))));
             Date d = new Date();
             d.setTime(configLoad.getLong("Bank.Transactions."+i+".Date"));
             t.timestamp = d;
@@ -202,7 +203,7 @@ public class PlayerData {
 
     public UUID getOwner() {
         String islandOwnerUUID = getConfig().getFileConfiguration().getString("Island.Owner");
-        return (islandOwnerUUID == null) ? null : UUID.fromString(islandOwnerUUID);
+        return (islandOwnerUUID == null) ? null : FastUUID.parseUUID(islandOwnerUUID);
     }
 
     public void setOwner(UUID islandOwnerUUID) {
@@ -303,7 +304,7 @@ public class PlayerData {
         configLoad.set("ChatSpy", chatSpy);
         List<String> tempSpiedIslands = new ArrayList<>();
         for(UUID uuid : spiedIslands){
-            tempSpiedIslands.add(uuid.toString());
+            tempSpiedIslands.add(FastUUID.toString(uuid));
         }
         configLoad.set("ChatSpiedIslands", tempSpiedIslands);
         
@@ -316,7 +317,7 @@ public class PlayerData {
 
     private Config getConfig() {
         SkyBlock plugin = SkyBlock.getInstance();
-        return plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+        return plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), FastUUID.toString(uuid) + ".yml"));
     }
     
     public Player getPlayer() {

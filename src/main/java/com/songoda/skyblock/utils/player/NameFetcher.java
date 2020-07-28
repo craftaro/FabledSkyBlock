@@ -1,5 +1,6 @@
 package com.songoda.skyblock.utils.player;
 
+import com.eatthepath.uuid.FastUUID;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public final class NameFetcher {
 
         Names[] names = null;
 
-        Scanner jsonScanner = new Scanner((new URL("https://api.mojang.com/user/profiles/" + uuid.toString().replaceAll("-", "") + "/names")).openConnection().getInputStream(), "UTF-8");
+        Scanner jsonScanner = new Scanner((new URL("https://api.mojang.com/user/profiles/" + FastUUID.toString(uuid).replaceAll("-", "") + "/names")).openConnection().getInputStream(), "UTF-8");
         names = new Gson().fromJson(jsonScanner.next(), Names[].class);
         jsonScanner.close();
 

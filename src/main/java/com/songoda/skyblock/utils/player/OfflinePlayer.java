@@ -1,5 +1,6 @@
 package com.songoda.skyblock.utils.player;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.usercache.UserCacheManager;
 import org.bukkit.Bukkit;
@@ -38,14 +39,14 @@ public class OfflinePlayer {
         this.name = bukkitOfflinePlayer.getName();
 
         FileConfiguration configLoad = YamlConfiguration.loadConfiguration(
-                new File(new File(plugin.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+                new File(new File(plugin.getDataFolder().toString() + "/player-data"), FastUUID.toString(uuid) + ".yml"));
         texture = new String[]{configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value")};
         playtime = configLoad.getInt("Statistics.Island.Playtime");
         memberSince = configLoad.getString("Statistics.Island.Join");
         lastOnline = configLoad.getString("Statistics.Island.LastOnline");
 
         if (!(configLoad.getString("Island.Owner") == null || configLoad.getString("Island.Owner").isEmpty())) {
-            owner = UUID.fromString(configLoad.getString("Island.Owner"));
+            owner = FastUUID.parseUUID(configLoad.getString("Island.Owner"));
         }
     }
 
@@ -67,14 +68,14 @@ public class OfflinePlayer {
         }
 
         FileConfiguration configLoad = YamlConfiguration.loadConfiguration(
-                new File(new File(plugin.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+                new File(new File(plugin.getDataFolder().toString() + "/player-data"), FastUUID.toString(uuid) + ".yml"));
         texture = new String[]{configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value")};
         playtime = configLoad.getInt("Statistics.Island.Playtime");
         memberSince = configLoad.getString("Statistics.Island.Join");
         lastOnline = configLoad.getString("Statistics.Island.LastOnline");
 
         if (!(configLoad.getString("Island.Owner") == null || configLoad.getString("Island.Owner").isEmpty())) {
-            owner = UUID.fromString(configLoad.getString("Island.Owner"));
+            owner = FastUUID.parseUUID(configLoad.getString("Island.Owner"));
         }
     }
 

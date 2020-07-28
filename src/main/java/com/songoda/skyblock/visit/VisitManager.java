@@ -1,5 +1,6 @@
 package com.songoda.skyblock.visit;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -51,10 +52,10 @@ public class VisitManager {
                         FileManager.Config config = new FileManager.Config(fileManager, fileList);
                         FileConfiguration configLoad = config.getFileConfiguration();
 
-                        UUID islandOwnerUUID = UUID.fromString(fileList.getName().replace(".yml", ""));
+                        UUID islandOwnerUUID = FastUUID.parseUUID(fileList.getName().replace(".yml", ""));
 
                         if (islandOwnerUUID == null) {
-                            islandOwnerUUID = UUID.fromString(fileList.getName().replaceFirst("[.][^.]+$", ""));
+                            islandOwnerUUID = FastUUID.parseUUID(fileList.getName().replaceFirst("[.][^.]+$", ""));
 
                             if (islandOwnerUUID == null) {
                                 continue;

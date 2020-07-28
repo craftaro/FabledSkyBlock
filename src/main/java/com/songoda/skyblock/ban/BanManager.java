@@ -1,5 +1,6 @@
 package com.songoda.skyblock.ban;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -45,7 +46,7 @@ public class BanManager {
 
             if (configFile.exists()) {
                 for (File fileList : configFile.listFiles()) {
-                    UUID islandOwnerUUID = UUID.fromString(fileList.getName().replaceFirst("[.][^.]+$", ""));
+                    UUID islandOwnerUUID = FastUUID.parseUUID(fileList.getName().replaceFirst("[.][^.]+$", ""));
                     createIsland(islandOwnerUUID);
                 }
             }
@@ -59,9 +60,9 @@ public class BanManager {
         ban.save();
 
         File oldBanDataFile = new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
-                uuid1.toString() + ".yml");
+                FastUUID.toString(uuid1) + ".yml");
         File newBanDataFile = new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
-                uuid2.toString() + ".yml");
+                FastUUID.toString(uuid2) + ".yml");
 
         fileManager.unloadConfig(oldBanDataFile);
         fileManager.unloadConfig(newBanDataFile);
