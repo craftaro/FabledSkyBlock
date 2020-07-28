@@ -364,7 +364,7 @@ public class Entity implements Listener {
             Island island = islandManager.getIslandAtLocation(entity.getLocation());
             plugin.getPermissionManager().processPermission(event, null, island);
 
-            if (!event.isCancelled()) {
+            if (!event.isCancelled() && island != null) {
 
                 StackableManager stackableManager = plugin.getStackableManager();
 
