@@ -13,7 +13,7 @@ public class ProtectorDamagePermission extends ListeningPermission  {
     private final SkyBlock plugin;
     
     public ProtectorDamagePermission(SkyBlock plugin) {
-        super("ProtectorDamagePermission", CompatibleMaterial.CARVED_PUMPKIN, PermissionType.ISLAND);
+        super("ProtectorDamage", CompatibleMaterial.CARVED_PUMPKIN, PermissionType.ISLAND);
         this.plugin = plugin;
     }
     
