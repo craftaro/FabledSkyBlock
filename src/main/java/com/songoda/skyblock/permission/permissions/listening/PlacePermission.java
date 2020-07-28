@@ -31,7 +31,7 @@ public class PlacePermission extends ListeningPermission {
 
         Player player = event.getPlayer();
 
-        if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.BONE_MEAL)
+        if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()).equals(CompatibleMaterial.BONE_MEAL))
             cancelAndMessage(event, player, plugin, messageManager);
     }
 
