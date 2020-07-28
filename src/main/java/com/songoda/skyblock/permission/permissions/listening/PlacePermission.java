@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlacePermission extends ListeningPermission {
@@ -41,6 +42,11 @@ public class PlacePermission extends ListeningPermission {
     
     @PermissionHandler
     public void onMultiPlace(BlockMultiPlaceEvent event) {
+        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+    }
+    
+    @PermissionHandler
+    public void onHangingPlace(HangingPlaceEvent event) {
         cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
     }
 }
