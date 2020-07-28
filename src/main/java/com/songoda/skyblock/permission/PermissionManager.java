@@ -83,6 +83,7 @@ public class PermissionManager {
                 new ItemDropPermission(),
                 new FishingPermission(plugin),
                 new CauldronPermission(plugin),
+                new ProtectorDamagePermission(plugin),
 
                 // Basic
                 new MemberPermission(),

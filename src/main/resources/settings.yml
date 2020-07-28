@@ -168,6 +168,7 @@ Settings:
         NaturalMobSpawning: true
         MobGriefing: true
         Explosions: true
+        ProtectorDamage: true
         FireSpread: true
         LeafDecay: true
         KeepItemsOnDeath: false
