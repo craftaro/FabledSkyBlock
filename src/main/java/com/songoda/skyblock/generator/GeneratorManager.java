@@ -22,7 +22,7 @@ import java.util.Random;
 public class GeneratorManager {
 
     private final SkyBlock plugin;
-    private List<Generator> generatorStorage = new ArrayList<>();
+    private final List<Generator> generatorStorage = new ArrayList<>();
 
     public GeneratorManager(SkyBlock plugin) {
         this.plugin = plugin;
@@ -62,6 +62,7 @@ public class GeneratorManager {
             generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
                     IslandWorld.valueOf(configLoad.getString("Generators." + generatorList + ".World", "Normal")),
                     icon, generatorMaterials,
+                    configLoad.getLong("Generators." + generatorList + ".UnlockLevel", 0L),
                     configLoad.getBoolean("Generators." + generatorList + ".Permission")));
         }
     }
@@ -155,11 +156,11 @@ public class GeneratorManager {
         return CompatibleMaterial.COBBLESTONE;
     }
 
-    public void addGenerator(String name, IslandWorld isWorld, List<GeneratorMaterial> generatorMaterials, boolean permission) {
+    public void addGenerator(String name, IslandWorld isWorld, List<GeneratorMaterial> generatorMaterials, int level, boolean permission) {
         CompatibleMaterial[] oreMaterials = new CompatibleMaterial[]{CompatibleMaterial.COAL, CompatibleMaterial.CHARCOAL, CompatibleMaterial.DIAMOND,
                 CompatibleMaterial.IRON_INGOT, CompatibleMaterial.GOLD_INGOT, CompatibleMaterial.EMERALD};
         generatorStorage.add(new Generator(name, isWorld, oreMaterials[new Random().nextInt(oreMaterials.length)],
-                generatorMaterials, permission));
+                generatorMaterials, level, permission));
     }
 
     public void removeGenerator(Generator generator) {

@@ -7,17 +7,19 @@ import java.util.List;
 
 public class Generator {
 
-    private String name;
-    private IslandWorld isWorld;
-    private CompatibleMaterial materials;
-    private List<GeneratorMaterial> generatorMaterials;
+    private final String name;
+    private final IslandWorld isWorld;
+    private final CompatibleMaterial materials;
+    private final List<GeneratorMaterial> generatorMaterials;
+    private final long level;
     private boolean permission;
 
-    public Generator(String name, IslandWorld isWorld, CompatibleMaterial materials, List<GeneratorMaterial> generatorMaterials, boolean permission) {
+    public Generator(String name, IslandWorld isWorld, CompatibleMaterial materials, List<GeneratorMaterial> generatorMaterials, long level, boolean permission) {
         this.name = name;
         this.isWorld = isWorld;
         this.materials = materials;
         this.generatorMaterials = generatorMaterials;
+        this.level = level;
         this.permission = permission;
     }
 
@@ -47,5 +49,9 @@ public class Generator {
 
     public void setPermission(boolean permission) {
         this.permission = permission;
+    }
+    
+    public long getLevel() {
+        return level;
     }
 }
