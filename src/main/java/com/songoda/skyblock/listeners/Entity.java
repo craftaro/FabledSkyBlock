@@ -92,6 +92,8 @@ public class Entity implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         IslandManager islandManager = plugin.getIslandManager();
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
     
         org.bukkit.entity.Entity victim = event.getEntity();
         Island island = islandManager.getIslandAtLocation(victim.getLocation());
@@ -103,10 +105,14 @@ public class Entity implements Listener {
             }
     
             if(victim instanceof Player && attacker instanceof Player) { // PVP
-                if(plugin.getPermissionManager()
-                        .processPermission(event, (Player) attacker, island)) {
-                    plugin.getPermissionManager()
-                            .processPermission(event, (Player) victim, island);
+                if(configLoad.getBoolean("Island.PvP.Enable")) {
+                    if(plugin.getPermissionManager()
+                            .processPermission(event, (Player) attacker, island)) {
+                        plugin.getPermissionManager()
+                                .processPermission(event, (Player) victim, island);
+                    }
+                } else {
+                    event.setCancelled(true);
                 }
             } else if(victim instanceof Player) { // EVP
                 plugin.getPermissionManager()
