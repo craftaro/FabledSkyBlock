@@ -278,7 +278,7 @@ public class Generator implements Listener {
                                 configLoad.getString("Island.Admin.Generator.Characters.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     } else {
-                        generatorManager.addGenerator(event1.getName(), IslandWorld.Normal, new ArrayList<>(), false);
+                        generatorManager.addGenerator(event1.getName(), IslandWorld.Normal, new ArrayList<>(), 0, false);
 
                         messageManager.sendMessage(player,
                                 configLoad.getString("Island.Admin.Generator.Created.Message")
