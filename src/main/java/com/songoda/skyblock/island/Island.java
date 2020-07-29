@@ -725,7 +725,7 @@ public class Island {
     public boolean hasPermission(IslandRole role, BasicPermission permission) {
         if (islandPermissions.containsKey(role)) {
             for (IslandPermission islandPermission : islandPermissions.get(role)) {
-                if (islandPermission.getPermission() == permission)
+                if (islandPermission.getPermission().equals(permission))
                     return islandPermission.getStatus();
             }
         }
