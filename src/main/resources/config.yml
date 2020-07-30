@@ -5,6 +5,11 @@ Command:
         # Shows all aliases of the commands.
         Aliases:
             Enable: true
+    Island:
+        # What command should be executed on /is or /island
+        Aliases:
+            IslandOwned: "island controlpanel"
+            NoIsland: "island create"
 Sound:
     # When disabled all sounds will be disabled.
     Enable: true

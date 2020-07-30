@@ -130,8 +130,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             SoundManager soundManager = plugin.getSoundManager();
             FileManager fileManager = plugin.getFileManager();
 
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+            FileConfiguration languageConfigLoad = languageConfig.getFileConfiguration();
+            
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+            FileConfiguration mainConfig = config.getFileConfiguration();
 
             Player player = null;
 
@@ -143,22 +146,21 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 if (player == null) {
                     sendConsoleHelpCommands(sender);
                 } else {
+                    String commandToExecute;
                     if (plugin.getIslandManager().getIsland(player) == null) {
-                        Bukkit.getServer().getScheduler().runTask(plugin, () -> Bukkit.getServer().dispatchCommand(sender, "island create"));
+                        commandToExecute = mainConfig.getString("Command.Island.Aliases.NoIsland", "island create");
                     } else {
-                        boolean canUseControlPanel = player.hasPermission("fabledskyblock.*")
-                                || player.hasPermission("fabledskyblock.island.*")
-                                || player.hasPermission("fabledskyblock.island.controlpanel");
-
-                        if (!canUseControlPanel) {
-                            messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Island.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                            return true;
-                        }
-
-                        ControlPanel.getInstance().open(player);
-                        soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+                        commandToExecute = mainConfig.getString("Command.Island.Aliases.IslandOwned", "island controlpanel");
                     }
+    
+                    if(commandToExecute.startsWith("/")) {
+                        commandToExecute = commandToExecute.substring(1);
+                    }
+                    
+                    String finalCommandToExecute = commandToExecute;
+                    Bukkit.getServer().getScheduler().runTask(plugin, () ->
+                            Bukkit.getServer().dispatchCommand(sender,
+                                    finalCommandToExecute));
                 }
 
                 return true;
@@ -176,15 +178,14 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                             || player.hasPermission("fabledskyblock.island.help");
 
                     if (!canUseHelp) {
-                        messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Island.Message"));
+                        messageManager.sendMessage(player, languageConfigLoad.getString("Command.PermissionDenied.Island.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         return true;
                     }
 
                     int page = -1;
 
-                    if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                            .getFileConfiguration().getBoolean("Command.Help.List")) {
+                    if (!mainConfig.getBoolean("Command.Help.List")) {
                         page = 1;
 
                         if (args.length == 2) {
@@ -192,7 +193,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                                 page = Integer.valueOf(args[1]);
                             } else {
                                 messageManager.sendMessage(player,
-                                        configLoad.getString("Command.Island.Help.Integer.Message"));
+                                        languageConfigLoad.getString("Command.Island.Help.Integer.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 return true;
@@ -214,7 +215,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                                 || player.hasPermission("fabledskyblock.admin.help");
 
                         if (!canUseHelp) {
-                            messageManager.sendMessage(player, configLoad.getString("Command.PermissionDenied.Admin.Message"));
+                            messageManager.sendMessage(player, languageConfigLoad.getString("Command.PermissionDenied.Admin.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             return true;
                         }
@@ -230,7 +231,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                                     page = Integer.valueOf(args[2]);
                                 } else {
                                     messageManager.sendMessage(player,
-                                            configLoad.getString("Command.Island.Help.Integer.Message"));
+                                            languageConfigLoad.getString("Command.Island.Help.Integer.Message"));
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
                                             1.0F);
 
@@ -253,13 +254,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
 
             if (subCommand == null) {
-                messageManager.sendMessage(sender, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
+                messageManager.sendMessage(sender, languageConfigLoad.getString("Command.Island.Argument.Unrecognised.Message"));
                 soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 return true;
             }
 
             if (!subCommand.hasPermission(sender, isAdmin)) {
-                messageManager.sendMessage(sender, configLoad.getString("Command.PermissionDenied." + (isAdmin ? "Admin" : "Island") + ".Message"));
+                messageManager.sendMessage(sender, languageConfigLoad.getString("Command.PermissionDenied." + (isAdmin ? "Admin" : "Island") + ".Message"));
                 soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 return true;
             }
