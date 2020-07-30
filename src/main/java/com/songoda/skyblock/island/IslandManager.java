@@ -1651,7 +1651,9 @@ public class IslandManager {
         settings.put("Damage", true);
 
         for (String settingList : settings.keySet()) {
-            if (configLoad.getBoolean("Island.Settings." + settingList + ".Enable") && island.hasPermission(IslandRole.Owner, plugin.getPermissionManager().getPermission(settingList)) == settings.get(settingList)) {
+            if (configLoad.getBoolean("Island.Settings." + settingList + ".Enable") &&
+                    island.hasPermission(IslandRole.Owner, plugin.getPermissionManager().getPermission(settingList)) ==
+                            settings.get(settingList)) {
                 safeLevel++;
             }
         }
