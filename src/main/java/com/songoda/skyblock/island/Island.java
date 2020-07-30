@@ -28,6 +28,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -52,7 +53,7 @@ public class Island {
     private int maxMembers;
     private boolean deleted = false;
 
-    public Island(OfflinePlayer player) {
+    public Island(@Nonnull OfflinePlayer player) {
         this.plugin = SkyBlock.getInstance();
 
         FileManager fileManager = plugin.getFileManager();
