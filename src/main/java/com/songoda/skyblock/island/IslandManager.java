@@ -60,10 +60,8 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class IslandManager {
@@ -758,19 +756,16 @@ public class IslandManager {
         for (File file : files) {
             if (file != null && file.getName().contains(".yml") && file.getName().length() > 35) {
                 try {
-                    Config config = new FileManager.Config(fileManager, file);
-                    FileConfiguration islandConfigLoad = config.getFileConfiguration();
-    
-                    UUID islandOwnerUUID = FastUUID.parseUUID(islandConfigLoad.getString("Island.Owner", ""));
+                    UUID islandOwnerUUID = FastUUID.parseUUID(file.getName().split("\\.")[0]);
                     
-                    Island island = getIslandByUUID(islandOwnerUUID);
+                    Island island = getIslandByPlayer(Bukkit.getOfflinePlayer(islandOwnerUUID));
                     
                     if(island != null) {
                         island.setSize(island.getSize() + diff);
                         island.save();
                     } else {
                         loadIsland(file);
-                        island = getIslandByUUID(islandOwnerUUID);
+                        island = getIslandByPlayer(Bukkit.getOfflinePlayer(islandOwnerUUID));
     
                         island.setSize(island.getSize() + diff);
                         island.save();
@@ -788,7 +783,6 @@ public class IslandManager {
     }
     
     public void setAllIslandsSize(@Nonnull int size, @Nullable Runnable callback) {
-        FileManager fileManager = plugin.getFileManager();
         File islandConfigDir = new File(plugin.getDataFolder().toString() + "/island-data");
         
         if (!islandConfigDir.exists()) return;
@@ -799,19 +793,16 @@ public class IslandManager {
         for (File file : files) {
             if (file != null && file.getName().contains(".yml") && file.getName().length() > 35) {
                 try {
-                    Config config = new FileManager.Config(fileManager, file);
-                    FileConfiguration islandConfigLoad = config.getFileConfiguration();
+                    UUID islandOwnerUUID = FastUUID.parseUUID(file.getName().split("\\.")[0]);
                     
-                    UUID islandOwnerUUID = FastUUID.parseUUID(islandConfigLoad.getString("Island.Owner", ""));
-                    
-                    Island island = getIslandByUUID(islandOwnerUUID);
+                    Island island = getIslandByPlayer(Bukkit.getOfflinePlayer(islandOwnerUUID));
                     
                     if(island != null) {
                         island.setSize(size);
                         island.save();
                     } else {
                         loadIsland(file);
-                        island = getIslandByUUID(islandOwnerUUID);
+                        island = getIslandByPlayer(Bukkit.getOfflinePlayer(islandOwnerUUID));
                         
                         island.setSize(size);
                         island.save();
@@ -835,8 +826,8 @@ public class IslandManager {
         
         Config config = fileManager.getConfig(islandFile);
         FileConfiguration configLoad = config.getFileConfiguration();
-        
-        UUID islandOwnerUUID = FastUUID.parseUUID(configLoad.getString("Island.Owner", ""));
+    
+        UUID islandOwnerUUID = FastUUID.parseUUID(islandFile.getName().split("\\.")[0]);
     
         if (config.getFileConfiguration().getString("Location") == null) {
             deleteIslandData(islandOwnerUUID);

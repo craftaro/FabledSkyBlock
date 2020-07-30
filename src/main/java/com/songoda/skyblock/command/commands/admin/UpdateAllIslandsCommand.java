@@ -78,7 +78,7 @@ public class UpdateAllIslandsCommand extends SubCommand {
     
     @Override
     public String getName() {
-        return "updateallIslands";
+        return "updateallislands";
     }
     
     @Override
