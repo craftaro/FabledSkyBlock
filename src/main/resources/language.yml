@@ -189,6 +189,19 @@ Command:
       Permission:
         Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to unban players from the Island.'
     Admin:
+      UpdateAllIslands:
+        Unexpected:
+          Message: '&bSkyBlock &8| &cError&8: &eUnexpected values'
+        NoArgs:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin UpdateAllIslands <SetSize|AdjustSize> <value>'
+        Start:
+          Message: '&bSkyBlock &8| &aInfo&8: &eIslands update started. It could take some time.'
+        Finished:
+          Message: '&bSkyBlock &8| &aInfo&8: &eIslands update finished.'
+        NotANumber:
+          Message: '&bSkyBlock &8| &cError&8: &eThe provided value is not valid.'
+        Info:
+          Message: '&f&oEdit all the islands in one time.'
       Bank:
         Short01:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin bank [<Deposit|Withdraw|Balance>]'
@@ -206,6 +219,8 @@ Command:
           Message: 'Succesfully removed %ammount% from %player%''s island'
         SuccesDeposit:
           Message: 'Succesfully added %ammount% to %player%''s island'
+        Unexpected:
+          Message: '&bSkyBlock &8| &cError&8: &eUnexpected values'
       ChatSpy:
         Info:
           Message: '&f&oToggle island chat spy.'

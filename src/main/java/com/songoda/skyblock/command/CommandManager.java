@@ -118,7 +118,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 new StackableCommand(),
                 new AdminBank(),
                 new SetMaxMembers(),
-                new ChatSpyCommand()
+                new ChatSpyCommand(),
+                new UpdateAllIslandsCommand()
         );
     }
 

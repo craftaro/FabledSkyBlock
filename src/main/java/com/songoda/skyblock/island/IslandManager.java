@@ -55,11 +55,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class IslandManager {
@@ -739,6 +743,88 @@ public class IslandManager {
         
             Bukkit.getScheduler().runTask(plugin, () ->
                     Bukkit.getServer().getPluginManager().callEvent(new IslandLoadEvent(island.getAPIWrapper())));
+        }
+    }
+    
+    public void adjustAllIslandsSize(@Nonnull int diff, @Nullable Runnable callback) {
+        FileManager fileManager = plugin.getFileManager();
+        File islandConfigDir = new File(plugin.getDataFolder().toString() + "/island-data");
+    
+        if (!islandConfigDir.exists()) return;
+    
+        File[] files = islandConfigDir.listFiles();
+        if(files == null) return;
+    
+        for (File file : files) {
+            if (file != null && file.getName().contains(".yml") && file.getName().length() > 35) {
+                try {
+                    Config config = new FileManager.Config(fileManager, file);
+                    FileConfiguration islandConfigLoad = config.getFileConfiguration();
+    
+                    UUID islandOwnerUUID = FastUUID.parseUUID(islandConfigLoad.getString("Island.Owner", ""));
+                    
+                    Island island = getIslandByUUID(islandOwnerUUID);
+                    
+                    if(island != null) {
+                        island.setSize(island.getSize() + diff);
+                        island.save();
+                    } else {
+                        loadIsland(file);
+                        island = getIslandByUUID(islandOwnerUUID);
+    
+                        island.setSize(island.getSize() + diff);
+                        island.save();
+                        unloadIsland(island, null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        if(callback != null) {
+            callback.run();
+        }
+    }
+    
+    public void setAllIslandsSize(@Nonnull int size, @Nullable Runnable callback) {
+        FileManager fileManager = plugin.getFileManager();
+        File islandConfigDir = new File(plugin.getDataFolder().toString() + "/island-data");
+        
+        if (!islandConfigDir.exists()) return;
+        
+        File[] files = islandConfigDir.listFiles();
+        if(files == null) return;
+        
+        for (File file : files) {
+            if (file != null && file.getName().contains(".yml") && file.getName().length() > 35) {
+                try {
+                    Config config = new FileManager.Config(fileManager, file);
+                    FileConfiguration islandConfigLoad = config.getFileConfiguration();
+                    
+                    UUID islandOwnerUUID = FastUUID.parseUUID(islandConfigLoad.getString("Island.Owner", ""));
+                    
+                    Island island = getIslandByUUID(islandOwnerUUID);
+                    
+                    if(island != null) {
+                        island.setSize(size);
+                        island.save();
+                    } else {
+                        loadIsland(file);
+                        island = getIslandByUUID(islandOwnerUUID);
+                        
+                        island.setSize(size);
+                        island.save();
+                        unloadIsland(island, null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    
+        if(callback != null) {
+            callback.run();
         }
     }
     
