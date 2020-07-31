@@ -78,7 +78,8 @@ public final class LocationUtil {
         for(locWorking.setY(locWorking.getBlockY()); locWorking.getBlockY()>=0; locWorking.setY(locWorking.getBlockY()-1)){
             if(!locWorking.getBlock().isEmpty()){
                 if(locWorking.getBlock().getType().equals(CompatibleMaterial.WATER.getMaterial()) ||
-                        (NMSUtil.getVersionNumber() > 13 && locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
+                        (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && 
+                                locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
                     loc = locWorking;
                 }
                 break;
