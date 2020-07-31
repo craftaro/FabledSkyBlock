@@ -6,7 +6,7 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
-import com.songoda.skyblock.limit.impl.EntityLimitaton;
+import com.songoda.skyblock.limit.impl.EntityLimitation;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.upgrade.Upgrade;
@@ -569,7 +569,7 @@ public class Entity implements Listener {
 
         if (island == null) return;
 
-        EntityLimitaton limits = plugin.getLimitationHandler().getInstance(EntityLimitaton.class);
+        EntityLimitation limits = plugin.getLimitationHandler().getInstance(EntityLimitation.class);
         EntityType type = entity.getType();
 
         if (limits.isBeingTracked(type)) {

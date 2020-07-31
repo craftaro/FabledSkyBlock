@@ -4,16 +4,20 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.limit.EnumLimitation;
+import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-public final class EntityLimitaton extends EnumLimitation<EntityType> {
-
-    public EntityLimitaton() {
+public final class EntityLimitation extends EnumLimitation<EntityType> {
+    
+    private final LimitationInstanceHandler limitationInstanceHandler;
+    
+    public EntityLimitation(LimitationInstanceHandler limitationInstanceHandler) {
         super(EntityType.class);
+        this.limitationInstanceHandler = limitationInstanceHandler;
     }
 
     public long getEntityCount(Island island, IslandWorld islandWorld, EntityType type) {
@@ -35,12 +39,13 @@ public final class EntityLimitaton extends EnumLimitation<EntityType> {
 
         for (int x = minX; x < maxX + 16; x += 16) {
             for (int z = minZ; z < maxZ + 16; z += 16) {
-                final Chunk chunk = world.getChunkAt(x >> 4, z >> 4);
-
-                for (Entity ent : chunk.getEntities()) {
-                    if (ent.getType() == type) count++;
+                if (limitationInstanceHandler.isLoadChunks() || world.isChunkLoaded(x >> 4, z >> 4)) {
+                    final Chunk chunk = world.getChunkAt(x >> 4, z >> 4);
+    
+                    for (Entity ent : chunk.getEntities()) {
+                        if (ent.getType() == type) count++;
+                    }
                 }
-
             }
         }
         return count;
