@@ -45,26 +45,29 @@ public final class LocationUtil {
         }
     }
 
-    public static @Nullable Location getSafeLocation(@Nonnull Location loc){
-        boolean found = false;
+    public static @Nullable Location getSafeLocation(SkyBlock plugin, @Nonnull Location loc){
         Location locChecked = null;
-        if(loc.getWorld() != null){
-            locChecked = loc.clone();
-            loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
-            for(int i=loc.getBlockY(); i>=0 && !found; i--){
-                locChecked = locChecked.subtract(0d, 1d, 0d);
-                found = checkBlock(locChecked);
-            }
-            if(!found){
-                for(int i=loc.getBlockY(); i<256 && !found; i++){
-                    locChecked = locChecked.add(0d, 1d, 0d);
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+            boolean found = false;
+            if(loc.getWorld() != null){
+                locChecked = loc.clone();
+                loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+                for(int i=loc.getBlockY(); i>=0 && !found; i--){
+                    locChecked = locChecked.subtract(0d, 1d, 0d);
                     found = checkBlock(locChecked);
                 }
-            }
-            if (found) {
-                locChecked = locChecked.add(0d,1d,0d);
-            } else {
-                locChecked = null;
+                if(!found){
+                    for(int i=loc.getBlockY(); i<256 && !found; i++){
+                        locChecked = locChecked.add(0d, 1d, 0d);
+                        found = checkBlock(locChecked);
+                    }
+                }
+                if (found) {
+                    locChecked = locChecked.add(0d,1d,0d);
+                } else {
+                    locChecked = null;
+                }
             }
         }
         return locChecked;

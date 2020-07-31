@@ -163,7 +163,7 @@ public class Portal implements Listener {
         IslandWorld toWorldF = toWorld;
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Location loc = island.getLocation(toWorldF, spawnEnvironment);
-            Location tempSafeLoc = LocationUtil.getSafeLocation(loc);
+            Location tempSafeLoc = LocationUtil.getSafeLocation(plugin, loc);
             Location safeLoc = null;
             if(tempSafeLoc != null) {
                 safeLoc = tempSafeLoc;

@@ -203,7 +203,7 @@ public class Move implements Listener {
         if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
+                Location safeLoc = LocationUtil.getSafeLocation(plugin, island.getLocation(world, IslandEnvironment.Main));
                 if(safeLoc != null){
                     loc = safeLoc;
                 }
@@ -213,7 +213,7 @@ public class Move implements Listener {
             }
         } else {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
+                Location safeLoc = LocationUtil.getSafeLocation(plugin, island.getLocation(world, IslandEnvironment.Visitor));
                 if(safeLoc != null){
                     loc = safeLoc;
                 }

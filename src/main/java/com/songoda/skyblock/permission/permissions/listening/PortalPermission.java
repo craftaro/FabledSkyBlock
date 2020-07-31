@@ -71,7 +71,7 @@ public class PortalPermission extends ListeningPermission {
         Island island = islandManager.getIslandAtLocation(from);
         Location to = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
         if(island.hasRole(IslandRole.Visitor, player.getUniqueId())){
-            Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+            Location safeLoc = LocationUtil.getSafeLocation(plugin, island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
             if(safeLoc != null) {
                 to = safeLoc;
             }
