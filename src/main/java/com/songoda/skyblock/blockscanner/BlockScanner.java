@@ -117,7 +117,7 @@ public final class BlockScanner extends BukkitRunnable {
 
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
-                        for (int y = scanY; y < 256; y++) {
+                        for (int y = scanY; y < shot.getHighestBlockYAt(x, z); y++) {
 
 
                             final CompatibleMaterial type = CompatibleMaterial.getBlockMaterial(VERSION > 12
