@@ -364,6 +364,9 @@ Island:
     Limits:
         # Should slime split bypass limits.yml
         AllowSlimeSplit: true
+        # If true, load all chunks on player's island to count entities.
+        # If false, do not load all chunks and only count entites on loaded chunks on player's island.
+        LoadChunks: true
     Nether:
         # Allow placing water in the Nether
         AllowNetherWater: false
