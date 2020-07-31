@@ -49,7 +49,7 @@ public final class SkullUtil {
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), null);
         gameProfile.getProperties().put("textures", new Property("textures", value, signature));
 
-        Field profileField = null;
+        Field profileField;
 
         try {
             profileField = sm.getClass().getDeclaredField("profile");
