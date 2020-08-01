@@ -381,4 +381,12 @@ public final class LocationUtil {
         centerLoc.setZ((double)loc.getBlockZ() + 0.5D);
         return centerLoc;
     }
+    
+    public static Location toBlockLocation(Location loc) {
+        Location blockLoc = loc.clone();
+        blockLoc.setX(loc.getBlockX());
+        blockLoc.setY(loc.getBlockY());
+        blockLoc.setZ(loc.getBlockZ());
+        return blockLoc;
+    }
 }
