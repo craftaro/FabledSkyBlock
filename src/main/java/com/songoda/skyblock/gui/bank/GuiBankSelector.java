@@ -141,7 +141,11 @@ public class GuiBankSelector extends Gui {
 
                 double amount;
                 try {
-                    amount = Double.parseDouble(gui.getInputText().trim());
+                    if(gui.getInputText() != null) {
+                        amount = Double.parseDouble(gui.getInputText().trim());
+                    } else {
+                        amount = 0;
+                    }
                 } catch (NumberFormatException e1) {
                     messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short4.Message"));
                     soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
