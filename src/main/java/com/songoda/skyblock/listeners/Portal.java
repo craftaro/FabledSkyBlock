@@ -117,7 +117,7 @@ public class Portal implements Listener {
 
         if (tick == null) return;
 
-        PlayerEnterPortalEvent playerEnterPortalEvent = new PlayerEnterPortalEvent(player, player.getLocation()); // TODO Why?? - Fabrimat
+        PlayerEnterPortalEvent playerEnterPortalEvent = new PlayerEnterPortalEvent(player, player.getLocation());
         // Check permissions.
         boolean perms = !plugin.getPermissionManager().processPermission(playerEnterPortalEvent,
                 player, island);
