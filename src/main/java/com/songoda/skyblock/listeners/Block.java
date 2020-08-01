@@ -40,9 +40,11 @@ import java.util.*;
 public class Block implements Listener {
 
     private final SkyBlock plugin;
+    private final Set<Location> generatorWaitingLocs;
 
     public Block(SkyBlock plugin) {
         this.plugin = plugin;
+        this.generatorWaitingLocs = new HashSet<>();
     }
     
     @EventHandler(priority = EventPriority.LOW)
@@ -427,6 +429,11 @@ public class Block implements Listener {
         }
 
         // Generators
+        if(this.generatorWaitingLocs.contains(LocationUtil.toBlockLocation(block.getLocation().clone()))) {
+            event.setCancelled(true);
+            return;
+        }
+        
         if (ServerVersion.isServerVersionBelow(ServerVersion.V1_12)) {
             CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
             if (material != CompatibleMaterial.WATER
@@ -482,11 +489,13 @@ public class Block implements Listener {
                             OfflinePlayer owner = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
                             event.setCancelled(true);
                             org.bukkit.World finalWorld = event.getBlock().getWorld();
+                            this.generatorWaitingLocs.add(LocationUtil.toBlockLocation(block.getLocation().clone()));
                             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                                 if(plugin.getVaultPermission().playerHas(block.getWorld().getName(), owner, generator.getPermission()) ||
                                         plugin.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.generator.*") ||
                                         plugin.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.*")) {
                                     Bukkit.getScheduler().runTask(plugin, () -> {
+                                        this.generatorWaitingLocs.remove(LocationUtil.toBlockLocation(block.getLocation().clone()));
                                         if(worldManager.getIslandWorld(finalWorld).equals(generator.getIsWorld())){
                                             BlockState genState = generatorManager.generateBlock(generator, block);
                                             block.setType(genState.getType());
@@ -759,11 +768,13 @@ public class Block implements Listener {
                         OfflinePlayer owner = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
                         event.setCancelled(true);
                         org.bukkit.World finalWorld = event.getBlock().getWorld();
+                        this.generatorWaitingLocs.add(LocationUtil.toBlockLocation(block.getLocation().clone()));
                         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                             if(plugin.getVaultPermission().playerHas(block.getWorld().getName(), owner, generator.getPermission()) ||
                                     plugin.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.generator.*") ||
                                     plugin.getVaultPermission().playerHas(block.getWorld().getName(), owner, "fabledskyblock.*")) {
                                 Bukkit.getScheduler().runTask(plugin, () -> {
+                                    this.generatorWaitingLocs.remove(LocationUtil.toBlockLocation(block.getLocation().clone()));
                                     if(worldManager.getIslandWorld(finalWorld).equals(generator.getIsWorld())){
                                         BlockState genState = generatorManager.generateBlock(generator, block);
                                         block.setType(genState.getType());
