@@ -25,8 +25,8 @@ public class FishingPermission extends ListeningPermission {
     @PermissionHandler(priority = PermissionPriority.LAST)
     public void onProjectileLaunch(ProjectileLaunchByPlayerEvent event) {
         org.bukkit.entity.Projectile projectile = event.getEntity();
-        Player shooter = (Player) projectile.getShooter();
-        if (projectile instanceof FishHook) {
+        if (projectile instanceof FishHook && projectile.getShooter() instanceof Player) {
+            Player shooter = (Player) projectile.getShooter();
             cancelAndMessage(event, shooter, plugin, messageManager);
             event.setStopped(true);
         }
