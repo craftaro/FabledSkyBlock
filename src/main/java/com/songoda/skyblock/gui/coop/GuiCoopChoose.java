@@ -20,12 +20,14 @@ public class GuiCoopChoose extends Gui {
     private final FileConfiguration languageLoad;
     private final Gui returnGui;
     private final String targetPlayer;
+    private final Island island;
     
-    public GuiCoopChoose(SkyBlock plugin, Gui returnGui, Island island, String targetPlayer) {
-        super(GuiType.HOPPER);
+    public GuiCoopChoose(SkyBlock plugin, Island island, Gui returnGui, String targetPlayer) {
+        super(1, returnGui);
         this.plugin = plugin;
         this.returnGui = returnGui;
         this.targetPlayer = targetPlayer;
+        this.island = island;
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
         setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
@@ -48,25 +50,25 @@ public class GuiCoopChoose extends Gui {
             soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             guiManager.showGUI(event.player, returnGui);
         });
-        setButton(4, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
+        setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Exit.Displayname"))), (event) -> {
             soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             guiManager.showGUI(event.player, returnGui);
         });
     
-        setButton(1, GuiUtils.createButtonItem(CompatibleMaterial.OBSIDIAN, // Normal
-                TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Word.Normal"))),
+        setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.OBSIDIAN, // Normal
+                TextUtils.formatText("&r" + languageLoad.getString("Menu.Coop.Item.Word.Normal"))),
                 (event) ->  {
             Bukkit.getServer().dispatchCommand(event.player,
                         "island coop " + targetPlayer + " " + languageLoad.getString("Menu.Coop.Item.Word.Normal"));
-                    guiManager.showGUI(event.player, returnGui);
+                    guiManager.showGUI(event.player, new GuiCoop(plugin, island, null));
         });
-        setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.GLASS, // Temp
-                TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Word.Temp"))),
+        setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.GLASS, // Temp
+                TextUtils.formatText("&r" + languageLoad.getString("Menu.Coop.Item.Word.Temp"))),
                 (event) -> {
             Bukkit.getServer().dispatchCommand(event.player,
                     "island coop " + targetPlayer + " " + languageLoad.getString("Menu.Coop.Item.Word.Temp"));
-                    guiManager.showGUI(event.player, returnGui);
+                    guiManager.showGUI(event.player, new GuiCoop(plugin, island, null));
         });
     }
 }

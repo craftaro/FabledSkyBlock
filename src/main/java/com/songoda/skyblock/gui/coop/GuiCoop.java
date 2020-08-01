@@ -34,7 +34,7 @@ public class GuiCoop extends Gui {
     private final FileConfiguration languageLoad;
     
     public GuiCoop(SkyBlock plugin, Island island, Gui returnGui) {
-        super(returnGui);
+        super(6, returnGui);
         this.plugin = plugin;
         this.island = island;
         this.languageLoad = plugin.getFileManager()
@@ -77,7 +77,7 @@ public class GuiCoop extends Gui {
                         AnvilGui gui = new AnvilGui(event.player, this);
                         gui.setAction((e -> {
                             String playerName = gui.getInputText().trim();
-                            guiManager.showGUI(event.player, new GuiCoopChoose(plugin, parent, island, playerName));
+                            guiManager.showGUI(event.player, new GuiCoopChoose(plugin, island, e.gui.getParent(), playerName));
                         }));
                         gui.setTitle(TextUtils.formatText(
                                 languageLoad.getString("Menu.Coop.Item.Word.Normal") +
@@ -103,22 +103,20 @@ public class GuiCoop extends Gui {
         if(coopPlayers.size() == 0){
             ItemStack empty = CompatibleMaterial.BARRIER.getItem();
             ItemMeta emptyMeta = empty.getItemMeta();
-            emptyMeta.setDisplayName(languageLoad.getString("Menu.Coop.Item.Nothing.Displayname"));
+            emptyMeta.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Nothing.Displayname")));
             empty.setItemMeta(emptyMeta);
             setButton(31, empty, (event) ->
                     soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F));
         } else {
-            //this.pages = (int) Math.max(1, Math.ceil((double) coopPlayers.size() / 36d));
+            this.pages = (int) Math.max(1, Math.ceil((double) coopPlayers.size() / 36d));
             
-            /*if (page != 1) {
+            if (page != 1) {
                 setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
                         TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Previous.Displayname"))),
                         (event) -> {
                             page--;
                             paint();
                         });
-                
-                
             }
             
             if (page != pages) {
@@ -128,18 +126,13 @@ public class GuiCoop extends Gui {
                             page++;
                             paint();
                         });
-            }*/
-    
-            setPages((int) Math.max(1, Math.ceil((double) coopPlayers.size() / 36d)));
-            setPrevPage(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                    TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Previous.Displayname"))));
-            setNextPage(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                    TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Next.Displayname"))));
+            }
             
-            UUID[] coopUUIDs = (UUID[]) coopPlayers.keySet().toArray();
+            UUID[] coopUUIDs = new UUID[coopPlayers.size()];
+            coopPlayers.keySet().toArray(coopUUIDs);
             
-            for (int i = 9; i < ((getRows()-2)*9)+18; i++) {
-                int current = ((page - 1) * 36) - 18;
+            for (int i = 18; i < (((getRows()-2)*9)+18); i++) {
+                int current = ((page-1) * 36) - 18;
                 if (current + i < coopPlayers.size()) {
                     UUID uuid = coopUUIDs[current + i];
                     IslandCoop type = (IslandCoop) coopPlayers.values().toArray()[current + i];
@@ -166,16 +159,19 @@ public class GuiCoop extends Gui {
                         ItemStack is = SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]);
                         ItemMeta im = is.getItemMeta();
                         if (im != null) {
-                            im.setDisplayName(languageLoad.getString("Menu.Coop.Item.Coop.Displayname")
+                            im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Coop.Displayname")
                                     .replace("%player", targetPlayerName == null ? "" : targetPlayerName)
                                     .replace("%type", type == IslandCoop.TEMP ?
                                             languageLoad.getString("Menu.Coop.Item.Word.Temp") :
-                                            languageLoad.getString("Menu.Coop.Item.Word.Normal")));
-                            im.setLore(languageLoad.getStringList("Menu.Coop.Item.Coop.Lore"));
+                                            languageLoad.getString("Menu.Coop.Item.Word.Normal"))));
+                            im.setLore(TextUtils.formatText(languageLoad.getStringList("Menu.Coop.Item.Coop.Lore")));
                             is.setItemMeta(im);
                         }
     
-                        setButton(i, is, e -> Bukkit.getServer().dispatchCommand(e.player, "island coop " + targetPlayerName));
+                        setButton(i, is, e -> {
+                            Bukkit.getServer().dispatchCommand(e.player, "island coop " + targetPlayerName);
+                            paint();
+                        });
                     }
                 } else {
                     setItem(i, null);
