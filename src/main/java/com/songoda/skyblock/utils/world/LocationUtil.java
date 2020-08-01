@@ -36,7 +36,7 @@ public final class LocationUtil {
     public static void removeWaterFromLoc(SkyBlock plugin, Location loc) {
         if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)){
-            Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
+            Location tempLoc = LocationUtil.getDefinitiveLocation(loc.clone());
             if(tempLoc.getBlock().getType().equals(Material.WATER)){
                 tempLoc.getBlock().setType(Material.AIR);
             } else if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)){
