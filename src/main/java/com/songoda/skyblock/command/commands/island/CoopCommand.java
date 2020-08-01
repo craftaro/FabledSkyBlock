@@ -4,8 +4,8 @@ import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.gui.coop.GuiCoop;
 import com.songoda.skyblock.island.*;
-import com.songoda.skyblock.menus.Coop;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -125,8 +125,8 @@ public class CoopCommand extends SubCommand {
 
                     return;
                 }
-
-                Coop.getInstance().open(player);
+    
+                plugin.getGuiManager().showGUI(player, new GuiCoop(plugin, island, null));
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Permission.Message"));
