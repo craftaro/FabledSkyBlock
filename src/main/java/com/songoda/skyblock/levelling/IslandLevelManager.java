@@ -14,7 +14,6 @@ import com.songoda.skyblock.levelling.calculator.impl.UltimateStackerCalculator;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -32,7 +31,7 @@ import java.util.Map.Entry;
 public final class IslandLevelManager {
     
     private final Map<Island, IslandScan> inScan;
-    private final Map<CompatibleMaterial, Long> worth;
+    private final Map<CompatibleMaterial, Double> worth;
     private final Map<CompatibleMaterial, AmountMaterialPair> cachedPairs;
     private final SkyBlock plugin;
 
@@ -103,11 +102,11 @@ public final class IslandLevelManager {
 
             if (material == null) continue;
 
-            worth.put(material, current.getLong("Points"));
+            worth.put(material, current.getDouble("Points"));
         }
     }
 
-    public void addWorth(CompatibleMaterial material, long points) {
+    public void addWorth(CompatibleMaterial material, double points) {
         worth.put(material, points);
     }
 
@@ -119,19 +118,19 @@ public final class IslandLevelManager {
 
         final List<LevellingMaterial> materials = new ArrayList<>(worth.size());
 
-        for (Entry<CompatibleMaterial, Long> entry : worth.entrySet()) {
+        for (Entry<CompatibleMaterial, Double> entry : worth.entrySet()) {
             materials.add(new LevellingMaterial(entry.getKey(), entry.getValue()));
         }
 
         return materials;
     }
 
-    public Map<CompatibleMaterial, Long> getWorths() {
+    public Map<CompatibleMaterial, Double> getWorths() {
         return worth;
     }
 
-    public long getWorth(CompatibleMaterial material) {
-        return worth.getOrDefault(material, 0L);
+    public double getWorth(CompatibleMaterial material) {
+        return worth.getOrDefault(material, 0d);
     }
 
     public boolean hasWorth(CompatibleMaterial material) {

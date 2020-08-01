@@ -387,7 +387,7 @@ public class PlaceholderManager {
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_level_block_value.Invalid.Message"));
             } else {
-                long blockValue = levellingManager.getWorth(materials);
+                double blockValue = levellingManager.getWorth(materials);
                 return ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Placeholder.fabledskyblock_level_block_value.Non-empty.Message")
                                 .replace("%placeholder", NumberUtil.formatNumberByDecimal(blockValue)));

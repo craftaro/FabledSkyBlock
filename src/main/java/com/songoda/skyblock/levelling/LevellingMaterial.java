@@ -8,9 +8,9 @@ import org.bukkit.inventory.ItemStack;
 public final class LevellingMaterial {
 
     private CompatibleMaterial materials;
-    private long points;
+    private double points;
 
-    public LevellingMaterial(CompatibleMaterial materials, long points) {
+    public LevellingMaterial(CompatibleMaterial materials, double points) {
         this.materials = materials;
         this.points = points;
     }
@@ -19,11 +19,11 @@ public final class LevellingMaterial {
         return materials;
     }
 
-    public long getPoints() {
+    public double getPoints() {
         return points;
     }
 
-    public void setPoints(long points) {
+    public void setPoints(double points) {
         this.points = points;
     }
 

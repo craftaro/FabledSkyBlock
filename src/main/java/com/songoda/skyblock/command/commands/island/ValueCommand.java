@@ -36,8 +36,8 @@ public class ValueCommand extends SubCommand {
             CompatibleMaterial materials = CompatibleMaterial.getMaterial(player.getItemInHand().getType().name());
 
             if (materials != null && levellingManager.hasWorth(materials)) {
-                long worth = levellingManager.getWorth(materials);
-                double level = (double) worth / (double) fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
+                double worth = levellingManager.getWorth(materials);
+                double level = worth / (double) fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Levelling.Division");
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Value.Value.Message").replace("%material", WordUtils.capitalizeFully(materials.name().toLowerCase().replace("_", " ")))

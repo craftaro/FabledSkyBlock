@@ -252,7 +252,7 @@ public class Levelling {
                 if (mainConfig.getFileConfiguration().getString("Materials." + material + ".Points") == null)
                     break;
 
-                int pointsMultiplier = mainConfig.getFileConfiguration().getInt("Materials." + material + ".Points");
+                double pointsMultiplier = mainConfig.getFileConfiguration().getDouble("Materials." + material + ".Points");
 
                 if (!settingsConfig.getFileConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") && pointsMultiplier == 0)
                     return;
@@ -265,7 +265,7 @@ public class Levelling {
                 if (materialLimit == -1)
                     materialAmountCounted = materialAmount;
 
-                long pointsEarned = materialAmountCounted * pointsMultiplier;
+                double pointsEarned = materialAmountCounted * pointsMultiplier;
 
 
                 String name = plugin.getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(materials);

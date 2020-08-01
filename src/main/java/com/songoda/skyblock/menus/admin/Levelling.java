@@ -216,35 +216,37 @@ public class Levelling implements Listener {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Admin.Levelling.Permission.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                            } else if (event1.getName().matches("[0-9]+")) {
-                                int pointDivision = Integer.valueOf(event1.getName());
-
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Admin.Levelling.Division.Message")
-                                                .replace("%division", NumberUtil.formatNumberByDecimal(pointDivision)));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
-
-                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                                    Config config12 = fileManager
-                                            .getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                                    FileConfiguration configLoad12 = config12.getFileConfiguration();
-
-                                    configLoad12.set("Island.Levelling.Division", pointDivision);
-
-                                    try {
-                                        configLoad12.save(config12.getFile());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                });
-
-                                player.closeInventory();
-
-                                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                             } else {
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Admin.Levelling.Numerical.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                try {
+                                    double pointDivision = Double.parseDouble(event1.getName());
+    
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Levelling.Division.Message")
+                                                    .replace("%division", NumberUtil.formatNumberByDecimal(pointDivision)));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+    
+                                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                                        Config config12 = fileManager
+                                                .getConfig(new File(plugin.getDataFolder(), "config.yml"));
+                                        FileConfiguration configLoad12 = config12.getFileConfiguration();
+        
+                                        configLoad12.set("Island.Levelling.Division", pointDivision);
+        
+                                        try {
+                                            configLoad12.save(config12.getFile());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+    
+                                    player.closeInventory();
+    
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
+                                } catch (NumberFormatException ignored) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Levelling.Numerical.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                }
                             }
 
                             event1.setWillClose(true);
@@ -315,8 +317,8 @@ public class Levelling implements Listener {
                                                     configLoad.getString("Island.Admin.Levelling.Permission.Message"));
                                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                         } else if (levellingManager.hasWorth(materials)) {
-                                            if (event1.getName().matches("[0-9]+")) {
-                                                int materialPoints = Integer.valueOf(event1.getName());
+                                            try {
+                                                double materialPoints = Double.parseDouble(event1.getName());
                                                 materialList.setPoints(materialPoints);
 
                                                 messageManager.sendMessage(player, configLoad
@@ -349,7 +351,7 @@ public class Levelling implements Listener {
                                                                 e.printStackTrace();
                                                             }
                                                         });
-                                            } else {
+                                            } catch (NumberFormatException ignored) {
                                                 messageManager.sendMessage(player, configLoad
                                                         .getString("Island.Admin.Levelling.Numerical.Message"));
                                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
