@@ -1222,7 +1222,9 @@ public class IslandManager {
                     for (Player all : Bukkit.getOnlinePlayers()) {
                         PlayerData targetPlayerData = plugin.getPlayerDataManager().getPlayerData(all);
 
-                        if (targetPlayerData.getOwner() != null && targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
+                        if (targetPlayerData != null && 
+                                targetPlayerData.getOwner() != null &&
+                                targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
                             Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
 
                             if (islandMembers == 1) {
