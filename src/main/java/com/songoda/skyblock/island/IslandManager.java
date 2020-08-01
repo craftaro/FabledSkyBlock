@@ -1222,7 +1222,7 @@ public class IslandManager {
                     for (Player all : Bukkit.getOnlinePlayers()) {
                         PlayerData targetPlayerData = plugin.getPlayerDataManager().getPlayerData(all);
 
-                        if (targetPlayerData != null && 
+                        if (targetPlayerData != null &&
                                 targetPlayerData.getOwner() != null &&
                                 targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
                             Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
@@ -1295,7 +1295,7 @@ public class IslandManager {
             if (!island.isCoopPlayer(visitor)) {
                 Player targetPlayer = Bukkit.getServer().getPlayer(visitor);
                 LocationUtil.teleportPlayerToSpawn(targetPlayer);
-                messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", islandOwnerPlayerName));
+                messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Closed.Message").replace("%player", islandOwnerPlayerName));
             }
         }
     }
@@ -1322,7 +1322,7 @@ public class IslandManager {
             if (!island.isCoopPlayer(visitor) && !island.isPlayerWhitelisted(visitor)) {
                 Player targetPlayer = Bukkit.getServer().getPlayer(visitor);
                 LocationUtil.teleportPlayerToSpawn(targetPlayer);
-                messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Whitelisted.Island.Message").replace("%player", islandOwnerPlayerName)); // TODO
+                messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Whitelisted.Message").replace("%player", islandOwnerPlayerName)); // TODO
             }
         }
     }

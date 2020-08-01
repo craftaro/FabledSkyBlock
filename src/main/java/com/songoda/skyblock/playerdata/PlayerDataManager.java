@@ -217,7 +217,7 @@ public class PlayerDataManager {
                             return;
                         } else {
                             if (messageManager != null)
-                                messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", targetPlayerName));
+                                messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Message").replace("%player", targetPlayerName));
                         }
                     }
 
@@ -278,7 +278,7 @@ public class PlayerDataManager {
                                 } else {
                                     islandManager.unloadIsland(island, Bukkit.getServer().getOfflinePlayer(visitIslandList));
                                     if (messageManager != null)
-                                        messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", targetPlayerName));
+                                        messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Message").replace("%player", targetPlayerName));
                                 }
                             }
                         }

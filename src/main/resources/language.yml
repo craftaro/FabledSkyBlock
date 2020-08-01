@@ -987,8 +987,9 @@ Command:
       Invalid:
         Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island visit [<player>]'
       Closed:
-       Island:
-        Message: '&bSkyBlock &8| &aInfo&8: &eThe island you were at closed.'
+        Message: '&bSkyBlock &8| &aInfo&8: &eThe island you were at is now closed.'
+      Whitelisted:
+        Message: '&bSkyBlock &8| &aInfo&8: &eThe island you were at is now whitelisted.'
     Help:
       Page:
         Message: '&bSkyBlock &8| &cError&8: &eThere are not that many pages.'
