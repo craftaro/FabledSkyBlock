@@ -47,19 +47,6 @@ public class Chat implements Listener {
                 island = plugin.getIslandManager().getIsland(player);
             }
 
-            String messageFormat = event.getFormat();
-
-            for (String placeholderList : placeholderManager.getPlaceholders()) {
-                String placeholder = "{" + placeholderList + "}";
-
-                if (messageFormat.contains(placeholder)) {
-                    messageFormat = messageFormat.replace(placeholder,
-                            placeholderManager.getPlaceholder(player, placeholderList));
-                }
-            }
-
-            event.setFormat(messageFormat);
-
             if (playerData.isChat() && island != null) {
                 event.setCancelled(true);
 

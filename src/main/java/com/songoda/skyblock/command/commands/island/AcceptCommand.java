@@ -13,7 +13,6 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
-import com.songoda.skyblock.scoreboard.Scoreboard;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.Bukkit;
@@ -126,39 +125,25 @@ public class AcceptCommand extends SubCommand {
                             plugin.getVisitManager().getIsland(invite.getOwnerUUID())
                                     .removeVoter(player.getUniqueId());
 
-                            for (Player all : Bukkit.getOnlinePlayers()) {
-                                if (!all.getUniqueId().equals(player.getUniqueId())) {
-                                    if (playerDataManager.hasPlayerData(all)) {
-                                        playerData = playerDataManager.getPlayerData(all);
+                            for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
+                                if (!loopPlayer.getUniqueId().equals(player.getUniqueId())) {
+                                    if (playerDataManager.hasPlayerData(loopPlayer)) {
+                                        playerData = playerDataManager.getPlayerData(loopPlayer);
 
                                         if (playerData.getOwner() != null
                                                 && playerData.getOwner().equals(island.getOwnerUUID())) {
-                                            all.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                            loopPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                                     configLoad
                                                             .getString(
                                                                     "Command.Island.Accept.Accepted.Broadcast.Message")
                                                             .replace("%player", player.getName())));
-                                            soundManager.playSound(all, CompatibleSound.ENTITY_FIREWORK_ROCKET_BLAST.getSound(), 1.0F,
+                                            soundManager.playSound(loopPlayer, CompatibleSound.ENTITY_FIREWORK_ROCKET_BLAST.getSound(), 1.0F,
                                                     1.0F);
 
                                             if (scoreboardManager != null) {
                                                 if (island.getRole(IslandRole.Member).size() == 1
                                                         && island.getRole(IslandRole.Operator).size() == 0) {
-                                                    Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-                                                    scoreboard.setDisplayName(
-                                                            ChatColor.translateAlternateColorCodes('&', configLoad
-                                                                    .getString("Scoreboard.Island.Team.Displayname")));
-
-                                                    if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                                                        scoreboard.setDisplayList(configLoad.getStringList(
-                                                                "Scoreboard.Island.Team.Empty.Displaylines"));
-                                                    } else {
-                                                        scoreboard.setDisplayList(configLoad.getStringList(
-                                                                "Scoreboard.Island.Team.Occupied.Displaylines"));
-                                                    }
-
-    
-                                                    scoreboard.run();
+                                                    scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                                 }
                                             }
                                         }
@@ -167,20 +152,7 @@ public class AcceptCommand extends SubCommand {
                             }
 
                             if (scoreboardManager != null) {
-                                Scoreboard scoreboard = scoreboardManager.getScoreboard(player);
-                                scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Scoreboard.Island.Team.Displayname", "")));
-
-                                if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                                    scoreboard.setDisplayList(
-                                            configLoad.getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
-                                } else {
-                                    scoreboard.setDisplayList(
-                                            configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-                                }
-
-
-                                scoreboard.run();
+                                scoreboardManager.updatePlayerScoreboardType(player);
                             }
                         }
                     } else {

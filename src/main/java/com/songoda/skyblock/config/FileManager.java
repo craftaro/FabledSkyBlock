@@ -11,6 +11,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,10 +26,12 @@ import java.util.logging.Level;
 public class FileManager {
 
     private final SkyBlock plugin;
-    private Map<String, Config> loadedConfigs = new HashMap<>();
+    private final Map<String, Config> loadedConfigs = new HashMap<>();
 
     public FileManager(SkyBlock plugin) {
         this.plugin = plugin;
+
+        backupIfNeeded();
 
         loadConfigs();
     }
@@ -56,6 +64,8 @@ public class FileManager {
         configFiles.put("upgrades.yml", new File(plugin.getDataFolder(), "upgrades.yml"));
         configFiles.put("biomes.yml", new File(plugin.getDataFolder(), "biomes.yml"));
         // configFiles.put("menus.yml", new File(skyblock.getDataFolder(), "menus.yml"));
+        configFiles.put("scoreboard.yml", new File(plugin.getDataFolder(), "scoreboard.yml"));
+        configFiles.put("placeholders.yml", new File(plugin.getDataFolder(), "placeholders.yml"));
         configFiles.put("generators.yml", new File(plugin.getDataFolder(), "generators.yml"));
         configFiles.put("stackables.yml", new File(plugin.getDataFolder(), "stackables.yml"));
         configFiles.put("structures.yml", new File(plugin.getDataFolder(), "structures.yml"));
@@ -89,10 +99,15 @@ public class FileManager {
             }
 
             if (configFile.exists()) {
-                if (fileName.equals("config.yml") || fileName.equals("language.yml") || fileName.equals("worlds.yml") || fileName.equals("biomes.yml")) {
+                if (fileName.equals("config.yml") ||
+                        fileName.equals("language.yml") ||
+                        fileName.equals("worlds.yml") ||
+                        fileName.equals("biomes.yml") ||
+                        fileName.equals("scoreboard.yml") ||
+                        fileName.equals("placeholders.yml")) {
                     FileChecker fileChecker;
 
-                    if (fileName.equals("config.yml") || fileName.equals("biomes.yml")) {
+                    if (fileName.equals("config.yml") || fileName.equals("biomes.yml") || fileName.equals("scoreboard.yml")) {
                         fileChecker = new FileChecker(plugin, this, fileName, true);
                     } else {
                         fileChecker = new FileChecker(plugin, this, fileName, false);
@@ -161,6 +176,35 @@ public class FileManager {
             ex.printStackTrace();
         }
     }
+    
+    public void backupIfNeeded() {
+        File languageFile = new File(plugin.getDataFolder().toString() + "language.yml");
+        File scoreboardFile = new File(plugin.getDataFolder().toString() + "scoreboard.yml");
+        File placeholderFile = new File(plugin.getDataFolder().toString() + "placeholders.yml");
+        if(languageFile.exists() && (!scoreboardFile.exists() || !placeholderFile.exists())) {
+            File backupDir = new File(plugin.getDataFolder().toString() + "/backup");
+            if(!backupDir.exists()) {
+                backupDir.mkdir();
+            }
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+    
+            
+            Path oldLanguagePath = languageFile.toPath();
+            Path newLanguagePath = new File(plugin.getDataFolder().toString() + "/backup/language" + dtf.format(now) + ".yml").toPath();
+    
+            CopyOption[] options = new CopyOption[]{
+                    StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.COPY_ATTRIBUTES
+            };
+
+            try {
+                Files.copy(oldLanguagePath, newLanguagePath, options);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public Location getLocation(Config config, String path, boolean direction) {
 
@@ -199,7 +243,6 @@ public class FileManager {
     }
 
     public Config getConfig(File configPath) {
-
         Config cached = loadedConfigs.get(configPath.getPath());
 
         if (cached != null) return cached;

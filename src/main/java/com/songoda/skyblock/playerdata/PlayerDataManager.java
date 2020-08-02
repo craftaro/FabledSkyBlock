@@ -8,7 +8,6 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
-import com.songoda.skyblock.scoreboard.Scoreboard;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.world.LocationUtil;
@@ -193,23 +192,12 @@ public class PlayerDataManager {
                             ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
 
                             if (scoreboardManager != null) {
-                                for (Player all : Bukkit.getOnlinePlayers()) {
-                                    PlayerData targetPlayerData = getPlayerData(all);
+                                for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
+                                    PlayerData targetPlayerData = getPlayerData(loopPlayer);
 
-                                    if (targetPlayerData.getOwner() != null && targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
-                                        Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-
-                                        if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1) == 1) {
-                                            scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Solo.Displayname")));
-                                            scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
-                                        } else {
-                                            scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Scoreboard.Island.Team.Displayname")));
-                                            scoreboard.setDisplayList(configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-
-
-                                        }
-
-                                        scoreboard.run();
+                                    if (targetPlayerData.getOwner() != null &&
+                                            targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
+                                        scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                     }
                                 }
                             }

@@ -14,7 +14,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
-import com.songoda.skyblock.scoreboard.Scoreboard;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
@@ -148,11 +147,7 @@ public class KickCommand extends SubCommand {
                                         }
 
                                         if (scoreboardManager != null) {
-                                            Scoreboard scoreboard = scoreboardManager.getScoreboard(targetPlayer);
-                                            scoreboard.setDisplayName(
-                                                    ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-                                            scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
-                                            scoreboard.run();
+                                            scoreboardManager.updatePlayerScoreboardType(targetPlayer);
                                         }
 
                                         playerData = playerDataManager.getPlayerData(targetPlayer);
@@ -190,17 +185,7 @@ public class KickCommand extends SubCommand {
 
                                     if (scoreboardManager != null) {
                                         if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
-                                            Scoreboard scoreboard = scoreboardManager.getScoreboard(player);
-                                            scoreboard.setDisplayName(
-                                                    ChatColor.translateAlternateColorCodes('&', languageConfig.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
-
-                                            if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                                                scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
-                                            } else {
-                                                scoreboard.setDisplayList(languageConfig.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
-                                            }
-
-                                            scoreboard.run();
+                                            scoreboardManager.updatePlayerScoreboardType(player);
                                         }
                                     }
                                 }

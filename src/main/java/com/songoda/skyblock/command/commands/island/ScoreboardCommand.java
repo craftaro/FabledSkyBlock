@@ -37,13 +37,13 @@ public class ScoreboardCommand extends SubCommand {
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         }else if (playerData.isScoreboard()) {
             playerData.setScoreboard(false);
-            scoreboardManager.removePlayer(player);
-            
+            scoreboardManager.addDisabledPlayer(player);
+
             messageManager.sendMessage(player, configLoad.getString("Command.Scoreboard.Disabled.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
         } else {
             playerData.setScoreboard(true);
-            scoreboardManager.addPlayer(player);
+            scoreboardManager.removeDisabledPlayer(player);
 
             messageManager.sendMessage(player, configLoad.getString("Command.Scoreboard.Enabled.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);

@@ -11,7 +11,6 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
-import com.songoda.skyblock.scoreboard.Scoreboard;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.world.LocationUtil;
@@ -93,28 +92,22 @@ public class LeaveCommand extends SubCommand {
                 // TODO Check if player has been teleported
                 islandManager.unloadIsland(island, null);
 
-                for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (!all.getUniqueId().equals(player.getUniqueId())) {
-                        if (island.hasRole(IslandRole.Member, all.getUniqueId())
-                                || island.hasRole(IslandRole.Operator, all.getUniqueId())
-                                || island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-                            all.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
+                    if (!loopPlayer.getUniqueId().equals(player.getUniqueId())) {
+                        if (island.hasRole(IslandRole.Member, loopPlayer.getUniqueId())
+                                || island.hasRole(IslandRole.Operator, loopPlayer.getUniqueId())
+                                || island.hasRole(IslandRole.Owner, loopPlayer.getUniqueId())) {
+                            loopPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     languageConfig.getFileConfiguration()
                                             .getString("Command.Island.Leave.Left.Broadcast.Message")
                                             .replace("%player", player.getName())));
-                            soundManager.playSound(all, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
+                            soundManager.playSound(loopPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
 
                             if (island.getRole(IslandRole.Member).size() == 0
                                     && island.getRole(IslandRole.Operator).size() == 0) {
                                 if (scoreboardManager != null) {
                                     if (islandManager.getVisitorsAtIsland(island).size() != 0) {
-                                        Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-                                        scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                                                languageConfig.getFileConfiguration()
-                                                        .getString("Scoreboard.Island.Solo.Displayname")));
-                                        scoreboard.setDisplayList(languageConfig.getFileConfiguration()
-                                                .getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
-                                        scoreboard.run();
+                                        scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                     }
                                 }
 
@@ -129,12 +122,7 @@ public class LeaveCommand extends SubCommand {
                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
 
                 if (scoreboardManager != null) {
-                    Scoreboard scoreboard = scoreboardManager.getScoreboard(player);
-                    scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                            languageConfig.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-                    scoreboard.setDisplayList(
-                            languageConfig.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
-                    scoreboard.run();
+                    scoreboardManager.updatePlayerScoreboardType(player);
                 }
             }
         }

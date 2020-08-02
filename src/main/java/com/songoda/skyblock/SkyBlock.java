@@ -253,6 +253,10 @@ public class SkyBlock extends SongodaPlugin {
             this.userCacheManager.onDisable();
         }
 
+        if (this.scoreboardManager != null) {
+            this.scoreboardManager.disable();
+        }
+
         if (this.islandManager != null) {
             this.islandManager.onDisable();
         }
@@ -291,7 +295,6 @@ public class SkyBlock extends SongodaPlugin {
     private CoreProtectAPI loadCoreProtect() {
         Plugin plugin = getServer().getPluginManager().getPlugin("CoreProtect");
 
-
         if (plugin != null) { // Check before loading classes
             if (plugin instanceof CoreProtect) { // Check that CoreProtect is loaded
                 CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
@@ -303,7 +306,6 @@ public class SkyBlock extends SongodaPlugin {
             }
         }
         return null;
-
     }
 
     @Override

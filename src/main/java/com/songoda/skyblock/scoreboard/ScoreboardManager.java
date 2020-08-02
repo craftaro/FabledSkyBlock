@@ -1,275 +1,139 @@
 package com.songoda.skyblock.scoreboard;
 
-import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.cooldown.CooldownManager;
-import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.manager.Manager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
+import com.songoda.skyblock.visit.Visit;
+import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Team;
-import org.bukkit.scoreboard.Team.Option;
 
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class ScoreboardManager {
-    
-    private final SkyBlock plugin;
-    private final Map<UUID, Scoreboard> scoreboardStorage = new ConcurrentHashMap<>();
-    
-    private final PlayerDataManager playerDataManager;
+public class ScoreboardManager extends Manager {
 
-    private final List<String> teamNames = new ArrayList<>();
-    private final List<String> objectiveNames = new ArrayList<>();
+    private final List<Driver> drivers;
+    private final Set<Player> disabledPlayers;
 
     public ScoreboardManager(SkyBlock plugin) {
-        this.plugin = plugin;
-        this.playerDataManager = plugin.getPlayerDataManager();
-        Bukkit.getScheduler().runTask(plugin, () -> reloadScoreboards(true));
-        Bukkit.getScheduler().runTaskTimer(plugin, this::updateScoreboards,  20L, 40L);
+        super(plugin);
+        this.drivers = new ArrayList<>();
+        this.disabledPlayers = new ConcurrentSet<>();
+
+        for(ScoreboardType type : ScoreboardType.values()) {
+            newDriver(type);
+        }
+
+        updateOnlinePlayers();
     }
 
-    private synchronized void updateScoreboards() {
-        final org.bukkit.scoreboard.Scoreboard primary = Bukkit.getScoreboardManager().getMainScoreboard();
-        final Set<Objective> objectives = primary.getObjectives();
-        final Set<Team> teams = primary.getTeams();
-
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            /*
-             * Unregister all teams or objectives that are no longer present in the main
-             * scoreboard.
-             */
-            for (UUID uuid : scoreboardStorage.keySet()) {
-                Player player = Bukkit.getPlayer(uuid);
-                if(player != null) {
-                    final org.bukkit.scoreboard.Scoreboard board = player.getScoreboard();
-            
-                    for (String name : objectiveNames) {
-                
-                        if (primary.getObjective(name) != null) continue;
-                
-                        final Objective objective = board.getObjective(name);
-                
-                        if (objective != null) objective.unregister();
-                    }
-            
-                    for (String name : teamNames) {
-                
-                        if (primary.getTeam(name) != null) continue;
-                
-                        final Team team = board.getTeam(name);
-                
-                        if (team != null) team.unregister();
-                    }
-                }
-            }
-    
-            /*
-             * Update the objective/team names.
-             */
-    
-            objectiveNames.clear();
-            teamNames.clear();
-    
-            for(Objective objective : objectives) {
-                if (primary.getObjective(objective.getName()) != null) {
-                    objectiveNames.add(objective.getName());
-                }
-            }
-    
-            for(Team team : teams) {
-                if (primary.getTeam(team.getName()) != null) {
-                    teamNames.add(team.getName());
-                }
-            }
-    
-            /*
-             * Update or add any missing information to the player's scoreboard.
-             */
-    
-            for (UUID uuid : scoreboardStorage.keySet()) {
-                Player player = Bukkit.getPlayer(uuid);
-                if(player != null) {
-                    PlayerData pd = playerDataManager.getPlayerData(player);
-                    if(pd != null && pd.isScoreboard()){
-                        final org.bukkit.scoreboard.Scoreboard playerBoard = player.getScoreboard();
-                
-                        for (Objective primaryObjective : objectives) {
-                    
-                            Objective obj = playerBoard.getObjective(primaryObjective.getName());
-                    
-                            if (obj == null)
-                                obj = playerBoard.registerNewObjective(primaryObjective.getName(), primaryObjective.getCriteria());
-                    
-                            obj.setDisplayName(primaryObjective.getDisplayName());
-                            obj.setDisplaySlot(primaryObjective.getDisplaySlot());
-                            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) obj.setRenderType(primaryObjective.getRenderType());
-                        }
-                
-                        for (Team primaryTeam : teams) {
-                    
-                            Team obj = playerBoard.getTeam(primaryTeam.getName());
-                    
-                            if (obj == null) obj = playerBoard.registerNewTeam(primaryTeam.getName());
-                    
-                            obj.setAllowFriendlyFire(primaryTeam.allowFriendlyFire());
-                            obj.setCanSeeFriendlyInvisibles(primaryTeam.canSeeFriendlyInvisibles());
-                            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) obj.setColor(primaryTeam.getColor());
-                            obj.setDisplayName(primaryTeam.getDisplayName());
-                            obj.setNameTagVisibility(primaryTeam.getNameTagVisibility());
-                            obj.setPrefix(primaryTeam.getPrefix());
-                            obj.setSuffix(primaryTeam.getSuffix());
-                    
-                            for (String primaryEntry : primaryTeam.getEntries()) {
-                                obj.addEntry(primaryEntry);
-                            }
-                    
-                            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
-                                for (Option option : Option.values()) {
-                                    obj.setOption(option, primaryTeam.getOption(option));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
+    @Override
+    public void disable() {
+        clearDrivers();
     }
 
-    public synchronized void reloadScoreboards(boolean createNew) {
+    @Override
+    public void reload() {
+        disable();
+        updateOnlinePlayers();
+    }
 
-        FileManager fileManager = plugin.getFileManager();
-
-        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable"))
-            return;
-
-        for (Player all : Bukkit.getOnlinePlayers()) {
-
-            boolean store = false;
-
-            Scoreboard scoreboard = null;
-            if (hasScoreboard(all))
-                scoreboard = getScoreboard(all);
-            else {
-                if (createNew) {
-                    scoreboard = new Scoreboard(plugin, all);
-                    store = true;
-                }
-            }
-
-            if (scoreboard == null) continue;
-
-            IslandManager islandManager = plugin.getIslandManager();
-            Config language = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-            Island island = islandManager.getIsland(all);
-
-            if (island == null) {
-                scoreboard.setDisplayName(color(language.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-                scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
-            } else {
-                if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
-                    scoreboard.setDisplayName(color(language.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
-
-                    if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                        scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
-                    } else {
-                        scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
-                    }
-                } else {
-                    scoreboard.setDisplayName(color(language.getFileConfiguration().getString("Scoreboard.Island.Team.Displayname")));
-
-                    if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                        scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
-                    } else {
-                        scoreboard.setDisplayList(language.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-                    }
-                }
-            }
-
-            scoreboard.run();
-            if (store) storeScoreboard(all, scoreboard);
+    public void updateOnlinePlayers() {
+        for(Player player : plugin.getServer().getOnlinePlayers()) {
+            updatePlayerScoreboardType(player);
         }
     }
 
-    private String color(String str) {
-        return str != null ? ChatColor.translateAlternateColorCodes('&', str) : null;
-    }
-
-    public synchronized void storeScoreboard(Player player, Scoreboard scoreboard) {
-        scoreboardStorage.put(player.getUniqueId(), scoreboard);
-    }
-
-    public synchronized Scoreboard getScoreboard(Player player) {
-        if (scoreboardStorage.containsKey(player.getUniqueId())) {
-            return scoreboardStorage.get(player.getUniqueId());
-        }
-
-        return null;
-    }
-
-    public synchronized boolean hasScoreboard(Player player) {
-        return scoreboardStorage.containsKey(player.getUniqueId());
-    }
-    
-    public synchronized Map<UUID, Scoreboard> getScoreboardStorage() {
-        return this.scoreboardStorage;
-    }
-    
-    public synchronized void addPlayer(Player player){
-        CooldownManager cooldownManager = plugin.getCooldownManager();
-        FileManager fileManager = plugin.getFileManager();
+    public void updatePlayerScoreboardType(Player player) {
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         IslandManager islandManager = plugin.getIslandManager();
-        
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        Scoreboard scoreboard = new Scoreboard(plugin, player);
-        Island island = islandManager.getIsland(player);
-    
-        if (island != null) {
-            OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
-        
-            cooldownManager.addCooldownPlayer(CooldownType.Levelling, cooldownManager.loadCooldownPlayer(CooldownType.Levelling, offlinePlayer));
-            cooldownManager.addCooldownPlayer(CooldownType.Ownership, cooldownManager.loadCooldownPlayer(CooldownType.Ownership, offlinePlayer));
-        
-            if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
-                scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Solo.Displayname")));
-            
-                if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                    scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Empty.Displaylines"));
+
+        PlayerData playerData = playerDataManager.getPlayerData(player);
+        Island island = islandManager.getIslandByPlayer(player);
+
+        if(playerData.isScoreboard()) {
+            ScoreboardType type;
+            if(island != null) {
+                Visit islandVisit = island.getVisit();
+                boolean hasVisitors = islandVisit.getVisitors().size() > 1;
+                boolean hasMembers = islandVisit.getMembers() > 1;
+
+                if(hasMembers) {
+                    if(hasVisitors) {
+                        type = ScoreboardType.ISLAND_SOLO_VISITORS;
+                    } else {
+                        type = ScoreboardType.ISLAND_SOLO_EMPTY;
+                    }
                 } else {
-                    scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
+                    if(hasVisitors) {
+                        type = ScoreboardType.ISLAND_TEAM_VISITORS;
+                    } else {
+                        type = ScoreboardType.ISLAND_TEAM_EMPTY;
+                    }
                 }
             } else {
-                scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Island.Team.Displayname")));
-            
-                if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                    scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
-                } else {
-                    scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-                }
-            
+                type = ScoreboardType.NOISLAND;
             }
-        } else {
-            scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-            scoreboard.setDisplayList(config.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
+
+            setPlayerScoreboard(player, type);
+            Bukkit.broadcastMessage(type.toString());
         }
-    
-        scoreboard.run();
-        this.storeScoreboard(player, scoreboard);
+    }
+
+    public void unregisterPlayer(Player player) {
+        for(Driver driver : drivers) {
+            driver.unregisterHolder(player);
+        }
+    }
+
+    public void addDisabledPlayer(Player player) {
+        disabledPlayers.add(player);
+    }
+
+    public void removeDisabledPlayer(Player player) {
+        disabledPlayers.remove(player);
+    }
+
+    public boolean isPlayerDisabled(Player player) {
+        return disabledPlayers.contains(player);
     }
     
-    public synchronized void removePlayer(Player player){
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        this.scoreboardStorage.remove(player.getUniqueId());
+    private void newDriver(ScoreboardType board) {
+        FileManager fileManager = plugin.getFileManager();
+        FileConfiguration scoreboardLoad = fileManager.getConfig(
+                new File(plugin.getDataFolder(), "scoreboard.yml")).getFileConfiguration();
+
+        Driver driver = new Driver(plugin, board);
+        if(scoreboardLoad.getBoolean("Settings.Async", true)) {
+            driver.runTaskTimerAsynchronously(plugin, 1L, 1L);
+        } else {
+            driver.runTaskTimer(plugin, 1L, 1L);
+        }
+        drivers.add(driver);
+        Bukkit.broadcastMessage("G " + drivers.size());
+    }
+    
+    public void clearDrivers() {
+        for(Driver driver : drivers)
+            driver.cancel();
+        drivers.clear();
+    }
+
+    public void setPlayerScoreboard(Player player, ScoreboardType type) {
+        for(Driver driver : drivers) {
+            if(driver.getBoardType().equals(type)) {
+                Bukkit.broadcastMessage("F");
+                driver.registerHolder(new Holder(plugin, driver, player));
+            } else {
+                driver.unregisterHolder(player);
+            }
+        }
+        Bukkit.broadcastMessage(drivers.size() + "");
     }
 }
