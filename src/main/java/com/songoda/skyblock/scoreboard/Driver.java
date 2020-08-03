@@ -60,11 +60,6 @@ class Driver extends BukkitRunnable {
     }
 
     public void registerHolder(Holder holder) {
-        try {
-            throw new Exception();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
         holders.add(holder);
     }
 
