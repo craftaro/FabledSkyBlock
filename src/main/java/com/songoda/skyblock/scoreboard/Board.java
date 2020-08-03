@@ -64,13 +64,10 @@ class Board {
             cache.put(line, string);
 
             ScoreboardLine parts;
-
-            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_8)) {
-                parts = convertIntoPieces(string, 16);
-            } else if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)){
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)){
                 parts = convertIntoPieces(string, 64);
             } else {
-                parts = convertIntoPieces(string, 8);
+                parts = convertIntoPieces(string, 16);
             }
 
             t.setPrefix(parts.getPrefix());
