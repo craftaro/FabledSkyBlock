@@ -3,6 +3,7 @@ package com.songoda.skyblock.scoreboard;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.placeholder.PlaceholderManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -25,7 +26,11 @@ class Board {
         this.player = player;
         this.plugin = plugin;
         this.board = this.plugin.getServer().getScoreboardManager().getNewScoreboard();
-        this.objective = this.board.registerNewObjective("sb1", "sb2");
+        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+            this.objective = this.board.registerNewObjective("sb1", "sb2", "sb3");
+        } else {
+            this.objective = this.board.registerNewObjective("sb1", "sb2");
+        }
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         this.objective.setDisplayName("...");
 
@@ -35,8 +40,6 @@ class Board {
             
             this.objective.getScore(ChatColor.values()[i] + "").setScore(lineCount - i);
         }
-        
-        //this.player.setScoreboard(this.board);
     }
 
     public void setTitle(String string) {
@@ -77,10 +80,7 @@ class Board {
     
     private ScoreboardLine convertIntoPieces(String line, int allowed_line_size) {
         String prefixLine = line.substring(0, Math.min(line.length(), allowed_line_size));
-        String suffixLine = "";
-        if(line.length() > allowed_line_size) {
-            suffixLine = line.substring(allowed_line_size);
-        }
+        String suffixLine = line.length() <= allowed_line_size ? "" : line.substring(allowed_line_size, Math.min(line.length(), allowed_line_size*2));
 
         if (prefixLine.endsWith(String.valueOf(ChatColor.COLOR_CHAR))) {
             prefixLine = ChatColor.translateAlternateColorCodes(
@@ -109,7 +109,7 @@ class Board {
             } else {
                 lastColorCodes = ChatColor.WHITE.toString();
             }
-
+            
             prefixLine = ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, prefixLine);
             suffixLine = ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, lastColorCodes + suffixLine);
         }

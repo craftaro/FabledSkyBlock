@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 class Driver extends BukkitRunnable {
@@ -46,7 +47,7 @@ class Driver extends BukkitRunnable {
                 }
             }
         } else {
-            title = new Row(new ArrayList<>(), 0);
+            title = new Row(new ArrayList<>(), -1);
         }
     }
 
