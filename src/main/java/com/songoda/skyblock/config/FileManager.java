@@ -48,7 +48,7 @@ public class FileManager {
         }
 
         // Will remain null unless WorldEdit is present.
-        File schematicsDirectory = null;
+        File schematicsDirectory;
 
         if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !(schematicsDirectory = new File(plugin.getDataFolder().toString() + "/schematics")).exists()) {
             schematicsDirectory.mkdir();
@@ -63,7 +63,7 @@ public class FileManager {
         configFiles.put("settings.yml", new File(plugin.getDataFolder(), "settings.yml"));
         configFiles.put("upgrades.yml", new File(plugin.getDataFolder(), "upgrades.yml"));
         configFiles.put("biomes.yml", new File(plugin.getDataFolder(), "biomes.yml"));
-        // configFiles.put("menus.yml", new File(skyblock.getDataFolder(), "menus.yml"));
+        // configFiles.put("menus.yml", new File(plugin.getDataFolder(), "menus.yml"));
         configFiles.put("scoreboard.yml", new File(plugin.getDataFolder(), "scoreboard.yml"));
         configFiles.put("placeholders.yml", new File(plugin.getDataFolder(), "placeholders.yml"));
         configFiles.put("generators.yml", new File(plugin.getDataFolder(), "generators.yml"));
@@ -107,7 +107,7 @@ public class FileManager {
                         fileName.equals("placeholders.yml")) {
                     FileChecker fileChecker;
 
-                    if (fileName.equals("config.yml") || fileName.equals("biomes.yml") || fileName.equals("scoreboard.yml")) {
+                    if (fileName.equals("config.yml") || fileName.equals("biomes.yml")) {
                         fileChecker = new FileChecker(plugin, this, fileName, true);
                     } else {
                         fileChecker = new FileChecker(plugin, this, fileName, false);
@@ -178,20 +178,20 @@ public class FileManager {
     }
     
     public void backupIfNeeded() {
-        File languageFile = new File(plugin.getDataFolder().toString() + "language.yml");
-        File scoreboardFile = new File(plugin.getDataFolder().toString() + "scoreboard.yml");
-        File placeholderFile = new File(plugin.getDataFolder().toString() + "placeholders.yml");
+        File languageFile = new File(plugin.getDataFolder(), "language.yml");
+        File scoreboardFile = new File(plugin.getDataFolder(), "scoreboard.yml");
+        File placeholderFile = new File(plugin.getDataFolder(), "placeholders.yml");
         if(languageFile.exists() && (!scoreboardFile.exists() || !placeholderFile.exists())) {
             File backupDir = new File(plugin.getDataFolder().toString() + "/backup");
             if(!backupDir.exists()) {
                 backupDir.mkdir();
             }
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm:ss");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
             LocalDateTime now = LocalDateTime.now();
     
             
             Path oldLanguagePath = languageFile.toPath();
-            Path newLanguagePath = new File(plugin.getDataFolder().toString() + "/backup/language" + dtf.format(now) + ".yml").toPath();
+            Path newLanguagePath = new File(plugin.getDataFolder().toString() + "/backup", "language" + dtf.format(now) + ".yml").toPath();
     
             CopyOption[] options = new CopyOption[]{
                     StandardCopyOption.REPLACE_EXISTING,
