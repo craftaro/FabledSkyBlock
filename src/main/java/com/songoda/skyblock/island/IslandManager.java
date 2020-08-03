@@ -1194,8 +1194,8 @@ public class IslandManager {
             }
         } else {
             if (scoreboardManager != null) {
-                int islandVisitors = getVisitorsAtIsland(island).size(), islandMembers = island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size() + 1;
-
+                int islandVisitors = getVisitorsAtIsland(island).size();
+    
                 if (islandVisitors == 0) {
                     for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
                         PlayerData targetPlayerData = plugin.getPlayerDataManager().getPlayerData(loopPlayer);

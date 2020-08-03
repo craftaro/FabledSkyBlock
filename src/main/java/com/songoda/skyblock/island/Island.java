@@ -369,7 +369,7 @@ public class Island {
 
     public Location getLocation(IslandWorld world, IslandEnvironment environment) {
         for (IslandLocation islandLocationList : islandLocations) {
-            if (islandLocationList.getWorld() == world && islandLocationList.getEnvironment() == environment) {
+            if (islandLocationList.getWorld().equals(world) && islandLocationList.getEnvironment().equals(environment)) {
                 return islandLocationList.getLocation();
             }
         }
