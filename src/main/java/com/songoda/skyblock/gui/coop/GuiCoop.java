@@ -80,8 +80,7 @@ public class GuiCoop extends Gui {
                             guiManager.showGUI(event.player, new GuiCoopChoose(plugin, island, e.gui.getParent(), playerName));
                         }));
                         gui.setTitle(TextUtils.formatText(
-                                languageLoad.getString("Menu.Coop.Item.Word.Normal") +
-                                        " / " + languageLoad.getString("Menu.Coop.Item.Word.Temp")));
+                                languageLoad.getString("Menu.Coop.Item.Word.Enter")));
                         guiManager.showGUI(event.player, gui);
                     } else {
                         messageManager.sendMessage(event.player,
