@@ -30,7 +30,7 @@ Placeholders:
     Non-empty: '{PLACEHOLDER}'
     Empty: '0'
   fabledskyblock_island_bank_balance_formatted:
-    Empty: 0'
+    Empty: '0'
     Non-empty: '{PLACEHOLDER}'
   fabledskyblock_island_owner:
     Non-empty:

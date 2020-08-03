@@ -235,7 +235,7 @@ public class PlaceholderProcessor {
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_members.Empty"));
                 } else {
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_members.Non-empty")
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_members.Non-empty")
                                     .replace("{PLACEHOLDER}", "" + island.getRole(IslandRole.Member).size()));
                 }
                 break;
@@ -359,14 +359,14 @@ public class PlaceholderProcessor {
                     }
     
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Non-empty")
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_votes.Non-empty")
                                     .replace("{POSITION}", "" + (value))
                                     .replace("{PLAYER}", islandOwnerName)
                                     .replace("{VOTES}", NumberUtil.formatNumberByDecimal(visit.getVoters().size())));
                 } else {
     
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Empty"));
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_votes.Empty"));
                 }
             } else if(placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_bank_")){
                 List<Leaderboard> leaderboardBankPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Bank);
@@ -393,14 +393,14 @@ public class PlaceholderProcessor {
                     }
         
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Non-empty")
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_bank.Non-empty")
                                     .replace("{POSITION}", "" + (value))
                                     .replace("{PLAYER}", islandOwnerName)
                                     .replace("{BALANCE}", NumberUtil.formatNumberByDecimal(visit.getBankBalance())));
                 } else {
         
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Empty"));
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_bank.Empty"));
                 }
             } else if(placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_level_")){
                 List<Leaderboard> leaderboardLevelPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Level);
@@ -428,7 +428,7 @@ public class PlaceholderProcessor {
                     }
         
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_level.Non-empty")
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_level.Non-empty")
                                     .replace("{POSITION}", "" + (value))
                                     .replace("{PLAYER}", islandOwnerName)
                                     .replace("{LEVEL}", NumberUtil.formatNumberByDecimal(level.getLevel()))
@@ -436,69 +436,69 @@ public class PlaceholderProcessor {
                 } else {
         
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_level.Empty"));
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_level.Empty"));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_level_rank")) {
                 if (island == null) {
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Empty"));
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_level_rank.Empty"));
                 } else {
                     int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Level);
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Non-empty")
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_level_rank.Non-empty")
                                     .replace("{PLACEHOLDER}", "" + rank));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_bank_rank")) {
                 if (island == null) {
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Empty"));
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_bank_rank.Empty"));
                 } else {
                     int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Bank);
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Non-empty")
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_bank_rank.Non-empty")
                                     .replace("{PLACEHOLDER}", "" + rank));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_votes_rank")) {
                 if (island == null) {
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Empty"));
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_votes_rank.Empty"));
                 } else {
                     int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Votes);
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Non-empty")
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_votes_rank.Non-empty")
                                     .replace("{PLACEHOLDER}", "" + rank));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_level_block_count_")) {
                 if (island == null) {
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Empty"));
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_count.Empty"));
                 } else {
                     String materialName = placeholder.replace("fabledskyblock_island_level_block_count_", "").toUpperCase();
                     CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
                     if (materials == null) {
                         returnValue = TextUtils.formatText(
-                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Invalid"));
+                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_count.Invalid"));
                     } else {
                         long blockCount = island.getLevel().getMaterialAmount(materials.name());
                         returnValue = TextUtils.formatText(
-                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Non-empty")
+                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_count.Non-empty")
                                         .replace("{PLACEHOLDER}", NumberUtil.formatNumberByDecimal(blockCount)));
                     }
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_level_block_points_")) {
                 if (island == null) {
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Empty"));
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_points.Empty"));
                 } else {
                     String materialName = placeholder.replace("fabledskyblock_island_level_block_points_", "").toUpperCase();
                     CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
                     if (materials == null) {
                         returnValue = TextUtils.formatText(
-                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Invalid"));
+                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_points.Invalid"));
                     } else {
                         long blockPoints = island.getLevel().getMaterialPoints(materials.name());
                         returnValue = TextUtils.formatText(
-                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Non-empty")
+                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_points.Non-empty")
                                         .replace("{PLACEHOLDER}", NumberUtil.formatNumberByDecimal(blockPoints)));
                     }
                 }
@@ -507,11 +507,11 @@ public class PlaceholderProcessor {
                 CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
                 if (materials == null) {
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_level_block_value.Invalid"));
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_level_block_value.Invalid"));
                 } else {
                     double blockValue = levellingManager.getWorth(materials);
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_level_block_value.Non-empty")
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_level_block_value.Non-empty")
                                     .replace("{PLACEHOLDER}", NumberUtil.formatNumberByDecimal(blockValue)));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_has_upgrade_")) {
