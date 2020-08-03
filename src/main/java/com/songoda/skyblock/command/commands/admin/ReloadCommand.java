@@ -26,15 +26,15 @@ public class ReloadCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        onCommand(player, args);
+        onCommand(player);
     }
 
     @Override
     public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
-        onCommand(sender, args);
+        onCommand(sender);
     }
 
-    public void onCommand(CommandSender sender, String[] args) {
+    public void onCommand(CommandSender sender) {
         LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
         MessageManager messageManager = plugin.getMessageManager();
         SoundManager soundManager = plugin.getSoundManager();
