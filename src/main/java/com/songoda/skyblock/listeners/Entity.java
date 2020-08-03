@@ -611,6 +611,18 @@ public class Entity implements Listener {
         });
         event.setCancelled(true); // For other plugin API reasons.
     }
+    
+    @EventHandler(ignoreCancelled = true)
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        WorldManager worldManager = plugin.getWorldManager();
+        if(worldManager.isIslandWorld(event.getLocation().getWorld())) {
+            org.bukkit.entity.Entity entity = event.getEntity();
+    
+            if(event.getEntity() instanceof EnderSignal) {
+                ((EnderSignal) entity).setTargetLocation(entity.getLocation().add(0d, 50d, 0d));
+            }
+        }
+    }
 
     @EventHandler(ignoreCancelled = true)
     public void onDamageVehicle(VehicleDamageEvent event) {
