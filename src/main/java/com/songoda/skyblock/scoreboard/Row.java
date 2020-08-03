@@ -17,7 +17,7 @@ class Row {
     public Row(List<String> lines, int interval) {
         this.lines = lines;
         this.interval = interval;
-        this.current = 1;
+        this.current = 0;
         this.count = 0;
         
         if(interval < 0) {
@@ -29,7 +29,7 @@ class Row {
         if(lines.isEmpty()) {
             line = "";
         } else {
-            line = TextUtils.formatText(lines.get(0));
+            line = TextUtils.formatText(lines.get(current));
         }
     }
 

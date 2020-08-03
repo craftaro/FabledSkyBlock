@@ -41,7 +41,7 @@ class Driver extends BukkitRunnable {
             for(int i = 1; i<16; i++) {
                 List<String> rowLines = config.getStringList("Rows." + i + ".Content");
                 if(!rowLines.isEmpty()) {
-                    Row row = new Row(rowLines, config.getInt("Interval"));
+                    Row row = new Row(rowLines, config.getInt("Rows." + i + ".Interval"));
                     rows.add(row);
                 }
             }
