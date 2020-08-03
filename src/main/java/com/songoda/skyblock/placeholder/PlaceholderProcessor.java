@@ -26,6 +26,10 @@ import java.util.UUID;
 public class PlaceholderProcessor {
     
     public String processPlaceholder(Player player, String placeholder) {
+        if(player == null || placeholder == null) {
+            return "";
+        }
+        
         SkyBlock plugin = SkyBlock.getInstance();
         IslandManager islandManager = plugin.getIslandManager();
         VisitManager visitManager = plugin.getVisitManager();
@@ -36,17 +40,12 @@ public class PlaceholderProcessor {
                 new File(plugin.getDataFolder(), "placeholders.yml")).getFileConfiguration();
 
         if(placeholdersLoad == null) {
-            Bukkit.broadcastMessage("ABC");
             return "Error";
         }
 
         Island island = islandManager.getIsland(player);
     
         String returnValue = null;
-        
-        if(player == null || placeholder == null) {
-            return "";
-        }
         
         switch (placeholder.toLowerCase()) {
             case "fabledskyblock_island_exists":

@@ -191,10 +191,6 @@ Scoreboards:
             Content:
               - '&ewww.songoda.com'
     Team:
-      Word:
-        Owner: 'Owner'
-        Operator: 'Operator'
-        Member: 'Member'
       Empty:
         Title:
           Interval: 3

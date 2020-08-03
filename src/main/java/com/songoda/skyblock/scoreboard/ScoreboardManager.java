@@ -82,7 +82,6 @@ public class ScoreboardManager extends Manager {
             }
 
             setPlayerScoreboard(player, type);
-            Bukkit.broadcastMessage(type.toString());
         }
     }
 
@@ -116,7 +115,6 @@ public class ScoreboardManager extends Manager {
             driver.runTaskTimer(plugin, 1L, 1L);
         }
         drivers.add(driver);
-        Bukkit.broadcastMessage("G " + drivers.size());
     }
     
     public void clearDrivers() {
@@ -128,12 +126,10 @@ public class ScoreboardManager extends Manager {
     public void setPlayerScoreboard(Player player, ScoreboardType type) {
         for(Driver driver : drivers) {
             if(driver.getBoardType().equals(type)) {
-                Bukkit.broadcastMessage("F");
                 driver.registerHolder(new Holder(plugin, driver, player));
             } else {
                 driver.unregisterHolder(player);
             }
         }
-        Bukkit.broadcastMessage(drivers.size() + "");
     }
 }
