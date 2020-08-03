@@ -1,25 +1,25 @@
 package com.songoda.skyblock.placeholder;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.invite.Invite;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.island.IslandStatus;
+import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.skyblock.utils.player.OfflinePlayer;
+import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,6 +34,7 @@ public class PlaceholderProcessor {
         IslandManager islandManager = plugin.getIslandManager();
         VisitManager visitManager = plugin.getVisitManager();
         IslandLevelManager levellingManager = plugin.getLevellingManager();
+        LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
 
         FileManager fileManager = plugin.getFileManager();
         FileConfiguration placeholdersLoad = fileManager.getConfig(
@@ -50,45 +51,66 @@ public class PlaceholderProcessor {
         switch (placeholder.toLowerCase()) {
             case "fabledskyblock_island_exists":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_exists.Not-exists.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_exists.Not-exists"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_exists.Exists.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_exists.Exists"));
                 }
                 break;
-            case "fabledskyblock_island_isopen":
+            case "fabledskyblock_island_isopen": //Deprecated
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_isopen.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_isopen.Empty"));
                 } else {
-                    if (island.getStatus().equals(IslandStatus.OPEN)) { // TODO Update to Status
-                        returnValue = ChatColor.translateAlternateColorCodes('&',
-                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_isopen.Open.Message"));
+                    if (island.getStatus().equals(IslandStatus.OPEN)) {
+                        returnValue = TextUtils.formatText(
+                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_isopen.Open"));
                     } else {
-                        returnValue = ChatColor.translateAlternateColorCodes('&',
-                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_isopen.Closed.Message"));
+                        returnValue = TextUtils.formatText(
+                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_isopen.Closed"));
+                    }
+                }
+                break;
+            case "fabledskyblock_island_status":
+                if (island == null) {
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_status.Empty"));
+                } else {
+                    switch(island.getStatus()){
+                        case OPEN:
+                            returnValue = TextUtils.formatText(
+                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_status.Open"));
+                            break;
+                        case CLOSED:
+                            returnValue = TextUtils.formatText(
+                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_status.Closed"));
+                            break;
+                        case WHITELISTED:
+                            returnValue = TextUtils.formatText(
+                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_status.Whitelisted"));
+                            break;
                     }
                 }
                 break;
             case "fabledskyblock_island_size":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_size.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_size.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_size.Non-empty.Message")
-                                    .replace("%placeholder", "" + island.getSize()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_size.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + island.getSize()));
                 }
                 break;
             case "fabledskyblock_island_radius":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_radius.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_radius.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_radius.Non-empty.Message")
-                                    .replace("%placeholder", "" + island.getRadius()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_radius.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + island.getRadius()));
                 }
                 break;
             case "fabledskyblock_island_level":
@@ -96,12 +118,12 @@ public class PlaceholderProcessor {
                 break;
             case "fabledskyblock_island_level_formatted":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_formatted.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_formatted.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_formatted.Non-empty.Message").replace(
-                                    "%placeholder", "" + NumberUtil.formatNumberBySuffix(island.getLevel().getLevel())));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_formatted.Non-empty").replace(
+                                    "{PLACEHOLDER}", "" + NumberUtil.formatNumberBySuffix(island.getLevel().getLevel())));
                 }
                 break;
             case "fabledskyblock_island_points":
@@ -109,168 +131,168 @@ public class PlaceholderProcessor {
                 break;
             case "fabledskyblock_island_votes":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_votes.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_votes.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_votes.Non-empty.Message")
-                                    .replace("%placeholder", "" + visitManager.getIslands().get(player.getUniqueId()).getVoters().size()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_votes.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + visitManager.getIslands().get(player.getUniqueId()).getVoters().size()));
                 }
                 break;
             case "fabledskyblock_island_role":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_role.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_role.Empty"));
                 } else {
                     for (IslandRole roleList : IslandRole.values()) {
                         if (island.hasRole(roleList, player.getUniqueId())) {
-                            returnValue = ChatColor.translateAlternateColorCodes('&',
-                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_role.Non-empty.Message")
-                                            .replace("%placeholder", plugin.getLocalizationManager().getLocalizationFor(IslandRole.class).getLocale(roleList)));
+                            returnValue = TextUtils.formatText(
+                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_role.Non-empty")
+                                            .replace("{PLACEHOLDER}", plugin.getLocalizationManager().getLocalizationFor(IslandRole.class).getLocale(roleList)));
                         }
                     }
                 }
                 break;
             case "fabledskyblock_island_owner":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_owner.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_owner.Empty"));
                 } else {
                     UUID islandOwnerUUID = island.getOwnerUUID();
                     Player targetPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
     
                     if (targetPlayer == null) {
-                        returnValue = ChatColor.translateAlternateColorCodes('&',
-                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_owner.Non-empty.Other.Message").replace(
-                                        "%placeholder", Bukkit.getServer().getOfflinePlayer(islandOwnerUUID).getName()));
+                        returnValue = TextUtils.formatText(
+                                placeholdersLoad.getString("Placeholders.fabledskyblock_island_owner.Non-empty.Other").replace(
+                                        "{PLACEHOLDER}", Bukkit.getServer().getOfflinePlayer(islandOwnerUUID).getName()));
                     } else {
                         if (targetPlayer.getName().equals(player.getName())) {
-                            returnValue = ChatColor.translateAlternateColorCodes('&',
-                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_owner.Non-empty.Yourself.Message")
-                                            .replace("%placeholder", targetPlayer.getName()));
+                            returnValue = TextUtils.formatText(
+                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_owner.Non-empty.Yourself")
+                                            .replace("{PLACEHOLDER}", targetPlayer.getName()));
                         } else {
-                            returnValue = ChatColor.translateAlternateColorCodes('&',
-                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_owner.Non-empty.Other.Message")
-                                            .replace("%placeholder", targetPlayer.getName()));
+                            returnValue = TextUtils.formatText(
+                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_owner.Non-empty.Other")
+                                            .replace("{PLACEHOLDER}", targetPlayer.getName()));
                         }
                     }
                 }
                 break;
             case "fabledskyblock_island_biome":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_biome.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_biome.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_biome.Non-empty.Message")
-                                    .replace("%placeholder", island.getBiomeName()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_biome.Non-empty")
+                                    .replace("{PLACEHOLDER}", island.getBiomeName()));
                 }
                 break;
             case "fabledskyblock_island_time":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_time.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_time.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_time.Non-empty.Message")
-                                    .replace("%placeholder", "" + island.getTime()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_time.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + island.getTime()));
                 }
                 break;
             case "fabledskyblock_island_weather":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_weather.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_weather.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_weather.Non-empty.Message")
-                                    .replace("%placeholder", "" + island.getWeatherName()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_weather.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + island.getWeatherName()));
                 }
                 break;
             case "fabledskyblock_island_bans":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bans.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bans.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bans.Non-empty.Message")
-                                    .replace("%placeholder", "" + island.getBan().getBans().size()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bans.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + island.getBan().getBans().size()));
                 }
                 break;
             case "fabledskyblock_island_members_total":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_members_total.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_members_total.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_members_total.Non-empty.Message")
-                                    .replace("%placeholder", "" + (island.getRole(IslandRole.Member).size()
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_members_total.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + (island.getRole(IslandRole.Member).size()
                                             + island.getRole(IslandRole.Operator).size() + 1)));
                 }
                 break;
             case "fabledskyblock_island_members":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_members.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_members.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_members.Non-empty.Message")
-                                    .replace("%placeholder", "" + island.getRole(IslandRole.Member).size()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_members.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + island.getRole(IslandRole.Member).size()));
                 }
                 break;
             case "fabledskyblock_island_maxmembers":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_maxmembers.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_maxmembers.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_maxmembers.Non-empty.Message")
-                                    .replace("%placeholder", "" + island.getMaxMembers()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_maxmembers.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + island.getMaxMembers()));
                 }
                 break;
             case "fabledskyblock_island_operators":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_operators.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_operators.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_operators.Non-empty.Message")
-                                    .replace("%placeholder", "" + island.getRole(IslandRole.Operator).size()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_operators.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + island.getRole(IslandRole.Operator).size()));
                 }
                 break;
             case "fabledskyblock_island_coops":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_coops.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_coops.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_coops.Non-empty.Message")
-                                    .replace("%placeholder", "" + islandManager.getCoopPlayersAtIsland(island).size()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_coops.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + islandManager.getCoopPlayersAtIsland(island).size()));
                 }
                 break;
             case "fabledskyblock_island_coops_total":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_coops_total.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_coops_total.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_coops_total.Non-empty.Message")
-                                    .replace("%placeholder", "" + island.getCoopPlayers().size()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_coops_total.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + island.getCoopPlayers().size()));
                 }
                 break;
             case "fabledskyblock_island_visitors":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_visitors.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_visitors.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_visitors.Non-empty.Message")
-                                    .replace("%placeholder", "" + islandManager.getVisitorsAtIsland(island).size()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_visitors.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + islandManager.getVisitorsAtIsland(island).size()));
                 }
                 break;
             case "fabledskyblock_island_invites":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_invites.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_invites.Empty"));
                 } else {
                     Map<UUID, Invite> invites = plugin.getInviteManager().getInvites();
                     int invitedPlayers = 0;
@@ -284,112 +306,213 @@ public class PlaceholderProcessor {
                         }
                     }
     
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_invites.Non-empty.Message")
-                                    .replace("%placeholder", "" + invitedPlayers));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_invites.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + invitedPlayers));
                 }
                 break;
             case "fabledskyblock_island_bank_balance":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance.Non-empty.Message"))
-                            .replace("%placeholder", "" + NumberUtil.formatNumberByDecimal(island.getBankBalance()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance.Non-empty"))
+                            .replace("{PLACEHOLDER}", "" + NumberUtil.formatNumberByDecimal(island.getBankBalance()));
                 }
                 break;
             case "fabledskyblock_island_bank_balance_formatted":
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance_formatted.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance_formatted.Empty"));
                 } else {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance_formatted.Non-empty.Message"))
-                            .replace("%placeholder", "" + NumberUtil.formatNumberBySuffix((long) island.getBankBalance()));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance_formatted.Non-empty"))
+                            .replace("{PLACEHOLDER}", "" + NumberUtil.formatNumberBySuffix((long) island.getBankBalance()));
                 }
                 break;
         }
             
         if(returnValue == null) {
-            if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_level_rank")) {
-                if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Empty.Message"));
+            if(placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_votes_")){
+                List<Leaderboard> leaderboardVotesPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Votes);
+    
+                String[] values = placeholder.split("_");
+                int value;
+                try {
+                    value = Integer.parseInt(values[values.length-1]);
+                } catch(NumberFormatException ignored) {
+                    value = 1;
+                }
+    
+                if (value > 0 && value < leaderboardVotesPlayers.size()) {
+                    Leaderboard leaderboard = leaderboardVotesPlayers.get(value);
+                    Visit visit = leaderboard.getVisit();
+        
+                    Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
+                    String islandOwnerName;
+        
+                    if (targetPlayer == null) {
+                        islandOwnerName = new OfflinePlayer(visit.getOwnerUUID()).getName();
+                    } else {
+                        islandOwnerName = targetPlayer.getName();
+                    }
+    
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Non-empty")
+                                    .replace("{POSITION}", "" + (value))
+                                    .replace("{PLAYER}", islandOwnerName)
+                                    .replace("{VOTES}", NumberUtil.formatNumberByDecimal(visit.getVoters().size())));
                 } else {
-                    LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
+    
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_votes.Empty"));
+                }
+            } else if(placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_bank_")){
+                List<Leaderboard> leaderboardBankPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Bank);
+    
+                String[] values = placeholder.split("_");
+                int value;
+                try {
+                    value = Integer.parseInt(values[values.length-1]);
+                } catch(NumberFormatException ignored) {
+                    value = 1;
+                }
+    
+                if (value > 0 && value < leaderboardBankPlayers.size()) {
+                    Leaderboard leaderboard = leaderboardBankPlayers.get(value);
+                    Visit visit = leaderboard.getVisit();
+        
+                    Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
+                    String islandOwnerName;
+        
+                    if (targetPlayer == null) {
+                        islandOwnerName = new OfflinePlayer(visit.getOwnerUUID()).getName();
+                    } else {
+                        islandOwnerName = targetPlayer.getName();
+                    }
+        
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Non-empty")
+                                    .replace("{POSITION}", "" + (value))
+                                    .replace("{PLAYER}", islandOwnerName)
+                                    .replace("{BALANCE}", NumberUtil.formatNumberByDecimal(visit.getBankBalance())));
+                } else {
+        
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_bank.Empty"));
+                }
+            } else if(placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_level_")){
+                List<Leaderboard> leaderboardLevelPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Level);
+    
+                String[] values = placeholder.split("_");
+                int value;
+                try {
+                    value = Integer.parseInt(values[values.length-1]);
+                } catch(NumberFormatException ignored) {
+                    value = 1;
+                }
+    
+                if (value > 0 && value < leaderboardLevelPlayers.size()) {
+                    Leaderboard leaderboard = leaderboardLevelPlayers.get(value);
+                    Visit visit = leaderboard.getVisit();
+                    IslandLevel level = visit.getLevel();
+    
+                    Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
+                    String islandOwnerName;
+        
+                    if (targetPlayer == null) {
+                        islandOwnerName = new OfflinePlayer(visit.getOwnerUUID()).getName();
+                    } else {
+                        islandOwnerName = targetPlayer.getName();
+                    }
+        
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_level.Non-empty")
+                                    .replace("{POSITION}", "" + (value))
+                                    .replace("{PLAYER}", islandOwnerName)
+                                    .replace("{LEVEL}", NumberUtil.formatNumberByDecimal(level.getLevel()))
+                                    .replace("{POINTS}", NumberUtil.formatNumberByDecimal(level.getPoints())));
+                } else {
+        
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_leaderboard_level.Empty"));
+                }
+            } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_level_rank")) {
+                if (island == null) {
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Empty"));
+                } else {
                     int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Level);
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Non-empty.Message")
-                                    .replace("%placeholder", "" + rank));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_level_rank.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + rank));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_bank_rank")) {
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Empty"));
                 } else {
-                    LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
                     int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Bank);
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Non-empty.Message")
-                                    .replace("%placeholder", "" + rank));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_bank_rank.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + rank));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_leaderboard_votes_rank")) {
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Empty"));
                 } else {
-                    LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
                     int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Votes);
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Non-empty.Message")
-                                    .replace("%placeholder", "" + rank));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_leaderboard_votes_rank.Non-empty")
+                                    .replace("{PLACEHOLDER}", "" + rank));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_level_block_count_")) {
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Empty"));
                 } else {
                     String materialName = placeholder.replace("fabledskyblock_island_level_block_count_", "").toUpperCase();
                     CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
                     if (materials == null) {
-                        returnValue = ChatColor.translateAlternateColorCodes('&',
-                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Invalid.Message"));
+                        returnValue = TextUtils.formatText(
+                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Invalid"));
                     } else {
                         long blockCount = island.getLevel().getMaterialAmount(materials.name());
-                        returnValue = ChatColor.translateAlternateColorCodes('&',
-                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Non-empty.Message")
-                                        .replace("%placeholder", NumberUtil.formatNumberByDecimal(blockCount)));
+                        returnValue = TextUtils.formatText(
+                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_count.Non-empty")
+                                        .replace("{PLACEHOLDER}", NumberUtil.formatNumberByDecimal(blockCount)));
                     }
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_level_block_points_")) {
                 if (island == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Empty.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Empty"));
                 } else {
                     String materialName = placeholder.replace("fabledskyblock_island_level_block_points_", "").toUpperCase();
                     CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
                     if (materials == null) {
-                        returnValue = ChatColor.translateAlternateColorCodes('&',
-                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Invalid.Message"));
+                        returnValue = TextUtils.formatText(
+                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Invalid"));
                     } else {
                         long blockPoints = island.getLevel().getMaterialPoints(materials.name());
-                        returnValue = ChatColor.translateAlternateColorCodes('&',
-                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Non-empty.Message")
-                                        .replace("%placeholder", NumberUtil.formatNumberByDecimal(blockPoints)));
+                        returnValue = TextUtils.formatText(
+                                placeholdersLoad.getString("Placeholder.fabledskyblock_island_level_block_points.Non-empty")
+                                        .replace("{PLACEHOLDER}", NumberUtil.formatNumberByDecimal(blockPoints)));
                     }
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_level_block_value_")) {
                 String materialName = placeholder.replace("fabledskyblock_level_block_value_", "").toUpperCase();
                 CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
                 if (materials == null) {
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_level_block_value.Invalid.Message"));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_level_block_value.Invalid"));
                 } else {
                     double blockValue = levellingManager.getWorth(materials);
-                    returnValue = ChatColor.translateAlternateColorCodes('&',
-                            placeholdersLoad.getString("Placeholder.fabledskyblock_level_block_value.Non-empty.Message")
-                                    .replace("%placeholder", NumberUtil.formatNumberByDecimal(blockValue)));
+                    returnValue = TextUtils.formatText(
+                            placeholdersLoad.getString("Placeholder.fabledskyblock_level_block_value.Non-empty")
+                                    .replace("{PLACEHOLDER}", NumberUtil.formatNumberByDecimal(blockValue)));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_has_upgrade_")) {
                 Upgrade.Type type;
