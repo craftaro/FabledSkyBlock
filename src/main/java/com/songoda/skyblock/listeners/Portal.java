@@ -163,13 +163,12 @@ public class Portal implements Listener {
         IslandWorld toWorldF = toWorld;
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Location loc = island.getLocation(toWorldF, spawnEnvironment);
-            Location tempSafeLoc = LocationUtil.getSafeLocation(plugin, loc);
-            Location safeLoc = null;
-            if(tempSafeLoc != null) {
-                safeLoc = tempSafeLoc;
-            }
-            if(safeLoc != null){
-                loc = safeLoc;
+            if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                    .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                Location safeLoc = LocationUtil.getSafeLocation(loc);
+                if (safeLoc != null) {
+                    loc = safeLoc;
+                }
             }
             Location finalLoc = loc;
             PaperLib.teleportAsync(player, finalLoc);

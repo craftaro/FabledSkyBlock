@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.io.File;
+
 public class PortalPermission extends ListeningPermission {
 
     private final SkyBlock plugin;
@@ -71,9 +73,12 @@ public class PortalPermission extends ListeningPermission {
         Island island = islandManager.getIslandAtLocation(from);
         Location to = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
         if(island.hasRole(IslandRole.Visitor, player.getUniqueId())){
-            Location safeLoc = LocationUtil.getSafeLocation(plugin, island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
-            if(safeLoc != null) {
-                to = safeLoc;
+            if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                    .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+                if (safeLoc != null) {
+                    to = safeLoc;
+                }
             }
             if(to == null){
                 to = LocationUtil.getSpawnLocation();

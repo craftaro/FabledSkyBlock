@@ -203,19 +203,29 @@ public class Move implements Listener {
         if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                Location safeLoc = LocationUtil.getSafeLocation(plugin, island.getLocation(world, IslandEnvironment.Main));
-                if(safeLoc != null){
-                    loc = safeLoc;
+                if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                        .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                    Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
+                    if (safeLoc != null) {
+                        loc = safeLoc;
+                    }
                 }
             } else {
                 loc = island.getLocation(world, IslandEnvironment.Main);
-                LocationUtil.removeWaterFromLoc(plugin, loc);
+    
+                if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                        .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)) {
+                    LocationUtil.removeWaterFromLoc(loc);
+                }
             }
         } else {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                Location safeLoc = LocationUtil.getSafeLocation(plugin, island.getLocation(world, IslandEnvironment.Visitor));
-                if(safeLoc != null){
-                    loc = safeLoc;
+                if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                        .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                    Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
+                    if (safeLoc != null) {
+                        loc = safeLoc;
+                    }
                 }
             } else {
                 loc = island.getLocation(world, IslandEnvironment.Visitor);

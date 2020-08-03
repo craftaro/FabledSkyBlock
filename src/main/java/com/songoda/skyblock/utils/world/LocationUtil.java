@@ -33,41 +33,35 @@ import java.util.logging.Level;
 
 public final class LocationUtil {
 
-    public static void removeWaterFromLoc(SkyBlock plugin, Location loc) {
-        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)){
-            Location tempLoc = LocationUtil.getDefinitiveLocation(loc.clone());
-            if(tempLoc.getBlock().getType().equals(Material.WATER)){
-                tempLoc.getBlock().setType(Material.AIR);
-            } else if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)){
-                LocationUtil113.removeWaterLoggedFromLocation(tempLoc);
-            }
+    public static void removeWaterFromLoc(Location loc) {
+        Location tempLoc = LocationUtil.getDefinitiveLocation(loc.clone());
+        if(tempLoc.getBlock().getType().equals(Material.WATER)){
+            tempLoc.getBlock().setType(Material.AIR);
+        } else if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)){
+            LocationUtil113.removeWaterLoggedFromLocation(tempLoc);
         }
     }
 
-    public static @Nullable Location getSafeLocation(SkyBlock plugin, @Nonnull Location loc){
+    public static @Nullable Location getSafeLocation(@Nonnull Location loc){
         Location locChecked = null;
-        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
-            boolean found = false;
-            if(loc.getWorld() != null){
-                locChecked = loc.clone();
-                loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
-                for(int i=loc.getBlockY(); i>=0 && !found; i--){
-                    locChecked = locChecked.subtract(0d, 1d, 0d);
+        boolean found = false;
+        if(loc.getWorld() != null){
+            locChecked = loc.clone();
+            loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+            for(int i=loc.getBlockY(); i>=0 && !found; i--){
+                locChecked = locChecked.subtract(0d, 1d, 0d);
+                found = checkBlock(locChecked);
+            }
+            if(!found){
+                for(int i=loc.getBlockY(); i<256 && !found; i++){
+                    locChecked = locChecked.add(0d, 1d, 0d);
                     found = checkBlock(locChecked);
                 }
-                if(!found){
-                    for(int i=loc.getBlockY(); i<256 && !found; i++){
-                        locChecked = locChecked.add(0d, 1d, 0d);
-                        found = checkBlock(locChecked);
-                    }
-                }
-                if (found) {
-                    locChecked = locChecked.add(0d,1d,0d);
-                } else {
-                    locChecked = null;
-                }
+            }
+            if (found) {
+                locChecked = locChecked.add(0d,1d,0d);
+            } else {
+                locChecked = null;
             }
         }
         return locChecked;

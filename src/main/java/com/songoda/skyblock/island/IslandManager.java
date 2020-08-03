@@ -1210,9 +1210,12 @@ public class IslandManager {
             }
             Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                Location safeLoc = LocationUtil.getSafeLocation(plugin, loc);
-                if(safeLoc != null){
-                    loc = safeLoc;
+                if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                        .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                    Location safeLoc = LocationUtil.getSafeLocation(loc);
+                    if (safeLoc != null) {
+                        loc = safeLoc;
+                    }
                 }
             }
             if(loc != null){
