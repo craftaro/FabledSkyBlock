@@ -145,10 +145,13 @@ public class KickCommand extends SubCommand {
                                                 && !targetPlayer.isOp()) {
                                             LocationUtil.teleportPlayerToSpawn(targetPlayer);
                                         }
-
-                                        if (scoreboardManager != null) {
-                                            scoreboardManager.updatePlayerScoreboardType(targetPlayer);
-                                        }
+    
+                                        Player finalTargetPlayer = targetPlayer;
+                                        Bukkit.getScheduler().runTask(plugin, () -> {
+                                            if (scoreboardManager != null) {
+                                                scoreboardManager.updatePlayerScoreboardType(finalTargetPlayer);
+                                            }
+                                        });
 
                                         playerData = playerDataManager.getPlayerData(targetPlayer);
                                         playerData.setPlaytime(0);
@@ -183,11 +186,11 @@ public class KickCommand extends SubCommand {
                                         }
                                     }
 
-                                    if (scoreboardManager != null) {
-                                        if (island.getRole(IslandRole.Member).size() == 0 && island.getRole(IslandRole.Operator).size() == 0) {
+                                    Bukkit.getScheduler().runTask(plugin, () -> {
+                                        if (scoreboardManager != null) {
                                             scoreboardManager.updatePlayerScoreboardType(player);
                                         }
-                                    }
+                                    });
                                 }
                             } else {
                                 switch (island.getStatus()){

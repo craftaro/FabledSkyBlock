@@ -262,9 +262,11 @@ public class IslandManager {
         data.setIsland(player.getUniqueId());
         data.setOwner(player.getUniqueId());
 
-        if (scoreboardManager != null) {
-            scoreboardManager.updatePlayerScoreboardType(player);
-        }
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (scoreboardManager != null) {
+                scoreboardManager.updatePlayerScoreboardType(player);
+            }
+        });
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             PaperLib.teleportAsync(player, island.getLocation(IslandWorld.Normal, IslandEnvironment.Main));

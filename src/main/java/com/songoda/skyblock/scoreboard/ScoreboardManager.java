@@ -61,8 +61,11 @@ public class ScoreboardManager extends Manager {
             ScoreboardType type;
             if(island != null) {
                 Visit islandVisit = island.getVisit();
-                boolean hasVisitors = islandVisit.getVisitors().size() > 1;
-                boolean hasMembers = islandVisit.getMembers() > 1;
+                boolean hasVisitors = (islandVisit != null &&
+                        islandVisit.getVisitors() != null &&
+                        islandVisit.getVisitors().size() > 1);
+                boolean hasMembers = (islandVisit != null &&
+                        islandVisit.getMembers() > 1);
 
                 if(hasMembers) {
                     if(hasVisitors) {
@@ -84,7 +87,19 @@ public class ScoreboardManager extends Manager {
             setPlayerScoreboard(player, type);
         }
     }
-
+    
+    
+    
+    public void setPlayerScoreboard(Player player, ScoreboardType type) {
+        for(Driver driver : drivers) {
+            if(driver.getBoardType().equals(type)) {
+                driver.registerHolder(new Holder(plugin, driver, player));
+            } else {
+                driver.unregisterHolder(player);
+            }
+        }
+    }
+    
     public void unregisterPlayer(Player player) {
         for(Driver driver : drivers) {
             driver.unregisterHolder(player);
@@ -121,15 +136,5 @@ public class ScoreboardManager extends Manager {
         for(Driver driver : drivers)
             driver.cancel();
         drivers.clear();
-    }
-
-    public void setPlayerScoreboard(Player player, ScoreboardType type) {
-        for(Driver driver : drivers) {
-            if(driver.getBoardType().equals(type)) {
-                driver.registerHolder(new Holder(plugin, driver, player));
-            } else {
-                driver.unregisterHolder(player);
-            }
-        }
     }
 }

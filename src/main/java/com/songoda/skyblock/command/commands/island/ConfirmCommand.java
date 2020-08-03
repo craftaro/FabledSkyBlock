@@ -14,6 +14,7 @@ import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
+import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.structure.Structure;
 import com.songoda.skyblock.structure.StructureManager;
@@ -39,6 +40,7 @@ public class ConfirmCommand extends SubCommand {
         IslandManager islandManager = plugin.getIslandManager();
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
+        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
         Economy economy = plugin.getEconomyManager().getEconomy();
 
         if (playerDataManager.hasPlayerData(player)) {
@@ -108,9 +110,19 @@ public class ConfirmCommand extends SubCommand {
                                             .getString("Command.Island.Confirmation.Ownership.Member.Message"));
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                 }
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (scoreboardManager != null) {
+                                        scoreboardManager.updatePlayerScoreboardType(player);
+                                    }
+                                });
                             } else if (confirmation.equals(Confirmation.Reset)) {
                                 playerData.setConfirmation(null);
                                 playerData.setConfirmationTime(0);
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (scoreboardManager != null) {
+                                        scoreboardManager.updatePlayerScoreboardType(player);
+                                    }
+                                });
                             } else if (confirmation.equals(Confirmation.Deletion)) {
                                 if (island.getStatus().equals(IslandStatus.OPEN)) {
                                     messageManager.sendMessage(player,
@@ -175,6 +187,11 @@ public class ConfirmCommand extends SubCommand {
                                         soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1f, 1f);
                                     }
                                 }
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (scoreboardManager != null) {
+                                        scoreboardManager.updatePlayerScoreboardType(player);
+                                    }
+                                });
                             }
                         } else {
                             messageManager.sendMessage(player,
