@@ -96,11 +96,11 @@ Scoreboards:
           3:
             Interval: 5
             Content:
-              - ' &8- &7Level&8: &f%island_level%'
+              - ' &8- &7Level&8: &f%fabledskyblock_island_level_formatted%'
           4:
             Interval: 20
             Content:
-              - ' &8- &7Size&8: &f%island_size%&7x&f%island_size%'
+              - ' &8- &7Size&8: &f%fabledskyblock_island_size%&7x&f%fabledskyblock_island_size%'
           5:
             Interval: -1
             Content:
@@ -157,15 +157,15 @@ Scoreboards:
           3:
             Interval: 5
             Content:
-              - ' &8- &7Level&8: &f%island_level%'
+              - ' &8- &7Level&8: &f%fabledskyblock_island_level_formatted%'
           4:
             Interval: 5
             Content:
-              - ' &8- &7Visitors&8: &f%island_visitors%'
+              - ' &8- &7Visitors&8: &f%fabledskyblock_island_visitors%'
           5:
             Interval: 20
             Content:
-              - ' &8- &7Size&8: &f%island_size%&7x&f%island_size%'
+              - ' &8- &7Size&8: &f%fabledskyblock_island_size%&7x&f%fabledskyblock_island_size%'
           6:
             Interval: -1
             Content:
@@ -227,19 +227,19 @@ Scoreboards:
           3:
             Interval: 20
             Content:
-              - ' &8- &7Role&8: &f%island_role%'
+              - ' &8- &7Role&8: &f%fabledskyblock_island_role%'
           4:
             Interval: 20
             Content:
-              - ' &8- &7Members&8: &f%island_members%'
+              - ' &8- &7Members&8: &f%fabledskyblock_island_members%'
           5:
             Interval: 5
             Content:
-              - ' &8- &7Level&8: &f%island_level%'
+              - ' &8- &7Level&8: &f%fabledskyblock_island_level_formatted%'
           6:
             Interval: 20
             Content:
-              - ' &8- &7Size&8: &f%island_size%&7x&f%island_size%'
+              - ' &8- &7Size&8: &f%fabledskyblock_island_size%&7x&f%fabledskyblock_island_size%'
           7:
             Interval: -1
             Content:
@@ -296,23 +296,23 @@ Scoreboards:
           3:
             Interval: 20
             Content:
-              - ' &8- &7Role&8: &f%island_role%'
+              - ' &8- &7Role&8: &f%fabledskyblock_island_role%'
           4:
             Interval: 20
             Content:
-              - ' &8- &7Members&8: &f%island_members%'
+              - ' &8- &7Members&8: &f%fabledskyblock_island_members%'
           5:
             Interval: 5
             Content:
-              - ' &8- &7Level&8: &f%island_level%'
+              - ' &8- &7Level&8: &f%fabledskyblock_island_level_formatted%'
           6:
             Interval: 5
             Content:
-              - ' &8- &7Visitors&8: &f%island_visitors%'
+              - ' &8- &7Visitors&8: &f%fabledskyblock_island_visitors%'
           7:
             Interval: 20
             Content:
-              - ' &8- &7Size&8: &f%island_size%&7x&f%island_size%'
+              - ' &8- &7Size&8: &f%fabledskyblock_island_size%&7x&f%fabledskyblock_island_size%'
           8:
             Interval: -1
             Content:
