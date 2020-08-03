@@ -532,7 +532,6 @@ public class IslandManager {
     }
 
     public synchronized boolean deleteIsland(Island island, boolean force) {
-        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         CooldownManager cooldownManager = plugin.getCooldownManager();
         FileManager fileManager = plugin.getFileManager();
@@ -584,10 +583,6 @@ public class IslandManager {
                 playerData.setMemberSince(null);
                 playerData.setChat(false);
                 playerData.save();
-
-                if (scoreboardManager != null) {
-                    scoreboardManager.updatePlayerScoreboardType(player);
-                }
 
                 if (isPlayerAtIsland(island, player)) {
                     LocationUtil.teleportPlayerToSpawn(player);
