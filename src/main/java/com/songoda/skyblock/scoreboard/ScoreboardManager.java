@@ -66,15 +66,15 @@ public class ScoreboardManager extends Manager {
 
                 if(hasMembers) {
                     if(hasVisitors) {
-                        type = ScoreboardType.ISLAND_SOLO_VISITORS;
-                    } else {
-                        type = ScoreboardType.ISLAND_SOLO_EMPTY;
-                    }
-                } else {
-                    if(hasVisitors) {
                         type = ScoreboardType.ISLAND_TEAM_VISITORS;
                     } else {
                         type = ScoreboardType.ISLAND_TEAM_EMPTY;
+                    }
+                } else {
+                    if(hasVisitors) {
+                        type = ScoreboardType.ISLAND_SOLO_VISITORS;
+                    } else {
+                        type = ScoreboardType.ISLAND_SOLO_EMPTY;
                     }
                 }
             } else {
