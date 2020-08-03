@@ -31,7 +31,7 @@ public class PlaceholderManager extends Manager {
     }
     
     public String parsePlaceholders(Player player, String message) {
-        String retValue = "";
+        String retValue = message;
         
         if(PlaceholderAPIEnabled) {
             retValue = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message);
