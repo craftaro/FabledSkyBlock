@@ -58,15 +58,16 @@ public class MobGriefingPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)
-                && (!(event.getDamager() instanceof org.bukkit.entity.Projectile)
-                    || !(((org.bukkit.entity.Projectile) event.getDamager()).getShooter() instanceof Player))
-                && !(event.getDamager() instanceof TNTPrimed)
-                && !(event.getDamager() instanceof ExplosiveMinecart)
-                && !(event.getDamager() instanceof IronGolem)
-                && !(event.getDamager() instanceof Snowman)
-                && !(event.getDamager() instanceof Wolf &&
-                ((Wolf) event.getDamager()).isTamed())) {
+        if (!(event.getDamager() instanceof Player) &&
+                (!(event.getDamager() instanceof org.bukkit.entity.Projectile) ||
+                    !(((org.bukkit.entity.Projectile) event.getDamager()).getShooter() instanceof Player)) &&
+                !(event.getDamager() instanceof TNTPrimed) &&
+                !(event.getDamager() instanceof ExplosiveMinecart) &&
+                !(event.getDamager() instanceof IronGolem) &&
+                !(event.getDamager() instanceof Snowman) &&
+                !(event.getDamager() instanceof Wolf &&
+                ((Wolf) event.getDamager()).isTamed()) &&
+                !(event.getEntity() instanceof Player)) {
             event.setCancelled(true);
         }
     }
