@@ -113,6 +113,6 @@ class Board {
             prefixLine = ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, prefixLine);
             suffixLine = ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, lastColorCodes + suffixLine);
         }
-        return new ScoreboardLine(prefixLine, suffixLine);
+        return new ScoreboardLine(prefixLine, suffixLine, allowed_line_size);
     }
 }
