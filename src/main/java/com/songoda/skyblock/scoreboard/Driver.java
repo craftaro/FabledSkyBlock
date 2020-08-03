@@ -10,7 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 class Driver extends BukkitRunnable {
@@ -60,6 +60,11 @@ class Driver extends BukkitRunnable {
     }
 
     public void registerHolder(Holder holder) {
+        try {
+            throw new Exception();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         holders.add(holder);
     }
 
@@ -68,11 +73,14 @@ class Driver extends BukkitRunnable {
     }
 
     public void unregisterHolder(Player player) {
-        for(Holder holder : holders)
+        Iterator<Holder> it = holders.iterator();
+        while(it.hasNext()) {
+            Holder holder = it.next();
             if(holder.player.equals(player)) {
-                holders.remove(holder);
+                it.remove();
                 break;
             }
+        }
     }
     
     @Override
