@@ -3634,12 +3634,12 @@ Island:
 Hologram:
   Leaderboard:
     Votes:
-      Footer: '&ewww.example.net'
+      Footer: '&ewww.songoda.com'
       Claimed: '&8* &f&o[%position] &a%player &7- &6%votes'
       Unclaimed: '&8* &f&o[%position] &7&oUnclaimed Position'
       Header: '&b&lSkyBlock &8&l| &e&lTop 10 Votes'
     Bank:
-      Footer: '&ewww.example.net'
+      Footer: '&ewww.songoda.com'
       Unclaimed: '&8* &f&o[%position] &7&oUnclaimed Position'
       Claimed: '&8* &f&o[%position] &a%player &7- &6$%balance'
       Header: '&b&lSkyBlock &8&l| &e&lTop 10 Bank Balances'
@@ -3647,7 +3647,7 @@ Hologram:
       Header: '&b&lSkyBlock &8&l| &e&lTop 10 Level'
       Claimed: '&8* &f&o[%position] &a%player &7- &6%level'
       Unclaimed: '&8* &f&o[%position] &7&oUnclaimed Position'
-      Footer: '&ewww.example.net'
+      Footer: '&ewww.songoda.com'
   Stackable:
     Message: '%blocks: %amount'
 Challenge:
