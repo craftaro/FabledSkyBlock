@@ -82,8 +82,9 @@ public class ScoreboardManager extends Manager {
             } else {
                 type = ScoreboardType.NO_ISLAND;
             }
-
-            setPlayerScoreboard(player, type);
+            synchronized (player) {
+                setPlayerScoreboard(player, type);
+            }
         }
     }
     
