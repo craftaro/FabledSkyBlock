@@ -9,7 +9,6 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.visit.Visit;
 import io.netty.util.internal.ConcurrentSet;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -81,7 +80,7 @@ public class ScoreboardManager extends Manager {
                     }
                 }
             } else {
-                type = ScoreboardType.NOISLAND;
+                type = ScoreboardType.NO_ISLAND;
             }
 
             setPlayerScoreboard(player, type);
