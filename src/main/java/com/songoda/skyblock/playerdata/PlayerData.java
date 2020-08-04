@@ -2,7 +2,6 @@ package com.songoda.skyblock.playerdata;
 
 import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;

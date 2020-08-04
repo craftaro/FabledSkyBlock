@@ -7,7 +7,6 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.version.NMSUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Biome;

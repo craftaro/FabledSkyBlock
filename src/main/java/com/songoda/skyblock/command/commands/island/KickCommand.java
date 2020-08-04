@@ -19,7 +19,6 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

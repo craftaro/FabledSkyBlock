@@ -5,7 +5,9 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
-import org.bukkit.entity.*;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.Snowman;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class ProtectorDamagePermission extends ListeningPermission  {

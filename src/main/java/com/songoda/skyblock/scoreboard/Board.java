@@ -3,7 +3,6 @@ package com.songoda.skyblock.scoreboard;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.placeholder.PlaceholderManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;

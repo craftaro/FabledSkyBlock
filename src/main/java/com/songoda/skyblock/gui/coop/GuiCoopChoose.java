@@ -3,7 +3,6 @@ package com.songoda.skyblock.gui.coop;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.gui.Gui;
-import com.songoda.core.gui.GuiType;
 import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;

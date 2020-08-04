@@ -13,7 +13,6 @@ import com.songoda.skyblock.command.commands.island.UpgradeCommand;
 import com.songoda.skyblock.command.commands.island.*;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.menus.ControlPanel;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.ChatComponent;

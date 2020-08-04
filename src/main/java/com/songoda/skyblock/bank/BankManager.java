@@ -3,7 +3,6 @@ package com.songoda.skyblock.bank;
 import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.economy.EconomyManager;
 import com.songoda.skyblock.island.Island;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

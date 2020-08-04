@@ -4,9 +4,6 @@ import com.songoda.core.hooks.Hook;
 import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.manager.Manager;
-import org.bukkit.Bukkit;
-
-import java.util.Arrays;
 
 public class EconomyManager extends Manager {
     

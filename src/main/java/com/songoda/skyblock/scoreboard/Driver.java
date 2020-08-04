@@ -2,7 +2,6 @@ package com.songoda.skyblock.scoreboard;
 
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
