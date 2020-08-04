@@ -154,19 +154,6 @@ public final class BlockScanner extends BukkitRunnable {
                     lastX = Math.min(cX | 15, bounds.getMaxX()-1)&0x000F;
                     lastZ = Math.min(cZ | 15, bounds.getMaxZ()-1)&0x000F;
                 }
-    
-                int finalInitX = initX;
-                int finalInitZ = initZ;
-                int finalLastZ = lastZ;
-                int finalLastX = lastX;
-                Bukkit.getScheduler().runTask(SkyBlock.getInstance(), () -> {
-                    world.getChunkAt(shot.getX(), shot.getZ()).getBlock(finalInitX, 80, finalInitZ).setType(CompatibleMaterial.GOLD_BLOCK.getBlockMaterial());
-                    world.getChunkAt(shot.getX(), shot.getZ()).getBlock(finalLastX, 80, finalLastZ).setType(CompatibleMaterial.CRYING_OBSIDIAN.getBlockMaterial());
-                    Bukkit.getScheduler().runTaskLater(SkyBlock.getInstance(), () -> {
-                        world.getChunkAt(shot.getX(), shot.getZ()).getBlock(finalInitX, 80, finalInitZ).setType(CompatibleMaterial.AIR.getBlockMaterial());
-                        world.getChunkAt(shot.getX(), shot.getZ()).getBlock(finalLastX, 80, finalLastZ).setType(CompatibleMaterial.AIR.getBlockMaterial());
-                    }, 300L);
-                });
                 
                 for (int x = initX; x <= lastX; x++) {
                     for (int z = initZ; z <= lastZ; z++) {
