@@ -81,16 +81,16 @@ public class Island {
                 if (minimumSize < 0 || minimumSize > 1000)
                     minimumSize = 50;
     
-                if(minimumSize % 2 != 0) {
+                /*if(minimumSize % 2 != 0) {
                     minimumSize += 1;
-                }
+                }*/
                 
                 if (maximumSize < 0 || maximumSize > 1000)
                     maximumSize = 100;
                 
-                if(maximumSize % 2 != 0) {
+                /*if(maximumSize % 2 != 0) {
                     maximumSize += 1;
-                }
+                }*/
 
                 size = Math.max(minimumSize, Math.min(customSize, maximumSize));
             }
