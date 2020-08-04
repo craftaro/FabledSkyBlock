@@ -20,19 +20,24 @@ public class ChunkLoader extends BukkitRunnable {
 
     private ChunkScannerTask generalTask;
     private ChunkForChunkScannerTask chunkTask;
-    private boolean chunkForChunk;
-    private boolean paper;
+    private final boolean chunkForChunk;
+    private final boolean paper;
     private World world;
-    private Island island;
+    private final Island island;
     private int x;
     private int z;
     private int minZ;
     private int maxX;
     private int maxZ;
-    private int chunkPerTick;
-    private CompleteTask completeTask;
+    private final int chunkPerTick;
+    private final CompleteTask completeTask;
 
-    private ChunkLoader(Island island, IslandWorld islandWorld, boolean paper, boolean chunkForChunk, ChunkForChunkScannerTask chunkTask, CompleteTask complete) {
+    private ChunkLoader(Island island,
+                        IslandWorld islandWorld,
+                        boolean paper,
+                        boolean chunkForChunk,
+                        ChunkForChunkScannerTask chunkTask,
+                        CompleteTask complete) {
         chunkPerTick = SkyBlock.getInstance().getFileManager()
                 .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
                 .getFileConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
@@ -51,11 +56,11 @@ public class ChunkLoader extends BukkitRunnable {
         Location minLocation = new Location(world, islandLocation.getBlockX() - island.getRadius(), 0, islandLocation.getBlockZ() - island.getRadius());
         Location maxLocation = new Location(world, islandLocation.getBlockX() + island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + island.getRadius());
 
-        int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
-        minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
+        int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4 ;
+        minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4;
 
-        maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX());
-        maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ());
+        maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4 | 15;
+        maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4 | 15;
 
         x = minX;
         z = minZ;
@@ -67,7 +72,12 @@ public class ChunkLoader extends BukkitRunnable {
         }
     }
 
-    private ChunkLoader(Island island, IslandWorld islandWorld, boolean paper, boolean chunkForChunk, ChunkScannerTask generalTask, CompleteTask complete) {
+    private ChunkLoader(Island island,
+                        IslandWorld islandWorld,
+                        boolean paper,
+                        boolean chunkForChunk,
+                        ChunkScannerTask generalTask,
+                        CompleteTask complete) {
         chunkPerTick = SkyBlock.getInstance().getFileManager()
                 .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
                 .getFileConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
@@ -83,18 +93,26 @@ public class ChunkLoader extends BukkitRunnable {
 
         world = islandLocation.getWorld();
 
-        Location minLocation = new Location(world, islandLocation.getBlockX() - island.getRadius(), 0, islandLocation.getBlockZ() - island.getRadius());
-        Location maxLocation = new Location(world, islandLocation.getBlockX() + island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + island.getRadius());
+        Location minLocation = new Location(
+                world,
+                islandLocation.getBlockX() - island.getRadius(),
+                0,
+                islandLocation.getBlockZ() - island.getRadius());
+        Location maxLocation = new Location(
+                world,
+                islandLocation.getBlockX() + island.getRadius(),
+                world.getMaxHeight(),
+                islandLocation.getBlockZ() + island.getRadius());
+        
+        int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4;
+        minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4;
 
-        int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
-        minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
-
-        maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX());
-        maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ());
+        maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4 | 15;
+        maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4 | 15;
 
         x = minX;
         z = minZ;
-
+        
         if(paper){
             this.runTaskAsynchronously(SkyBlock.getInstance());
         } else {
@@ -105,8 +123,8 @@ public class ChunkLoader extends BukkitRunnable {
     @Override
     public void run() { // TODO New algorithm that start from the center of the island
         for(int i = 0; i < chunkPerTick || paper; i++){
-            if(x < maxX){
-                if(z < maxZ){
+            if(x <= maxX){
+                if(z <= maxZ){
                     if(!chunkForChunk){
                         positions.add(PaperLib.getChunkAtAsync(world, x >> 4, z >> 4));
                     } else {

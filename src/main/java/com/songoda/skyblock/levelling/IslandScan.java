@@ -12,7 +12,10 @@ import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.levelling.amount.AmountMaterialPair;
 import com.songoda.skyblock.levelling.amount.BlockAmount;
 import com.songoda.skyblock.message.MessageManager;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChunkSnapshot;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -22,8 +25,6 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 public final class IslandScan extends BukkitRunnable {
 
@@ -81,28 +82,25 @@ public final class IslandScan extends BukkitRunnable {
                 populate(snapshots, IslandWorld.Nether, plugin.isPaperAsync(), () -> {
                     if (hasEnd) {
                         populate(snapshots, IslandWorld.End, plugin.isPaperAsync(), () -> {
-                            BlockScanner.startScanner(snapshots, true, true, true, false, (blocks) -> {
+                            BlockScanner.startScanner(snapshots, island, true, true, true, false, (blocks) -> {
                                 this.blocks = blocks;
                                 this.blocksSize = blocks.size();
                                 this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
-
                             });
                         });
                     } else {
-                        BlockScanner.startScanner(snapshots, true, true, true, false, (blocks) -> {
+                        BlockScanner.startScanner(snapshots, island, true, true, true, false, (blocks) -> {
                             this.blocks = blocks;
                             this.blocksSize = blocks.size();
                             this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
-
                         });
                     }
                 });
             } else {
-                BlockScanner.startScanner(snapshots, true, true, true, false, (blocks) -> {
+                BlockScanner.startScanner(snapshots, island, true, true, true, false, (blocks) -> {
                     this.blocks = blocks;
                     this.blocksSize = blocks.size();
                     this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
-
                 });
             }
         });
@@ -169,8 +167,12 @@ public final class IslandScan extends BukkitRunnable {
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (language.getBoolean("Command.Island.Level.Scanning.Progress.Should-Display-Message") && executions == 1 || totalScanned == blocksSize || executions % runEveryX == 0) {
 
-                final double percent = ((double) totalScanned / (double) blocksSize) * 100;
+                double percent = ((double) totalScanned / (double) blocksSize) * 100;
 
+                if(Double.isNaN(percent)) {
+                    percent = 0d;
+                }
+                
                 String message = language.getString("Command.Island.Level.Scanning.Progress.Message");
                 message = message.replace("%current_scanned_blocks%", String.valueOf(totalScanned));
                 message = message.replace("%max_blocks%", String.valueOf(blocksSize));
