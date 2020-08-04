@@ -328,6 +328,8 @@ Island:
             Selector: "DIAMOND_AXE"
     Scoreboard:
         Enable: true
+        # Set it to false if you notice some visual problems.
+        Async: true
     Generator:
         Enable: true
         # Check only the island owner's permissions

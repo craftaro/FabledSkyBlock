@@ -122,11 +122,11 @@ public class ScoreboardManager extends Manager {
     
     private void newDriver(ScoreboardType board) {
         FileManager fileManager = plugin.getFileManager();
-        FileConfiguration scoreboardLoad = fileManager.getConfig(
-                new File(plugin.getDataFolder(), "scoreboard.yml")).getFileConfiguration();
+        FileConfiguration configload = fileManager.getConfig(
+                new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
 
         Driver driver = new Driver(plugin, board);
-        if(scoreboardLoad.getBoolean("Settings.Async", true)) {
+        if(configload.getBoolean("Island.Scoreboard.Async", true)) {
             driver.runTaskTimerAsynchronously(plugin, 1L, 1L);
         } else {
             driver.runTaskTimer(plugin, 1L, 1L);
