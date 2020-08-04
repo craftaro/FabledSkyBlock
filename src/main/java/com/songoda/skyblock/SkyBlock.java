@@ -118,11 +118,11 @@ public class SkyBlock extends SongodaPlugin {
             this.getLogger().warning("This Minecraft version is not officially supported.");
         }
         
-        if(paper = ServerProject.isServer(ServerProject.PAPER) &&
-                ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)){
+        if(paper = ServerProject.isServer(ServerProject.PAPER)){
             try {
                 Bukkit.spigot().getClass().getMethod("getPaperConfig");
-                paperAsync = Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
+                paperAsync = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
+                        Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
             } catch (NoSuchMethodException ignored) {
                 paperAsync = false;
             }
