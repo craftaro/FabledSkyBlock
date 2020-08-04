@@ -161,13 +161,13 @@ public class FileManager {
         final ConfigurationSection section = config.getFileConfiguration().createSection(path);
 
         section.set("world", location.getWorld().getName());
-        section.set("x", Double.valueOf(location.getX()));
-        section.set("y", Double.valueOf(location.getY()));
-        section.set("z", Double.valueOf(location.getZ()));
+        section.set("x", location.getX());
+        section.set("y", location.getY());
+        section.set("z", location.getZ());
 
         if (direction) {
-            section.set("yaw", Float.valueOf(location.getYaw()));
-            section.set("pitch", Float.valueOf(location.getPitch()));
+            section.set("yaw", location.getYaw());
+            section.set("pitch", location.getPitch());
         }
 
         try {
@@ -272,10 +272,10 @@ public class FileManager {
             while ((currentLine = bufferedReader.readLine()) != null) {
                 if (currentLine.contains("#")) {
                     addLine = currentLine.replace("[!]", "IMPORTANT").replace(":", "-").replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
-                    whole.append(addLine + "\n");
+                    whole.append(addLine).append("\n");
                     commentNum++;
                 } else {
-                    whole.append(currentLine + "\n");
+                    whole.append(currentLine).append("\n");
                 }
             }
 
@@ -311,9 +311,9 @@ public class FileManager {
 
         for (String line : lines) {
             if (line.contains(plugin.getDescription().getName() + "_COMMENT")) {
-                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "").replace(plugin.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "") + "\n");
+                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "").replace(plugin.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "")).append("\n");
             } else if (line.contains(":")) {
-                config.append(line + "\n");
+                config.append(line).append("\n");
             }
         }
 
