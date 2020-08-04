@@ -19,12 +19,8 @@ class Row {
         this.interval = interval;
         this.current = 0;
         this.count = 0;
-        
-        if(interval < 0) {
-            static_line = true;
-        } else {
-            static_line = false;
-        }
+    
+        static_line = interval < 0 || lines.isEmpty() || lines.size() <= 1;
 
         if(lines.isEmpty()) {
             line = "";
@@ -34,7 +30,7 @@ class Row {
     }
 
     public void update() {
-        if (!static_line && !lines.isEmpty()) {
+        if (!static_line) {
             if (count >= interval) {
                 count = 0;
                 current++;
