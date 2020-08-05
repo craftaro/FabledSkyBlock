@@ -39,7 +39,7 @@ class Holder {
 
                 this.player.setScoreboard(board.board);
             } else {
-                this.player.setScoreboard(plugin.getServer().getScoreboardManager().getNewScoreboard());
+                this.player.setScoreboard(scoreboardManager.getEmptyScoreboard());
             }
         }
     }

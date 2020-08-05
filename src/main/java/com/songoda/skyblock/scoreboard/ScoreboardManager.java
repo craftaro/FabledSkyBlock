@@ -9,8 +9,10 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.visit.Visit;
 import io.netty.util.internal.ConcurrentSet;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.Set;
 
 public class ScoreboardManager extends Manager {
 
+    private final Scoreboard emptyScoreboard;
     private final List<Driver> drivers;
     private final Set<Player> disabledPlayers;
 
@@ -26,6 +29,7 @@ public class ScoreboardManager extends Manager {
         super(plugin);
         this.drivers = new ArrayList<>();
         this.disabledPlayers = new ConcurrentSet<>();
+        this.emptyScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         for(ScoreboardType type : ScoreboardType.values()) {
             newDriver(type);
@@ -138,5 +142,9 @@ public class ScoreboardManager extends Manager {
         for(Driver driver : drivers)
             driver.cancel();
         drivers.clear();
+    }
+    
+    public Scoreboard getEmptyScoreboard() {
+        return emptyScoreboard;
     }
 }
