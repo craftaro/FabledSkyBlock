@@ -201,7 +201,7 @@ Command:
         NotANumber:
           Message: '&bSkyBlock &8| &cError&8: &eThe provided value is not valid.'
         Info:
-          Message: '&f&oEdit all the islands in one time.'
+          Message: '&f&oEdit all the islands at once.'
       Bank:
         Short01:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin bank [<Deposit|Withdraw|Balance>]'
