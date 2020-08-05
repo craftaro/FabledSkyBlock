@@ -45,9 +45,8 @@ public class ScoreboardCommand extends SubCommand {
         } else {
             playerData.setScoreboard(true);
             scoreboardManager.removeDisabledPlayer(player);
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                scoreboardManager.updatePlayerScoreboardType(player);
-            });
+            Bukkit.getScheduler().runTask(plugin, () ->
+                    scoreboardManager.updatePlayerScoreboardType(player));
 
             messageManager.sendMessage(player, configLoad.getString("Command.Scoreboard.Enabled.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);

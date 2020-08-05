@@ -98,10 +98,9 @@ public class ScoreboardManager extends Manager {
     
     public void setPlayerScoreboard(Player player, ScoreboardType type) {
         for(Driver driver : drivers) {
+            driver.unregisterHolder(player);
             if(driver.getBoardType().equals(type)) {
                 driver.registerHolder(new Holder(plugin, driver, player));
-            } else {
-                driver.unregisterHolder(player);
             }
         }
     }
@@ -110,10 +109,12 @@ public class ScoreboardManager extends Manager {
         for(Driver driver : drivers) {
             driver.unregisterHolder(player);
         }
+        player.setScoreboard(emptyScoreboard);
     }
 
     public void addDisabledPlayer(Player player) {
         disabledPlayers.add(player);
+        Bukkit.getScheduler().runTask(plugin, () -> this.unregisterPlayer(player));
     }
 
     public void removeDisabledPlayer(Player player) {
