@@ -116,7 +116,7 @@ public class Join implements Listener {
             SkyBlock.getInstance().getFabledChallenge().getPlayerManager().loadPlayer(player.getUniqueId());
             
             Bukkit.getScheduler().runTask(plugin, () -> {
-                if (scoreboardManager != null && playerDataManager.getPlayerData(player).isScoreboard()) {
+                if (playerDataManager.getPlayerData(player).isScoreboard()) {
                     scoreboardManager.updatePlayerScoreboardType(player);
                 }
             });

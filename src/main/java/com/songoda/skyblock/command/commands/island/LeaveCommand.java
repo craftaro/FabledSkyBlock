@@ -105,10 +105,8 @@ public class LeaveCommand extends SubCommand {
 
                             if (island.getRole(IslandRole.Member).size() == 0
                                     && island.getRole(IslandRole.Operator).size() == 0) {
-                                if (scoreboardManager != null) {
-                                    if (islandManager.getVisitorsAtIsland(island).size() != 0) {
-                                        scoreboardManager.updatePlayerScoreboardType(loopPlayer);
-                                    }
+                                if (islandManager.getVisitorsAtIsland(island).size() != 0) {
+                                    scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                 }
 
                                 break;
@@ -120,10 +118,8 @@ public class LeaveCommand extends SubCommand {
                 messageManager.sendMessage(player,
                         languageConfig.getFileConfiguration().getString("Command.Island.Leave.Left.Sender.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
-
-                if (scoreboardManager != null) {
-                    scoreboardManager.updatePlayerScoreboardType(player);
-                }
+    
+                scoreboardManager.updatePlayerScoreboardType(player);
             }
         }
     }

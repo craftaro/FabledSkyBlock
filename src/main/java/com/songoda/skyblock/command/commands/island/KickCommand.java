@@ -147,9 +147,7 @@ public class KickCommand extends SubCommand {
     
                                         Player finalTargetPlayer = targetPlayer;
                                         Bukkit.getScheduler().runTask(plugin, () -> {
-                                            if (scoreboardManager != null) {
-                                                scoreboardManager.updatePlayerScoreboardType(finalTargetPlayer);
-                                            }
+                                            scoreboardManager.updatePlayerScoreboardType(player);
                                         });
 
                                         playerData = playerDataManager.getPlayerData(targetPlayer);
@@ -186,9 +184,7 @@ public class KickCommand extends SubCommand {
                                     }
 
                                     Bukkit.getScheduler().runTask(plugin, () -> {
-                                        if (scoreboardManager != null) {
-                                            scoreboardManager.updatePlayerScoreboardType(player);
-                                        }
+                                        scoreboardManager.updatePlayerScoreboardType(player);
                                     });
                                 }
                             } else {

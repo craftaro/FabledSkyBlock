@@ -111,17 +111,13 @@ public class ConfirmCommand extends SubCommand {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                 }
                                 Bukkit.getScheduler().runTask(plugin, () -> {
-                                    if (scoreboardManager != null) {
-                                        scoreboardManager.updatePlayerScoreboardType(player);
-                                    }
+                                    scoreboardManager.updatePlayerScoreboardType(player);
                                 });
                             } else if (confirmation.equals(Confirmation.Reset)) {
                                 playerData.setConfirmation(null);
                                 playerData.setConfirmationTime(0);
                                 Bukkit.getScheduler().runTask(plugin, () -> {
-                                    if (scoreboardManager != null) {
-                                        scoreboardManager.updatePlayerScoreboardType(player);
-                                    }
+                                    scoreboardManager.updatePlayerScoreboardType(player);
                                 });
                             } else if (confirmation.equals(Confirmation.Deletion)) {
                                 if (island.getStatus().equals(IslandStatus.OPEN)) {
@@ -188,9 +184,7 @@ public class ConfirmCommand extends SubCommand {
                                     }
                                 }
                                 Bukkit.getScheduler().runTask(plugin, () -> {
-                                    if (scoreboardManager != null) {
-                                        scoreboardManager.updatePlayerScoreboardType(player);
-                                    }
+                                    scoreboardManager.updatePlayerScoreboardType(player);
                                 });
                             }
                         } else {

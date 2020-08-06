@@ -263,9 +263,7 @@ public class IslandManager {
         data.setOwner(player.getUniqueId());
 
         Bukkit.getScheduler().runTask(plugin, () -> {
-            if (scoreboardManager != null) {
-                scoreboardManager.updatePlayerScoreboardType(player);
-            }
+            scoreboardManager.updatePlayerScoreboardType(player);
         });
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -950,9 +948,7 @@ public class IslandManager {
                     island.hasRole(IslandRole.Operator, loopPlayer.getUniqueId()) ||
                     island.hasRole(IslandRole.Owner, loopPlayer.getUniqueId()) ||
                     island.getCoopType(loopPlayer.getUniqueId()) == IslandCoop.NORMAL) {
-                if (scoreboardManager != null) {
-                    scoreboardManager.updatePlayerScoreboardType(loopPlayer);
-                }
+                scoreboardManager.updatePlayerScoreboardType(loopPlayer);
 
                 unloadIsland = false;
             }
@@ -1190,18 +1186,16 @@ public class IslandManager {
                                 .getFileConfiguration().getString("Island.Teleport.Unsafe.Message")));
             }
         } else {
-            if (scoreboardManager != null) {
-                int islandVisitors = getVisitorsAtIsland(island).size();
-    
-                if (islandVisitors == 0) {
-                    for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
-                        PlayerData targetPlayerData = plugin.getPlayerDataManager().getPlayerData(loopPlayer);
+            int islandVisitors = getVisitorsAtIsland(island).size();
 
-                        if (targetPlayerData != null &&
-                                targetPlayerData.getOwner() != null &&
-                                targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
-                            scoreboardManager.updatePlayerScoreboardType(loopPlayer);
-                        }
+            if (islandVisitors == 0) {
+                for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
+                    PlayerData targetPlayerData = plugin.getPlayerDataManager().getPlayerData(loopPlayer);
+
+                    if (targetPlayerData != null &&
+                            targetPlayerData.getOwner() != null &&
+                            targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
+                        scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                     }
                 }
             }

@@ -190,14 +190,12 @@ public class PlayerDataManager {
 
                             ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
 
-                            if (scoreboardManager != null) {
-                                for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
-                                    PlayerData targetPlayerData = getPlayerData(loopPlayer);
-
-                                    if (targetPlayerData.getOwner() != null &&
-                                            targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
-                                        scoreboardManager.updatePlayerScoreboardType(loopPlayer);
-                                    }
+                            for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
+                                PlayerData targetPlayerData = getPlayerData(loopPlayer);
+        
+                                if (targetPlayerData.getOwner() != null &&
+                                        targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
+                                    scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                 }
                             }
 

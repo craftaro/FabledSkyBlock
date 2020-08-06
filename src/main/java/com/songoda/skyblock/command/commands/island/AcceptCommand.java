@@ -140,20 +140,17 @@ public class AcceptCommand extends SubCommand {
                                             soundManager.playSound(loopPlayer, CompatibleSound.ENTITY_FIREWORK_ROCKET_BLAST.getSound(), 1.0F,
                                                     1.0F);
 
-                                            if (scoreboardManager != null) {
-                                                if (island.getRole(IslandRole.Member).size() == 1
-                                                        && island.getRole(IslandRole.Operator).size() == 0) {
-                                                    scoreboardManager.updatePlayerScoreboardType(loopPlayer);
-                                                }
+                                            
+                                            if (island.getRole(IslandRole.Member).size() == 1
+                                                    && island.getRole(IslandRole.Operator).size() == 0) {
+                                                scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                             }
                                         }
                                     }
                                 }
                             }
-
-                            if (scoreboardManager != null) {
-                                scoreboardManager.updatePlayerScoreboardType(player);
-                            }
+    
+                            scoreboardManager.updatePlayerScoreboardType(player);
                         }
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Accept.Owner.Message"));
