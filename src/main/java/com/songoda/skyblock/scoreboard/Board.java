@@ -16,12 +16,12 @@ class Board {
     
     private final Player player;
     private final SkyBlock plugin;
-    public Scoreboard board;
+    private final Scoreboard board;
     private final Objective objective;
 
     private final HashMap<Integer, String> cache = new HashMap<>();
 
-    public Board(SkyBlock plugin, Player player, int lineCount) {
+    Board(SkyBlock plugin, Player player, int lineCount) {
         this.player = player;
         this.plugin = plugin;
         this.board = this.plugin.getServer().getScoreboardManager().getNewScoreboard();
@@ -41,7 +41,7 @@ class Board {
         }
     }
 
-    public void setTitle(String string) {
+    void setTitle(String string) {
         PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
 
         if(string == null) string = "";
@@ -54,7 +54,7 @@ class Board {
         }
     }
 
-    public void setLine(int line, String string) {
+    void setLine(int line, String string) {
         Team t = board.getTeam(String.valueOf(line));
         if(string == null) string = "";
 
@@ -72,6 +72,10 @@ class Board {
             t.setPrefix(parts.getPrefix());
             t.setSuffix(parts.getSuffix());
         }
+    }
+    
+    Scoreboard getBoard() {
+        return board;
     }
     
     private ScoreboardLine convertIntoPieces(String line, int allowed_line_size) {

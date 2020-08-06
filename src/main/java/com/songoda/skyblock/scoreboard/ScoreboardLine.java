@@ -5,7 +5,7 @@ class ScoreboardLine {
     private final String prefix;
     private final String suffix;
 
-    public ScoreboardLine(String prefix, String suffix, int limit) {
+    ScoreboardLine(String prefix, String suffix, int limit) {
         if(prefix.length() > limit) {
             prefix = prefix.substring(0, limit);
         }
@@ -16,11 +16,11 @@ class ScoreboardLine {
         this.suffix = suffix;
     }
 
-    public String getPrefix() {
+    String getPrefix() {
         return prefix;
     }
 
-    public String getSuffix() {
+    String getSuffix() {
         return suffix;
     }
 }

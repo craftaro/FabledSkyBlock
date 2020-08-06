@@ -14,7 +14,7 @@ class Row {
 
     public boolean static_line;
 
-    public Row(List<String> lines, int interval) {
+    Row(List<String> lines, int interval) {
         this.lines = lines;
         this.interval = interval;
         this.current = 0;
@@ -29,7 +29,7 @@ class Row {
         }
     }
 
-    public void update() {
+    void update() {
         if (!static_line) {
             if (count >= interval) {
                 count = 0;
@@ -43,7 +43,7 @@ class Row {
         }
     }
 
-    public String getLine() {
+    String getLine() {
         return this.line;
     }
     

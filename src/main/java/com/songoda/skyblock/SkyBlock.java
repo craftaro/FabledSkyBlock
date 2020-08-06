@@ -151,11 +151,7 @@ public class SkyBlock extends SongodaPlugin {
         cooldownManager = new CooldownManager(this);
         limitationHandler = new LimitationInstanceHandler();
         fabledChallenge = new FabledChallenge(this);
-
-        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable")) {
-            scoreboardManager = new ScoreboardManager(this);
-        }
-
+        scoreboardManager = new ScoreboardManager(this);
         inviteManager = new InviteManager(this);
         biomeManager = new BiomeManager(this);
         levellingManager = new IslandLevelManager(this);

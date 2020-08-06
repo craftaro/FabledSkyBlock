@@ -21,7 +21,7 @@ class Driver extends BukkitRunnable {
     private final List<Holder> holders;
     private final ScoreboardType boardType;
 
-    public Driver(SkyBlock plugin, ScoreboardType boardType) {
+    Driver(SkyBlock plugin, ScoreboardType boardType) {
         this.plugin = plugin;
         FileManager fileManager = plugin.getFileManager();
         FileConfiguration scoreboardLoad = fileManager.getConfig(
@@ -50,27 +50,27 @@ class Driver extends BukkitRunnable {
         }
     }
 
-    public List<Row> getRows() {
+    List<Row> getRows() {
         return rows;
     }
 
-    public Row getTitle() {
+    Row getTitle() {
         return title;
     }
 
-    public void registerHolder(Holder holder) {
+    void registerHolder(Holder holder) {
         holders.add(holder);
     }
 
-    public void unregisterHolder(Holder holder) {
+    void unregisterHolder(Holder holder) {
         holders.remove(holder);
     }
 
-    public void unregisterHolder(Player player) {
+    void unregisterHolder(Player player) {
         Iterator<Holder> it = holders.iterator();
         while(it.hasNext()) {
             Holder holder = it.next();
-            if(holder.player.equals(player)) {
+            if(holder.getPlayer().equals(player)) {
                 it.remove();
                 break;
             }
@@ -89,7 +89,7 @@ class Driver extends BukkitRunnable {
         }
     }
 
-    public ScoreboardType getBoardType() {
+    ScoreboardType getBoardType() {
         return boardType;
     }
 }

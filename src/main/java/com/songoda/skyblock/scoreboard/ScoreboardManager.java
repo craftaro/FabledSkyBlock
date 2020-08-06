@@ -21,21 +21,29 @@ import java.util.Set;
 
 public class ScoreboardManager extends Manager {
 
+    private final boolean enabled;
     private final Scoreboard emptyScoreboard;
     private final List<Driver> drivers;
     private final Set<Player> disabledPlayers;
 
     public ScoreboardManager(SkyBlock plugin) {
         super(plugin);
+        FileManager fileManager = plugin.getFileManager();
+        
+        this.enabled = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Scoreboard.Enable", true);
+        
         this.drivers = new ArrayList<>();
         this.disabledPlayers = new ConcurrentSet<>();
         this.emptyScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
-        for(ScoreboardType type : ScoreboardType.values()) {
-            newDriver(type);
+        if(enabled) {
+            for(ScoreboardType type : ScoreboardType.values()) {
+                newDriver(type);
+            }
+    
+            updateOnlinePlayers();
         }
-
-        updateOnlinePlayers();
     }
 
     @Override
@@ -50,46 +58,50 @@ public class ScoreboardManager extends Manager {
     }
 
     public void updateOnlinePlayers() {
-        for(Player player : plugin.getServer().getOnlinePlayers()) {
-            updatePlayerScoreboardType(player);
+        if(enabled) {
+            for(Player player : plugin.getServer().getOnlinePlayers()) {
+                updatePlayerScoreboardType(player);
+            }
         }
     }
 
     public void updatePlayerScoreboardType(Player player) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        IslandManager islandManager = plugin.getIslandManager();
-
-        PlayerData playerData = playerDataManager.getPlayerData(player);
-        Island island = islandManager.getIslandByPlayer(player);
-
-        if(playerData.isScoreboard()) {
-            ScoreboardType type;
-            if(island != null) {
-                Visit islandVisit = island.getVisit();
-                boolean hasVisitors = (islandVisit != null &&
-                        islandVisit.getVisitors() != null &&
-                        islandVisit.getVisitors().size() > 1);
-                boolean hasMembers = (islandVisit != null &&
-                        islandVisit.getMembers() > 1);
-
-                if(hasMembers) {
-                    if(hasVisitors) {
-                        type = ScoreboardType.ISLAND_TEAM_VISITORS;
+        if(enabled) {
+            PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+            IslandManager islandManager = plugin.getIslandManager();
+    
+            PlayerData playerData = playerDataManager.getPlayerData(player);
+            Island island = islandManager.getIslandByPlayer(player);
+    
+            if(playerData.isScoreboard()) {
+                ScoreboardType type;
+                if(island != null) {
+                    Visit islandVisit = island.getVisit();
+                    boolean hasVisitors = (islandVisit != null &&
+                            islandVisit.getVisitors() != null &&
+                            islandVisit.getVisitors().size() > 1);
+                    boolean hasMembers = (islandVisit != null &&
+                            islandVisit.getMembers() > 1);
+            
+                    if(hasMembers) {
+                        if(hasVisitors) {
+                            type = ScoreboardType.ISLAND_TEAM_VISITORS;
+                        } else {
+                            type = ScoreboardType.ISLAND_TEAM_EMPTY;
+                        }
                     } else {
-                        type = ScoreboardType.ISLAND_TEAM_EMPTY;
+                        if(hasVisitors) {
+                            type = ScoreboardType.ISLAND_SOLO_VISITORS;
+                        } else {
+                            type = ScoreboardType.ISLAND_SOLO_EMPTY;
+                        }
                     }
                 } else {
-                    if(hasVisitors) {
-                        type = ScoreboardType.ISLAND_SOLO_VISITORS;
-                    } else {
-                        type = ScoreboardType.ISLAND_SOLO_EMPTY;
-                    }
+                    type = ScoreboardType.NO_ISLAND;
                 }
-            } else {
-                type = ScoreboardType.NO_ISLAND;
-            }
-            synchronized (player) {
-                setPlayerScoreboard(player, type);
+                synchronized (player) {
+                    setPlayerScoreboard(player, type);
+                }
             }
         }
     }
@@ -97,28 +109,36 @@ public class ScoreboardManager extends Manager {
     
     
     public void setPlayerScoreboard(Player player, ScoreboardType type) {
-        for(Driver driver : drivers) {
-            driver.unregisterHolder(player);
-            if(driver.getBoardType().equals(type)) {
-                driver.registerHolder(new Holder(plugin, driver, player));
+        if(enabled) {
+            for(Driver driver : drivers) {
+                driver.unregisterHolder(player);
+                if(driver.getBoardType().equals(type)) {
+                    driver.registerHolder(new Holder(plugin, driver, player));
+                }
             }
         }
     }
     
     public void unregisterPlayer(Player player) {
-        for(Driver driver : drivers) {
-            driver.unregisterHolder(player);
+        if(enabled) {
+            for(Driver driver : drivers) {
+                driver.unregisterHolder(player);
+            }
+            player.setScoreboard(emptyScoreboard);
         }
-        player.setScoreboard(emptyScoreboard);
     }
 
     public void addDisabledPlayer(Player player) {
-        disabledPlayers.add(player);
-        Bukkit.getScheduler().runTask(plugin, () -> this.unregisterPlayer(player));
+        if(enabled) {
+            disabledPlayers.add(player);
+            Bukkit.getScheduler().runTask(plugin, () -> this.unregisterPlayer(player));
+        }
     }
 
     public void removeDisabledPlayer(Player player) {
-        disabledPlayers.remove(player);
+        if(enabled) {
+            disabledPlayers.remove(player);
+        }
     }
 
     public boolean isPlayerDisabled(Player player) {
@@ -140,9 +160,11 @@ public class ScoreboardManager extends Manager {
     }
     
     public void clearDrivers() {
-        for(Driver driver : drivers)
-            driver.cancel();
-        drivers.clear();
+        if(enabled) {
+            for(Driver driver : drivers)
+                driver.cancel();
+            drivers.clear();
+        }
     }
     
     public Scoreboard getEmptyScoreboard() {
