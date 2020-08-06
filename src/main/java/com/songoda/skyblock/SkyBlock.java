@@ -121,8 +121,12 @@ public class SkyBlock extends SongodaPlugin {
         if(paper = ServerProject.isServer(ServerProject.PAPER)){
             try {
                 Bukkit.spigot().getClass().getMethod("getPaperConfig");
-                paperAsync = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
-                        Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                    paperAsync = true;
+                } else {
+                    paperAsync = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
+                            Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
+                }
             } catch (NoSuchMethodException ignored) {
                 paperAsync = false;
             }
