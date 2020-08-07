@@ -26,19 +26,21 @@ class Holder {
         PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
         ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
 
-        if (!scoreboardManager.isPlayerDisabled(player)) {
-            board.setTitle(driver.getTitle().getLine());
-
-            int count = 0;
-            for(Row row : driver.getRows()) {
-                String line = placeholderManager.parsePlaceholders(player, row.getLine());
-                board.setLine(count, line);
-                count++;
+        if(scoreboardManager != null) {
+            if (!scoreboardManager.isPlayerDisabled(player)) {
+                board.setTitle(driver.getTitle().getLine());
+        
+                int count = 0;
+                for(Row row : driver.getRows()) {
+                    String line = placeholderManager.parsePlaceholders(player, row.getLine());
+                    board.setLine(count, line);
+                    count++;
+                }
+        
+                this.player.setScoreboard(board.getBoard());
+            } else {
+                this.player.setScoreboard(scoreboardManager.getEmptyScoreboard());
             }
-
-            this.player.setScoreboard(board.getBoard());
-        } else {
-            this.player.setScoreboard(scoreboardManager.getEmptyScoreboard());
         }
     }
     
