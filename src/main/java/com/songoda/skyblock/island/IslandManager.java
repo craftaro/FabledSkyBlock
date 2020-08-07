@@ -1257,7 +1257,7 @@ public class IslandManager {
             if (!island.isCoopPlayer(visitor)) {
                 Player targetPlayer = Bukkit.getServer().getPlayer(visitor);
                 LocationUtil.teleportPlayerToSpawn(targetPlayer);
-                messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Closed.Message").replace("%player", islandOwnerPlayerName));
+                messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Closed.Island.Message").replace("%player", islandOwnerPlayerName));
             }
         }
     }
