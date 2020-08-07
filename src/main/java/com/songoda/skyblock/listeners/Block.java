@@ -837,47 +837,6 @@ public class Block implements Listener {
     }
     
     @EventHandler(ignoreCancelled = true)
-    public void onSponge(SpongeAbsorbEvent event) {
-        IslandLevelManager islandLevelManager = plugin.getLevellingManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        StackableManager stackableManager = plugin.getStackableManager();
-        WorldManager worldManager = plugin.getWorldManager();
-    
-        org.bukkit.block.Block block = event.getBlock();
-    
-        if (worldManager.isIslandWorld(block.getWorld())) {
-            Location blockLocation = block.getLocation();
-    
-            Island island = islandManager.getIslandAtLocation(blockLocation);
-            if (island != null) {
-                if (plugin.getPermissionManager().processPermission(event, island) && !event.isCancelled()) {
-                    if (stackableManager == null || !stackableManager.isStacked(blockLocation)) {
-                        IslandLevel level = island.getLevel();
-    
-                        CompatibleMaterial material = CompatibleMaterial.SPONGE;
-                        if (level.hasMaterial(material.name())) {
-                            long materialAmount = level.getMaterialAmount(material.name());
-    
-                            if (materialAmount - 1 <= 0) {
-                                level.removeMaterial(material.name());
-                            } else {
-                                level.setMaterialAmount(material.name(), materialAmount - 1);
-                            }
-    
-                            Bukkit.getScheduler().runTask(plugin, () -> islandLevelManager.updateLevel(island, blockLocation));
-                        }
-                    } else {
-                        event.setCancelled(true);
-                    }
-                }
-            } else {
-                event.setCancelled(true);
-            }
-        }
-    
-    }
-    
-    @EventHandler(ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
         org.bukkit.block.Block block = event.getBlock();
         WorldManager worldManager = plugin.getWorldManager();
