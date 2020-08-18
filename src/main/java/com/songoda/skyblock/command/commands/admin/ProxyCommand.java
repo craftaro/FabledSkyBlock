@@ -8,6 +8,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,19 +30,20 @@ public class ProxyCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
             OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
-            UUID islandOwnerUUID = targetPlayerOffline.getOwner();
 
-            if (islandManager.containsIsland(islandOwnerUUID)) {
+            UUID userUUID = targetPlayerOffline.getUUID();
+
+            if (islandManager.getIsland(Bukkit.getOfflinePlayer(userUUID)) != null) {
                 if (islandManager.isPlayerProxyingAnotherPlayer(((Player)sender).getUniqueId())) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.Proxy.IsOffPlayer.Message")
@@ -55,7 +57,7 @@ public class ProxyCommand extends SubCommand {
                                     .replace("%player", targetPlayerOffline.getName()));
                     soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                    islandManager.addProxiedPlayer(((Player)sender).getUniqueId(), targetPlayerOffline.getUniqueId());
+                    islandManager.addProxiedPlayer(((Player)sender).getUniqueId(), userUUID);
                 }
             }
         } else if (args.length == 0){

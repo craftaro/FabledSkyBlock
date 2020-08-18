@@ -1,18 +1,16 @@
 package com.songoda.skyblock.challenge.challenge;
 
-import java.io.File;
-import java.util.List;
-import java.util.UUID;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
 
 public class ItemChallenge {
 	private Challenge challenge;
@@ -40,14 +38,24 @@ public class ItemChallenge {
 	}
 
 	public ItemStack createItem(UUID player, int amount) {
+		FileManager.Config langConfig = SkyBlock.getInstance().getFileManager()
+				.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"));
+		FileConfiguration langConfigLoad = langConfig.getFileConfiguration();
+		
 		ItemStack is = type.getItem();
 		is.setAmount(this.amount);
 		// Air
 		ItemMeta im = is.getItemMeta();
 		if (im != null) {
+			String maxAmount;
+			if(challenge.getMaxTimes() == Integer.MAX_VALUE) {
+				maxAmount = langConfigLoad.getString("Challenge.Inventory.Unlimited.Message");
+			} else {
+				maxAmount = String.valueOf(challenge.getMaxTimes());
+			}
 			im.setDisplayName(ChatColor.translateAlternateColorCodes('&',
 					itemTitle.replace("%challenge", challenge.getName()).replace("%amount", Integer.toString(amount))
-							.replace("%max", Integer.toString(challenge.getMaxTimes()))));
+							.replace("%max", maxAmount)));
 			im.setLore(lore);
 			is.setItemMeta(im);
 		}

@@ -1,12 +1,10 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
@@ -81,7 +79,7 @@ public class ExplosionsPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onTNTInteract(PlayerInteractEvent event) {
-        if(event.getItem().getType().equals(CompatibleMaterial.FLINT_AND_STEEL.getMaterial())
+        if(event.getItem() != null && event.getItem().getType().equals(CompatibleMaterial.FLINT_AND_STEEL.getMaterial())
                 && event.getClickedBlock().getType().equals(CompatibleMaterial.TNT.getBlockMaterial())){
             cancelAndMessage(event, event.getPlayer(), plugin, plugin.getMessageManager());
         }

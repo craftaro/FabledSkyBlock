@@ -1,0 +1,567 @@
+# All the Minecraft Biomes
+# Use "Data" only on pre - 1.13
+# Normal: true means that the biome is available in the Overworld.
+# Nether and The End will come in future updates.
+
+Biomes:
+  BADLANDS:
+    DisplayName: '&6Badlands'
+    DisplayItem:
+      Material: WHITE_TERRACOTTA
+      Data: 0
+    Permission: true
+    Normal: true
+  BADLANDS_PLATEAU:
+    DisplayName: '&6Badlands Plateau'
+    DisplayItem:
+      Material: RED_TERRACOTTA
+      Data: 14
+    Permission: true
+    Normal: true
+  BAMBOO_JUNGLE:
+    DisplayName: '&6Bamboo Jungle'
+    DisplayItem:
+      Material: BAMBOO
+      Data: 0
+    Permission: true
+    Normal: true
+  BAMBOO_JUNGLE_HILLS:
+    DisplayName: '&6Bamboo Jungle Hills'
+    DisplayItem:
+      Material: SCAFFOLDING
+      Data: 0
+    Permission: true
+    Normal: true
+  BASALT_DELTAS:
+    DisplayName: '&6Basalt Deltas'
+    DisplayItem:
+      Material: BASALT
+      Data: 0
+    Permission: true
+    Normal: false
+  BEACH:
+    DisplayName: '&6Beach'
+    DisplayItem:
+      Material: SAND
+      Data: 0
+    Permission: true
+    Normal: true
+  BIRCH_FOREST:
+    DisplayName: '&6Birch Forest'
+    DisplayItem:
+      Material: BIRCH_SAPLING
+      Data: 0
+    Permission: true
+    Normal: true
+  BIRCH_FOREST_HILLS:
+    DisplayName: '&6Birch Forest Hills'
+    DisplayItem:
+      Material: BIRCH_LEAVES
+      Data: 0
+    Permission: true
+    Normal: true
+  COLD_OCEAN:
+    DisplayName: '&6Cold Ocean'
+    DisplayItem:
+      Material: SEAGRASS
+      Data: 0
+    Permission: true
+    Normal: true
+  CRIMSON_FOREST:
+    DisplayName: '&6Crimson Forest'
+    DisplayItem:
+      Material: WEEPING_VINES
+      Data: 0
+    Permission: true
+    Normal: false
+  DARK_FOREST:
+    DisplayName: '&6Dark Forest'
+    DisplayItem:
+      Material: DARK_OAK_SAPLING
+      Data: 0
+    Permission: true
+    Normal: true
+  DARK_FOREST_HILLS:
+    DisplayName: '&6Dark Forest Hills'
+    DisplayItem:
+      Material: DARK_OAK_LEAVES
+      Data: 0
+    Permission: true
+    Normal: true
+  DEEP_COLD_OCEAN:
+    DisplayName: '&6Deep Cold Ocean'
+    DisplayItem:
+      Material: COD
+      Data: 0
+    Permission: true
+    Normal: true
+  DEEP_FROZEN_OCEAN:
+    DisplayName: '&6Deep Frozen Ocean'
+    DisplayItem:
+      Material: ICE
+      Data: 0
+    Permission: true
+    Normal: true
+  DEEP_LUKEWARM_OCEAN:
+    DisplayName: '&6Deep Lukewarm Ocean'
+    DisplayItem:
+      Material: PUFFERFISH
+      Data: 0
+    Permission: true
+    Normal: true
+  DEEP_OCEAN:
+    DisplayName: '&6Deep Ocean'
+    DisplayItem:
+      Material: GRAVEL
+      Data: 0
+    Permission: true
+    Normal: true
+  DEEP_WARM_OCEAN:
+    DisplayName: '&6Deep Warm Ocean'
+    DisplayItem:
+      Material: TROPICAL_FISH
+      Data: 0
+    Permission: true
+    Normal: true
+  DESERT:
+    DisplayName: '&6Desert'
+    DisplayItem:
+      Material: CACTUS
+      Data: 0
+    Permission: true
+    Normal: true
+  DESERT_HILLS:
+    DisplayName: '&6Desert Hills'
+    DisplayItem:
+      Material: RED_SAND
+      Data: 0
+    Permission: true
+    Normal: true
+  DESERT_LAKES:
+    DisplayName: '&6Desert Lakes'
+    DisplayItem:
+      Material: SANDSTONE
+      Data: 0
+    Permission: true
+    Normal: true
+  END_BARRENS:
+    DisplayName: '&6End Barrens'
+    DisplayItem:
+      Material: END_STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  END_HIGHLANDS:
+    DisplayName: '&6End HighLands'
+    DisplayItem:
+      Material: END_STONE_BRICKS
+      Data: 0
+    Permission: true
+    Normal: false
+  END_MIDLANDS:
+    DisplayName: '&6End Midlands'
+    DisplayItem:
+      Material: PURPUR_BLOCK
+      Data: 0
+    Permission: true
+    Normal: false
+  ERODED_BADLANDS:
+    DisplayName: '&6Eroded Badlands'
+    DisplayItem:
+      Material: PINK_TERRACOTTA
+      Data: 0
+    Permission: true
+    Normal: true
+  FLOWER_FOREST:
+    DisplayName: '&6Flower Forest'
+    DisplayItem:
+      Material: SUNFLOWER
+      Data: 0
+    Permission: true
+    Normal: true
+  FOREST:
+    DisplayName: '&6Forest'
+    DisplayItem:
+      Material: APPLE
+      Data: 0
+    Permission: true
+    Normal: true
+  FROZEN_OCEAN:
+    DisplayName: '&6Frozen Ocean'
+    DisplayItem:
+      Material: ICE
+      Data: 0
+    Permission: true
+    Normal: true
+  FROZEN_RIVER:
+    DisplayName: '&6Frozen River'
+    DisplayItem:
+      Material: COD
+      Data: 0
+    Permission: true
+    Normal: true
+  GIANT_SPRUCE_TAIGA:
+    DisplayName: '&6Giant Spruce Taiga'
+    DisplayItem:
+      Material: SPRUCE_LOG
+      Data: 0
+    Permission: true
+    Normal: true
+  GIANT_SPRUCE_TAIGA_HILLS:
+    DisplayName: '&6Giant Spruce Taiga Hills'
+    DisplayItem:
+      Material: SPRUCE_LEAVES
+      Data: 0
+    Permission: true
+    Normal: true
+  GIANT_TREE_TAIGA:
+    DisplayName: 'Giant Tree Taiga'
+    DisplayItem:
+      Material: SPRUCE_SAPLING
+      Data: 0
+    Permission: true
+    Normal: true
+  GIANT_TREE_TAIGA_HILLS:
+    DisplayName: '&6Giant Tree Taiga Hills'
+    DisplayItem:
+      Material: SPRUCE_WOOD
+      Data: 0
+    Permission: true
+    Normal: true
+  GRAVELLY_MOUNTAINS:
+    DisplayName: '&6Gravelly Mountains'
+    DisplayItem:
+      Material: GRAVEL
+      Data: 0
+    Permission: true
+    Normal: true
+  ICE_SPIKES:
+    DisplayName: '&6Ice Spikes'
+    DisplayItem:
+      Material: PACKED_ICE
+      Data: 0
+    Permission: true
+    Normal: true
+  JUNGLE:
+    DisplayName: '&6Jungle'
+    DisplayItem:
+      Material: VINES
+      Data: 0
+    Permission: true
+    Normal: true
+  JUNGLE_EDGE:
+    DisplayName: '&6Jungle Edge'
+    DisplayItem:
+      Material: JUNGLE_TREE_LOG
+      Data: 0
+    Permission: true
+    Normal: true
+  JUNGLE_HILLS:
+    DisplayName: '&6Jungle Hills'
+    DisplayItem:
+      Material: JUNGLE_TREE_SAPLING
+      Data: 0
+    Permission: true
+    Normal: true
+  LUKEWARM_OCEAN:
+    DisplayName: '&6Lukewarm Ocean'
+    DisplayItem:
+      Material: KELP
+      Data: 0
+    Permission: true
+    Normal: true
+  MODIFIED_BADLANDS_PLATEAU:
+    DisplayName: '&6Modified Badlands Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  MODIFIED_GRAVELLY_MOUNTAINS:
+    DisplayName: '&6Modified Gravelly Mountains'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  MODIFIED_JUNGLE:
+    DisplayName: '&6Modified Jungle'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  MODIFIED_JUNGLE_EDGE:
+    DisplayName: '&6Modified Jungle Edge'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  MODIFIED_WOODED_BADLANDS_PLATEAU:
+    DisplayName: '&6Modified Wooden Badlands Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  MOUNTAINS:
+    DisplayName: '&6Mountains'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: true
+  MOUNTAIN_EDGE:
+    DisplayName: '&6Mountain Edge'
+    DisplayItem:
+      Material: DIORITE
+      Data: 0
+    Permission: true
+    Normal: true
+  MUSHROOM_FIELDS:
+    DisplayName: '&6Mushroom Fields'
+    DisplayItem:
+      Material: RED_MUSHROOM
+      Data: 0
+    Permission: true
+    Normal: true
+  MUSHROOM_FIELD_SHORE:
+    DisplayName: '&6Mushroom Field Shore'
+    DisplayItem:
+      Material: BROWN_MUSHROOM
+      Data: 0
+    Permission: true
+    Normal: true
+  # PRE-1.16
+  NETHER:
+    DisplayName: '&6Nether'
+    DisplayItem:
+      Material: NETHERRACK
+      Data: 0
+    Permission: true
+    Normal: false
+  NETHER_WASTES:
+    DisplayName: '&6Nether Wastes'
+    DisplayItem:
+      Material: NETHER_WART
+      Data: 0
+    Permission: true
+    Normal: false
+  OCEAN:
+    DisplayName: '&6Ocean'
+    DisplayItem:
+      Material: SEA_LANTERN
+      Data: 0
+    Permission: true
+    Normal: true
+  PLAINS:
+    DisplayName: '&6Plains'
+    DisplayItem:
+      Material: GRASS_BLOCK
+      Data: 0
+    Permission: true
+    Normal: true
+  RIVER:
+    DisplayName: '&6River'
+    DisplayItem:
+      Material: SUGAR_CANE
+      Data: 0
+    Permission: true
+    Normal: true
+  SAVANNA:
+    DisplayName: '&6Savanna'
+    DisplayItem:
+      Material: GRASS
+      Data: 0
+    Permission: true
+    Normal: true
+  SAVANNA_PLATEAU:
+    DisplayName: '&6Savanna Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  SHATTERED_SAVANNA:
+    DisplayName: '&6Shattered Savanna'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  SHATTERED_SAVANNA_PLATEAU:
+    DisplayName: '&6Shattered Savanna Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  SMALL_END_ISLANDS:
+    DisplayName: '&6Small End Island'
+    DisplayItem:
+      Material: PURPUR_PILLAR
+      Data: 0
+    Permission: true
+    Normal: false
+  SNOWY_BEACH:
+    DisplayName: '&6Snowy Beach'
+    DisplayItem:
+      Material: RABBIT_FOOT
+      Data: 0
+    Permission: true
+    Normal: true
+  SNOWY_MOUNTAINS:
+    DisplayName: '&6Snowy Mountains'
+    DisplayItem:
+      Material: SNOW_BLOCK
+      Data: 0
+    Permission: true
+    Normal: true
+  SNOWY_TAIGA:
+    DisplayName: '&6Snowy Taiga'
+    DisplayItem:
+      Material: SPRUCE_SAPLING
+      Data: 0
+    Permission: true
+    Normal: true
+  SNOWY_TAIGA_HILLS:
+    DisplayName: '&6Snowy Taiga Hills'
+    DisplayItem:
+      Material: SNOWBALL
+      Data: 0
+    Permission: true
+    Normal: true
+  SNOWY_TAIGA_MOUNTAINS:
+    DisplayName: '&6Snowy Taiga Mountains'
+    DisplayItem:
+      Material: SWEET_BERRIES
+      Data: 0
+    Permission: true
+    Normal: true
+  SNOWY_TUNDRA:
+    DisplayName: '&6Snowy Tundra'
+    DisplayItem:
+      Material: SNOW
+      Data: 0
+    Permission: true
+    Normal: true
+  SOUL_SAND_VALLEY:
+    DisplayName: '&6Soul Sand Valley'
+    DisplayItem:
+      Material: SOULSAND
+      Data: 0
+    Permission: true
+    Normal: false
+  STONE_SHORE:
+    DisplayName: '&6Stone Shore'
+    DisplayItem:
+      Material: CLAY
+      Data: 0
+    Permission: true
+    Normal: true
+  SUNFLOWER_PLAINS:
+    DisplayName: '&6Sunflower Plains'
+    DisplayItem:
+      Material: SUNFLOWER
+      Data: 0
+    Permission: true
+    Normal: true
+  SWAMP:
+    DisplayName: '&6Swamp'
+    DisplayItem:
+      Material: LILYPAD
+      Data: 0
+    Permission: true
+    Normal: true
+  SWAMP_HILLS:
+    DisplayName: '&6Swamp Hills'
+    DisplayItem:
+      Material: SLIME_BLOCK
+      Data: 0
+    Permission: true
+    Normal: true
+  TAIGA:
+    DisplayName: '&6Taiga'
+    DisplayItem:
+      Material: SPRUCE_WOOD
+      Data: 0
+    Permission: true
+    Normal: true
+  TAIGA_HILLS:
+    DisplayName: '&6Taiga Hills'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  TAIGA_MOUNTAINS:
+    DisplayName: '&6Taiga Mountains'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  TALL_BIRCH_FOREST:
+    DisplayName: '&6Tall Birch Forest'
+    DisplayItem:
+      Material: BIRCH_LOG
+      Data: 0
+    Permission: true
+    Normal: true
+  TALL_BIRCH_HILLS:
+    DisplayName: '&6Tall Birch Hills'
+    DisplayItem:
+      Material: BIRCH_PLANKS
+      Data: 0
+    Permission: true
+    Normal: true
+  THE_END:
+    DisplayName: '&6The End'
+    DisplayItem:
+      Material: CHORUS_FRUIT
+      Data: 0
+    Permission: true
+    Normal: false
+  THE_VOID:
+    DisplayName: '&6The Void'
+    DisplayItem:
+      Material: BEDROCK
+      Data: 0
+    Permission: true
+    Normal: false
+  WARM_OCEAN:
+    DisplayName: '&6Warm Ocean'
+    DisplayItem:
+      Material: BRAIN_CORAL
+      Data: 0
+    Permission: true
+    Normal: true
+  WARPED_FOREST:
+    DisplayName: '&6Warped Forest'
+    DisplayItem:
+      Material: WARPED_STEM
+      Data: 0
+    Permission: true
+    Normal: false
+  WOODED_BADLANDS_PLATEAU:
+    DisplayName: '&6Wooded Badlands Plateau'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  WOODED_HILLS:
+    DisplayName: '&6Wooded Hills'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false
+  WOODED_MOUNTAINS:
+    DisplayName: '&6Wooded Mountains'
+    DisplayItem:
+      Material: STONE
+      Data: 0
+    Permission: true
+    Normal: false

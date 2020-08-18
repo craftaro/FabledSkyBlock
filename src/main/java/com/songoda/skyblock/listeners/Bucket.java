@@ -6,7 +6,6 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
-
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.entity.Player;
@@ -19,10 +18,10 @@ import java.io.File;
 
 public class Bucket implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Bucket(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Bucket(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -30,16 +29,16 @@ public class Bucket implements Listener {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlockClicked();
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
         CompatibleMaterial clickedBlock = CompatibleMaterial.getBlockMaterial(event.getBlockClicked().getType());
 
         if (clickedBlock == CompatibleMaterial.WATER
                 || clickedBlock == CompatibleMaterial.LAVA) {
-            if (skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
+            if (plugin.getWorldManager().isIslandWorld(block.getWorld())) {
                 Island island = islandManager.getIslandAtLocation(block.getLocation());
                 // Check permissions.
-                if (!skyblock.getPermissionManager().processPermission(event, player, island))
+                if (!plugin.getPermissionManager().processPermission(event, player, island))
                     return;
             }
         }
@@ -50,17 +49,17 @@ public class Bucket implements Listener {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getBlockClicked().getRelative(event.getBlockFace());
 
-        WorldManager worldManager = skyblock.getWorldManager();
-        IslandManager islandManager = skyblock.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
-        if (skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
+        if (plugin.getWorldManager().isIslandWorld(block.getWorld())) {
             Island island = islandManager.getIslandAtLocation(block.getLocation());
             // Check permissions.
-            if (!skyblock.getPermissionManager().processPermission(event, player, island))
+            if (!plugin.getPermissionManager().processPermission(event, player, island))
                 return;
         }
 
-        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+        if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
             return;
 
         Island island = islandManager.getIslandAtLocation(block.getLocation());
@@ -72,10 +71,10 @@ public class Bucket implements Listener {
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
             event.setCancelled(true);
-            skyblock.getMessageManager().sendMessage(player,
-                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+            plugin.getMessageManager().sendMessage(player,
+                    plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
                             .getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
-            skyblock.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            plugin.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }
 }

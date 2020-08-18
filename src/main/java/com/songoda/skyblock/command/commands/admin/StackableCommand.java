@@ -1,20 +1,18 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import java.io.File;
-import java.util.Set;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.StringUtil;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
  
 
 public class StackableCommand extends SubCommand {
@@ -22,14 +20,14 @@ public class StackableCommand extends SubCommand {
     @SuppressWarnings("deprecation")
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        final MessageManager messageManager = skyblock.getMessageManager();
+        final MessageManager messageManager = plugin.getMessageManager();
 
         if (args.length == 0) {
             player.sendMessage(StringUtil.color("&e/island admin stackable setsize <size> &7- &f&osets the target block's stack size if applicable"));
             return;
         }
 
-        final FileConfiguration messageConfig = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+        final FileConfiguration messageConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
 
         if (args[0].equalsIgnoreCase("setsize")) {
 
@@ -54,7 +52,7 @@ public class StackableCommand extends SubCommand {
                 return;
             }
 
-            final StackableManager stackableManager = skyblock.getStackableManager();
+            final StackableManager stackableManager = plugin.getStackableManager();
             final CompatibleMaterial type = CompatibleMaterial.getMaterial(block.getType());
 
             if (!stackableManager.isStackableMaterial(type)) {

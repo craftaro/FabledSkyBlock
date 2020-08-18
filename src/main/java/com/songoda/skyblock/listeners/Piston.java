@@ -17,10 +17,10 @@ import java.io.File;
 
 public class Piston implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Piston(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Piston(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     // Prevent point farming dragon eggs.
@@ -29,8 +29,8 @@ public class Piston implements Listener {
 
         Block block = event.getBlock().getRelative(event.getDirection());
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
 
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
@@ -38,7 +38,7 @@ public class Piston implements Listener {
 
         if (island == null || CompatibleMaterial.DRAGON_EGG != CompatibleMaterial.getMaterial(block)) return;
 
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (!configLoad.getBoolean("Island.Block.Level.Enable")) return;

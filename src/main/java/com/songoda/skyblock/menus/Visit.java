@@ -9,6 +9,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -19,7 +20,6 @@ import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-
 import com.songoda.skyblock.visit.VisitManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,16 +45,16 @@ public class Visit {
     }
 
     public void open(Player player, Visit.Type type, Visit.Sort sort) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        VisitManager visitManager = skyblock.getVisitManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        VisitManager visitManager = plugin.getVisitManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+        FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                 .getFileConfiguration();
 
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -109,7 +109,7 @@ public class Visit {
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                    Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
                 } else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         configLoad.getString("Menu.Visit.Item.Nothing.Displayname"))))) {
@@ -123,13 +123,13 @@ public class Visit {
                         playerData.setPage(MenuType.VISIT, playerData.getPage(MenuType.VISIT) - 1);
                         soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
                     } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Visit.Item.Next.Displayname")))) {
                         playerData.setPage(MenuType.VISIT, playerData.getPage(MenuType.VISIT) + 1);
                         soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
                     } else {
                         String targetPlayerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
                         UUID targetPlayerUUID;
@@ -145,6 +145,7 @@ public class Visit {
                         if (visitManager.hasIsland(targetPlayerUUID)) {
                             com.songoda.skyblock.visit.Visit visit = visitManager.getIsland(targetPlayerUUID);
                             boolean isCoopPlayer = false;
+                            boolean isWhitelistedPlayer = false;
                             org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer()
                                     .getOfflinePlayer(targetPlayerUUID);
 
@@ -152,11 +153,15 @@ public class Visit {
                                 if (islandManager.getIsland(offlinePlayer).isCoopPlayer(player.getUniqueId())) {
                                     isCoopPlayer = true;
                                 }
+                                if (visit.getStatus().equals(IslandStatus.WHITELISTED) &&
+                                        islandManager.getIsland(offlinePlayer).isPlayerWhitelisted(player.getUniqueId())) {
+                                    isWhitelistedPlayer = true;
+                                }
                             }
 
-                            if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass")
+                            if (visit.getStatus().equals(IslandStatus.OPEN) || isCoopPlayer || isWhitelistedPlayer || player.hasPermission("fabledskyblock.bypass")
                                     || player.hasPermission("fabledskyblock.bypass.*")
-                                    || player.hasPermission("fabledskyblock.*") || visit.isOpen()) {
+                                    || player.hasPermission("fabledskyblock.*")) {
                                 if (!islandManager.containsIsland(targetPlayerUUID)) {
                                     islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
                                 }
@@ -166,7 +171,7 @@ public class Visit {
                                 if ((!island.hasRole(IslandRole.Member, player.getUniqueId())
                                         && !island.hasRole(IslandRole.Operator, player.getUniqueId())
                                         && !island.hasRole(IslandRole.Owner, player.getUniqueId()))
-                                        && fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                        && fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                         .getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
                                     if (event.getClick() == ClickType.RIGHT) {
                                         if (playerData.getIsland() != null
@@ -197,7 +202,7 @@ public class Visit {
                                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F,
                                                     1.0F);
 
-                                            Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                            Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                                     () -> open(player, (Type) playerData.getType(),
                                                             (Sort) playerData.getSort()), 1L);
                                         } else {
@@ -242,7 +247,7 @@ public class Visit {
                                                 targetPlayerName));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player, (Type) playerData.getType(),
                                                 (Sort) playerData.getSort()), 1L);
                             }
@@ -254,7 +259,7 @@ public class Visit {
                                 .replace("%player", targetPlayerName));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, (Type) playerData.getType(), (Sort) playerData.getSort()), 1L);
                     }
                 }
             }
@@ -263,7 +268,7 @@ public class Visit {
         Map<UUID, com.songoda.skyblock.visit.Visit> openIslands = visitManager.getOpenIslands();
         List<com.songoda.skyblock.visit.Visit> visitIslands = new ArrayList<>();
 
-        boolean keepBannedIslands = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+        boolean keepBannedIslands = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Visit.Menu.Bans");
 
         for (int i = 0; i < openIslands.size(); i++) {
@@ -378,7 +383,7 @@ public class Visit {
             nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER),
                     configLoad.getString("Menu.Visit.Item.Nothing.Displayname"), null, null, null, null), 31);
         } else {
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
 
             int index = playerMenuPage * 36 - 36,
                     endIndex = index >= visitIslands.size() ? visitIslands.size() - 1 : index + 36, inventorySlot = 17,
@@ -533,7 +538,7 @@ public class Visit {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Visit.Title")));
         nInv.setRows(6);
 
-        Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
     }
 
     public enum Type {

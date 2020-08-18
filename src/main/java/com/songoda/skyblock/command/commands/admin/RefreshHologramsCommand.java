@@ -28,20 +28,20 @@ public class RefreshHologramsCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        Bukkit.getScheduler().runTaskAsynchronously(skyblock, () -> {
-            LeaderboardManager leaderboardManager = skyblock.getLeaderboardManager();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
             leaderboardManager.clearLeaderboard();
             leaderboardManager.resetLeaderboard();
             leaderboardManager.setupLeaderHeads();
 
-            Bukkit.getScheduler().runTask(skyblock, () -> skyblock.getHologramTask().updateHologram());
+            Bukkit.getScheduler().runTask(plugin, () -> plugin.getHologramTask().updateHologram());
         });
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RefreshHolograms.Refreshed.Message"));

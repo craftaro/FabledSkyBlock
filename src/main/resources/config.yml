@@ -5,18 +5,30 @@ Command:
         # Shows all aliases of the commands.
         Aliases:
             Enable: true
+    Island:
+        # What command should be executed on /is or /island
+        Aliases:
+            IslandOwned: "island controlpanel"
+            NoIsland: "island create"
 Sound:
     # When disabled all sounds will be disabled.
     Enable: true
+Economy:
+    # Possible managers: Default, Vault, PlayerPoints and Reserve
+    Manager: Default
 Island:
+    Performance:
+        # Chunk loading per tick affecting operations like island deletion, scan and biome changing.
+        # This option is ignored when using Paper's async chunk load
+        # You should increase this only if you have a SSD
+        ChunkPerTick: 15
     Size:
-        # [!] Do not go over 1000 for both of these options.
-        # The size of an Island when created.
-        # [!] Do not go over the maximum.
-        # [!] Even numbers WILL create world border issues.
-        Minimum: 100
+        # Warning: The maximum is capped at 1000
+        # Warning: Do not go over the maximum
+        # The size of an Island when created
+        Minimum: 51
         # The maximum size of an Island based on the permission node 'fabledskyblock.size.<size>'.
-        Maximum: 200
+        Maximum: 1000
     Creation:
         # Rather than opening the 'Island Creator' menu. Create an island
         # as soon as a player performs the '/island' or '/island create'
@@ -90,6 +102,7 @@ Island:
                 Height: 60
     Member:
         # Max amount of players allowed to be in a team.
+        # Can be increased with Upgrades
         Capacity: 12
     Chat:
         # If island chat should be output to console
@@ -140,8 +153,8 @@ Island:
         # even if it's open.
         # [!] Enabling will prevent possible memory leak issues affecting performance.
         Unload: false
-        # Upon Island creation is the Island open to visit?
-        Open: false
+        # The island status upon island creation (Open, Closed, Whitelisted)
+        Status: Whitelisted
         # Allow players to vote for Islands. This will filter Islands with more votes first
         # in the Visit Island menu.
         Vote: true
@@ -161,7 +174,7 @@ Island:
             Lines: 6
             # Length allowed for each line
             Length: 30
-        # Max amount of players allowed at a Island. This also includes Island Members.
+        # Max amount of concurrent players allowed at an Island. This also includes Island Members.
         # [!] Set to -1 for unlimited capacity.
         Capacity: 25
         # Allow Island Operators or Owners to ban players from their Island.
@@ -177,10 +190,6 @@ Island:
             Type: Plains
         Cooldown:
             Time: 900
-        # If the Nether/End biomes should be allowed in the overworld
-        AllowOtherWorldlyBiomes:
-            Nether: true
-            End: true
     Weather:
         Default:
             # The weather and time will operate the same weather and time as the world.
@@ -209,7 +218,7 @@ Island:
         # Island Level Points divided by value
         Division: 100
         # Points to subtract to Island Level Points
-        Subtract: 1000
+        Subtract: 0
         Cooldown:
             # Time until Island level rescan expires
             Time: 60
@@ -289,7 +298,10 @@ Island:
         # items in their inventory if they die at an island.
         Enable: true
     Settings:
-        # When any of these options are disabled, the setting will be removed from the 'Island Settings'
+        # With this option true the players will need fabledskyblock.settings.<role>.<settingName> permission
+        # Roles and settings name can be found in the settings.yml file
+        Permission: false
+        # When any of these options are disabled, the setting will be removed from the settings menu
         # menu.
         KeepItemsOnDeath:
             Enable: true
@@ -316,8 +328,19 @@ Island:
             Selector: "DIAMOND_AXE"
     Scoreboard:
         Enable: true
+        # Set it to false if you notice some visual problems.
+        Async: true
     Generator:
         Enable: true
+        # Check only the island owner's permissions
+        # it requires Vault installed
+        # Experimental feature!
+        CheckOnlyOwnerPermissions: false
+        # Check permissions of all the online player in the island or just
+        # the nearest player to the generator
+        CheckOnlyNearestPlayer: false
+        # Ignore visitors in permission check, also who has "fabledskyblock.generator.anywhere" permission
+        IgnoreVisitors: false
     Stackable:
         Enable: true
         # fabledskyblock.stackables
@@ -330,15 +353,22 @@ Island:
     Challenge:
         # Enable or disable challenges. Configuration for challenges are in challenges.yml file
         Enable: true
-        # Disabling this will make challenges per player
-        PerIsland: true
+        # Whether challenges should be per-island or per-player
+        PerIsland: false
+        # Whether to ignore item lore in requirements
+        IgnoreItemLore: false
     Teleport:
         # Enable or disable Fall damage
         FallDamage: true
         RemoveWater: true
+        # Check if location is safe before teleporting
+        SafetyCheck: true
     Limits:
         # Should slime split bypass limits.yml
         AllowSlimeSplit: true
+        # If true, load all chunks on player's island to count entities.
+        # If false, do not load all chunks and only count entites on loaded chunks on player's island.
+        LoadChunks: true
     Nether:
         # Allow placing water in the Nether
         AllowNetherWater: false
@@ -350,6 +380,7 @@ Island:
         BlazeImmuneToWaterInNether: false
     Restrict:
         # Blocks that can be placed only if the island has nether unlocked
+        # You may add/remove as many as you want
         NetherBlocks:
             NETHERRACK: true
             SOUL_SAND: true
@@ -372,7 +403,66 @@ Island:
             NETHER_WART_BLOCK: true
             WITHER_SKELETON_SKULL: true
             WITHER_ROSE: true
+            CRIMSON_NYLIUM: true
+            WARPED_NYLIUM: true
+            CRIMSON_PLANKS: true
+            WARPED_PLANKS: true
+            NETHER_GOLD_ORE: true
+            CRIMSTON_STEM: true
+            WARPED_STEM: true
+            STRIPPED_CRIMSON_STEM: true
+            STRIPPED_WARPED_STEM: true
+            STRIPPED_CRIMSON_HYPHAE: true
+            STRIPPED_WARPED_HYPHAE: true
+            CRIMSON_HYPHAE: true
+            WARPED_HYPHAE: true
+            CRIMSON_FUNGUS: true
+            WARPED_FUNGUS: true
+            CRIMSON_ROOTS: true
+            WARPED_ROOTS: true
+            NETHER_SPROUTS: true
+            WEEPING_VINES: true
+            TWISTING_VINES: true
+            SOUL_OIL: true
+            BASALT: true
+            POLISHED_BASALT: true
+            SOUL_TORCH: true
+            CRIMSON_TRAPDOOR: true
+            WARPED_TRAPDOOR: true
+            CHAIN: true
+            CRIMSON_DOOR: true
+            WARPED_DOOR: true
+            CRIMSON_FENCE_GATE: true
+            WARPED_FENCE_GATE: true
+            CRACKED_NETHER_BRICKS: true
+            BLACKSTONE_WALL: true
+            POLISHED_BLACKSTONE_WALL: true
+            POLISHED_BLACKSTONE_BRICK_WALL: true
+            CRIMSON_BUTTON: true
+            WARPED_BUTTON: true
+            POLISHED_BLACKSTONE_BUTTON: true
+            SOUL_LANTERN: true
+            SOUL_CAMPFIRE: true
+            SHROOMLIGHT: true
+            LODESTONE: true
+            NETHERITE_BLOCK: true
+            ANCIENT_DEBRIS: true
+            CRYING_OBSIDIAN: true
+            BLACKSTONE: true
+            BLACKSTONE_SLAB: true
+            BLACKSTONE_STAIRS: true
+            GLIDED_BLACKSTONE: true
+            POLISHED_BLACKSTONE: true
+            POLISHED_BLACKSTONE_SLAB: true
+            POLISHED_BLACKSTONE_STAIRS: true
+            CHISELED_POLISHED_BLACKSTONE: true
+            POLISHED_BLACKSTONE_BRICKS: true
+            POLISHED_BLACKSTONE_BRICK_SLAB: true
+            POLISHED_BLACKSTONE_BRICK_STAIRS: true
+            CRACKED_POLISHED_BLACKSTONE_BRICKS: true
+            RESPAWN_ANCHOR: true
         # Blocks that can be placed only if the island has The End unlocked
+        # You may add/remove as many as you want
         EndBlocks:
             END_STONE: true
             END_STONE_BRICKS: true

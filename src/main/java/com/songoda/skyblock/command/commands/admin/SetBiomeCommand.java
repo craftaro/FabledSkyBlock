@@ -1,5 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.command.SubCommand;
@@ -7,11 +8,12 @@ import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-import com.songoda.skyblock.utils.version.SBiome;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -34,23 +36,37 @@ public class SetBiomeCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        BiomeManager biomeManager = skyblock.getBiomeManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        BiomeManager biomeManager = plugin.getBiomeManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-
-        if (args.length == 2) {
+        
+        if (args.length >= 2) {
             String biomeName = args[1].toUpperCase().trim();
-
-            SBiome biome = null;
-            for (SBiome sbiome : SBiome.values()) {
-                if (sbiome.isAvailable() && sbiome.name().equals(biomeName)) {
-                    biome = sbiome;
+    
+            IslandWorld world = null;
+            if(args[2] != null) {
+                String worldName = args[2].toUpperCase().trim();
+                for(IslandWorld islandWorld : IslandWorld.values()) {
+                    if(islandWorld.name().equalsIgnoreCase(worldName)) {
+                        world = islandWorld;
+                    }
+                }
+            }
+            
+            if(world == null) {
+                world = IslandWorld.Normal;
+            }
+            
+            CompatibleBiome biome = null;
+            for (CompatibleBiome cbiome : CompatibleBiome.values()) {
+                if (cbiome.isCompatible() && cbiome.name().equals(biomeName)) {
+                    biome = cbiome;
                     break;
                 }
             }
@@ -76,24 +92,32 @@ public class SetBiomeCommand extends SubCommand {
                 } else {
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
-                        biomeManager.setBiome(island, biome.getBiome());
-                        island.setBiome(biome.getBiome());
+                        biomeManager.setBiome(island, world, biome.getBiome(), null);
+                        if(world.equals(IslandWorld.Normal)) {
+                            island.setBiome(biome.getBiome());
+                        }
                     } else {
-                        Island island = islandManager.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                        islandManager.loadIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                        Island island = islandManager.getIsland(Bukkit.getOfflinePlayer(islandOwnerUUID));
                         if (island == null) {
                             messageManager.sendMessage(sender,
                                     configLoad.getString("Command.Island.Admin.SetBiome.Island.Data.Message"));
                             soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         } else {
-                            biomeManager.setBiome(island, biome.getBiome());
-                            island.setBiome(biome.getBiome());
+                            CompatibleBiome finalBiome = biome;
+                            IslandWorld finalWorld = world;
+                            biomeManager.setBiome(island, world, biome.getBiome(), () -> {
+                                if(finalWorld.equals(IslandWorld.Normal)) {
+                                    island.setBiome(finalBiome.getBiome());
+                                }
+                            });
                         }
                     }
 
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetBiome.Set.Message")
                                     .replace("%player", targetPlayerName)
-                                    .replace("%biome", biome.getFormattedBiomeName()));
+                                    .replace("%biome", StringUtil.capitalizeWord(biome.getBiome().name().replaceAll("_", " "))));
                     soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                 }
             } else {

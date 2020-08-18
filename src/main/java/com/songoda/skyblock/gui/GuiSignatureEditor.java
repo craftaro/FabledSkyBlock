@@ -70,11 +70,11 @@ public class GuiSignatureEditor extends Gui {
                                 "Island.Visitor.Signature.Lines")
                                 || gui.getInputText().length() > mainConfig.getFileConfiguration()
                                 .getInt("Island.Visitor.Signature.Length")) {
-                            CompatibleSound.BLOCK_ANVIL_LAND.play(e.player);
+                            plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                         } else {
                             signatureMessage.add(gui.getInputText().trim());
                             island.setMessage(IslandMessage.Signature, e.player.getName(), signatureMessage);
-                            CompatibleSound.BLOCK_NOTE_BLOCK_PLING.play(e.player);
+                            plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1f, 1f);
                         }
                         e.player.closeInventory();
                         paint();
@@ -109,7 +109,7 @@ public class GuiSignatureEditor extends Gui {
             messageManager.sendMessage(player,
                     configLoad.getString(
                             "Command.Island.Settings.Owner.Message"));
-            CompatibleSound.BLOCK_ANVIL_LAND.play(player);
+            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             player.closeInventory();
             return false;
         } else if (!(island1.hasRole(IslandRole.Operator,
@@ -118,7 +118,7 @@ public class GuiSignatureEditor extends Gui {
                 player.getUniqueId()))) {
             messageManager.sendMessage(player, configLoad
                     .getString("Command.Island.Role.Message"));
-            CompatibleSound.BLOCK_ANVIL_LAND.play(player);
+            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             player.closeInventory();
             return false;
         } else if (!plugin.getFileManager()
@@ -129,7 +129,7 @@ public class GuiSignatureEditor extends Gui {
             messageManager.sendMessage(player,
                     configLoad.getString(
                             "Island.Settings.Visitor.Signature.Disabled.Message"));
-            CompatibleSound.BLOCK_ANVIL_LAND.play(player);
+            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             return false;
         }
         return true;

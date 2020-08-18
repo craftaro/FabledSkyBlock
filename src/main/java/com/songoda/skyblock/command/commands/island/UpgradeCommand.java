@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.menus.Upgrade;
@@ -17,18 +17,19 @@ public class UpgradeCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        Economy economy = plugin.getEconomyManager().getEconomy();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (skyblock.getIslandManager().getIsland(player) == null) {
-            skyblock.getMessageManager().sendMessage(player,
+        if (plugin.getIslandManager().getIsland(player) == null) {
+            plugin.getMessageManager().sendMessage(player,
                     configLoad.getString("Command.Island.Upgrade.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
-            if (!EconomyManager.isEnabled()) {
+            if (!economy.isEnabled()) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Upgrade.Disabled.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 return;

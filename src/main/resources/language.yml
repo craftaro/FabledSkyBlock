@@ -7,7 +7,48 @@ ClassLocalization:
    Operator: 'Operator'
    Owner: 'Owner'
 Command:
+  Scoreboard:
+    Disabled:
+      Message: '&bSkyBlock &8| &aInfo&8: &eScoreboard disabled.'
+    Enabled:
+      Message: '&bSkyBlock &8| &aInfo&8: &eScoreboard enabled.'
+    Error:
+      Message: '&bSkyBlock &8| &cError&8: &eAn error occurred.'
+    GlobalDisable:
+      Message: '&bSkyBlock &8| &cError&8: &eScoreboard are globally disabled.'
+    Info:
+      Message: '&bSkyBlock &8| &aInfo&8: &eEnable or disabled the scoreboard.'
   Island:
+    Whitelist:
+      Info:
+        Message: '&f&oManage your island''s whitelist.'
+      Permission:
+        Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to manage the island''s whitelist''.'
+      Enabled:
+        Message: '&bSkyBlock &8| &aInfo&8: &eWhitelist enabled.'
+      Disabled:
+        Message: '&bSkyBlock &8| &aInfo&8: &eWhitelist disabled. The island is now closed.'
+      Added:
+        Message: '&bSkyBlock &8| &aInfo&8: &eAdded %player to the island''s whitelist.'
+      Removed:
+        Message: '&bSkyBlock &8| &aInfo&8: &eRemoved %player from the island''s whitelist.'
+      AlreadyAdded:
+        Message: '&bSkyBlock &8| &cError&8: &e%player is already whitelisted.'
+      NotWhitelisted:
+        Message: '&bSkyBlock &8| &cError&8: &e%player is not whitelisted.'
+      PlayerNotFound:
+        Message: '&bSkyBlock &8| &cError&8: &ePlayer %player has not been found.'
+      InvalidArgNumber:
+        Message: '&bSkyBlock &8| &cError&8: &eInvalid arguments number.'
+      List:
+        Start:
+          Message: '&bSkyBlock &8| &aInfo&8: &eCurrent island''s whitelist:'
+        List:
+          Message: '&a- &e%player'
+        End:
+          Message: '&a---------'
+        Empty:
+          Message: '&bSkyBlock &8| &aInfo&8: &eYour island''s whitelist is currently empty.'
     Bans:
       Owner:
         Message: '&bSkyBlock &8| &cError&8: &eYou are not an Island Owner.'
@@ -148,6 +189,19 @@ Command:
       Permission:
         Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to unban players from the Island.'
     Admin:
+      UpdateAllIslands:
+        Unexpected:
+          Message: '&bSkyBlock &8| &cError&8: &eUnexpected values'
+        NoArgs:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin UpdateAllIslands <SetSize|AdjustSize> <value>'
+        Start:
+          Message: '&bSkyBlock &8| &aInfo&8: &eIslands update started. It could take some time.'
+        Finished:
+          Message: '&bSkyBlock &8| &aInfo&8: &eIslands update finished.'
+        NotANumber:
+          Message: '&bSkyBlock &8| &cError&8: &eThe provided value is not valid.'
+        Info:
+          Message: '&f&oEdit all the islands at once.'
       Bank:
         Short01:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin bank [<Deposit|Withdraw|Balance>]'
@@ -160,11 +214,41 @@ Command:
         Balance:
           Message: ' %player% have %bal%.'
         Info:
-          Message: '&bSkyBlock &8| &cError&8: /island admin bank [<Deposit|Withdraw|Balance>] [Player]'
+          Message: '&f&oManage a player''s island bank.'
         SuccesWithdraw:
           Message: 'Succesfully removed %ammount% from %player%''s island'
         SuccesDeposit:
           Message: 'Succesfully added %ammount% to %player%''s island'
+        Unexpected:
+          Message: '&bSkyBlock &8| &cError&8: &eUnexpected values'
+      ChatSpy:
+        Info:
+          Message: '&f&oToggle island chat spy.'
+        Enabled:
+          Message: '&bSkyBlock &8| &aInfo&8: &eChat spy enabled.'
+        Disabled:
+          Message: '&bSkyBlock &8| &aInfo&8: &eChat spy disabled.'
+        GlobalEnabled:
+          Message: '&bSkyBlock &8| &aInfo&8: &eEnabled global chat spy.'
+        GlobalAlreadyEnabled:
+          Message: '&bSkyBlock &8| &cError&8: &eGlobal chat spy already enabled.'
+        Add:
+          Message: '&bSkyBlock &8| &aInfo&8: &eAdded %owner''s island to chat spy.'
+        Remove:
+          Message: '&bSkyBlock &8| &aInfo&8: &eRemoved %owner''s island to chat spy.'
+        NullIsland:
+          Message: '&bSkyBlock &8| &cError&8: &ePlayer does not have an island.'
+        InvalidArgNumber:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid arguments number.'
+        List:
+          Start:
+            Message: '&bSkyBlock &8| &aInfo&8: &eCurrently spied island''s chats:'
+          List:
+            Message: '&a- &e%owner'
+          End:
+            Message: '&a---------'
+          Empty:
+            Message: '&bSkyBlock &8| &aInfo&8: &eYou are not spying on any island''s chat. Global mode is enabled.'
       Reload:
         Info:
           Message: '&f&oReload all loaded files.'
@@ -207,7 +291,7 @@ Command:
         Set:
           Message: '&bSkyBlock &8| &aInfo&8: &eYou have set &d%player''s &eIsland biome to &d%biome&e.'
         Info:
-          Message: '&f&oSets the size of a player''s Island.'
+          Message: '&f&oSets the biome of a player''s Island.'
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin setbiome <player> <biome>'
         InvalidBiome:
@@ -273,6 +357,25 @@ Command:
           Message: '&bSkyBlock &8| &cError&8: &eYou must enter a numerical value.'
         Invalid:
           Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin setsize <player> <size>'
+      SetMaxMembers:
+        Set:
+          Message: '&bSkyBlock &8| &aInfo&8: &eYou have set &d%player''s &eIsland max members amount to &d%maxMembers&e.'
+        Members:
+          Less:
+            Message: '&bSkyBlock &8| &cError&8: &eThe max members amount of the Island must be less than 100000.'
+          Greater:
+            Message: '&bSkyBlock &8| &cError&8: &eThe max members amount of the Island must be greater than 0.'
+        Info:
+          Message: '&f&oSets the max members amount of a player''s Island.'
+        Island:
+          Owner:
+            Message: '&bSkyBlock &8| &cError&8: &eThat player is not a Member of or does not own an Island.'
+          Data:
+            Message: '&bSkyBlock &8| &cError&8: &eThe Island data for that player''s Island does not exist.'
+        Numerical:
+          Message: '&bSkyBlock &8| &cError&8: &eYou must enter a numerical value.'
+        Invalid:
+          Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island admin setmaxmembers <player> <value>'
       SetAlwaysLoaded:
         IsOn:
           Message: '&bSkyBlock &8| &aInfo&8: &eThis island will not unload.'
@@ -800,8 +903,17 @@ Command:
         Message: '&f&oOpens the Island Biome menu.'
       Permission:
         Message: '&bSkyBlock &8| &cError&8: &eYou do not have the right to change your Island''s biome.'
+      InProgress:
+        Message: '&bSkyBlock &8| &cError&8: &eA biome update is still in progress for this Island.'
+      Completed:
+        Message: '&bSkyBlock &8| &aInfo&8: &eThe biome update is now complete'
+        Should-Display-Message: true
       Owner:
         Message: '&bSkyBlock &8| &cError&8: &eYou are not an Island Owner.'
+      Progress:
+        Message: '&fUpdated &a%current_updated_chunks%&f/&b%max_chunks% &fchunks ( &a%percent%&f%&f )'
+        Should-Display-Message: true
+        Display-Every-X-Updates: 20
     Visitors:
       Info:
         Message: '&f&oOpens the Island Visitors menu.'
@@ -875,8 +987,9 @@ Command:
       Invalid:
         Message: '&bSkyBlock &8| &cError&8: &eInvalid: /island visit [<player>]'
       Closed:
-       Island:
-        Message: '&bSkyBlock &8| &aInfo&8: &eThe island you were at closed.'
+        Message: '&bSkyBlock &8| &aInfo&8: &eThe island you were at is now closed.'
+      Whitelisted:
+        Message: '&bSkyBlock &8| &aInfo&8: &eThe island you were at is now whitelisted.'
     Help:
       Page:
         Message: '&bSkyBlock &8| &cError&8: &eThere are not that many pages.'
@@ -972,6 +1085,8 @@ Command:
         Message: '&bSkyBlock &8| &aInfo&8: &eYour Island is now &cPrivate&e.'
       Public:
         Message: '&bSkyBlock &8| &aInfo&8: &eYour Island is now &aPublic&e.'
+      Restricted:
+        Message: '&bSkyBlock &8| &aInfo&8: &eYour Island is now &eRestricted&e.'
     Leaderboard:
       Disabled:
         Message: '&bSkyBlock &8| &cError&8: &eYou cannot view that leaderboard because it has been disabled.'
@@ -1018,83 +1133,6 @@ Command:
       Message: '&bSkyBlock &8| &cError&8: &eYou don''t have permission to perform that command.'
     Island:
       Message: '&bSkyBlock &8| &cError&8: &eYou don''t have permission to perform that command.'
-Scoreboard:
-  Tutorial:
-    Displaylines:
-    - ''
-    - '&bIsland&f:'
-    - '&cYou do not own an Island.'
-    - ' &8- &7/island create'
-    - ''
-    - '&bProfile&f:'
-    - ' &8- &7Rank&8: &fDefault'
-    - ' &8- &7Balance&8: &f$0'
-    - ''
-    - '&ewww.example.net'
-    Displayname: '&b&lSkyBlock'
-  Island:
-    Solo:
-      Empty:
-        Displaylines:
-        - ''
-        - '&bIsland&f:'
-        - ' &8- &7Level&8: &f%island_level'
-        - ' &8- &7Size&8: &f%island_size&7x&f%island_size'
-        - ''
-        - '&bProfile&f:'
-        - ' &8- &7Rank&8: &fDefault'
-        - ' &8- &7Balance&8: &f$0'
-        - ''
-        - '&ewww.example.net'
-      Occupied:
-        Displaylines:
-        - ''
-        - '&bIsland&f:'
-        - ' &8- &7Level&8: &f%island_level'
-        - ' &8- &7Visitors&8: &f%island_visitors'
-        - ' &8- &7Size&8: &f%island_size&7x&f%island_size'
-        - ''
-        - '&bProfile&f:'
-        - ' &8- &7Rank&8: &fDefault'
-        - ' &8- &7Balance&8: &f$0'
-        - ''
-        - '&ewww.example.net'
-      Displayname: '&b&lSkyBlock'
-    Team:
-      Word:
-        Owner: Owner
-        Operator: Operator
-        Member: Member
-      Empty:
-        Displaylines:
-        - ''
-        - '&bIsland&f:'
-        - ' &8- &7Role&8: &f%island_role'
-        - ' &8- &7Members&8: &f%island_members'
-        - ' &8- &7Level&8: &f%island_level'
-        - ' &8- &7Size&8: &f%island_size&7x&f%island_size'
-        - ''
-        - '&bProfile&f:'
-        - ' &8- &7Rank&8: &fDefault'
-        - ' &8- &7Balance&8: &f$0'
-        - ''
-        - '&ewww.example.net'
-      Occupied:
-        Displaylines:
-        - ''
-        - '&bIsland&f:'
-        - ' &8- &7Role&8: &f%island_role'
-        - ' &8- &7Members&8: &f%island_members'
-        - ' &8- &7Level&8: &f%island_level'
-        - ' &8- &7Visitors&8: &f%island_visitors'
-        - ' &8- &7Size&8: &f%island_size&7x&f%island_size'
-        - ''
-        - '&bProfile&f:'
-        - ' &8- &7Rank&8: &fDefault'
-        - ' &8- &7Balance&8: &f$0'
-        - ''
-        - '&ewww.example.net'
-      Displayname: '&b&lSkyBlock'
 Menu:
   Settings:
     Default:
@@ -1145,6 +1183,20 @@ Menu:
             Displayname: '&aDoor Use'
           Jukebox:
             Displayname: '&aJukebox Use'
+          PvP:
+            Displayname: '&aPvP'
+          Noteblock:
+            Displayname: '&aNoteblock use'
+          Cauldron:
+            Displayname: '&aCauldron use'
+          Minecart:
+            Displayname: '&aMinecart'
+          Damage:
+            Displayname: '&aDamage'
+          Boat:
+            Displayname: '&aBoat'
+          Trample:
+            Displayname: '&aTrample'
           Bucket:
             Displayname: '&aBucket Use'
           SpawnEgg:
@@ -1210,6 +1262,8 @@ Menu:
             Displayname: '&aLeaf Decay'
           MobGriefing:
             Displayname: '&aMob Griefing'
+          ProtectorDamage:
+            Displayname: '&aProtector damage'
           Status:
             Enabled:
               Lore:
@@ -1281,13 +1335,19 @@ Menu:
                 - ''
                 - '&7Current Visitors&8: &a%visitors'
                 - ''
-                - '&eClick to close Island!'
+                - '&eClick to enable Whitelist!'
               Closed:
                 Lore:
                 - '&7Island Visits&8: &e%visitors'
                 - '&7Island Votes&8: &e%votes'
                 - ''
                 - '&aClick to open Island!'
+              Whitelisted:
+                Lore:
+                  - '&7Island Visits&8: &e%visitors'
+                  - '&7Island Votes&8: &e%votes'
+                  - ''
+                  - '&aClick to close Island!'
             Disabled:
               Closed:
                 Lore:
@@ -1300,7 +1360,13 @@ Menu:
                 - ''
                 - '&7Current Visitors&8: &a%visitors'
                 - ''
-                - '&eClick to close Island!'
+                - '&eClick to enable Whitelist!'
+              Whitelisted:
+                Lore:
+                  - '&7Island Visits&8: &e%visitors'
+                  - '&7Island Votes&8: &e%votes'
+                  - ''
+                  - '&aClick to close Island!'
           Displayname: '&aIsland Visit Statistics'
         Signature:
           Displayname: '&bIsland Signature'
@@ -1502,6 +1568,18 @@ Menu:
                 - '&7Status&8: &cfalse'
             Milking:
               Displayname: '&aMilking'
+            PvP:
+              Displayname: '&aPvP'
+            Noteblock:
+              Displayname: '&aNoteblock use'
+            Minecart:
+              Displayname: '&aMinecart'
+            Damage:
+              Displayname: '&aDamage'
+            Boat:
+              Displayname: '&aBoat'
+            Trample:
+              Displayname: '&aTrample'
             Anvil:
               Displayname: '&aAnvil Use'
             Portal:
@@ -1656,6 +1734,8 @@ Menu:
               Displayname: '&aNatural Mob Spawning'
             MobGriefing:
               Displayname: '&aMob Griefing'
+            ProtectorDamage:
+              Displayname: '&aProtector Damage'
             PvP:
               Displayname: '&aPvP'
             Explosions:
@@ -1712,6 +1792,15 @@ Menu:
             - '&7Tiers&8: &f%tiers'
             - ''
             - '&eClick to manage tiers!'
+          Members:
+            Displayname: '&aMax Members'
+            Lore:
+              - '&7Increases the max amount'
+              - '&7of Island members.'
+              - ''
+              - '&7Tiers&8: &f%tiers'
+              - ''
+              - '&eClick to manage tiers!'
           Fly:
             Displayname: '&aFlight'
             Lore:
@@ -1788,6 +1877,35 @@ Menu:
             - '&eRight-Click to set cost!'
             Displayname: '&bTier #%tier'
         Title: '&8Upgrade Editor - Size'
+      Members:
+        Item:
+          Information:
+            Displayname: '&aInformation'
+            Lore:
+              - '&7Create tiers, and decide the'
+              - '&7cost and what upgrade Islands'
+              - '&7receive from them.'
+              - ''
+              - '&eClick to create a tier!'
+          Return:
+            Displayname: '&cReturn to Upgrade Editor'
+          Word:
+            Size:
+              Enter: Enter Members
+            Cost:
+              Enter: Enter Cost
+          Barrier:
+            Displayname: '&cMax members Tiers'
+          Tier:
+            Lore:
+              - '&7Max members&8: &f%maxMembers'
+              - '&7Cost&8: &f$%cost'
+              - ''
+              - '&eLeft-Click to set value!'
+              - '&eMiddle-Click to remove!'
+              - '&eRight-Click to set cost!'
+            Displayname: '&bTier #%tier'
+        Title: '&8Upgrade Editor - Members'
     Generator:
       Generator:
         Item:
@@ -2213,7 +2331,7 @@ Menu:
       Material:
         Displayname: '&7%material &8(&e+%points Points&8)'
         Lore:
-        - '&8(&e%blocks Blocks&8)'
+        - '&8(&e%blocks Blocks&8, &e%counted Counted&8)'
     Title: '&8Island Levelling'
   ControlPanel:
     Item:
@@ -2480,8 +2598,6 @@ Menu:
     Item:
       Exit:
         Displayname: '&cExit Biome Selection'
-      Barrier:
-        Displayname: '&cSelect a Biome'
       Info:
         Displayname: '&bCurrent Biome'
         Lore:
@@ -2495,6 +2611,10 @@ Menu:
           Lore:
           - '&7Click to Set!'
           Displayname: '&aBiome: &e%biome_type'
+      Next:
+        Displayname: '&aNext Page >'
+      Previous:
+        Displayname: '&a< Previous Page'
     Title: '&8Select a Biome'
   Information:
     Categories:
@@ -2810,6 +2930,41 @@ Menu:
           - ''
           - '&cYou don''t have enough money!'
         Displayname: '&bBorder Size [Tier #%tier]'
+      Members:
+        Claimable:
+          Lore:
+            - '&7Increases the max members'
+            - '&7amount of your Island.'
+            - ''
+            - '&7Max members&8: &f%maxMembers'
+            - '&7Cost&8: &f$%cost'
+            - ''
+            - '&7Status&8: &6&lCLAIMABLE'
+            - ''
+            - '&eClick to unlock this upgrade!'
+        Claimed:
+          Lore:
+            - '&7Increases the max members'
+            - '&7amount of your Island.'
+            - ''
+            - '&7Max members&8: &f%maxMembers'
+            - '&7Cost&8: &f$%cost'
+            - ''
+            - '&7Status&8: &a&lCLAIMED'
+            - ''
+            - '&cYou have unlocked this upgrade!'
+        Unclaimable:
+          Lore:
+            - '&7Increases the max members'
+            - '&7amount of your Island.'
+            - ''
+            - '&7Max members&8: &f%maxMembers'
+            - '&7Cost&8: &f$%cost'
+            - ''
+            - '&7Status&8: &c&lLOCKED'
+            - ''
+            - '&cYou don''t have enough money!'
+        Displayname: '&bMax Members [Tier #%tier]'
       Word:
         Enable: Enable
         Disable: Disable
@@ -3174,196 +3329,54 @@ Menu:
     Title: 'Bank'
     Item:
       Exit:
-        Displayname: 'Exit'
-        Lore: 'Exits the Menu'
+        Displayname: '&cExit'
+        Lore: '&7Exits the Menu'
       Barrier:
         Displayname: '&cBank'
       Log:
-        Displayname: 'Transaction Log'
-        Empty: 'Looks like you haven''t got transactions'
+        Displayname: '&fTransaction Log'
+        Empty: '&7Looks like you haven''t got transactions'
       Deposit:
-        Displayname: 'Deposit'
-        Lore: 'Click to deposit your money. Everything or a custom ammount.'
+        Displayname: '&fDeposit'
+        Lore: '&7Click to deposit your money. Everything or a custom amount.'
       Withdraw:
-        Displayname: 'Withdraw'
-        Lore: 'Click to withdraw your money. Everything or a custom ammount.'
+        Displayname: '&fWithdraw'
+        Lore: '&7Click to withdraw your money. Everything or a custom amount.'
       Balance:
-        Displayname: 'Balance'
+        Displayname: '&fBalance'
+        Lore: '&7Bank balance: &6$%balance'
+      Next:
+        Displayname: '&aNext Page'
+      Last:
+        Displayname: '&aPrevious Page'
+    Transactions:
+      Info:
+        Displayname: '&fInfo'
+        Lore: '&7Total transactions: %totalTransactions'
+      Title: 'Transactions'
+      Withdraw:
+        Displayname: '&c%dateTime'
+        Format: '&7 %playerName withdrawn %amount'
+      Deposit:
+        Displayname: '&a%dateTime'
+        Format: '&7 %playerName deposited %amount'
+      Admin: '&cAdmin&7'
+      DateTimeFormat: 'dd/MM/yyyy HH:mm:ss'
+    Words:
+      Withdraw: 'Withdraw'
+      Deposit: 'Deposit'
   Input:
     Title: 'Select amount.'
     Item:
       All:
-        Displayname: 'All'
+        Displayname: '&fAll'
         Lore: '%action% all available.'
       Custom:
-        Displayname: 'Custom'
+        Displayname: '&fCustom'
         Lore: '%action% a custom amount.'
-      Barrier:
-        Displayname: ' '
-        Lore: ' '
       Exit:
-        Displayname: 'Exit'
-        Lore: "Closes the menu."
-Placeholder:
-  fabledskyblock_leaderboard_votes:
-    Empty:
-      Message: '&f&oUnclaimed'
-    Non-empty:
-      Message: '&f[%position] %player [%votes]'
-  fabledskyblock_leaderboard_bank:
-    Empty:
-      Message: '&f&oUnclaimed'
-    Non-empty:
-      Message: '&f[%position] %player [$%balance]'
-  fabledskyblock_island_exists:
-    Exists:
-      Message: '&atrue'
-    Not-exists:
-      Message: '&cfalse'
-  fabledskyblock_island_members:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_island_coops:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_leaderboard_level:
-    Empty:
-      Message: '&f&oUnclaimed'
-    Non-empty:
-      Message: '&f[%position] %player [%level]'
-  fabledskyblock_island_visitors:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_island_size:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_time:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_island_bank_balance_formatted:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_owner:
-    Non-empty:
-      Yourself:
-        Message: '&fYou'
-      Other:
-        Message: '&f%placeholder'
-    Empty:
-      Message: '&f&oNone'
-  fabledskyblock_island_leaderboard_bank_rank:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_island_bans:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_island_coops_total:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_island_invites:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_island_level_block_count:
-    Invalid:
-      Message: '&cInvalid Type'
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_island_weather:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_role:
-    Empty:
-      Message: '&f&oNone'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_operators:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_bank_balance:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_biome:
-    Empty:
-      Message: '&f&oNone'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_level_formatted:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_members_total:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_island_level_block_points:
-    Empty:
-      Message: '&c0'
-    Invalid:
-      Message: '&cInvalid Type'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_isopen:
-    Closed:
-      Message: '&cfalse'
-    Open:
-      Message: '&atrue'
-    Empty:
-      Message: '&cfalse'
-  fabledskyblock_island_votes:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_radius:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_leaderboard_votes_rank:
-    Non-empty:
-      Message: '&f%placeholder'
-    Empty:
-      Message: '&c0'
-  fabledskyblock_level_block_value:
-    Invalid:
-      Message: '&cInvalid Type'
-    Non-empty:
-      Message: '&f%placeholder'
-  fabledskyblock_island_leaderboard_level_rank:
-    Empty:
-      Message: '&c0'
-    Non-empty:
-      Message: '&f%placeholder'
+        Displayname: '&cExit'
+        Lore: '&7Exits the Menu'
 Island:
   Limit:
     Block:
@@ -3378,6 +3391,13 @@ Island:
       Message: '&8[&bSkyBlock &8| &dChat&8] %role &e%player&8: &f%message'
     Untoggled:
       Message: '&bSkyBlock &8| &aInfo&8: &eThe Island chat has been untoggled because there are no Island Members online. Chat messages will now be visible for all players.'
+    Spy:
+      Format:
+        Role:
+          Member: '&a[Member]'
+          Operator: '&b[Operator]'
+          Owner: '&c[Owner]'
+        Message: '&8[&bSkyBlock &8| &dChatSpy&8] [&7%islandOwner&8] &e%player&8: &f%message'
   SpawnProtection:
     Break:
       Message: '&bSkyBlock &8| &cError&8: &eYou cannot break the spawn point of the Island.'
@@ -3436,6 +3456,8 @@ Island:
       Tier:
         Size:
           Message: '&bSkyBlock &8| &cError&8: &eThe size of the tier must be less than 1000.'
+        Members:
+          Message: '&bSkyBlock &8| &cError&8: &eThe size of the tier must be less than 100000.'
         Limit:
           Message: '&bSkyBlock &8| &cError&8: &eYou have reached the limit of tiers for this upgrade.'
         Selected:
@@ -3612,12 +3634,12 @@ Island:
 Hologram:
   Leaderboard:
     Votes:
-      Footer: '&ewww.example.net'
+      Footer: '&ewww.songoda.com'
       Claimed: '&8* &f&o[%position] &a%player &7- &6%votes'
       Unclaimed: '&8* &f&o[%position] &7&oUnclaimed Position'
       Header: '&b&lSkyBlock &8&l| &e&lTop 10 Votes'
     Bank:
-      Footer: '&ewww.example.net'
+      Footer: '&ewww.songoda.com'
       Unclaimed: '&8* &f&o[%position] &7&oUnclaimed Position'
       Claimed: '&8* &f&o[%position] &a%player &7- &6$%balance'
       Header: '&b&lSkyBlock &8&l| &e&lTop 10 Bank Balances'
@@ -3625,11 +3647,13 @@ Hologram:
       Header: '&b&lSkyBlock &8&l| &e&lTop 10 Level'
       Claimed: '&8* &f&o[%position] &a%player &7- &6%level'
       Unclaimed: '&8* &f&o[%position] &7&oUnclaimed Position'
-      Footer: '&ewww.example.net'
+      Footer: '&ewww.songoda.com'
   Stackable:
     Message: '%blocks: %amount'
 Challenge:
   Inventory:
+    Unlimited:
+      Message: 'Unlimited'
     Item:
       Title: '%challenge &e%amount &6/ &e%max'
   Broadcast: '&bSkyBlock &8| &6%player &7has completed challenge %challenge (%amount

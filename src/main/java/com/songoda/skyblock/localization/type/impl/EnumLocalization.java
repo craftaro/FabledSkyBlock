@@ -1,11 +1,10 @@
 package com.songoda.skyblock.localization.type.impl;
 
-import java.util.EnumMap;
-import java.util.Map;
-
+import com.songoda.skyblock.localization.type.Localization;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.songoda.skyblock.localization.type.Localization;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class EnumLocalization<T extends Enum<T>> extends Localization<T> {
 

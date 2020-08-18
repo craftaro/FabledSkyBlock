@@ -1,12 +1,16 @@
 package com.songoda.skyblock.listeners;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
-import java.util.List;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.permission.PermissionManager;
+import com.songoda.skyblock.upgrade.Upgrade;
+import com.songoda.skyblock.utils.version.NMSUtil;
+import com.songoda.skyblock.utils.world.LocationUtil;
+import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
@@ -17,23 +21,18 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.material.Crops;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.world.LocationUtil;
-import com.songoda.skyblock.world.WorldManager;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class Grow implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Grow(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Grow(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     /**
@@ -44,10 +43,10 @@ public class Grow implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onStructureGrow(StructureGrowEvent event) {
-        WorldManager worldManager = skyblock.getWorldManager();
+        WorldManager worldManager = plugin.getWorldManager();
         if (!worldManager.isIslandWorld(event.getWorld())) return;
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
         Island origin = islandManager.getIslandAtLocation(event.getLocation());
         for (Iterator<BlockState> it = event.getBlocks().iterator(); it.hasNext();) {
             BlockState state = it.next();
@@ -77,23 +76,23 @@ public class Grow implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onCropUpgrade(BlockGrowEvent event) {
         org.bukkit.block.Block block = event.getBlock();
-        WorldManager worldManager = skyblock.getWorldManager();
-        if (!skyblock.getWorldManager().isIslandWorld(block.getWorld())) return;
+        WorldManager worldManager = plugin.getWorldManager();
+        if (!plugin.getWorldManager().isIslandWorld(block.getWorld())) return;
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
         Island island = islandManager.getIslandAtLocation(block.getLocation());
         if (island == null) return;
 
         // Check spawn block protection
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
-            if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+            if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 return;
             }
         }
 
-        List<Upgrade> upgrades = skyblock.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
+        List<Upgrade> upgrades = plugin.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
         if (upgrades == null || upgrades.size() == 0 || !upgrades.get(0).isEnabled() || !island.isUpgrade(Upgrade.Type.Crop)) return;
 
         if (NMSUtil.getVersionNumber() > 12) {
@@ -128,12 +127,12 @@ public class Grow implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onBlockGrow(BlockGrowEvent event) {
-        WorldManager worldManager = skyblock.getWorldManager();
+        WorldManager worldManager = plugin.getWorldManager();
         BlockState state = event.getNewState();
         if (!worldManager.isIslandWorld(state.getWorld())) return;
         if (CompatibleMaterial.getBlockMaterial(state.getType()) != CompatibleMaterial.PUMPKIN && CompatibleMaterial.getBlockMaterial(state.getType()) != CompatibleMaterial.MELON)  return;
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
         Island origin = islandManager.getIslandAtLocation(event.getBlock().getLocation());
         Island growingTo = islandManager.getIslandAtLocation(state.getLocation());
         // This block is ok to continue as it's not related to Skyblock islands.
@@ -156,13 +155,13 @@ public class Grow implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onStructureCreate(StructureGrowEvent event) {
-        if (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) return;
+        if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) return;
 
         List<BlockState> blocks = event.getBlocks();
         if (blocks.isEmpty()) return;
 
-        WorldManager worldManager = skyblock.getWorldManager();
-        IslandManager islandManager = skyblock.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        IslandManager islandManager = plugin.getIslandManager();
         Island island = islandManager.getIslandAtLocation(event.getLocation());
         if (island == null) return;
 
@@ -181,18 +180,18 @@ public class Grow implements Listener {
         if (event.getSource().getType() != Material.FIRE) return;
 
         org.bukkit.block.Block block = event.getBlock();
-        if (!skyblock.getWorldManager().isIslandWorld(block.getWorld())) return;
+        if (!plugin.getWorldManager().isIslandWorld(block.getWorld())) return;
 
-        PermissionManager permissionManager = skyblock.getPermissionManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
         if (!permissionManager.hasPermission(block.getLocation(), "FireSpread", IslandRole.Owner)) event.setCancelled(true);
     }
 
     @EventHandler
     public void onLeavesDecay(LeavesDecayEvent event) {
         org.bukkit.block.Block block = event.getBlock();
-        if (!skyblock.getWorldManager().isIslandWorld(block.getWorld())) return;
+        if (!plugin.getWorldManager().isIslandWorld(block.getWorld())) return;
 
-        PermissionManager permissionManager = skyblock.getPermissionManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
         if (!permissionManager.hasPermission(block.getLocation(), "LeafDecay", IslandRole.Owner)) event.setCancelled(true);
     }
 

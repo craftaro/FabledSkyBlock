@@ -5,8 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.songoda</groupId>
 	<artifactId>skyblock</artifactId>
-	<version>2.3</version>
+	<version>2.3.7</version>
 	<packaging>jar</packaging>
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 	<build>
 		<defaultGoal>clean install</defaultGoal>
 		<finalName>FabledSkyblock-${project.version}</finalName>
@@ -41,13 +45,12 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -60,12 +63,15 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
 							<shadedArtifactAttached>false</shadedArtifactAttached>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
 							<minimizeJar>true</minimizeJar>
 							<artifactSet>
 								<includes>
 									<include>com.songoda:SongodaCore</include>
+									<include>io.papermc:paperlib</include>
+									<include>com.eatthepath:fast-uuid</include>
 								</includes>
 							</artifactSet>
 							<filters>
@@ -83,6 +89,14 @@
 									<pattern>com.songoda.core</pattern>
 									<shadedPattern>${project.groupId}.skyblock.core</shadedPattern>
 								</relocation>
+								<relocation>
+									<pattern>io.papermc.lib</pattern>
+									<shadedPattern>${project.groupId}.paperlib</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>com.eatthepath.uuid</pattern>
+									<shadedPattern>${project.groupId}.fast-uuid</shadedPattern>
+								</relocation>
 							</relocations>
 						</configuration>
 					</execution>
@@ -99,6 +113,10 @@
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<repository>
+			<id>papermc</id>
+			<url>https://papermc.io/repo/repository/maven-public/</url>
 		</repository>
 		<repository>
 			<id>minecraft-repo</id>
@@ -127,9 +145,27 @@
 	</repositories>
 	<dependencies>
 		<dependency>
+			<groupId>io.papermc</groupId>
+			<artifactId>paperlib</artifactId>
+			<version>1.0.4</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.destroystokyo.paper</groupId>
+			<artifactId>paper-api</artifactId>
+			<version>1.16.1-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>io.papermc</groupId>
+					<artifactId>paperlib</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
-			<version>1.15</version>
+			<version>1.16.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -183,11 +219,35 @@
 			<groupId>com.sk89q</groupId>
 			<artifactId>worldedit-bukkit</artifactId>
 			<version>7.1.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>io.papermc</groupId>
+					<artifactId>paperlib</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.songoda</groupId>
 			<artifactId>SongodaCore</artifactId>
 			<version>LATEST</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.Zrips</groupId>
+			<artifactId>Residence</artifactId>
+			<scope>provided</scope>
+			<version>4.9.0.6</version>
+		</dependency>
+		<dependency>
+			<groupId>net</groupId>
+			<artifactId>coreprotect</artifactId>
+			<scope>provided</scope>
+			<version>2.18.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eatthepath</groupId>
+			<artifactId>fast-uuid</artifactId>
+			<version>0.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

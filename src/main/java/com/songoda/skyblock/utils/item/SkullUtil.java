@@ -3,8 +3,6 @@ package com.songoda.skyblock.utils.item;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.skyblock.utils.version.NMSUtil;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -51,7 +49,7 @@ public final class SkullUtil {
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), null);
         gameProfile.getProperties().put("textures", new Property("textures", value, signature));
 
-        Field profileField = null;
+        Field profileField;
 
         try {
             profileField = sm.getClass().getDeclaredField("profile");

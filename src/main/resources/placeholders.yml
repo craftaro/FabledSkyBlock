@@ -1,0 +1,104 @@
+Placeholders:
+  fabledskyblock_leaderboard_votes:
+    Empty: 'Unclaimed'
+    Non-empty: '[{POSITION}] {PLAYER} [{VOTES]'
+  fabledskyblock_leaderboard_bank:
+    Empty: 'Unclaimed'
+    Non-empty: '[{POSITION}] {PLAYER} [${BALANCE}]'
+  fabledskyblock_leaderboard_level:
+    Empty: 'Unclaimed'
+    Non-empty: '[{POSITION}] {PLAYER} [{LEVEL}]'
+  fabledskyblock_island_exists:
+    Exists: 'true'
+    Not-exists: 'false'
+  fabledskyblock_island_members:
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_island_coops:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_visitors:
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_island_size:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_maxmembers:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_time:
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_island_bank_balance_formatted:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_owner:
+    Non-empty:
+      Yourself: 'You'
+      Other: '{PLACEHOLDER}'
+    Empty: '&oNone'
+  fabledskyblock_island_leaderboard_bank_rank:
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_island_bans:
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_island_coops_total:
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_island_invites:
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_island_level_block_count:
+    Invalid: 'Invalid Type'
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_island_weather:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_role:
+    Empty: '&oNone'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_operators:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_bank_balance:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_biome:
+    Empty: '&oNone'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_level_formatted:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_members_total:
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_island_level_block_points:
+    Empty: '0'
+    Invalid: 'Invalid Type'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_isopen:
+    Closed: 'false'
+    Open: 'true'
+    Empty: 'false'
+  fabledskyblock_island_status:
+    Closed: 'Closed'
+    Open: 'Open'
+    Whitelisted: 'Whitelisted'
+    Empty: 'None'
+  fabledskyblock_island_votes:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_radius:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_leaderboard_votes_rank:
+    Non-empty: '{PLACEHOLDER}'
+    Empty: '0'
+  fabledskyblock_level_block_value:
+    Invalid: 'Invalid Type'
+    Non-empty: '{PLACEHOLDER}'
+  fabledskyblock_island_leaderboard_level_rank:
+    Empty: '0'
+    Non-empty: '{PLACEHOLDER}'

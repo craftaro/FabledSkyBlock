@@ -18,20 +18,17 @@ public class VisitorsCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Visitors.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        } else if (!island.isOpen()) {
-            messageManager.sendMessage(player, configLoad.getString("Command.Island.Visitors.Closed.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (islandManager.getVisitorsAtIsland(island).size() == 0) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Visitors.Visitors.Message"));

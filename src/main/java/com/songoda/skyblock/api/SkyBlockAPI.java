@@ -25,9 +25,9 @@ public class SkyBlockAPI {
     /**
      * @param implementation the implementation to set
      */
-    public static void setImplementation(SkyBlock implementation) {
-        if (SkyBlockAPI.implementation != null) {
-            throw new IllegalArgumentException("Cannot set API implementation twice");
+    public static void setImplementation(SkyBlock implementation) throws IllegalStateException {
+        if (SkyBlockAPI.implementation != null && SkyBlockAPI.implementation != implementation) {
+            throw new IllegalStateException("Cannot set API implementation twice");
         }
 
         SkyBlockAPI.implementation = implementation;

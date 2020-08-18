@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils.world;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -12,12 +13,18 @@ import com.songoda.skyblock.utils.math.VectorUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.world.WorldManager;
-import org.bukkit.*;
+import io.papermc.lib.PaperLib;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,46 +33,47 @@ import java.util.logging.Level;
 
 public final class LocationUtil {
 
-    public static void removeWaterFromLoc(SkyBlock plugin, Location loc) {
-        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)){
-            Location tempLoc = LocationUtil.getDefinitiveLocation(loc);
-            if(tempLoc.getBlock().getType().equals(Material.WATER)){
-                tempLoc.getBlock().setType(Material.AIR);
-            } else if(NMSUtil.getVersionNumber() > 13){
-                LocationUtil113.removeWaterLoggedFromLocation(tempLoc);
-            }
+    public static void removeWaterFromLoc(Location loc) {
+        Location tempLoc = LocationUtil.getDefinitiveLocation(loc.clone());
+        if(tempLoc.getBlock().getType().equals(Material.WATER)){
+            tempLoc.getBlock().setType(Material.AIR);
+        } else if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)){
+            LocationUtil113.removeWaterLoggedFromLocation(tempLoc);
         }
     }
 
-    public static Location getSafeLocation(Location loc){
+    public static @Nullable Location getSafeLocation(@Nonnull Location loc){
+        Location locChecked = null;
         boolean found = false;
-        Location locChecked = loc.clone();
-        loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
-        for(int i=loc.getBlockY(); i>=0 && !found; i--){
-            locChecked = locChecked.subtract(0d, 1d, 0d);
-            found = checkBlock(locChecked);
-        }
-        if(!found){
-            for(int i=loc.getBlockY(); i<256 && !found; i++){
-                locChecked = locChecked.add(0d, 1d, 0d);
+        if(loc.getWorld() != null){
+            locChecked = loc.clone();
+            loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
+            for(int i=loc.getBlockY(); i>=0 && !found; i--){
+                locChecked = locChecked.subtract(0d, 1d, 0d);
                 found = checkBlock(locChecked);
             }
-        }
-        if (found) {
-            locChecked = locChecked.add(0d,1d,0d);
-        } else {
-            locChecked = null;
+            if(!found){
+                for(int i=loc.getBlockY(); i<256 && !found; i++){
+                    locChecked = locChecked.add(0d, 1d, 0d);
+                    found = checkBlock(locChecked);
+                }
+            }
+            if (found) {
+                locChecked = locChecked.add(0d,1d,0d);
+            } else {
+                locChecked = null;
+            }
         }
         return locChecked;
     }
 
-    public static Location getDefinitiveLocation(Location loc){
+    public static @Nonnull Location getDefinitiveLocation(@Nonnull Location loc){
         Location locWorking = loc.clone();
-        for(int i=locWorking.getBlockY(); i>=0; i--){
+        for(locWorking.setY(locWorking.getBlockY()); locWorking.getBlockY()>=0; locWorking.setY(locWorking.getBlockY()-1)){
             if(!locWorking.getBlock().isEmpty()){
                 if(locWorking.getBlock().getType().equals(CompatibleMaterial.WATER.getMaterial()) ||
-                        (NMSUtil.getVersionNumber() > 13 && locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
+                        (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && 
+                                locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
                     loc = locWorking;
                 }
                 break;
@@ -138,16 +146,15 @@ public final class LocationUtil {
                 || isLocationLocation(location2.subtract(0, 1, 0), location1);
     }
 
-    public static boolean isLocationAtLocationRadius(Location location1, Location location2, double radius) {
+    public static boolean isLocationInLocationRadius(Location location1, Location location2, double radius) {
         if (location1 == null || location2 == null || location1.getWorld() == null || location2.getWorld() == null
                 || !location1.getWorld().getName().equals(location2.getWorld().getName())) {
             return false;
         }
-
         double x = Math.abs(location1.getX() - location2.getX());
         double z = Math.abs(location1.getZ() - location2.getZ());
-
-        return x <= radius && z <= radius;
+        
+        return x < radius && z < radius;
     }
 
     public static List<Location> getLocations(Location minLocation, Location maxLocation) {
@@ -268,13 +275,13 @@ public final class LocationUtil {
     }
 
     public static void teleportPlayerToSpawn(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
-        FileManager fileManager = skyblock.getFileManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
 
         if (config.getFileConfiguration().getString("Location.Spawn") == null) {
             Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");
@@ -295,19 +302,19 @@ public final class LocationUtil {
                 }
             }
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
-                player.teleport(spawnLocation);
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> {
+                PaperLib.teleportAsync(player, spawnLocation);
                 player.setFallDistance(0.0F);
             });
         }
     }
 
     public static Location getSpawnLocation() {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
 
         if (config.getFileConfiguration().getString("Location.Spawn") != null) {
             Location location = fileManager.getLocation(config, "Location.Spawn", true);
@@ -359,5 +366,21 @@ public final class LocationUtil {
         } else {
             return rndLoc;
         }
+    }
+    
+    public static Location toCenterLocation(Location loc) {
+        Location centerLoc = loc.clone();
+        centerLoc.setX((double)loc.getBlockX() + 0.5D);
+        centerLoc.setY((double)loc.getBlockY() + 0.5D);
+        centerLoc.setZ((double)loc.getBlockZ() + 0.5D);
+        return centerLoc;
+    }
+    
+    public static Location toBlockLocation(Location loc) {
+        Location blockLoc = loc.clone();
+        blockLoc.setX(loc.getBlockX());
+        blockLoc.setY(loc.getBlockY());
+        blockLoc.setZ(loc.getBlockZ());
+        return blockLoc;
     }
 }

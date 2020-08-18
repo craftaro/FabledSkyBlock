@@ -3,9 +3,10 @@ package com.songoda.skyblock;
 import com.songoda.core.SongodaCore;
 import com.songoda.core.SongodaPlugin;
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerProject;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.configuration.Config;
 import com.songoda.core.gui.GuiManager;
-import com.songoda.core.hooks.EconomyManager;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.bank.BankManager;
@@ -16,22 +17,21 @@ import com.songoda.skyblock.command.commands.SkyBlockCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.confirmation.ConfirmationTask;
 import com.songoda.skyblock.cooldown.CooldownManager;
+import com.songoda.skyblock.economy.EconomyManager;
 import com.songoda.skyblock.generator.GeneratorManager;
-import com.songoda.skyblock.permission.PermissionManager;
-import com.songoda.skyblock.tasks.HologramTask;
 import com.songoda.skyblock.invite.InviteManager;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.reward.RewardManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.levelling.rework.IslandLevelManager;
+import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import com.songoda.skyblock.listeners.*;
 import com.songoda.skyblock.localization.LocalizationManager;
-import com.songoda.skyblock.menus.Rollback;
 import com.songoda.skyblock.menus.admin.Creator;
 import com.songoda.skyblock.menus.admin.Generator;
 import com.songoda.skyblock.menus.admin.Levelling;
 import com.songoda.skyblock.message.MessageManager;
+import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.PlaceholderManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.playtime.PlaytimeTask;
@@ -39,6 +39,7 @@ import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.structure.StructureManager;
+import com.songoda.skyblock.tasks.HologramTask;
 import com.songoda.skyblock.tasks.MobNetherWaterTask;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.usercache.UserCacheManager;
@@ -46,10 +47,14 @@ import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.visit.VisitTask;
 import com.songoda.skyblock.world.WorldManager;
 import com.songoda.skyblock.world.generator.VoidGenerator;
+import net.coreprotect.CoreProtect;
+import net.coreprotect.CoreProtectAPI;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import java.io.File;
@@ -72,6 +77,7 @@ public class SkyBlock extends SongodaPlugin {
     private InviteManager inviteManager;
     private BiomeManager biomeManager;
     private IslandLevelManager levellingManager;
+    private com.songoda.skyblock.economy.EconomyManager economyManager;
     private CommandManager commandManager;
     private StructureManager structureManager;
     private StackableManager stackableManager;
@@ -89,6 +95,12 @@ public class SkyBlock extends SongodaPlugin {
     private BankManager bankManager;
     private PermissionManager permissionManager;
 
+    private CoreProtectAPI coreProtectAPI;
+    private Permission vaultPermission;
+    
+    private boolean paper;
+    private boolean paperAsync;
+
     private final GuiManager guiManager = new GuiManager(this);
 
     public static SkyBlock getInstance() {
@@ -102,11 +114,30 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onPluginEnable() {
+        if(ServerVersion.isServerVersionAbove(ServerVersion.V1_16) || ServerVersion.isServerVersionBelow(ServerVersion.V1_8)) {
+            this.getLogger().warning("This Minecraft version is not officially supported.");
+        }
+        
+        if(paper = ServerProject.isServer(ServerProject.PAPER)){
+            try {
+                Bukkit.spigot().getClass().getMethod("getPaperConfig");
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                    paperAsync = true;
+                } else {
+                    paperAsync = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
+                            Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
+                }
+            } catch (NoSuchMethodException ignored) {
+                paperAsync = false;
+            }
+            this.getLogger().info("Enabling Paper hooks");
+        }
+
         // Run Songoda Updater
         SongodaCore.registerPlugin(this, 17, CompatibleMaterial.GRASS_BLOCK);
 
         // Load Economy
-        EconomyManager.load();
+        economyManager = new EconomyManager(this);
 
         // Load Holograms
         com.songoda.core.hooks.HologramManager.load(this);
@@ -124,14 +155,10 @@ public class SkyBlock extends SongodaPlugin {
         cooldownManager = new CooldownManager(this);
         limitationHandler = new LimitationInstanceHandler();
         fabledChallenge = new FabledChallenge(this);
-
-        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Scoreboard.Enable")) {
-            scoreboardManager = new ScoreboardManager(this);
-        }
-
+        scoreboardManager = new ScoreboardManager(this);
         inviteManager = new InviteManager(this);
         biomeManager = new BiomeManager(this);
-        levellingManager = new IslandLevelManager();
+        levellingManager = new IslandLevelManager(this);
         commandManager = new CommandManager(this);
         structureManager = new StructureManager(this);
         soundManager = new SoundManager(this);
@@ -155,7 +182,7 @@ public class SkyBlock extends SongodaPlugin {
         rewardManager = new RewardManager(this);
         rewardManager.loadRewards();
 
-        bankManager = new BankManager();
+        bankManager = new BankManager(this);
 
         new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
         new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -186,17 +213,40 @@ public class SkyBlock extends SongodaPlugin {
         pluginManager.registerEvents(new Grow(this), this);
         pluginManager.registerEvents(new Piston(this), this);
         pluginManager.registerEvents(new FallBreak(this), this);
+        pluginManager.registerEvents(new World(this), this);
+        
+        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+            pluginManager.registerEvents(new Sponge(this), this);
+        }
 
-        if (pluginManager.isPluginEnabled("EpicSpawners")) pluginManager.registerEvents(new EpicSpawners(this), this);
+        if (pluginManager.isPluginEnabled("EpicSpawners"))
+            pluginManager.registerEvents(new EpicSpawners(this), this);
         if (pluginManager.isPluginEnabled("UltimateStacker"))
             pluginManager.registerEvents(new UltimateStacker(this), this);
-
-        pluginManager.registerEvents(new Rollback(), this);
+        
         pluginManager.registerEvents(new Levelling(), this);
         pluginManager.registerEvents(new Generator(), this);
         pluginManager.registerEvents(new Creator(), this);
 
         this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
+    
+        if (pluginManager.isPluginEnabled("Vault")) {
+            this.vaultPermission = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
+        }
+    
+        switch (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getString("Economy.Manager", "Default")) {
+            case "Vault":
+                getEconomyManager().setEconomy("Vault");
+                break;
+            case "PlayerPoints":
+                getEconomyManager().setEconomy("PlayerPoints");
+                break;
+            case "Reserve":
+                getEconomyManager().setEconomy("Reserve");
+                break;
+        }
+        
+        this.coreProtectAPI = loadCoreProtect();
 
         SkyBlockAPI.setImplementation(INSTANCE);
     }
@@ -205,6 +255,10 @@ public class SkyBlock extends SongodaPlugin {
     public void onPluginDisable() {
         if (this.userCacheManager != null) {
             this.userCacheManager.onDisable();
+        }
+
+        if (this.scoreboardManager != null) {
+            this.scoreboardManager.disable();
         }
 
         if (this.islandManager != null) {
@@ -242,6 +296,22 @@ public class SkyBlock extends SongodaPlugin {
         HandlerList.unregisterAll(this);
     }
 
+    private CoreProtectAPI loadCoreProtect() {
+        Plugin plugin = getServer().getPluginManager().getPlugin("CoreProtect");
+
+        if (plugin != null) { // Check before loading classes
+            if (plugin instanceof CoreProtect) { // Check that CoreProtect is loaded
+                CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
+                if (CoreProtect.isEnabled()) { // Check that the API is enabled
+                    if (CoreProtect.APIVersion() >= 6) { // Check that a compatible version of the API is loaded
+                        return CoreProtect;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onConfigReload() {
 
@@ -274,6 +344,10 @@ public class SkyBlock extends SongodaPlugin {
 
     public BanManager getBanManager() {
         return banManager;
+    }
+
+    public BankManager getBankManager() {
+        return bankManager;
     }
 
     public IslandManager getIslandManager() {
@@ -383,5 +457,25 @@ public class SkyBlock extends SongodaPlugin {
 
     public GuiManager getGuiManager() {
         return guiManager;
+    }
+
+    public CoreProtectAPI getCoreProtectAPI() {
+        return coreProtectAPI;
+    }
+
+    public boolean isPaper() {
+        return paper;
+    }
+
+    public boolean isPaperAsync() {
+        return paperAsync;
+    }
+    
+    public Permission getVaultPermission() {
+        return vaultPermission;
+    }
+    
+    public EconomyManager getEconomyManager() {
+        return economyManager;
     }
 }

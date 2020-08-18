@@ -1,21 +1,18 @@
 package com.songoda.skyblock.localization;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.songoda.core.compatibility.CompatibleMaterial;
-import org.bukkit.Material;
-import org.bukkit.configuration.Configuration;
-
 import com.google.common.collect.Sets;
+import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.localization.type.Localization;
 import com.songoda.skyblock.localization.type.impl.BlankLocalization;
 import com.songoda.skyblock.localization.type.impl.EnumLocalization;
 import com.songoda.skyblock.localization.type.impl.MaterialsLocalization;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.Configuration;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class LocalizationManager {
 

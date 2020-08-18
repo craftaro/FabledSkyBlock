@@ -8,7 +8,9 @@ import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlacePermission extends ListeningPermission {
@@ -29,12 +31,22 @@ public class PlacePermission extends ListeningPermission {
 
         Player player = event.getPlayer();
 
-        if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.BONE_MEAL)
+        if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()).equals(CompatibleMaterial.BONE_MEAL))
             cancelAndMessage(event, player, plugin, messageManager);
     }
 
     @PermissionHandler
     public void onPlace(BlockPlaceEvent event) {
+        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+    }
+    
+    @PermissionHandler
+    public void onMultiPlace(BlockMultiPlaceEvent event) {
+        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+    }
+    
+    @PermissionHandler
+    public void onHangingPlace(HangingPlaceEvent event) {
         cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
     }
 }

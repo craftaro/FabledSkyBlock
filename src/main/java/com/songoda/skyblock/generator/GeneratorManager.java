@@ -4,7 +4,6 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
-
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.block.Block;
@@ -22,24 +21,20 @@ import java.util.Random;
 
 public class GeneratorManager {
 
-    private final SkyBlock skyblock;
-    private List<Generator> generatorStorage = new ArrayList<>();
+    private final SkyBlock plugin;
+    private final List<Generator> generatorStorage = new ArrayList<>();
 
-    public GeneratorManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public GeneratorManager(SkyBlock plugin) {
+        this.plugin = plugin;
         registerGenerators();
     }
 
     public void registerGenerators() {
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "generators.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "generators.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getString("Generators") == null)
             return;
-
-        CompatibleMaterial[] oreMaterials = new CompatibleMaterial[]{CompatibleMaterial.COAL, CompatibleMaterial.CHARCOAL, CompatibleMaterial.DIAMOND,
-                CompatibleMaterial.IRON_INGOT, CompatibleMaterial.GOLD_INGOT, CompatibleMaterial.EMERALD};
-        Random rnd = new Random();
 
         for (String generatorList : configLoad.getConfigurationSection("Generators").getKeys(false)) {
             if (configLoad.getString("Generators." + generatorList + ".Name") == null)
@@ -55,10 +50,19 @@ public class GeneratorManager {
                     }
                 }
             }
+            
+            Random rnd = new Random();
+            CompatibleMaterial icon;
+            if(!generatorMaterials.isEmpty()) {
+                icon = generatorMaterials.get(rnd.nextInt(generatorMaterials.size())).getMaterials();
+            } else {
+                icon = CompatibleMaterial.STONE;
+            }
 
             generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
                     IslandWorld.valueOf(configLoad.getString("Generators." + generatorList + ".World", "Normal")),
-                    oreMaterials[rnd.nextInt(oreMaterials.length)], generatorMaterials,
+                    icon, generatorMaterials,
+                    configLoad.getLong("Generators." + generatorList + ".UnlockLevel", 0L),
                     configLoad.getBoolean("Generators." + generatorList + ".Permission")));
         }
     }
@@ -119,7 +123,7 @@ public class GeneratorManager {
         CompatibleMaterial materials = getRandomMaterials(generator);
         if (materials == null) return block.getState();
         
-        skyblock.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 10.0F);
+        plugin.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 10.0F);
 
 
         if (NMSUtil.getVersionNumber() > 12) {
@@ -152,11 +156,11 @@ public class GeneratorManager {
         return CompatibleMaterial.COBBLESTONE;
     }
 
-    public void addGenerator(String name, IslandWorld isWorld, List<GeneratorMaterial> generatorMaterials, boolean permission) {
+    public void addGenerator(String name, IslandWorld isWorld, List<GeneratorMaterial> generatorMaterials, int level, boolean permission) {
         CompatibleMaterial[] oreMaterials = new CompatibleMaterial[]{CompatibleMaterial.COAL, CompatibleMaterial.CHARCOAL, CompatibleMaterial.DIAMOND,
                 CompatibleMaterial.IRON_INGOT, CompatibleMaterial.GOLD_INGOT, CompatibleMaterial.EMERALD};
         generatorStorage.add(new Generator(name, isWorld, oreMaterials[new Random().nextInt(oreMaterials.length)],
-                generatorMaterials, permission));
+                generatorMaterials, level, permission));
     }
 
     public void removeGenerator(Generator generator) {

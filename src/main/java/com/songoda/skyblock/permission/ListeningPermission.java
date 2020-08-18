@@ -5,11 +5,11 @@ import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
-import com.songoda.skyblock.permission.event.events.ProjectileLaunchByPlayerEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
@@ -37,6 +37,8 @@ public abstract class ListeningPermission extends BasicPermission {
     public void onBreak(BlockBreakEvent event) {}
 
     public void onPlace(BlockPlaceEvent event) {}
+    
+    public void onMultiPlace(BlockMultiPlaceEvent event) {}
 
     public void onVehicleDamage(VehicleDamageEvent event) {}
 
@@ -76,7 +78,7 @@ public abstract class ListeningPermission extends BasicPermission {
 
     public void onTeleport(PlayerTeleportEvent event) {}
 
-    public void onProjectileLaunch(ProjectileLaunchByPlayerEvent event) {}
+    public void onProjectileLaunch(ProjectileLaunchEvent event) {}
 
     public void onBlockIgnite(BlockIgniteEvent event) {}
 
@@ -88,7 +90,7 @@ public abstract class ListeningPermission extends BasicPermission {
         messageManager.sendMessage(player,
                 plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
                         .getFileConfiguration().getString("Island.Settings.Permission.Message"));
-        CompatibleSound.ENTITY_VILLAGER_NO.play(player);
+        plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1f, 1f);
     }
 
     protected void cancelAndMessage(Cancellable cancellable, Player player,

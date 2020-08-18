@@ -6,6 +6,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.command.ConsoleCommandSender;
@@ -18,11 +19,11 @@ public class CloseCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -32,8 +33,8 @@ public class CloseCommand extends SubCommand {
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                 || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && skyblock.getPermissionManager().hasPermission(island,"Visitor", IslandRole.Operator))) {
-            if (island.isOpen()) {
+                && plugin.getPermissionManager().hasPermission(island,"Visitor", IslandRole.Operator))) {
+            if (island.getStatus().equals(IslandStatus.OPEN) || island.getStatus().equals(IslandStatus.WHITELISTED)) {
                 islandManager.closeIsland(island);
 
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Close.Closed.Message"));

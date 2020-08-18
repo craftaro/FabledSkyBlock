@@ -19,11 +19,11 @@ public class CurrentCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length > 0) {

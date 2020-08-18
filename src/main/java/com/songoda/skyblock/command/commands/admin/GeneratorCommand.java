@@ -18,15 +18,15 @@ public class GeneratorCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (skyblock.getGeneratorManager() == null) {
+        if (plugin.getGeneratorManager() == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Generator.Disabled.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {

@@ -7,8 +7,8 @@ import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -27,8 +27,6 @@ public class DestroyPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
             return;
 
@@ -42,13 +40,24 @@ public class DestroyPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) return;
-        Player player = (Player)event.getDamager();
-        Entity entity = event.getEntity();
+        Player player = null;
+        if (event.getDamager() instanceof Player) {
+            player = (Player) event.getDamager();
+        }
+        if(event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player){
+            player = (Player) ((Projectile) event.getDamager()).getShooter();
+        }
+        if(player != null){
+            Entity entity = event.getEntity();
 
-        if (entity.getType() != EntityType.ARMOR_STAND) return;
-
-        cancelAndMessage(event, player, plugin, messageManager);
+            switch (entity.getType()){
+                case ARMOR_STAND:
+                case PAINTING:
+                case ITEM_FRAME:
+                    cancelAndMessage(event, player, plugin, messageManager);
+                    break;
+            }
+        }
     }
 
     @PermissionHandler

@@ -30,12 +30,12 @@ public class InviteCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -46,11 +46,11 @@ public class InviteCommand extends SubCommand {
                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                     || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && skyblock.getPermissionManager().hasPermission(island, "Invite", IslandRole.Operator))) {
-                Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                    && plugin.getPermissionManager().hasPermission(island, "Invite", IslandRole.Operator))) {
+                Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
 
                 if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()
-                        + 1) >= mainConfig.getFileConfiguration().getInt("Island.Member.Capacity")) {
+                        + 1) >= island.getMaxMembers()) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Capacity.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else {
@@ -77,8 +77,8 @@ public class InviteCommand extends SubCommand {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Invite.Member.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                        } else if (skyblock.getInviteManager().hasInvite(targetPlayer.getUniqueId())) {
-                            Invite invite = skyblock.getInviteManager().getInvite(targetPlayer.getUniqueId());
+                        } else if (plugin.getInviteManager().hasInvite(targetPlayer.getUniqueId())) {
+                            Invite invite = plugin.getInviteManager().getInvite(targetPlayer.getUniqueId());
 
                             if (invite.getOwnerUUID().equals(island.getOwnerUUID())) {
                                 messageManager.sendMessage(player,
@@ -213,7 +213,7 @@ public class InviteCommand extends SubCommand {
 
                             targetPlayer.spigot().sendMessage(chatComponent.getTextComponent());
 
-                            Invite invite = skyblock.getInviteManager().createInvite(targetPlayer, player,
+                            Invite invite = plugin.getInviteManager().createInvite(targetPlayer, player,
                                     island.getOwnerUUID(), respondTime);
 
                             Bukkit.getServer().getPluginManager()

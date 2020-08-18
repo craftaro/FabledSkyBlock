@@ -1,30 +1,28 @@
 package com.songoda.skyblock.challenge.challenge;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.logging.Level;
-
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager.Config;
+import java.io.File;
+import java.util.HashMap;
+import java.util.logging.Level;
 
 public class ChallengeManager {
-	private SkyBlock skyblock;
+	private SkyBlock plugin;
 	private HashMap<Integer, ChallengeCategory> categories;
 
-	public ChallengeManager(SkyBlock skyblock) {
-		this.skyblock = skyblock;
+	public ChallengeManager(SkyBlock plugin) {
+		this.plugin = plugin;
 		categories = new HashMap<>();
 		loadChallenges();
 	}
 
 	private void loadChallenges() {
-		Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "challenges.yml"));
+		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "challenges.yml"));
 		FileConfiguration configLoad = config.getFileConfiguration();
 
 		try {

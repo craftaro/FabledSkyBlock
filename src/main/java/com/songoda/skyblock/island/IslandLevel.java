@@ -1,6 +1,8 @@
 package com.songoda.skyblock.island;
 
 import com.google.common.base.Strings;
+import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.reward.LevelReward;
@@ -17,7 +19,7 @@ import java.util.Map.Entry;
 
 public class IslandLevel {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
     private UUID ownerUUID;
 
@@ -29,11 +31,11 @@ public class IslandLevel {
     // Highest level achieved, to prevent reward farming (since is level can decrease)
     private long highestLevel;
 
-    public IslandLevel(UUID ownerUUID, SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public IslandLevel(UUID ownerUUID, SkyBlock plugin) {
+        this.plugin = plugin;
         this.ownerUUID = ownerUUID;
 
-        final Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
+        final Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
         final FileConfiguration configLoad = config.getFileConfiguration();
 
         final ConfigurationSection section = configLoad.getConfigurationSection("Levelling.Materials");
@@ -63,7 +65,7 @@ public class IslandLevel {
     }
 
     public long getPoints() {
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         ConfigurationSection materialSection = configLoad.getConfigurationSection("Materials");
@@ -78,8 +80,15 @@ public class IslandLevel {
             if (current == null) continue;
 
             long pointsRequired = current.getLong("Points", 0);
+            long blockAmount = entry.getValue();
 
-            if (pointsRequired != 0) pointsEarned = pointsEarned + (entry.getValue() * pointsRequired);
+            long materialLimit = current.getLong("Limit", -1);
+            long materialAmountCounted = Math.min(materialLimit, blockAmount);
+
+            if (materialLimit == -1)
+                materialAmountCounted = blockAmount;
+
+            if (pointsRequired != 0) pointsEarned = pointsEarned + (materialAmountCounted * pointsRequired);
 
         }
 
@@ -87,7 +96,16 @@ public class IslandLevel {
     }
 
     public long getMaterialPoints(String material) {
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (material.toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER.name();
+                    break;
+            }
+        }
+        
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         ConfigurationSection materialSection = configLoad.getConfigurationSection("Materials");
@@ -99,23 +117,28 @@ public class IslandLevel {
         if (current == null) return 0;
 
         Long boxedAmount = this.materials.get(material);
-
         if (boxedAmount == null) return 0;
+
+        long materialLimit = current.getLong("Limit", -1);
+        long materialAmountCounted = Math.min(materialLimit, boxedAmount);
+
+        if (materialLimit == -1)
+            materialAmountCounted = boxedAmount;
 
         long pointsRequired = current.getLong("Points");
 
-        return pointsRequired == 0 ? 0 : boxedAmount * pointsRequired;
+        return pointsRequired == 0 ? 0 : materialAmountCounted * pointsRequired;
     }
 
     public long getLevel() {
-        long division = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getLong("Island.Levelling.Division");
+        long division = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getLong("Island.Levelling.Division");
 
         if (division == 0) {
             division = 1;
         }
 
         long points = getPoints();
-        long subtract = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getLong("Island.Levelling.Subtract");
+        long subtract = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getLong("Island.Levelling.Subtract");
         if(points >= subtract){
             points -= subtract;
         } else {
@@ -133,8 +156,8 @@ public class IslandLevel {
         if (level <= highestLevel)
             return;
 
-        final FileConfiguration language = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
-        final FileConfiguration config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration();
+        final FileConfiguration language = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+        final FileConfiguration config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
 
         OfflinePlayer owner = Bukkit.getOfflinePlayer(ownerUUID);
 
@@ -145,16 +168,16 @@ public class IslandLevel {
             if (config.getBoolean("Island.LevelRewards.Rewards", false)) {
                 // Reward the player for each level reached, message only for the highest, so we don't spam the chat
                 for (int i = (int) highestLevel + 1; i <= level; i++) {
-                    LevelReward levelReward = skyblock.getRewardManager().getReward(i);
+                    LevelReward levelReward = plugin.getRewardManager().getReward(i);
 
                     if (levelReward != null)
-                        levelReward.give(player, skyblock, i);
+                        levelReward.give(player, plugin, i);
 
-                    List<LevelReward> repeatRewards = skyblock.getRewardManager().getRepeatRewards(i);
+                    List<LevelReward> repeatRewards = plugin.getRewardManager().getRepeatRewards(i);
 
                     if (!repeatRewards.isEmpty()) {
                         for (LevelReward reward : repeatRewards) {
-                            reward.give(player, skyblock, i);
+                            reward.give(player, plugin, i);
                         }
                     }
                 }
@@ -165,7 +188,7 @@ public class IslandLevel {
 
                 if (!Strings.isNullOrEmpty(msg)) {
                     msg = msg.replace("%level%", String.valueOf(level));
-                    skyblock.getMessageManager().sendMessage(player, msg);
+                    plugin.getMessageManager().sendMessage(player, msg);
                 }
             }
         }
@@ -174,18 +197,44 @@ public class IslandLevel {
     }
 
     public void setMaterialAmount(String material, long amount) {
-        skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml")).getFileConfiguration()
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (material.toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER.name();
+                    break;
+            }
+        }
+        
+        plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml")).getFileConfiguration()
                 .set("Levelling.Materials." + material + ".Amount", amount);
 
         this.materials.put(material, amount);
     }
 
     public long getMaterialAmount(String material) {
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (material.toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER.name();
+                    break;
+            }
+        }
         return this.materials.getOrDefault(material, 0l);
     }
 
     public void removeMaterial(String material) {
-        skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml")).getFileConfiguration()
+        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (material.toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    material = CompatibleMaterial.REPEATER.name();
+                    break;
+            }
+        }
+        
+        plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml")).getFileConfiguration()
                 .set("Levelling.Materials." + material, null);
 
         this.materials.remove(material);
@@ -204,7 +253,7 @@ public class IslandLevel {
     }
 
     public void setMaterials(Map<String, Long> materials) {
-        Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
+        Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         configLoad.set("Levelling.Materials", null);
@@ -233,7 +282,7 @@ public class IslandLevel {
     }
 
     public void save() {
-        Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
+        Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
         File configFile = config.getFile();
         FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -245,7 +294,7 @@ public class IslandLevel {
     }
 
     public void setHighestLevel(long highestLevel) {
-        Config config = skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
+        Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         configLoad.set("Levelling.Highest-Level", highestLevel);

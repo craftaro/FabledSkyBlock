@@ -9,7 +9,7 @@ import com.songoda.skyblock.cooldown.CooldownPlayer;
 import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.levelling.rework.IslandLevelManager;
+import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.menus.Levelling;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -30,15 +30,15 @@ public class LevelCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        IslandLevelManager levellingManager = skyblock.getLevellingManager();
-        CooldownManager cooldownManager = skyblock.getCooldownManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        VisitManager visitManager = skyblock.getVisitManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        IslandLevelManager levellingManager = plugin.getLevellingManager();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        VisitManager visitManager = plugin.getVisitManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {

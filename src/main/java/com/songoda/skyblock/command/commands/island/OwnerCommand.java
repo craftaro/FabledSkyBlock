@@ -37,15 +37,15 @@ public class OwnerCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        CooldownManager cooldownManager = skyblock.getCooldownManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -126,7 +126,7 @@ public class OwnerCommand extends SubCommand {
 
                         return;
                     } else {
-                        int confirmationTime = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                        int confirmationTime = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                 .getFileConfiguration().getInt("Island.Confirmation.Timeout");
 
                         playerData.setOwnership(targetPlayerUUID);

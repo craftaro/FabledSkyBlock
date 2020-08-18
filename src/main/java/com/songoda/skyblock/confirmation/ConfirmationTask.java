@@ -1,9 +1,8 @@
 package com.songoda.skyblock.confirmation;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ConfirmationTask extends BukkitRunnable {
 

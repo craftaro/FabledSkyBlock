@@ -7,13 +7,13 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.permission.event.Stoppable;
 import com.songoda.skyblock.permission.permissions.basic.*;
 import com.songoda.skyblock.permission.permissions.listening.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -72,9 +72,7 @@ public class PermissionManager {
                 new MobHurtingPermission(plugin),
                 new ArmorStandUsePermission(plugin),
                 new MonsterHurtingPermission(plugin),
-                new PvpPermission(plugin),
                 new HangingDestroyPermission(plugin),
-                new DamagePermission(plugin),
                 new ExplosionsPermission(plugin),
                 new MobTamingPermission(plugin),
                 new MobGriefingPermission(plugin),
@@ -84,13 +82,14 @@ public class PermissionManager {
                 new ItemPickupPermission(),
                 new ItemDropPermission(),
                 new FishingPermission(plugin),
+                new CauldronPermission(plugin),
+                new ProtectorDamagePermission(plugin),
 
                 // Basic
                 new MemberPermission(),
                 new VisitorPermission(),
                 new KickPermission(),
                 new BiomePermission(),
-                new KeepItemsOnDeathPermission(),
                 new UnbanPermission(),
                 new BanPermission(),
                 new BorderPermission(),
@@ -103,6 +102,21 @@ public class PermissionManager {
                 new VisitorSpawnPermission());
 
         if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")){
+            registerPermission(new KeepItemsOnDeathPermission());
+        }
+    
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")){
+            registerPermission(new PvpPermission(plugin));
+        }
+    
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                .getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")){
+            registerPermission(new DamagePermission(plugin));
+        }
+    
+        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")){
             registerPermission(new HungerPermission(plugin));
         }
@@ -113,7 +127,43 @@ public class PermissionManager {
         })).collect(Collectors.toList());
     }
 
+    private void updateSettingsConfig(BasicPermission permission){
+        FileManager.Config settingsConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "settings.yml"));
+        FileConfiguration settingsConfigLoad = settingsConfig.getFileConfiguration();
+
+        switch (permission.getType()){
+            case GENERIC:
+                if(settingsConfigLoad.getString("Settings.Visitor." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Visitor." + permission.getName(), true);
+                }
+                if(settingsConfigLoad.getString("Settings.Member." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Member." + permission.getName(), true);
+                }
+                if(settingsConfigLoad.getString("Settings.Coop." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Coop." + permission.getName(), true);
+                }
+                break;
+            case OPERATOR:
+                if(settingsConfigLoad.getString("Settings.Operator." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Operator." + permission.getName(), true);
+                }
+                break;
+            case ISLAND:
+                if(settingsConfigLoad.getString("Settings.Owner." + permission.getName()) == null){
+                    settingsConfigLoad.set("Settings.Owner." + permission.getName(), true);
+                }
+                break;
+        }
+        try {
+            settingsConfigLoad.save(settingsConfig.getFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean registerPermission(BasicPermission permission) {
+        updateSettingsConfig(permission);
+
         registeredPermissions.put(permission.getName().toUpperCase(), permission);
         Set<Method> methods;
         try {
@@ -172,7 +222,7 @@ public class PermissionManager {
                 e.printStackTrace();
             }
         }
-        return true;
+        return !cancellable.isCancelled();
     }
 
     public boolean hasPermission(Player player, Island island, BasicPermission permission, boolean reversePermission){
@@ -188,11 +238,19 @@ public class PermissionManager {
         switch(island.getRole(player)){
             case Owner:
                 if(!configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
-                    return island.hasPermission(IslandRole.Owner, permission);
+                    if(permission.getType().equals(PermissionType.ISLAND)) {
+                        return island.hasPermission(IslandRole.Owner, permission);
+                    } else {
+                        return true;
+                    }
                 }
             case Operator:
                 if(!configLoad.getBoolean("Island.Settings.OwnersAndOperatorsAsMembers", false)){
-                    return island.hasPermission(IslandRole.Operator, permission);
+                    if(permission.getType().equals(PermissionType.OPERATOR)) {
+                        return island.hasPermission(IslandRole.Operator, permission);
+                    } else {
+                        return true;
+                    }
                 }
             case Member:
                 return island.hasPermission(IslandRole.Member, permission);
@@ -209,10 +267,11 @@ public class PermissionManager {
     }
 
     public boolean hasPermission(Location location, String permission, IslandRole islandRole) {
-        if (location == null)
-            return false;
-        return plugin.getIslandManager().getIslandAtLocation(location)
-                .hasPermission(islandRole, getPermission(permission));
+        Island island = plugin.getIslandManager().getIslandAtLocation(location);
+        if(island != null) {
+            return island.hasPermission(islandRole, getPermission(permission));
+        }
+        return true; // Return true as there is no island, we don't have to modify the normal world behavior
     }
 
     public boolean hasPermission(Island island, String permission, IslandRole islandRole) {

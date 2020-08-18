@@ -3,11 +3,7 @@
  */
 package com.songoda.skyblock.challenge.inventory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
-import java.util.function.Consumer;
-
+import com.songoda.skyblock.SkyBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,21 +14,24 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 
-import com.songoda.skyblock.SkyBlock;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public class InventoryManager implements Listener {
-	private SkyBlock skyblock;
+	private SkyBlock plugin;
 	private HashMap<UUID, Inventory> inventories;
 	private int task;
 
-	public InventoryManager(SkyBlock skyblock) {
-		this.skyblock = skyblock;
+	public InventoryManager(SkyBlock plugin) {
+		this.plugin = plugin;
 		this.inventories = new HashMap<>();
 	}
 
 	public void init() {
-		Bukkit.getPluginManager().registerEvents(this, skyblock);
-		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(skyblock, () -> {
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
 			if (inventories.size() == 0)
 				return;
 			for (Inventory inv : inventories.values()) {

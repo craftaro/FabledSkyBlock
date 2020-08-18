@@ -1,11 +1,11 @@
 package com.songoda.skyblock.limit;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class EnumLimitation<K extends Enum<K>> implements Limitation {
 

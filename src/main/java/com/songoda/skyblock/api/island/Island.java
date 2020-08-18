@@ -7,6 +7,7 @@ import com.songoda.skyblock.api.utils.APIUtil;
 import com.songoda.skyblock.api.visit.Visit;
 import com.songoda.skyblock.island.IslandCoop;
 import com.songoda.skyblock.island.IslandPermission;
+import com.songoda.skyblock.island.IslandStatus;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
@@ -14,7 +15,10 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class Island {
 
@@ -372,12 +376,14 @@ public class Island {
 	/**
 	 * @return true of conditions met, false otherwise
 	 */
+	@Deprecated
 	public boolean isOpen() {
-		return handle.isOpen();
+		return handle.getStatus().equals(IslandStatus.OPEN);
 	}
-
+	
+	@Deprecated
 	public void setOpen(boolean open) {
-		this.handle.setOpen(open);
+		this.handle.setStatus(open ? IslandStatus.OPEN : IslandStatus.CLOSED);
 	}
 
 	/**
@@ -459,7 +465,8 @@ public class Island {
 	 */
 	public void load() {
 		if (this.handle == null) {
-			this.handle = SkyBlockAPI.getImplementation().getIslandManager().loadIsland(player);
+			SkyBlockAPI.getImplementation().getIslandManager().loadIsland(player);
+			this.handle = SkyBlockAPI.getImplementation().getIslandManager().getIsland(player);
 		}
 	}
 

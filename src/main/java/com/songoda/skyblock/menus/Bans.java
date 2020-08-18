@@ -17,7 +17,6 @@ import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,19 +42,19 @@ public class Bans {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
-            Island island = skyblock.getIslandManager().getIsland(player);
+            Island island = plugin.getIslandManager().getIsland(player);
 
-            Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = languageConfig.getFileConfiguration();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -69,7 +68,7 @@ public class Bans {
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
-                    } else if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                    } else if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                             .getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Bans.Disabled.Message"));
@@ -96,7 +95,7 @@ public class Bans {
                             configLoad.getString("Menu.Bans.Item.Information.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> {
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
                                 if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
                                     Bukkit.getServer().dispatchCommand(player,
@@ -131,21 +130,21 @@ public class Bans {
                             playerData1.setPage(MenuType.BANS, playerData1.getPage(MenuType.BANS) - 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
                                 '&', configLoad.getString("Menu.Bans.Item.Next.Displayname")))) {
                             playerData1.setPage(MenuType.BANS, playerData1.getPage(MenuType.BANS) + 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else {
                             if ((island1.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && skyblock.getPermissionManager().hasPermission(island1,"Unban", IslandRole.Operator))
+                                    && plugin.getPermissionManager().hasPermission(island1,"Unban", IslandRole.Operator))
                                     || island1.hasRole(IslandRole.Owner, player.getUniqueId())) {
                                 String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
                                 Bukkit.getServer().dispatchCommand(player, "island unban " + playerName);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 3L);
                             } else {
                                 messageManager.sendMessage(player,
@@ -236,7 +235,7 @@ public class Bans {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Bans.Title")));
             nInv.setRows(6);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
         }
     }
 }

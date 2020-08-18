@@ -1,0 +1,478 @@
+Scoreboards:
+  NoIsland:
+    Title:
+      Interval: 3
+      Content:
+        - '&b&lSkyBlock'
+        - '&a&lS&b&lkyBlock'
+        - '&a&lSk&b&lyBlock'
+        - '&a&lSky&b&lBlock'
+        - '&a&lSkyB&b&llock'
+        - '&a&lSkyBl&b&lock'
+        - '&a&lSkyBlo&b&lck'
+        - '&a&lSkyBloc&b&lk'
+        - '&a&lSkyBlock'
+        - '&b&lS&a&lkyBlock'
+        - '&b&lSk&a&lyBlock'
+        - '&b&lSky&a&lBlock'
+        - '&b&lSkyB&a&llock'
+        - '&b&lSkyBl&a&lock'
+        - '&b&lSkyBlo&a&lck'
+        - '&b&lSkyBloc&a&lk'
+    Rows:
+      1:
+        Interval: -1
+        Content:
+          - ''
+      2:
+        Interval: -1
+        Content:
+          - '&bIsland&f:'
+      3:
+        Interval: 5
+        Content:
+          - '&cYou do not own an Island.'
+      4:
+        Interval: 20
+        Content:
+          - ' &8- &7/island create'
+      5:
+        Interval: -1
+        Content:
+          - ''
+      6:
+        Interval: 5
+        Content:
+          - '&bProfile&f:'
+      7:
+        Interval: 20
+        Content:
+          - ' &8- &7Rank&8: &fDefault'
+      '8':
+        Interval: 5
+        Content:
+          - ' &8- &7Balance&8: &f$0'
+      '9':
+        Interval: -1
+        Content:
+          - ''
+      10:
+        Interval: 1
+        Content:
+          - '&ewww.songoda.com'
+          - '&cw&eww.songoda.com'
+          - '&cww&ew.songoda.com'
+          - '&cwww&e.songoda.com'
+          - '&cwww.&esongoda.com'
+          - '&cwww.s&eongoda.com'
+          - '&cwww.so&engoda.com'
+          - '&cwww.son&egoda.com'
+          - '&cwww.song&eoda.com'
+          - '&cwww.songo&eda.com'
+          - '&cwww.songod&ea.com'
+          - '&cwww.songoda&e.com'
+          - '&cwww.songoda.&ecom'
+          - '&cwww.songoda.c&eom'
+          - '&cwww.songoda.co&em'
+          - '&cwww.songoda.com'
+          - '&ew&cww.songoda.com'
+          - '&eww&cw.songoda.com'
+          - '&ewww&c.songoda.com'
+          - '&ewww.&csongoda.com'
+          - '&ewww.s&congoda.com'
+          - '&ewww.so&cngoda.com'
+          - '&ewww.son&cgoda.com'
+          - '&ewww.song&coda.com'
+          - '&ewww.songo&cda.com'
+          - '&ewww.songod&ca.com'
+          - '&ewww.songoda&c.com'
+          - '&ewww.songoda.&ccom'
+          - '&ewww.songoda.c&com'
+          - '&ewww.songoda.co&cm'
+  Island:
+    Solo:
+      Empty:
+        Title:
+          Interval: 3
+          Content:
+            - '&b&lSkyBlock'
+            - '&a&lS&b&lkyBlock'
+            - '&a&lSk&b&lyBlock'
+            - '&a&lSky&b&lBlock'
+            - '&a&lSkyB&b&llock'
+            - '&a&lSkyBl&b&lock'
+            - '&a&lSkyBlo&b&lck'
+            - '&a&lSkyBloc&b&lk'
+            - '&a&lSkyBlock'
+            - '&b&lS&a&lkyBlock'
+            - '&b&lSk&a&lyBlock'
+            - '&b&lSky&a&lBlock'
+            - '&b&lSkyB&a&llock'
+            - '&b&lSkyBl&a&lock'
+            - '&b&lSkyBlo&a&lck'
+            - '&b&lSkyBloc&a&lk'
+        Rows:
+          1:
+            Interval: -1
+            Content:
+              - ''
+          2:
+            Interval: -1
+            Content:
+              - '&bIsland&f:'
+          3:
+            Interval: 5
+            Content:
+              - ' &8- &7Level&8: &f%fabledskyblock_island_level_formatted%'
+          4:
+            Interval: 20
+            Content:
+              - ' &8- &7Size&8: &f%fabledskyblock_island_size%&7x&f%fabledskyblock_island_size%'
+          5:
+            Interval: -1
+            Content:
+              - ''
+          6:
+            Interval: 5
+            Content:
+              - '&bProfile&f:'
+          7:
+            Interval: 20
+            Content:
+              - ' &8- &7Rank&8: &fDefault'
+          '8':
+            Interval: 5
+            Content:
+              - ' &8- &7Balance&8: &f$0'
+          '9':
+            Interval: -1
+            Content:
+              - ''
+          10:
+            Interval: 1
+            Content:
+              - '&ewww.songoda.com'
+              - '&cw&eww.songoda.com'
+              - '&cww&ew.songoda.com'
+              - '&cwww&e.songoda.com'
+              - '&cwww.&esongoda.com'
+              - '&cwww.s&eongoda.com'
+              - '&cwww.so&engoda.com'
+              - '&cwww.son&egoda.com'
+              - '&cwww.song&eoda.com'
+              - '&cwww.songo&eda.com'
+              - '&cwww.songod&ea.com'
+              - '&cwww.songoda&e.com'
+              - '&cwww.songoda.&ecom'
+              - '&cwww.songoda.c&eom'
+              - '&cwww.songoda.co&em'
+              - '&cwww.songoda.com'
+              - '&ew&cww.songoda.com'
+              - '&eww&cw.songoda.com'
+              - '&ewww&c.songoda.com'
+              - '&ewww.&csongoda.com'
+              - '&ewww.s&congoda.com'
+              - '&ewww.so&cngoda.com'
+              - '&ewww.son&cgoda.com'
+              - '&ewww.song&coda.com'
+              - '&ewww.songo&cda.com'
+              - '&ewww.songod&ca.com'
+              - '&ewww.songoda&c.com'
+              - '&ewww.songoda.&ccom'
+              - '&ewww.songoda.c&com'
+              - '&ewww.songoda.co&cm'
+      Occupied:
+        Title:
+          Interval: 3
+          Content:
+            - '&b&lSkyBlock'
+            - '&a&lS&b&lkyBlock'
+            - '&a&lSk&b&lyBlock'
+            - '&a&lSky&b&lBlock'
+            - '&a&lSkyB&b&llock'
+            - '&a&lSkyBl&b&lock'
+            - '&a&lSkyBlo&b&lck'
+            - '&a&lSkyBloc&b&lk'
+            - '&a&lSkyBlock'
+            - '&b&lS&a&lkyBlock'
+            - '&b&lSk&a&lyBlock'
+            - '&b&lSky&a&lBlock'
+            - '&b&lSkyB&a&llock'
+            - '&b&lSkyBl&a&lock'
+            - '&b&lSkyBlo&a&lck'
+            - '&b&lSkyBloc&a&lk'
+        Rows:
+          1:
+            Interval: -1
+            Content:
+              - ''
+          2:
+            Interval: -1
+            Content:
+              - '&bIsland&f:'
+          3:
+            Interval: 5
+            Content:
+              - ' &8- &7Level&8: &f%fabledskyblock_island_level_formatted%'
+          4:
+            Interval: 5
+            Content:
+              - ' &8- &7Visitors&8: &f%fabledskyblock_island_visitors%'
+          5:
+            Interval: 20
+            Content:
+              - ' &8- &7Size&8: &f%fabledskyblock_island_size%&7x&f%fabledskyblock_island_size%'
+          6:
+            Interval: -1
+            Content:
+              - ''
+          7:
+            Interval: 5
+            Content:
+              - '&bProfile&f:'
+          8:
+            Interval: 20
+            Content:
+              - ' &8- &7Rank&8: &fDefault'
+          '9':
+            Interval: 5
+            Content:
+              - ' &8- &7Balance&8: &f$0'
+          '10':
+            Interval: -1
+            Content:
+              - ''
+          11:
+            Interval: -1
+            Content:
+              - '&ewww.songoda.com'
+              - '&cw&eww.songoda.com'
+              - '&cww&ew.songoda.com'
+              - '&cwww&e.songoda.com'
+              - '&cwww.&esongoda.com'
+              - '&cwww.s&eongoda.com'
+              - '&cwww.so&engoda.com'
+              - '&cwww.son&egoda.com'
+              - '&cwww.song&eoda.com'
+              - '&cwww.songo&eda.com'
+              - '&cwww.songod&ea.com'
+              - '&cwww.songoda&e.com'
+              - '&cwww.songoda.&ecom'
+              - '&cwww.songoda.c&eom'
+              - '&cwww.songoda.co&em'
+              - '&cwww.songoda.com'
+              - '&ew&cww.songoda.com'
+              - '&eww&cw.songoda.com'
+              - '&ewww&c.songoda.com'
+              - '&ewww.&csongoda.com'
+              - '&ewww.s&congoda.com'
+              - '&ewww.so&cngoda.com'
+              - '&ewww.son&cgoda.com'
+              - '&ewww.song&coda.com'
+              - '&ewww.songo&cda.com'
+              - '&ewww.songod&ca.com'
+              - '&ewww.songoda&c.com'
+              - '&ewww.songoda.&ccom'
+              - '&ewww.songoda.c&com'
+              - '&ewww.songoda.co&cm'
+    Team:
+      Empty:
+        Title:
+          Interval: 3
+          Content:
+            - '&b&lSkyBlock'
+            - '&a&lS&b&lkyBlock'
+            - '&a&lSk&b&lyBlock'
+            - '&a&lSky&b&lBlock'
+            - '&a&lSkyB&b&llock'
+            - '&a&lSkyBl&b&lock'
+            - '&a&lSkyBlo&b&lck'
+            - '&a&lSkyBloc&b&lk'
+            - '&a&lSkyBlock'
+            - '&b&lS&a&lkyBlock'
+            - '&b&lSk&a&lyBlock'
+            - '&b&lSky&a&lBlock'
+            - '&b&lSkyB&a&llock'
+            - '&b&lSkyBl&a&lock'
+            - '&b&lSkyBlo&a&lck'
+            - '&b&lSkyBloc&a&lk'
+        Rows:
+          1:
+            Interval: -1
+            Content:
+              - ''
+          2:
+            Interval: -1
+            Content:
+              - '&bIsland&f:'
+          3:
+            Interval: 20
+            Content:
+              - ' &8- &7Role&8: &f%fabledskyblock_island_role%'
+          4:
+            Interval: 20
+            Content:
+              - ' &8- &7Members&8: &f%fabledskyblock_island_members%'
+          5:
+            Interval: 5
+            Content:
+              - ' &8- &7Level&8: &f%fabledskyblock_island_level_formatted%'
+          6:
+            Interval: 20
+            Content:
+              - ' &8- &7Size&8: &f%fabledskyblock_island_size%&7x&f%fabledskyblock_island_size%'
+          7:
+            Interval: -1
+            Content:
+              - ''
+          8:
+            Interval: 5
+            Content:
+              - '&bProfile&f:'
+          9:
+            Interval: 20
+            Content:
+              - ' &8- &7Rank&8: &fDefault'
+          '10':
+            Interval: 5
+            Content:
+              - ' &8- &7Balance&8: &f$0'
+          '11':
+            Interval: -1
+            Content:
+              - ''
+          12:
+            Interval: -1
+            Content:
+              - '&ewww.songoda.com'
+              - '&cw&eww.songoda.com'
+              - '&cww&ew.songoda.com'
+              - '&cwww&e.songoda.com'
+              - '&cwww.&esongoda.com'
+              - '&cwww.s&eongoda.com'
+              - '&cwww.so&engoda.com'
+              - '&cwww.son&egoda.com'
+              - '&cwww.song&eoda.com'
+              - '&cwww.songo&eda.com'
+              - '&cwww.songod&ea.com'
+              - '&cwww.songoda&e.com'
+              - '&cwww.songoda.&ecom'
+              - '&cwww.songoda.c&eom'
+              - '&cwww.songoda.co&em'
+              - '&cwww.songoda.com'
+              - '&ew&cww.songoda.com'
+              - '&eww&cw.songoda.com'
+              - '&ewww&c.songoda.com'
+              - '&ewww.&csongoda.com'
+              - '&ewww.s&congoda.com'
+              - '&ewww.so&cngoda.com'
+              - '&ewww.son&cgoda.com'
+              - '&ewww.song&coda.com'
+              - '&ewww.songo&cda.com'
+              - '&ewww.songod&ca.com'
+              - '&ewww.songoda&c.com'
+              - '&ewww.songoda.&ccom'
+              - '&ewww.songoda.c&com'
+              - '&ewww.songoda.co&cm'
+      Occupied:
+        Title:
+          Interval: 3
+          Content:
+            - '&b&lSkyBlock'
+            - '&a&lS&b&lkyBlock'
+            - '&a&lSk&b&lyBlock'
+            - '&a&lSky&b&lBlock'
+            - '&a&lSkyB&b&llock'
+            - '&a&lSkyBl&b&lock'
+            - '&a&lSkyBlo&b&lck'
+            - '&a&lSkyBloc&b&lk'
+            - '&a&lSkyBlock'
+            - '&b&lS&a&lkyBlock'
+            - '&b&lSk&a&lyBlock'
+            - '&b&lSky&a&lBlock'
+            - '&b&lSkyB&a&llock'
+            - '&b&lSkyBl&a&lock'
+            - '&b&lSkyBlo&a&lck'
+            - '&b&lSkyBloc&a&lk'
+        Rows:
+          1:
+            Interval: -1
+            Content:
+              - ''
+          2:
+            Interval: -1
+            Content:
+              - '&bIsland&f:'
+          3:
+            Interval: 20
+            Content:
+              - ' &8- &7Role&8: &f%fabledskyblock_island_role%'
+          4:
+            Interval: 20
+            Content:
+              - ' &8- &7Members&8: &f%fabledskyblock_island_members%'
+          5:
+            Interval: 5
+            Content:
+              - ' &8- &7Level&8: &f%fabledskyblock_island_level_formatted%'
+          6:
+            Interval: 5
+            Content:
+              - ' &8- &7Visitors&8: &f%fabledskyblock_island_visitors%'
+          7:
+            Interval: 20
+            Content:
+              - ' &8- &7Size&8: &f%fabledskyblock_island_size%&7x&f%fabledskyblock_island_size%'
+          8:
+            Interval: -1
+            Content:
+              - ''
+          9:
+            Interval: 5
+            Content:
+              - '&bProfile&f:'
+          10:
+            Interval: 20
+            Content:
+              - ' &8- &7Rank&8: &fDefault'
+          '11':
+            Interval: 5
+            Content:
+              - ' &8- &7Balance&8: &f$0'
+          '12':
+            Interval: -1
+            Content:
+              - ''
+          13:
+            Interval: -1
+            Content:
+              - '&ewww.songoda.com'
+              - '&cw&eww.songoda.com'
+              - '&cww&ew.songoda.com'
+              - '&cwww&e.songoda.com'
+              - '&cwww.&esongoda.com'
+              - '&cwww.s&eongoda.com'
+              - '&cwww.so&engoda.com'
+              - '&cwww.son&egoda.com'
+              - '&cwww.song&eoda.com'
+              - '&cwww.songo&eda.com'
+              - '&cwww.songod&ea.com'
+              - '&cwww.songoda&e.com'
+              - '&cwww.songoda.&ecom'
+              - '&cwww.songoda.c&eom'
+              - '&cwww.songoda.co&em'
+              - '&cwww.songoda.com'
+              - '&ew&cww.songoda.com'
+              - '&eww&cw.songoda.com'
+              - '&ewww&c.songoda.com'
+              - '&ewww.&csongoda.com'
+              - '&ewww.s&congoda.com'
+              - '&ewww.so&cngoda.com'
+              - '&ewww.son&cgoda.com'
+              - '&ewww.song&coda.com'
+              - '&ewww.songo&cda.com'
+              - '&ewww.songod&ca.com'
+              - '&ewww.songoda&c.com'
+              - '&ewww.songoda.&ccom'
+              - '&ewww.songoda.c&com'
+              - '&ewww.songoda.co&cm'

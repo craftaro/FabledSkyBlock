@@ -5,8 +5,8 @@ import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.levelling.rework.IslandLevelManager;
-import com.songoda.skyblock.levelling.rework.LevellingMaterial;
+import com.songoda.skyblock.levelling.IslandLevelManager;
+import com.songoda.skyblock.levelling.LevellingMaterial;
 import com.songoda.skyblock.menus.MenuType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
@@ -16,12 +16,10 @@ import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,12 +49,12 @@ public class Levelling implements Listener {
 
     @SuppressWarnings("deprecation")
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        IslandLevelManager levellingManager = skyblock.getLevellingManager();
-        FileManager fileManager = skyblock.getFileManager();
+        IslandLevelManager levellingManager = plugin.getLevellingManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
         List<LevellingMaterial> levellingMaterials = levellingManager.getWorthsAsLevelingMaterials();
 
@@ -74,7 +72,7 @@ public class Levelling implements Listener {
             return testInventory.getItem(0) != null;
         }).collect(Collectors.toList());
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         nInventoryUtil nInv = new nInventoryUtil(player, null);
@@ -88,7 +86,7 @@ public class Levelling implements Listener {
                         configLoad.getStringList("Menu.Admin.Levelling.Item.Information.Lore"),
                         new Placeholder[]{new Placeholder("%materials", "" + levellingMaterials.size()),
                                 new Placeholder("%division",
-                                        "" + fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                        "" + fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                                 .getFileConfiguration().getInt("Island.Levelling.Division"))},
                         null, null),
                 4);
@@ -147,7 +145,7 @@ public class Levelling implements Listener {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Levelling.Title")));
         nInv.setRows(6);
 
-        Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
     }
 
     @SuppressWarnings("deprecation")
@@ -157,14 +155,14 @@ public class Levelling implements Listener {
         ItemStack is = event.getCurrentItem();
 
         if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-            SkyBlock skyblock = SkyBlock.getInstance();
+            SkyBlock plugin = SkyBlock.getInstance();
 
-            IslandLevelManager levellingManager = skyblock.getLevellingManager();
-            MessageManager messageManager = skyblock.getMessageManager();
-            SoundManager soundManager = skyblock.getSoundManager();
-            FileManager fileManager = skyblock.getFileManager();
+            IslandLevelManager levellingManager = plugin.getLevellingManager();
+            MessageManager messageManager = plugin.getMessageManager();
+            SoundManager soundManager = plugin.getSoundManager();
+            FileManager fileManager = plugin.getFileManager();
 
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             String inventoryName = "";
@@ -180,7 +178,7 @@ public class Levelling implements Listener {
 
             if (inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Levelling.Title")))) {
                 event.setCancelled(true);
-                PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+                PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
                 if (!(player.hasPermission("fabledskyblock.admin.level") || player.hasPermission("fabledskyblock.admin.*")
                         || player.hasPermission("fabledskyblock.*"))) {
@@ -218,35 +216,37 @@ public class Levelling implements Listener {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Admin.Levelling.Permission.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                            } else if (event1.getName().matches("[0-9]+")) {
-                                int pointDivision = Integer.valueOf(event1.getName());
-
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Admin.Levelling.Division.Message")
-                                                .replace("%division", NumberUtil.formatNumberByDecimal(pointDivision)));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
-
-                                Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
-                                    Config config12 = fileManager
-                                            .getConfig(new File(skyblock.getDataFolder(), "config.yml"));
-                                    FileConfiguration configLoad12 = config12.getFileConfiguration();
-
-                                    configLoad12.set("Island.Levelling.Division", pointDivision);
-
-                                    try {
-                                        configLoad12.save(config12.getFile());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                });
-
-                                player.closeInventory();
-
-                                Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
                             } else {
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Admin.Levelling.Numerical.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                try {
+                                    double pointDivision = Double.parseDouble(event1.getName());
+    
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Levelling.Division.Message")
+                                                    .replace("%division", NumberUtil.formatNumberByDecimal(pointDivision)));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+    
+                                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                                        Config config12 = fileManager
+                                                .getConfig(new File(plugin.getDataFolder(), "config.yml"));
+                                        FileConfiguration configLoad12 = config12.getFileConfiguration();
+        
+                                        configLoad12.set("Island.Levelling.Division", pointDivision);
+        
+                                        try {
+                                            configLoad12.save(config12.getFile());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+    
+                                    player.closeInventory();
+    
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
+                                } catch (NumberFormatException ignored) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Levelling.Numerical.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                }
                             }
 
                             event1.setWillClose(true);
@@ -281,7 +281,7 @@ public class Levelling implements Listener {
                         playerData.setPage(MenuType.ADMIN_LEVELLING, playerData.getPage(MenuType.ADMIN_LEVELLING) - 1);
                         soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
 
                         return;
                     } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
@@ -291,7 +291,7 @@ public class Levelling implements Listener {
                         playerData.setPage(MenuType.ADMIN_LEVELLING, playerData.getPage(MenuType.ADMIN_LEVELLING) + 1);
                         soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
 
                         return;
                     }
@@ -317,8 +317,8 @@ public class Levelling implements Listener {
                                                     configLoad.getString("Island.Admin.Levelling.Permission.Message"));
                                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                         } else if (levellingManager.hasWorth(materials)) {
-                                            if (event1.getName().matches("[0-9]+")) {
-                                                int materialPoints = Integer.valueOf(event1.getName());
+                                            try {
+                                                double materialPoints = Double.parseDouble(event1.getName());
                                                 materialList.setPoints(materialPoints);
 
                                                 messageManager.sendMessage(player, configLoad
@@ -329,13 +329,15 @@ public class Levelling implements Listener {
                                                         1.0F);
                                                 player.closeInventory();
 
-                                                Bukkit.getServer().getScheduler().runTaskLater(skyblock,
+                                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                                         () -> open(player), 1L);
 
-                                                Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock,
+                                                levellingManager.addWorth(materials, materialPoints);
+
+                                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
                                                         () -> {
                                                             Config config1 = fileManager.getConfig(new File(
-                                                                    skyblock.getDataFolder(), "levelling.yml"));
+                                                                    plugin.getDataFolder(), "levelling.yml"));
                                                             FileConfiguration configLoad1 = config1
                                                                     .getFileConfiguration();
 
@@ -349,7 +351,7 @@ public class Levelling implements Listener {
                                                                 e.printStackTrace();
                                                             }
                                                         });
-                                            } else {
+                                            } catch (NumberFormatException ignored) {
                                                 messageManager.sendMessage(player, configLoad
                                                         .getString("Island.Admin.Levelling.Numerical.Message"));
                                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
@@ -386,9 +388,9 @@ public class Levelling implements Listener {
                                                 .replace("%material", materials.name()));
                                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
-                                Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                                     Config config13 = fileManager
-                                            .getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+                                            .getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
                                     FileConfiguration configLoad13 = config13.getFileConfiguration();
 
                                     configLoad13.set("Materials." + materials.name(), null);
@@ -425,8 +427,8 @@ public class Levelling implements Listener {
                         .replace("%material", materials.name()));
                 soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
-                    Config config14 = fileManager.getConfig(new File(skyblock.getDataFolder(), "levelling.yml"));
+                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                    Config config14 = fileManager.getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
                     FileConfiguration configLoad14 = config14.getFileConfiguration();
 
                     configLoad14.set("Materials." + materials.name() + ".Points", 0);

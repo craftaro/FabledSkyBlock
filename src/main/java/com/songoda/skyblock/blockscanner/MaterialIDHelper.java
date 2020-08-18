@@ -1,27 +1,22 @@
 package com.songoda.skyblock.blockscanner;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.songoda.core.compatibility.ServerVersion;
 import org.bukkit.Material;
 
-import com.songoda.skyblock.utils.version.NMSUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public final class MaterialIDHelper {
 
-    private final static int VERSION = NMSUtil.getVersionNumber();
-
-    private MaterialIDHelper() {
-
-    }
+    private MaterialIDHelper() {}
 
     private final static Map<Integer, Material> MATERIALS;
 
     static {
         MATERIALS = new HashMap<>();
 
-        if (VERSION > 12) {
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
             for (Material type : Material.values()) {
                 if (type.isLegacy()) MATERIALS.put(type.getId(), type);
             }

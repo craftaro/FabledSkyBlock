@@ -1,34 +1,38 @@
 package com.songoda.skyblock.utils.world;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-
+import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.songoda.skyblock.utils.version.NMSUtil;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public final class WorldBorder {
-
-    private static Class<?> packetPlayOutWorldBorder, packetPlayOutWorldBorderEnumClass, worldBorderClass,
-            craftWorldClass;
+    
+    private static Class<?> packetPlayOutWorldBorderEnumClass;
+    private static Class<?> worldBorderClass;
+    private static Class<?> craftWorldClass;
     private static Constructor<?> packetPlayOutWorldBorderConstructor;
 
     static {
         try {
-            packetPlayOutWorldBorder = NMSUtil.getNMSClass("PacketPlayOutWorldBorder");
+            Class<?> packetPlayOutWorldBorder = NMSUtil.getNMSClass("PacketPlayOutWorldBorder");
 
-            if (NMSUtil.getVersionNumber() > 10) {
-                packetPlayOutWorldBorderEnumClass = packetPlayOutWorldBorder.getDeclaredClasses()[0];
-            } else {
-                packetPlayOutWorldBorderEnumClass = packetPlayOutWorldBorder.getDeclaredClasses()[1];
+            if(packetPlayOutWorldBorder != null) {
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+                    packetPlayOutWorldBorderEnumClass = packetPlayOutWorldBorder.getDeclaredClasses()[0];
+                } else {
+                    packetPlayOutWorldBorderEnumClass = packetPlayOutWorldBorder.getDeclaredClasses()[1];
+                }
+                
+                worldBorderClass = NMSUtil.getNMSClass("WorldBorder");
+                craftWorldClass = NMSUtil.getCraftClass("CraftWorld");
+    
+                packetPlayOutWorldBorderConstructor = packetPlayOutWorldBorder.getConstructor(worldBorderClass,
+                        packetPlayOutWorldBorderEnumClass);
             }
-
-            worldBorderClass = NMSUtil.getNMSClass("WorldBorder");
-            craftWorldClass = NMSUtil.getCraftClass("CraftWorld");
-
-            packetPlayOutWorldBorderConstructor = packetPlayOutWorldBorder.getConstructor(worldBorderClass,
-                    packetPlayOutWorldBorderEnumClass);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,12 +43,9 @@ public final class WorldBorder {
             if (centerLocation == null || centerLocation.getWorld() == null)
                 return;
 
-            if (size % 2 == 1)
-                size++;
-
             Object worldBorder = worldBorderClass.getConstructor().newInstance();
 
-            if (NMSUtil.getVersionNumber() >= 9) {
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                 Object craftWorld = craftWorldClass.cast(centerLocation.getWorld());
                 Method getHandleMethod = craftWorld.getClass().getMethod("getHandle");
                 Object worldServer = getHandleMethod.invoke(craftWorld);
@@ -52,13 +53,16 @@ public final class WorldBorder {
             }
 
             Method setCenter = worldBorder.getClass().getMethod("setCenter", double.class, double.class);
-            setCenter.invoke(worldBorder, centerLocation.getBlockX(), centerLocation.getBlockZ());
+            setCenter.invoke(worldBorder, centerLocation.getX(), centerLocation.getZ());
 
             Method setSize = worldBorder.getClass().getMethod("setSize", double.class);
             setSize.invoke(worldBorder, size);
 
             Method setWarningTime = worldBorder.getClass().getMethod("setWarningTime", int.class);
             setWarningTime.invoke(worldBorder, 0);
+            
+            Method setWarningDistance = worldBorder.getClass().getMethod("setWarningDistance", int.class);
+            setWarningDistance.invoke(worldBorder, 0);
 
             Method transitionSizeBetween = worldBorder.getClass().getMethod("transitionSizeBetween", double.class,
                     double.class, long.class);
@@ -73,7 +77,7 @@ public final class WorldBorder {
             Object packet = packetPlayOutWorldBorderConstructor.newInstance(worldBorder,
                     Enum.valueOf((Class<Enum>) packetPlayOutWorldBorderEnumClass, "INITIALIZE"));
             NMSUtil.sendPacket(player, packet);
-        } catch (Exception e) {
+        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }

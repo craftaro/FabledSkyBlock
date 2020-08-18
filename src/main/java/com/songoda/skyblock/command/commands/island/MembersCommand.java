@@ -14,15 +14,15 @@ public class MembersCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        SoundManager soundManager = skyblock.getSoundManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        if (skyblock.getIslandManager().getIsland(player) == null) {
-            skyblock.getMessageManager().sendMessage(player,
-                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+        if (plugin.getIslandManager().getIsland(player) == null) {
+            plugin.getMessageManager().sendMessage(player,
+                    plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
                             .getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
-            PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+            PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
             playerData.setType(Members.Type.Default);
             playerData.setSort(Members.Sort.Default);
 

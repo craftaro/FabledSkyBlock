@@ -1,7 +1,8 @@
 package com.songoda.skyblock.utils.item;
 
- 
+
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -24,10 +25,11 @@ public final class ItemStackUtil {
             Object NBTTagCompound = NMSUtil.getNMSClass("NBTCompressedStreamTools")
                     .getMethod("a", DataInputStream.class).invoke(null, dataInputStream);
             Object craftItemStack;
-
-            if (NMSUtil.getVersionNumber() > 12) {
+    
+            assert NMSItemStackClass != null;
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                 craftItemStack = NMSItemStackClass.getMethod("a", NBTTagCompoundClass).invoke(null, NBTTagCompound);
-            } else if (NMSUtil.getVersionNumber() > 10) {
+            } else if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
                 craftItemStack = NMSItemStackClass.getConstructor(NBTTagCompoundClass).newInstance(NBTTagCompound);
             } else {
                 craftItemStack = NMSItemStackClass.getMethod("createStack", NBTTagCompoundClass).invoke(null,

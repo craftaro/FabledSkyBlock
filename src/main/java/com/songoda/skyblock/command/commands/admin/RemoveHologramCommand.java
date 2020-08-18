@@ -5,11 +5,10 @@ import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.hologram.Hologram;
-import com.songoda.skyblock.tasks.HologramTask;
 import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-
+import com.songoda.skyblock.tasks.HologramTask;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -33,12 +32,12 @@ public class RemoveHologramCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        HologramTask hologramManager = skyblock.getHologramTask();
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        HologramTask hologramManager = plugin.getHologramTask();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -57,7 +56,7 @@ public class RemoveHologramCommand extends SubCommand {
             }
 
             if (hologramType != null) {
-                Config locationsConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "locations.yml"));
+                Config locationsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
                 FileConfiguration locationsConfigLoad = locationsConfig.getFileConfiguration();
 
                 if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + hologramType.name()) == null) {
@@ -72,7 +71,7 @@ public class RemoveHologramCommand extends SubCommand {
                         e.printStackTrace();
                     }
 
-                    Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+                    Bukkit.getServer().getScheduler().runTask(plugin, () -> {
                         HologramType hologramType1 = HologramType.valueOf(WordUtils.capitalize(args[0].toLowerCase()));
                         Hologram hologram = hologramManager.getHologram(hologramType1);
 

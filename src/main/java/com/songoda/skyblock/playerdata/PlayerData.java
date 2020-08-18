@@ -1,14 +1,13 @@
 package com.songoda.skyblock.playerdata;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
-import com.songoda.skyblock.bank.Type;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.confirmation.Confirmation;
+import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.menus.MenuType;
 import com.songoda.skyblock.utils.structure.Area;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,7 +17,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class PlayerData {
-
+    
+    private final SkyBlock plugin;
     private UUID uuid;
     private UUID islandOwnerUUID;
     private UUID ownershipUUID;
@@ -34,6 +34,9 @@ public class PlayerData {
     private Object sort;
 
     private Area area;
+    
+    private boolean chatSpy;
+    private Set<UUID> spiedIslands;
 
     private boolean chat;
     private boolean preview;
@@ -43,6 +46,8 @@ public class PlayerData {
     private List<Transaction> transactions;
 
     public PlayerData(Player player) {
+        this.plugin = SkyBlock.getInstance();
+        
         uuid = player.getUniqueId();
         islandOwnerUUID = null;
 
@@ -53,18 +58,33 @@ public class PlayerData {
 
         area = new Area();
 
+        chatSpy = getConfig().getFileConfiguration().getBoolean("ChatSpy", false);
+        spiedIslands = new HashSet<>();
+    
+        if (getConfig().getFileConfiguration().getString("ChatSpiedIslands") != null) {
+            for (String islandUUID : getConfig().getFileConfiguration().getStringList("ChatSpiedIslands")) {
+                spiedIslands.add(FastUUID.parseUUID(islandUUID));
+            }
+        }
+        
         chat = false;
         preview = false;
         transactions = new ArrayList<>();
         FileConfiguration configLoad = getConfig().getFileConfiguration();
         for (int i = 0;i< configLoad.getInt("Bank.Transactions.Size");i++) {
             Transaction t = new Transaction();
-            t.action = Type.valueOf(configLoad.getString("Bank.Transactions."+i+".Action"));
-            t.ammount = Float.parseFloat(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Amount")));
-            t.player = Bukkit.getOfflinePlayer(UUID.fromString(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Player"))));
+            t.action = Transaction.Type.valueOf(configLoad.getString("Bank.Transactions."+i+".Action"));
+            t.amount = Float.parseFloat(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Amount")));
+            t.player = Bukkit.getOfflinePlayer(FastUUID.parseUUID(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Player"))));
             Date d = new Date();
             d.setTime(configLoad.getLong("Bank.Transactions."+i+".Date"));
             t.timestamp = d;
+            String visibility = configLoad.getString("Bank.Transactions."+i+".Visibility");
+            if(visibility != null){
+                t.visibility = Transaction.Visibility.valueOf(visibility);
+            } else {
+                t.visibility = Transaction.Visibility.USER; // Defaulting this as it's a new field
+            }
             transactions.add(t);
         }
     }
@@ -148,14 +168,21 @@ public class PlayerData {
         this.playTime = playTime;
     }
 
+    public boolean isScoreboard() {
+        return getConfig().getFileConfiguration().getBoolean("Scoreboard", true);
+    }
+
+    public void setScoreboard(boolean scoreboard) {
+        getConfig().getFileConfiguration().set("Scoreboard", scoreboard);
+    }
+    
     public boolean isPreview() {
         return preview;
     }
-
+    
     public void setPreview(boolean preview) {
         this.preview = preview;
     }
-
 
     public int getVisitTime() {
         return visitTime;
@@ -175,7 +202,7 @@ public class PlayerData {
 
     public UUID getOwner() {
         String islandOwnerUUID = getConfig().getFileConfiguration().getString("Island.Owner");
-        return (islandOwnerUUID == null) ? null : UUID.fromString(islandOwnerUUID);
+        return (islandOwnerUUID == null) ? null : FastUUID.parseUUID(islandOwnerUUID);
     }
 
     public void setOwner(UUID islandOwnerUUID) {
@@ -254,8 +281,8 @@ public class PlayerData {
         }
     }
 
-    public void save() {
-        transactions = BankManager.getInstance().getTransactionList(getPlayer());
+    public synchronized void save() {
+        transactions = plugin.getBankManager().getTransactionList(getPlayerUUID());
         Config config = getConfig();
         FileConfiguration configLoad = config.getFileConfiguration();
         configLoad.set("Statistics.Island.Playtime", getPlaytime());
@@ -264,13 +291,22 @@ public class PlayerData {
             for (int i = 0; i < transactions.size(); i++) {
                 Transaction t = transactions.get(i);
                 configLoad.set("Bank.Transactions." + i + ".Action", t.action.name());
-                configLoad.set("Bank.Transactions." + i + ".Amount", t.ammount);
+                configLoad.set("Bank.Transactions." + i + ".Amount", t.amount);
                 configLoad.set("Bank.Transactions." + i + ".Player", t.player.getUniqueId().toString());
                 configLoad.set("Bank.Transactions." + i + ".Date", t.timestamp.getTime());
+                configLoad.set("Bank.Transactions." + i + ".Visibility", t.visibility.name());
             }
         }else {
             configLoad.set("Bank.Transactions.Size", 0);
         }
+    
+        configLoad.set("ChatSpy", chatSpy);
+        List<String> tempSpiedIslands = new ArrayList<>();
+        for(UUID uuid : spiedIslands){
+            tempSpiedIslands.add(FastUUID.toString(uuid));
+        }
+        configLoad.set("ChatSpiedIslands", tempSpiedIslands);
+        
         try {
             configLoad.save(config.getFile());
         } catch (IOException e) {
@@ -279,15 +315,67 @@ public class PlayerData {
     }
 
     private Config getConfig() {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        return skyblock.getFileManager().getConfig(new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+        SkyBlock plugin = SkyBlock.getInstance();
+        return plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), FastUUID.toString(uuid) + ".yml"));
     }
     
     public Player getPlayer() {
         return Bukkit.getPlayer(uuid);
     }
 
+    public UUID getPlayerUUID() {
+        return uuid;
+    }
+
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+    
+    public boolean isChatSpy() {
+        return chatSpy;
+    }
+    
+    public void setChatSpy(boolean chatSpy) {
+        this.chatSpy = chatSpy;
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+    }
+    
+    public void addChatSpyIsland(UUID uuid) {
+        spiedIslands.add(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+    }
+    
+    public boolean isChatSpyIsland(UUID uuid) {
+        return spiedIslands.contains(uuid);
+    }
+    
+    public void removeChatSpyIsland(UUID uuid) {
+        spiedIslands.remove(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+    }
+    
+    public Set<UUID> getChatSpyIslands() {
+        return new HashSet<>(spiedIslands);
+    }
+    
+    public void addChatSpyIsland(Island island) {
+        this.addChatSpyIsland(island.getOwnerUUID());
+    }
+    
+    public boolean isChatSpyIsland(Island island) {
+        return this.isChatSpyIsland(island.getOwnerUUID());
+    }
+    
+    public void removeChatSpyIsland(Island island) {
+        this.removeChatSpyIsland(island.getOwnerUUID());
+    }
+    
+    public boolean isGlobalChatSpy() {
+        return spiedIslands.isEmpty();
+    }
+    
+    public void enableGlobalChatSpy() {
+        spiedIslands.clear();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
     }
 }

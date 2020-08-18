@@ -1,7 +1,6 @@
 package com.songoda.skyblock.localization.type.impl;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import org.bukkit.Material;
 
  
 

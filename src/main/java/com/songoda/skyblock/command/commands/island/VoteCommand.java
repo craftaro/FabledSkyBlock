@@ -9,6 +9,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -28,18 +29,18 @@ public class VoteCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        VisitManager visitManager = skyblock.getVisitManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        VisitManager visitManager = plugin.getVisitManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
-            if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+            if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                     .getBoolean("Island.Visitor.Vote")) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Disabled.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -68,13 +69,13 @@ public class VoteCommand extends SubCommand {
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             } else {
                 Visit visit = visitManager.getIsland(islandOwnerUUID);
+                if (!islandManager.containsIsland(islandOwnerUUID)) {
+                    islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
+                }
+    
+                Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 
-                if (visit.isOpen()) {
-                    if (!islandManager.containsIsland(islandOwnerUUID)) {
-                        islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
-                    }
-
-                    Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
+                if (visit.getStatus().equals(IslandStatus.OPEN)) {
 
                     if (island.hasRole(IslandRole.Member, player.getUniqueId())
                             || island.hasRole(IslandRole.Operator, player.getUniqueId())

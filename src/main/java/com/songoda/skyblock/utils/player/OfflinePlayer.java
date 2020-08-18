@@ -1,5 +1,6 @@
 package com.songoda.skyblock.utils.player;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.usercache.UserCacheManager;
 import org.bukkit.Bukkit;
@@ -11,64 +12,70 @@ import java.util.UUID;
 
 public class OfflinePlayer {
 
-    private UUID uuid;
+    private final UUID uuid;
+    org.bukkit.OfflinePlayer bukkitOfflinePlayer;
 
     private String name;
-    private String memberSince;
-    private String lastOnline;
+    private final String memberSince;
+    private final String lastOnline;
     private UUID owner = null;
-    private String[] texture;
+    private final String[] texture;
 
-    private int playtime;
+    private final int playtime;
 
     public OfflinePlayer(String name) {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        UserCacheManager userCacheManager = skyblock.getUserCacheManager();
-
-        @SuppressWarnings("deprecation")
-        org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(name);
-
-        this.name = offlinePlayer.getName();
-        this.uuid = offlinePlayer.getUniqueId();
-
-        if (this.uuid == null && userCacheManager.hasUser(name)) {
+        SkyBlock plugin = SkyBlock.getInstance();
+        UserCacheManager userCacheManager = plugin.getUserCacheManager();
+        
+        bukkitOfflinePlayer = Bukkit.getServer().getOfflinePlayer(name);
+        
+        if (userCacheManager.hasUser(name)) {
             this.uuid = userCacheManager.getUser(name);
+            bukkitOfflinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
+        } else {
+            this.uuid = bukkitOfflinePlayer.getUniqueId();
         }
+    
+        this.name = bukkitOfflinePlayer.getName();
 
         FileConfiguration configLoad = YamlConfiguration.loadConfiguration(
-                new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+                new File(new File(plugin.getDataFolder().toString() + "/player-data"), FastUUID.toString(uuid) + ".yml"));
         texture = new String[]{configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value")};
         playtime = configLoad.getInt("Statistics.Island.Playtime");
         memberSince = configLoad.getString("Statistics.Island.Join");
         lastOnline = configLoad.getString("Statistics.Island.LastOnline");
 
         if (!(configLoad.getString("Island.Owner") == null || configLoad.getString("Island.Owner").isEmpty())) {
-            owner = UUID.fromString(configLoad.getString("Island.Owner"));
+            owner = FastUUID.parseUUID(configLoad.getString("Island.Owner"));
         }
     }
 
     public OfflinePlayer(UUID uuid) {
-        SkyBlock skyblock = SkyBlock.getInstance();
-        UserCacheManager userCacheManager = skyblock.getUserCacheManager();
+        SkyBlock plugin = SkyBlock.getInstance();
+        UserCacheManager userCacheManager = plugin.getUserCacheManager();
+    
+        bukkitOfflinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
 
-        org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(uuid);
-
-        this.name = offlinePlayer.getName();
+        this.name = bukkitOfflinePlayer.getName();
         this.uuid = uuid;
 
-        if (this.name == null && userCacheManager.hasUser(uuid)) {
-            this.name = userCacheManager.getUser(uuid);
+        if (this.name == null) {
+            if(userCacheManager.hasUser(uuid)) {
+                this.name = userCacheManager.getUser(uuid);
+            } else {
+                this.name = "Unknown";
+            }
         }
 
         FileConfiguration configLoad = YamlConfiguration.loadConfiguration(
-                new File(new File(skyblock.getDataFolder().toString() + "/player-data"), uuid.toString() + ".yml"));
+                new File(new File(plugin.getDataFolder().toString() + "/player-data"), FastUUID.toString(uuid) + ".yml"));
         texture = new String[]{configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value")};
         playtime = configLoad.getInt("Statistics.Island.Playtime");
         memberSince = configLoad.getString("Statistics.Island.Join");
         lastOnline = configLoad.getString("Statistics.Island.LastOnline");
 
         if (!(configLoad.getString("Island.Owner") == null || configLoad.getString("Island.Owner").isEmpty())) {
-            owner = UUID.fromString(configLoad.getString("Island.Owner"));
+            owner = FastUUID.parseUUID(configLoad.getString("Island.Owner"));
         }
     }
 
@@ -102,5 +109,9 @@ public class OfflinePlayer {
 
     public int getPlaytime() {
         return playtime;
+    }
+    
+    public org.bukkit.OfflinePlayer getBukkitOfflinePlayer() {
+        return bukkitOfflinePlayer;
     }
 }

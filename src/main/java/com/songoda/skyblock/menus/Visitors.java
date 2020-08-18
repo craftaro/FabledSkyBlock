@@ -15,7 +15,6 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -40,25 +39,25 @@ public class Visitors {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                     .getFileConfiguration();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (playerDataManager.hasPlayerData(player)) {
-                    PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+                    PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
                     Island island = islandManager.getIsland(player);
 
                     if (island == null) {
-                        skyblock.getMessageManager().sendMessage(player,
+                        plugin.getMessageManager().sendMessage(player,
                                 configLoad.getString("Command.Island.Visitors.Owner.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
@@ -98,20 +97,20 @@ public class Visitors {
                             playerData.setPage(MenuType.VISITORS, playerData.getPage(MenuType.VISITORS) - 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
                                 '&', configLoad.getString("Menu.Visitors.Item.Next.Displayname")))) {
                             playerData.setPage(MenuType.VISITORS, playerData.getPage(MenuType.VISITORS) + 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else {
                             boolean isOperator = island.hasRole(IslandRole.Operator, player.getUniqueId()),
                                     isOwner = island.hasRole(IslandRole.Owner, player.getUniqueId()),
                                     canKick = permissionManager.hasPermission(island, "Kick", IslandRole.Operator),
                                     canBan = permissionManager.hasPermission(island, "Ban", IslandRole.Operator),
                                     banningEnabled = fileManager
-                                            .getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                                            .getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                             .getFileConfiguration().getBoolean("Island.Visitor.Banning");
                             String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
 
@@ -147,14 +146,14 @@ public class Visitors {
                                 }
                             }
 
-                            Bukkit.getServer().getScheduler().runTaskLater(skyblock, () -> open(player), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         }
                     }
                 }
             });
 
             PlayerData playerData = playerDataManager.getPlayerData(player);
-            Island island = skyblock.getIslandManager().getIsland(player);
+            Island island = plugin.getIslandManager().getIsland(player);
 
             Set<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
             Map<Integer, UUID> sortedIslandVisitors = new TreeMap<>();
@@ -212,9 +211,9 @@ public class Visitors {
             } else {
                 boolean isOperator = island.hasRole(IslandRole.Operator, player.getUniqueId()),
                         isOwner = island.hasRole(IslandRole.Owner, player.getUniqueId()),
-                        canKick = skyblock.getPermissionManager().hasPermission(island, "Kick", IslandRole.Operator),
-                        canBan = skyblock.getPermissionManager().hasPermission(island, "Ban", IslandRole.Operator),
-                        banningEnabled = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                        canKick = plugin.getPermissionManager().hasPermission(island, "Kick", IslandRole.Operator),
+                        canBan = plugin.getPermissionManager().hasPermission(island, "Ban", IslandRole.Operator),
+                        banningEnabled = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                 .getFileConfiguration().getBoolean("Island.Visitor.Banning");
                 int index = playerMenuPage * 36 - 36,
                         endIndex = index >= islandVisitors.size() ? islandVisitors.size() - 1 : index + 36,
@@ -294,7 +293,7 @@ public class Visitors {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Visitors.Title")));
             nInv.setRows(6);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
         }
     }
 }

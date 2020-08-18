@@ -1,80 +1,79 @@
 package com.songoda.skyblock.config;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.logging.Level;
-
+import com.google.common.io.ByteStreams;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.google.common.io.ByteStreams;
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.island.IslandWorld;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Level;
 
 public class FileManager {
 
-    private final SkyBlock skyblock;
-    private Map<String, Config> loadedConfigs = new HashMap<>();
+    private final SkyBlock plugin;
+    private final Map<String, Config> loadedConfigs = new HashMap<>();
 
-    public FileManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public FileManager(SkyBlock plugin) {
+        this.plugin = plugin;
+
+        backupIfNeeded();
 
         loadConfigs();
     }
 
     public void loadConfigs() {
-        if (!skyblock.getDataFolder().exists()) {
-            skyblock.getDataFolder().mkdir();
+        if (!plugin.getDataFolder().exists()) {
+            plugin.getDataFolder().mkdir();
         }
 
-        File structureDirectory = new File(skyblock.getDataFolder().toString() + "/structures");
+        File structureDirectory = new File(plugin.getDataFolder().toString() + "/structures");
 
         if (!structureDirectory.exists()) {
             structureDirectory.mkdir();
         }
 
         // Will remain null unless WorldEdit is present.
-        File schematicsDirectory = null;
+        File schematicsDirectory;
 
-        if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !(schematicsDirectory = new File(skyblock.getDataFolder().toString() + "/schematics")).exists()) {
+        if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !(schematicsDirectory = new File(plugin.getDataFolder().toString() + "/schematics")).exists()) {
             schematicsDirectory.mkdir();
         }
 
         Map<String, File> configFiles = new LinkedHashMap<>();
-        configFiles.put("limits.yml", new File(skyblock.getDataFolder(), "limits.yml"));
-        configFiles.put("worlds.yml", new File(skyblock.getDataFolder(), "worlds.yml"));
-        configFiles.put("levelling.yml", new File(skyblock.getDataFolder(), "levelling.yml"));
-        configFiles.put("config.yml", new File(skyblock.getDataFolder(), "config.yml"));
-        configFiles.put("language.yml", new File(skyblock.getDataFolder(), "language.yml"));
-        configFiles.put("settings.yml", new File(skyblock.getDataFolder(), "settings.yml"));
-        configFiles.put("upgrades.yml", new File(skyblock.getDataFolder(), "upgrades.yml"));
-        configFiles.put("generators.yml", new File(skyblock.getDataFolder(), "generators.yml"));
-        configFiles.put("stackables.yml", new File(skyblock.getDataFolder(), "stackables.yml"));
-        configFiles.put("structures.yml", new File(skyblock.getDataFolder(), "structures.yml"));
-        configFiles.put("rewards.yml", new File(skyblock.getDataFolder(), "rewards.yml"));
-        configFiles.put("structures/default.structure", new File(skyblock.getDataFolder().toString() + "/structures", "default.structure"));
-        configFiles.put("challenges.yml", new File(skyblock.getDataFolder(), "challenges.yml"));
+        configFiles.put("limits.yml", new File(plugin.getDataFolder(), "limits.yml"));
+        configFiles.put("worlds.yml", new File(plugin.getDataFolder(), "worlds.yml"));
+        configFiles.put("levelling.yml", new File(plugin.getDataFolder(), "levelling.yml"));
+        configFiles.put("config.yml", new File(plugin.getDataFolder(), "config.yml"));
+        configFiles.put("language.yml", new File(plugin.getDataFolder(), "language.yml"));
+        configFiles.put("settings.yml", new File(plugin.getDataFolder(), "settings.yml"));
+        configFiles.put("upgrades.yml", new File(plugin.getDataFolder(), "upgrades.yml"));
+        configFiles.put("biomes.yml", new File(plugin.getDataFolder(), "biomes.yml"));
+        // configFiles.put("menus.yml", new File(plugin.getDataFolder(), "menus.yml"));
+        configFiles.put("scoreboard.yml", new File(plugin.getDataFolder(), "scoreboard.yml"));
+        configFiles.put("placeholders.yml", new File(plugin.getDataFolder(), "placeholders.yml"));
+        configFiles.put("generators.yml", new File(plugin.getDataFolder(), "generators.yml"));
+        configFiles.put("stackables.yml", new File(plugin.getDataFolder(), "stackables.yml"));
+        configFiles.put("structures.yml", new File(plugin.getDataFolder(), "structures.yml"));
+        configFiles.put("rewards.yml", new File(plugin.getDataFolder(), "rewards.yml"));
+        configFiles.put("structures/default.structure", new File(plugin.getDataFolder().toString() + "/structures", "default.structure"));
+        configFiles.put("challenges.yml", new File(plugin.getDataFolder(), "challenges.yml"));
 
-        File oldStructureFile = new File(skyblock.getDataFolder().toString() + "/structures", "default.structure");
+        File oldStructureFile = new File(plugin.getDataFolder().toString() + "/structures", "default.structure");
         oldStructureFile.delete();
 
         for (Entry<String, File> configEntry : configFiles.entrySet()) {
@@ -89,8 +88,10 @@ public class FileManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try (InputStream is = skyblock.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
-                    ByteStreams.copy(is, os);
+                try (InputStream is = plugin.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
+                    if(is != null){
+                        ByteStreams.copy(is, os);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -98,13 +99,18 @@ public class FileManager {
             }
 
             if (configFile.exists()) {
-                if (fileName.equals("config.yml") || fileName.equals("language.yml") || fileName.equals("settings.yml") || fileName.equals("worlds.yml")) {
+                if (fileName.equals("config.yml") ||
+                        fileName.equals("language.yml") ||
+                        fileName.equals("worlds.yml") ||
+                        fileName.equals("biomes.yml") ||
+                        fileName.equals("scoreboard.yml") ||
+                        fileName.equals("placeholders.yml")) {
                     FileChecker fileChecker;
 
-                    if (fileName.equals("config.yml")) {
-                        fileChecker = new FileChecker(skyblock, this, fileName, true);
+                    if (fileName.equals("config.yml") || fileName.equals("biomes.yml")) {
+                        fileChecker = new FileChecker(plugin, this, fileName, true);
                     } else {
-                        fileChecker = new FileChecker(skyblock, this, fileName, false);
+                        fileChecker = new FileChecker(plugin, this, fileName, false);
                     }
 
                     fileChecker.loadSections();
@@ -114,8 +120,10 @@ public class FileManager {
             } else {
                 try {
                     configFile.createNewFile();
-                    try (InputStream is = skyblock.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
-                        ByteStreams.copy(is, os);
+                    try (InputStream is = plugin.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
+                        if(is != null){
+                            ByteStreams.copy(is, os);
+                        }
                     }
 
                     if (fileName.equals("worlds.yml")) {
@@ -153,19 +161,48 @@ public class FileManager {
         final ConfigurationSection section = config.getFileConfiguration().createSection(path);
 
         section.set("world", location.getWorld().getName());
-        section.set("x", Double.valueOf(location.getX()));
-        section.set("y", Double.valueOf(location.getY()));
-        section.set("z", Double.valueOf(location.getZ()));
+        section.set("x", location.getX());
+        section.set("y", location.getY());
+        section.set("z", location.getZ());
 
         if (direction) {
-            section.set("yaw", Float.valueOf(location.getYaw()));
-            section.set("pitch", Float.valueOf(location.getPitch()));
+            section.set("yaw", location.getYaw());
+            section.set("pitch", location.getPitch());
         }
 
         try {
             config.getFileConfiguration().save(config.getFile());
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+    
+    public void backupIfNeeded() {
+        File languageFile = new File(plugin.getDataFolder(), "language.yml");
+        File scoreboardFile = new File(plugin.getDataFolder(), "scoreboard.yml");
+        File placeholderFile = new File(plugin.getDataFolder(), "placeholders.yml");
+        if(languageFile.exists() && (!scoreboardFile.exists() || !placeholderFile.exists())) {
+            File backupDir = new File(plugin.getDataFolder().toString() + "/backup");
+            if(!backupDir.exists()) {
+                backupDir.mkdir();
+            }
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
+            LocalDateTime now = LocalDateTime.now();
+    
+            
+            Path oldLanguagePath = languageFile.toPath();
+            Path newLanguagePath = new File(plugin.getDataFolder().toString() + "/backup", "language" + dtf.format(now) + ".yml").toPath();
+    
+            CopyOption[] options = new CopyOption[]{
+                    StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.COPY_ATTRIBUTES
+            };
+
+            try {
+                Files.copy(oldLanguagePath, newLanguagePath, options);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -206,7 +243,6 @@ public class FileManager {
     }
 
     public Config getConfig(File configPath) {
-
         Config cached = loadedConfigs.get(configPath.getPath());
 
         if (cached != null) return cached;
@@ -227,7 +263,7 @@ public class FileManager {
 
     public InputStream getConfigContent(Reader reader) {
         try {
-            String addLine, currentLine, pluginName = skyblock.getDescription().getName();
+            String addLine, currentLine, pluginName = plugin.getDescription().getName();
             int commentNum = 0;
 
             StringBuilder whole = new StringBuilder();
@@ -236,10 +272,10 @@ public class FileManager {
             while ((currentLine = bufferedReader.readLine()) != null) {
                 if (currentLine.contains("#")) {
                     addLine = currentLine.replace("[!]", "IMPORTANT").replace(":", "-").replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
-                    whole.append(addLine + "\n");
+                    whole.append(addLine).append("\n");
                     commentNum++;
                 } else {
-                    whole.append(currentLine + "\n");
+                    whole.append(currentLine).append("\n");
                 }
             }
 
@@ -274,10 +310,10 @@ public class FileManager {
         StringBuilder config = new StringBuilder();
 
         for (String line : lines) {
-            if (line.contains(skyblock.getDescription().getName() + "_COMMENT")) {
-                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "").replace(skyblock.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "") + "\n");
+            if (line.contains(plugin.getDescription().getName() + "_COMMENT")) {
+                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "").replace(plugin.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "")).append("\n");
             } else if (line.contains(":")) {
-                config.append(line + "\n");
+                config.append(line).append("\n");
             }
         }
 

@@ -1,44 +1,43 @@
 package com.songoda.skyblock.command.commands.island;
 
-import java.io.File;
-
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.skyblock.island.IslandManager;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
 import com.songoda.skyblock.challenge.FabledChallenge;
 import com.songoda.skyblock.challenge.challenge.Challenge;
 import com.songoda.skyblock.challenge.challenge.ChallengeCategory;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
 
 public class ChallengeCommand extends SubCommand {
 
 	@Override
 	public void onCommandByPlayer(Player player, String[] args) {
-		MessageManager messageManager = skyblock.getMessageManager();
-		SoundManager soundManager = skyblock.getSoundManager();
-		FileManager fileManager = skyblock.getFileManager();
-		FabledChallenge fabledChallenge = skyblock.getFabledChallenge();
-		IslandManager islandManager = skyblock.getIslandManager();
+		MessageManager messageManager = plugin.getMessageManager();
+		SoundManager soundManager = plugin.getSoundManager();
+		FileManager fileManager = plugin.getFileManager();
+		FabledChallenge fabledChallenge = plugin.getFabledChallenge();
+		IslandManager islandManager = plugin.getIslandManager();
 
-		Config langConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+		Config langConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
 		FileConfiguration langConfigLoad = langConfig.getFileConfiguration();
 
 		// Not loaded
-		if (!fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
 				.getBoolean("Island.Challenge.Enable")) {
 			messageManager.sendMessage(player, langConfigLoad.getString("Command.Island.Challenge.Disabled.Message"));
 			soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 			return;
 		}
 		if (args.length == 0) {
-			if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+			if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
 					.getBoolean("Island.Challenge.PerIsland")){
 				if(islandManager.getIsland(player) == null){
 					messageManager.sendMessage(player, langConfigLoad.getString("Command.Island.Challenge.NoIsland.Message"));
@@ -110,7 +109,7 @@ public class ChallengeCommand extends SubCommand {
 
 	@Override
 	public String[] getAliases() {
-		return new String[] { "c" };
+		return new String[] { "c", "challenges" };
 	}
 
 	@Override

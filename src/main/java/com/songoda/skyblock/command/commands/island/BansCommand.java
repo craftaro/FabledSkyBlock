@@ -18,19 +18,19 @@ public class BansCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        Island island = skyblock.getIslandManager().getIsland(player);
+        Island island = plugin.getIslandManager().getIsland(player);
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bans.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && skyblock.getPermissionManager().hasPermission(island, "Unban", IslandRole.Operator))
+                && plugin.getPermissionManager().hasPermission(island, "Unban", IslandRole.Operator))
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             if (island.getBan().getBans().size() == 0) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Bans.Bans.Message"));

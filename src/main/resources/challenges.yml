@@ -325,17 +325,20 @@ challenges:
         # NEAR:<EntityType> <amount> ==> <amount> of <EntityType> must be next to the player
         # POTION:<PotionType> <data> <amount>
         # data must be: 0 = normal potion, 1 = extended, 2 = ++, 3 = splash, 4 = splash extended, 5 = splash ++, 6 = lingering, 7 = lingering extended, 8 = lingering ++
+        # BANK:<amount> requires amount from the island's bank
+        # ECO:<amount> requires amount from the player's balance
         require:
           - 'ITEM:cobblestone 128'
         # The reward
         # ITEM:<item> <count> means the player will have <count> <item> when the challenge is done
         # CMD:<cmd> means a command will be executed by the console when the challenge is done
+        # BANK:<amount> gives amount to the island's bank
         reward:
           - 'CMD:eco give {player} 100'
-          - 'ITEM:iron_ingot 20'
+          - 'ITEM:iron_ingot 10'
           - 'ITEM:name_tag 1'
-        # The maximum amount of time this challenge is repeatable
-        maxtimes: 5
+        # The maximum amount of time this challenge is repeatable. Unlimited for endless challenge
+        maxtimes: Unlimited
         # If true, broadcast a message when this challenge is completed
         showInChat: true
         item:
@@ -352,7 +355,7 @@ challenges:
             - '&c&lFor this challenge, you''ll need:'
             - '&e- 2 stacks of cobblestone'
             - '&c&lReward:'
-            - '&e- 20 iron ingots'
+            - '&e- 10 iron ingots'
             - '&e- 1 name tag'
             - '&e- 100 $'
       '2':
@@ -526,7 +529,7 @@ challenges:
             - '&e- 24 pumpkin seeds'
             - '&e- 24 melon seeds'
             - '&e- 24 wheat seeds'
-            - '&c&lEt tu gagneras :'
+            - '&c&lRewards:'
             - '&e- 1 sponge'
             - '&e- 150 $'
       '9':
@@ -565,7 +568,8 @@ challenges:
           - 'ITEM:cake 5'
           - 'ITEM:pumpkin_pie 16'
         reward:
-          - 'CMD:eco give {player} 300'
+          - 'CMD:eco give {player} 150'
+          - 'BANK:150'
           - 'ITEM:diamond 10'
           - 'ITEM:cow_spawn_egg 1'
         maxtimes: 1
@@ -583,7 +587,8 @@ challenges:
             - '&c&lRewards:'
             - '&e- 10 diamonds'
             - '&e- 1 cow spawn egg'
-            - '&e- 300 $'
+            - '&e- 150 $'
+            - '&e- 150 $ to the bank island'
       '2':
         id: 2
         name: '&2Hunter'
@@ -612,7 +617,7 @@ challenges:
             - '&e- 1 stack of gunpowder'
             - '&e- 1 stack of arrows'
             - '&e- 1 stack of bones'
-            - '&c&lEt tu gagneras :'
+            - '&c&lRewards:'
             - '&e- 16 iron ingots'
             - '&e- 8 redstone blocks'
             - '&e- 250 $'
@@ -906,7 +911,7 @@ challenges:
             - '&e- 10 ghast tears'
             - '&e- 24 magma cream'
             - '&e- 1 stack of magma blocks'
-            - '&c&lEt tu gagneras :'
+            - '&c&lRewards:'
             - '&e- 1 spawner'
             - '&e- 500 $'
       '4':
@@ -1077,6 +1082,7 @@ challenges:
         name: '&2The Neighbours'
         require:
           - 'NEAR:villager 10'
+          - 'BANK:100'
         reward:
           - 'CMD:eco give {player} 1000'
           - 'ITEM:diamond_block 16'
@@ -1091,6 +1097,7 @@ challenges:
           lore:
             - '&c&lFor this challenge, you''ll need:'
             - '&e- Have 10 villagers in your proximity'
+            - '&e- 100 $ in the island bank'
             - '&c&lRewards:'
             - '&e- 16 diamond blocks'
             - '&e- 1000 $'
@@ -1683,14 +1690,11 @@ challenges:
           - 'NEAR:COW 1'
           - 'NEAR:RABBIT 1'
           - 'NEAR:WOLF 1'
-          - 'NEAR:DONKEY 1'
           - 'NEAR:HORSE 1'
-          - 'NEAR:LLAMA 1'
           - 'NEAR:OCELOT 1'
           - 'NEAR:MUSHROOM_COW 1'
           - 'NEAR:SHEEP 1'
           - 'NEAR:VILLAGER 1'
-          - 'NEAR:SKELETON_HORSE 1'
         reward:
           - 'CMD:eco give {player} 3000'
           - 'ITEM:diamond_block 32'
@@ -1709,14 +1713,11 @@ challenges:
             - '&e   - 1 Cow'
             - '&e   - 1 Rabbit'
             - '&e   - 1 Wolf'
-            - '&e   - 1 Donkey'
             - '&e   - 1 Horse'
-            - '&e   - 1 Llama'
             - '&e   - 1 Ocelot'
             - '&e   - 1 Mooshroom cow'
             - '&e   - 1 Sheep'
             - '&e   - 1 Villager'
-            - '&e   - 1 Skeleton Horse'
             - '&c&lRewards:'
             - '&e- 32 diamond blocks'
             - '&e- 3000 $'
@@ -1826,6 +1827,7 @@ challenges:
         id: 8
         name: '&4THE IMPOSSIBLE CHALLENGE'
         require:
+          - 'ECO:10000'
           - 'ITEM:bedrock 64'
         reward:
           - 'CMD:eco give {player} 0'

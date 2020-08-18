@@ -3,7 +3,6 @@ package com.songoda.skyblock.structure;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
- 
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -15,8 +14,8 @@ public class StructureManager {
     public List<String> knownStructures;
     private List<Structure> structureStorage = new ArrayList<>();
 
-    public StructureManager(SkyBlock skyblock) {
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "structures.yml"));
+    public StructureManager(SkyBlock plugin) {
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "structures.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getString("Structures") != null) {
@@ -32,7 +31,7 @@ public class StructureManager {
                     }
                 }
 
-                String structureFile = null, overworldFile = null, netherFile = null, endFile = null;
+                String structureFile, overworldFile = null, netherFile = null, endFile = null;
 
                 if (configLoad.getString("Structures." + structureList + ".File.Overworld") == null
                         && configLoad.getString("Structures." + structureList + ".File.Nether") == null

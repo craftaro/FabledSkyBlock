@@ -1,20 +1,24 @@
 package com.songoda.skyblock.visit;
 
+import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.ban.Ban;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandLocation;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.island.IslandWorld;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Visit {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private final IslandLevel islandLevel;
     private UUID islandOwnerUUID;
     private String islandOwnerName;
@@ -22,14 +26,15 @@ public class Visit {
     private int islandSize;
     private int islandMembers;
     private int safeLevel;
-    private double islandBankBalance;
+    private final double islandBankBalance;
     private List<String> islandSignature;
+    private final Set<UUID> islandVisitors;
+    
+    private IslandStatus status;
 
-    private boolean open;
-
-    protected Visit(SkyBlock skyblock, UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize,
-                    int islandMembers, double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, boolean open) {
-        this.skyblock = skyblock;
+    protected Visit(SkyBlock plugin, UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize,
+                    int islandMembers, double islandBankBalance, int safeLevel, IslandLevel islandLevel, List<String> islandSignature, IslandStatus status) {
+        this.plugin = plugin;
         this.islandOwnerUUID = islandOwnerUUID;
         this.islandLocations = islandLocations;
         this.islandSize = islandSize;
@@ -38,7 +43,17 @@ public class Visit {
         this.safeLevel = safeLevel;
         this.islandLevel = islandLevel;
         this.islandSignature = islandSignature;
-        this.open = open;
+        this.status = status;
+        this.islandVisitors = new HashSet<>();
+    
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
+                        islandOwnerUUID.toString() + ".yml"))
+                .getFileConfiguration();
+    
+        for (String visitor : configLoad.getStringList("Visitors")) {
+            islandVisitors.add(FastUUID.parseUUID(visitor));
+        }
     }
 
     public UUID getOwnerUUID() {
@@ -107,46 +122,17 @@ public class Visit {
     }
 
     public Set<UUID> getVisitors() {
-        Set<UUID> islandVisitors = new HashSet<>();
-
-        for (String islandVisitorList : skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
-                        islandOwnerUUID.toString() + ".yml"))
-                .getFileConfiguration().getStringList("Visitors")) {
-            islandVisitors.add(UUID.fromString(islandVisitorList));
-        }
-
         return islandVisitors;
     }
 
     public void addVisitor(UUID uuid) {
-        List<String> islandVisitors = new ArrayList<>();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
-                        islandOwnerUUID.toString() + ".yml"))
-                .getFileConfiguration();
-
-        for (String islandVisitorList : configLoad.getStringList("Visitors")) {
-            islandVisitors.add(islandVisitorList);
-        }
-
-        islandVisitors.add(uuid.toString());
-        configLoad.set("Visitors", islandVisitors);
+        islandVisitors.add(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
     }
 
     public void removeVisitor(UUID uuid) {
-        List<String> islandVisitors = new ArrayList<>();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
-                        islandOwnerUUID.toString() + ".yml"))
-                .getFileConfiguration();
-
-        for (String islandVisitorList : configLoad.getStringList("Visitors")) {
-            islandVisitors.add(islandVisitorList);
-        }
-
-        islandVisitors.remove(uuid.toString());
-        configLoad.set("Visitors", islandVisitors);
+        islandVisitors.remove(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
     }
 
     public boolean isVoter(UUID uuid) {
@@ -156,11 +142,11 @@ public class Visit {
     public Set<UUID> getVoters() {
         Set<UUID> islandVoters = new HashSet<>();
 
-        for (String islandVisitorList : skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        for (String islandVisitorList : plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration().getStringList("Voters")) {
-            islandVoters.add(UUID.fromString(islandVisitorList));
+            islandVoters.add(FastUUID.parseUUID(islandVisitorList));
         }
 
         return islandVoters;
@@ -168,26 +154,26 @@ public class Visit {
 
     public void addVoter(UUID uuid) {
         List<String> islandVoters = new ArrayList<>();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
         islandVoters.addAll(configLoad.getStringList("Voters"));
 
-        islandVoters.add(uuid.toString());
+        islandVoters.add(FastUUID.toString(uuid));
         configLoad.set("Voters", islandVoters);
     }
 
     public void removeVoter(UUID uuid) {
         List<String> islandVoters = new ArrayList<>();
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(new File(skyblock.getDataFolder().toString() + "/visit-data"),
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
         for (String islandVoterList : configLoad.getStringList("Voters")) {
-            if (!uuid.toString().equals(islandVoterList)) {
+            if (!FastUUID.toString(uuid).equals(islandVoterList)) {
                 islandVoters.add(islandVoterList);
             }
         }
@@ -203,26 +189,28 @@ public class Visit {
         this.islandSignature = islandSignature;
     }
 
-    public boolean isOpen() {
-        return open;
-    }
-
-    public void setOpen(boolean open) {
-        this.open = open;
-    }
-
     public Ban getBan() {
-        return skyblock.getBanManager().getIsland(getOwnerUUID());
+        return plugin.getBanManager().getIsland(getOwnerUUID());
     }
 
-    public void save() {
-        FileManager.Config config = skyblock.getFileManager().getConfig(new File(
-                new File(skyblock.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
-
+    public synchronized void save() {
+        FileManager.Config config = plugin.getFileManager().getConfig(new File(
+                new File(plugin.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
+    
+        config.getFileConfiguration().set("Visitors", new ArrayList<>(islandVisitors.stream().map(UUID::toString).collect(Collectors.toSet())));
+        
         try {
             config.getFileConfiguration().save(config.getFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public IslandStatus getStatus() {
+        return status;
+    }
+    
+    public void setStatus(IslandStatus status) {
+        this.status = status;
     }
 }

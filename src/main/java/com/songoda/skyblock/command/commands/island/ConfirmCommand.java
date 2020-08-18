@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -10,9 +10,11 @@ import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
+import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.structure.Structure;
 import com.songoda.skyblock.structure.StructureManager;
@@ -32,17 +34,19 @@ public class ConfirmCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        StructureManager structureManager = skyblock.getStructureManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        StructureManager structureManager = plugin.getStructureManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
+        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+        Economy economy = plugin.getEconomyManager().getEconomy();
 
         if (playerDataManager.hasPlayerData(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
-            Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (playerData.getConfirmationTime() > 0) {
@@ -99,18 +103,24 @@ public class ConfirmCommand extends SubCommand {
                                     islandManager.giveOwnership(island,
                                             Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
 
-                                    skyblock.getCooldownManager().createPlayer(CooldownType.Ownership,
+                                    plugin.getCooldownManager().createPlayer(CooldownType.Ownership,
                                             Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                                 } else {
                                     messageManager.sendMessage(player, configLoad
                                             .getString("Command.Island.Confirmation.Ownership.Member.Message"));
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                 }
-                            } else if (confirmation == Confirmation.Reset) {
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    scoreboardManager.updatePlayerScoreboardType(player);
+                                });
+                            } else if (confirmation.equals(Confirmation.Reset)) {
                                 playerData.setConfirmation(null);
                                 playerData.setConfirmationTime(0);
-                            } else if (confirmation == Confirmation.Deletion) {
-                                if (island.isOpen()) {
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    scoreboardManager.updatePlayerScoreboardType(player);
+                                });
+                            } else if (confirmation.equals(Confirmation.Deletion)) {
+                                if (island.getStatus().equals(IslandStatus.OPEN)) {
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Command.Island.Confirmation.Deletion.Open.Message"));
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -126,15 +136,15 @@ public class ConfirmCommand extends SubCommand {
                                         return;
                                     }
 
-                                    if (EconomyManager.isEnabled() && island.getStructure() != null
+                                    if (economy.isEnabled() && island.getStructure() != null
                                             && !island.getStructure().isEmpty()
                                             && structureManager.containsStructure(island.getStructure())) {
                                         Structure structure = structureManager.getStructure(island.getStructure());
                                         double deletionCost = structure.getDeletionCost();
 
                                         if (deletionCost != 0.0D) {
-                                            if (EconomyManager.hasBalance(player, deletionCost)) {
-                                                EconomyManager.withdrawBalance(player, deletionCost);
+                                            if (economy.hasBalance(player, deletionCost)) {
+                                                economy.withdrawBalance(player, deletionCost);
                                             } else {
                                                 messageManager.sendMessage(player,
                                                         configLoad.getString(
@@ -173,6 +183,9 @@ public class ConfirmCommand extends SubCommand {
                                         soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1f, 1f);
                                     }
                                 }
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    scoreboardManager.updatePlayerScoreboardType(player);
+                                });
                             }
                         } else {
                             messageManager.sendMessage(player,

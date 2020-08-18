@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus;
 
+// Needed for pages
 public enum MenuType {
     ADMIN_LEVELLING,
     ADMIN_CREATOR,

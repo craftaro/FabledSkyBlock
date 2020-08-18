@@ -30,6 +30,16 @@ Upgrades:
         4:
             Value: 350
             Cost: 500000
+    Members:
+        0:
+            Value: 5
+            Cost: 10000
+        1:
+            Value: 7
+            Cost: 20000
+        2:
+            Value: 10
+            Cost: 30000
     Spawner:
         Enable: true
         Cost: 100000

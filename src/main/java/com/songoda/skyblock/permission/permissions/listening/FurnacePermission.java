@@ -7,6 +7,7 @@ import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
 import org.bukkit.block.Block;
+import org.bukkit.block.Furnace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -24,15 +25,13 @@ public class FurnacePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
             return;
 
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
-        if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.FURNACE)
+        if (block != null && block.getState() instanceof Furnace)
             cancelAndMessage(event, player, plugin, messageManager);
     }
 }

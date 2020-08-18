@@ -4,11 +4,8 @@ import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandCoop;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandRole;
-import com.songoda.skyblock.menus.Coop;
+import com.songoda.skyblock.gui.coop.GuiCoop;
+import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -26,13 +23,13 @@ public class CoopCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        PermissionManager permissionManager = skyblock.getPermissionManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        PermissionManager permissionManager = plugin.getPermissionManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -42,7 +39,7 @@ public class CoopCommand extends SubCommand {
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+        } else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Coop.Enable")) {
             if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                     || (island.hasRole(IslandRole.Operator, player.getUniqueId())
@@ -85,7 +82,8 @@ public class CoopCommand extends SubCommand {
                     } else if (island.isCoopPlayer(targetPlayerUUID)) {
                         if (targetPlayer != null) {
                             if (islandManager.getVisitorsAtIsland(island).contains(targetPlayerUUID)) {
-                                if (!island.isOpen()) {
+                                if (!(island.getStatus().equals(IslandStatus.OPEN) ||
+                                        (island.getStatus().equals(IslandStatus.WHITELISTED) && island.isPlayerWhitelisted(player)))) {
                                     LocationUtil.teleportPlayerToSpawn(targetPlayer);
 
                                     messageManager.sendMessage(targetPlayer,
@@ -127,8 +125,8 @@ public class CoopCommand extends SubCommand {
 
                     return;
                 }
-
-                Coop.getInstance().open(player);
+    
+                plugin.getGuiManager().showGUI(player, new GuiCoop(plugin, island, null));
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Permission.Message"));

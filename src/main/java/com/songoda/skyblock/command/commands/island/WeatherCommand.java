@@ -18,12 +18,12 @@ public class WeatherCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        FileConfiguration configLoad = skyblock.getFileManager()
-                .getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration();
+        FileConfiguration configLoad = plugin.getFileManager()
+                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
 
@@ -31,7 +31,7 @@ public class WeatherCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Weather.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && skyblock.getPermissionManager().hasPermission(island, "Weather", IslandRole.Operator))
+                && plugin.getPermissionManager().hasPermission(island, "Weather", IslandRole.Operator))
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             Weather.getInstance().open(player);
             soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);

@@ -7,7 +7,6 @@ import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionPriority;
 import com.songoda.skyblock.permission.PermissionType;
-import com.songoda.skyblock.permission.event.events.ProjectileLaunchByPlayerEvent;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -24,12 +23,11 @@ public class FishingPermission extends ListeningPermission {
     }
 
     @PermissionHandler(priority = PermissionPriority.LAST)
-    public void onProjectileLaunch(ProjectileLaunchByPlayerEvent event) {
+    public void onProjectileLaunch(ProjectileLaunchEvent event) {
         org.bukkit.entity.Projectile projectile = event.getEntity();
-        Player shooter = (Player) projectile.getShooter();
-        if (projectile instanceof FishHook) {
+        if (projectile instanceof FishHook && projectile.getShooter() instanceof Player) {
+            Player shooter = (Player) projectile.getShooter();
             cancelAndMessage(event, shooter, plugin, messageManager);
-            event.setStopped(true);
         }
     }
 }

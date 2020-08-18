@@ -8,6 +8,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.world.LocationUtil;
@@ -24,11 +25,11 @@ public class KickAllCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -38,8 +39,8 @@ public class KickAllCommand extends SubCommand {
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                 || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && skyblock.getPermissionManager().hasPermission(island, "Kick", IslandRole.Operator))) {
-            if (island.isOpen()) {
+                && plugin.getPermissionManager().hasPermission(island, "Kick", IslandRole.Operator))) {
+            if (!island.getStatus().equals(IslandStatus.CLOSED)) {
                 Set<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
 
                 if (islandVisitors.size() == 0) {
@@ -50,8 +51,7 @@ public class KickAllCommand extends SubCommand {
                         Player targetPlayer = Bukkit.getServer().getPlayer(islandVisitorList);
 
                         if (targetPlayer != null &&
-                                (targetPlayer.hasPermission("fabledskyblock.bypass.ban") ||
-                                        targetPlayer.hasPermission("fabledskyblock.bypass.kick")))
+                                (targetPlayer.hasPermission("fabledskyblock.bypass.kick")))
                             continue;
 
                         IslandKickEvent islandKickEvent = new IslandKickEvent(island.getAPIWrapper(),

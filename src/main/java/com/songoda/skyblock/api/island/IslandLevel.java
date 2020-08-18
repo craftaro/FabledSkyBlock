@@ -1,8 +1,9 @@
 package com.songoda.skyblock.api.island;
 
 import com.google.common.base.Preconditions;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
+import org.bukkit.Location;
 import org.bukkit.Material;
 
 public class IslandLevel {
@@ -115,5 +116,14 @@ public class IslandLevel {
      */
     public Island getIsland() {
         return handle;
+    }
+    
+    /**
+     * Update the island level for a determined location
+     * @param location
+     */
+    public void updateLevel(Location location){
+        Preconditions.checkArgument(location != null, "Cannot update level of a null island");
+        SkyBlock.getInstance().getLevellingManager().updateLevel(this.handle.getIsland(), location);
     }
 }

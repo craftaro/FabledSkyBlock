@@ -1,10 +1,11 @@
 package com.songoda.skyblock.stackable;
 
-import java.io.File;
-import java.util.UUID;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -14,11 +15,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.utils.NumberUtil;
- 
-import com.songoda.skyblock.utils.version.NMSUtil;
+import java.io.File;
+import java.util.UUID;
 
 public class Stackable {
 
@@ -105,6 +103,13 @@ public class Stackable {
 
     public void takeOne() {
         this.size--;
+        this.updateDisplay();
+        SkyBlock.getInstance().getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+        this.save();
+    }
+
+    public void take(int n) {
+        this.size-=n;
         this.updateDisplay();
         SkyBlock.getInstance().getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
         this.save();

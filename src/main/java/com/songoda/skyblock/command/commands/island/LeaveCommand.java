@@ -11,7 +11,6 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
-import com.songoda.skyblock.scoreboard.Scoreboard;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.world.LocationUtil;
@@ -28,16 +27,16 @@ public class LeaveCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         PlayerData playerData = playerDataManager.getPlayerData(player);
 
-        Config languageConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
 
         Island island = islandManager.getIsland(player);
 
@@ -83,7 +82,7 @@ public class LeaveCommand extends SubCommand {
                             if (targetPlayerData.isChat()) {
                                 targetPlayerData.setChat(false);
                                 messageManager.sendMessage(targetPlayer,
-                                        fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"))
+                                        fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
                                                 .getFileConfiguration().getString("Island.Chat.Untoggled.Message"));
                             }
                         }
@@ -93,29 +92,21 @@ public class LeaveCommand extends SubCommand {
                 // TODO Check if player has been teleported
                 islandManager.unloadIsland(island, null);
 
-                for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (!all.getUniqueId().equals(player.getUniqueId())) {
-                        if (island.hasRole(IslandRole.Member, all.getUniqueId())
-                                || island.hasRole(IslandRole.Operator, all.getUniqueId())
-                                || island.hasRole(IslandRole.Owner, all.getUniqueId())) {
-                            all.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
+                    if (!loopPlayer.getUniqueId().equals(player.getUniqueId())) {
+                        if (island.hasRole(IslandRole.Member, loopPlayer.getUniqueId())
+                                || island.hasRole(IslandRole.Operator, loopPlayer.getUniqueId())
+                                || island.hasRole(IslandRole.Owner, loopPlayer.getUniqueId())) {
+                            loopPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     languageConfig.getFileConfiguration()
                                             .getString("Command.Island.Leave.Left.Broadcast.Message")
                                             .replace("%player", player.getName())));
-                            soundManager.playSound(all, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
+                            soundManager.playSound(loopPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
 
                             if (island.getRole(IslandRole.Member).size() == 0
                                     && island.getRole(IslandRole.Operator).size() == 0) {
-                                if (scoreboardManager != null) {
-                                    if (islandManager.getVisitorsAtIsland(island).size() != 0) {
-                                        Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-                                        scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                                                languageConfig.getFileConfiguration()
-                                                        .getString("Scoreboard.Island.Solo.Displayname")));
-                                        scoreboard.setDisplayList(languageConfig.getFileConfiguration()
-                                                .getStringList("Scoreboard.Island.Solo.Occupied.Displaylines"));
-                                        scoreboard.run();
-                                    }
+                                if (islandManager.getVisitorsAtIsland(island).size() != 0) {
+                                    scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                 }
 
                                 break;
@@ -127,15 +118,8 @@ public class LeaveCommand extends SubCommand {
                 messageManager.sendMessage(player,
                         languageConfig.getFileConfiguration().getString("Command.Island.Leave.Left.Sender.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
-
-                if (scoreboardManager != null) {
-                    Scoreboard scoreboard = scoreboardManager.getScoreboard(player);
-                    scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                            languageConfig.getFileConfiguration().getString("Scoreboard.Tutorial.Displayname")));
-                    scoreboard.setDisplayList(
-                            languageConfig.getFileConfiguration().getStringList("Scoreboard.Tutorial.Displaylines"));
-                    scoreboard.run();
-                }
+    
+                scoreboardManager.updatePlayerScoreboardType(player);
             }
         }
     }

@@ -25,19 +25,19 @@ public class CreateCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        CooldownManager cooldownManager = skyblock.getCooldownManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
         if (islandManager.getIsland(player) == null) {
-            Config mainConfig = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
 
             if (args.length == 1) {
-                Structure structure = skyblock.getStructureManager().getStructure(args[0]);
+                Structure structure = plugin.getStructureManager().getStructure(args[0]);
 
                 if (structure != null && islandManager.createIsland(player, structure)) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
@@ -50,7 +50,7 @@ public class CreateCommand extends SubCommand {
                 Creator.getInstance().open(player);
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
             } else {
-                List<Structure> structures = skyblock.getStructureManager().getStructures();
+                List<Structure> structures = plugin.getStructureManager().getStructures();
 
                 if (structures.size() == 0) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.None.Message"));
@@ -58,7 +58,7 @@ public class CreateCommand extends SubCommand {
 
                     return;
                 } else if (!fileManager
-                        .isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+                        .isFileExist(new File(new File(plugin.getDataFolder().toString() + "/structures"),
                                 structures.get(0).getOverworldFile()))) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
@@ -66,14 +66,14 @@ public class CreateCommand extends SubCommand {
 
                     return;
                 } else if (!fileManager
-                        .isFileExist(new File(new File(skyblock.getDataFolder().toString() + "/structures"),
+                        .isFileExist(new File(new File(plugin.getDataFolder().toString() + "/structures"),
                                 structures.get(0).getNetherFile()))) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
-                } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                } else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
                         && cooldownManager.hasPlayer(CooldownType.Creation, player)) {
                     CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Creation, player);

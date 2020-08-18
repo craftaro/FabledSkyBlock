@@ -14,21 +14,21 @@ import java.util.Map.Entry;
 
 public class TopBank extends DataCollector {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public TopBank(SkyBlock skyblock) {
-        super("topbank", skyblock.getDescription().getName(), BoardType.DEFAULT, "&bTop Bank", "topbank",
+    public TopBank(SkyBlock plugin) {
+        super("topbank", plugin.getDescription().getName(), BoardType.DEFAULT, "&bTop Bank", "topbank",
                 Arrays.asList(ChatColor.DARK_GRAY + "-=+=-", ChatColor.AQUA + "{name}",
                         ChatColor.WHITE + "Bal: ${amount}", ChatColor.DARK_GRAY + "-=+=-"),
                 true, UUID.class);
 
-        this.skyblock = skyblock;
+        this.plugin = plugin;
     }
 
     @Override
     public List<Entry<?, Double>> requestAll() {
 
-        List<Leaderboard> leaderboards = skyblock.getLeaderboardManager().getLeaderboard(Type.Bank);
+        List<Leaderboard> leaderboards = plugin.getLeaderboardManager().getLeaderboard(Type.Bank);
         Map<UUID, Double> topLevels = new HashMap<>(leaderboards.size());
 
         for (Leaderboard leaderboard : leaderboards) {

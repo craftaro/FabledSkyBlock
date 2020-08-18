@@ -496,43 +496,4 @@ public final class EntityUtil {
             }
         }
     }
-
-	public static boolean isMonster(EntityType type) {
-        if (NMSUtil.getVersionNumber() > 10) {
-            if(type.equals(EntityType.WITHER_SKELETON)) return true; // TODO In < 11 we have SkeletonType.Wither
-        }
-		switch (type) { // TODO Check server versions
-		case BAT:
-		case BLAZE:
-		case CAVE_SPIDER:
-		case COD:
-		case CREEPER:
-		case DROWNED:
-		case ELDER_GUARDIAN:
-		case ENDERMAN:
-		case ENDERMITE:
-		case EVOKER:
-		case GHAST:
-		case HUSK:
-		case ILLUSIONER:
-		case MAGMA_CUBE:
-		case PHANTOM:
-		case PIG_ZOMBIE:
-		case RAVAGER:
-		case SILVERFISH:
-		case SKELETON:
-		case SLIME:
-		case SPIDER:
-		case STRAY:
-		case VEX:
-		case VINDICATOR:
-		case WITCH:
-		case WITHER:
-		case ZOMBIE:
-		case ZOMBIE_VILLAGER:
-			return true;
-		default:
-			return false;
-		}
-	}
 }

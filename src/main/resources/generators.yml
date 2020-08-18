@@ -3,6 +3,7 @@ Generators:
         Name: Normal
         World: Normal
         Permission: false
+        UnlockLevel: 0
         Materials:
             COBBLESTONE:
                 Chance: 60
@@ -20,6 +21,7 @@ Generators:
         Name: Nether
         World: Nether
         Permission: false
+        UnlockLevel: 0
         Materials:
             NETHERRACK:
                 Chance: 80
@@ -31,6 +33,7 @@ Generators:
         Name: End
         World: End
         Permission: false
+        UnlockLevel: 0
         Materials:
             END_STONE:
                 Chance: 100.0

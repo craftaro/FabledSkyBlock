@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +22,17 @@ public abstract class BasicPermission {
     private final CompatibleMaterial icon;
     private final PermissionType type;
 
-    protected BasicPermission(String name, CompatibleMaterial icon, PermissionType type) {
+    protected BasicPermission(@Nonnull String name, @Nonnull CompatibleMaterial icon, @Nonnull PermissionType type) {
         this.name = name;
         this.icon = icon;
         this.type = type;
     }
 
     public ItemStack getItem(Island island, IslandRole role) {
+        return getItem(island.hasPermission(role, this), role);
+    }
+
+    public ItemStack getItem(boolean permissionEnabled, IslandRole role) {
         ItemStack is = icon.getItem();
         FileManager.Config config = SkyBlock.getInstance().getFileManager()
                 .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"));
@@ -44,18 +49,19 @@ public abstract class BasicPermission {
                 || role == IslandRole.Coop)
             roleName = "Default";
 
-        String nameFinal = configLoad.getString("Menu.Settings." + roleName + ".Item.Setting." + name + ".Displayname");
+        String nameFinal = TextUtils.formatText(configLoad.getString("Menu.Settings." + roleName + ".Item.Setting." + name + ".Displayname", name));
 
-        im.setDisplayName(TextUtils.formatText(nameFinal == null ? name : nameFinal));
+        if(im != null){
+            im.setDisplayName(nameFinal);
+            for (String itemLoreList : configLoad
+                    .getStringList("Menu.Settings." + roleName + ".Item.Setting.Status."
+                            + (permissionEnabled ? "Enabled" : "Disabled") + ".Lore"))
+                itemLore.add(TextUtils.formatText(itemLoreList));
 
-        for (String itemLoreList : configLoad
-                .getStringList("Menu.Settings." + roleName + ".Item.Setting.Status."
-                        + (island.hasPermission(role, this) ? "Enabled" : "Disabled") + ".Lore"))
-            itemLore.add(TextUtils.formatText(itemLoreList));
-
-        im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        im.setLore(itemLore);
-        is.setItemMeta(im);
+            im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            im.setLore(itemLore);
+            is.setItemMeta(im);
+        }
 
         return is;
     }

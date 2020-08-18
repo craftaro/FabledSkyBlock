@@ -3,10 +3,7 @@ package com.songoda.skyblock.command.commands.island;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandEnvironment;
-import com.songoda.skyblock.island.IslandManager;
-import com.songoda.skyblock.island.IslandWorld;
+import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -14,10 +11,9 @@ import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.data.Waterlogged;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -29,13 +25,13 @@ public class TeleportCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        VisitManager visitManager = skyblock.getVisitManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        VisitManager visitManager = plugin.getVisitManager();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -61,14 +57,23 @@ public class TeleportCommand extends SubCommand {
                 if (visitManager.hasIsland(islandOwnerUUID)) {
                     Visit visit = visitManager.getIsland(islandOwnerUUID);
                     boolean isCoopPlayer = false;
+                    boolean isWhitelistedPlayer = false;
 
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         if (islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).isCoopPlayer(player.getUniqueId())) {
                             isCoopPlayer = true;
                         }
+                        if (visit.getStatus().equals(IslandStatus.WHITELISTED) && islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)).isPlayerWhitelisted(player.getUniqueId())) {
+                            isWhitelistedPlayer = true;
+                        }
                     }
 
-                    if (isCoopPlayer || player.hasPermission("fabledskyblock.bypass") || player.hasPermission("fabledskyblock.bypass.*") || player.hasPermission("fabledskyblock.*") || visit.isOpen()) {
+                    if (visit.getStatus().equals(IslandStatus.OPEN) ||
+                            isCoopPlayer ||
+                            isWhitelistedPlayer ||
+                            player.hasPermission("fabledskyblock.bypass") ||
+                            player.hasPermission("fabledskyblock.bypass.*") ||
+                            player.hasPermission("fabledskyblock.*")) {
                         if (!islandManager.containsIsland(islandOwnerUUID)) {
                             islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                         }
@@ -108,10 +113,15 @@ public class TeleportCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Yourself.Message"));
             soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
 
-            Bukkit.getServer().getScheduler().runTask(skyblock, () -> {
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> {
                 Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
-                LocationUtil.removeWaterFromLoc(skyblock, loc);
-                player.teleport(loc);
+                PaperLib.getChunkAtAsync(loc).thenRun((() -> {
+                    if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                            .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)) {
+                        LocationUtil.removeWaterFromLoc(loc);
+                    }
+                    PaperLib.teleportAsync(player, loc);
+                }));
 
                 if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                     player.setFallDistance(0.0F);

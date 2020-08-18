@@ -23,12 +23,12 @@ public class UnbanCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -37,11 +37,11 @@ public class UnbanCommand extends SubCommand {
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Owner.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-            } else if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+            } else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                     .getBoolean("Island.Visitor.Banning")) {
                 if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                         || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                        && skyblock.getPermissionManager().hasPermission(island,"Unban", IslandRole.Operator))) {
+                        && plugin.getPermissionManager().hasPermission(island,"Unban", IslandRole.Operator))) {
                     Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
                     UUID targetPlayerUUID = null;

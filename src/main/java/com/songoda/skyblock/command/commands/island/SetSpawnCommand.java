@@ -8,7 +8,6 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-
 import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,12 +19,12 @@ public class SetSpawnCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -51,14 +50,14 @@ public class SetSpawnCommand extends SubCommand {
                 if (island.hasRole(IslandRole.Operator, player.getUniqueId())
                         || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
                     if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                            && (skyblock.getPermissionManager().hasPermission(island,
+                            && (plugin.getPermissionManager().hasPermission(island,
                             environment.name() + "Spawn", IslandRole.Operator)))
                             || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
                         if (islandManager.isPlayerAtIsland(island, player)) {
-                            IslandWorld world = skyblock.getWorldManager().getIslandWorld(player.getWorld());
+                            IslandWorld world = plugin.getWorldManager().getIslandWorld(player.getWorld());
                             Location location = player.getLocation();
 
-                            if (fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                            if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
 
                                 CompatibleMaterial toCompare = CompatibleMaterial.getMaterial(location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType());

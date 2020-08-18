@@ -1,5 +1,13 @@
 package com.songoda.skyblock.usercache;
 
+import com.eatthepath.uuid.FastUUID;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager;
+import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.utils.player.NameFetcher;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -7,27 +15,19 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.utils.player.NameFetcher;
-
 public final class UserCacheManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
     private final Config config;
 
-    public UserCacheManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
-        this.config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "usercache.yml"));
+    public UserCacheManager(SkyBlock plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "usercache.yml"));
 
-        final FileManager fileManager = skyblock.getFileManager();
-        final File configFile = new File(skyblock.getDataFolder().toString() + "/island-data");
+        final FileManager fileManager = plugin.getFileManager();
+        final File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
 
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> {
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             if (configFile.exists()) {
                 int usersIgnored = 0;
 
@@ -46,14 +46,14 @@ public final class UserCacheManager {
                         final String ownerUUIDString = fileName.substring(0, fileName.indexOf('.'));
 
                         Set<UUID> islandMembers = new HashSet<>();
-                        islandMembers.add(UUID.fromString(ownerUUIDString));
+                        islandMembers.add(FastUUID.parseUUID(ownerUUIDString));
 
                         for (String memberList : configLoad.getStringList("Members")) {
-                            islandMembers.add(UUID.fromString(memberList));
+                            islandMembers.add(FastUUID.parseUUID(memberList));
                         }
 
                         for (String operatorList : configLoad.getStringList("Operators")) {
-                            islandMembers.add(UUID.fromString(operatorList));
+                            islandMembers.add(FastUUID.parseUUID(operatorList));
                         }
 
                         for (UUID islandMemberList : islandMembers) {
@@ -87,14 +87,14 @@ public final class UserCacheManager {
     }
 
     public void addUser(UUID uuid, String name) {
-        config.getFileConfiguration().set(uuid.toString(), name);
+        config.getFileConfiguration().set(FastUUID.toString(uuid), name);
     }
 
     public String getUser(UUID uuid) {
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (configLoad.getString(uuid.toString()) != null) {
-            return configLoad.getString(uuid.toString());
+        if (configLoad.getString(FastUUID.toString(uuid)) != null) {
+            return configLoad.getString(FastUUID.toString(uuid));
         }
 
         return null;
@@ -105,7 +105,7 @@ public final class UserCacheManager {
 
         for (String userList : configLoad.getConfigurationSection("").getKeys(false)) {
             if (configLoad.getString(userList).equalsIgnoreCase(name)) {
-                return UUID.fromString(userList);
+                return FastUUID.parseUUID(userList);
             }
         }
 
@@ -113,7 +113,7 @@ public final class UserCacheManager {
     }
 
     public boolean hasUser(UUID uuid) {
-        return config.getFileConfiguration().getString(uuid.toString()) != null;
+        return config.getFileConfiguration().getString(FastUUID.toString(uuid)) != null;
     }
 
     public boolean hasUser(String name) {
@@ -129,7 +129,7 @@ public final class UserCacheManager {
     }
 
     public void saveAsync() {
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(skyblock, () -> save());
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> save());
     }
 
     public synchronized void save() {

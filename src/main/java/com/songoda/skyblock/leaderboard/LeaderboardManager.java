@@ -17,23 +17,23 @@ import java.util.*;
 
 public class LeaderboardManager {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
     private List<Leaderboard> leaderboardStorage = new ArrayList<>();
 
-    public LeaderboardManager(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public LeaderboardManager(SkyBlock plugin) {
+        this.plugin = plugin;
 
-        new LeaderboardTask(skyblock).runTaskTimerAsynchronously(skyblock, 0L,
-                skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
+        new LeaderboardTask(plugin).runTaskTimerAsynchronously(plugin, 0L,
+                plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
 
         resetLeaderboard();
         setupLeaderHeads();
     }
 
     public void resetLeaderboard() {
-        VisitManager visitManager = skyblock.getVisitManager();
-        WorldManager worldManager = skyblock.getWorldManager();
+        VisitManager visitManager = plugin.getVisitManager();
+        WorldManager worldManager = plugin.getWorldManager();
 
         visitManager.loadIslands();
 
@@ -43,7 +43,7 @@ public class LeaderboardManager {
         List<LeaderboardPlayer> islandBanks = new ArrayList<>(arraySize);
         List<LeaderboardPlayer> islandVotes = new ArrayList<>(arraySize);
 
-        boolean enableExemptions = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration()
+        boolean enableExemptions = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Leaderboard.Exemptions.Enable");
 
         for (UUID ownerUUID : new LinkedHashSet<>(visitManager.getIslands().keySet())) {
@@ -79,7 +79,7 @@ public class LeaderboardManager {
     }
 
     public int getPlayerIslandLeaderboardPosition(OfflinePlayer offlinePlayer, Leaderboard.Type type) {
-        VisitManager visitManager = skyblock.getVisitManager();
+        VisitManager visitManager = plugin.getVisitManager();
         visitManager.loadIslands();
 
         List<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>(visitManager.getIslands().size());
@@ -117,9 +117,9 @@ public class LeaderboardManager {
 
     public void setupLeaderHeads() {
         if (Bukkit.getServer().getPluginManager().getPlugin("LeaderHeads") != null) {
-            new TopLevel(skyblock);
-            new TopBank(skyblock);
-            new TopVotes(skyblock);
+            new TopLevel(plugin);
+            new TopBank(plugin);
+            new TopVotes(plugin);
         }
     }
 

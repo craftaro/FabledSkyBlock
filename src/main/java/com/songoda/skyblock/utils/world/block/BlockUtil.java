@@ -9,6 +9,7 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -172,7 +173,7 @@ public final class BlockUtil extends BlockUtils {
             blockData.setRotateFace(skull.getRotation().toString());
             blockData.setStateType(BlockStateType.SKULL.toString());
         } else {
-            if (NMSVersion > 8) {
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                 if (blockState instanceof EndGateway) {
                     EndGateway endGateway = (EndGateway) blockState;
                     blockData.setExactTeleport(endGateway.isExactTeleport());
@@ -182,7 +183,7 @@ public final class BlockUtil extends BlockUtils {
                     blockData.setStateType(BlockStateType.ENDGATEWAY.toString());
                 }
 
-                if (NMSVersion > 10) {
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
                     if (blockState instanceof ShulkerBox) {
                         ShulkerBox shulkerBox = (ShulkerBox) blockState;
 
@@ -197,6 +198,30 @@ public final class BlockUtil extends BlockUtils {
                         blockData.setStateType(BlockStateType.SHULKERBOX.toString());
                     }
                 }
+                
+                if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)){
+                    if (blockState instanceof Barrel) {
+                        Barrel barrel = (Barrel) blockState;
+        
+                        for (int i = 0; i < barrel.getInventory().getSize(); i++) {
+                            ItemStack is = barrel.getInventory().getItem(i);
+            
+                            if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
+                                blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
+                            }
+                        }
+        
+                        blockData.setStateType(BlockStateType.BARREL.toString());
+                    }
+                    
+                    if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
+                         if (blockState instanceof RespawnAnchor) {
+                             RespawnAnchor respawnAnchor = (RespawnAnchor) blockState;
+                             blockData.setCharges(respawnAnchor.getCharges());
+                             blockData.setStateType(BlockStateType.RESPAWN_ANCHOR.toString());
+                        }
+                    }
+                }
             }
         }
 
@@ -204,7 +229,7 @@ public final class BlockUtil extends BlockUtils {
             blockData.setFacing(((Stairs) materialData).getFacing().toString());
             blockData.setDataType(BlockDataType.STAIRS.toString());
         } else if (materialData instanceof org.bukkit.material.FlowerPot) {
-            if (NMSVersion >= 8 && NMSVersion <= 12) {
+            if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12)) {
                 try {
                     World world = block.getWorld();
 
@@ -256,7 +281,7 @@ public final class BlockUtil extends BlockUtils {
         Material material = Material.valueOf(materialStr);
         if (material == Material.AIR) return;
 
-        if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13))
+        if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12))
             setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
         else
             block.setBlockData(Bukkit.getServer().createBlockData(blockData.getBlockData()));
@@ -268,7 +293,7 @@ public final class BlockUtil extends BlockUtils {
 
         BlockState state = block.getState();
 
-        if (blockTypeState == BlockStateType.BANNER) {
+        if (blockTypeState.equals(BlockStateType.BANNER)) {
             Banner banner = (Banner) state;
             banner.setBaseColor(DyeColor.valueOf(blockData.getBaseColor().toUpperCase()));
 
@@ -277,7 +302,7 @@ public final class BlockUtil extends BlockUtils {
                 banner.addPattern(new Pattern(DyeColor.valueOf(pattern[1].toUpperCase()), PatternType.valueOf(pattern[0].toUpperCase())));
             }
             state.update();
-        } else if (blockTypeState == BlockStateType.BEACON) {
+        } else if (blockTypeState.equals(BlockStateType.BEACON)) {
             Beacon beacon = (Beacon) state;
             String[] potionEffect = blockData.getPotionEffect().split(":");
             if (!potionEffect[0].equals("null")) {
@@ -288,17 +313,17 @@ public final class BlockUtil extends BlockUtils {
                 beacon.setSecondaryEffect(PotionEffectType.getByName(potionEffect[1].toUpperCase()));
             }
             state.update();
-        } else if (blockTypeState == BlockStateType.BREWINGSTAND && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
+        } else if (blockTypeState.equals(BlockStateType.BREWINGSTAND) && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
             BrewingStand brewingStand = (BrewingStand) state;
             brewingStand.setBrewingTime(blockData.getBrewingTime());
             brewingStand.setFuelLevel(blockData.getFuelLevel());
             state.update();
-        } else if (blockTypeState == BlockStateType.COMMANDBLOCK) {
+        } else if (blockTypeState.equals(BlockStateType.COMMANDBLOCK)) {
             CommandBlock commandBlock = (CommandBlock) state;
             commandBlock.setCommand(blockData.getCommand());
             commandBlock.setName(blockData.getCommandBlockName());
             state.update();
-        } else if (blockTypeState == BlockStateType.CHEST) {
+        } else if (blockTypeState.equals(BlockStateType.CHEST)) {
             Chest chest = (Chest) state;
 
             for (Integer slotList : blockData.getInventory().keySet()) {
@@ -307,7 +332,7 @@ public final class BlockUtil extends BlockUtils {
                     chest.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState == BlockStateType.DISPENSER) {
+        } else if (blockTypeState.equals(BlockStateType.DISPENSER)) {
             Dispenser dispenser = (Dispenser) state;
 
             for (Integer slotList : blockData.getInventory().keySet()) {
@@ -316,7 +341,7 @@ public final class BlockUtil extends BlockUtils {
                     dispenser.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState == BlockStateType.DROPPER) {
+        } else if (blockTypeState.equals(BlockStateType.DROPPER)) {
             Dropper dropper = (Dropper) state;
 
             for (Integer slotList : blockData.getInventory().keySet()) {
@@ -325,7 +350,7 @@ public final class BlockUtil extends BlockUtils {
                     dropper.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState == BlockStateType.HOPPER) {
+        } else if (blockTypeState.equals(BlockStateType.HOPPER)) {
             Hopper hopper = (Hopper) state;
 
             for (Integer slotList : blockData.getInventory().keySet()) {
@@ -334,7 +359,7 @@ public final class BlockUtil extends BlockUtils {
                     hopper.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState == BlockStateType.CREATURESPAWNER) {
+        } else if (blockTypeState.equals(BlockStateType.CREATURESPAWNER)) {
             CreatureSpawner creatureSpawner = (CreatureSpawner) state;
 
             if (blockData.getEntity() != null) {
@@ -343,7 +368,7 @@ public final class BlockUtil extends BlockUtils {
 
             creatureSpawner.setDelay(blockData.getDelay());
             state.update();
-        } else if (blockTypeState == BlockStateType.FURNACE) {
+        } else if (blockTypeState.equals(BlockStateType.FURNACE)) {
             Furnace furnace = (Furnace) state;
             furnace.setBurnTime(blockData.getBurnTime());
             furnace.setCookTime(blockData.getCookTime());
@@ -356,35 +381,35 @@ public final class BlockUtil extends BlockUtils {
                     furnace.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState == BlockStateType.JUKEBOX) {
+        } else if (blockTypeState.equals(BlockStateType.JUKEBOX)) {
             Jukebox jukebox = (Jukebox) state;
 
             if (blockData.getPlaying() != null) {
                 jukebox.setPlaying(Material.valueOf(blockData.getPlaying().toUpperCase()));
             }
             state.update();
-        } else if (blockTypeState == BlockStateType.SIGN) {
+        } else if (blockTypeState.equals(BlockStateType.SIGN)) {
             Sign sign = (Sign) state;
 
             for (int i = 0; i < blockData.getSignLines().length; i++) {
                 sign.setLine(i, ChatColor.translateAlternateColorCodes('&', blockData.getSignLines()[i]));
             }
             state.update();
-        } else if (blockTypeState == BlockStateType.SKULL) {
+        } else if (blockTypeState.equals(BlockStateType.SKULL)) {
             Skull skull = (Skull) state;
 
             skull.setRotation(BlockFace.valueOf(blockData.getRotateFace().toUpperCase()));
             skull.setSkullType(SkullType.valueOf(blockData.getSkullType().toUpperCase()));
 
-            if (NMSVersion > 9) {
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10)) {
                 skull.setOwningPlayer(Bukkit.getServer().getOfflinePlayer(blockData.getSkullOwner()));
             } else {
                 skull.setOwner(blockData.getSkullOwner());
             }
             state.update();
         } else {
-            if (NMSVersion > 8) {
-                if (blockTypeState == BlockStateType.ENDGATEWAY) {
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+                if (blockTypeState.equals(BlockStateType.ENDGATEWAY)) {
                     EndGateway endGateway = (EndGateway) state;
                     endGateway.setExactTeleport(blockData.isExactTeleport());
 
@@ -399,17 +424,35 @@ public final class BlockUtil extends BlockUtils {
                     state.update();
                 }
 
-                if (NMSVersion > 9) {
-                    if (NMSVersion > 10) {
-                        if (blockTypeState == BlockStateType.SHULKERBOX) {
-                            ShulkerBox shulkerBox = (ShulkerBox) state;
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+                    if (blockTypeState.equals(BlockStateType.SHULKERBOX)) {
+                        ShulkerBox shulkerBox = (ShulkerBox) state;
 
+                        for (Integer slotList : blockData.getInventory().keySet()) {
+                            if (slotList < shulkerBox.getInventory().getSize()) {
+                                ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
+                                shulkerBox.getInventory().setItem(slotList, is);
+                            }
+                        }
+                    }
+                    if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)){
+                        if (blockTypeState.equals(BlockStateType.BARREL)) {
+                            Barrel barrel = (Barrel) state;
+    
                             for (Integer slotList : blockData.getInventory().keySet()) {
-                                if (slotList < shulkerBox.getInventory().getSize()) {
+                                if (slotList < barrel.getInventory().getSize()) {
                                     ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
-                                    shulkerBox.getInventory().setItem(slotList, is);
+                                    barrel.getInventory().setItem(slotList, is);
                                 }
                             }
+                        }
+                    }
+    
+                    if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
+                        if (blockTypeState.equals(BlockStateType.RESPAWN_ANCHOR)) {
+                            RespawnAnchor respawnAnchor = (RespawnAnchor) state;
+                            respawnAnchor.setCharges(blockData.getCharges());
+                            state.update();
                         }
                     }
                 }

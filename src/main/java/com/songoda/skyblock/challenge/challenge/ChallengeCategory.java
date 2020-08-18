@@ -1,16 +1,15 @@
 package com.songoda.skyblock.challenge.challenge;
 
+import com.songoda.core.compatibility.CompatibleMaterial;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
-import com.songoda.core.compatibility.CompatibleMaterial;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class ChallengeCategory {
 	private int id;
@@ -39,7 +38,15 @@ public class ChallengeCategory {
 			String name = ChatColor.translateAlternateColorCodes('&', config.getString(key + ".name"));
 			List<String> require = toColor(config.getStringList(key + ".require"));
 			List<String> reward = toColor(config.getStringList(key + ".reward"));
-			int maxTimes = config.getInt(key + ".maxtimes");
+			int maxTimes = 0;
+			try {
+				Integer.parseInt(config.getString(key + ".maxtimes", "unlimited"));
+				maxTimes = config.getInt(key + ".maxtimes");
+			} catch(NumberFormatException ignored) {
+				if(config.getString(key + ".maxtimes", "unlimited").equalsIgnoreCase("unlimited")) {
+					maxTimes = Integer.MAX_VALUE;
+				}
+			}
 			boolean showInChat = config.getBoolean(key + ".showInChat");
 			// Item
 			boolean show = config.getBoolean(key + ".item.show");

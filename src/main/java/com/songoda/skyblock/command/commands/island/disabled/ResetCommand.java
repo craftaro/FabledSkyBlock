@@ -26,14 +26,14 @@ public class ResetCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        PlayerData playerData = skyblock.getPlayerDataManager().getPlayerData(player);
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -47,7 +47,7 @@ public class ResetCommand extends SubCommand {
                         configLoad.getString("Command.Island.Reset.Confirmation.Pending.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
             } else {
-                int confirmationTime = fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                int confirmationTime = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getInt("Island.Confirmation.Timeout");
 
                 playerData.setConfirmation(Confirmation.Reset);

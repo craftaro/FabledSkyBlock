@@ -14,21 +14,21 @@ import java.util.Map.Entry;
 
 public class TopVotes extends DataCollector {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public TopVotes(SkyBlock skyblock) {
-        super("topvotes", skyblock.getDescription().getName(), BoardType.DEFAULT, "&bTop Votes", "topvotes",
+    public TopVotes(SkyBlock plugin) {
+        super("topvotes", plugin.getDescription().getName(), BoardType.DEFAULT, "&bTop Votes", "topvotes",
                 Arrays.asList(ChatColor.DARK_GRAY + "-=+=-", ChatColor.AQUA + "{name}",
                         ChatColor.WHITE + "{amount} Votes", ChatColor.DARK_GRAY + "-=+=-"),
                 true, UUID.class);
 
-        this.skyblock = skyblock;
+        this.plugin = plugin;
     }
 
     @Override
     public List<Entry<?, Double>> requestAll() {
         
-        List<Leaderboard> leaderboards = skyblock.getLeaderboardManager().getLeaderboard(Type.Votes);
+        List<Leaderboard> leaderboards = plugin.getLeaderboardManager().getLeaderboard(Type.Votes);
         Map<UUID, Double> topLevels = new HashMap<>(leaderboards.size());
         
         for (int i = 0; i < leaderboards.size(); i++) {

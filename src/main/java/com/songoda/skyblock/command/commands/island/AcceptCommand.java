@@ -13,7 +13,6 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
-import com.songoda.skyblock.scoreboard.Scoreboard;
 import com.songoda.skyblock.scoreboard.ScoreboardManager;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.Bukkit;
@@ -32,20 +31,20 @@ public class AcceptCommand extends SubCommand {
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = skyblock.getPlayerDataManager();
-        ScoreboardManager scoreboardManager = skyblock.getScoreboardManager();
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
         PlayerData playerData = playerDataManager.getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
-            InviteManager inviteManager = skyblock.getInviteManager();
+            InviteManager inviteManager = plugin.getInviteManager();
 
             if (inviteManager.hasInvite(player.getUniqueId())) {
                 Invite invite = inviteManager.getInvite(player.getUniqueId());
@@ -62,8 +61,8 @@ public class AcceptCommand extends SubCommand {
                             island = islandManager
                                     .getIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
                         } else {
-                            island = islandManager
-                                    .loadIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
+                            islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
+                            island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(invite.getOwnerUUID()));
                             unloadIsland = true;
                         }
 
@@ -99,8 +98,7 @@ public class AcceptCommand extends SubCommand {
                             island.save();
 
                             if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()
-                                    + 1) >= fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml"))
-                                    .getFileConfiguration().getInt("Island.Member.Capacity")) {
+                                    + 1) >= island.getMaxMembers()) {
                                 Map<UUID, Invite> invites = inviteManager.getInvites();
 
                                 for (UUID inviteList : invites.keySet()) {
@@ -123,66 +121,36 @@ public class AcceptCommand extends SubCommand {
                                     }
                                 }
                             }
-
-                            skyblock.getVisitManager().getIsland(invite.getOwnerUUID())
+    
+                            plugin.getVisitManager().getIsland(invite.getOwnerUUID())
                                     .removeVoter(player.getUniqueId());
 
-                            for (Player all : Bukkit.getOnlinePlayers()) {
-                                if (!all.getUniqueId().equals(player.getUniqueId())) {
-                                    if (playerDataManager.hasPlayerData(all)) {
-                                        playerData = playerDataManager.getPlayerData(all);
+                            for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
+                                if (!loopPlayer.getUniqueId().equals(player.getUniqueId())) {
+                                    if (playerDataManager.hasPlayerData(loopPlayer)) {
+                                        playerData = playerDataManager.getPlayerData(loopPlayer);
 
                                         if (playerData.getOwner() != null
                                                 && playerData.getOwner().equals(island.getOwnerUUID())) {
-                                            all.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                            loopPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                                     configLoad
                                                             .getString(
                                                                     "Command.Island.Accept.Accepted.Broadcast.Message")
                                                             .replace("%player", player.getName())));
-                                            soundManager.playSound(all, CompatibleSound.ENTITY_FIREWORK_ROCKET_BLAST.getSound(), 1.0F,
+                                            soundManager.playSound(loopPlayer, CompatibleSound.ENTITY_FIREWORK_ROCKET_BLAST.getSound(), 1.0F,
                                                     1.0F);
 
-                                            if (scoreboardManager != null) {
-                                                if (island.getRole(IslandRole.Member).size() == 1
-                                                        && island.getRole(IslandRole.Operator).size() == 0) {
-                                                    Scoreboard scoreboard = scoreboardManager.getScoreboard(all);
-                                                    scoreboard.setDisplayName(
-                                                            ChatColor.translateAlternateColorCodes('&', configLoad
-                                                                    .getString("Scoreboard.Island.Team.Displayname")));
-
-                                                    if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                                                        scoreboard.setDisplayList(configLoad.getStringList(
-                                                                "Scoreboard.Island.Team.Empty.Displaylines"));
-                                                    } else {
-                                                        scoreboard.setDisplayList(configLoad.getStringList(
-                                                                "Scoreboard.Island.Team.Occupied.Displaylines"));
-                                                    }
-
-    
-                                                    scoreboard.run();
-                                                }
+                                            
+                                            if (island.getRole(IslandRole.Member).size() == 1
+                                                    && island.getRole(IslandRole.Operator).size() == 0) {
+                                                scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                             }
                                         }
                                     }
                                 }
                             }
-
-                            if (scoreboardManager != null) {
-                                Scoreboard scoreboard = scoreboardManager.getScoreboard(player);
-                                scoreboard.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Scoreboard.Island.Team.Displayname", "")));
-
-                                if (islandManager.getVisitorsAtIsland(island).size() == 0) {
-                                    scoreboard.setDisplayList(
-                                            configLoad.getStringList("Scoreboard.Island.Team.Empty.Displaylines"));
-                                } else {
-                                    scoreboard.setDisplayList(
-                                            configLoad.getStringList("Scoreboard.Island.Team.Occupied.Displaylines"));
-                                }
-
-
-                                scoreboard.run();
-                            }
+    
+                            scoreboardManager.updatePlayerScoreboardType(player);
                         }
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Accept.Owner.Message"));

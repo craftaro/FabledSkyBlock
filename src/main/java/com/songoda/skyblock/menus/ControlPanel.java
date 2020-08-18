@@ -1,9 +1,13 @@
 package com.songoda.skyblock.menus;
 
-import java.io.File;
-
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
+import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.utils.item.MenuClickRegistry;
+import com.songoda.skyblock.utils.item.MenuClickRegistry.RegistryKey;
+import com.songoda.skyblock.utils.item.nInventoryUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,12 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.utils.item.MenuClickRegistry;
-import com.songoda.skyblock.utils.item.MenuClickRegistry.RegistryKey;
-import com.songoda.skyblock.utils.item.nInventoryUtil;
+import java.io.File;
 
 public final class ControlPanel {
 
@@ -39,10 +38,16 @@ public final class ControlPanel {
 
                 final Island island = SkyBlock.getInstance().getIslandManager().getIsland((Player) player);
 
-                if (island.isOpen()) {
-                    Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island close"), 1L);
-                } else {
-                    Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island open"), 1L);
+                switch (island.getStatus()) {
+                    case OPEN:
+                        Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island whitelist on"), 1L);
+                        break;
+                    case CLOSED:
+                        Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island open"), 1L);
+                        break;
+                    case WHITELISTED:
+                        Bukkit.getServer().getScheduler().runTaskLater(inst, () -> Bukkit.getServer().dispatchCommand(player, "island close"), 1L);
+                        break;
                 }
             });
 
@@ -83,9 +88,9 @@ public final class ControlPanel {
     }
 
     public void open(Player player) {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -176,6 +181,6 @@ public final class ControlPanel {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.ControlPanel.Title")));
         nInv.setRows(2);
 
-        Bukkit.getServer().getScheduler().runTask(skyblock, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
     }
 }

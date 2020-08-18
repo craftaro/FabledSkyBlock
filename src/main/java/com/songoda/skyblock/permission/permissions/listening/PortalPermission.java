@@ -10,12 +10,12 @@ import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
 import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
 import com.songoda.skyblock.utils.world.LocationUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import java.io.File;
 
 public class PortalPermission extends ListeningPermission {
 
@@ -34,11 +34,21 @@ public class PortalPermission extends ListeningPermission {
             Player player = (Player) event.getEntity();
 
             cancelAndMessage(event, player, plugin, messageManager);
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                player.teleport(getToLocation(event.getLocation(), player));
-            });
         }
     }
+
+    @PermissionHandler
+    public void onMove(PlayerMoveEvent event) {
+        if(event.getTo() != null){
+            CompatibleMaterial toMaterial = CompatibleMaterial.getMaterial(event.getTo().getBlock().getType());
+
+            if (toMaterial == CompatibleMaterial.NETHER_PORTAL || toMaterial == CompatibleMaterial.END_PORTAL) {
+                //event.setTo(LocationUtil.getRandomLocation(event.getFrom().getWorld(), 5000, 5000, true, true));
+                cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+            }
+        }
+    }
+
 
     @PermissionHandler
     public void onTeleport(PlayerTeleportEvent event) {
@@ -47,12 +57,12 @@ public class PortalPermission extends ListeningPermission {
                 || event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)
                 || (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)
                     && event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_GATEWAY))){
-            event.getPlayer().teleport(getToLocation(event.getFrom(), event.getPlayer()));
+            /*event.getPlayer().teleport(getToLocation(event.getFrom(), event.getPlayer()));
             Location to = getToLocation(event.getFrom(), event.getPlayer());
             Bukkit.getScheduler().runTask(plugin, () -> {
                 event.getPlayer().teleport(to);
             });
-            event.setTo(to);
+            event.setTo(to);*/
 
             cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
         }
@@ -63,7 +73,13 @@ public class PortalPermission extends ListeningPermission {
         Island island = islandManager.getIslandAtLocation(from);
         Location to = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
         if(island.hasRole(IslandRole.Visitor, player.getUniqueId())){
-            to = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+            if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                    .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor));
+                if (safeLoc != null) {
+                    to = safeLoc;
+                }
+            }
             if(to == null){
                 to = LocationUtil.getSpawnLocation();
             }

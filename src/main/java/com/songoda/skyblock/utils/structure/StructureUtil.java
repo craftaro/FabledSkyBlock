@@ -15,10 +15,6 @@ import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.utils.world.block.BlockUtil;
 import com.songoda.skyblock.utils.world.entity.EntityData;
 import com.songoda.skyblock.utils.world.entity.EntityUtil;
-
-import java.io.FileInputStream;
-import java.util.Base64;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,10 +26,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -203,14 +201,14 @@ public final class StructureUtil {
     }
 
     public static ItemStack getTool() throws Exception {
-        SkyBlock skyblock = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getInstance();
 
-        FileManager fileManager = skyblock.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        FileManager.Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        ItemStack is = new ItemStack(Material.valueOf(fileManager.getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Admin.Structure.Selector")));
+        ItemStack is = new ItemStack(Material.valueOf(fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Admin.Structure.Selector")));
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Structure.Tool.Item.Displayname")));
 

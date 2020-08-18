@@ -35,12 +35,12 @@ public class DeleteCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        MessageManager messageManager = skyblock.getMessageManager();
-        IslandManager islandManager = skyblock.getIslandManager();
-        SoundManager soundManager = skyblock.getSoundManager();
-        FileManager fileManager = skyblock.getFileManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = plugin.getSoundManager();
+        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(skyblock.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Player player = null;
@@ -68,7 +68,8 @@ public class DeleteCommand extends SubCommand {
                         configLoad.getString("Command.Island.Admin.Delete.Owner.Message"));
                 soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             } else {
-                Island island = islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
+                islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
+                Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
                 Location spawnLocation = LocationUtil.getSpawnLocation();
 
                 if (spawnLocation != null && islandManager.isLocationAtIsland(island, spawnLocation)) {

@@ -10,7 +10,7 @@ import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.levelling.rework.IslandLevelManager;
+import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -18,12 +18,13 @@ import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.*;
-import org.bukkit.block.BlockFace;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,10 +44,10 @@ import java.util.HashMap;
 
 public class Interact implements Listener {
 
-    private final SkyBlock skyblock;
+    private final SkyBlock plugin;
 
-    public Interact(SkyBlock skyblock) {
-        this.skyblock = skyblock;
+    public Interact(SkyBlock plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -55,9 +56,9 @@ public class Interact implements Listener {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getClickedBlock().getRelative(event.getBlockFace());
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        WorldManager worldManager = skyblock.getWorldManager();
-        IslandLevelManager levellingManager = skyblock.getLevellingManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = plugin.getWorldManager();
+        IslandLevelManager levellingManager = plugin.getLevellingManager();
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
@@ -68,7 +69,7 @@ public class Interact implements Listener {
             Island island = islandManager.getIslandAtLocation(blockLoc);
 
             // Check permissions.
-            if (!skyblock.getPermissionManager().processPermission(event, player, island))
+            if (!plugin.getPermissionManager().processPermission(event, player, island))
                 return;
 
             if (island == null) {
@@ -77,13 +78,13 @@ public class Interact implements Listener {
             }
 
             if (levellingManager.isScanning(island)) {
-                skyblock.getMessageManager().sendMessage(player,
-                        skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
+                plugin.getMessageManager().sendMessage(player,
+                        plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
                 event.setCancelled(true);
                 return;
             }
 
-            FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+            FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
             IslandWorld world = worldManager.getIslandWorld(block.getWorld());
 
@@ -96,24 +97,24 @@ public class Interact implements Listener {
                 }
 
                 if (isObstructing) {
-                    skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
-                    skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
+                    plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                     event.setCancelled(true);
                     return;
                 }
             }
 
-            BlockLimitation limits = skyblock.getLimitationHandler().getInstance(BlockLimitation.class);
+            BlockLimitation limits = plugin.getLimitationHandler().getInstance(BlockLimitation.class);
 
             long limit = limits.getBlockLimit(player, Material.WATER);
 
             if (limits.isBlockLimitExceeded(event.getItem().getType(), block.getLocation(), limit)) {
                 CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getItem().getType());
 
-                skyblock.getMessageManager().sendMessage(player, skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+                plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
                         .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
-                skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 event.setCancelled(true);
                 return;
@@ -136,15 +137,17 @@ public class Interact implements Listener {
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getClickedBlock();
 
-        if (block != null && !skyblock.getWorldManager().isIslandWorld(block.getWorld())) {
+        if (block != null && !plugin.getWorldManager().isIslandWorld(block.getWorld())) {
             return;
         }
 
-        IslandManager islandManager = skyblock.getIslandManager();
-        StackableManager stackableManager = skyblock.getStackableManager();
-        IslandLevelManager levellingManager = skyblock.getLevellingManager();
+        IslandManager islandManager = plugin.getIslandManager();
+        StackableManager stackableManager = plugin.getStackableManager();
+        IslandLevelManager levellingManager = plugin.getLevellingManager();
 
-        Island island = islandManager.getIslandAtLocation(player.getLocation());
+        Island island = (block != null) ?
+                islandManager.getIslandAtLocation(block.getLocation()) :
+                islandManager.getIslandAtLocation(player.getLocation());
         if (island == null) {
             event.setCancelled(true);
             return;
@@ -153,7 +156,7 @@ public class Interact implements Listener {
         CompatibleMaterial material = block == null ? null : CompatibleMaterial.getMaterial(block.getType());
 
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(event, player, island))
+        if (!plugin.getPermissionManager().processPermission(event, player, island))
             return;
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -166,28 +169,34 @@ public class Interact implements Listener {
             } else {
                 heldType = CompatibleMaterial.AIR;
             }
-
+    
+            if (stackableManager != null && block != null && stackableManager.isStacked(block.getLocation())) {
+                if(blockType.equals(CompatibleMaterial.DRAGON_EGG)){
+                    event.setCancelled(true);
+                }
+            }
+            
             if (stackableManager != null && stackableManager.isStackableMaterial(heldType) && blockType == heldType
-                    && !player.isSneaking() && skyblock.getPermissionManager().hasPermission(player, island, "Place")
-                    && (!skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission")
+                    && !player.isSneaking() && plugin.getPermissionManager().hasPermission(player, island, "Place")
+                    && (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission")
                     || player.hasPermission("fabledskyblock.stackable"))) {
 
                 if (levellingManager.isScanning(island)) {
-                    skyblock.getMessageManager().sendMessage(player,
-                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
+                    plugin.getMessageManager().sendMessage(player,
+                            plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
                     event.setCancelled(true);
                     return;
                 }
 
-                BlockLimitation limits = skyblock.getLimitationHandler().getInstance(BlockLimitation.class);
+                BlockLimitation limits = plugin.getLimitationHandler().getInstance(BlockLimitation.class);
 
-                long limit = limits.getBlockLimit(player, block);
+                long limit = limits.getBlockLimit(player, block.getType());
 
                 if (limits.isBlockLimitExceeded(block, limit)) {
-                    skyblock.getMessageManager().sendMessage(player,
-                            skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+                    plugin.getMessageManager().sendMessage(player,
+                            plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
                                     .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
-                    skyblock.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                     event.setCancelled(true);
                     return;
@@ -197,7 +206,7 @@ public class Interact implements Listener {
                 Stackable stackable = stackableManager.getStack(location, blockType);
                 int itemAmount = event.getItem().getAmount();
 
-                FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
                 FileConfiguration configLoad = config.getFileConfiguration();
 
                 if (configLoad.getBoolean("Island.Stackable.Limit.Enable")) {
@@ -236,6 +245,10 @@ public class Interact implements Listener {
                     event.setCancelled(true);
                 }
 
+                if(plugin.getCoreProtectAPI() != null && material != null) {
+                    plugin.getCoreProtectAPI().logPlacement(player.getName(), location, material.getMaterial(), null);
+                }
+
                 if (player.getGameMode() != GameMode.CREATIVE)
                     ItemUtils.takeActiveItem(player, CompatibleHand.getHand(event), itemAmount);
 
@@ -260,7 +273,7 @@ public class Interact implements Listener {
             }
 
             // Check if the clicked block is outside of the border.
-            WorldManager worldManager = skyblock.getWorldManager();
+            WorldManager worldManager = plugin.getWorldManager();
             org.bukkit.block.Block clickedBlock = event.getClickedBlock();
             IslandWorld world = worldManager.getIslandWorld(clickedBlock.getWorld());
             if (!islandManager.isLocationAtIsland(island, clickedBlock.getLocation(), world)) {
@@ -273,10 +286,10 @@ public class Interact implements Listener {
                     && event.getItem() != null
                     && CompatibleMaterial.getMaterial(event.getItem()) != CompatibleMaterial.AIR
                     && CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.BUCKET) {
-                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getBoolean("Island.Block.Obsidian.Enable")) {
 
-                    CompatibleSound.BLOCK_FIRE_EXTINGUISH.play(block.getWorld(), block.getLocation(), 1.0F, 1.0F);
+                    plugin.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 1.0F);
                     block.setType(CompatibleMaterial.AIR.getBlockMaterial());
 
                     ItemUtils.takeActiveItem(player, CompatibleHand.getHand(event));
@@ -288,7 +301,7 @@ public class Interact implements Listener {
                     return;
                 }
             } else if (material == CompatibleMaterial.END_PORTAL_FRAME) {
-                if (skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"))
+                if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getBoolean("Island.Block.EndFrame.Enable")) {
 
                     if (Bukkit.getPluginManager().isPluginEnabled("EpicAnchors")) {
@@ -325,7 +338,7 @@ public class Interact implements Listener {
                         }
                         player.updateInventory();
 
-                        FileManager.Config config = skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "config.yml"));
+                        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
                         FileConfiguration configLoad = config.getFileConfiguration();
 
                         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
@@ -342,8 +355,8 @@ public class Interact implements Listener {
                                 }
                             }
                         }
-
-                        CompatibleSound.ENTITY_CHICKEN_EGG.play(player, 10.0F, 10.0F);
+    
+                        plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 10.0F, 10.0F);
 
                         event.setCancelled(true);
                         return;
@@ -370,8 +383,8 @@ public class Interact implements Listener {
     public void onPlayerInteractStructure(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        MessageManager messageManager = skyblock.getMessageManager();
-        SoundManager soundManager = skyblock.getSoundManager();
+        MessageManager messageManager = plugin.getMessageManager();
+        SoundManager soundManager = plugin.getSoundManager();
 
         if (event.getItem() != null) {
             try {
@@ -385,10 +398,10 @@ public class Interact implements Listener {
                                 || player.hasPermission("fabledskyblock.*")) {
                             event.setCancelled(true);
 
-                            skyblock.getPlayerDataManager().getPlayerData(player).getArea().setPosition(1, event.getClickedBlock().getLocation());
+                            plugin.getPlayerDataManager().getPlayerData(player).getArea().setPosition(1, event.getClickedBlock().getLocation());
 
                             messageManager.sendMessage(player,
-                                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
+                                    plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
                                             .replace("%position", "1"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
                         }
@@ -403,10 +416,10 @@ public class Interact implements Listener {
                                 || player.hasPermission("fabledskyblock.*")) {
                             event.setCancelled(true);
 
-                            skyblock.getPlayerDataManager().getPlayerData(player).getArea().setPosition(2, event.getClickedBlock().getLocation());
+                            plugin.getPlayerDataManager().getPlayerData(player).getArea().setPosition(2, event.getClickedBlock().getLocation());
 
                             messageManager.sendMessage(player,
-                                    skyblock.getFileManager().getConfig(new File(skyblock.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
+                                    plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
                                             .replace("%position", "2"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
                         }
@@ -423,14 +436,14 @@ public class Interact implements Listener {
         Player player = event.getPlayer();
         org.bukkit.entity.Entity entity = event.getRightClicked();
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
-        if (!skyblock.getWorldManager().isIslandWorld(entity.getWorld())) return;
+        if (!plugin.getWorldManager().isIslandWorld(entity.getWorld())) return;
 
         Island island = islandManager.getIslandAtLocation(entity.getLocation());
 
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(event, player, island))
+        if (!plugin.getPermissionManager().processPermission(event, player, island))
             return;
     }
 
@@ -440,16 +453,16 @@ public class Interact implements Listener {
             return;
         }
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
         Player player = (Player) event.getAttacker();
 
-        if (!skyblock.getWorldManager().isIslandWorld(event.getVehicle().getWorld())) return;
+        if (!plugin.getWorldManager().isIslandWorld(event.getVehicle().getWorld())) return;
 
         Island island = islandManager.getIslandAtLocation(event.getVehicle().getLocation());
 
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(event, player, island))
+        if (!plugin.getPermissionManager().processPermission(event, player, island))
             return;
     }
 
@@ -459,22 +472,22 @@ public class Interact implements Listener {
             return;
         }
 
-        IslandManager islandManager = skyblock.getIslandManager();
+        IslandManager islandManager = plugin.getIslandManager();
 
         Player player = (Player) event.getAttacker();
 
-        if (!skyblock.getWorldManager().isIslandWorld(event.getVehicle().getWorld())) return;
+        if (!plugin.getWorldManager().isIslandWorld(event.getVehicle().getWorld())) return;
 
         Island island = islandManager.getIslandAtLocation(event.getVehicle().getLocation());
 
         // Check permissions.
-        if (!skyblock.getPermissionManager().processPermission(event, player, island))
+        if (!plugin.getPermissionManager().processPermission(event, player, island))
             return;
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-        if (skyblock.getStackableManager() != null && skyblock.getStackableManager().isStacked(event.getRightClicked().getLocation().getBlock().getLocation())) {
+        if (plugin.getStackableManager() != null && plugin.getStackableManager().isStacked(event.getRightClicked().getLocation().getBlock().getLocation())) {
             event.setCancelled(true);
         }
     }

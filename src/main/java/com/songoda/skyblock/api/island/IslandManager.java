@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.structure.Structure;
 import com.songoda.skyblock.api.utils.APIUtil;
-import com.songoda.skyblock.island.IslandPermission;
 import com.songoda.skyblock.permission.PermissionManager;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;

@@ -1,9 +1,9 @@
 package com.songoda.skyblock.utils.player;
 
-import java.util.Set;
-
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
+
+import java.util.Set;
 
 public final class PlayerUtil {
 
