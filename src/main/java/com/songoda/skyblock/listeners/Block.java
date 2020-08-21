@@ -932,4 +932,47 @@ public class Block implements Listener {
             event.setCancelled(true);
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onLiquidDestroyBlock(BlockFromToEvent event) {
+        if (!plugin.getWorldManager().isIslandWorld(event.getBlock().getWorld()))
+            return;
+
+        IslandManager islandManager = plugin.getIslandManager();
+        Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+        if (island == null)
+            return;
+
+        CompatibleMaterial destmaterial = CompatibleMaterial.getMaterial(event.getToBlock());
+        if (destmaterial == CompatibleMaterial.AIR)
+            return;
+        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (event.getToBlock().getType().toString().toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    destmaterial = CompatibleMaterial.REPEATER;
+                    break;
+            }
+        }
+
+        CompatibleMaterial srcmaterial = CompatibleMaterial.getMaterial(event.getBlock());
+        if (srcmaterial != CompatibleMaterial.WATER
+            && srcmaterial != CompatibleMaterial.LAVA)
+            return;
+
+        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
+        if (!configLoad.getBoolean("Island.Block.Level.Enable"))
+            return;
+
+        IslandLevel level = island.getLevel();
+        if (level.hasMaterial(destmaterial.name())) {
+            long materialAmount = level.getMaterialAmount(destmaterial.name());
+
+            if (materialAmount - 1 <= 0) {
+                level.removeMaterial(destmaterial.name());
+            } else {
+                level.setMaterialAmount(destmaterial.name(), materialAmount - 1);
+            }
+        }
+    }
 }
