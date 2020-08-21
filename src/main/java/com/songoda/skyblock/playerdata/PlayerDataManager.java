@@ -192,6 +192,8 @@ public class PlayerDataManager {
 
                             for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
                                 PlayerData targetPlayerData = getPlayerData(loopPlayer);
+                                if (targetPlayerData == null)
+                                    continue;
         
                                 if (targetPlayerData.getOwner() != null &&
                                         targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
