@@ -264,7 +264,7 @@ public class Move implements Listener {
         final Player player = e.getPlayer();
         final WorldManager worldManager = plugin.getWorldManager();
         if(e.getTo() != null && e.getTo().getWorld() != null){
-            if(!e.isAsynchronous()){
+            if(Bukkit.isPrimaryThread()){
                 e.getTo().getWorld().loadChunk(e.getTo().getChunk()); // Is that needed?
             }
             if(worldManager.isIslandWorld(e.getTo().getWorld())
