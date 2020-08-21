@@ -115,6 +115,10 @@ public class TeleportCommand extends SubCommand {
 
             Bukkit.getServer().getScheduler().runTask(plugin, () -> {
                 Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
+                if (loc == null) {
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Unsafe.Message"));
+                    return;
+                }
                 PaperLib.getChunkAtAsync(loc).thenRun((() -> {
                     if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
                             .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)) {
