@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
@@ -135,7 +136,7 @@ public class Biome {
                         SBiome selectedBiomeType = SBiome.getFromGuiIcon(is.getType(), is.getData().getData());
 
                         cooldownManager.createPlayer(CooldownType.Biome, player);
-                        biomeManager.setBiome(island,IslandWorld.Normal, selectedBiomeType.getBiome(), null);
+                        biomeManager.setBiome(island,IslandWorld.Normal, CompatibleBiome.getBiome(selectedBiomeType.getBiome()), null);
                         island.setBiome(selectedBiomeType.getBiome());
                         island.save();
 

@@ -278,10 +278,10 @@ public class IslandManager {
         } catch (Exception ex) {
             cBiome = CompatibleBiome.PLAINS;
         }
-        Biome biome = cBiome.getBiome();
+        final CompatibleBiome compatibleBiome = cBiome;
 
         Bukkit.getServer().getScheduler().runTaskLater(plugin, () ->
-                plugin.getBiomeManager().setBiome(island, IslandWorld.Normal, biome, () -> {
+                plugin.getBiomeManager().setBiome(island, IslandWorld.Normal, compatibleBiome, () -> {
             if (structure.getCommands() != null) {
                 for (String commandList : structure.getCommands()) {
                     Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));

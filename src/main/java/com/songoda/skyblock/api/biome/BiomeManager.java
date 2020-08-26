@@ -1,6 +1,7 @@
 package com.songoda.skyblock.api.biome;
 
 import com.google.common.base.Preconditions;
+import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.skyblock.api.island.Island;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.block.Biome;
@@ -20,6 +21,6 @@ public class BiomeManager {
         Preconditions.checkArgument(island != null, "Cannot set biome to null island");
         Preconditions.checkArgument(biome != null, "Cannot set biome to null biome");
 
-        this.biomeManager.setBiome(island.getIsland(), IslandWorld.Normal, biome, null);
+        this.biomeManager.setBiome(island.getIsland(), IslandWorld.Normal, CompatibleBiome.getBiome(biome), null);
     }
 }

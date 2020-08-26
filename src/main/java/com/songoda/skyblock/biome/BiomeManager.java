@@ -1,5 +1,6 @@
 package com.songoda.skyblock.biome;
 
+import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.ChunkLoader;
@@ -21,8 +22,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BiomeManager {
-    
-    final ServerVersion ASYNC_OBFUSCATOR_VERSION = ServerVersion.V1_9;
 
     private final SkyBlock plugin;
     private final List<Island> updatingIslands;
@@ -48,7 +47,7 @@ public class BiomeManager {
         updatingIslands.remove(island);
     }
 
-    public void setBiome(Island island, IslandWorld world, Biome biome, CompleteTask task) {
+    public void setBiome(Island island, IslandWorld world, CompatibleBiome biome, CompleteTask task) {
         addUpdatingIsland(island);
 
         if (island.getLocation(world, IslandEnvironment.Island) == null) return;
@@ -59,17 +58,13 @@ public class BiomeManager {
     
         ChunkLoader.startChunkLoadingPerChunk(island, world, plugin.isPaperAsync(), (futureChunk) -> {
             Chunk chunk = futureChunk.join();
-            if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){ // TODO Should be 1.15 but it works fine there
-                setChunkBiome3D(biome, chunk);
-            } else {
-                try {
-                    setChunkBiome2D(biome, chunk);
-                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+            try {
+                if (chunk != null)
+                    biome.setBiome(chunk);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
             }
-            updateBiomePacket(island, chunk);
-        
+
             progress.getAndIncrement();
         
             if(language.getBoolean("Command.Island.Biome.Progress.Should-Display-Message") &&
@@ -94,61 +89,6 @@ public class BiomeManager {
         }));
     }
 
-    private void setChunkBiome2D(Biome biome, Chunk chunk) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        for(int x = chunk.getX() << 4; x < (chunk.getX()<< 4)+16; x++){
-            for(int z = chunk.getZ() << 4; z < (chunk.getZ()<< 4)+16; z++){
-                World.class.getMethod("setBiome", int.class, int.class, Biome.class).invoke(chunk.getWorld(), x, z, biome);
-            }
-        }
-    }
-    
-    // Do not use - Too laggy
-    private void setChunkBiome3D(Biome biome, Chunk chunk) {
-        for(int x = chunk.getX() << 4; x < (chunk.getX()<< 4)+16; x++){
-            for(int z = chunk.getZ() << 4; z < (chunk.getZ()<< 4)+16; z++){
-                for(int y = 0; y < chunk.getWorld().getMaxHeight(); ++y) {
-                    chunk.getWorld().setBiome(x, y, z, biome);
-                }
-            }
-        }
-    }
-
-    
-
-    private void updateBiomePacket(Island island, Chunk chunk) {
-        Class<?> packetPlayOutMapChunkClass;
-        Class<?> chunkClass;
-    
-        packetPlayOutMapChunkClass = NMSUtil.getNMSClass("PacketPlayOutMapChunk");
-        chunkClass = NMSUtil.getNMSClass("Chunk");
-    
-        for (Player player : plugin.getIslandManager().getPlayersAtIsland(island, IslandWorld.Normal)) {
-            try {
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
-                    if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
-                        NMSUtil.sendPacket(player,
-                                packetPlayOutMapChunkClass.getConstructor(chunkClass, int.class, boolean.class).newInstance(player
-                                                .getLocation().getChunk().getClass().getMethod("getHandle").invoke(chunk),
-                                        65535, true));
-                    } else {
-                        NMSUtil.sendPacket(player,
-                                packetPlayOutMapChunkClass.getConstructor(chunkClass, int.class).newInstance(player
-                                                .getLocation().getChunk().getClass().getMethod("getHandle").invoke(chunk),
-                                        65535));
-                    }
-                } else {
-                    NMSUtil.sendPacket(player,
-                            packetPlayOutMapChunkClass.getConstructor(chunkClass, boolean.class, int.class)
-                                    .newInstance(player.getLocation().getChunk().getClass().getMethod("getHandle")
-                                            .invoke(chunk), true, 20));
-                }
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    
     public interface CompleteTask {
         void onCompleteUpdate();
     }

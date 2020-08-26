@@ -253,47 +253,33 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onPluginDisable() {
-        if (this.userCacheManager != null) {
+        if (this.userCacheManager != null)
             this.userCacheManager.onDisable();
-        }
-
-        if (this.scoreboardManager != null) {
+        if (this.scoreboardManager != null)
             this.scoreboardManager.disable();
-        }
-
-        if (this.islandManager != null) {
+        if (this.islandManager != null)
             this.islandManager.onDisable();
-        }
-
-        if (this.visitManager != null) {
+        if (this.visitManager != null)
             this.visitManager.onDisable();
-        }
-
-        if (this.banManager != null) {
+        if (this.banManager != null)
             this.banManager.onDisable();
-        }
-
-        if (this.playerDataManager != null) {
+        if (this.playerDataManager != null)
             this.playerDataManager.onDisable();
-        }
-
-        if (this.cooldownManager != null) {
+        if (this.cooldownManager != null)
             this.cooldownManager.onDisable();
-        }
-
-        if (this.hologramTask != null) {
+        if (this.hologramTask != null)
             this.hologramTask.onDisable();
-        }
-
-        if (this.mobNetherWaterTask != null) {
+        if (this.mobNetherWaterTask != null)
             this.mobNetherWaterTask.onDisable();
-        }
-
-        if (this.fabledChallenge != null) {
+        if (this.fabledChallenge != null)
             this.fabledChallenge.onDisable();
-        }
 
         HandlerList.unregisterAll(this);
+    }
+
+    @Override
+    public void onDataLoad() {
+
     }
 
     private CoreProtectAPI loadCoreProtect() {
