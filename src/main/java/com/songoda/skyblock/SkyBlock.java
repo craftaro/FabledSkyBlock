@@ -296,6 +296,10 @@ public class SkyBlock extends SongodaPlugin {
         HandlerList.unregisterAll(this);
     }
 
+    @Override
+    public void onDataLoad() {
+    }
+    
     private CoreProtectAPI loadCoreProtect() {
         Plugin plugin = getServer().getPluginManager().getPlugin("CoreProtect");
 
