@@ -279,7 +279,6 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onDataLoad() {
-
     }
 
     private CoreProtectAPI loadCoreProtect() {
