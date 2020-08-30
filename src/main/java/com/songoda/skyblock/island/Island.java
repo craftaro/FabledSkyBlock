@@ -14,7 +14,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.BasicPermission;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.upgrade.Upgrade;
+import com.songoda.skyblock.upgrade.Upgrade;g
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.visit.Visit;
@@ -311,9 +311,14 @@ public class Island {
                 .getFileConfiguration().getString("Ownership.Original"));
     }
 
-    public int getMaxMembers() {
-        return maxMembers;
+    public int getMaxMembers(Player player) {
+        try {
+            return PlayerUtils.getNumberFromPermission(Objects.requireNonNull(player.getPlayer()), "fabledskyblock.members", maxMembers);
+        } catch (Exception ignored) {
+            return maxMembers;
+        }
     }
+
 
     public void setMaxMembers(int maxMembers) {
         if (maxMembers > 100000 || maxMembers < 0) {
