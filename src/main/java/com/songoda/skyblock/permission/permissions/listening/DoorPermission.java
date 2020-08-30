@@ -28,12 +28,7 @@ public class DoorPermission extends ListeningPermission {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
             return;
 
-        if (event.getClickedBlock() == null) return;
         Player player = event.getPlayer();
-        if (event.getClickedBlock().getBlockData() instanceof Openable){
-            System.out.println("is openabled");
-            cancelAndMessage(event, player, plugin, messageManager);
-        }
 
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
         if (material == CompatibleMaterial.BIRCH_DOOR || material == CompatibleMaterial.ACACIA_DOOR

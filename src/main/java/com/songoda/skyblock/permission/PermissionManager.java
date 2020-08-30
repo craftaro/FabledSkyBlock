@@ -59,6 +59,7 @@ public class PermissionManager {
                 new TramplePermission(plugin),
                 new PressurePlatePermission(plugin),
                 new CakePermission(plugin),
+                new TrapdoorPermission(plugin),
                 new PlacePermission(plugin),
                 new LeashPermission(plugin),
                 new AnimalBreedingPermission(plugin),
