@@ -4,9 +4,12 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
+import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -17,9 +20,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Challenge {
@@ -395,7 +396,7 @@ public class Challenge {
 		},
 		POTION {
 
-			private Pattern space = Pattern.compile(" ");
+			private final Pattern space = Pattern.compile(" ");
 
 			@Override
 			public Peer<PotionType, Peer<Integer, Integer>> convert(String value) throws IllegalArgumentException {

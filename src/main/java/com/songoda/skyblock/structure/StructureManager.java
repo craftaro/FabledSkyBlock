@@ -12,7 +12,7 @@ import java.util.List;
 public class StructureManager {
 
     public List<String> knownStructures;
-    private List<Structure> structureStorage = new ArrayList<>();
+    private final List<Structure> structureStorage = new ArrayList<>();
 
     public StructureManager(SkyBlock plugin) {
         Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "structures.yml"));

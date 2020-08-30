@@ -347,7 +347,7 @@ public class Information {
                                             new Placeholder("%island_members",
                                                     "" + (islandMembers.size() + islandOperators.size() + 1)),
                                             new Placeholder("%island_capacity", // %island_capacity
-                                                    "" + island.getMaxMembers()),
+                                                    "" + island.getMaxMembers(player)),
                                             new Placeholder("%members", "" + islandMembers.size()),
                                             new Placeholder("%operators", "" + islandOperators.size())},
                                     null, null),
@@ -568,8 +568,8 @@ public class Information {
 
     public static class Viewer {
 
-        private UUID islandOwnerUUID;
-        private Type type;
+        private final UUID islandOwnerUUID;
+        private final Type type;
 
         public Viewer(UUID islandOwnerUUID, Type type) {
             this.islandOwnerUUID = islandOwnerUUID;

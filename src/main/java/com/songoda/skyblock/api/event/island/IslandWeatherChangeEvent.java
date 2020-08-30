@@ -8,8 +8,8 @@ public class IslandWeatherChangeEvent extends IslandEvent {
 
     private static final HandlerList HANDLERS = new HandlerList();
     private final boolean sync;
-    private WeatherType weather;
-    private int time;
+    private final WeatherType weather;
+    private final int time;
 
     public IslandWeatherChangeEvent(Island island, WeatherType weather, int time, boolean sync) {
         super(island);

@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 public class ChallengeManager {
-	private SkyBlock plugin;
-	private HashMap<Integer, ChallengeCategory> categories;
+	private final SkyBlock plugin;
+	private final HashMap<Integer, ChallengeCategory> categories;
 
 	public ChallengeManager(SkyBlock plugin) {
 		this.plugin = plugin;
@@ -30,7 +30,7 @@ public class ChallengeManager {
 			if (section != null) {
 				for (String k : section.getKeys(false)) {
 					int id = configLoad.getInt("challenges." + k + ".id");
-					String name = ChatColor.translateAlternateColorCodes('&', configLoad.getString("challenges." + k + ".name"));
+					String name = plugin.formatText(configLoad.getString("challenges." + k + ".name"));
 					ChallengeCategory cc = new ChallengeCategory(id, name, configLoad);
 					categories.put(id, cc);
 				}

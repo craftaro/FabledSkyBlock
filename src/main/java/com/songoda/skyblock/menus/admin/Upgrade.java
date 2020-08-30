@@ -138,11 +138,7 @@ public class Upgrade {
 
                     if (upgrade != null) {
                         if (event.getClick() == ClickType.LEFT) {
-                            if (upgrade.isEnabled()) {
-                                upgrade.setEnabled(false);
-                            } else {
-                                upgrade.setEnabled(true);
-                            }
+                            upgrade.setEnabled(!upgrade.isEnabled());
 
                             if (playerDataManager.hasPlayerData(player)) {
                                 com.songoda.skyblock.upgrade.Upgrade.Type upgradeType = ((Viewer) playerDataManager

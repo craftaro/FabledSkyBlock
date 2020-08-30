@@ -16,8 +16,8 @@ import java.util.*;
 
 public class UpgradeManager {
 
-    private SkyBlock plugin;
-    private Map<Upgrade.Type, List<Upgrade>> upgradeStorage = new HashMap<>();
+    private final SkyBlock plugin;
+    private final Map<Upgrade.Type, List<Upgrade>> upgradeStorage = new HashMap<>();
 
     public UpgradeManager(SkyBlock plugin) {
         this.plugin = plugin;

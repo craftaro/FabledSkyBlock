@@ -18,7 +18,7 @@ public class CooldownManager {
 
     private final SkyBlock plugin;
 
-    private Map<CooldownType, List<CooldownPlayer>> cooldownStorage = new EnumMap<>(CooldownType.class);
+    private final Map<CooldownType, List<CooldownPlayer>> cooldownStorage = new EnumMap<>(CooldownType.class);
 
     public CooldownManager(SkyBlock plugin) {
         this.plugin = plugin;

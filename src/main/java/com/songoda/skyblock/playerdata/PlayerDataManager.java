@@ -27,7 +27,7 @@ import java.util.UUID;
 public class PlayerDataManager {
 
     private final SkyBlock plugin;
-    private Map<UUID, PlayerData> playerDataStorage = new HashMap<>();
+    private final Map<UUID, PlayerData> playerDataStorage = new HashMap<>();
 
     public PlayerDataManager(SkyBlock plugin) {
         this.plugin = plugin;

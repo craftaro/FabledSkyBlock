@@ -20,8 +20,7 @@ public class CooldownTask extends BukkitRunnable {
 
             if (cooldownPlayers == null) return;
 
-            for (int i = 0; i < cooldownPlayers.size(); i++) {
-                CooldownPlayer cooldownPlayer = cooldownPlayers.get(i);
+            for (CooldownPlayer cooldownPlayer : cooldownPlayers) {
                 Cooldown cooldown = cooldownPlayer.getCooldown();
 
                 cooldown.setTime(cooldown.getTime() - 1);

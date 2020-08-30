@@ -2,13 +2,13 @@ package com.songoda.skyblock.utils.structure;
 
 public class Storage {
 
-    private String blocks;
-    private String entities;
-    private String originLocation;
+    private final String blocks;
+    private final String entities;
+    private final String originLocation;
 
-    private long time;
+    private final long time;
 
-    private int version;
+    private final int version;
 
     public Storage(String blocks, String entities, String originLocation, long time, int version) {
         this.blocks = blocks;

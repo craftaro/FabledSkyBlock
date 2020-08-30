@@ -34,7 +34,7 @@ public class Portal implements Listener {
 
     private final SkyBlock plugin;
 
-    private Map<UUID, Tick> tickCounter = new HashMap<>();
+    private final Map<UUID, Tick> tickCounter = new HashMap<>();
 
     public Portal(SkyBlock plugin) {
         this.plugin = plugin;

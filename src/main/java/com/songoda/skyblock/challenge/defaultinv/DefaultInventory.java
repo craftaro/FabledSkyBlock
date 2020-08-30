@@ -17,8 +17,8 @@ import java.util.List;
 
 public class DefaultInventory {
 	private final Item defaultItem = new Item(new ItemStack(Material.AIR));
-	private int size;
-	private Item[][] items;
+	private final int size;
+	private final Item[][] items;
 
 	public DefaultInventory(SkyBlock plugin) {
 		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "challenges.yml"));

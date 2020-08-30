@@ -555,6 +555,9 @@ public class IslandManager {
             }
         }
 
+        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+        FileConfiguration configLoad = config.getFileConfiguration();
+
         if (configLoad.getBoolean("Island.Deletion.DeleteIsland", true)) {
             startDeletion(island, worldManager);
         }
@@ -566,9 +569,6 @@ public class IslandManager {
         org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
         cooldownManager.removeCooldownPlayer(CooldownType.Levelling, offlinePlayer);
         cooldownManager.removeCooldownPlayer(CooldownType.Ownership, offlinePlayer);
-
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
 
         boolean cooldownCreationEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Creation.Enable");
         boolean cooldownDeletionEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable");

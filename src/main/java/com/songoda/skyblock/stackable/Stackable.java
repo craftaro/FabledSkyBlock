@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class Stackable {
 
-    private UUID uuid;
+    private final UUID uuid;
 
     private Location location;
     private CompatibleMaterial material;

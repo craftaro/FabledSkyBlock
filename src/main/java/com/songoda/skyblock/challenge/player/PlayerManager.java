@@ -23,9 +23,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PlayerManager {
-	private SkyBlock plugin;
-	private HashMap<UUID, HashMap<Challenge, Integer>> islands;
-	private File playersDirectory;
+	private final SkyBlock plugin;
+	private final HashMap<UUID, HashMap<Challenge, Integer>> islands;
+	private final File playersDirectory;
 
 	public PlayerManager(SkyBlock plugin) {
 		this.plugin = plugin;

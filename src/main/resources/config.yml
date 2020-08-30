@@ -17,6 +17,18 @@ Economy:
     # Possible managers: Default, Vault, PlayerPoints and Reserve
     Manager: Default
 Island:
+    # This is settings is primary when damage, permission island dont work is false
+    Entity_Damage:
+        PVP: true # player vs player
+        EVP: true # entity vs player
+        PVE: true # player vs entity
+        EVE: true # entity vs entity
+    # Enabled or Disabled Task
+    Task:
+        PlaytimeTask: true
+        VisitTask: true
+
+
     Performance:
         # Chunk loading per tick affecting operations like island deletion, scan and biome changing.
         # This option is ignored when using Paper's async chunk load
@@ -63,6 +75,8 @@ Island:
             Time: 60
         ClearInventory: false
         ClearEnderChest: false
+        # When disabled, on deleting an island, it will only get removed from the plugin, the island itself stays
+        DeleteIsland: true
     World:
         # Delete the Island world when changing the liquid option.
         # If lava disabled, the world will be a water world.

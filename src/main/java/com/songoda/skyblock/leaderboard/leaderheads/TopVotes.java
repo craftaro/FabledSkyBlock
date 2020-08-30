@@ -30,9 +30,8 @@ public class TopVotes extends DataCollector {
         
         List<Leaderboard> leaderboards = plugin.getLeaderboardManager().getLeaderboard(Type.Votes);
         Map<UUID, Double> topLevels = new HashMap<>(leaderboards.size());
-        
-        for (int i = 0; i < leaderboards.size(); i++) {
-            Leaderboard leaderboard = leaderboards.get(i);
+
+        for (Leaderboard leaderboard : leaderboards) {
             Visit visit = leaderboard.getVisit();
             topLevels.put(visit.getOwnerUUID(), (double) visit.getVoters().size());
         }

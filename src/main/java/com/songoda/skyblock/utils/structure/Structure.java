@@ -2,8 +2,8 @@ package com.songoda.skyblock.utils.structure;
 
 public class Structure {
 
-    private Storage storage;
-    private String file;
+    private final Storage storage;
+    private final String file;
 
     public Structure(Storage storage, String file) {
         this.storage = storage;

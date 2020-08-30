@@ -103,9 +103,10 @@ public class Entity implements Listener {
             if(attacker instanceof Projectile && ((Projectile) attacker).getShooter() instanceof org.bukkit.entity.Entity) {
                 attacker = (org.bukkit.entity.Entity) ((Projectile) attacker).getShooter();
             }
-    
+
+            // Rework with better config
             if(victim instanceof Player && attacker instanceof Player) { // PVP
-                if(configLoad.getBoolean("Island.PvP.Enable")) {
+                if (configLoad.getBoolean("Island.Entity_Damage.PVP")) {
                     if(plugin.getPermissionManager()
                             .processPermission(event, (Player) attacker, island)) {
                         plugin.getPermissionManager()
@@ -114,15 +115,26 @@ public class Entity implements Listener {
                 } else {
                     event.setCancelled(true);
                 }
-            } else if(victim instanceof Player) { // EVP
-                plugin.getPermissionManager()
-                        .processPermission(event, (Player) victim, island, true);
-            } else if(attacker instanceof Player) { // PVE
-                plugin.getPermissionManager()
-                        .processPermission(event, (Player) attacker, island);
-            } else { // EVE
-                plugin.getPermissionManager()
-                        .processPermission(event, island);
+            }
+            else if(victim instanceof Player) { // EVP
+                if (configLoad.getBoolean("Island.Entity_Damage.EVP")) {
+                    plugin.getPermissionManager()
+                            .processPermission(event, (Player) victim, island, true);
+                }
+
+            }
+            else if(attacker instanceof Player) { // PVE
+                if (configLoad.getBoolean("Island.Entity_Damage.PVE")) {
+                    plugin.getPermissionManager()
+                            .processPermission(event, (Player) attacker, island);
+                }
+
+            }
+            else { // EVE
+                if (configLoad.getBoolean("Island.Entity_Damage.PVE")) {
+                    plugin.getPermissionManager()
+                            .processPermission(event, island);
+                }
             }
             
             // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
@@ -342,7 +354,6 @@ public class Entity implements Listener {
         
         if (event.getTo() != Material.AIR) {
             materials = CompatibleMaterial.getBlockMaterial(event.getTo());
-            ;
 
             if (materials != null) {
                 long materialAmount = 0;

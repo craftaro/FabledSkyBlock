@@ -14,14 +14,14 @@ import java.util.function.Consumer;
 
 public class Inventory {
 	public static final String TICK = "tick";
-	private HashMap<String, Object> values;
-	private Player player;
-	private InventoryProvider inventoryProvider;
-	private int size;
+	private final HashMap<String, Object> values;
+	private final Player player;
+	private final InventoryProvider inventoryProvider;
+	private final int size;
 
-	private List<Integer> excluseCases;
-	private ClickableItem[] items;
-	private org.bukkit.inventory.Inventory bukkitInventory;
+	private final List<Integer> excluseCases;
+	private final ClickableItem[] items;
+	private final org.bukkit.inventory.Inventory bukkitInventory;
 
 	public Inventory(Player player, InventoryProvider inventoryProvider, Consumer<Inventory> params) {
 		this.values = new HashMap<>();

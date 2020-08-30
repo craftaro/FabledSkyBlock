@@ -340,11 +340,7 @@ public class Generator implements Listener {
                 if (generatorManager.containsGenerator(name)) {
                     com.songoda.skyblock.generator.Generator generator = generatorManager.getGenerator(name);
 
-                    if (generator.isPermission()) {
-                        generator.setPermission(false);
-                    } else {
-                        generator.setPermission(true);
-                    }
+                    generator.setPermission(!generator.isPermission());
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
@@ -680,7 +676,7 @@ public class Generator implements Listener {
 
     public class Viewer {
 
-        private String name;
+        private final String name;
 
         public Viewer(String name) {
             this.name = name;

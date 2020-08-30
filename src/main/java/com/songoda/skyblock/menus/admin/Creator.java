@@ -778,11 +778,7 @@ public class Creator implements Listener {
                         if (structureManager.containsStructure(name)) {
                             Structure structure = structureManager.getStructure(name);
 
-                            if (structure.isPermission()) {
-                                structure.setPermission(false);
-                            } else {
-                                structure.setPermission(true);
-                            }
+                            structure.setPermission(!structure.isPermission());
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
@@ -1286,7 +1282,7 @@ public class Creator implements Listener {
 
     public class Viewer {
 
-        private String name;
+        private final String name;
         private boolean item = false;
 
         public Viewer(String name) {

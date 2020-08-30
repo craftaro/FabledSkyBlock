@@ -6,10 +6,10 @@ import java.util.UUID;
 
 public class Invite {
 
-    private UUID playerUUID;
-    private UUID senderUUID;
+    private final UUID playerUUID;
+    private final UUID senderUUID;
     private UUID islandOwnerUUID;
-    private String senderName;
+    private final String senderName;
     private int time;
 
     public Invite(Player player, Player sender, UUID islandOwnerUUID, int time) {

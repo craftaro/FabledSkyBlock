@@ -20,7 +20,7 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 public class ExplosionsPermission extends ListeningPermission {
 
-    private SkyBlock plugin;
+    private final SkyBlock plugin;
 
     public ExplosionsPermission(SkyBlock plugin) {
         super("Explosions", CompatibleMaterial.GUNPOWDER, PermissionType.ISLAND);

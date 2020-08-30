@@ -317,11 +317,7 @@ public class Settings {
                                         return;
                                     }
 
-                                    if (settingList.getStatus()) {
-                                        settingList.setStatus(false);
-                                    } else {
-                                        settingList.setStatus(true);
-                                    }
+                                    settingList.setStatus(!settingList.getStatus());
 
                                     if (settingList.getPermission().getName().equals("KeepItemsOnDeath")
                                             || settingList.getPermission().getName().equals("PvP")

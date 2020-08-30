@@ -14,14 +14,14 @@ import java.util.UUID;
 
 public class ItemChallenge {
 	private Challenge challenge;
-	private boolean show;
-	private int row;
-	private int col;
-	private CompatibleMaterial type;
-	private int amount;
-	private List<String> lore;
+	private final boolean show;
+	private final int row;
+	private final int col;
+	private final CompatibleMaterial type;
+	private final int amount;
+	private final List<String> lore;
 
-	private String itemTitle;
+	private final String itemTitle;
 
 	public ItemChallenge(boolean show, int row, int col, CompatibleMaterial type, int amount, List<String> lore) {
 		this.show = show;

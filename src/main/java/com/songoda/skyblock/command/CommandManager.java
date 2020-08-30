@@ -38,11 +38,14 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
     public CommandManager(SkyBlock plugin) {
         this.plugin = plugin;
-    
-        plugin.getCommand("island").setExecutor(this);
-        plugin.getCommand("island").setTabCompleter(this);
 
-        registerSubCommands();
+        PluginCommand islandCMD = plugin.getCommand("island");
+        if (islandCMD != null) {
+            islandCMD.setExecutor(this);
+            islandCMD.setTabCompleter(this);
+            registerSubCommands();
+        }
+
     }
 
     public void registerSubCommands() {

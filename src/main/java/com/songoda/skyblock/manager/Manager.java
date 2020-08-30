@@ -14,13 +14,13 @@ public abstract class Manager {
     /**
      * Reloads the Manager's settings
      */
-    public void reload() {};
-    
+    public void reload() {}
+
     /**
      * Cleans up the Manager's resources
      */
-    public void disable() {};
-    
+    public void disable() {}
+
     public void triggerPlayerLogin(Player player) {}
     
     public void triggerPlayerLogout(Player player) {}

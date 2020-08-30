@@ -10,7 +10,7 @@ public class IslandUpgradeEvent extends IslandEvent {
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final Player player;
-    private IslandUpgrade upgrade;
+    private final IslandUpgrade upgrade;
 
     public IslandUpgradeEvent(Island island, Player player, IslandUpgrade upgrade) {
         super(island);

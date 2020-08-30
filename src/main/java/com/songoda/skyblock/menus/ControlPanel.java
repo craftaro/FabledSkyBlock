@@ -36,7 +36,7 @@ public final class ControlPanel {
 
             executors.put(RegistryKey.fromLanguageFile("Menu.ControlPanel.Item.Lock.Displayname", CompatibleMaterial.IRON_DOOR), (inst, player, e) -> {
 
-                final Island island = SkyBlock.getInstance().getIslandManager().getIsland((Player) player);
+                final Island island = SkyBlock.getInstance().getIslandManager().getIsland(player);
 
                 switch (island.getStatus()) {
                     case OPEN:

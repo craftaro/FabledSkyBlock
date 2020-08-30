@@ -9,7 +9,7 @@ public class PlayerVoteEvent extends PlayerEvent implements Cancellable {
 
     private boolean cancelled = false;
 
-    private static HandlerList HANDLERS = new HandlerList();
+    private static final HandlerList HANDLERS = new HandlerList();
 
     public PlayerVoteEvent(Player player, Island island) {
         super(player, island);

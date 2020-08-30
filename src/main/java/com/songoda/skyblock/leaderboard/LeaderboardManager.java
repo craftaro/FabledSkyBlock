@@ -19,7 +19,7 @@ public class LeaderboardManager {
 
     private final SkyBlock plugin;
 
-    private List<Leaderboard> leaderboardStorage = new ArrayList<>();
+    private final List<Leaderboard> leaderboardStorage = new ArrayList<>();
 
     public LeaderboardManager(SkyBlock plugin) {
         this.plugin = plugin;

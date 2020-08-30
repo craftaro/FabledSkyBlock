@@ -23,19 +23,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AbstractAnvilGUI {
-    private static Class<?> BlockPositionClass;
-    private static Class<?> PacketPlayOutOpenWindowClass;
-    private static Class<?> IChatBaseComponentClass;
-    private static Class<?> ICraftingClass;
-    private static Class<?> ContainerAnvilClass;
-    private static Class<?> ChatMessageClass;
-    private static Class<?> EntityHumanClass;
-    private static Class<?> ContainerClass;
+    private static final Class<?> BlockPositionClass;
+    private static final Class<?> PacketPlayOutOpenWindowClass;
+    private static final Class<?> IChatBaseComponentClass;
+    private static final Class<?> ICraftingClass;
+    private static final Class<?> ContainerAnvilClass;
+    private static final Class<?> ChatMessageClass;
+    private static final Class<?> EntityHumanClass;
+    private static final Class<?> ContainerClass;
     private static Class<?> ContainerAccessClass;
-    private static Class<?> WorldClass;
-    private static Class<?> PlayerInventoryClass;
+    private static final Class<?> WorldClass;
+    private static final Class<?> PlayerInventoryClass;
     private static Class<?> ContainersClass;
-    private static Class<?> CraftPlayerClass;
+    private static final Class<?> CraftPlayerClass;
 
     static {
         BlockPositionClass = NMSUtil.getNMSClass("BlockPosition");
@@ -211,7 +211,7 @@ public class AbstractAnvilGUI {
         INPUT_RIGHT(1),
         OUTPUT(2);
 
-        private int slot;
+        private final int slot;
 
         AnvilSlot(int slot) {
             this.slot = slot;
@@ -238,9 +238,9 @@ public class AbstractAnvilGUI {
     }
 
     public class AnvilClickEvent {
-        private AnvilSlot slot;
+        private final AnvilSlot slot;
 
-        private String name;
+        private final String name;
 
         private boolean close = true;
         private boolean destroy = true;

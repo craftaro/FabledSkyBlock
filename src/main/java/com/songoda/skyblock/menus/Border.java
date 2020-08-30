@@ -78,11 +78,7 @@ public class Border {
             } else if ((is.getType() == Material.TRIPWIRE_HOOK) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Border.Item.Toggle.Displayname"))))) {
-                if (island.isBorder()) {
-                    island.setBorder(false);
-                } else {
-                    island.setBorder(true);
-                }
+                island.setBorder(!island.isBorder());
 
                 islandManager.updateBorder(island);
                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);

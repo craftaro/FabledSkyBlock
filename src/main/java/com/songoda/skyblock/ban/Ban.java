@@ -62,15 +62,12 @@ public class Ban {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.getServer().getPluginManager().callEvent(islandBanEvent));
 
         if (!islandBanEvent.isCancelled()) {
-            List<String> islandBans = new ArrayList<>();
             FileConfiguration configLoad = plugin.getFileManager()
                     .getConfig(new File(new File(plugin.getDataFolder().toString() + "/ban-data"),
                             FastUUID.toString(islandOwnerUUID) + ".yml"))
                     .getFileConfiguration();
 
-            for (String islandBanList : configLoad.getStringList("Bans")) {
-                islandBans.add(islandBanList);
-            }
+            List<String> islandBans = new ArrayList<>(configLoad.getStringList("Bans"));
 
             islandBans.add(banned.toString());
             configLoad.set("Bans", islandBans);

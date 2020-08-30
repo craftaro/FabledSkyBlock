@@ -88,7 +88,7 @@ public class FallBreak implements Listener {
             WorldManager worldManager = plugin.getWorldManager();
             if (worldManager.isIslandWorld(event.getEntity().getLocation().getWorld())) {
                 if (!event.getTo().equals(CompatibleMaterial.AIR.getMaterial())){
-                    fallingBlocks.remove((FallingBlock) event.getEntity());
+                    fallingBlocks.remove(event.getEntity());
                 } else if(!event.isCancelled()) {
                     fallingBlocks.add((FallingBlock) event.getEntity());
                 }

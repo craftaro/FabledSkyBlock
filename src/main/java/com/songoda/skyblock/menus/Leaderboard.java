@@ -344,7 +344,7 @@ public class Leaderboard {
 
     public static class Viewer {
 
-        private Type type;
+        private final Type type;
 
         public Viewer(Type type) {
             this.type = type;

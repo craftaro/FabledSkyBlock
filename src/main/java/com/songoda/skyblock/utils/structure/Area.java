@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Area {
 
-    private Map<Integer, Location> positions;
+    private final Map<Integer, Location> positions;
 
     public Area() {
         positions = new HashMap<>();

@@ -4,7 +4,7 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 
 public class GeneratorMaterial {
 
-    private CompatibleMaterial materials;
+    private final CompatibleMaterial materials;
     private double chance;
 
     public GeneratorMaterial(CompatibleMaterial materials, double chance) {

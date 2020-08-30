@@ -132,9 +132,7 @@ public class Move implements Listener {
 
                                     player.setFoodLevel(20);
 
-                                    for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-                                        player.removePotionEffect(potionEffect.getType());
-                                    }
+                                    player.getActivePotionEffects().stream().map(PotionEffect::getType).forEach(player::removePotionEffect);
                                 }
                                 player.setFallDistance(0.0F);
 

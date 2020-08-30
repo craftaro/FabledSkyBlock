@@ -23,7 +23,7 @@ public final class StringUtil {
     }
 
     public static String capitalizeWord(String str){
-        String words[]=str.split("\\s");
+        String[] words =str.split("\\s");
         String capitalizeWord="";
         for(String w:words){
             String first=w.substring(0,1);

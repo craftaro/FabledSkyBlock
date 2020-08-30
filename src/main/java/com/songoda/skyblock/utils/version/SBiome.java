@@ -32,11 +32,11 @@ public enum SBiome {
     THE_VOID("SKY", CompatibleMaterial.OBSIDIAN),
     WARM_OCEAN(true, CompatibleMaterial.TROPICAL_FISH);
 
-    private static boolean isPostVersion = NMSUtil.getVersionNumber() >= 13;
+    private static final boolean isPostVersion = NMSUtil.getVersionNumber() >= 13;
 
-    private String legacyName;
-    private boolean isPost13;
-    private CompatibleMaterial guiIcon;
+    private final String legacyName;
+    private final boolean isPost13;
+    private final CompatibleMaterial guiIcon;
 
     SBiome(CompatibleMaterial guiIcon) {
         this(null, false, guiIcon);

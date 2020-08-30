@@ -337,8 +337,7 @@ public class Block implements Listener {
         if (event.getBlock().getType() == CompatibleMaterial.END_PORTAL_FRAME.getMaterial()
                 && event.getPlayer().getItemInHand().getType() == CompatibleMaterial.ENDER_EYE.getMaterial()) return;
         
-        islandLevelManager.updateLevel(island, blockLoc);
-        
+        // Not util used 2 islandLevelManager if condition is true
         // Sponge level dupe fix
         if(ServerVersion.isServerVersionBelow(ServerVersion.V1_13) &&
                 block.getType().equals(CompatibleMaterial.SPONGE.getBlockMaterial())) {
@@ -359,6 +358,8 @@ public class Block implements Listener {
                     }
                 }
             });
+        } else {
+            islandLevelManager.updateLevel(island, blockLoc);
         }
     }
 
@@ -775,7 +776,8 @@ public class Block implements Listener {
                             if(onlineOwner.hasPermission(generator.getPermission())) {
                                 applyGenerator(event.getBlock().getWorld(), block, worldManager, islandLevelManager, island, state, generatorManager, generator);
                             }
-                        } else {
+                        }
+                        else {
                             event.setCancelled(true);
                             org.bukkit.World finalWorld = event.getBlock().getWorld();
                             this.generatorWaitingLocs.add(LocationUtil.toBlockLocation(block.getLocation().clone()));

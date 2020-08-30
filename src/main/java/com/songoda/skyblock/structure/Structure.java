@@ -9,7 +9,7 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
 
     private CompatibleMaterial material;
 
-    private String name;
+    private final String name;
     private String overworldFile;
     private String netherFile;
     private String endFile;

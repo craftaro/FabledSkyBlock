@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerChallenge {
-	private UUID uuid;
-	private HashMap<Challenge, Integer> challenges;
+	private final UUID uuid;
+	private final HashMap<Challenge, Integer> challenges;
 
 	public PlayerChallenge(UUID uuid, HashMap<Challenge, Integer> challenges) {
 		this.uuid = uuid;

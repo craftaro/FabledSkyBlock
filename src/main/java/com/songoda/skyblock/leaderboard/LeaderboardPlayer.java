@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public class LeaderboardPlayer {
 
-    private UUID uuid;
-    private long value;
+    private final UUID uuid;
+    private final long value;
 
     public LeaderboardPlayer(UUID uuid, long value) {
         this.uuid = uuid;

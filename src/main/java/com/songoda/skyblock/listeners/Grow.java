@@ -68,7 +68,6 @@ public class Grow implements Listener {
             // The structure is growing from one island to another.
             if (!origin.getIslandUUID().equals(growingTo.getIslandUUID())) {
                 it.remove();
-                continue;
             }
         }
     }

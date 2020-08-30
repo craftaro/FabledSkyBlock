@@ -18,7 +18,7 @@ public final class LocalizationManager {
 
     private final Localization<?> def = new BlankLocalization("", Object.class);
 
-    private Map<Class<?>, Localization<?>> map;
+    private final Map<Class<?>, Localization<?>> map;
 
     public LocalizationManager() {
         this.map = new HashMap<>();

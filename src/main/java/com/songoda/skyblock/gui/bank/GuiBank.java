@@ -24,7 +24,7 @@ public class GuiBank extends Gui {
 
     public GuiBank(SkyBlock plugin, Island island, Gui returnGui, boolean admin) {
         super(2, returnGui);
-        this.plugin = plugin;;
+        this.plugin = plugin;
         this.soundManager = plugin.getSoundManager();
         this.island = island;
         this.admin = admin;

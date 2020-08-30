@@ -3,8 +3,8 @@ package com.songoda.skyblock.challenge.defaultinv;
 import org.bukkit.inventory.ItemStack;
 
 public class Item {
-	private ItemStack itemStack;
-	private int redirect;
+	private final ItemStack itemStack;
+	private final int redirect;
 
 	public Item(ItemStack itemStack) {
 		this(itemStack, 0);

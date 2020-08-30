@@ -21,7 +21,7 @@ import java.util.UUID;
 public class BanManager {
 
     private final SkyBlock plugin;
-    private Map<UUID, Ban> banStorage = new HashMap<>();
+    private final Map<UUID, Ban> banStorage = new HashMap<>();
 
     public BanManager(SkyBlock plugin) {
         this.plugin = plugin;

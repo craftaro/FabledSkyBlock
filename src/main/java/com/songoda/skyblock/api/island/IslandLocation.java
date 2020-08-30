@@ -5,9 +5,9 @@ import org.bukkit.World;
 
 public class IslandLocation {
 
-    private IslandEnvironment environment;
-    private IslandWorld world;
-    private Location location;
+    private final IslandEnvironment environment;
+    private final IslandWorld world;
+    private final Location location;
 
     public IslandLocation(IslandEnvironment environment, IslandWorld world, Location location) {
         this.environment = environment;

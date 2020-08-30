@@ -333,7 +333,7 @@ public class Members {
                             new Placeholder("%island_members",
                                     "" + (islandMembers.size() + islandOperators.size() + 1)),
                             new Placeholder("%island_capacity",
-                                    "" + island.getMaxMembers()),
+                                    "" + island.getMaxMembers(player)),
                             new Placeholder("%members", "" + islandMembers.size()),
                             new Placeholder("%operators", "" + islandOperators.size())},
                     null, null), 4);

@@ -14,7 +14,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.BasicPermission;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.upgrade.Upgrade;g
+import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.visit.Visit;

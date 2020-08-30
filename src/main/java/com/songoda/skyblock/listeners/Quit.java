@@ -103,25 +103,16 @@ public class Quit implements Listener {
         if(island != null && plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
                 .getBoolean("Island.Challenge.PerIsland", false)){
             if(island.getRole(IslandRole.Member) != null){
-                for(UUID uuid : island.getRole(IslandRole.Member)){
-                    if(Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline()){
-                        offline = false;
-                    }
-                }
+                offline = island.getRole(IslandRole.Member).stream().noneMatch(uuid -> Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline());
             }
             if(offline && island.getRole(IslandRole.Operator) != null){
-                for(UUID uuid : island.getRole(IslandRole.Operator)){
-                    if(Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline()){
-                        offline = false;
-                    }
+                if (island.getRole(IslandRole.Operator).stream().anyMatch(uuid -> Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline())) {
+                    offline = false;
                 }
             }
-            if(offline && island.getRole(IslandRole.Owner) != null){
-                for(UUID uuid : island.getRole(IslandRole.Owner)){
-                    if(Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline()){
-                        offline = false;
-                    }
-                }
+            if (offline && island.getRole(IslandRole.Owner) != null &&
+                    island.getRole(IslandRole.Owner).stream().anyMatch(uuid -> Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline())) {
+                offline = false;
             }
         }
 

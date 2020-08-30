@@ -19,8 +19,8 @@ public class StackableManager {
     // ToDO: Should pobably be a GUI for this
 
     private final SkyBlock plugin;
-    private Set<CompatibleMaterial> stackableMaterials = EnumSet.noneOf(CompatibleMaterial.class);
-    private Map<Location, Stackable> stacks = new HashMap<>();
+    private final Set<CompatibleMaterial> stackableMaterials = EnumSet.noneOf(CompatibleMaterial.class);
+    private final Map<Location, Stackable> stacks = new HashMap<>();
 
     public StackableManager(SkyBlock plugin) {
         this.plugin = plugin;

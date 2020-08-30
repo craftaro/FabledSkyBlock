@@ -33,11 +33,8 @@ public class GuiBiome extends Gui {
     private final SkyBlock plugin;
     private final Island island;
     private final FileConfiguration languageLoad;
-    private final FileConfiguration config;
-    private final Gui returnGui;
     private final Player player;
     private final IslandWorld world;
-    private final boolean admin;
 
     public GuiBiome(SkyBlock plugin, Player player, Island island, IslandWorld world, Gui returnGui, boolean admin) {
         super(6, returnGui);
@@ -45,9 +42,7 @@ public class GuiBiome extends Gui {
         this.island = island;
         this.world = world;
         this.player = player;
-        this.returnGui = returnGui;
-        this.admin = admin;
-        this.config = plugin.getFileManager()
+        FileConfiguration config = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();

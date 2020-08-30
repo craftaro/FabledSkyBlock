@@ -206,11 +206,7 @@ public class Upgrade {
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Upgrade.Item.Crop.Displayname"))))) {
                         if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Crop)) {
-                            if (island.isUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Crop)) {
-                                island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Crop, false);
-                            } else {
-                                island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Crop, true);
-                            }
+                            island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Crop, !island.isUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Crop));
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
@@ -308,12 +304,8 @@ public class Upgrade {
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Upgrade.Item.Drops.Displayname"))))) {
                         if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Drops)) {
-                            if (island.isUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Drops)) {
-                                island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Drops,
-                                        false);
-                            } else {
-                                island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Drops, true);
-                            }
+                            island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Drops,
+                                    !island.isUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Drops));
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
@@ -367,8 +359,8 @@ public class Upgrade {
                                         .equals(ChatColor.translateAlternateColorCodes('&',
                                                 configLoad.getString("Menu.Upgrade.Item.Members.Displayname")
                                                         .replace("%tier", "" + tier)))) {
-                                    if (upgrade.getValue() > island.getMaxMembers()
-                                            && upgrade.getValue() != island.getMaxMembers()) {
+                                    if (upgrade.getValue() > island.getMaxMembers(player)
+                                            && upgrade.getValue() != island.getMaxMembers(player)) {
                                         if (economy.hasBalance(player, upgrade.getCost())) {
                                             messageManager.sendMessage(player,
                                                     configLoad.getString("Island.Upgrade.Bought.Message").replace(
@@ -465,13 +457,8 @@ public class Upgrade {
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname"))))) {
                         if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner)) {
-                            if (island.isUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner)) {
-                                island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner,
-                                        false);
-                            } else {
-                                island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner,
-                                        true);
-                            }
+                            island.setUpgrade(player, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner,
+                                    !island.isUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner));
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
@@ -749,12 +736,12 @@ public class Upgrade {
                         int tier = i + 1;
             
                         if (tier != upgrades.size()) {
-                            if (upgrade.getValue() <= island.getMaxMembers()) {
+                            if (upgrade.getValue() <= island.getMaxMembers(player)) {
                                 continue;
                             }
                         }
             
-                        if (island.getMaxMembers() >= upgrade.getValue()) {
+                        if (island.getMaxMembers(player) >= upgrade.getValue()) {
                             nInv.addItem(nInv.createItem(new ItemStack(Material.BOOKSHELF),
                                     ChatColor.translateAlternateColorCodes('&',
                                             configLoad.getString("Menu.Upgrade.Item.Members.Displayname").replace("%tier",

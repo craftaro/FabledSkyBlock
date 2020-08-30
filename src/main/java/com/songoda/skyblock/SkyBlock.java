@@ -52,6 +52,7 @@ import net.coreprotect.CoreProtectAPI;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
@@ -163,11 +164,13 @@ public class SkyBlock extends SongodaPlugin {
         structureManager = new StructureManager(this);
         soundManager = new SoundManager(this);
 
-        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Generator.Enable")) {
+        FileConfiguration configuration = fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration();
+
+        if (configuration.getBoolean("Island.Generator.Enable")) {
             generatorManager = new GeneratorManager(this);
         }
 
-        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.Enable")) {
+        if (configuration.getBoolean("Island.Stackable.Enable")) {
             stackableManager = new StackableManager(this);
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> stackableManager.loadSavedStackables(), 5L);
         }
@@ -184,8 +187,15 @@ public class SkyBlock extends SongodaPlugin {
 
         bankManager = new BankManager(this);
 
-        new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
-        new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
+
+        if (configuration.getBoolean("Island.Task.PlaytimeTask")) {
+            new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
+        }
+
+        if (configuration.getBoolean("Island.Task.VisitTask")) {
+            new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
+        }
+
         new ConfirmationTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
 
         // Start Tasks
@@ -234,7 +244,7 @@ public class SkyBlock extends SongodaPlugin {
             this.vaultPermission = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
         }
     
-        switch (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getString("Economy.Manager", "Default")) {
+        switch (configuration.getString("Economy.Manager", "Default")) {
             case "Vault":
                 getEconomyManager().setEconomy("Vault");
                 break;
@@ -244,6 +254,8 @@ public class SkyBlock extends SongodaPlugin {
             case "Reserve":
                 getEconomyManager().setEconomy("Reserve");
                 break;
+            default:
+                this.getLogger().warning("EconomyManager is default");
         }
         
         this.coreProtectAPI = loadCoreProtect();
@@ -287,10 +299,9 @@ public class SkyBlock extends SongodaPlugin {
         if (plugin != null) { // Check before loading classes
             if (plugin instanceof CoreProtect) { // Check that CoreProtect is loaded
                 CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
-                if (CoreProtect.isEnabled()) { // Check that the API is enabled
-                    if (CoreProtect.APIVersion() >= 6) { // Check that a compatible version of the API is loaded
-                        return CoreProtect;
-                    }
+                // Check that the API is enabled and  Check that a compatible version of the API is loaded
+                if (CoreProtect.isEnabled() && CoreProtect.APIVersion() >= 6) {
+                    return CoreProtect;
                 }
             }
         }
@@ -307,7 +318,7 @@ public class SkyBlock extends SongodaPlugin {
         return null;
     }
 
-    private String formatText(String string) {
+    public String formatText(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 

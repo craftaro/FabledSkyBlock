@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class VisitManager {
 
     private final SkyBlock plugin;
-    private HashMap<UUID, Visit> visitStorage = new HashMap<>();
+    private final HashMap<UUID, Visit> visitStorage = new HashMap<>();
 
     public VisitManager(SkyBlock plugin) {
         this.plugin = plugin;
