@@ -117,6 +117,63 @@ public class Challenge {
 	}
 
 	public enum Type {
+		
+		CHALLENGE {
+
+			@Override
+			public Object convert(String value) throws IllegalArgumentException {
+				if (value == null || "".equalsIgnoreCase(value)) {
+					throw new IllegalArgumentException("Value is empty or null");
+				}
+				String[] test = value.split("\\.");
+				if (test.length != 6) {
+					throw new IllegalArgumentException("Your config is not good, correct syntax : CHALLENGE:category.[id_category].challenges.[id_challenges].count.[count_times]");
+				}
+				List<Integer> integerList = new ArrayList<Integer>();
+
+				Arrays.stream(test).filter(condition -> !condition.equalsIgnoreCase("category") && !condition.equalsIgnoreCase("challenges") && !condition.equalsIgnoreCase("count")).forEachOrdered(condition -> {
+					try {
+						integerList.add(Integer.parseInt(condition));
+					} catch (NumberFormatException ex) {
+						throw new IllegalArgumentException(
+								"\"" + condition + "\" isn't a valid number (value = \"" + value + "\")");
+					}
+				});
+				return integerList;
+			}
+
+			@Override
+			public boolean has(Player p, Object obj){
+				List<Integer> is = (List<Integer>) obj;
+				SkyBlock instance = SkyBlock.getInstance();
+				FileManager.Config config = instance.getFileManager().getConfig(new File(new File(instance.getDataFolder(), "challenge-data"), p.getUniqueId().toString() + ".yml"));
+				FileConfiguration fileConfig = config.getFileConfiguration();
+				ConfigurationSection section = fileConfig.getConfigurationSection("challenges");
+				for (String k : (section != null) ? section.getKeys(false) : new HashSet<String>()) {
+					int id = fileConfig.getInt("challenges." + k + ".id");
+					if (is.get(0) == id) {
+						ChallengeCategory cc = SkyBlock.getInstance().getFabledChallenge().getChallengeManager().getChallenge(id);
+						if (cc != null) {
+							ConfigurationSection section2 = fileConfig.getConfigurationSection("challenges." + k + ".challenges");
+							if (section2 != null && !section2.getKeys(false).isEmpty() && section2.getKeys(false).stream().map(d -> "challenges." + k + ".challenges." + d).anyMatch(key -> is.get(1) == fileConfig.getInt(key + ".id") && fileConfig.getInt(key + ".count") >= is.get(2))) {
+								return true;
+							}
+						}
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public void executeRequire(Player p, Object obj) {
+				// Nothing
+			}
+
+			@Override
+			public void executeReward(Player p, Object obj) {
+				// Nothing
+			}
+		},
 		ITEM {
 			// An item
 
