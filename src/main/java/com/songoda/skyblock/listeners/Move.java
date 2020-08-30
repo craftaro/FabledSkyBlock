@@ -63,9 +63,8 @@ public class Move implements Listener {
         IslandWorld world = worldManager.getIslandWorld(player.getWorld());
 
         if (world == IslandWorld.Nether || world == IslandWorld.End) {
-            if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.World." + world.name() + ".Enable")) {
-                Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
+            if (!this.plugin.getConfiguration().getBoolean("Island.World." + world.name() + ".Enable")) {
+                FileConfiguration configLoad = plugin.getLanguage();
 
                 messageManager.sendMessage(player, configLoad.getString("Island.World.Message").replace(configLoad.getString("Island.World.Word." + world.name()), world.name()));
 
@@ -96,8 +95,7 @@ public class Move implements Listener {
 
                 if (island != null) {
                     if (islandManager.isLocationAtIsland(island, to)) {
-                        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                        FileConfiguration configLoad = config.getFileConfiguration();
+                        FileConfiguration configLoad = plugin.getConfiguration();
 
                         boolean keepItemsOnDeath;
 
@@ -149,15 +147,14 @@ public class Move implements Listener {
                     } else {
                         if(!islandManager.isLocationAtIsland(island, to)) {
                             teleportPlayerToIslandSpawn(player, world, island);
-                            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                            FileConfiguration configLoad = config.getFileConfiguration();
+                            FileConfiguration configLoad = plugin.getConfiguration();
 
 
                             if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                                 player.setFallDistance(0.0F);
                             }
 
-                            messageManager.sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration()
+                            messageManager.sendMessage(player, plugin.getLanguage()
                                     .getString("Island.WorldBorder.Outside.Message"));
                             soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                         }
@@ -189,7 +186,7 @@ public class Move implements Listener {
                     LocationUtil.teleportPlayerToSpawn(player);
     
                     messageManager.sendMessage(player,
-                            plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
+                            plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
                     soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                 });
             });
@@ -201,8 +198,7 @@ public class Move implements Listener {
         if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                        .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                if(plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
                     Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
                     if (safeLoc != null) {
                         loc = safeLoc;
@@ -211,15 +207,13 @@ public class Move implements Listener {
             } else {
                 loc = island.getLocation(world, IslandEnvironment.Main);
     
-                if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                        .getFileConfiguration().getBoolean("Island.Teleport.RemoveWater", false)) {
+                if(plugin.getConfiguration().getBoolean("Island.Teleport.RemoveWater", false)) {
                     LocationUtil.removeWaterFromLoc(loc);
                 }
             }
         } else {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                        .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                if(plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
                     Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
                     if (safeLoc != null) {
                         loc = safeLoc;
@@ -234,9 +228,7 @@ public class Move implements Listener {
             PaperLib.teleportAsync(player, finalLoc);
         } else {
             LocationUtil.teleportPlayerToSpawn(player);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                            .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message")));
+            player.sendMessage(plugin.formatText(plugin.getLanguage().getString("Command.Island.Teleport.Unsafe.Message")));
         }
     }
 
@@ -247,9 +239,7 @@ public class Move implements Listener {
     private void teleportPlayerToIslandSpawn(Player player, SoundManager soundManager, Island island) {
         teleportPlayerToIslandSpawn(player, island);
 
-        FileManager fileManager = plugin.getFileManager();
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
             player.setFallDistance(0.0F);
@@ -270,8 +260,7 @@ public class Move implements Listener {
                 if(plugin.getIslandManager().getIslandAtLocation(e.getTo()) == null){
                     e.setCancelled(true);
                     plugin.getMessageManager().sendMessage(player,
-                            plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                                    .getFileConfiguration().getString("Island.WorldBorder.Disappeared.Message"));
+                            plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
                     plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                 }
             }

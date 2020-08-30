@@ -16,7 +16,6 @@ import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -55,8 +54,7 @@ public class Upgrade {
         FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player) && playerDataManager.getPlayerData(player).getViewer() != null) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                    .getFileConfiguration();
+            FileConfiguration configLoad = plugin.getLanguage();
             Viewer viewer = (Upgrade.Viewer) playerDataManager.getPlayerData(player).getViewer();
 
             if (viewer == null || viewer.getType() == Upgrade.Viewer.Type.Upgrades) {
@@ -74,43 +72,43 @@ public class Upgrade {
                     com.songoda.skyblock.upgrade.Upgrade upgrade = null;
 
                     if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Exit.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
 
                         return;
                     } else if ((is.getType() == Material.POTION) && (is.hasItemMeta())) {
-                        if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                        if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Speed.Displayname")))) {
                             upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Speed)
                                     .get(0);
                             viewer.setUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Speed);
-                        } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
-                                '&', configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Jump.Displayname")))) {
+                        } else if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
+                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Jump.Displayname")))) {
                             upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Jump)
                                     .get(0);
                             viewer.setUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Jump);
                         }
                     } else if ((is.getType() == CompatibleMaterial.WHEAT_SEEDS.getMaterial()) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Crop.Displayname"))))) {
                         upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Crop)
                                 .get(0);
                         viewer.setUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Crop);
                     } else if ((is.getType() == Material.FEATHER) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Fly.Displayname"))))) {
                         upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Fly)
                                 .get(0);
                         viewer.setUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Fly);
                     } else if ((is.getType() == Material.SPIDER_EYE) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Drops.Displayname"))))) {
                         upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Drops)
                                 .get(0);
                         viewer.setUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Drops);
                     } else if ((is.getType() == Material.BEACON) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Size.Displayname"))))) {
                         viewer.setType(Viewer.Type.Size);
                         viewer.setUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Size);
@@ -119,7 +117,7 @@ public class Upgrade {
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     } else if ((is.getType() == Material.BOOKSHELF) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Members.Displayname"))))) {
                         viewer.setType(Viewer.Type.Members);
                         viewer.setUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Members);
@@ -129,7 +127,7 @@ public class Upgrade {
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     } else if ((is.getType() == CompatibleMaterial.SPAWNER.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName()
-                            .equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                            .equals(plugin.formatText(configLoad
                                     .getString("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Displayname"))))) {
                         upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner)
                                 .get(0);
@@ -268,7 +266,7 @@ public class Upgrade {
 
                 upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Speed).get(0);
                 nInv.addItem(nInv.createItem(speedPotion,
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Speed.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Speed.Lore"),
                         new Placeholder[]{
@@ -286,7 +284,7 @@ public class Upgrade {
 
                 upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Jump).get(0);
                 nInv.addItem(nInv.createItem(jumpPotion,
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Jump.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Jump.Lore"),
                         new Placeholder[]{
@@ -296,7 +294,7 @@ public class Upgrade {
 
                 upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Crop).get(0);
                 nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Crop.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Crop.Lore"),
                         new Placeholder[]{
@@ -306,7 +304,7 @@ public class Upgrade {
 
                 upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Fly).get(0);
                 nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Fly.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Fly.Lore"),
                         new Placeholder[]{
@@ -316,7 +314,7 @@ public class Upgrade {
 
                 upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Drops).get(0);
                 nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Drops.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Drops.Lore"),
                         new Placeholder[]{
@@ -334,7 +332,7 @@ public class Upgrade {
                 }
 
                 nInv.addItem(nInv.createItem(new ItemStack(Material.BEACON),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Size.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Size.Lore"),
                         new Placeholder[]{new Placeholder("%tiers", "" + upgradeTiersSize)}, null, null), 5);
@@ -348,16 +346,14 @@ public class Upgrade {
                     upgradeTiersMembers = upgradesMembers.size();
                 }
 
-                nInv.addItem(nInv.createItem(CompatibleMaterial.BOOKSHELF.getItem(),
-                        ChatColor.translateAlternateColorCodes('&',
+                nInv.addItem(nInv.createItem(CompatibleMaterial.BOOKSHELF.getItem(), plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Members.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Members.Lore"),
                         new Placeholder[]{new Placeholder("%tiers", "" + upgradeTiersMembers)}, null, null), 4);
 
                 upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Spawner).get(0);
                 nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
-                        ChatColor.translateAlternateColorCodes('&',
-                                configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Displayname")),
+                        plugin.formatText(configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Lore"),
                         new Placeholder[]{
                                 new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
@@ -365,15 +361,13 @@ public class Upgrade {
                         null, null), 6);
 
                 nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
-                        ChatColor.translateAlternateColorCodes('&',
-                                configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Exit.Displayname")),
+                        plugin.formatText(configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Exit.Displayname")),
                         null, null, null, null), 8);
 
-                nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Menu.Admin.Upgrade.Upgrades.Title")));
+                nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Admin.Upgrade.Upgrades.Title")));
                 nInv.setRows(1);
 
-                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
             } else if (viewer.getType() == Upgrade.Viewer.Type.Size) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                     if (!(player.hasPermission("fabledskyblock.admin.upgrade") || player.hasPermission("fabledskyblock.admin.*")
@@ -391,14 +385,14 @@ public class Upgrade {
 
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .equals(plugin.formatText(configLoad
                                         .getString("Menu.Admin.Upgrade.Size.Item.Return.Displayname"))))) {
                             playerData.setViewer(new Viewer(Viewer.Type.Upgrades, null));
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
-                                .getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .getDisplayName().equals(plugin.formatText(configLoad
                                         .getString("Menu.Admin.Upgrade.Size.Item.Information.Displayname"))))) {
                             List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
                                     .getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Size);
@@ -515,7 +509,7 @@ public class Upgrade {
                         } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
                                 && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .equals(plugin.formatText(configLoad
                                         .getString("Menu.Admin.Upgrade.Size.Item.Barrier.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
@@ -759,16 +753,16 @@ public class Upgrade {
                 });
 
                 nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Size.Item.Return.Displayname")),
                         null, null, null, null), 0);
                 nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Size.Item.Information.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Size.Item.Information.Lore"), null, null, null),
                         1);
                 nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Size.Item.Barrier.Displayname")),
                         null, null, null, null), 2);
 
@@ -783,7 +777,7 @@ public class Upgrade {
 
                             if (upgrade != null) {
                                 nInv.addItem(nInv.createItem(new ItemStack(Material.PAPER, tier),
-                                        ChatColor.translateAlternateColorCodes('&',
+                                        plugin.formatText(
                                                 configLoad.getString("Menu.Admin.Upgrade.Size.Item.Tier.Displayname")
                                                         .replace("%tier", "" + tier)),
                                         configLoad.getStringList("Menu.Admin.Upgrade.Size.Item.Tier.Lore"),
@@ -796,11 +790,11 @@ public class Upgrade {
                     }
                 }
 
-                nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
+                nInv.setTitle(plugin.formatText(
                         configLoad.getString("Menu.Admin.Upgrade.Size.Title")));
                 nInv.setRows(1);
 
-                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
             } else if (viewer.getType() == Viewer.Type.Members) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                     if (!(player.hasPermission("fabledskyblock.admin.upgrade") || player.hasPermission("fabledskyblock.admin.*")
@@ -818,14 +812,14 @@ public class Upgrade {
 
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .equals(plugin.formatText(configLoad
                                         .getString("Menu.Admin.Upgrade.Members.Item.Return.Displayname"))))) {
                             playerData.setViewer(new Viewer(Viewer.Type.Upgrades, null));
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
-                                .getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .getDisplayName().equals(plugin.formatText(configLoad
                                         .getString("Menu.Admin.Upgrade.Members.Item.Information.Displayname"))))) {
                             List<com.songoda.skyblock.upgrade.Upgrade> upgrades = upgradeManager
                                     .getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Members);
@@ -942,7 +936,7 @@ public class Upgrade {
                         } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
                                 && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .equals(plugin.formatText(configLoad
                                         .getString("Menu.Admin.Upgrade.Members.Item.Barrier.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
@@ -1186,16 +1180,16 @@ public class Upgrade {
                 });
 
                 nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Members.Item.Return.Displayname")),
                         null, null, null, null), 0);
                 nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Members.Item.Information.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Members.Item.Information.Lore"), null, null, null),
                         1);
                 nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
-                        ChatColor.translateAlternateColorCodes('&',
+                        plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Members.Item.Barrier.Displayname")),
                         null, null, null, null), 2);
 
@@ -1210,7 +1204,7 @@ public class Upgrade {
 
                             if (upgrade != null) {
                                 nInv.addItem(nInv.createItem(new ItemStack(Material.PAPER, tier),
-                                        ChatColor.translateAlternateColorCodes('&',
+                                        plugin.formatText(
                                                 configLoad.getString("Menu.Admin.Upgrade.Members.Item.Tier.Displayname")
                                                         .replace("%tier", "" + tier)),
                                         configLoad.getStringList("Menu.Admin.Upgrade.Members.Item.Tier.Lore"),
@@ -1223,19 +1217,16 @@ public class Upgrade {
                     }
                 }
 
-                nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Menu.Admin.Upgrade.Members.Title")));
+                nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Admin.Upgrade.Members.Title")));
                 nInv.setRows(1);
 
-                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+                Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
             }
         }
     }
 
     private String getStatus(com.songoda.skyblock.upgrade.Upgrade upgrade) {
-        SkyBlock plugin = SkyBlock.getInstance();
-        FileConfiguration configLoad = plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+        FileConfiguration configLoad = SkyBlock.getInstance().getLanguage();
 
         if (upgrade.isEnabled()) {
             return configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Word.Disable");

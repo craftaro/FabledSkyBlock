@@ -119,13 +119,7 @@ public final class UserCacheManager {
     public boolean hasUser(String name) {
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        for (String userList : configLoad.getConfigurationSection("").getKeys(false)) {
-            if (configLoad.getString(userList).equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-
-        return false;
+        return configLoad.getConfigurationSection("").getKeys(false).stream().anyMatch(userList -> configLoad.getString(userList).equalsIgnoreCase(name));
     }
 
     public void saveAsync() {

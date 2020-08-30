@@ -37,8 +37,7 @@ public class FallBreak implements Listener {
                 int counter = 0;
                 IslandManager islandManager = plugin.getIslandManager();
                 WorldManager worldManager = plugin.getWorldManager();
-                FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
+                FileConfiguration configLoad = plugin.getConfiguration();
                 Iterator<FallingBlock> iterator = fallingBlocks.iterator();
                 while(iterator.hasNext()) {
                     FallingBlock ent = iterator.next();

@@ -38,8 +38,7 @@ public class Piston implements Listener {
 
         if (island == null || CompatibleMaterial.DRAGON_EGG != CompatibleMaterial.getMaterial(block)) return;
 
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         if (!configLoad.getBoolean("Island.Block.Level.Enable")) return;
 

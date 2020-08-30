@@ -20,7 +20,7 @@ public final class NameFetcher {
             return null;
         }
 
-        Names[] names = null;
+        Names[] names;
 
         Scanner jsonScanner = new Scanner((new URL("https://api.mojang.com/user/profiles/" + FastUUID.toString(uuid).replaceAll("-", "") + "/names")).openConnection().getInputStream(), "UTF-8");
         names = new Gson().fromJson(jsonScanner.next(), Names[].class);

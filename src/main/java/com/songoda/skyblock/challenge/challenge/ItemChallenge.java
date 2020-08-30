@@ -30,17 +30,12 @@ public class ItemChallenge {
 		this.type = type;
 		this.amount = amount;
 		this.lore = lore;
-
-		FileManager.Config langConfig = SkyBlock.getInstance().getFileManager()
-				.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"));
-		FileConfiguration langConfigLoad = langConfig.getFileConfiguration();
+		FileConfiguration langConfigLoad = SkyBlock.getInstance().getLanguage();
 		itemTitle = langConfigLoad.getString("Challenge.Inventory.Item.Title");
 	}
 
 	public ItemStack createItem(UUID player, int amount) {
-		FileManager.Config langConfig = SkyBlock.getInstance().getFileManager()
-				.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"));
-		FileConfiguration langConfigLoad = langConfig.getFileConfiguration();
+		FileConfiguration langConfigLoad = SkyBlock.getInstance().getLanguage();
 		
 		ItemStack is = type.getItem();
 		is.setAmount(this.amount);
@@ -53,9 +48,8 @@ public class ItemChallenge {
 			} else {
 				maxAmount = String.valueOf(challenge.getMaxTimes());
 			}
-			im.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-					itemTitle.replace("%challenge", challenge.getName()).replace("%amount", Integer.toString(amount))
-							.replace("%max", maxAmount)));
+			im.setDisplayName(SkyBlock.getInstance().formatText( challenge.getName()).replace("%amount", Integer.toString(amount))
+					.replace("%max", maxAmount));
 			im.setLore(lore);
 			is.setItemMeta(im);
 		}

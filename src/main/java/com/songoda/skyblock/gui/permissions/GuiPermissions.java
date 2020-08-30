@@ -48,7 +48,7 @@ public class GuiPermissions extends Gui {
         this.returnGui = returnGui;
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
-        this.configLoad = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
+        this.configLoad = this.plugin.getConfiguration();
         setTitle(TextUtils.formatText(languageLoad.getString("Menu.Settings." + role.name() + ".Title")));
         setDefaultItem(null);
         paint();

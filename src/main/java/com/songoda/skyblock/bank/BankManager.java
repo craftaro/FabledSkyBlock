@@ -20,8 +20,7 @@ public class BankManager {
 
     public BankManager(SkyBlock plugin) {
         this.plugin = plugin;
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        lang = config.getFileConfiguration();
+        lang = this.plugin.getLanguage();
         log = new HashMap<>();
         loadTransactions();
     }
@@ -107,7 +106,7 @@ public class BankManager {
         }
 
         // If decimals aren't allowed, check for them
-        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+        if (!this.plugin.getConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
             int intAmt = (int) amt;
             if (intAmt != amt) {
                 return BankResponse.DECIMALS_NOT_ALLOWED;
@@ -135,7 +134,6 @@ public class BankManager {
 
     public BankResponse withdraw(Player player, Island island, double amt, boolean admin) {
         Economy economy = plugin.getEconomyManager().getEconomy();
-        FileManager fileManager = plugin.getFileManager();
 
         // Make sure the amount is positive
         if (amt <= 0) {
@@ -143,7 +141,7 @@ public class BankManager {
         }
 
         // If decimals aren't allowed, check for them
-        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+        if (!this.plugin.getConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
             int intAmt = (int) amt;
             if (intAmt != amt) {
                 return BankResponse.DECIMALS_NOT_ALLOWED;

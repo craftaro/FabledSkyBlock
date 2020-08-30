@@ -90,8 +90,7 @@ public final class ControlPanel {
     public void open(Player player) {
         SkyBlock plugin = SkyBlock.getInstance();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
             MenuClickRegistry.getInstance().dispatch(player, event);

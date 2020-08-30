@@ -20,10 +20,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 public class nInventoryUtil {
@@ -100,15 +97,11 @@ public class nInventoryUtil {
     }
 
     public void addItem(Item item, int... slots) {
-        for (int slotList : slots) {
-            items.put(slotList, item.prepareItem());
-        }
+        Arrays.stream(slots).forEachOrdered(slotList -> items.put(slotList, item.prepareItem()));
     }
 
     public void addItemStack(ItemStack is, int... slots) {
-        for (int slotList : slots) {
-            items.put(slotList, is);
-        }
+        Arrays.stream(slots).forEachOrdered(slotList -> items.put(slotList, is));
     }
 
     public Map<Integer, ItemStack> getItems() {
@@ -160,9 +153,7 @@ public class nInventoryUtil {
             }
         }
 
-        for(Entry<Integer, ItemStack> entry : items.entrySet()) {
-            inv.setItem(entry.getKey(), entry.getValue());
-        }
+        items.forEach((key, value) -> inv.setItem(key, value));
     }
 
     public Inventory getInventory() {

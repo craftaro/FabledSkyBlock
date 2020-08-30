@@ -80,17 +80,14 @@ public class IslandManager {
         Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "worlds.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        offset = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getInt("Island.Creation.Distance", 1200);
+        offset = plugin.getConfiguration().getInt("Island.Creation.Distance", 1200);
 
         for (IslandWorld worldList : IslandWorld.values()) {
             ConfigurationSection configSection = configLoad.getConfigurationSection("World." + worldList.name() + ".nextAvailableLocation");
             islandPositions.add(new IslandPosition(worldList, configSection.getDouble("x"), configSection.getDouble("z")));
         }
 
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            loadIsland(all);
-        }
+        Bukkit.getOnlinePlayers().forEach(this::loadIsland);
         for (Island island : getIslands().values()) {
             if (island.isAlwaysLoaded())
                 loadIslandAtLocation(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island));
@@ -144,10 +141,9 @@ public class IslandManager {
             if (islandPositionList.getWorld() == world) {
 
                 Config config_world = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "worlds.yml"));
-                Config config_config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
 
                 FileConfiguration configLoad_world = config_world.getFileConfiguration();
-                FileConfiguration configLoad_config = config_config.getFileConfiguration();
+                FileConfiguration configLoad_config = plugin.getConfiguration();
                 int x = (int) configLoad_world.get("World." + world.name() + ".nextAvailableLocation.island_number");
                 int islandHeight = configLoad_config.getInt("Island.World." + world.name() + ".IslandSpawnHeight", 72);
                 while (true) {
@@ -215,13 +211,13 @@ public class IslandManager {
             final int highest = PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.create", true, 2);
 
             if ((amt = data.getIslandCreationCount()) >= highest) {
-                plugin.getMessageManager().sendMessage(player, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.MaxCreationMessage"));
+                plugin.getLanguage().getString("Island.Creator.Error.MaxCreationMessage");
                 return false;
             }
         }
 
         if (fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
-            plugin.getMessageManager().sendMessage(player, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.Message"));
+            plugin.getMessageManager().sendMessage(player, plugin.getLanguage().getString("Island.Creator.Error.Message"));
             plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
             return false;
@@ -247,8 +243,7 @@ public class IslandManager {
 
         if (!banManager.hasIsland(island.getOwnerUUID())) banManager.createIsland(island.getOwnerUUID());
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = this.plugin.getConfiguration();
 
         if (configLoad.getBoolean("Island.Creation.Cooldown.Creation.Enable") && !player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*")
                 && !player.hasPermission("fabledskyblock.*"))
@@ -271,7 +266,7 @@ public class IslandManager {
             player.setFallDistance(0.0F);
         }, configLoad.getInt("Island.Creation.TeleportTimeout") * 20);
 
-        String biomeName = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Biome.Default.Type").toUpperCase();
+        String biomeName = this.plugin.getConfiguration().getString("Island.Biome.Default.Type").toUpperCase();
         CompatibleBiome cBiome;
         try {
             cBiome = CompatibleBiome.valueOf(biomeName);
@@ -300,17 +295,15 @@ public class IslandManager {
         FileManager fileManager = plugin.getFileManager();
 
         PlayerData data = plugin.getPlayerDataManager().getPlayerData(player);
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLang = config.getFileConfiguration();
-        config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configMain = config.getFileConfiguration();
+        FileConfiguration configLang = plugin.getLanguage();
+        FileConfiguration configMain = plugin.getConfiguration();
 
 
         if (data != null) {
             final int highest = PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.create", true, 2);
 
             if ((data.getIslandCreationCount()) >= highest) {
-                plugin.getMessageManager().sendMessage(player, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Creator.Error.MaxCreationMessage"));
+                plugin.getMessageManager().sendMessage(player, plugin.getLanguage().getString("Island.Creator.Error.MaxCreationMessage"));
                 return false;
             }
 
@@ -427,8 +420,7 @@ public class IslandManager {
             level.save();
             level.setOwnerUUID(player.getUniqueId());
 
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getConfiguration();
 
             if (configLoad.getBoolean("Island.Ownership.Password.Reset")) {
                 island.setPassword(null);
@@ -465,7 +457,7 @@ public class IslandManager {
             fileManager.unloadConfig(newIslandDataFile);
             oldIslandDataFile.renameTo(newIslandDataFile);
 
-            if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+            if (this.plugin.getConfiguration()
                     .getBoolean("Island.Challenge.PerIsland", true)){
                 File oldChallengeDataFile = new File(new File(plugin.getDataFolder().toString() + "/challenge-data"), uuid2.toString() + ".yml");
                 File newChallengeDataFile = new File(new File(plugin.getDataFolder().toString() + "/challenge-data"), player.getUniqueId().toString() + ".yml");
@@ -555,8 +547,7 @@ public class IslandManager {
             }
         }
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         if (configLoad.getBoolean("Island.Deletion.DeleteIsland", true)) {
             startDeletion(island, worldManager);
@@ -623,7 +614,7 @@ public class IslandManager {
         fileManager.deleteConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), island.getOwnerUUID().toString() + ".yml"));
         fileManager.deleteConfig(new File(new File(plugin.getDataFolder().toString() + "/setting-data"), island.getOwnerUUID().toString() + ".yml"));
         fileManager.deleteConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml"));
-        if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+        if (this.plugin.getConfiguration()
                 .getBoolean("Island.Challenge.PerIsland", true)){
             fileManager.deleteConfig(new File(new File(plugin.getDataFolder().toString() + "/challenge-data"), island.getOwnerUUID().toString() + ".yml"));
         }
@@ -665,7 +656,7 @@ public class IslandManager {
         fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/level-data", FastUUID.toString(uuid) + ".yml"));
         fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/setting-data", FastUUID.toString(uuid) + ".yml"));
         fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/visit-data", FastUUID.toString(uuid) + ".yml"));
-        if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+        if (this.plugin.getConfiguration()
                 .getBoolean("Island.Challenge.PerIsland", true)){
             fileManager.deleteConfig(new File(plugin.getDataFolder().toString() + "/challenge-data", FastUUID.toString(uuid) + ".yml"));
         }
@@ -931,9 +922,6 @@ public class IslandManager {
         ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
         FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
-
         if (island.isDeleted()) return;
 
         island.save();
@@ -960,7 +948,7 @@ public class IslandManager {
             return;
         }
 
-        unloadIsland = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Unload");
+        unloadIsland = this.plugin.getConfiguration().getBoolean("Island.Visitor.Unload");
 
         if (unloadIsland) {
             VisitManager visitManager = plugin.getVisitManager();
@@ -987,7 +975,7 @@ public class IslandManager {
         fileManager.unloadConfig(new File(new File(plugin.getDataFolder().toString() + "/setting-data"), island.getOwnerUUID() + ".yml"));
         fileManager.unloadConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), island.getOwnerUUID() + ".yml"));
 
-        if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+        if (this.plugin.getConfiguration()
                 .getBoolean("Island.Challenge.PerIsland", true)){
             fileManager.unloadConfig(new File(new File(plugin.getDataFolder().toString() + "/challenge-data"), island.getOwnerUUID() + ".yml"));
         }
@@ -1061,7 +1049,7 @@ public class IslandManager {
             }
         }
 
-        if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+        if (this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) {
             Bukkit.getServer().getScheduler().runTask(plugin, () -> islandLocation.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().setType(Material.STONE));
         }
 
@@ -1118,7 +1106,7 @@ public class IslandManager {
         pasteStructure(island, islandWorld);
 
         // Recalculate island level after 5 seconds
-        if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Levelling.ScanAutomatically")) {
+        if (plugin.getConfiguration().getBoolean("Island.Levelling.ScanAutomatically")) {
             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> plugin.getLevellingManager().startScan(null, island), 100L);
         }
     }
@@ -1139,8 +1127,7 @@ public class IslandManager {
         boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + islandWorld.name());
 
         if (!unlocked) {
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getConfiguration();
             double price = configLoad.getDouble("Island.World." + islandWorld.name() + ".UnlockPrice");
             if (price == -1) unlocked = true;
         }
@@ -1170,10 +1157,7 @@ public class IslandManager {
 
     public void visitIsland(Player player, Island island) {
         ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-        FileManager fileManager = plugin.getFileManager();
-
-        Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = languageConfig.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId()) || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
             Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Main);
@@ -1183,9 +1167,7 @@ public class IslandManager {
                     player.setFallDistance(0.0F);
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Island.Teleport.Unsafe.Message")));
+                player.sendMessage(plugin.formatText(plugin.getLanguage().getString("Island.Teleport.Unsafe.Message")));
             }
         } else {
             int islandVisitors = getVisitorsAtIsland(island).size();
@@ -1203,8 +1185,7 @@ public class IslandManager {
             }
             Location loc = island.getLocation(IslandWorld.Normal, IslandEnvironment.Visitor);
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                        .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                if(plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
                     Location safeLoc = LocationUtil.getSafeLocation(loc);
                     if (safeLoc != null) {
                         loc = safeLoc;
@@ -1217,9 +1198,7 @@ public class IslandManager {
                     player.setFallDistance(0.0F);
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                                .getFileConfiguration().getString("Command.Island.Teleport.Unsafe.Message")));
+                player.sendMessage(plugin.formatText(plugin.getLanguage().getString("Command.Island.Teleport.Unsafe.Message")));
             }
             if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
                 player.setFallDistance(0.0F);
@@ -1227,7 +1206,7 @@ public class IslandManager {
 
             List<String> islandWelcomeMessage = island.getMessage(IslandMessage.Welcome);
 
-            if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Welcome.Enable") && islandWelcomeMessage.size() != 0) {
+            if (this.plugin.getConfiguration().getBoolean("Island.Visitor.Welcome.Enable") && islandWelcomeMessage.size() != 0) {
                 for (String islandWelcomeMessageList : islandWelcomeMessage) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', islandWelcomeMessageList));
                 }
@@ -1239,9 +1218,7 @@ public class IslandManager {
 
     public void closeIsland(Island island) {
         MessageManager messageManager = plugin.getMessageManager();
-
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         island.setStatus(IslandStatus.CLOSED);
 
@@ -1266,9 +1243,7 @@ public class IslandManager {
     
     public void whitelistIsland(Island island) {
         MessageManager messageManager = plugin.getMessageManager();
-        
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
         
         island.setStatus(IslandStatus.WHITELISTED);
         
@@ -1463,8 +1438,7 @@ public class IslandManager {
                 Island island = getIslandAtLocation(player.getLocation());
 
                 if (island != null) {
-                    Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                    FileConfiguration configLoad = config.getFileConfiguration();
+                    FileConfiguration configLoad = plugin.getConfiguration();
 
                     if (!island.isWeatherSynchronized()) {
                         player.setPlayerTime(island.getTime(), configLoad.getBoolean("Island.Weather.Time.Cycle"));
@@ -1558,8 +1532,7 @@ public class IslandManager {
         MessageManager messageManager = plugin.getMessageManager();
         SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         boolean coopPlayers = island.hasPermission(IslandRole.Operator, plugin.getPermissionManager().getPermission("CoopPlayers"));
 
@@ -1597,8 +1570,7 @@ public class IslandManager {
     }
 
     public int getIslandSafeLevel(Island island) {
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         int safeLevel = 0;
 
@@ -1622,7 +1594,7 @@ public class IslandManager {
         WorldManager worldManager = plugin.getWorldManager();
 
         if (island.isBorder()) {
-            if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+            if (this.plugin.getConfiguration().getBoolean("Island.WorldBorder.Enable")) {
                 double increment = island.getSize() % 2 != 0 ? 0.5d : 0.0d;
                 
                 for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {

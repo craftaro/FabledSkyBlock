@@ -59,7 +59,7 @@ public class Bucket implements Listener {
                 return;
         }
 
-        if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+        if (!this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection"))
             return;
 
         Island island = islandManager.getIslandAtLocation(block.getLocation());
@@ -72,8 +72,7 @@ public class Bucket implements Listener {
         if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
             event.setCancelled(true);
             plugin.getMessageManager().sendMessage(player,
-                    plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                            .getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
+                    plugin.getLanguage().getString("Island.SpawnProtection.Place.Message"));
             plugin.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }

@@ -6,6 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+
 /**
  * A Biome wrapper for supporting Biomes in 1.8-1.13+
  */
@@ -63,10 +65,7 @@ public enum SBiome {
      */
     @SuppressWarnings("deprecation")
     public static SBiome getFromGuiIcon(Material material, byte data) {
-        for (SBiome biome : values())
-            if (biome.isAvailable() && biome.getGuiIcon().getType().equals(material) && (isPostVersion || biome.getGuiIcon().getData().getData() == data))
-                return biome;
-        return null;
+        return Arrays.stream(values()).filter(biome -> biome.isAvailable() && biome.getGuiIcon().getType().equals(material) && (isPostVersion || biome.getGuiIcon().getData().getData() == data)).findFirst().orElse(null);
     }
 
     /**
@@ -84,11 +83,7 @@ public enum SBiome {
      * @return The Biome this SBiome represents, or null if it is not available in this server version
      */
     public Biome getBiome() {
-        if (!this.isAvailable())
-            return null;
-        if (isPostVersion || this.legacyName == null)
-            return Biome.valueOf(this.name());
-        return Biome.valueOf(this.legacyName);
+        return !this.isAvailable() ? null : isPostVersion || this.legacyName == null ? Biome.valueOf(this.name()) : Biome.valueOf(this.legacyName);
     }
 
     /**
@@ -97,9 +92,7 @@ public enum SBiome {
      * @return The formatted Biome name
      */
     public String getFormattedBiomeName() {
-        if (!this.isAvailable())
-            return null;
-        return StringUtil.capitalizeWord(this.getBiome().name().replaceAll("_", " "));
+        return !this.isAvailable() ? null : StringUtil.capitalizeWord(this.getBiome().name().replaceAll("_", " "));
     }
 
     /**
@@ -108,9 +101,7 @@ public enum SBiome {
      * @return The Gui icon that represents this Biome
      */
     public ItemStack getGuiIcon() {
-        if (!this.isAvailable())
-            return null;
-        return this.guiIcon.getItem();
+        return !this.isAvailable() ? null : this.guiIcon.getItem();
     }
 
 }

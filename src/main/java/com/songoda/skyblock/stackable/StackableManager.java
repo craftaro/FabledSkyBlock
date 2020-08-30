@@ -28,8 +28,7 @@ public class StackableManager {
     }
 
     public void registerStackables() {
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "stackables.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getStackables();
 
         List<String> stackableList = configLoad.getStringList("Stackables");
         if (stackableList.isEmpty()) return;

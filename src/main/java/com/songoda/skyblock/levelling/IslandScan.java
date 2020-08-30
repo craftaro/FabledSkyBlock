@@ -46,7 +46,7 @@ public final class IslandScan extends BukkitRunnable {
         this.plugin = plugin;
         this.island = island;
         this.amounts = new EnumMap<>(CompatibleMaterial.class);
-        this.language = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration();
+        this.language = this.plugin.getLanguage();
         this.runEveryX = language.getInt("Command.Island.Level.Scanning.Progress.Display-Every-X-Scan");
         this.doubleBlocks = new HashSet<>();
     }
@@ -54,7 +54,7 @@ public final class IslandScan extends BukkitRunnable {
     public IslandScan start() {
         final SkyBlock plugin = SkyBlock.getInstance();
 
-        final FileConfiguration config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
+        final FileConfiguration config = this.plugin.getConfiguration();
         final FileConfiguration islandData = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), this.island.getOwnerUUID().toString() + ".yml")).getFileConfiguration();
 
         final boolean hasNether = config.getBoolean("Island.World.Nether.Enable") && islandData.getBoolean("Unlocked.Nether", false);

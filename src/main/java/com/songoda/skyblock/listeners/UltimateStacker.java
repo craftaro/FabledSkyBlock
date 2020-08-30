@@ -36,8 +36,7 @@ public class UltimateStacker implements Listener {
 
             Island island = islandManager.getIslandAtLocation(location);
 
-            FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getConfiguration();
 
             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
                 CompatibleSpawners materials = CompatibleSpawners.getSpawner(event.getSpawnerType());
@@ -65,8 +64,7 @@ public class UltimateStacker implements Listener {
 
         Island island = islandManager.getIslandAtLocation(location);
 
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
             CompatibleSpawners materials = CompatibleSpawners.getSpawner(event.getSpawnerType());

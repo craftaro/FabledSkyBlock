@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MessageManager {
@@ -45,15 +46,10 @@ public class MessageManager {
             }
         } else {
             if (message.contains("\n") || message.contains("\\n")) {
-                List<String> messages = new ArrayList<>();
 
                 message = message.replace("\\n", "\n");
 
-                for (String messageList : message.split("\n")) {
-                    messages.add(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', messageList)));
-                }
-
-                sender.sendMessage(messages.toArray(new String[messages.size()]));
+                sender.sendMessage(Arrays.stream(message.split("\n")).map(messageList -> ChatColor.stripColor(plugin.formatText(messageList))).toArray(String[]::new));
             } else {
                 sender.sendMessage(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)));
             }

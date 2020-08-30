@@ -75,9 +75,7 @@ public class Quit implements Listener {
                         if (targetPlayerData.isChat()) {
                             targetPlayerData.setChat(false);
                             messageManager.sendMessage(targetPlayer,
-                                    plugin.getFileManager()
-                                            .getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                                            .getFileConfiguration().getString("Island.Chat.Untoggled.Message"));
+                                    plugin.getLanguage().getString("Island.Chat.Untoggled.Message"));
                         }
                     }
                 }
@@ -100,7 +98,7 @@ public class Quit implements Listener {
         playerDataManager.unloadPlayerData(player);
 
         boolean offline = true;
-        if(island != null && plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+        if(island != null && this.plugin.getConfiguration()
                 .getBoolean("Island.Challenge.PerIsland", false)){
             if(island.getRole(IslandRole.Member) != null){
                 offline = island.getRole(IslandRole.Member).stream().noneMatch(uuid -> Bukkit.getPlayer(uuid) != null && !Bukkit.getPlayer(uuid).isOnline());
@@ -121,7 +119,7 @@ public class Quit implements Listener {
         }
 
         for (Island islandList : islandManager.getCoopIslands(player)) {
-            if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+            if (this.plugin.getConfiguration()
                     .getBoolean("Island.Coop.Unload") || islandList.getCoopType(player.getUniqueId()) == IslandCoop.TEMP) {
                 islandList.removeCoopPlayer(player.getUniqueId());
             }
@@ -144,8 +142,7 @@ public class Quit implements Listener {
 
             if (targetPlayer != null) {
                 messageManager.sendMessage(targetPlayer,
-                        plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                                .getFileConfiguration()
+                        plugin.getLanguage()
                                 .getString("Command.Island.Invite.Invited.Sender.Disconnected.Message")
                                 .replace("%player", player.getName()));
                 plugin.getSoundManager().playSound(targetPlayer,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);

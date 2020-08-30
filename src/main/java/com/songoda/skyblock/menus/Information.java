@@ -64,8 +64,7 @@ public class Information {
                     islandManager.loadIsland(targetOfflinePlayer);
                 }
 
-                FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                        .getFileConfiguration();
+                FileConfiguration configLoad = plugin.getLanguage();
                 Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(viewer.getOwner()));
 
                 if (island == null) {
@@ -119,12 +118,12 @@ public class Information {
 
                             if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    plugin.formatText(configLoad.getString(
                                             "Menu.Information.Categories.Item.Exit.Displayname"))))) {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                             } else if ((is.getType() == CompatibleMaterial.ITEM_FRAME.getMaterial()) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    plugin.formatText(configLoad.getString(
                                             "Menu.Information.Categories.Item.Members.Displayname"))))) {
                                 playerData13.setViewer(new Viewer(
                                         ((Viewer) playerData13.getViewer()).getOwner(),
@@ -136,7 +135,7 @@ public class Information {
                             } else if ((is.getType() == CompatibleMaterial.MAP.getMaterial())
                                     && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    plugin.formatText(configLoad.getString(
                                             "Menu.Information.Categories.Item.Information.Displayname"))))) {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
@@ -144,7 +143,7 @@ public class Information {
                                 event.setWillDestroy(false);
                             } else if ((is.getType() == CompatibleMaterial.PAINTING.getMaterial()) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    plugin.formatText(configLoad.getString(
                                             "Menu.Information.Categories.Item.Visitors.Displayname"))))) {
                                 playerData13.setViewer(new Viewer(
                                         ((Viewer) playerData13.getViewer()).getOwner(),
@@ -169,7 +168,6 @@ public class Information {
                             configLoad.getStringList("Menu.Information.Categories.Item.Visitors.Lore"), null, null,
                             null), 3);
 
-                    Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
                     List<String> itemLore = new ArrayList<>();
 
                     String safety = "";
@@ -180,8 +178,8 @@ public class Information {
                         safety = configLoad.getString("Menu.Information.Categories.Item.Information.Vote.Word.Safe");
                     }
 
-                    if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
-                        if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
+                    if (plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
+                        if (plugin.getConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
                             for (String itemLoreList : configLoad.getStringList(
                                     "Menu.Information.Categories.Item.Information.Vote.Enabled.Signature.Enabled.Lore")) {
                                 if (itemLoreList.contains("%signature")) {
@@ -191,9 +189,7 @@ public class Information {
                                         itemLore.add(configLoad.getString(
                                                 "Menu.Information.Categories.Item.Information.Vote.Word.Empty"));
                                     } else {
-                                        for (String signatureList : islandSignature) {
-                                            itemLore.add(signatureList);
-                                        }
+                                        itemLore.addAll(islandSignature);
                                     }
                                 } else {
                                     itemLore.add(itemLoreList);
@@ -214,13 +210,13 @@ public class Information {
                                         new Placeholder("%players",
                                                 "" + islandManager.getPlayersAtIsland(island).size()),
                                         new Placeholder("%player_capacity",
-                                                "" + mainConfig.getFileConfiguration()
+                                                "" + plugin.getConfiguration()
                                                         .getInt("Island.Visitor.Capacity")),
                                         new Placeholder("%owner", islandOwnerName),
                                         new Placeholder("%safety", safety)},
                                 null, null), 2);
                     } else {
-                        if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
+                        if (plugin.getConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
                             for (String itemLoreList : configLoad.getStringList(
                                     "Menu.Information.Categories.Item.Information.Vote.Disabled.Signature.Enabled.Lore")) {
                                 if (itemLoreList.contains("%signature")) {
@@ -252,14 +248,14 @@ public class Information {
                                         new Placeholder("%players",
                                                 "" + islandManager.getPlayersAtIsland(island).size()),
                                         new Placeholder("%player_capacity",
-                                                "" + mainConfig.getFileConfiguration()
+                                                "" + plugin.getConfiguration()
                                                         .getInt("Island.Visitor.Capacity")),
                                         new Placeholder("%owner", islandOwnerName),
                                         new Placeholder("%safety", safety)},
                                 null, null), 2);
                     }
 
-                    nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
+                    nInv.setTitle(plugin.formatText(
                             configLoad.getString("Menu.Information.Categories.Title")));
                     nInv.setType(InventoryType.HOPPER);
 

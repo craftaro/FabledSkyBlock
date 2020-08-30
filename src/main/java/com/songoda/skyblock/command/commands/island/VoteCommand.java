@@ -40,7 +40,7 @@ public class VoteCommand extends SubCommand {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
-            if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+            if (!this.plugin.getConfiguration()
                     .getBoolean("Island.Visitor.Vote")) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Disabled.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);

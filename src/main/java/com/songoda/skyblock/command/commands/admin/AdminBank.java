@@ -36,7 +36,7 @@ public class AdminBank extends SubCommand {
 
         Island island = islandManager.getIslandAtLocation(player.getLocation());
 
-        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")) {
+        if (!this.plugin.getConfiguration().getBoolean("Island.Bank.Enable")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Disabled.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             return;

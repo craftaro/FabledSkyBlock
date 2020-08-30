@@ -42,8 +42,7 @@ public class GuiBankSelector extends Gui {
         this.island = island;
         this.returnGui = returnGui;
         this.admin = admin;
-        this.languageLoad = plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+        this.languageLoad = this.plugin.getLanguage();
         setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
         setTitle(TextUtils.formatText(languageLoad.getString("Menu.Input.Title")));
         paint();
@@ -92,14 +91,14 @@ public class GuiBankSelector extends Gui {
             switch(type){
                 case DEPOSIT:
                     amount = economy.getBalance(event.player);
-                    if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+                    if (!this.plugin.getConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
                         amount = Math.floor(amount);
                     }
                     response = bankManager.deposit(event.player, island, amount, admin);
                     break;
                 case WITHDRAW:
                     amount = island.getBankBalance();
-                    if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
+                    if (!this.plugin.getConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
                         amount = Math.floor(amount);
                     }
                     response = bankManager.withdraw(event.player, island, amount, admin);

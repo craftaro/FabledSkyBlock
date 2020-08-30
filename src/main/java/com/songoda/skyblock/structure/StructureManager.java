@@ -11,7 +11,6 @@ import java.util.List;
 
 public class StructureManager {
 
-    public List<String> knownStructures;
     private final List<Structure> structureStorage = new ArrayList<>();
 
     public StructureManager(SkyBlock plugin) {
@@ -20,7 +19,7 @@ public class StructureManager {
 
         if (configLoad.getString("Structures") != null) {
             for (String structureList : configLoad.getConfigurationSection("Structures").getKeys(false)) {
-                CompatibleMaterial materials = null;
+                CompatibleMaterial materials;
 
                 if (configLoad.getString("Structures." + structureList + ".Item.Material") == null) {
                     materials = CompatibleMaterial.GRASS_BLOCK;
@@ -73,8 +72,6 @@ public class StructureManager {
 
                     if (endFile == null && overworldFile != null) {
                         endFile = overworldFile;
-                    } else if (endFile == null && netherFile != null) {
-                        endFile = netherFile;
                     }
                 }
 
@@ -105,23 +102,11 @@ public class StructureManager {
     }
 
     public Structure getStructure(String name) {
-        for (Structure structureList : structureStorage) {
-            if (structureList.getName().equalsIgnoreCase(name)) {
-                return structureList;
-            }
-        }
-
-        return null;
+        return structureStorage.stream().filter(structureList -> structureList.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
     public boolean containsStructure(String name) {
-        for (Structure structureList : structureStorage) {
-            if (structureList.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-
-        return false;
+        return structureStorage.stream().anyMatch(structureList -> structureList.getName().equalsIgnoreCase(name));
     }
 
     public List<Structure> getStructures() {

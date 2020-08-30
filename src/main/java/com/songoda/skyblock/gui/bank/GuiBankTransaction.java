@@ -36,10 +36,7 @@ public class GuiBankTransaction extends Gui {
         this.transactions = this.transactionList.size();
         this.returnGui = returnGui;
         this.admin = admin;
-        this.languageLoad = plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-
+        this.languageLoad = plugin.getLanguage();
         if(transactions == 0){
             setRows(2);
         } else if(transactions > 4*9){

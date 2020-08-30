@@ -183,7 +183,7 @@ public class Stackable {
 
     private String getCustomName() {
         return ChatColor
-                .translateAlternateColorCodes('&', SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration().getString("Hologram.Stackable.Message"))
+                .translateAlternateColorCodes('&', SkyBlock.getInstance().getLanguage().getString("Hologram.Stackable.Message"))
                 .replace("%block", SkyBlock.getInstance().getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(material)).replace("%amount", NumberUtil.formatNumber(this.size));
     }
 }

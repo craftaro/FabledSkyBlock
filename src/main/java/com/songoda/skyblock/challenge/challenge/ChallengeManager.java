@@ -22,8 +22,7 @@ public class ChallengeManager {
 	}
 
 	private void loadChallenges() {
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "challenges.yml"));
-		FileConfiguration configLoad = config.getFileConfiguration();
+		FileConfiguration configLoad = this.plugin.getChallenges();
 
 		try {
 			ConfigurationSection section = configLoad.getConfigurationSection("challenges");

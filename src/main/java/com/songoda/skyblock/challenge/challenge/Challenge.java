@@ -209,9 +209,7 @@ public class Challenge {
 
 			@Override
 			public boolean has(Player p, Object obj) {
-				boolean ignoreLore = SkyBlock.getInstance().getFileManager()
-						.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
-						.getFileConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
+				boolean ignoreLore = SkyBlock.getInstance().getConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
 				if(obj instanceof ItemStack){
 					// Check if player has specific item in his inventory
 					ItemStack is = (ItemStack) obj;
@@ -225,9 +223,7 @@ public class Challenge {
 
 			@Override
 			public void executeRequire(Player p, Object obj) {
-				boolean ignoreLore = SkyBlock.getInstance().getFileManager()
-						.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
-						.getFileConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
+				boolean ignoreLore = SkyBlock.getInstance().getConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
 				
 				if(obj instanceof ItemStack){
 					// Remove specific item in player's inventory

@@ -28,7 +28,7 @@ public class LeaderboardCommand extends SubCommand {
 
         if (playerDataManager.hasPlayerData(player)) {
             if (args.length == 0) {
-                if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+                if (this.plugin.getConfiguration()
                         .getBoolean("Island.Visitor.Vote")) {
                     playerDataManager.getPlayerData(player)
                             .setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Browse));
@@ -46,7 +46,7 @@ public class LeaderboardCommand extends SubCommand {
                         playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Bank));
                         break;
                     case "votes":
-                        if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+                        if (this.plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
                             playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Votes));
                         } else {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Disabled.Message"));

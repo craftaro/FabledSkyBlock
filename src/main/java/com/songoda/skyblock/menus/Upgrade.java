@@ -54,11 +54,9 @@ public class Upgrade {
         UpgradeManager upgradeManager = plugin.getUpgradeManager();
         IslandManager islandManager = plugin.getIslandManager();
         SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
         Economy economy = plugin.getEconomyManager().getEconomy();
 
-        FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                .getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         if (!economy.isEnabled()) {
             messageManager.sendMessage(player, configLoad.getString("Island.Upgrade.Disabled.Message"));
@@ -91,7 +89,7 @@ public class Upgrade {
                     ItemStack is = event.getItem();
 
                     if ((is.getType() == Material.POTION) && (is.hasItemMeta())) {
-                        if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                        if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                 configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")))) {
                             if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Speed)) {
                                 if (island.isUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.Speed)) {
@@ -897,8 +895,7 @@ public class Upgrade {
 
     private String getStatus(Island island, com.songoda.skyblock.upgrade.Upgrade.Type type) {
         SkyBlock plugin = SkyBlock.getInstance();
-        FileConfiguration configLoad = plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
         String upgradeStatus;
 
         if (island.isUpgrade(type)) {

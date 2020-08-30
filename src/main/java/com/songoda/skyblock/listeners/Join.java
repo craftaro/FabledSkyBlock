@@ -42,7 +42,6 @@ public class Join implements Listener {
         UserCacheManager userCacheManager = plugin.getUserCacheManager();
         CooldownManager cooldownManager = plugin.getCooldownManager();
         IslandManager islandManager = plugin.getIslandManager();
-        FileManager fileManager = plugin.getFileManager();
         
         Player player = event.getPlayer();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -53,9 +52,8 @@ public class Join implements Listener {
                 islandManager.loadIsland(player);
                 Island island = islandManager.getIsland(player);
                 boolean teleportedToIsland = false;
-            
-                Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
+
+                FileConfiguration configLoad = plugin.getConfiguration();
             
                 if (configLoad.getBoolean("Island.Join.Spawn")) {
                     LocationUtil.teleportPlayerToSpawn(player);

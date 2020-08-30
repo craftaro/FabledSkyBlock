@@ -101,33 +101,28 @@ public class PermissionManager {
                 new MainSpawnPermission(),
                 new VisitorSpawnPermission());
 
-        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")){
+        if(plugin.getConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")){
             registerPermission(new KeepItemsOnDeathPermission());
         }
     
-        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")){
+        if(plugin.getConfiguration().getBoolean("Island.Settings.PvP.Enable")){
             registerPermission(new PvpPermission(plugin));
         }
     
-        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")){
+        if(plugin.getConfiguration().getBoolean("Island.Settings.Damage.Enable")){
             registerPermission(new DamagePermission(plugin));
         }
     
-        if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")){
+        if(plugin.getConfiguration().getBoolean("Island.Settings.Hunger.Enable")){
             registerPermission(new HungerPermission(plugin));
         }
 
-        registeredHandlers = registeredHandlers.stream().sorted(Comparator.comparingInt(h -> {
-            final PermissionHandler permissionHandler = h.getHandler().getAnnotation(PermissionHandler.class);
-            return permissionHandler.priority().ordinal();
-        })).collect(Collectors.toList());
+        registeredHandlers = registeredHandlers.stream()
+                .sorted(Comparator.comparingInt(h -> h.getHandler().getAnnotation(PermissionHandler.class).priority().ordinal()))
+                .collect(Collectors.toList());
     }
 
-    private void updateSettingsConfig(BasicPermission permission){
+    private synchronized void updateSettingsConfig(BasicPermission permission){
         FileManager.Config settingsConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "settings.yml"));
         FileConfiguration settingsConfigLoad = settingsConfig.getFileConfiguration();
 
@@ -174,19 +169,12 @@ public class PermissionManager {
         } catch (NoClassDefFoundError e) {
             return false;
         }
-        for (Method method : methods) {
-            final PermissionHandler permissionHandler = method.getAnnotation(PermissionHandler.class);
-            if (permissionHandler == null) continue;
-            registeredHandlers.add(new HandlerWrapper(permission, method));
-        }
+        methods.stream().filter(method -> method.getAnnotation(PermissionHandler.class) != null).forEachOrdered(method -> registeredHandlers.add(new HandlerWrapper(permission, method)));
         return true;
     }
 
     public boolean registerPermissions(BasicPermission... permissions) {
-        for (BasicPermission permission : permissions)
-            if (!registerPermission(permission))
-                return false;
-        return true;
+        return Arrays.stream(permissions).allMatch(this::registerPermission);
     }
 
     public boolean processPermission(Cancellable cancellable, Island island) {
@@ -232,8 +220,7 @@ public class PermissionManager {
         if (player.hasPermission("fabledskyblock.bypass." + permission.getName().toLowerCase()))
             return !reversePermission;
 
-        FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = SkyBlock.getInstance().getConfiguration();
 
         switch(island.getRole(player)){
             case Owner:

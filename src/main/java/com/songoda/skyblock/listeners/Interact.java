@@ -178,7 +178,7 @@ public class Interact implements Listener {
             
             if (stackableManager != null && stackableManager.isStackableMaterial(heldType) && blockType == heldType
                     && !player.isSneaking() && plugin.getPermissionManager().hasPermission(player, island, "Place")
-                    && (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission")
+                    && (!this.plugin.getConfiguration().getBoolean("Island.Stackable.RequirePermission")
                     || player.hasPermission("fabledskyblock.stackable"))) {
 
                 if (levellingManager.isScanning(island)) {

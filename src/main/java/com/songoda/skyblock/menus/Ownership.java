@@ -48,11 +48,9 @@ public class Ownership {
         MessageManager messageManager = plugin.getMessageManager();
         IslandManager islandManager = plugin.getIslandManager();
         SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                    .getFileConfiguration();
+            FileConfiguration configLoad = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (playerDataManager.hasPlayerData(player)) {

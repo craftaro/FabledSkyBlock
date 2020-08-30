@@ -39,10 +39,9 @@ public final class LimitationInstanceHandler {
 
     public void reloadAll() {
         final SkyBlock plugin = SkyBlock.getInstance();
-        final Configuration config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "limits.yml")).getFileConfiguration();
+        final Configuration config = plugin.getLimits();
     
-        loadChunks = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Limits.LoadChunks");
+        loadChunks = plugin.getConfiguration().getBoolean("Island.Limits.LoadChunks");
     
         for (Limitation limit : instances.values()) {
             limit.reload(config.getConfigurationSection(limit.getSectionName()));

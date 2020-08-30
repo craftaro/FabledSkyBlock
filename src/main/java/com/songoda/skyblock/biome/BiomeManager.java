@@ -31,7 +31,7 @@ public class BiomeManager {
     public BiomeManager(SkyBlock plugin) {
         this.plugin = plugin;
         this.updatingIslands = new ArrayList<>();
-        this.language = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration();
+        this.language = SkyBlock.getInstance().getLanguage();
         this.runEveryX = language.getInt("Command.Island.Biome.Progress.Display-Every-X-Updates");
     }
     

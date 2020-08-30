@@ -19,10 +19,14 @@ Economy:
 Island:
     # This is settings is primary when damage, permission island dont work is false
     Entity_Damage:
-        PVP: true # player vs player
-        EVP: true # entity vs player
-        PVE: true # player vs entity
-        EVE: true # entity vs entity
+        # player vs player
+        PVP: true
+        # entity vs player
+        EVP: true
+        # player vs entity
+        PVE: true
+        # entity vs entity
+        EVE: true
     # Enabled or Disabled Task
     Task:
         PlaytimeTask: true

@@ -45,8 +45,7 @@ public class Creator {
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         List<Structure> availableStructures = new ArrayList<>();
 
@@ -158,28 +157,27 @@ public class Creator {
                             event.setWillDestroy(false);
 
                             return;
-                        } else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                .getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
+                        } else if (plugin.getConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
                                 && cooldownManager.hasPlayer(CooldownType.Creation, player)) {
                             CooldownPlayer cooldownPlayer = cooldownManager
                                     .getCooldownPlayer(CooldownType.Creation, player);
                             Cooldown cooldown = cooldownPlayer.getCooldown();
 
                             if (cooldown.getTime() < 60) {
-                                messageManager.sendMessage(player, config.getFileConfiguration()
+                                messageManager.sendMessage(player, configLoad
                                         .getString("Island.Creator.Selector.Cooldown.Message")
                                         .replace("%time", cooldown.getTime() + " "
-                                                + config.getFileConfiguration().getString(
+                                                + configLoad.getString(
                                                 "Island.Creator.Selector.Cooldown.Word.Second")));
                             } else {
                                 long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
-                                messageManager.sendMessage(player, config.getFileConfiguration()
+                                messageManager.sendMessage(player, configLoad
                                         .getString("Island.Creator.Selector.Cooldown.Message")
                                         .replace("%time", durationTime[2] + " "
-                                                + config.getFileConfiguration().getString(
+                                                + configLoad.getString(
                                                 "Island.Creator.Selector.Cooldown.Word.Minute")
                                                 + " " + durationTime[3] + " "
-                                                + config.getFileConfiguration().getString(
+                                                + configLoad.getString(
                                                 "Island.Creator.Selector.Cooldown.Word.Second")));
                             }
 
