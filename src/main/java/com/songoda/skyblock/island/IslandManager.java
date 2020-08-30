@@ -555,7 +555,9 @@ public class IslandManager {
             }
         }
 
-        startDeletion(island, worldManager);
+        if (configLoad.getBoolean("Island.Deletion.DeleteIsland", true)) {
+            startDeletion(island, worldManager);
+        }
 
         plugin.getVisitManager().deleteIsland(island.getOwnerUUID());
         plugin.getBanManager().deleteIsland(island.getOwnerUUID());
