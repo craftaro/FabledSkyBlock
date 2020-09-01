@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -23,9 +24,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PlayerManager {
-	private SkyBlock plugin;
-	private HashMap<UUID, HashMap<Challenge, Integer>> islands;
-	private File playersDirectory;
+	private final SkyBlock plugin;
+	private final HashMap<UUID, HashMap<Challenge, Integer>> islands;
+	private final File playersDirectory;
 
 	public PlayerManager(SkyBlock plugin) {
 		this.plugin = plugin;
@@ -35,14 +36,12 @@ public class PlayerManager {
 			playersDirectory.mkdirs();
 
 		Bukkit.getScheduler().runTask(plugin, () -> {
-			for(Player p : Bukkit.getServer().getOnlinePlayers()){
-				loadPlayer(p.getUniqueId());
-			}
+			Bukkit.getServer().getOnlinePlayers().stream().map(Entity::getUniqueId).forEach(this::loadPlayer);
 		});
 	}
 
 	public HashMap<Challenge, Integer> getPlayer(UUID uuid) {
-		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (this.plugin.getConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", false)) {
 			OfflinePlayer player = Bukkit.getPlayer(uuid);
 			if(player == null) {
@@ -63,7 +62,7 @@ public class PlayerManager {
 	 *                 The uuid of specific player
 	 */
 	public void loadPlayer(UUID uuid) {
-		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (this.plugin.getConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
 			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
@@ -104,7 +103,7 @@ public class PlayerManager {
 	 *                 The uuid of specific player
 	 */
 	public void unloadPlayer(UUID uuid) {
-		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (this.plugin.getConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", false)) {
 			OfflinePlayer player = Bukkit.getPlayer(uuid);
 			if(player == null) {
@@ -138,7 +137,7 @@ public class PlayerManager {
 		if (c == null)
 			return false;
 		UUID uuid = p.getUniqueId();
-		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (this.plugin.getConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
 			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
@@ -174,7 +173,7 @@ public class PlayerManager {
 		if (!canDoChallenge(p, c))
 			return false;
 		UUID uuid = p.getUniqueId();
-		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (this.plugin.getConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
 			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
@@ -193,10 +192,8 @@ public class PlayerManager {
 			peer.getKey().executeReward(p, peer.getValue());
 		}
 		// Ok, send message
-		String broadcast = ChatColor.translateAlternateColorCodes('&',
-				SkyBlock.getInstance().getFileManager()
-						.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"))
-						.getFileConfiguration().getString("Challenge.Broadcast"));
+		SkyBlock instance = SkyBlock.getInstance();
+		String broadcast = instance.formatText(instance.getLanguage().getString("Challenge.Broadcast"));
 		if (c.isShowInChat())
 			Bukkit.broadcastMessage(broadcast.replace("%player", p.getName()).replace("%challenge", c.getName())
 					.replace("%amount", Integer.toString(count + 1))
@@ -205,7 +202,7 @@ public class PlayerManager {
 	}
 
 	public void addChallenge(UUID uuid, Challenge c) {
-		if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (this.plugin.getConfiguration()
 				.getBoolean("Island.Challenge.PerIsland", true)) {
 			Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 			if(is != null){
@@ -244,7 +241,7 @@ public class PlayerManager {
 		if (challenges != null) {
 			return challenges.getOrDefault(c, 0);
 		} else {
-			if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+			if (this.plugin.getConfiguration()
 					.getBoolean("Island.Challenge.PerIsland", true)) {
 				Island is = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(uuid));
 				if(is != null){

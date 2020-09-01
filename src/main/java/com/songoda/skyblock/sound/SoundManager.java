@@ -20,8 +20,7 @@ public class SoundManager {
 
     public void playSound(CommandSender sender, Sound sound, float volume, float pitch) {
         if (sender instanceof Player) {
-            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getConfiguration();
 
             if (configLoad.getBoolean("Sound.Enable")) {
                 Player player = (Player) sender;
@@ -31,10 +30,7 @@ public class SoundManager {
     }
 
     public void playSound(Location location, Sound sound, float volume, float pitch) {
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
-
-        if (configLoad.getBoolean("Sound.Enable")) {
+        if (plugin.getConfiguration().getBoolean("Sound.Enable")) {
             location.getWorld().playSound(location, sound, volume, pitch);
         }
     }

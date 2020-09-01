@@ -55,8 +55,7 @@ public class Generator implements Listener {
 
         PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         nInventoryUtil nInv = new nInventoryUtil(player, null);
 
@@ -190,8 +189,7 @@ public class Generator implements Listener {
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         String inventoryName = "";
         if (NMSUtil.getVersionNumber() > 13) {
@@ -288,7 +286,7 @@ public class Generator implements Listener {
                         Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                             Config config14 = fileManager
                                     .getConfig(new File(plugin.getDataFolder(), "generators.yml"));
-                            FileConfiguration configLoad14 = config14.getFileConfiguration();
+                            FileConfiguration configLoad14 = plugin.getGenerators();
 
                             configLoad14.set("Generators." + event1.getName() + ".Name", event1.getName());
 
@@ -340,11 +338,7 @@ public class Generator implements Listener {
                 if (generatorManager.containsGenerator(name)) {
                     com.songoda.skyblock.generator.Generator generator = generatorManager.getGenerator(name);
 
-                    if (generator.isPermission()) {
-                        generator.setPermission(false);
-                    } else {
-                        generator.setPermission(true);
-                    }
+                    generator.setPermission(!generator.isPermission());
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
@@ -680,7 +674,7 @@ public class Generator implements Listener {
 
     public class Viewer {
 
-        private String name;
+        private final String name;
 
         public Viewer(String name) {
             this.name = name;

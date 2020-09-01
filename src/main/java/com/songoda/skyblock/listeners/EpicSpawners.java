@@ -42,8 +42,7 @@ public class EpicSpawners implements Listener {
             int amount = event.getSpawner().getFirstStack().getStackSize();
             EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
-            FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getConfiguration();
 
             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
                 CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
@@ -77,8 +76,7 @@ public class EpicSpawners implements Listener {
         int amount = event.getStackSize() - event.getOldStackSize();
         EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
             CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
@@ -112,8 +110,7 @@ public class EpicSpawners implements Listener {
         int amount = event.getSpawner().getFirstStack().getStackSize();
         EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
             CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);

@@ -51,7 +51,7 @@ public class GuiPermissionsSelector extends Gui {
                     new GuiAdminPermissions(plugin, IslandRole.Operator, this) :
                     new GuiPermissions(plugin, player, island, IslandRole.Operator, this)));
 
-        boolean isCoop = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+        boolean isCoop = plugin.getConfiguration()
                 .getBoolean("Island.Coop.Enable");
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,

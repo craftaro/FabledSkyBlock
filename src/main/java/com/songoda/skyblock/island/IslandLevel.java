@@ -65,8 +65,7 @@ public class IslandLevel {
     }
 
     public long getPoints() {
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = this.plugin.getLevelling();
 
         ConfigurationSection materialSection = configLoad.getConfigurationSection("Materials");
 
@@ -104,9 +103,8 @@ public class IslandLevel {
                     break;
             }
         }
-        
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+
+        FileConfiguration configLoad = this.plugin.getLevelling();
 
         ConfigurationSection materialSection = configLoad.getConfigurationSection("Materials");
 
@@ -131,14 +129,14 @@ public class IslandLevel {
     }
 
     public long getLevel() {
-        long division = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getLong("Island.Levelling.Division");
+        long division = this.plugin.getConfiguration().getLong("Island.Levelling.Division");
 
         if (division == 0) {
             division = 1;
         }
 
         long points = getPoints();
-        long subtract = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getLong("Island.Levelling.Subtract");
+        long subtract = this.plugin.getConfiguration().getLong("Island.Levelling.Subtract");
         if(points >= subtract){
             points -= subtract;
         } else {
@@ -156,8 +154,8 @@ public class IslandLevel {
         if (level <= highestLevel)
             return;
 
-        final FileConfiguration language = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
-        final FileConfiguration config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
+        final FileConfiguration language = this.plugin.getLanguage();
+        final FileConfiguration config = this.plugin.getConfiguration();
 
         OfflinePlayer owner = Bukkit.getOfflinePlayer(ownerUUID);
 

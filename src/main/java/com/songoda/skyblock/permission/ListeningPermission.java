@@ -88,8 +88,7 @@ public abstract class ListeningPermission extends BasicPermission {
         }
 
         messageManager.sendMessage(player,
-                plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                        .getFileConfiguration().getString("Island.Settings.Permission.Message"));
+                plugin.getLanguage().getString("Island.Settings.Permission.Message"));
         plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1f, 1f);
     }
 

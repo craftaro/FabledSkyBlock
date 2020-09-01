@@ -52,7 +52,7 @@ public final class IslandLevelManager {
 
         if (island == null) throw new IllegalArgumentException("island cannot be null");
 
-        Configuration config = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration();
+        Configuration config = SkyBlock.getInstance().getLanguage();
         MessageManager messageManager = SkyBlock.getInstance().getMessageManager();
 
         if (inScan.containsKey(island)) {
@@ -89,7 +89,7 @@ public final class IslandLevelManager {
     public void reloadWorth() {
         worth.clear();
 
-        final Configuration config = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "levelling.yml")).getFileConfiguration();
+        final Configuration config = SkyBlock.getInstance().getLevelling();
         final ConfigurationSection materialSection = config.getConfigurationSection("Materials");
 
         if (materialSection == null) return;
@@ -102,7 +102,7 @@ public final class IslandLevelManager {
 
             if (material == null) continue;
 
-            worth.put(material, current.getDouble("Points"));
+            worth.put(material, current.getDouble("Points", 0.0));
         }
     }
 

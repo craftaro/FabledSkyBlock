@@ -54,8 +54,7 @@ public class Bans {
             PlayerData playerData = playerDataManager.getPlayerData(player);
             Island island = plugin.getIslandManager().getIsland(player);
 
-            Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-            FileConfiguration configLoad = languageConfig.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (playerDataManager.hasPlayerData(player)) {
@@ -68,8 +67,7 @@ public class Bans {
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
-                    } else if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                            .getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
+                    } else if (!plugin.getConfiguration().getBoolean("Island.Visitor.Banning")) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Bans.Disabled.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -80,18 +78,18 @@ public class Bans {
                     ItemStack is = event.getItem();
 
                     if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial()) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Barrier.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
                     } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Exit.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                     } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Information.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
@@ -118,21 +116,21 @@ public class Bans {
                             gui.open();
                         }, 1L);
                     } else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
-                            && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Nothing.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
                     } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())) {
-                        if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                        if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                 configLoad.getString("Menu.Bans.Item.Previous.Displayname")))) {
                             playerData1.setPage(MenuType.BANS, playerData1.getPage(MenuType.BANS) - 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
-                        } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
-                                '&', configLoad.getString("Menu.Bans.Item.Next.Displayname")))) {
+                        } else if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
+                                configLoad.getString("Menu.Bans.Item.Next.Displayname")))) {
                             playerData1.setPage(MenuType.BANS, playerData1.getPage(MenuType.BANS) + 1);
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
@@ -223,7 +221,7 @@ public class Bans {
 
                         nInv.addItem(
                                 nInv.createItem(SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]),
-                                        ChatColor.translateAlternateColorCodes('&',
+                                        plugin.formatText(
                                                 configLoad.getString("Menu.Bans.Item.Ban.Displayname")
                                                         .replace("%player", targetPlayerName == null ? "" : targetPlayerName)),
                                         configLoad.getStringList("Menu.Bans.Item.Ban.Lore"), null, null, null),
@@ -232,10 +230,10 @@ public class Bans {
                 }
             }
 
-            nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Bans.Title")));
+            nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Bans.Title")));
             nInv.setRows(6);
 
-            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
         }
     }
 }

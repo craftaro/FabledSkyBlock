@@ -48,8 +48,7 @@ public class Visitors {
         FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                    .getFileConfiguration();
+            FileConfiguration configLoad = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (playerDataManager.hasPlayerData(player)) {
@@ -109,9 +108,7 @@ public class Visitors {
                                     isOwner = island.hasRole(IslandRole.Owner, player.getUniqueId()),
                                     canKick = permissionManager.hasPermission(island, "Kick", IslandRole.Operator),
                                     canBan = permissionManager.hasPermission(island, "Ban", IslandRole.Operator),
-                                    banningEnabled = fileManager
-                                            .getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                            .getFileConfiguration().getBoolean("Island.Visitor.Banning");
+                                    banningEnabled = plugin.getConfiguration().getBoolean("Island.Visitor.Banning");
                             String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
 
                             if ((isOperator && canKick) || isOwner) {
@@ -213,8 +210,7 @@ public class Visitors {
                         isOwner = island.hasRole(IslandRole.Owner, player.getUniqueId()),
                         canKick = plugin.getPermissionManager().hasPermission(island, "Kick", IslandRole.Operator),
                         canBan = plugin.getPermissionManager().hasPermission(island, "Ban", IslandRole.Operator),
-                        banningEnabled = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                .getFileConfiguration().getBoolean("Island.Visitor.Banning");
+                        banningEnabled = plugin.getConfiguration().getBoolean("Island.Visitor.Banning");
                 int index = playerMenuPage * 36 - 36,
                         endIndex = index >= islandVisitors.size() ? islandVisitors.size() - 1 : index + 36,
                         inventorySlot = 17;

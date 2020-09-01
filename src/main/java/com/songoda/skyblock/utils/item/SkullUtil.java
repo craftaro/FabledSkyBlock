@@ -22,7 +22,7 @@ public final class SkullUtil {
                 .encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", skinTexture).getBytes());
         gameProfile.getProperties().put("textures", new Property("textures", new String(encodedData)));
 
-        Field profileField = null;
+        Field profileField;
 
         try {
             profileField = sm.getClass().getDeclaredField("profile");

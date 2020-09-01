@@ -42,8 +42,7 @@ public class Border {
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
 
-        FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                .getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
             Island island = islandManager.getIsland(player);
@@ -61,8 +60,7 @@ public class Border {
                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 return;
-            } else if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                    .getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+            } else if (!plugin.getConfiguration().getBoolean("Island.WorldBorder.Enable")) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Disabled.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
@@ -78,11 +76,7 @@ public class Border {
             } else if ((is.getType() == Material.TRIPWIRE_HOOK) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Border.Item.Toggle.Displayname"))))) {
-                if (island.isBorder()) {
-                    island.setBorder(false);
-                } else {
-                    island.setBorder(true);
-                }
+                island.setBorder(!island.isBorder());
 
                 islandManager.updateBorder(island);
                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);

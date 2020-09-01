@@ -14,15 +14,12 @@ import java.util.List;
 
 class Driver extends BukkitRunnable {
 
-    private final SkyBlock plugin;
-
     private final Row title;
     private final List<Row> rows;
     private final List<Holder> holders;
     private final ScoreboardType boardType;
 
     Driver(SkyBlock plugin, ScoreboardType boardType) {
-        this.plugin = plugin;
         FileManager fileManager = plugin.getFileManager();
         FileConfiguration scoreboardLoad = fileManager.getConfig(
                 new File(plugin.getDataFolder(), "scoreboard.yml")).getFileConfiguration();

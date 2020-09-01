@@ -41,7 +41,7 @@ public class BanCommand extends SubCommand {
                 if (island == null) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Owner.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                } else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
+                } else if (this.plugin.getConfiguration().getBoolean("Island.Visitor.Banning")) {
                     if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                             || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && permissionManager.hasPermission(island, "Ban", IslandRole.Operator))) {
                         Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);

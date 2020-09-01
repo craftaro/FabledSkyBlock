@@ -10,18 +10,18 @@ import java.util.List;
 
 public interface InventoryProvider {
 
-	public String title(Inventory inv);
+	String title(Inventory inv);
 
-	public int rows(Inventory inv);
+	int rows(Inventory inv);
 
-	public void init(Inventory inv);
+	void init(Inventory inv);
 
-	public void update(Inventory inv);
+	void update(Inventory inv);
 
-	public default List<Integer> excluseCases(Inventory inv) {
+	default List<Integer> excluseCases(Inventory inv) {
 		return new ArrayList<>();
 	}
 
-	public default void onClose(InventoryCloseEvent e, Inventory inv) {
+	default void onClose(InventoryCloseEvent e, Inventory inv) {
 	}
 }

@@ -2,9 +2,9 @@ package com.songoda.skyblock.menus;
 
 public interface InputMethodSelectlistener {
 
-    public void choose(InputMethod inputMethod);
+    void choose(InputMethod inputMethod);
 
-    public enum InputMethod {
+    enum InputMethod {
         ALL,
         CUSTOM,
         CANCELED

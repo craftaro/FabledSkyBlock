@@ -1,8 +1,8 @@
 package com.songoda.skyblock.challenge.challenge;
 
 public class Peer<E, F> {
-	private E key;
-	private F value;
+	private final E key;
+	private final F value;
 
 	public Peer(E key, F value) {
 		this.key = key;

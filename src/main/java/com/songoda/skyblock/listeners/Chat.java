@@ -49,9 +49,7 @@ public class Chat implements Listener {
 
             if (playerData.isChat() && island != null) {
                 event.setCancelled(true);
-
-                Config language = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-                FileConfiguration languageLoad = language.getFileConfiguration();
+                FileConfiguration languageLoad = plugin.getLanguage();
 
                 PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, island.getAPIWrapper(),
                         event.getMessage(), languageLoad.getString("Island.Chat.Format.Message"));
@@ -65,13 +63,11 @@ public class Chat implements Listener {
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         MessageManager messageManager = plugin.getMessageManager();
         IslandManager islandManager = plugin.getIslandManager();
-        FileManager fileManager = plugin.getFileManager();
         
         Island island = event.getIsland().getIsland();
         Player player = event.getPlayer();
-    
-        Config language = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration languageLoad = language.getFileConfiguration();
+
+        FileConfiguration languageLoad = plugin.getLanguage();
     
         String islandRole = null;
     
@@ -110,7 +106,7 @@ public class Chat implements Listener {
             }
         }
     
-        if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
+        if (this.plugin.getConfiguration().getBoolean("Island.Chat.OutputToConsole")) {
             messageManager.sendMessage(Bukkit.getConsoleSender(), event.getFormat().replace("%role", islandRole).replace("%player", player.getName())
                     .replace("%message", event.getMessage()));
         }

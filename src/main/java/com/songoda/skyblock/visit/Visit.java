@@ -22,7 +22,7 @@ public class Visit {
     private final IslandLevel islandLevel;
     private UUID islandOwnerUUID;
     private String islandOwnerName;
-    private IslandLocation[] islandLocations;
+    private final IslandLocation[] islandLocations;
     private int islandSize;
     private int islandMembers;
     private int safeLevel;

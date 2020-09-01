@@ -50,10 +50,8 @@ public class Teleport implements Listener {
         IslandManager islandManager = plugin.getIslandManager();
         SoundManager soundManager = plugin.getSoundManager();
         WorldManager worldManager = plugin.getWorldManager();
-        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         if(worldManager.isIslandWorld(event.getFrom().getWorld()) || worldManager.isIslandWorld(event.getTo().getWorld())) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> islandManager.updateFlight(player), 1L);
@@ -107,7 +105,7 @@ public class Teleport implements Listener {
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
-                        } else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
+                        } else if (this.plugin.getConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
                             event.setCancelled(true);
 
                             messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Teleport.Message"));
@@ -135,7 +133,7 @@ public class Teleport implements Listener {
 
                 if (worldManager.getIslandWorld(event.getTo().getWorld()) == IslandWorld.Normal) {
                     if (!island.isWeatherSynchronized()) {
-                        player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+                        player.setPlayerTime(island.getTime(), this.plugin.getConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                         player.setPlayerWeather(island.getWeather());
                     }
                 }

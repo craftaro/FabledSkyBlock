@@ -95,8 +95,6 @@ public class Spawner implements Listener {
                     
                     spawner.update();
                 }
-
-                return;
             }
         }
     }

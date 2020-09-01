@@ -25,8 +25,7 @@ public class WorldManager {
     }
 
     public void loadWorlds() {
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         String normalWorldName = configLoad.getString("Island.World.Normal.Name");
         String netherWorldName = configLoad.getString("Island.World.Nether.Name");

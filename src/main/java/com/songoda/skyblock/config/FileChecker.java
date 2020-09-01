@@ -15,7 +15,7 @@ public class FileChecker {
 
     private final FileManager fileManager;
 
-    private Map<File.Type, File> loadedFiles;
+    private final Map<File.Type, File> loadedFiles;
 
     public FileChecker(SkyBlock plugin, FileManager fileManager, String configurationFileName, boolean applyComments) {
         this.fileManager = fileManager;
@@ -87,10 +87,10 @@ public class FileChecker {
 
     public static class File {
 
-        private java.io.File configFile;
+        private final java.io.File configFile;
         private FileConfiguration configLoad;
 
-        private HashMap<String, Object> configKeys;
+        private final HashMap<String, Object> configKeys;
 
         public File(FileManager fileManager, java.io.File configFile, FileConfiguration configLoad) {
             this.configFile = configFile;

@@ -215,10 +215,9 @@ public final class StructureUtil {
 
         FileManager fileManager = plugin.getFileManager();
 
-        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
-        ItemStack is = new ItemStack(Material.valueOf(fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Admin.Structure.Selector")));
+        ItemStack is = new ItemStack(Material.valueOf(plugin.getConfiguration().getString("Island.Admin.Structure.Selector")));
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Structure.Tool.Item.Displayname")));
 

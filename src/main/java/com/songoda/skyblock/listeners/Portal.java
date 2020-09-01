@@ -34,7 +34,7 @@ public class Portal implements Listener {
 
     private final SkyBlock plugin;
 
-    private Map<UUID, Tick> tickCounter = new HashMap<>();
+    private final Map<UUID, Tick> tickCounter = new HashMap<>();
 
     public Portal(SkyBlock plugin) {
         this.plugin = plugin;
@@ -70,7 +70,6 @@ public class Portal implements Listener {
         IslandManager islandManager = plugin.getIslandManager();
         SoundManager soundManager = plugin.getSoundManager();
         WorldManager worldManager = plugin.getWorldManager();
-        FileManager fileManager = plugin.getFileManager();
 
         if (!worldManager.isIslandWorld(player.getWorld())) return;
 
@@ -78,8 +77,7 @@ public class Portal implements Listener {
 
         if (island == null) return;
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         IslandEnvironment spawnEnvironment;
         switch (island.getRole(player)) {
@@ -108,7 +106,7 @@ public class Portal implements Listener {
                 tick.setLast(System.currentTimeMillis());
             }
             if (tick.getTick() >= 100) {
-                messageManager.sendMessage(player, fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Portal.Stuck.Message"));
+                messageManager.sendMessage(player, plugin.getLanguage().getString("Island.Portal.Stuck.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                 LocationUtil.teleportPlayerToSpawn(player);
                 return;
@@ -163,8 +161,7 @@ public class Portal implements Listener {
         IslandWorld toWorldF = toWorld;
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Location loc = island.getLocation(toWorldF, spawnEnvironment);
-            if(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                    .getFileConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+            if(plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
                 Location safeLoc = LocationUtil.getSafeLocation(loc);
                 if (safeLoc != null) {
                     loc = safeLoc;

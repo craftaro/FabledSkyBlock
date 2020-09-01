@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 public class ChallengeCategory {
-	private int id;
-	private String name;
-	private HashMap<Integer, Challenge> challenges;
+	private final int id;
+	private final String name;
+	private final HashMap<Integer, Challenge> challenges;
 
 	public ChallengeCategory(int id, String name, FileConfiguration config) {
 		this.id = id;

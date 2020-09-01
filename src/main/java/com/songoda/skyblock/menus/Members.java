@@ -53,8 +53,7 @@ public class Members {
         FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                    .getFileConfiguration();
+            FileConfiguration configLoad = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (playerDataManager.hasPlayerData(player)) {
@@ -333,7 +332,7 @@ public class Members {
                             new Placeholder("%island_members",
                                     "" + (islandMembers.size() + islandOperators.size() + 1)),
                             new Placeholder("%island_capacity",
-                                    "" + island.getMaxMembers()),
+                                    "" + island.getMaxMembers(player)),
                             new Placeholder("%members", "" + islandMembers.size()),
                             new Placeholder("%operators", "" + islandOperators.size())},
                     null, null), 4);

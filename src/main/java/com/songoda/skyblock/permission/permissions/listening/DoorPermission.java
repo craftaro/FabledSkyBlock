@@ -25,14 +25,19 @@ public class DoorPermission extends ListeningPermission {
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
 
-
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
             return;
-        
+
         Player player = event.getPlayer();
 
-        if (event.getClickedBlock() instanceof Openable)
+        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+        if (material == CompatibleMaterial.BIRCH_DOOR || material == CompatibleMaterial.ACACIA_DOOR
+                || material == CompatibleMaterial.DARK_OAK_DOOR || material == CompatibleMaterial.JUNGLE_DOOR
+                || material == CompatibleMaterial.SPRUCE_DOOR || material == CompatibleMaterial.OAK_DOOR)
             cancelAndMessage(event, player, plugin, messageManager);
+
+
+
     }
 }
 

@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.function.Consumer;
 
 public class ClickableItem {
-	private ItemStack item;
-	private Consumer<InventoryClickEvent> event;
+	private final ItemStack item;
+	private final Consumer<InventoryClickEvent> event;
 
 	private ClickableItem(ItemStack item, Consumer<InventoryClickEvent> event) {
 		this.item = item;

@@ -21,7 +21,7 @@ import java.util.UUID;
 public class BanManager {
 
     private final SkyBlock plugin;
-    private Map<UUID, Ban> banStorage = new HashMap<>();
+    private final Map<UUID, Ban> banStorage = new HashMap<>();
 
     public BanManager(SkyBlock plugin) {
         this.plugin = plugin;
@@ -40,7 +40,7 @@ public class BanManager {
     public void loadIslands() {
         FileManager fileManager = plugin.getFileManager();
 
-        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+        if (!this.plugin.getConfiguration()
                 .getBoolean("Island.Visitor.Unload")) {
             File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
 
@@ -76,10 +76,8 @@ public class BanManager {
     public void removeVisitor(Island island) {
         MessageManager messageManager = plugin.getMessageManager();
         SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = this.plugin.getLanguage();
 
         for (UUID visitorList : plugin.getIslandManager().getVisitorsAtIsland(island)) {
             Player targetPlayer = Bukkit.getServer().getPlayer(visitorList);

@@ -19,11 +19,11 @@ import java.util.*;
 public class PlayerData {
     
     private final SkyBlock plugin;
-    private UUID uuid;
+    private final UUID uuid;
     private UUID islandOwnerUUID;
     private UUID ownershipUUID;
 
-    private List<MenuPage> pages;
+    private final List<MenuPage> pages;
     private int playTime;
     private int visitTime;
     private int confirmationTime;
@@ -33,10 +33,10 @@ public class PlayerData {
     private Object type;
     private Object sort;
 
-    private Area area;
+    private final Area area;
     
     private boolean chatSpy;
-    private Set<UUID> spiedIslands;
+    private final Set<UUID> spiedIslands;
 
     private boolean chat;
     private boolean preview;

@@ -25,8 +25,7 @@ public class Death implements Listener {
         Player player = event.getEntity();
 
         if (plugin.getWorldManager().isIslandWorld(player.getWorld())) {
-            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getConfiguration();
 
             boolean keepInventory = false;
 

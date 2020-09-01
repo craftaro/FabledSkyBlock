@@ -2,7 +2,7 @@ package com.songoda.skyblock.island;
 
 public class IslandPosition {
 
-    private IslandWorld world;
+    private final IslandWorld world;
 
     private double x;
     private double z;

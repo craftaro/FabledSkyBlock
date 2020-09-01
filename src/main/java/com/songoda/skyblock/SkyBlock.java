@@ -52,6 +52,7 @@ import net.coreprotect.CoreProtectAPI;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
@@ -107,6 +108,22 @@ public class SkyBlock extends SongodaPlugin {
         return INSTANCE;
     }
 
+    // Add ymlFiles to cache
+    private FileConfiguration biomes;
+    private FileConfiguration challenges;
+    private FileConfiguration config;
+    private FileConfiguration generators;
+    private FileConfiguration language;
+    private FileConfiguration levelling;
+    private FileConfiguration limits;
+    private FileConfiguration menus;
+    private FileConfiguration placeholders;
+    private FileConfiguration rewards;
+    private FileConfiguration scoreboard;
+    private FileConfiguration settings;
+    private FileConfiguration stackables;
+    private FileConfiguration upgrades;
+
     @Override
     public void onPluginLoad() {
         INSTANCE = this;
@@ -143,6 +160,12 @@ public class SkyBlock extends SongodaPlugin {
         com.songoda.core.hooks.HologramManager.load(this);
 
         fileManager = new FileManager(this);
+
+        if (!loadConfigs()) {
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         permissionManager = new PermissionManager(this);
         localizationManager = new LocalizationManager();
         worldManager = new WorldManager(this);
@@ -163,11 +186,12 @@ public class SkyBlock extends SongodaPlugin {
         structureManager = new StructureManager(this);
         soundManager = new SoundManager(this);
 
-        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Generator.Enable")) {
+
+        if (this.config.getBoolean("Island.Generator.Enable")) {
             generatorManager = new GeneratorManager(this);
         }
 
-        if (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.Enable")) {
+        if (this.config.getBoolean("Island.Stackable.Enable")) {
             stackableManager = new StackableManager(this);
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> stackableManager.loadSavedStackables(), 5L);
         }
@@ -184,8 +208,15 @@ public class SkyBlock extends SongodaPlugin {
 
         bankManager = new BankManager(this);
 
-        new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
-        new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
+
+        if (this.config.getBoolean("Island.Task.PlaytimeTask")) {
+            new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
+        }
+
+        if (this.config.getBoolean("Island.Task.VisitTask")) {
+            new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
+        }
+
         new ConfirmationTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
 
         // Start Tasks
@@ -234,7 +265,7 @@ public class SkyBlock extends SongodaPlugin {
             this.vaultPermission = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
         }
     
-        switch (fileManager.getConfig(new File(getDataFolder(), "config.yml")).getFileConfiguration().getString("Economy.Manager", "Default")) {
+        switch (this.config.getString("Economy.Manager", "Default")) {
             case "Vault":
                 getEconomyManager().setEconomy("Vault");
                 break;
@@ -244,6 +275,8 @@ public class SkyBlock extends SongodaPlugin {
             case "Reserve":
                 getEconomyManager().setEconomy("Reserve");
                 break;
+            default:
+                this.getLogger().warning("EconomyManager is default");
         }
         
         this.coreProtectAPI = loadCoreProtect();
@@ -287,10 +320,9 @@ public class SkyBlock extends SongodaPlugin {
         if (plugin != null) { // Check before loading classes
             if (plugin instanceof CoreProtect) { // Check that CoreProtect is loaded
                 CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
-                if (CoreProtect.isEnabled()) { // Check that the API is enabled
-                    if (CoreProtect.APIVersion() >= 6) { // Check that a compatible version of the API is loaded
-                        return CoreProtect;
-                    }
+                // Check that the API is enabled and  Check that a compatible version of the API is loaded
+                if (CoreProtect.isEnabled() && CoreProtect.APIVersion() >= 6) {
+                    return CoreProtect;
                 }
             }
         }
@@ -299,7 +331,8 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onConfigReload() {
-
+        if (!loadConfigs()) this.getLogger().warning("Config are not reload !");
+        else this.getLogger().info("Configurations Loaded !");
     }
 
     @Override
@@ -307,7 +340,32 @@ public class SkyBlock extends SongodaPlugin {
         return null;
     }
 
-    private String formatText(String string) {
+
+    private boolean loadConfigs() {
+        try {
+            biomes = this.getFileManager().getConfig(new File(this.getDataFolder(),"biomes.yml")).getFileConfiguration();
+            challenges = this.getFileManager().getConfig(new File(this.getDataFolder(),"challenges.yml")).getFileConfiguration();
+            config = this.getFileManager().getConfig(new File(this.getDataFolder(),"config.yml")).getFileConfiguration();
+            generators = this.getFileManager().getConfig(new File(this.getDataFolder(),"generators.yml")).getFileConfiguration();
+            language = this.getFileManager().getConfig(new File(this.getDataFolder(),"language.yml")).getFileConfiguration();
+            levelling = this.getFileManager().getConfig(new File(this.getDataFolder(),"levelling.yml")).getFileConfiguration();
+            limits = this.getFileManager().getConfig(new File(this.getDataFolder(),"limits.yml")).getFileConfiguration();
+            menus = this.getFileManager().getConfig(new File(this.getDataFolder(),"menus.yml")).getFileConfiguration();
+            placeholders = this.getFileManager().getConfig(new File(this.getDataFolder(),"placeholders.yml")).getFileConfiguration();
+            rewards = this.getFileManager().getConfig(new File(this.getDataFolder(),"rewards.yml")).getFileConfiguration();
+            scoreboard = this.getFileManager().getConfig(new File(this.getDataFolder(),"scoreboard.yml")).getFileConfiguration();
+            settings = this.getFileManager().getConfig(new File(this.getDataFolder(),"settings.yml")).getFileConfiguration();
+            stackables = this.getFileManager().getConfig(new File(this.getDataFolder(),"stackables.yml")).getFileConfiguration();
+            upgrades = this.getFileManager().getConfig(new File(this.getDataFolder(),"upgrades.yml")).getFileConfiguration();
+            return true;
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    public String formatText(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
@@ -463,4 +521,34 @@ public class SkyBlock extends SongodaPlugin {
     public EconomyManager getEconomyManager() {
         return economyManager;
     }
+
+
+    public FileConfiguration getBiomes() { return biomes; }
+
+    public FileConfiguration getChallenges() { return challenges; }
+
+    public FileConfiguration getConfiguration() { return config; }
+
+    public FileConfiguration getGenerators() { return generators; }
+
+    public FileConfiguration getLanguage() { return language; }
+
+    public FileConfiguration getLevelling() { return levelling; }
+
+    public FileConfiguration getLimits() { return limits; }
+
+    public FileConfiguration getMenus() { return menus; }
+
+    public FileConfiguration getPlaceholders() { return placeholders; }
+
+    public FileConfiguration getRewards() { return rewards; }
+
+    public FileConfiguration getSettings() { return settings; }
+
+    public FileConfiguration getStackables() { return stackables; }
+
+    public FileConfiguration getUpgrades() { return upgrades; }
+
+    public FileConfiguration getScoreboard() { return scoreboard; }
+
 }

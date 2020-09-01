@@ -21,11 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiBankTransaction extends Gui {
-    private final SkyBlock plugin;
-    private final BankManager bankManager;
     private final SoundManager soundManager;
     private final FileConfiguration languageLoad;
-    private final FileManager.Config config;
     private final Gui returnGui;
     private final int transactions;
     private final List<Transaction> transactionList;
@@ -33,17 +30,13 @@ public class GuiBankTransaction extends Gui {
 
     public GuiBankTransaction(SkyBlock plugin, Island island, Gui returnGui, boolean admin) {
         super(returnGui);
-        this.plugin = plugin;
-        this.bankManager = plugin.getBankManager();
+        BankManager bankManager = plugin.getBankManager();
         this.soundManager = plugin.getSoundManager();
         this.transactionList = bankManager.getTransactions(island.getOwnerUUID());
         this.transactions = this.transactionList.size();
         this.returnGui = returnGui;
         this.admin = admin;
-        this.languageLoad = plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
-        this.config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-
+        this.languageLoad = plugin.getLanguage();
         if(transactions == 0){
             setRows(2);
         } else if(transactions > 4*9){

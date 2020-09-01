@@ -65,7 +65,7 @@ public class Levelling {
             return;
 
         PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
-        FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
             if (islandManager.getIsland(player) == null) {
@@ -175,16 +175,13 @@ public class Levelling {
         List<String> testIslandMaterialKeysOrdered = testIslandMaterials.keySet().stream().sorted().collect(Collectors.toList());
         LinkedHashMap<String, Long> islandMaterials = new LinkedHashMap<>();
 
-        Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "levelling.yml"));
-        Config settingsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-
         // Filter out ItemStacks that can't be displayed in the inventory
         Inventory testInventory = Bukkit.createInventory(null, 9);
 
         for (String materialName : testIslandMaterialKeysOrdered) {
-            if (mainConfig.getFileConfiguration().getString("Materials." + materialName + ".Points") == null ||
-                    !settingsConfig.getFileConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") &&
-                            mainConfig.getFileConfiguration().getInt("Materials." + materialName + ".Points") <= 0)
+            if (plugin.getLevelling().getString("Materials." + materialName + ".Points") == null ||
+                    !plugin.getConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") &&
+                            plugin.getLevelling().getInt("Materials." + materialName + ".Points") <= 0)
                 continue;
 
             long value = testIslandMaterials.get(materialName);
@@ -249,17 +246,17 @@ public class Levelling {
 
                 long materialAmount = islandMaterials.get(material);
 
-                if (mainConfig.getFileConfiguration().getString("Materials." + material + ".Points") == null)
+                if (plugin.getLevelling().getString("Materials." + material + ".Points") == null)
                     break;
 
-                double pointsMultiplier = mainConfig.getFileConfiguration().getDouble("Materials." + material + ".Points");
+                double pointsMultiplier = plugin.getLevelling().getDouble("Materials." + material + ".Points");
 
-                if (!settingsConfig.getFileConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") && pointsMultiplier == 0)
+                if (!plugin.getConfiguration().getBoolean("Island.Levelling.IncludeEmptyPointsInList") && pointsMultiplier == 0)
                     return;
 
                 inventorySlot++;
 
-                long materialLimit = mainConfig.getFileConfiguration().getLong("Materials." + material + ".Limit", -1);
+                long materialLimit = plugin.getLevelling().getLong("Materials." + material + ".Limit", -1);
                 long materialAmountCounted = Math.min(materialLimit, materialAmount);
 
                 if (materialLimit == -1)
@@ -289,9 +286,9 @@ public class Levelling {
             }
         }
 
-        nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Title")));
+        nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Levelling.Title")));
         nInv.setRows(6);
 
-        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
     }
 }

@@ -37,8 +37,7 @@ public class FallBreak implements Listener {
                 int counter = 0;
                 IslandManager islandManager = plugin.getIslandManager();
                 WorldManager worldManager = plugin.getWorldManager();
-                FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
+                FileConfiguration configLoad = plugin.getConfiguration();
                 Iterator<FallingBlock> iterator = fallingBlocks.iterator();
                 while(iterator.hasNext()) {
                     FallingBlock ent = iterator.next();
@@ -88,7 +87,7 @@ public class FallBreak implements Listener {
             WorldManager worldManager = plugin.getWorldManager();
             if (worldManager.isIslandWorld(event.getEntity().getLocation().getWorld())) {
                 if (!event.getTo().equals(CompatibleMaterial.AIR.getMaterial())){
-                    fallingBlocks.remove((FallingBlock) event.getEntity());
+                    fallingBlocks.remove(event.getEntity());
                 } else if(!event.isCancelled()) {
                     fallingBlocks.add((FallingBlock) event.getEntity());
                 }

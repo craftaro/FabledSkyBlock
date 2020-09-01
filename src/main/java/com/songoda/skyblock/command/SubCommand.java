@@ -15,7 +15,7 @@ public abstract class SubCommand {
 
     public SubCommand() {
         this.plugin = SkyBlock.getInstance();
-        this.info = ChatColor.translateAlternateColorCodes('&', this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString(this.getInfoMessagePath()));
+        this.info = this.plugin.formatText(this.plugin.getLanguage().getString(this.getInfoMessagePath()));
     }
 
     public abstract void onCommandByPlayer(Player player, String[] args);

@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 public final class LevellingMaterial {
 
-    private CompatibleMaterial materials;
+    private final CompatibleMaterial materials;
     private double points;
 
     public LevellingMaterial(CompatibleMaterial materials, double points) {

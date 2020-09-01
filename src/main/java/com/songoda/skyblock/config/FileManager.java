@@ -333,7 +333,7 @@ public class FileManager {
 
     public static class Config {
 
-        private File configFile;
+        private final File configFile;
         private FileConfiguration configLoad;
 
         public Config(FileManager fileManager, java.io.File configPath) {

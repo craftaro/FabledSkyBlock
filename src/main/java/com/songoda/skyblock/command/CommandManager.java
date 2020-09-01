@@ -38,11 +38,14 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
     public CommandManager(SkyBlock plugin) {
         this.plugin = plugin;
-    
-        plugin.getCommand("island").setExecutor(this);
-        plugin.getCommand("island").setTabCompleter(this);
 
-        registerSubCommands();
+        PluginCommand islandCMD = plugin.getCommand("island");
+        if (islandCMD != null) {
+            islandCMD.setExecutor(this);
+            islandCMD.setTabCompleter(this);
+            registerSubCommands();
+        }
+
     }
 
     public void registerSubCommands() {
@@ -127,13 +130,9 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         if (command.getName().equalsIgnoreCase("island")) {
             MessageManager messageManager = plugin.getMessageManager();
             SoundManager soundManager = plugin.getSoundManager();
-            FileManager fileManager = plugin.getFileManager();
 
-            Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-            FileConfiguration languageConfigLoad = languageConfig.getFileConfiguration();
-            
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration mainConfig = config.getFileConfiguration();
+            FileConfiguration languageConfigLoad = plugin.getLanguage();
+            FileConfiguration mainConfig = plugin.getConfiguration();
 
             Player player = null;
 
@@ -189,7 +188,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                         if (args.length == 2) {
                             if (args[1].matches("[0-9]+")) {
-                                page = Integer.valueOf(args[1]);
+                                page = Integer.parseInt(args[1]);
                             } else {
                                 messageManager.sendMessage(player,
                                         languageConfigLoad.getString("Command.Island.Help.Integer.Message"));
@@ -221,13 +220,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                         int page = -1;
 
-                        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                .getFileConfiguration().getBoolean("Command.Help.List")) {
+                        if (!this.plugin.getConfiguration().getBoolean("Command.Help.List")) {
                             page = 1;
 
                             if (args.length == 3) {
                                 if (args[2].matches("[0-9]+")) {
-                                    page = Integer.valueOf(args[2]);
+                                    page = Integer.parseInt(args[2]);
                                 } else {
                                     messageManager.sendMessage(player,
                                             languageConfigLoad.getString("Command.Island.Help.Integer.Message"));
@@ -493,8 +491,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     player.spigot()
                             .sendMessage(
                                     new ChatComponent(
-                                            ChatColor.translateAlternateColorCodes(
-                                                    '&', configLoad.getString("Command.Island.Help.Word.Next")),
+                                            plugin.formatText(configLoad.getString("Command.Island.Help.Word.Next")),
                                             false, null,
                                             new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                                                     "/island " + subCommandText + "help " + (page + 1)),
@@ -503,8 +500,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     player.spigot()
                             .sendMessage(
                                     new ChatComponent(
-                                            ChatColor.translateAlternateColorCodes('&',
-                                                    configLoad.getString("Command.Island.Help.Word.Previous")),
+                                            plugin.formatText(configLoad.getString("Command.Island.Help.Word.Previous")),
                                             false, null,
                                             new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                                                     "/island " + subCommandText + "help " + (page - 1)),

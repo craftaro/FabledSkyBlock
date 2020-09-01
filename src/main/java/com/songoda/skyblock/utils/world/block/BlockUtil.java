@@ -19,6 +19,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 public final class BlockUtil extends BlockUtils {
@@ -41,11 +42,7 @@ public final class BlockUtil extends BlockUtils {
             blockData.setBaseColor(banner.getBaseColor().toString());
 
             final List<Pattern> bannerPatterns = banner.getPatterns();
-            final List<String> stringPatterns = new ArrayList<>(bannerPatterns.size());
-
-            for (Pattern patternList : bannerPatterns) {
-                stringPatterns.add(patternList.getPattern().toString() + ":" + patternList.getColor().toString());
-            }
+            final List<String> stringPatterns = bannerPatterns.stream().map(patternList -> patternList.getPattern().toString() + ":" + patternList.getColor().toString()).collect(Collectors.toCollection(() -> new ArrayList<>(bannerPatterns.size())));
 
             blockData.setPatterns(stringPatterns);
             blockData.setStateType(BlockStateType.BANNER.toString());
@@ -140,9 +137,8 @@ public final class BlockUtil extends BlockUtils {
         } else if (blockState instanceof Jukebox) {
             Jukebox jukebox = (Jukebox) blockState;
 
-            if (jukebox.getPlaying() != null) {
-                blockData.setPlaying(jukebox.getPlaying().toString());
-            }
+            jukebox.getPlaying();
+            blockData.setPlaying(jukebox.getPlaying().toString());
 
             blockData.setStateType(BlockStateType.JUKEBOX.toString());
         } else if (blockState instanceof Sign) {
@@ -150,19 +146,17 @@ public final class BlockUtil extends BlockUtils {
 
             String[] signLines = sign.getLines();
 
-            if (signLines != null) {
-                List<String> correctedSignLines = new ArrayList<>();
+            List<String> correctedSignLines = new ArrayList<>();
 
-                for (String signLineList : signLines) {
-                    for (ChatColor chatColorList : ChatColor.values()) {
-                        signLineList = signLineList.replace(chatColorList + "", "&" + chatColorList.toString().substring(chatColorList.toString().length() - 1));
-                    }
-
-                    correctedSignLines.add(signLineList);
+            for (String signLineList : signLines) {
+                for (ChatColor chatColorList : ChatColor.values()) {
+                    signLineList = signLineList.replace(chatColorList + "", "&" + chatColorList.toString().substring(chatColorList.toString().length() - 1));
                 }
 
-                signLines = correctedSignLines.toArray(new String[correctedSignLines.size()]);
+                correctedSignLines.add(signLineList);
             }
+
+            signLines = correctedSignLines.toArray(new String[correctedSignLines.size()]);
 
             blockData.setSignLines(signLines);
             blockData.setStateType(BlockStateType.SIGN.toString());
@@ -479,30 +473,28 @@ public final class BlockUtil extends BlockUtils {
 
                         materialStr = flower[0].toUpperCase();
 
-                        if (materialStr != null) {
-                            ItemStack is = new ItemStack(Material.getMaterial(materialStr), 1, (byte) materialData);
+                        ItemStack is = new ItemStack(Material.getMaterial(materialStr), 1, (byte) materialData);
 
-                            World world = block.getWorld();
+                        World world = block.getWorld();
 
-                            Class<?> blockPositionClass = NMSUtil.getNMSClass("BlockPosition");
+                        Class<?> blockPositionClass = NMSUtil.getNMSClass("BlockPosition");
 
-                            Object worldHandle = world.getClass().getMethod("getHandle").invoke(world);
-                            Object blockPosition = blockPositionClass.getConstructor(int.class, int.class, int.class).newInstance(block.getX(), block.getY(), block.getZ());
-                            Object tileEntity = worldHandle.getClass().getMethod("getTileEntity", blockPositionClass).invoke(worldHandle, blockPosition);
-                            Object itemStack = NMSUtil.getCraftClass("inventory.CraftItemStack").getMethod("asNMSCopy", is.getClass()).invoke(null, is);
-                            Object item = itemStack.getClass().getMethod("getItem").invoke(itemStack);
-                            Object data = itemStack.getClass().getMethod("getData").invoke(itemStack);
+                        Object worldHandle = world.getClass().getMethod("getHandle").invoke(world);
+                        Object blockPosition = blockPositionClass.getConstructor(int.class, int.class, int.class).newInstance(block.getX(), block.getY(), block.getZ());
+                        Object tileEntity = worldHandle.getClass().getMethod("getTileEntity", blockPositionClass).invoke(worldHandle, blockPosition);
+                        Object itemStack = NMSUtil.getCraftClass("inventory.CraftItemStack").getMethod("asNMSCopy", is.getClass()).invoke(null, is);
+                        Object item = itemStack.getClass().getMethod("getItem").invoke(itemStack);
+                        Object data = itemStack.getClass().getMethod("getData").invoke(itemStack);
 
-                            Field aField = tileEntity.getClass().getDeclaredField("a");
-                            aField.setAccessible(true);
-                            aField.set(tileEntity, item);
+                        Field aField = tileEntity.getClass().getDeclaredField("a");
+                        aField.setAccessible(true);
+                        aField.set(tileEntity, item);
 
-                            Field fField = tileEntity.getClass().getDeclaredField("f");
-                            fField.setAccessible(true);
-                            fField.set(tileEntity, data);
+                        Field fField = tileEntity.getClass().getDeclaredField("f");
+                        fField.setAccessible(true);
+                        fField.set(tileEntity, data);
 
-                            tileEntity.getClass().getMethod("update").invoke(tileEntity);
-                        }
+                        tileEntity.getClass().getMethod("update").invoke(tileEntity);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

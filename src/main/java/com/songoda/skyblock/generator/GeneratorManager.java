@@ -30,8 +30,7 @@ public class GeneratorManager {
     }
 
     public void registerGenerators() {
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "generators.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = this.plugin.getGenerators();
 
         if (configLoad.getString("Generators") == null)
             return;

@@ -55,8 +55,7 @@ public class Creator implements Listener {
 
         PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         nInventoryUtil nInv = new nInventoryUtil(player, null);
 
@@ -778,11 +777,7 @@ public class Creator implements Listener {
                         if (structureManager.containsStructure(name)) {
                             Structure structure = structureManager.getStructure(name);
 
-                            if (structure.isPermission()) {
-                                structure.setPermission(false);
-                            } else {
-                                structure.setPermission(true);
-                            }
+                            structure.setPermission(!structure.isPermission());
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
@@ -1148,24 +1143,22 @@ public class Creator implements Listener {
                             CompatibleMaterial materials = CompatibleMaterial.getMaterial(event.getCurrentItem().getType());
                             materials.getItem().setData(event.getCurrentItem().getData());
 
-                            if (materials != null) {
-                                structure.setMaterial(materials);
+                            structure.setMaterial(materials);
 
-                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                                    Config config113 = fileManager
-                                            .getConfig(new File(plugin.getDataFolder(), "structures.yml"));
-                                    FileConfiguration configLoad113 = config113.getFileConfiguration();
+                            Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                                Config config113 = fileManager
+                                        .getConfig(new File(plugin.getDataFolder(), "structures.yml"));
+                                FileConfiguration configLoad113 = config113.getFileConfiguration();
 
-                                    configLoad113.set("Structures." + structure.getName() + ".Item.Material",
-                                            structure.getMaterial().name());
+                                configLoad113.set("Structures." + structure.getName() + ".Item.Material",
+                                        structure.getMaterial().name());
 
-                                    try {
-                                        configLoad113.save(config113.getFile());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                });
-                            }
+                                try {
+                                    configLoad113.save(config113.getFile());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
 
                             viewer.setItem(false);
 
@@ -1286,7 +1279,7 @@ public class Creator implements Listener {
 
     public class Viewer {
 
-        private String name;
+        private final String name;
         private boolean item = false;
 
         public Viewer(String name) {

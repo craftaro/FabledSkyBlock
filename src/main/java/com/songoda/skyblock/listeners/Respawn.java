@@ -34,8 +34,7 @@ public class Respawn implements Listener {
         FileManager fileManager = plugin.getFileManager();
 
         if (worldManager.isIslandWorld(player.getWorld())) {
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getConfiguration();
 
             if (configLoad.getBoolean("Island.Death.Respawn.Island")) {
                 Location playerLocation = player.getLocation();
@@ -63,7 +62,7 @@ public class Respawn implements Listener {
                 }
             }
 
-            config = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
+            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
 
             if (config.getFileConfiguration().getString("Location.Spawn") == null) {
                 Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: A spawn point hasn't been set.");

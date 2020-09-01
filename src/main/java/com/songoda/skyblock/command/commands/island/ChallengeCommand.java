@@ -30,14 +30,14 @@ public class ChallengeCommand extends SubCommand {
 		FileConfiguration langConfigLoad = langConfig.getFileConfiguration();
 
 		// Not loaded
-		if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+		if (!this.plugin.getConfiguration()
 				.getBoolean("Island.Challenge.Enable")) {
 			messageManager.sendMessage(player, langConfigLoad.getString("Command.Island.Challenge.Disabled.Message"));
 			soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 			return;
 		}
 		if (args.length == 0) {
-			if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+			if (this.plugin.getConfiguration()
 					.getBoolean("Island.Challenge.PerIsland")){
 				if(islandManager.getIsland(player) == null){
 					messageManager.sendMessage(player, langConfigLoad.getString("Command.Island.Challenge.NoIsland.Message"));

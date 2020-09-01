@@ -5,8 +5,8 @@ import com.songoda.skyblock.visit.Visit;
 public class Leaderboard {
 
     private final Visit visit;
-    private Type type;
-    private int position;
+    private final Type type;
+    private final int position;
 
     public Leaderboard(Type type, Visit visit, int position) {
         this.type = type;

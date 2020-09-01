@@ -126,8 +126,7 @@ public class OwnerCommand extends SubCommand {
 
                         return;
                     } else {
-                        int confirmationTime = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                .getFileConfiguration().getInt("Island.Confirmation.Timeout");
+                        int confirmationTime = this.plugin.getConfiguration().getInt("Island.Confirmation.Timeout");
 
                         playerData.setOwnership(targetPlayerUUID);
                         playerData.setConfirmation(Confirmation.Ownership);

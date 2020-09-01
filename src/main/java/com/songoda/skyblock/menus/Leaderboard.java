@@ -42,24 +42,22 @@ public class Leaderboard {
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getLanguage();
 
             Viewer viewer = (Viewer) playerDataManager.getPlayerData(player).getViewer();
 
+            nInventoryUtil nInv;
             if (viewer.getType() == Viewer.Type.Browse) {
-                nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+                nInv = new nInventoryUtil(player, event -> {
                     if (playerDataManager.hasPlayerData(player)) {
                         ItemStack is = event.getItem();
 
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Leaderboard." + Viewer.Type.Browse.name()
-                                                + ".Item.Exit.Displayname"))))) {
+                                .equals(plugin.formatText(configLoad.getString("Menu.Leaderboard." + Viewer.Type.Browse.name()
+                                        + ".Item.Exit.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
 
                             return;
@@ -109,7 +107,7 @@ public class Leaderboard {
                                 null),
                         1);
 
-                if(fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")){
+                if(plugin.getConfiguration().getBoolean("Island.Bank.Enable")){
                     nInv.addItem(
                             nInv.createItem(new ItemStack(Material.GOLD_INGOT), configLoad
                                             .getString(
@@ -135,26 +133,23 @@ public class Leaderboard {
                                 null),
                         3);
 
-                nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
+                nInv.setTitle(plugin.formatText(
                         configLoad.getString("Menu.Leaderboard." + viewer.getType().name() + ".Title")));
                 nInv.setType(InventoryType.HOPPER);
 
-                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             } else {
-                nInventoryUtil nInv = new nInventoryUtil(player, event -> {
+                nInv = new nInventoryUtil(player, event -> {
                     if (playerDataManager.hasPlayerData(player)) {
                         ItemStack is = event.getItem();
 
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())) {
-                            if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
+                            if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                     configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Exit.Displayname")))) {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                             } else if (is.getItemMeta().getDisplayName()
-                                    .equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                    .equals(plugin.formatText(configLoad
                                             .getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname")))) {
-                                if (plugin.getFileManager()
-                                        .getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                        .getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+                                if (plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
                                     playerDataManager.getPlayerData(player)
                                             .setViewer(new Viewer(Viewer.Type.Browse));
                                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
@@ -219,7 +214,7 @@ public class Leaderboard {
                     }
                 });
 
-                if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+                if (plugin.getConfiguration()
                         .getBoolean("Island.Visitor.Vote")) {
                     nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                             configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname"), null, null,
@@ -234,8 +229,7 @@ public class Leaderboard {
                         .getLeaderboardManager().getLeaderboard(
                                 com.songoda.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
 
-                for (int i = 0; i < leaderboardIslands.size(); i++) {
-                    com.songoda.skyblock.leaderboard.Leaderboard leaderboard = leaderboardIslands.get(i);
+                for (com.songoda.skyblock.leaderboard.Leaderboard leaderboard : leaderboardIslands) {
                     Visit visit = leaderboard.getVisit();
 
                     int itemSlot = 0;
@@ -290,9 +284,7 @@ public class Leaderboard {
                                 itemLore.add(
                                         configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Word.Empty"));
                             } else {
-                                for (String signatureList : visit.getSiganture()) {
-                                    itemLore.add(signatureList);
-                                }
+                                itemLore.addAll(visit.getSiganture());
                             }
                         } else {
                             itemLore.add(itemLoreList);
@@ -332,19 +324,18 @@ public class Leaderboard {
                     }
                 }
 
-                nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Menu.Leaderboard.Leaderboard.Title").replace("%leaderboard",
-                                viewer.getType().name())));
+                nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Leaderboard.Leaderboard.Title").replace("%leaderboard",
+                        viewer.getType().name())));
                 nInv.setRows(6);
 
-                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             }
+            Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
         }
     }
 
     public static class Viewer {
 
-        private Type type;
+        private final Type type;
 
         public Viewer(Type type) {
             this.type = type;

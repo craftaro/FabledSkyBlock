@@ -15,7 +15,6 @@ import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -53,9 +52,8 @@ public class Settings {
         if (playerDataManager.hasPlayerData(player)) {
             Island island = islandManager.getIsland(player);
 
-            Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = plugin.getFileManager()
-                    .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+            FileConfiguration mainConfig = plugin.getConfiguration();
+            FileConfiguration configLoad = plugin.getLanguage();
 
             if (menuType == Settings.Type.Categories) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -80,13 +78,11 @@ public class Settings {
                         ItemStack is = event.getItem();
 
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
-                                && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
-                                '&',
+                                && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                 configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
                         } else if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
-                                && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes(
-                                '&',
+                                && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                 configLoad.getString("Menu.Settings.Categories.Item.Coop.Displayname"))))) {
                             if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Coop.Enable")) {
@@ -113,7 +109,7 @@ public class Settings {
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Coop, null), 1L);
                         } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .equals(plugin.formatText(configLoad
                                         .getString("Menu.Settings.Categories.Item.Visitor.Displayname"))))) {
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
                                     && !permissionManager.hasPermission(island13, "Visitor", IslandRole.Operator)) {
@@ -132,7 +128,7 @@ public class Settings {
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .equals(plugin.formatText(configLoad
                                         .getString("Menu.Settings.Categories.Item.Member.Displayname"))))) {
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
                                     && !permissionManager.hasPermission(island13, "Member", IslandRole.Operator)) {
@@ -150,7 +146,7 @@ public class Settings {
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Member, null), 1L);
                         } else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta()) && (is.getItemMeta()
-                                .getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .getDisplayName().equals(plugin.formatText(configLoad
                                         .getString("Menu.Settings.Categories.Item.Operator.Displayname"))))) {
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())) {
                                 messageManager.sendMessage(player,
@@ -168,7 +164,7 @@ public class Settings {
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Operator, null), 1L);
                         } else if ((is.getType() == CompatibleMaterial.OAK_SAPLING.getMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&', configLoad
+                                .equals(plugin.formatText(configLoad
                                         .getString("Menu.Settings.Categories.Item.Owner.Displayname"))))) {
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
                                     && !permissionManager.hasPermission(island13,"Island", IslandRole.Operator)) {
@@ -199,7 +195,7 @@ public class Settings {
                         configLoad.getString("Menu.Settings.Categories.Item.Operator.Displayname"),
                         configLoad.getStringList("Menu.Settings.Categories.Item.Operator.Lore"), null, null, null), 4);
 
-                if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+                if (plugin.getConfiguration()
                         .getBoolean("Island.Coop.Enable")) {
                     nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                             configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"), null, null, null,
@@ -219,8 +215,7 @@ public class Settings {
                             configLoad.getStringList("Menu.Settings.Categories.Item.Owner.Lore"), null, null, null), 6);
                 }
 
-                nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Menu.Settings.Categories.Title")));
+                nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Settings.Categories.Title")));
                 nInv.setRows(1);
 
                 Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
@@ -264,27 +259,23 @@ public class Settings {
 
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
-                                        "Menu.Settings." + role.name() + ".Item.Return.Displayname"))))) {
+                                .equals(plugin.formatText(configLoad.getString("Menu.Settings." + role.name() + ".Item.Return.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Categories, null, null), 1L);
                         } else if ((is.getType() == Material.PAPER) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&', configLoad
-                                        .getString("Menu.Settings.Visitor.Item.Signature.Displayname"))))) {
+                                .equals(plugin.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Signature.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Panel, null, Panel.Signature), 1L);
                         } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
-                                .equals(ChatColor.translateAlternateColorCodes('&',
-                                        configLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname"))))) {
+                                .equals(plugin.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Panel, null, Panel.Welcome), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
-                                .getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad
-                                        .getString("Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
+                                .getDisplayName().equals(plugin.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
                             switch (island14.getStatus()) {
                                 case OPEN:
                                     islandManager.whitelistIsland(island14);
@@ -306,7 +297,7 @@ public class Settings {
 
                             for (IslandPermission settingList : island14.getSettings(role)) {
                                 if (is.getItemMeta().getDisplayName()
-                                        .equals(ChatColor.translateAlternateColorCodes('&',
+                                        .equals(plugin.formatText(
                                                 configLoad.getString("Menu.Settings." + roleName + ".Item.Setting."
                                                         + settingList.getPermission().getName() + ".Displayname")))) {
                                     if (!hasPermission(island14, player, role)) {
@@ -317,11 +308,7 @@ public class Settings {
                                         return;
                                     }
 
-                                    if (settingList.getStatus()) {
-                                        settingList.setStatus(false);
-                                    } else {
-                                        settingList.setStatus(true);
-                                    }
+                                    settingList.setStatus(!settingList.getStatus());
 
                                     if (settingList.getPermission().getName().equals("KeepItemsOnDeath")
                                             || settingList.getPermission().getName().equals("PvP")
@@ -488,13 +475,13 @@ public class Settings {
                             createItem(island, role, "ExperienceOrbPickup", CompatibleMaterial.EXPERIENCE_BOTTLE.getItem()),
                             53);
 
-                    nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
+                    nInv.setTitle(plugin.formatText(
                             configLoad.getString("Menu.Settings." + role.name() + ".Title")));
                     nInv.setRows(6);
                 } else if (role == IslandRole.Operator) {
-                    if (mainConfig.getFileConfiguration().getBoolean("Island.Visitor.Banning")) {
-                        if (mainConfig.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
-                            if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+                    if (mainConfig.getBoolean("Island.Visitor.Banning")) {
+                        if (mainConfig.getBoolean("Island.Coop.Enable")) {
+                            if (mainConfig.getBoolean("Island.WorldBorder.Enable")) {
                                 nInv.addItemStack(
                                         createItem(island, role, "Invite", CompatibleMaterial.WRITABLE_BOOK.getItem()), 9);
                                 nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
@@ -550,7 +537,7 @@ public class Settings {
                                 nInv.addItemStack(createItem(island, role, "Weather", CompatibleMaterial.CLOCK.getItem()), 24);
                             }
                         } else {
-                            if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+                            if (mainConfig.getBoolean("Island.WorldBorder.Enable")) {
                                 nInv.addItemStack(
                                         createItem(island, role, "Invite", CompatibleMaterial.WRITABLE_BOOK.getItem()), 10);
                                 nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
@@ -601,8 +588,8 @@ public class Settings {
 
                         nInv.setRows(3);
                     } else {
-                        if (mainConfig.getFileConfiguration().getBoolean("Island.Coop.Enable")) {
-                            if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+                        if (mainConfig.getBoolean("Island.Coop.Enable")) {
+                            if (mainConfig.getBoolean("Island.WorldBorder.Enable")) {
                                 nInv.addItemStack(
                                         createItem(island, role, "Invite", CompatibleMaterial.WRITABLE_BOOK.getItem()), 10);
                                 nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
@@ -652,7 +639,7 @@ public class Settings {
 
                             nInv.setRows(3);
                         } else {
-                            if (mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Enable")) {
+                            if (mainConfig.getBoolean("Island.WorldBorder.Enable")) {
                                 nInv.addItemStack(
                                         createItem(island, role, "Invite", CompatibleMaterial.WRITABLE_BOOK.getItem()), 10);
                                 nInv.addItemStack(createItem(island, role, "Kick", new ItemStack(Material.IRON_DOOR)),
@@ -698,13 +685,13 @@ public class Settings {
                         }
                     }
 
-                    nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
+                    nInv.setTitle(plugin.formatText(
                             configLoad.getString("Menu.Settings." + role.name() + ".Title")));
                 } else if (role == IslandRole.Owner) {
-                    if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.PvP.Enable")) {
-                        if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
-                            if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-                                if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+                    if (mainConfig.getBoolean("Island.Settings.PvP.Enable")) {
+                        if (mainConfig.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
+                            if (mainConfig.getBoolean("Island.Settings.Damage.Enable")) {
+                                if (mainConfig.getBoolean("Island.Settings.Hunger.Enable")) {
                                     nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
                                             CompatibleMaterial.PIG_SPAWN_EGG.getItem()), 9);
                                     nInv.addItemStack(
@@ -749,7 +736,7 @@ public class Settings {
                                             createItem(island, role, "Damage", CompatibleMaterial.RED_DYE.getItem()), 17);
                                 }
                             } else {
-                                if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+                                if (mainConfig.getBoolean("Island.Settings.Hunger.Enable")) {
                                     nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
                                             CompatibleMaterial.PIG_SPAWN_EGG.getItem()), 9);
                                     nInv.addItemStack(
@@ -791,8 +778,8 @@ public class Settings {
                                 }
                             }
                         } else {
-                            if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-                                if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+                            if (mainConfig.getBoolean("Island.Settings.Damage.Enable")) {
+                                if (mainConfig.getBoolean("Island.Settings.Hunger.Enable")) {
                                     nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
                                             CompatibleMaterial.PIG_SPAWN_EGG.getItem()), 9);
                                     nInv.addItemStack(
@@ -833,7 +820,7 @@ public class Settings {
                                             createItem(island, role, "Damage", CompatibleMaterial.RED_DYE.getItem()), 16);
                                 }
                             } else {
-                                if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+                                if (mainConfig.getBoolean("Island.Settings.Hunger.Enable")) {
                                     nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
                                             CompatibleMaterial.PIG_SPAWN_EGG.getItem()), 10);
                                     nInv.addItemStack(
@@ -872,9 +859,9 @@ public class Settings {
                             }
                         }
                     } else {
-                        if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
-                            if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-                                if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+                        if (mainConfig.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
+                            if (mainConfig.getBoolean("Island.Settings.Damage.Enable")) {
+                                if (mainConfig.getBoolean("Island.Settings.Hunger.Enable")) {
                                     nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
                                             CompatibleMaterial.PIG_SPAWN_EGG.getItem()), 9);
                                     nInv.addItemStack(
@@ -915,7 +902,7 @@ public class Settings {
                                             createItem(island, role, "Damage", CompatibleMaterial.RED_DYE.getItem()), 16);
                                 }
                             } else {
-                                if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+                                if (mainConfig.getBoolean("Island.Settings.Hunger.Enable")) {
                                     nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
                                             CompatibleMaterial.PIG_SPAWN_EGG.getItem()), 10);
                                     nInv.addItemStack(
@@ -953,8 +940,8 @@ public class Settings {
                                 }
                             }
                         } else {
-                            if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Damage.Enable")) {
-                                if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+                            if (mainConfig.getBoolean("Island.Settings.Damage.Enable")) {
+                                if (mainConfig.getBoolean("Island.Settings.Hunger.Enable")) {
                                     nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
                                             CompatibleMaterial.PIG_SPAWN_EGG.getItem()), 10);
                                     nInv.addItemStack(
@@ -991,7 +978,7 @@ public class Settings {
                                             createItem(island, role, "Damage", CompatibleMaterial.RED_DYE.getItem()), 16);
                                 }
                             } else {
-                                if (mainConfig.getFileConfiguration().getBoolean("Island.Settings.Hunger.Enable")) {
+                                if (mainConfig.getBoolean("Island.Settings.Hunger.Enable")) {
                                     nInv.addItemStack(createItem(island, role, "NaturalMobSpawning",
                                             CompatibleMaterial.PIG_SPAWN_EGG.getItem()), 10);
                                     nInv.addItemStack(
@@ -1027,7 +1014,7 @@ public class Settings {
                         }
                     }
 
-                    nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
+                    nInv.setTitle(plugin.formatText(
                             configLoad.getString("Menu.Settings." + role.name() + ".Title")));
                     nInv.setRows(2);
                 }
@@ -1072,7 +1059,7 @@ public class Settings {
 
                             if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))))) {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
@@ -1080,7 +1067,7 @@ public class Settings {
                                         () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                             } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
                                 switch (island15.getStatus()) {
                                     case OPEN:
@@ -1100,7 +1087,7 @@ public class Settings {
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                             } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
-                                    .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname"))))) {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
 
@@ -1108,7 +1095,7 @@ public class Settings {
                                 event.setWillDestroy(false);
                             } else if ((is.getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta()
                                     .getDisplayName()
-                                    .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname"))))) {
                                 if (island15.getMessage(IslandMessage.Welcome).size() >= plugin.getFileManager()
                                         .getConfig(new File(plugin.getDataFolder(), "config.yml"))
@@ -1224,7 +1211,7 @@ public class Settings {
                                 }
                             } else if ((is.getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta()
                                     .getDisplayName()
-                                    .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Displayname"))))) {
                                 List<String> welcomeMessage = island15.getMessage(IslandMessage.Welcome);
 
@@ -1248,7 +1235,7 @@ public class Settings {
 
                     List<String> welcomeMessage = island.getMessage(IslandMessage.Welcome);
 
-                    if (welcomeMessage.size() == mainConfig.getFileConfiguration()
+                    if (welcomeMessage.size() == mainConfig
                             .getInt("Island.Visitor.Welcome.Lines")) {
                         nInv.addItem(nInv.createItem(new ItemStack(Material.ARROW),
                                 configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname"),
@@ -1291,8 +1278,7 @@ public class Settings {
                             configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"), null,
                             null, null, null), 0, 4);
 
-                    nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
-                            configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title")));
+                    nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title")));
                     nInv.setType(InventoryType.HOPPER);
 
                     Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
@@ -1330,7 +1316,7 @@ public class Settings {
 
                             if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"))))) {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
@@ -1338,7 +1324,7 @@ public class Settings {
                                         () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                             } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
                                 switch (island12.getStatus()) {
                                     case OPEN:
@@ -1358,7 +1344,7 @@ public class Settings {
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
                             } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
-                                    .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Signature.Item.Message.Displayname"))))) {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
 
@@ -1366,7 +1352,7 @@ public class Settings {
                                 event.setWillDestroy(false);
                             } else if ((is.getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta()
                                     .getDisplayName()
-                                    .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Displayname"))))) {
                                 if (island12.getMessage(IslandMessage.Signature).size() >= plugin.getFileManager()
                                         .getConfig(new File(plugin.getDataFolder(), "config.yml"))
@@ -1482,7 +1468,7 @@ public class Settings {
                                 }
                             } else if ((is.getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta()
                                     .getDisplayName()
-                                    .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                    .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.Displayname"))))) {
                                 List<String> signatureMessage = island12.getMessage(IslandMessage.Signature);
 
@@ -1507,7 +1493,7 @@ public class Settings {
 
                     List<String> signatureMessage = island.getMessage(IslandMessage.Signature);
 
-                    if (signatureMessage.size() == mainConfig.getFileConfiguration()
+                    if (signatureMessage.size() == mainConfig
                             .getInt("Island.Visitor.Signature.Lines")) {
                         nInv.addItem(nInv.createItem(new ItemStack(Material.ARROW),
                                 configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Displayname"),
@@ -1551,7 +1537,7 @@ public class Settings {
                             configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"), null,
                             null, null, null), 0, 4);
 
-                    nInv.setTitle(ChatColor.translateAlternateColorCodes('&',
+                    nInv.setTitle(plugin.formatText(
                             configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")));
                     nInv.setType(InventoryType.HOPPER);
 
@@ -1578,18 +1564,18 @@ public class Settings {
             roleName = "Default";
         }
 
-        im.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+        im.setDisplayName(plugin.formatText(
                 configLoad.getString("Menu.Settings." + roleName + ".Item.Setting." + setting + ".Displayname")));
 
         if (island.hasPermission(role, permissionManager.getPermission(setting))) {
             for (String itemLoreList : configLoad
                     .getStringList("Menu.Settings." + roleName + ".Item.Setting.Status.Enabled.Lore")) {
-                itemLore.add(ChatColor.translateAlternateColorCodes('&', itemLoreList));
+                itemLore.add(plugin.formatText(itemLoreList));
             }
         } else {
             for (String itemLoreList : configLoad
                     .getStringList("Menu.Settings." + roleName + ".Item.Setting.Status.Disabled.Lore")) {
-                itemLore.add(ChatColor.translateAlternateColorCodes('&', itemLoreList));
+                itemLore.add(plugin.formatText(itemLoreList));
             }
         }
 

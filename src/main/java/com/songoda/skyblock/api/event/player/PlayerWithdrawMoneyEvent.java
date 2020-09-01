@@ -8,8 +8,8 @@ public class PlayerWithdrawMoneyEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private Player player;
-    private double money;
+    private final Player player;
+    private final double money;
 
     public PlayerWithdrawMoneyEvent(Player player, double money) {
         this.player = player;

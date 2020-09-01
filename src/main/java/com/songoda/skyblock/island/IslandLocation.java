@@ -5,8 +5,8 @@ import org.bukkit.Location;
 
 public class IslandLocation {
 
-    private IslandWorld world;
-    private IslandEnvironment environment;
+    private final IslandWorld world;
+    private final IslandEnvironment environment;
 
     private double x;
     private double y;

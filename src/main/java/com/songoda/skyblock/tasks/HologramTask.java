@@ -46,11 +46,9 @@ public class HologramTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        FileManager fileManager = plugin.getFileManager();
         for (HologramType hologramTypeList : HologramType.values()) {
             if (hologramTypeList == HologramType.Votes) {
-                if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                        .getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+                if (!plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
                     continue;
                 }
             }
@@ -82,11 +80,9 @@ public class HologramTask extends BukkitRunnable {
     }
 
     private List<String> getHologramLines(HologramType type) {
-        FileManager fileManager = plugin.getFileManager();
         LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
 
-        FileConfiguration languageConfigLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                .getFileConfiguration();
+        FileConfiguration languageConfigLoad = plugin.getLanguage();
 
         List<String> hologramLines = new ArrayList<>();
         Leaderboard.Type leaderboardType = null;
@@ -151,19 +147,12 @@ public class HologramTask extends BukkitRunnable {
     }
 
     public Hologram getHologram(HologramType type) {
-        for (Hologram hologramList : hologramStorage) {
-            if (hologramList.getType() == type) {
-                return hologramList;
-            }
-        }
+        return hologramStorage.stream().filter(hologramList -> hologramList.getType() == type).findFirst().orElse(null);
 
-        return null;
     }
 
     public void updateHologram() {
-        for (Hologram hologramList : new ArrayList<>(hologramStorage)) {
-            hologramList.update(getHologramLines(hologramList.getType()));
-        }
+        new ArrayList<>(hologramStorage).forEach(hologramList -> hologramList.update(getHologramLines(hologramList.getType())));
     }
 
     public void removeHologram(Hologram hologram) {

@@ -4,6 +4,7 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.bank.Transaction;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,8 @@ public class TransactionLog {
     }
 
     public List<Transaction> getLogForPlayer(UUID uuid) {
-        return getImplementation().getTransactionList(Bukkit.getPlayer(uuid));
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return null;
+        return getImplementation().getTransactionList(player);
     }
 }

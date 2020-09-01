@@ -38,7 +38,7 @@ public class BorderCommand extends SubCommand {
         } else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
                 && permissionManager.hasPermission(island, "Border", IslandRole.Operator))
                 || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+            if (this.plugin.getConfiguration()
                     .getBoolean("Island.WorldBorder.Enable")) {
                 Border.getInstance().open(player);
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
