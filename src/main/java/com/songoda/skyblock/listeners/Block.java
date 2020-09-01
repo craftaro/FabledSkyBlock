@@ -305,7 +305,9 @@ public class Block implements Listener {
 
         long limit = limits.getBlockLimit(player, block.getType());
 
-        if (limits.isBlockLimitExceeded(block, limit)) {
+        ItemStack item = event.getItemInHand();
+
+        if (limits.isBlockLimitExceeded(block, limit) && CompatibleMaterial.getMaterial(item) != CompatibleMaterial.ENDER_EYE) {
             CompatibleMaterial material = null;
             if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
                 switch (block.getType().toString().toUpperCase()) {
