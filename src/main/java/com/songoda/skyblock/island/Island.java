@@ -953,7 +953,7 @@ public class Island {
             unlocked = true;
         }
 
-        if (!unlocked) {
+        if (!unlocked && player != null) {
             messageManager.sendMessage(player,
                     this.plugin.getLanguage()
                             .getString("Island.Unlock." + type.name() + ".Message").replace(
