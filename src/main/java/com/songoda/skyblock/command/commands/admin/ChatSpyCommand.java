@@ -52,7 +52,7 @@ public class ChatSpyCommand extends SubCommand {
                 case "add":
                     if(args.length == 2){
                         OfflinePlayer offlinePlayer = new OfflinePlayer(args[1]);
-                        Island island = islandManager.getIslandByPlayer(offlinePlayer.getBukkitOfflinePlayer());
+                        Island island = islandManager.getIslandByOwner(offlinePlayer.getBukkitOfflinePlayer());
                         if(island != null) {
                             playerData.addChatSpyIsland(island);
                             messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Add.Message")
@@ -68,7 +68,7 @@ public class ChatSpyCommand extends SubCommand {
                 case "remove":
                     if(args.length == 2){
                         OfflinePlayer offlinePlayer = new OfflinePlayer(args[1]);
-                        Island island = islandManager.getIslandByPlayer(offlinePlayer.getBukkitOfflinePlayer());
+                        Island island = islandManager.getIslandByOwner(offlinePlayer.getBukkitOfflinePlayer());
                         if(island != null) {
                             playerData.removeChatSpyIsland(island);
                             messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Remove.Message")

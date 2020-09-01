@@ -47,7 +47,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -735,14 +734,14 @@ public class IslandManager {
                 try {
                     UUID islandOwnerUUID = FastUUID.parseUUID(file.getName().split("\\.")[0]);
                     
-                    Island island = getIslandByPlayer(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                    Island island = getIslandByOwner(Bukkit.getOfflinePlayer(islandOwnerUUID));
                     
                     if(island != null) {
                         island.setSize(island.getSize() + diff);
                         island.save();
                     } else {
                         loadIsland(file);
-                        island = getIslandByPlayer(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                        island = getIslandByOwner(Bukkit.getOfflinePlayer(islandOwnerUUID));
     
                         island.setSize(island.getSize() + diff);
                         island.save();
@@ -772,14 +771,14 @@ public class IslandManager {
                 try {
                     UUID islandOwnerUUID = FastUUID.parseUUID(file.getName().split("\\.")[0]);
                     
-                    Island island = getIslandByPlayer(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                    Island island = getIslandByOwner(Bukkit.getOfflinePlayer(islandOwnerUUID));
                     
                     if(island != null) {
                         island.setSize(size);
                         island.save();
                     } else {
                         loadIsland(file);
-                        island = getIslandByPlayer(Bukkit.getOfflinePlayer(islandOwnerUUID));
+                        island = getIslandByOwner(Bukkit.getOfflinePlayer(islandOwnerUUID));
                         
                         island.setSize(size);
                         island.save();
@@ -1690,7 +1689,7 @@ public class IslandManager {
         return false;
     }
 
-    public Island getIslandByPlayer(org.bukkit.OfflinePlayer player) {
+    public Island getIslandByOwner(org.bukkit.OfflinePlayer player) {
         if (islandStorage.containsKey(player.getUniqueId())) {
             return islandStorage.get(player.getUniqueId());
         }

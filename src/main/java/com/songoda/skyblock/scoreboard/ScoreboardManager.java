@@ -71,8 +71,8 @@ public class ScoreboardManager extends Manager {
             IslandManager islandManager = plugin.getIslandManager();
     
             PlayerData playerData = playerDataManager.getPlayerData(player);
-            Island island = islandManager.getIslandByPlayer(player);
-    
+            Island island = islandManager.getIsland(player);
+
             if(playerData.isScoreboard()) {
                 ScoreboardType type;
                 if(island != null) {

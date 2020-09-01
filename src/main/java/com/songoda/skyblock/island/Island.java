@@ -1003,4 +1003,10 @@ public class Island {
         this.removeWhitelistedPlayer(player.getUniqueId());
     }
 
+    @Override
+    public String toString() {
+        return "Island{" +
+                "ownerUUID=" + ownerUUID +
+                '}';
+    }
 }
