@@ -2,6 +2,7 @@ package com.songoda.skyblock.challenge.challenge;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.hooks.economies.Economy;
+import com.songoda.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.config.FileManager;
@@ -189,7 +190,7 @@ public class Challenge {
 				// The id
 				String id = index == -1 ? value : value.substring(0, index);
 				// Check if it's a Minecraft item
-				Material m = CompatibleMaterial.getMaterial(id).getMaterial();
+				CompatibleMaterial m = CompatibleMaterial.getMaterial(id);
 				//Material m = Material.matchMaterial(id);
 				if (m == null)
 					throw new IllegalArgumentException(
@@ -204,7 +205,9 @@ public class Challenge {
 								"\"" + strAmount + "\" isn't a correct number (value = \"" + value + "\")");
 					}
 				}
-				return new ItemStack(m, amount);
+				ItemStack item = m.getItem();
+				item.setAmount(amount);
+				return item;
 			}
 
 			@Override
@@ -214,54 +217,46 @@ public class Challenge {
 					// Check if player has specific item in his inventory
 					ItemStack is = (ItemStack) obj;
 					if(ignoreLore){
-						return p.getInventory().contains(is.getType(), is.getAmount());
+						return p.getInventory().contains(is, is.getAmount());
 					}
-					return p.getInventory().containsAtLeast(new ItemStack(is.getType()), is.getAmount());
+					return p.getInventory().containsAtLeast(is, is.getAmount());
 				}
 				return false;
 			}
 
-			@Override
-			public void executeRequire(Player p, Object obj) {
-				boolean ignoreLore = SkyBlock.getInstance().getConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
-				
-				if(obj instanceof ItemStack){
-					// Remove specific item in player's inventory
-					ItemStack is = (ItemStack) obj;
-					int toRemove = is.getAmount();
-					for(ItemStack jis : p.getInventory().getContents()) {
-						if(jis != null) {
-							boolean isItem;
-							if(ignoreLore){
-								isItem = jis.getType().equals(is.getType());
-							} else {
-								isItem = jis.isSimilar(is);
-							}
-							
-							if(isItem) {
-								if(jis.getAmount() <= toRemove) {
-									toRemove -= jis.getAmount();
-									p.getInventory().removeItem(jis);
-								} else {
-									jis.setAmount(jis.getAmount() - toRemove);
-									toRemove = 0;
-								}
-							}
-							if(toRemove <= 0) {
-								p.updateInventory();
-								break;
-							}
-						}
-					}
-				}
-			}
+
+            @Override
+            public void executeRequire(Player p, Object obj) {
+                boolean ignoreLore = SkyBlock.getInstance().getConfig().getBoolean("Island.Challenge.IgnoreItemLore", false);
+
+                if (obj instanceof ItemStack) {
+                    // Remove specific item in player's inventory
+                    ItemStack is = (ItemStack) obj;
+                    int toRemove = is.getAmount();
+                    for (ItemStack jis : p.getInventory().getContents()) {
+                        if (jis == null) continue;
+                        if (ignoreLore ? ItemUtils.isSimilarMaterial(is, jis) : jis.isSimilar(is)) {
+                            if (jis.getAmount() <= toRemove) {
+                                toRemove -= jis.getAmount();
+                                p.getInventory().removeItem(jis);
+                            } else {
+                                jis.setAmount(jis.getAmount() - toRemove);
+                                toRemove = 0;
+                            }
+                        }
+                        if (toRemove <= 0) {
+                            p.updateInventory();
+                            break;
+                        }
+                    }
+                }
+            }
 
 			@Override
 			public void executeReward(Player p, Object obj) {
 				// Give specific item to player
 				ItemStack is = (ItemStack) obj;
-				HashMap<Integer, ItemStack> rest = p.getInventory()
-						.addItem(new ItemStack(is.getType(), is.getAmount()));
+				HashMap<Integer, ItemStack> rest = p.getInventory().addItem(is.clone());
 				for (ItemStack restIs : rest.values())
 					p.getWorld().dropItem(p.getLocation(), restIs);
 			}
