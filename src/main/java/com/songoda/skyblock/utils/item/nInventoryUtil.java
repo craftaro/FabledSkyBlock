@@ -192,7 +192,7 @@ public class nInventoryUtil {
 
         public Item(ItemStack is, String itemDisplayname, List<String> itemLore, Placeholder[] placeholders, Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
             this.is = is;
-            this.itemDisplayname = ChatColor.translateAlternateColorCodes('&', itemDisplayname);
+            this.itemDisplayname = itemDisplayname == null ? null : ChatColor.translateAlternateColorCodes('&', itemDisplayname);
             this.itemLore = itemLore;
             this.placeholders = placeholders;
             this.itemEnchantments = itemEnchantments;
