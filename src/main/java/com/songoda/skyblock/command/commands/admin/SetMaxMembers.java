@@ -79,8 +79,7 @@ public class SetMaxMembers extends SubCommand {
                                 .getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                         island.setMaxMembers(maxMembers);
 
-                        if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                .getFileConfiguration().getBoolean("Island.WorldBorder.Enable")
+                        if (this.plugin.getConfiguration().getBoolean("Island.WorldBorder.Enable")
                                 && island.isBorder()) {
                             islandManager.updateBorder(island);
                         }

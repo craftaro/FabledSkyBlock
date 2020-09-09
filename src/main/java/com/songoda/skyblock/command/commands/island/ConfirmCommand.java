@@ -136,7 +136,7 @@ public class ConfirmCommand extends SubCommand {
                                         return;
                                     }
 
-                                    if (economy.isEnabled() && island.getStructure() != null
+                                    if (economy != null && economy.isEnabled() && island.getStructure() != null
                                             && !island.getStructure().isEmpty()
                                             && structureManager.containsStructure(island.getStructure())) {
                                         Structure structure = structureManager.getStructure(island.getStructure());

@@ -37,9 +37,7 @@ public class MobNetherWaterTask  extends BukkitRunnable {
 
     @Override
     public void run() {
-        FileManager fileManager = plugin.getFileManager();
-        if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Nether.WaterDisappearWithNetherMobs", false)){
+        if (plugin.getConfiguration().getBoolean("Island.Nether.WaterDisappearWithNetherMobs", false)){
             for(World world : Bukkit.getServer().getWorlds()){
                 if(plugin.getWorldManager().isIslandWorld(world) && plugin.getWorldManager().getIslandWorld(world).equals(IslandWorld.Nether)){
                     for(Entity ent : world.getEntities()) {

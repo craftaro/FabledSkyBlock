@@ -115,8 +115,7 @@ public class Block implements Listener {
                     stackableManager.removeStack(stackable);
                 }
 
-                Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
+                FileConfiguration configLoad = plugin.getConfiguration();
 
                 if (configLoad.getBoolean("Island.Block.Level.Enable")) {
                     if (material != null) {
@@ -138,8 +137,7 @@ public class Block implements Listener {
             }
         }
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
 
@@ -147,7 +145,7 @@ public class Block implements Listener {
                 || LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
-                plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Break.Message"));
+                plugin.getMessageManager().sendMessage(player, plugin.getLanguage().getString("Island.SpawnProtection.Break.Message"));
                 plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
@@ -238,13 +236,12 @@ public class Block implements Listener {
 
         if (islandLevelManager.isScanning(island)) {
             plugin.getMessageManager().sendMessage(player,
-                    plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
+                    plugin.getLanguage().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
             event.setCancelled(true);
             return;
         }
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
 
         if(!player.hasPermission("fabledskyblock.bypass.netherplace") && !islandManager.isIslandWorldUnlocked(island, IslandWorld.Nether)){
@@ -252,8 +249,7 @@ public class Block implements Listener {
                 for(String s : configLoad.getConfigurationSection("Island.Restrict.NetherBlocks").getKeys(false)){
                     if(s.equalsIgnoreCase(block.getType().toString())){
                         if(configLoad.getBoolean("Island.Restrict.NetherBlocks." + s, false)){
-                            plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                                    .getFileConfiguration().getString("Island.Unlock.NetherBlocksPlace.Message")));
+                            plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getLanguage().getString("Island.Unlock.NetherBlocksPlace.Message")));
                             event.setCancelled(true);
                         }
                     }
@@ -266,8 +262,7 @@ public class Block implements Listener {
                 for(String s : configLoad.getConfigurationSection("Island.Restrict.EndBlocks").getKeys(false)){
                     if(s.equalsIgnoreCase(block.getType().toString())){
                         if(configLoad.getBoolean("Island.Restrict.EndBlocks." + s)){
-                            plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                                    .getFileConfiguration().getString("Island.Unlock.EndBlocksPlace.Message")));
+                            plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getLanguage().getString("Island.Unlock.EndBlocksPlace.Message")));
                             event.setCancelled(true);
                         }
                     }
@@ -298,7 +293,7 @@ public class Block implements Listener {
             }
 
             if (isObstructing) {
-                plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
+                plugin.getMessageManager().sendMessage(player, plugin.getLanguage().getString("Island.SpawnProtection.Place.Message"));
                 plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 event.setCancelled(true);
@@ -310,7 +305,9 @@ public class Block implements Listener {
 
         long limit = limits.getBlockLimit(player, block.getType());
 
-        if (limits.isBlockLimitExceeded(block, limit)) {
+        ItemStack item = event.getItemInHand();
+
+        if (limits.isBlockLimitExceeded(block, limit) && CompatibleMaterial.getMaterial(item) != CompatibleMaterial.ENDER_EYE) {
             CompatibleMaterial material = null;
             if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
                 switch (block.getType().toString().toUpperCase()) {
@@ -324,7 +321,7 @@ public class Block implements Listener {
                 material = CompatibleMaterial.getMaterial(block);
             }
 
-            plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+            plugin.getMessageManager().sendMessage(player, plugin.getLanguage().getString("Island.Limit.Block.Exceeded.Message")
                     .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
             plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
@@ -337,8 +334,7 @@ public class Block implements Listener {
         if (event.getBlock().getType() == CompatibleMaterial.END_PORTAL_FRAME.getMaterial()
                 && event.getPlayer().getItemInHand().getType() == CompatibleMaterial.ENDER_EYE.getMaterial()) return;
         
-        islandLevelManager.updateLevel(island, blockLoc);
-        
+        // Not util used 2 islandLevelManager if condition is true
         // Sponge level dupe fix
         if(ServerVersion.isServerVersionBelow(ServerVersion.V1_13) &&
                 block.getType().equals(CompatibleMaterial.SPONGE.getBlockMaterial())) {
@@ -359,6 +355,8 @@ public class Block implements Listener {
                     }
                 }
             });
+        } else {
+            islandLevelManager.updateLevel(island, blockLoc);
         }
     }
 
@@ -374,8 +372,7 @@ public class Block implements Listener {
         Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         if (island == null) return;
 
@@ -548,8 +545,7 @@ public class Block implements Listener {
         Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
         if (island == null) return;
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         if (performStackCheck(event.getBlock(), event.getBlocks(), event.getDirection())) {
             event.setCancelled(true);
@@ -587,7 +583,7 @@ public class Block implements Listener {
                 }
             }
 
-            if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Extend")) {
+            if (!this.plugin.getConfiguration().getBoolean("Island.Block.Piston.Connected.Extend")) {
                 if (block.getType() == CompatibleMaterial.PISTON.getMaterial() || block.getType() == CompatibleMaterial.STICKY_PISTON.getMaterial()) {
                     event.setCancelled(true);
                     return;
@@ -646,8 +642,7 @@ public class Block implements Listener {
         Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
         if (island == null) return;
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         if (performStackCheck(event.getBlock(), event.getBlocks(), event.getDirection())) {
             event.setCancelled(true);
@@ -676,7 +671,7 @@ public class Block implements Listener {
                 return;
             }
 
-            if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
+            if (!this.plugin.getConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
                 if (block.getType() == CompatibleMaterial.PISTON.getMaterial() || block.getType() == CompatibleMaterial.STICKY_PISTON.getMaterial()) {
                     event.setCancelled(true);
                     return;
@@ -691,7 +686,7 @@ public class Block implements Listener {
         WorldManager worldManager = plugin.getWorldManager();
         IslandLevelManager islandLevelManager = plugin.getLevellingManager();
         
-        FileConfiguration config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
+        FileConfiguration config = this.plugin.getConfiguration();
         
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
@@ -710,7 +705,7 @@ public class Block implements Listener {
         // Check spawn block protection
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
-            if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+            if (this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 return;
             }
@@ -775,7 +770,8 @@ public class Block implements Listener {
                             if(onlineOwner.hasPermission(generator.getPermission())) {
                                 applyGenerator(event.getBlock().getWorld(), block, worldManager, islandLevelManager, island, state, generatorManager, generator);
                             }
-                        } else {
+                        }
+                        else {
                             event.setCancelled(true);
                             org.bukkit.World finalWorld = event.getBlock().getWorld();
                             this.generatorWaitingLocs.add(LocationUtil.toBlockLocation(block.getLocation().clone()));
@@ -851,7 +847,7 @@ public class Block implements Listener {
 
     @EventHandler
     public void onPortalCreate(PortalCreateEvent event) {
-        if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+        if (!this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection"))
             return;
 
         WorldManager worldManager = plugin.getWorldManager();
@@ -913,7 +909,7 @@ public class Block implements Listener {
 
     @EventHandler
     public void onDispenserDispenseBlock(BlockDispenseEvent event) {
-        if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection"))
+        if (!this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection"))
             return;
 
         WorldManager worldManager = plugin.getWorldManager();
@@ -932,4 +928,46 @@ public class Block implements Listener {
             event.setCancelled(true);
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onLiquidDestroyBlock(BlockFromToEvent event) {
+        if (!plugin.getWorldManager().isIslandWorld(event.getBlock().getWorld()))
+            return;
+
+        IslandManager islandManager = plugin.getIslandManager();
+        Island island = islandManager.getIslandAtLocation(event.getBlock().getLocation());
+        if (island == null)
+            return;
+
+        CompatibleMaterial destmaterial = CompatibleMaterial.getMaterial(event.getToBlock());
+        if (destmaterial == CompatibleMaterial.AIR)
+            return;
+        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            switch (event.getToBlock().getType().toString().toUpperCase()) {
+                case "DIODE_BLOCK_OFF":
+                case "DIODE_BLOCK_ON":
+                    destmaterial = CompatibleMaterial.REPEATER;
+                    break;
+            }
+        }
+
+        CompatibleMaterial srcmaterial = CompatibleMaterial.getMaterial(event.getBlock());
+        if (srcmaterial != CompatibleMaterial.WATER
+            && srcmaterial != CompatibleMaterial.LAVA)
+            return;
+
+        FileConfiguration configLoad = plugin.getConfiguration();
+        if (!configLoad.getBoolean("Island.Block.Level.Enable"))
+            return;
+
+        IslandLevel level = island.getLevel();
+        if (level.hasMaterial(destmaterial.name())) {
+            long materialAmount = level.getMaterialAmount(destmaterial.name());
+
+            if (materialAmount - 1 <= 0) {
+                level.removeMaterial(destmaterial.name());
+            } else {
+                level.setMaterialAmount(destmaterial.name(), materialAmount - 1);
+            }
+        }
+    }
 }

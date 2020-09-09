@@ -18,7 +18,7 @@ public class CooldownManager {
 
     private final SkyBlock plugin;
 
-    private Map<CooldownType, List<CooldownPlayer>> cooldownStorage = new EnumMap<>(CooldownType.class);
+    private final Map<CooldownType, List<CooldownPlayer>> cooldownStorage = new EnumMap<>(CooldownType.class);
 
     public CooldownManager(SkyBlock plugin) {
         this.plugin = plugin;
@@ -95,7 +95,7 @@ public class CooldownManager {
         int time = 0;
 
         if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-            time = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+            time = this.plugin.getConfiguration()
                     .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
 
             Config config = fileManager
@@ -111,7 +111,7 @@ public class CooldownManager {
                 e.printStackTrace();
             }
         } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-            time = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+            time = this.plugin.getConfiguration()
                     .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
 
             Config config = plugin.getFileManager()

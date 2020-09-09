@@ -26,7 +26,7 @@ public class VoidGenerator extends ChunkGenerator {
         final ChunkData chunkData = createChunkData(world);
 
         final SkyBlock plugin = SkyBlock.getInstance();
-        final Configuration configLoad = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
+        final Configuration configLoad = plugin.getConfiguration();
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
         
         Biome biome;

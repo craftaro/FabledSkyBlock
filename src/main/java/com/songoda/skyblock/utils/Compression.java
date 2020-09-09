@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -19,7 +20,7 @@ public class Compression {
 	public static String decompress(byte[] compressed) throws IOException {
 		ByteArrayInputStream bis = new ByteArrayInputStream(compressed);
 		GZIPInputStream gis = new GZIPInputStream(bis);
-		BufferedReader br = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
+		BufferedReader br = new BufferedReader(new InputStreamReader(gis, StandardCharsets.UTF_8));
 		StringBuilder sb = new StringBuilder();
 		String line;
 		while((line = br.readLine()) != null) {

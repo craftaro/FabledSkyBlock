@@ -28,8 +28,7 @@ public class TopLevel extends DataCollector {
         List<Leaderboard> leaderboards = plugin.getLeaderboardManager().getLeaderboard(Leaderboard.Type.Level);
         Map<UUID, Double> topLevels = new HashMap<>(leaderboards.size());
 
-        for (int i = 0; i < leaderboards.size(); i++) {
-            Leaderboard leaderboard = leaderboards.get(i);
+        for (Leaderboard leaderboard : leaderboards) {
             Visit visit = leaderboard.getVisit();
             topLevels.put(visit.getOwnerUUID(), (double) visit.getLevel().getLevel());
         }

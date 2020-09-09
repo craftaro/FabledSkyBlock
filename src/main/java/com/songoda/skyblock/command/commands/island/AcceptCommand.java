@@ -98,7 +98,7 @@ public class AcceptCommand extends SubCommand {
                             island.save();
 
                             if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()
-                                    + 1) >= island.getMaxMembers()) {
+                                    + 1) >= island.getMaxMembers(player)) {
                                 Map<UUID, Invite> invites = inviteManager.getInvites();
 
                                 for (UUID inviteList : invites.keySet()) {

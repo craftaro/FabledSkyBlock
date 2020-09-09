@@ -36,7 +36,7 @@ public class AdminBank extends SubCommand {
 
         Island island = islandManager.getIslandAtLocation(player.getLocation());
 
-        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Bank.Enable")) {
+        if (!this.plugin.getConfiguration().getBoolean("Island.Bank.Enable")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Disabled.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             return;
@@ -60,7 +60,7 @@ public class AdminBank extends SubCommand {
                     return;
                 case "deposit":
                     if (args.length >= 3) {
-                        islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).addToBank(Double.parseDouble(args[2]));
+                        islandManager.getIslandByOwner(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).addToBank(Double.parseDouble(args[2]));
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesDeposit.Message").replace("%player%",args[1]).replace("%ammount%",economy.formatEconomy(Double.parseDouble(args[2]))));
                     }else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
@@ -68,7 +68,7 @@ public class AdminBank extends SubCommand {
                     return;
                 case "withdraw":
                     if (args.length >= 3) {
-                        islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).removeFromBank(Double.parseDouble(args[2]));
+                        islandManager.getIslandByOwner(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).removeFromBank(Double.parseDouble(args[2]));
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesWithdraw.Message").replace("%player%",args[1]).replace("%ammount%",economy.formatEconomy(Double.parseDouble(args[2]))));
                     }else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
@@ -122,7 +122,7 @@ public class AdminBank extends SubCommand {
                 return;
             case "deposit":
                 if (args.length >= 3) {
-                    islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).addToBank(Double.parseDouble(args[2]));
+                    islandManager.getIslandByOwner(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).addToBank(Double.parseDouble(args[2]));
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.SuccesDeposit.Message").replace("%player%",args[1]).replace("%ammount%",economy.formatEconomy(Double.parseDouble(args[2]))));
                 }else {
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
@@ -130,7 +130,7 @@ public class AdminBank extends SubCommand {
                 return;
             case "withdraw":
                 if (args.length >= 3) {
-                    islandManager.getIslandByPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).removeFromBank(Double.parseDouble(args[2]));
+                    islandManager.getIslandByOwner(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).removeFromBank(Double.parseDouble(args[2]));
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.SuccesWithdraw.Message").replace("%player%",args[1]).replace("%ammount%",economy.formatEconomy(Double.parseDouble(args[2]))));
                 }else {
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));

@@ -27,7 +27,7 @@ import java.util.UUID;
 public class PlayerDataManager {
 
     private final SkyBlock plugin;
-    private Map<UUID, PlayerData> playerDataStorage = new HashMap<>();
+    private final Map<UUID, PlayerData> playerDataStorage = new HashMap<>();
 
     public PlayerDataManager(SkyBlock plugin) {
         this.plugin = plugin;
@@ -128,12 +128,10 @@ public class PlayerDataManager {
     public void storeIsland(Player player) {
         MessageManager messageManager = plugin.getMessageManager();
         IslandManager islandManager = plugin.getIslandManager();
-        WorldManager worldManager = plugin.getWorldManager();
-        FileManager fileManager = plugin.getFileManager();
+        WorldManager worldManager = plugin.getWorldManager();;
         BanManager banManager = plugin.getBanManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         if (hasPlayerData(player)) {
             if (worldManager.isIslandWorld(player.getWorld())) {
@@ -150,7 +148,7 @@ public class PlayerDataManager {
                         targetPlayerName = targetPlayer.getName();
                     }
 
-                    if (banManager.hasIsland(island.getOwnerUUID()) && fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning")
+                    if (banManager.hasIsland(island.getOwnerUUID()) && this.plugin.getConfiguration().getBoolean("Island.Visitor.Banning")
                             && banManager.getIsland(island.getOwnerUUID()).isBanned(player.getUniqueId())) {
                         if (messageManager != null)
                             messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Island.Message").replace("%player", targetPlayerName));
@@ -161,7 +159,7 @@ public class PlayerDataManager {
 
                             if (world == IslandWorld.Normal) {
                                 if (!island.isWeatherSynchronized()) {
-                                    player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+                                    player.setPlayerTime(island.getTime(), this.plugin.getConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                     player.setPlayerWeather(island.getWeather());
                                 }
                             }
@@ -181,7 +179,7 @@ public class PlayerDataManager {
 
                             if (world == IslandWorld.Normal) {
                                 if (!island.isWeatherSynchronized()) {
-                                    player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+                                    player.setPlayerTime(island.getTime(), this.plugin.getConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                     player.setPlayerWeather(island.getWeather());
                                 }
                             }
@@ -192,6 +190,8 @@ public class PlayerDataManager {
 
                             for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
                                 PlayerData targetPlayerData = getPlayerData(loopPlayer);
+                                if (targetPlayerData == null)
+                                    continue;
         
                                 if (targetPlayerData.getOwner() != null &&
                                         targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
@@ -227,7 +227,7 @@ public class PlayerDataManager {
                             targetPlayerName = targetPlayer.getName();
                         }
 
-                        if (banManager.hasIsland(visitIslandList) && fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Banning")
+                        if (banManager.hasIsland(visitIslandList) && this.plugin.getConfiguration().getBoolean("Island.Visitor.Banning")
                                 && banManager.getIsland(visitIslandList).isBanned(player.getUniqueId())) {
                             if (messageManager != null)
                                 messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Island.Message").replace("%player", targetPlayerName));
@@ -252,7 +252,7 @@ public class PlayerDataManager {
 
                                     if (world == IslandWorld.Normal) {
                                         if (!island.isWeatherSynchronized()) {
-                                            player.setPlayerTime(island.getTime(), fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+                                            player.setPlayerTime(island.getTime(), this.plugin.getConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                             player.setPlayerWeather(island.getWeather());
                                         }
                                     }

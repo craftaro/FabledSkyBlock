@@ -2,11 +2,11 @@ package com.songoda.skyblock.utils.structure;
 
 public class Location {
 
-    private int x;
-    private int y;
-    private int z;
+    private final int x;
+    private final int y;
+    private final int z;
 
-    private boolean originLocation;
+    private final boolean originLocation;
 
     public Location(int x, int y, int z, boolean originLocation) {
         this.x = x;

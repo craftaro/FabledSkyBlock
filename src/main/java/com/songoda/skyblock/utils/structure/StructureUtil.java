@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.nms.NmsManager;
+import com.songoda.core.nms.nbt.NBTEntity;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.utils.Compression;
@@ -30,10 +32,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -185,11 +184,22 @@ public final class StructureUtil {
             }.getType())) {
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
                     try {
-                        org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(), entityDataList.getY(), entityDataList.getZ()), type);
-                        org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[0])),
-                                location.getY() - Integer.parseInt(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[2])));
-                        blockLocation.add(blockRotationLocation);
-                        EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
+                        if (entityDataList.getSerializedNBT() != null) {
+                            org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(), entityDataList.getY(), entityDataList.getZ()), type);
+                            org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[0])),
+                                    location.getY() - Integer.parseInt(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[2])));
+                            blockLocation.add(blockRotationLocation);
+                            NBTEntity nbtEntity = NmsManager.getNbt().newEntity();
+                            nbtEntity.deSerialize(entityDataList.getSerializedNBT());
+                            nbtEntity.set("UUID", UUID.randomUUID());
+                            nbtEntity.spawn(blockLocation);
+                        } else {
+                            org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(), entityDataList.getY(), entityDataList.getZ()), type);
+                            org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[0])),
+                                    location.getY() - Integer.parseInt(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[2])));
+                            blockLocation.add(blockRotationLocation);
+                            EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
+                        }
                     } catch (Exception e) {
                         SkyBlock.getInstance().getLogger().warning("Unable to convert EntityData to Entity for type {" + entityDataList.getEntityType() + "} in structure {" + structure.getStructureFile() + "}");
                     }
@@ -205,10 +215,9 @@ public final class StructureUtil {
 
         FileManager fileManager = plugin.getFileManager();
 
-        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
-        ItemStack is = new ItemStack(Material.valueOf(fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getString("Island.Admin.Structure.Selector")));
+        ItemStack is = new ItemStack(Material.valueOf(plugin.getConfiguration().getString("Island.Admin.Structure.Selector")));
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Island.Structure.Tool.Item.Displayname")));
 

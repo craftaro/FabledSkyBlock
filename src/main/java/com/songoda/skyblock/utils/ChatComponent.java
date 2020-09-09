@@ -7,7 +7,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChatComponent {
 
-    private TextComponent textComponent;
+    private final TextComponent textComponent;
 
     public ChatComponent(String text, boolean bold, ChatColor color, ClickEvent clickEvent, HoverEvent hoverEvent) {
         textComponent = new TextComponent(ChatColor.translateAlternateColorCodes('&', text));

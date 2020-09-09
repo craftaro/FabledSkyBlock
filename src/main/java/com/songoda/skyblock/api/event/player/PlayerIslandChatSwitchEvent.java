@@ -8,7 +8,7 @@ public class PlayerIslandChatSwitchEvent extends PlayerEvent {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private boolean chat;
+    private final boolean chat;
 
     public PlayerIslandChatSwitchEvent(Player player, Island island, boolean chat) {
         super(player, island);

@@ -47,8 +47,7 @@ public class NMSUtil {
 
     public static Class<?> getCraftClass(String className) {
         try {
-            String fullName = "org.bukkit.craftbukkit." + getVersion() + className;
-            return Class.forName(fullName);
+            return Class.forName("org.bukkit.craftbukkit." + getVersion() + className);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

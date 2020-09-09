@@ -24,7 +24,7 @@ import java.util.logging.Level;
 
 public class ChallengeInventory implements InventoryProvider {
 	public static final String CATEGORY = "ChallengeCategory";
-	private FabledChallenge fc;
+	private final FabledChallenge fc;
 	
 	public ChallengeInventory(FabledChallenge fc) {
 		this.fc = fc;

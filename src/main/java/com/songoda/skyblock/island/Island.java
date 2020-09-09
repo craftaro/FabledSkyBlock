@@ -60,10 +60,8 @@ public class Island {
 
         this.islandUUID = UUID.randomUUID();
         this.ownerUUID = player.getUniqueId();
-        this.size = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
-                .getInt("Island.Size.Minimum");
-        this.maxMembers = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
-                .getInt("Island.Member.Capacity", 3);
+        this.size = this.plugin.getConfiguration().getInt("Island.Size.Minimum");
+        this.maxMembers =  this.plugin.getConfiguration().getInt("Island.Member.Capacity", 3);
 
         if (this.size > 1000) {
             this.size = 50;
@@ -72,8 +70,7 @@ public class Island {
         if (player.isOnline()) {
             int customSize = PlayerUtils.getNumberFromPermission(player.getPlayer(), "fabledskyblock.size", 0);
             if (customSize > 0 || player.getPlayer().hasPermission("fabledskyblock.*")) {
-                Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                FileConfiguration configLoad = config.getFileConfiguration();
+                FileConfiguration configLoad = this.plugin.getConfiguration();
 
                 int minimumSize = configLoad.getInt("Island.Size.Minimum");
                 int maximumSize = configLoad.getInt("Island.Size.Maximum");
@@ -101,10 +98,8 @@ public class Island {
         File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
 
         Config config = fileManager.getConfig(new File(configFile, ownerUUID + ".yml"));
-        Config defaultSettingsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "settings.yml"));
-        Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
 
-        FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();
+        FileConfiguration mainConfigLoad = this.plugin.getConfiguration();
 
         if (fileManager.isFileExist(new File(configFile, ownerUUID + ".yml"))) {
             FileConfiguration configLoad = config.getFileConfiguration();
@@ -136,7 +131,7 @@ public class Island {
             }
 
             if (configLoad.getString("Border") == null) {
-                configLoad.set("Border.Enable", mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Default", false));
+                configLoad.set("Border.Enable", mainConfigLoad.getBoolean("Island.WorldBorder.Default", false));
                 configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
             }
 
@@ -192,7 +187,7 @@ public class Island {
                     if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
                             .getString("Settings." + roleList.name() + "." + permission.getName()) == null) {
                         permissions.add(
-                                new IslandPermission(permission, defaultSettingsConfig.getFileConfiguration()
+                                new IslandPermission(permission, this.plugin.getSettings()
                                         .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
                     } else {
                         permissions.add(new IslandPermission(permission, settingsDataConfig.getFileConfiguration()
@@ -234,7 +229,7 @@ public class Island {
 
             configLoad.set("UUID", islandUUID.toString());
             configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status").toUpperCase());
-            configLoad.set("Border.Enable", mainConfig.getFileConfiguration().getBoolean("Island.WorldBorder.Default", false));
+            configLoad.set("Border.Enable", mainConfigLoad.getBoolean("Island.WorldBorder.Default", false));
             configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
             configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
             configLoad.set("Weather.Synchronised", mainConfigLoad.getBoolean("Island.Weather.Default.Synchronised")); // TODO: Synchronized
@@ -249,7 +244,7 @@ public class Island {
 
                 for (BasicPermission permission : allPermissions) {
                     permissions.add(
-                            new IslandPermission(permission, defaultSettingsConfig.getFileConfiguration()
+                            new IslandPermission(permission, this.plugin.getSettings()
                                     .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
                 }
 
@@ -311,9 +306,14 @@ public class Island {
                 .getFileConfiguration().getString("Ownership.Original"));
     }
 
-    public int getMaxMembers() {
-        return maxMembers;
+    public int getMaxMembers(Player player) {
+        try {
+            return PlayerUtils.getNumberFromPermission(Objects.requireNonNull(player.getPlayer()), "fabledskyblock.members", maxMembers);
+        } catch (Exception ignored) {
+            return maxMembers;
+        }
     }
+
 
     public void setMaxMembers(int maxMembers) {
         if (maxMembers > 100000 || maxMembers < 0) {
@@ -912,8 +912,7 @@ public class Island {
             e.printStackTrace();
         }
 
-        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
-                .getBoolean("Island.Coop.Unload")) {
+        if (!this.plugin.getConfiguration().getBoolean("Island.Coop.Unload")) {
             config = fileManager
                     .getConfig(new File(plugin.getDataFolder().toString() + "/coop-data", ownerUUID.toString() + ".yml"));
             configLoad = config.getFileConfiguration();
@@ -941,8 +940,7 @@ public class Island {
         FileManager fileManager = plugin.getFileManager();
         SoundManager soundManager = plugin.getSoundManager();
         MessageManager messageManager = plugin.getMessageManager();
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = this.plugin.getConfiguration();
         Config islandData = fileManager
                 .getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"),
                         ownerUUID.toString() + ".yml"));
@@ -955,9 +953,9 @@ public class Island {
             unlocked = true;
         }
 
-        if (!unlocked) {
+        if (!unlocked && player != null) {
             messageManager.sendMessage(player,
-                    fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration()
+                    this.plugin.getLanguage()
                             .getString("Island.Unlock." + type.name() + ".Message").replace(
                             "%cost%", NumberUtil.formatNumberByDecimal(price)));
 
@@ -1005,4 +1003,10 @@ public class Island {
         this.removeWhitelistedPlayer(player.getUniqueId());
     }
 
+    @Override
+    public String toString() {
+        return "Island{" +
+                "ownerUUID=" + ownerUUID +
+                '}';
+    }
 }

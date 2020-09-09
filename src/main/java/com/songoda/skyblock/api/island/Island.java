@@ -499,9 +499,7 @@ public class Island {
 		if (!(object instanceof Island))
 			return false;
 		Island other = (Island) object;
-		if (!other.getIslandUUID().equals(getIslandUUID()))
-			return false;
-		return true;
-	}
+        return other.getIslandUUID().equals(getIslandUUID());
+    }
 
 }

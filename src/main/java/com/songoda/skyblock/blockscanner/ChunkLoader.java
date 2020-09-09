@@ -38,9 +38,7 @@ public class ChunkLoader extends BukkitRunnable {
                         boolean chunkForChunk,
                         ChunkForChunkScannerTask chunkTask,
                         CompleteTask complete) {
-        chunkPerTick = SkyBlock.getInstance().getFileManager()
-                .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
-                .getFileConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
+        chunkPerTick = SkyBlock.getInstance().getConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
 
         this.completeTask = complete;
         this.chunkTask = chunkTask;
@@ -78,9 +76,7 @@ public class ChunkLoader extends BukkitRunnable {
                         boolean chunkForChunk,
                         ChunkScannerTask generalTask,
                         CompleteTask complete) {
-        chunkPerTick = SkyBlock.getInstance().getFileManager()
-                .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
-                .getFileConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
+        chunkPerTick = SkyBlock.getInstance().getConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
     
         this.completeTask = complete;
         this.generalTask = generalTask;

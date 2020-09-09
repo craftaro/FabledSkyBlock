@@ -2,11 +2,15 @@ package com.songoda.skyblock.challenge.challenge;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.hooks.economies.Economy;
+import com.songoda.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
+import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -17,9 +21,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Challenge {
@@ -117,6 +119,63 @@ public class Challenge {
 	}
 
 	public enum Type {
+		
+		CHALLENGE {
+
+			@Override
+			public Object convert(String value) throws IllegalArgumentException {
+				if (value == null || "".equalsIgnoreCase(value)) {
+					throw new IllegalArgumentException("Value is empty or null");
+				}
+				String[] test = value.split("\\.");
+				if (test.length != 6) {
+					throw new IllegalArgumentException("Your config is not good, correct syntax : CHALLENGE:category.[id_category].challenges.[id_challenges].count.[count_times]");
+				}
+				List<Integer> integerList = new ArrayList<Integer>();
+
+				Arrays.stream(test).filter(condition -> !condition.equalsIgnoreCase("category") && !condition.equalsIgnoreCase("challenges") && !condition.equalsIgnoreCase("count")).forEachOrdered(condition -> {
+					try {
+						integerList.add(Integer.parseInt(condition));
+					} catch (NumberFormatException ex) {
+						throw new IllegalArgumentException(
+								"\"" + condition + "\" isn't a valid number (value = \"" + value + "\")");
+					}
+				});
+				return integerList;
+			}
+
+			@Override
+			public boolean has(Player p, Object obj){
+				List<Integer> is = (List<Integer>) obj;
+				SkyBlock instance = SkyBlock.getInstance();
+				FileManager.Config config = instance.getFileManager().getConfig(new File(new File(instance.getDataFolder(), "challenge-data"), p.getUniqueId().toString() + ".yml"));
+				FileConfiguration fileConfig = config.getFileConfiguration();
+				ConfigurationSection section = fileConfig.getConfigurationSection("challenges");
+				for (String k : (section != null) ? section.getKeys(false) : new HashSet<String>()) {
+					int id = fileConfig.getInt("challenges." + k + ".id");
+					if (is.get(0) == id) {
+						ChallengeCategory cc = SkyBlock.getInstance().getFabledChallenge().getChallengeManager().getChallenge(id);
+						if (cc != null) {
+							ConfigurationSection section2 = fileConfig.getConfigurationSection("challenges." + k + ".challenges");
+							if (section2 != null && !section2.getKeys(false).isEmpty() && section2.getKeys(false).stream().map(d -> "challenges." + k + ".challenges." + d).anyMatch(key -> is.get(1) == fileConfig.getInt(key + ".id") && fileConfig.getInt(key + ".count") >= is.get(2))) {
+								return true;
+							}
+						}
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public void executeRequire(Player p, Object obj) {
+				// Nothing
+			}
+
+			@Override
+			public void executeReward(Player p, Object obj) {
+				// Nothing
+			}
+		},
 		ITEM {
 			// An item
 
@@ -131,7 +190,7 @@ public class Challenge {
 				// The id
 				String id = index == -1 ? value : value.substring(0, index);
 				// Check if it's a Minecraft item
-				Material m = CompatibleMaterial.getMaterial(id).getMaterial();
+				CompatibleMaterial m = CompatibleMaterial.getMaterial(id);
 				//Material m = Material.matchMaterial(id);
 				if (m == null)
 					throw new IllegalArgumentException(
@@ -146,68 +205,58 @@ public class Challenge {
 								"\"" + strAmount + "\" isn't a correct number (value = \"" + value + "\")");
 					}
 				}
-				return new ItemStack(m, amount);
+				ItemStack item = m.getItem();
+				item.setAmount(amount);
+				return item;
 			}
 
 			@Override
 			public boolean has(Player p, Object obj) {
-				boolean ignoreLore = SkyBlock.getInstance().getFileManager()
-						.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
-						.getFileConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
+				boolean ignoreLore = SkyBlock.getInstance().getConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
 				if(obj instanceof ItemStack){
 					// Check if player has specific item in his inventory
 					ItemStack is = (ItemStack) obj;
 					if(ignoreLore){
-						return p.getInventory().contains(is.getType(), is.getAmount());
+						return p.getInventory().contains(is, is.getAmount());
 					}
-					return p.getInventory().containsAtLeast(new ItemStack(is.getType()), is.getAmount());
+					return p.getInventory().containsAtLeast(is, is.getAmount());
 				}
 				return false;
 			}
 
-			@Override
-			public void executeRequire(Player p, Object obj) {
-				boolean ignoreLore = SkyBlock.getInstance().getFileManager()
-						.getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml"))
-						.getFileConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
-				
-				if(obj instanceof ItemStack){
-					// Remove specific item in player's inventory
-					ItemStack is = (ItemStack) obj;
-					int toRemove = is.getAmount();
-					for(ItemStack jis : p.getInventory().getContents()) {
-						if(jis != null) {
-							boolean isItem;
-							if(ignoreLore){
-								isItem = jis.getType().equals(is.getType());
-							} else {
-								isItem = jis.isSimilar(is);
-							}
-							
-							if(isItem) {
-								if(jis.getAmount() <= toRemove) {
-									toRemove -= jis.getAmount();
-									p.getInventory().removeItem(jis);
-								} else {
-									jis.setAmount(jis.getAmount() - toRemove);
-									toRemove = 0;
-								}
-							}
-							if(toRemove <= 0) {
-								p.updateInventory();
-								break;
-							}
-						}
-					}
-				}
-			}
+
+            @Override
+            public void executeRequire(Player p, Object obj) {
+                boolean ignoreLore = SkyBlock.getInstance().getConfig().getBoolean("Island.Challenge.IgnoreItemLore", false);
+
+                if (obj instanceof ItemStack) {
+                    // Remove specific item in player's inventory
+                    ItemStack is = (ItemStack) obj;
+                    int toRemove = is.getAmount();
+                    for (ItemStack jis : p.getInventory().getContents()) {
+                        if (jis == null) continue;
+                        if (ignoreLore ? ItemUtils.isSimilarMaterial(is, jis) : jis.isSimilar(is)) {
+                            if (jis.getAmount() <= toRemove) {
+                                toRemove -= jis.getAmount();
+                                p.getInventory().removeItem(jis);
+                            } else {
+                                jis.setAmount(jis.getAmount() - toRemove);
+                                toRemove = 0;
+                            }
+                        }
+                        if (toRemove <= 0) {
+                            p.updateInventory();
+                            break;
+                        }
+                    }
+                }
+            }
 
 			@Override
 			public void executeReward(Player p, Object obj) {
 				// Give specific item to player
 				ItemStack is = (ItemStack) obj;
-				HashMap<Integer, ItemStack> rest = p.getInventory()
-						.addItem(new ItemStack(is.getType(), is.getAmount()));
+				HashMap<Integer, ItemStack> rest = p.getInventory().addItem(is.clone());
 				for (ItemStack restIs : rest.values())
 					p.getWorld().dropItem(p.getLocation(), restIs);
 			}
@@ -338,7 +387,7 @@ public class Challenge {
 		},
 		POTION {
 
-			private Pattern space = Pattern.compile(" ");
+			private final Pattern space = Pattern.compile(" ");
 
 			@Override
 			public Peer<PotionType, Peer<Integer, Integer>> convert(String value) throws IllegalArgumentException {

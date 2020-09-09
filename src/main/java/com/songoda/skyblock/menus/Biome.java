@@ -1,5 +1,6 @@
 package com.songoda.skyblock.menus;
 
+import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
@@ -52,7 +53,7 @@ public class Biome {
         SoundManager soundManager = plugin.getSoundManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration langConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+            FileConfiguration langConfig = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 Island island = islandManager.getIsland(player);
@@ -135,7 +136,7 @@ public class Biome {
                         SBiome selectedBiomeType = SBiome.getFromGuiIcon(is.getType(), is.getData().getData());
 
                         cooldownManager.createPlayer(CooldownType.Biome, player);
-                        biomeManager.setBiome(island,IslandWorld.Normal, selectedBiomeType.getBiome(), null);
+                        biomeManager.setBiome(island,IslandWorld.Normal, CompatibleBiome.getBiome(selectedBiomeType.getBiome()), null);
                         island.setBiome(selectedBiomeType.getBiome());
                         island.save();
 
@@ -166,12 +167,11 @@ public class Biome {
                     0, 8);
 
             nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
-                    ChatColor.translateAlternateColorCodes('&',
-                            langConfig.getString("Menu.Biome.Item.Barrier.Displayname")),
+                    plugin.formatText(langConfig.getString("Menu.Biome.Item.Barrier.Displayname")),
                     null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 
-            FileConfiguration settings = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
+            FileConfiguration settings = plugin.getConfiguration();
 
             boolean allowNetherBiome = settings.getBoolean("Island.Biome.AllowOtherWorldlyBiomes.Nether");
             boolean allowEndBiome = settings.getBoolean("Island.Biome.AllowOtherWorldlyBiomes.End");

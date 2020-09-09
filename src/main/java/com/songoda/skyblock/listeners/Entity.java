@@ -64,8 +64,7 @@ public class Entity implements Listener {
         if(event.getEntity() instanceof Blaze){
             WorldManager worldManager = plugin.getWorldManager();
 
-            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getConfiguration();
     
             if (configLoad.getBoolean("Island.Nether.BlazeImmuneToWaterInNether", false) &&
                     worldManager.getIslandWorld(event.getEntity().getWorld()).equals(IslandWorld.Nether) &&
@@ -92,8 +91,7 @@ public class Entity implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         IslandManager islandManager = plugin.getIslandManager();
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
     
         org.bukkit.entity.Entity victim = event.getEntity();
         Island island = islandManager.getIslandAtLocation(victim.getLocation());
@@ -103,9 +101,10 @@ public class Entity implements Listener {
             if(attacker instanceof Projectile && ((Projectile) attacker).getShooter() instanceof org.bukkit.entity.Entity) {
                 attacker = (org.bukkit.entity.Entity) ((Projectile) attacker).getShooter();
             }
-    
+
+            // Rework with better config
             if(victim instanceof Player && attacker instanceof Player) { // PVP
-                if(configLoad.getBoolean("Island.PvP.Enable")) {
+                if (configLoad.getBoolean("Island.Entity_Damage.PVP")) {
                     if(plugin.getPermissionManager()
                             .processPermission(event, (Player) attacker, island)) {
                         plugin.getPermissionManager()
@@ -114,15 +113,26 @@ public class Entity implements Listener {
                 } else {
                     event.setCancelled(true);
                 }
-            } else if(victim instanceof Player) { // EVP
-                plugin.getPermissionManager()
-                        .processPermission(event, (Player) victim, island, true);
-            } else if(attacker instanceof Player) { // PVE
-                plugin.getPermissionManager()
-                        .processPermission(event, (Player) attacker, island);
-            } else { // EVE
-                plugin.getPermissionManager()
-                        .processPermission(event, island);
+            }
+            else if(victim instanceof Player) { // EVP
+                if (configLoad.getBoolean("Island.Entity_Damage.EVP")) {
+                    plugin.getPermissionManager()
+                            .processPermission(event, (Player) victim, island, true);
+                }
+
+            }
+            else if(attacker instanceof Player) { // PVE
+                if (configLoad.getBoolean("Island.Entity_Damage.PVE")) {
+                    plugin.getPermissionManager()
+                            .processPermission(event, (Player) attacker, island);
+                }
+
+            }
+            else { // EVE
+                if (configLoad.getBoolean("Island.Entity_Damage.PVE")) {
+                    plugin.getPermissionManager()
+                            .processPermission(event, island);
+                }
             }
             
             // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
@@ -278,8 +288,7 @@ public class Entity implements Listener {
 
         if (event.isCancelled()) return;
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getConfiguration();
 
         IslandWorld world = worldManager.getIslandWorld(event.getBlock().getWorld());
 
@@ -290,7 +299,7 @@ public class Entity implements Listener {
         if ((LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0, 1, 0))
                 || LocationUtil.isLocationLocation(block.getLocation(),
                 island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0, 1, 0)))
-                && plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+                && this.plugin.getConfiguration()
                 .getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
@@ -323,8 +332,7 @@ public class Entity implements Listener {
         if (entity instanceof FallingBlock) return;
 
         // Check entities interacting with spawn
-        if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world) && plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+        if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world) && plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) {
             event.setCancelled(true);
             return;
         }
@@ -333,7 +341,7 @@ public class Entity implements Listener {
         plugin.getPermissionManager().processPermission(event, null, island);
 
 
-        if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+        if (!this.plugin.getConfiguration()
                 .getBoolean("Island.Block.Level.Enable"))
             return;
 
@@ -342,7 +350,6 @@ public class Entity implements Listener {
         
         if (event.getTo() != Material.AIR) {
             materials = CompatibleMaterial.getBlockMaterial(event.getTo());
-            ;
 
             if (materials != null) {
                 long materialAmount = 0;
@@ -379,8 +386,7 @@ public class Entity implements Listener {
                 while (it.hasNext()){
                     removed = false;
                     org.bukkit.block.Block block = it.next();
-                    if (SkyBlock.getInstance().getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
-                            .getBoolean("Island.Spawn.Protection")) {
+                    if (SkyBlock.getInstance().getConfiguration().getBoolean("Island.Spawn.Protection")) {
                         IslandWorld world = worldManager.getIslandWorld(event.getEntity().getWorld());
                         if (LocationUtil.isLocationLocation(block.getLocation(),
                                 island.getLocation(world, IslandEnvironment.Main).clone().subtract(0.0D, 1.0D, 0.0D))) {
@@ -408,8 +414,7 @@ public class Entity implements Listener {
                                 stackableManager.removeStack(stackable);
                             }
 
-                            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
-                            FileConfiguration configLoad = config.getFileConfiguration();
+                            FileConfiguration configLoad = plugin.getConfiguration();
 
                             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
                                 removeBlockFromLevel(island, block);
@@ -425,7 +430,7 @@ public class Entity implements Listener {
                             }
                         }
                     }
-                    if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+                    if (this.plugin.getConfiguration()
                             .getBoolean("Island.Block.Level.Enable")) {
                         if(!removed){
                             removeBlockFromLevel(island, block);
@@ -573,9 +578,7 @@ public class Entity implements Listener {
         EntityType type = entity.getType();
 
         if (limits.isBeingTracked(type)) {
-            FileManager fileManager = plugin.getFileManager();
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getConfiguration();
 
             boolean isSplit = event.getSpawnReason().equals(SpawnReason.SLIME_SPLIT);
             boolean splitBypass = configLoad.getBoolean("Island.Challenge.PerIsland", true);

@@ -79,7 +79,7 @@ public class Interact implements Listener {
 
             if (levellingManager.isScanning(island)) {
                 plugin.getMessageManager().sendMessage(player,
-                        plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
+                        plugin.getLanguage().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
                 event.setCancelled(true);
                 return;
             }
@@ -97,7 +97,7 @@ public class Interact implements Listener {
                 }
 
                 if (isObstructing) {
-                    plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.SpawnProtection.Place.Message"));
+                    plugin.getMessageManager().sendMessage(player, plugin.getLanguage().getString("Island.SpawnProtection.Place.Message"));
                     plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                     event.setCancelled(true);
@@ -109,10 +109,10 @@ public class Interact implements Listener {
 
             long limit = limits.getBlockLimit(player, Material.WATER);
 
-            if (limits.isBlockLimitExceeded(event.getItem().getType(), block.getLocation(), limit)) {
+            if (limits.isBlockLimitExceeded(CompatibleMaterial.getMaterial(event.getItem()), block.getLocation(), limit)) {
                 CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getItem().getType());
 
-                plugin.getMessageManager().sendMessage(player, plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
+                plugin.getMessageManager().sendMessage(player, plugin.getLanguage().getString("Island.Limit.Block.Exceeded.Message")
                         .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
                 plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
@@ -178,7 +178,7 @@ public class Interact implements Listener {
             
             if (stackableManager != null && stackableManager.isStackableMaterial(heldType) && blockType == heldType
                     && !player.isSneaking() && plugin.getPermissionManager().hasPermission(player, island, "Place")
-                    && (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Stackable.RequirePermission")
+                    && (!this.plugin.getConfiguration().getBoolean("Island.Stackable.RequirePermission")
                     || player.hasPermission("fabledskyblock.stackable"))) {
 
                 if (levellingManager.isScanning(island)) {

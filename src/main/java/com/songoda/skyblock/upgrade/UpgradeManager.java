@@ -16,14 +16,13 @@ import java.util.*;
 
 public class UpgradeManager {
 
-    private SkyBlock plugin;
-    private Map<Upgrade.Type, List<Upgrade>> upgradeStorage = new HashMap<>();
+    private final SkyBlock plugin;
+    private final Map<Upgrade.Type, List<Upgrade>> upgradeStorage = new HashMap<>();
 
     public UpgradeManager(SkyBlock plugin) {
         this.plugin = plugin;
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "upgrades.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getUpgrades();
 
         for (Upgrade.Type typeList : Upgrade.Type.values()) {
             if (typeList != Upgrade.Type.Size && typeList != Upgrade.Type.Members) {
@@ -55,7 +54,7 @@ public class UpgradeManager {
         }
 
         if (configLoad.getString("Upgrades.Members") != null) {
-            List<Upgrade> upgrades = new ArrayList<>();
+            List<Upgrade> upgrades = new LinkedList<>();
 
             for (String tierList : configLoad.getConfigurationSection("Upgrades.Members").getKeys(false)) {
                 if (configLoad.getString("Upgrades.Members." + tierList + ".Value") != null) {
@@ -80,7 +79,7 @@ public class UpgradeManager {
 
     }
 
-    public void addUpgrade(Upgrade.Type type, int value) {
+    public synchronized void addUpgrade(Upgrade.Type type, int value) {
         List<Upgrade> upgrades = new ArrayList<>();
 
         Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "upgrades.yml"));
@@ -215,6 +214,7 @@ public class UpgradeManager {
                     jump = new PotionEffect(PotionEffectType.JUMP, jump.getDuration() + 21, 1);
                 }
                 player.addPotionEffect(jump, true);
+                player.addPotionEffect(jump);
             }
         }
     }

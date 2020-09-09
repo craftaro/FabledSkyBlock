@@ -70,7 +70,7 @@ public enum CompatibleSpawners {
     private static final Set<CompatibleSpawners> ALL = Collections.unmodifiableSet(EnumSet.allOf(CompatibleSpawners.class));
 
     static int newV = -1;
-    private static Map<String, CompatibleSpawners> cachedSearch = new HashMap<>();
+    private static final Map<String, CompatibleSpawners> cachedSearch = new HashMap<>();
     String old13Mat;
     String old12Mat;
     int data;

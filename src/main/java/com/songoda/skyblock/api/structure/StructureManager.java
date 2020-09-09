@@ -29,12 +29,6 @@ public class StructureManager {
      * @return A List of Structures for an Island
      */
     public List<Structure> getStructures() {
-        List<Structure> structures = new ArrayList<>();
-
-        for (Structure structureList : structureManager.getStructures()) {
-            structures.add(structureList);
-        }
-
-        return structures;
+        return new ArrayList<>(structureManager.getStructures());
     }
 }

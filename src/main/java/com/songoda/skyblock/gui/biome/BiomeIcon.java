@@ -22,8 +22,7 @@ public class BiomeIcon {
 
     public BiomeIcon(SkyBlock plugin, CompatibleBiome biome){
         this.biome = biome;
-        FileConfiguration biomeConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(),"biomes.yml")).getFileConfiguration();
-        
+        FileConfiguration biomeConfig = plugin.getBiomes();
         CompatibleMaterial tempMat = CompatibleMaterial.getMaterial(biomeConfig.getString("Biomes." + biome.name() + ".DisplayItem.Material"));
         if(tempMat == null){
             tempMat = CompatibleMaterial.STONE;

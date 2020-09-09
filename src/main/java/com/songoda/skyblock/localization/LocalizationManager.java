@@ -18,7 +18,7 @@ public final class LocalizationManager {
 
     private final Localization<?> def = new BlankLocalization("", Object.class);
 
-    private Map<Class<?>, Localization<?>> map;
+    private final Map<Class<?>, Localization<?>> map;
 
     public LocalizationManager() {
         this.map = new HashMap<>();
@@ -36,17 +36,15 @@ public final class LocalizationManager {
 
         final SkyBlock inst = SkyBlock.getInstance();
 
-        toUse.reload(inst.getFileManager().getConfig(new File(inst.getDataFolder(), "language.yml")).getFileConfiguration().getConfigurationSection(toUse.getKeysPath()));
+        toUse.reload(inst.getLanguage().getConfigurationSection(toUse.getKeysPath()));
     }
 
     public void reloadAll() {
 
         final SkyBlock inst = SkyBlock.getInstance();
-        final Configuration config = inst.getFileManager().getConfig(new File(inst.getDataFolder(), "language.yml")).getFileConfiguration();
+        final Configuration config = inst.getLanguage();
 
-        for (Localization<?> locale : Sets.newHashSet(map.values())) {
-            locale.reload(config.getConfigurationSection(locale.getKeysPath()));
-        }
+        Sets.newHashSet(map.values()).forEach(locale -> locale.reload(config.getConfigurationSection(locale.getKeysPath())));
 
     }
 

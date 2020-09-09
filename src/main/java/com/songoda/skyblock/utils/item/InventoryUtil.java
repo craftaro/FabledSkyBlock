@@ -80,12 +80,11 @@ public class InventoryUtil {
     public static void takeItem(Player player, int amount) {
         if (player.getGameMode() == GameMode.CREATIVE) return;
 
-        ItemStack item = player.getInventory().getItemInHand();
-        if (item == null) return;
+        ItemStack item = player.getInventory().getItemInMainHand();
 
         int result = item.getAmount() - amount;
         item.setAmount(result);
 
-        player.setItemInHand(result > 0 ? item : null);
+        player.getInventory().setItemInMainHand(result > 0 ? item : null);
     }
 }

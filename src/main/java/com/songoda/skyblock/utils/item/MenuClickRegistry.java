@@ -20,8 +20,8 @@ public final class MenuClickRegistry {
         return instance == null ? instance = new MenuClickRegistry() : instance;
     }
 
-    private Set<MenuPopulator> populators;
-    private Map<RegistryKey, MenuExecutor> executors;
+    private final Set<MenuPopulator> populators;
+    private final Map<RegistryKey, MenuExecutor> executors;
 
     private MenuClickRegistry() {
         this.executors = new HashMap<>();
@@ -59,13 +59,13 @@ public final class MenuClickRegistry {
         executor.onClick(SkyBlock.getInstance(), clicker, e);
     }
 
-    public static interface MenuPopulator {
+    public interface MenuPopulator {
 
         void populate(Map<RegistryKey, MenuExecutor> executors);
 
     }
 
-    public static interface MenuExecutor {
+    public interface MenuExecutor {
 
         void onClick(SkyBlock plugin, Player clicker, ClickEvent e);
 

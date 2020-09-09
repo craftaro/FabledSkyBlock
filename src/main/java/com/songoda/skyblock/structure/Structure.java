@@ -9,7 +9,7 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
 
     private CompatibleMaterial material;
 
-    private String name;
+    private final String name;
     private String overworldFile;
     private String netherFile;
     private String endFile;
@@ -17,8 +17,8 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
 
     private boolean permission;
 
-    private List<String> description = new ArrayList<>();
-    private List<String> commands = new ArrayList<>();
+    private final List<String> description;
+    private final List<String> commands;
 
     private double deletionCost;
 

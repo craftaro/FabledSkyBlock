@@ -19,13 +19,13 @@ public class LeaderboardManager {
 
     private final SkyBlock plugin;
 
-    private List<Leaderboard> leaderboardStorage = new ArrayList<>();
+    private final List<Leaderboard> leaderboardStorage = new ArrayList<>();
 
     public LeaderboardManager(SkyBlock plugin) {
         this.plugin = plugin;
 
         new LeaderboardTask(plugin).runTaskTimerAsynchronously(plugin, 0L,
-                plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
+                this.plugin.getConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
 
         resetLeaderboard();
         setupLeaderHeads();
@@ -43,7 +43,7 @@ public class LeaderboardManager {
         List<LeaderboardPlayer> islandBanks = new ArrayList<>(arraySize);
         List<LeaderboardPlayer> islandVotes = new ArrayList<>(arraySize);
 
-        boolean enableExemptions = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+        boolean enableExemptions = this.plugin.getConfiguration()
                 .getBoolean("Island.Leaderboard.Exemptions.Enable");
 
         for (UUID ownerUUID : new LinkedHashSet<>(visitManager.getIslands().keySet())) {

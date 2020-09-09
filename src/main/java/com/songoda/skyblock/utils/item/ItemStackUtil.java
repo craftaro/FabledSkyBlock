@@ -1,6 +1,5 @@
 package com.songoda.skyblock.utils.item;
 
-
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.utils.version.NMSUtil;
@@ -11,21 +10,26 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
-public final class ItemStackUtil {
+public class ItemStackUtil {
+
+    private static final boolean isAbove1_16_R1 = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)
+            && !ServerVersion.getServerVersionString().equals("v1_16_R1");
 
     public static ItemStack deserializeItemStack(String data) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(new BigInteger(data, 32).toByteArray());
         DataInputStream dataInputStream = new DataInputStream(inputStream);
 
         ItemStack itemStack = null;
-
+        
         try {
             Class<?> NBTTagCompoundClass = NMSUtil.getNMSClass("NBTTagCompound");
             Class<?> NMSItemStackClass = NMSUtil.getNMSClass("ItemStack");
-            Object NBTTagCompound = NMSUtil.getNMSClass("NBTCompressedStreamTools")
+            Object NBTTagCompound = isAbove1_16_R1 ? NMSUtil.getNMSClass("NBTCompressedStreamTools")
+                    .getMethod("a", DataInput.class).invoke(null, dataInputStream)
+                    : NMSUtil.getNMSClass("NBTCompressedStreamTools")
                     .getMethod("a", DataInputStream.class).invoke(null, dataInputStream);
             Object craftItemStack;
-    
+
             assert NMSItemStackClass != null;
             if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                 craftItemStack = NMSItemStackClass.getMethod("a", NBTTagCompoundClass).invoke(null, NBTTagCompound);
@@ -77,4 +81,5 @@ public final class ItemStackUtil {
 
         return new BigInteger(1, outputStream.toByteArray()).toString(32);
     }
+
 }

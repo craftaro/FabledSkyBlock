@@ -17,12 +17,11 @@ import java.util.List;
 
 public class DefaultInventory {
 	private final Item defaultItem = new Item(new ItemStack(Material.AIR));
-	private int size;
-	private Item[][] items;
+	private final int size;
+	private final Item[][] items;
 
 	public DefaultInventory(SkyBlock plugin) {
-		Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "challenges.yml"));
-		FileConfiguration configLoad = config.getFileConfiguration();
+		FileConfiguration configLoad = plugin.getChallenges();
 		size = configLoad.getInt("inventory.size");
 		items = new Item[9][size];
 		ConfigurationSection section = configLoad.getConfigurationSection("inventory.items");
@@ -35,7 +34,7 @@ public class DefaultInventory {
 			int col = configLoad.getInt(k + ".col");
 			String strItem = configLoad.getString(k + ".item");
 			int amount = configLoad.getInt(k + ".amount");
-			String name = ChatColor.translateAlternateColorCodes('&', configLoad.getString(k + ".name"));
+			String name = plugin.formatText(configLoad.getString(k + ".name"));
 			List<String> lore = toColor(configLoad.getStringList(k + ".lore"));
 			int redirect = configLoad.getInt(k + ".redirect");
 			CompatibleMaterial material = CompatibleMaterial.getMaterial(strItem);

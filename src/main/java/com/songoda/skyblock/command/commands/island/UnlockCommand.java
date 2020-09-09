@@ -45,7 +45,7 @@ public class UnlockCommand extends SubCommand {
             return;
         }
 
-        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.World." + type + ".Enable")) {
+        if (!this.plugin.getConfiguration().getBoolean("Island.World." + type + ".Enable")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Disabled.Message").replace("%type%", type));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             return;

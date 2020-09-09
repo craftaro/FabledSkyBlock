@@ -79,8 +79,7 @@ public class SetSizeCommand extends SubCommand {
                                 .getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                         island.setSize(size);
 
-                        if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                .getFileConfiguration().getBoolean("Island.WorldBorder.Enable")
+                        if (this.plugin.getConfiguration().getBoolean("Island.WorldBorder.Enable")
                                 && island.isBorder()) {
                             islandManager.updateBorder(island);
                         }

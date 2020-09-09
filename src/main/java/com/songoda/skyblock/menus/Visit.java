@@ -54,8 +54,7 @@ public class Visit {
         VisitManager visitManager = plugin.getVisitManager();
         FileManager fileManager = plugin.getFileManager();
 
-        FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                .getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
             if (playerDataManager.hasPlayerData(player)) {
@@ -171,8 +170,7 @@ public class Visit {
                                 if ((!island.hasRole(IslandRole.Member, player.getUniqueId())
                                         && !island.hasRole(IslandRole.Operator, player.getUniqueId())
                                         && !island.hasRole(IslandRole.Owner, player.getUniqueId()))
-                                        && fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                        .getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
+                                        && plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
                                     if (event.getClick() == ClickType.RIGHT) {
                                         if (playerData.getIsland() != null
                                                 && playerData.getIsland().equals(island.getOwnerUUID())) {
@@ -268,8 +266,7 @@ public class Visit {
         Map<UUID, com.songoda.skyblock.visit.Visit> openIslands = visitManager.getOpenIslands();
         List<com.songoda.skyblock.visit.Visit> visitIslands = new ArrayList<>();
 
-        boolean keepBannedIslands = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getBoolean("Island.Visit.Menu.Bans");
+        boolean keepBannedIslands = plugin.getConfiguration().getBoolean("Island.Visit.Menu.Bans");
 
         for (int i = 0; i < openIslands.size(); i++) {
             UUID islandOwnerUUID = (UUID) openIslands.keySet().toArray()[i];
@@ -383,14 +380,12 @@ public class Visit {
             nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER),
                     configLoad.getString("Menu.Visit.Item.Nothing.Displayname"), null, null, null, null), 31);
         } else {
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
-
             int index = playerMenuPage * 36 - 36,
                     endIndex = index >= visitIslands.size() ? visitIslands.size() - 1 : index + 36, inventorySlot = 17,
-                    playerCapacity = config.getFileConfiguration().getInt("Island.Visitor.Capacity");
+                    playerCapacity = plugin.getConfiguration().getInt("Island.Visitor.Capacity");
 
-            boolean voteEnabled = config.getFileConfiguration().getBoolean("Island.Visitor.Vote");
-            boolean signatureEnabled = config.getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable");
+            boolean voteEnabled = plugin.getConfiguration().getBoolean("Island.Visitor.Vote");
+            boolean signatureEnabled = plugin.getConfiguration().getBoolean("Island.Visitor.Signature.Enable");
 
             for (; index < endIndex; index++) {
                 if (visitIslands.size() > index) {

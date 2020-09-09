@@ -34,12 +34,12 @@ public class World implements Listener {
                     break;
                 case NETHER:
                     if(!to.getBlock().getBiome().equals(CompatibleBiome.NETHER_WASTES.getBiome())) {
-                        biomeManager.setBiome(island, IslandWorld.Nether, CompatibleBiome.NETHER_WASTES.getBiome(), null);
+                        biomeManager.setBiome(island, IslandWorld.Nether, CompatibleBiome.NETHER_WASTES, null);
                     }
                     break;
                 case THE_END:
                     if(!to.getBlock().getBiome().equals(CompatibleBiome.THE_END.getBiome())) {
-                        biomeManager.setBiome(island, IslandWorld.End, CompatibleBiome.THE_END.getBiome(), null);
+                        biomeManager.setBiome(island, IslandWorld.End, CompatibleBiome.THE_END, null);
                     }
                     break;
             }

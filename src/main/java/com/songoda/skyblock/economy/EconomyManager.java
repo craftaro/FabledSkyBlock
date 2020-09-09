@@ -15,16 +15,14 @@ public class EconomyManager extends Manager {
         economy = com.songoda.core.hooks.EconomyManager.getEconomy();
     }
     
-    public boolean setEconomy(String economyString) {
+    public void setEconomy(String economyString) {
         Hook hook = com.songoda.core.hooks.EconomyManager.getManager().getHook(economyString);
         if(hook != null &&
                 hook.isEnabled() &&
                 hook instanceof Economy &&
                 !hook.equals(com.songoda.core.hooks.EconomyManager.getManager().getCurrentHook())) {
             this.economy = (Economy) hook;
-            return true;
         }
-        return false;
     }
     
     public Economy getEconomy() {

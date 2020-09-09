@@ -6,6 +6,7 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.levelling.amount.AmountMaterialPair;
 import com.songoda.skyblock.levelling.calculator.Calculator;
 import com.songoda.skyblock.levelling.calculator.CalculatorRegistry;
@@ -21,6 +22,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
@@ -29,8 +31,8 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public final class IslandLevelManager {
-    
-    private final Map<Island, IslandScan> inScan;
+
+    private final Map<Island, QueuedIslandScan> inScan;
     private final Map<CompatibleMaterial, Double> worth;
     private final Map<CompatibleMaterial, AmountMaterialPair> cachedPairs;
     private final SkyBlock plugin;
@@ -44,7 +46,7 @@ public final class IslandLevelManager {
         reloadWorth();
     }
 
-    public void startScan(Player attemptScanner, Island island){
+    public void startScan(Player attemptScanner, Island island) {
         if (!Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTask(SkyBlock.getInstance(), () -> startScan(attemptScanner, island));
             return;
@@ -52,7 +54,7 @@ public final class IslandLevelManager {
 
         if (island == null) throw new IllegalArgumentException("island cannot be null");
 
-        Configuration config = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration();
+        Configuration config = SkyBlock.getInstance().getLanguage();
         MessageManager messageManager = SkyBlock.getInstance().getMessageManager();
 
         if (inScan.containsKey(island)) {
@@ -70,7 +72,17 @@ public final class IslandLevelManager {
             messageManager.sendMessage(attemptScanner, config.getString("Command.Island.Level.Scanning.Started.Message"));
         }
 
-        inScan.put(island, new IslandScan(plugin, island).start());
+        QueuedIslandScan queuedIslandScan = new QueuedIslandScan(plugin, island);
+
+        queuedIslandScan.addToScan(IslandWorld.Normal);
+        if (island.isRegionUnlocked(null, IslandWorld.Nether))
+            queuedIslandScan.addToScan(IslandWorld.Nether);
+        if (island.isRegionUnlocked(null, IslandWorld.End))
+            queuedIslandScan.addToScan(IslandWorld.End);
+
+        queuedIslandScan.scan();
+
+        inScan.put(island, queuedIslandScan);
     }
 
     public boolean isScanning(Island island) {
@@ -79,17 +91,18 @@ public final class IslandLevelManager {
 
     void stopScan(Island island) {
 
-        final IslandScan scan = inScan.get(island);
+        final QueuedIslandScan queuedIslandScan = inScan.get(island);
 
-        if (scan == null) return;
+        if (queuedIslandScan == null) return;
 
-        inScan.remove(island);
+        if (!queuedIslandScan.scan())
+            inScan.remove(island);
     }
 
     public void reloadWorth() {
         worth.clear();
 
-        final Configuration config = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "levelling.yml")).getFileConfiguration();
+        final Configuration config = SkyBlock.getInstance().getLevelling();
         final ConfigurationSection materialSection = config.getConfigurationSection("Materials");
 
         if (materialSection == null) return;
@@ -102,7 +115,7 @@ public final class IslandLevelManager {
 
             if (material == null) continue;
 
-            worth.put(material, current.getDouble("Points"));
+            worth.put(material, current.getDouble("Points", 0.0));
         }
     }
 
@@ -141,8 +154,10 @@ public final class IslandLevelManager {
         final CompatibleMaterial spawner = CompatibleMaterial.SPAWNER;
         final PluginManager pm = Bukkit.getPluginManager();
 
-        if (pm.isPluginEnabled("EpicSpawners")) CalculatorRegistry.registerCalculator(new EpicSpawnerCalculator(), spawner);
-        if (pm.isPluginEnabled("UltimateStacker")) CalculatorRegistry.registerCalculator(new UltimateStackerCalculator(), spawner);
+        if (pm.isPluginEnabled("EpicSpawners"))
+            CalculatorRegistry.registerCalculator(new EpicSpawnerCalculator(), spawner);
+        if (pm.isPluginEnabled("UltimateStacker"))
+            CalculatorRegistry.registerCalculator(new UltimateStackerCalculator(), spawner);
     }
 
     private static final AmountMaterialPair EMPTY = new AmountMaterialPair(null, 0);
@@ -206,7 +221,7 @@ public final class IslandLevelManager {
 
         return new AmountMaterialPair(compMaterial, amount + stackSize);
     }
-    
+
     public void updateLevel(Island island, Location location) {
         // Fix a bug in Paper 1.8.8 when using ViaVersion on a 1.12.2 client.
         // BUG: Player can infinitely increase their level by placing a block at their
@@ -218,7 +233,7 @@ public final class IslandLevelManager {
         // placed.
         // This shouldn't cause any issues besides the task number being increased
         // insanely fast.
-        if(ServerVersion.isServerVersion(ServerVersion.V1_8)){
+        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
             Bukkit.getScheduler().runTask(plugin, () -> {
                 updateLevelLocation(island, location);
             });
@@ -226,11 +241,11 @@ public final class IslandLevelManager {
             updateLevelLocation(island, location);
         }
     }
-    
+
     private void updateLevelLocation(Island island, Location location) {
         Block block = location.getBlock();
         CompatibleMaterial material = null;
-        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
             switch (block.getType().toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
@@ -238,30 +253,30 @@ public final class IslandLevelManager {
                     break;
             }
         }
-        if(material == null) {
+        if (material == null) {
             material = CompatibleMaterial.getMaterial(block);
         }
-        
+
         if (material == null || material == CompatibleMaterial.AIR) return;
-        
+
         if (material == CompatibleMaterial.SPAWNER) {
             if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") ||
                     Bukkit.getPluginManager().isPluginEnabled("UltimateStacker") ||
                     Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
                 return;
-    
+
             CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
-    
+
             if (spawner != null)
                 material = CompatibleMaterial.getBlockMaterial(spawner.getMaterial());
         }
-        
+
         long materialAmount = 0;
         IslandLevel level = island.getLevel();
-        
+
         if (level.hasMaterial(material.name()))
             materialAmount = level.getMaterialAmount(material.name());
-        
+
         level.setMaterialAmount(material.name(), materialAmount + 1);
     }
 }

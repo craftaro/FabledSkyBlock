@@ -28,10 +28,10 @@ import java.util.Map.Entry;
 
 public final class IslandScan extends BukkitRunnable {
 
-    private static final NumberFormat FORMATTER = NumberFormat.getInstance();
 
     private final Set<Location> doubleBlocks;
     private final Island island;
+    private final IslandWorld world;
     private final Map<CompatibleMaterial, BlockAmount> amounts;
     private final Configuration language;
     private final int runEveryX;
@@ -41,12 +41,13 @@ public final class IslandScan extends BukkitRunnable {
     private int blocksSize;
     private Queue<BlockInfo> blocks;
 
-    public IslandScan(SkyBlock plugin, Island island) {
+    public IslandScan(SkyBlock plugin, Island island, IslandWorld world) {
         if (island == null) throw new IllegalArgumentException("island cannot be null");
         this.plugin = plugin;
         this.island = island;
+        this.world = world;
         this.amounts = new EnumMap<>(CompatibleMaterial.class);
-        this.language = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml")).getFileConfiguration();
+        this.language = this.plugin.getLanguage();
         this.runEveryX = language.getInt("Command.Island.Level.Scanning.Progress.Display-Every-X-Scan");
         this.doubleBlocks = new HashSet<>();
     }
@@ -54,7 +55,7 @@ public final class IslandScan extends BukkitRunnable {
     public IslandScan start() {
         final SkyBlock plugin = SkyBlock.getInstance();
 
-        final FileConfiguration config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
+        final FileConfiguration config = this.plugin.getConfiguration();
         final FileConfiguration islandData = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), this.island.getOwnerUUID().toString() + ".yml")).getFileConfiguration();
 
         final boolean hasNether = config.getBoolean("Island.World.Nether.Enable") && islandData.getBoolean("Unlocked.Nether", false);
@@ -65,62 +66,27 @@ public final class IslandScan extends BukkitRunnable {
 
         if (plugin.isPaperAsync()) {
             Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-                initScan(plugin, hasNether, hasEnd, snapshots);
+                initScan(plugin);
             });
         } else {
-            initScan(plugin, hasNether, hasEnd, snapshots);
+            initScan(plugin);
         }
 
 
         return this;
     }
 
-    private void initScan(SkyBlock plugin, boolean hasNether, boolean hasEnd, Map<World, List<ChunkSnapshot>> snapshots) {
-        populate(snapshots, IslandWorld.Normal, plugin.isPaperAsync(), () -> {
+    private void initScan(SkyBlock plugin) {
 
-            if (hasNether) {
-                populate(snapshots, IslandWorld.Nether, plugin.isPaperAsync(), () -> {
-                    if (hasEnd) {
-                        populate(snapshots, IslandWorld.End, plugin.isPaperAsync(), () -> {
-                            BlockScanner.startScanner(snapshots, island, true, true, true, false, (blocks) -> {
-                                this.blocks = blocks;
-                                this.blocksSize = blocks.size();
-                                this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
-                            });
-                        });
-                    } else {
-                        BlockScanner.startScanner(snapshots, island, true, true, true, false, (blocks) -> {
-                            this.blocks = blocks;
-                            this.blocksSize = blocks.size();
-                            this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
-                        });
-                    }
-                });
-            } else {
-                BlockScanner.startScanner(snapshots, island, true, true, true, false, (blocks) -> {
-                    this.blocks = blocks;
-                    this.blocksSize = blocks.size();
-                    this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
-                });
-            }
+        final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
+
+        populate(snapshots, plugin.isPaperAsync(), () -> {
+            BlockScanner.startScanner(snapshots, island, true, true, true, false, (blocks) -> {
+                this.blocks = blocks;
+                this.blocksSize = blocks.size();
+                this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
+            });
         });
-    }
-
-    private void finalizeBlocks() {
-
-        final Map<String, Long> materials = new HashMap<>(amounts.size());
-
-        for (Entry<CompatibleMaterial, BlockAmount> entry : amounts.entrySet()) {
-            materials.put(entry.getKey().name(), entry.getValue().getAmount());
-        }
-
-        final IslandLevel level = island.getLevel();
-
-        level.setMaterials(materials);
-        level.setLastCalculatedLevel(level.getLevel());
-        level.setLastCalculatedPoints(level.getPoints());
-
-        Bukkit.getServer().getPluginManager().callEvent(new IslandLevelChangeEvent(island.getAPIWrapper(), island.getAPIWrapper().getLevel()));
     }
 
     private int executions;
@@ -159,54 +125,22 @@ public final class IslandScan extends BukkitRunnable {
         totalScanned += scanned;
 
         if (blocks.isEmpty()) {
-            finalizeBlocks();
             cancel();
             SkyBlock.getInstance().getLevellingManager().stopScan(island);
         }
-
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            if (language.getBoolean("Command.Island.Level.Scanning.Progress.Should-Display-Message") && executions == 1 || totalScanned == blocksSize || executions % runEveryX == 0) {
-
-                double percent = ((double) totalScanned / (double) blocksSize) * 100;
-
-                if(Double.isNaN(percent)) {
-                    percent = 0d;
-                }
-                
-                String message = language.getString("Command.Island.Level.Scanning.Progress.Message");
-                message = message.replace("%current_scanned_blocks%", String.valueOf(totalScanned));
-                message = message.replace("%max_blocks%", String.valueOf(blocksSize));
-                message = message.replace("%percent_whole%", String.valueOf((int) percent));
-                message = message.replace("%percent%", FORMATTER.format(percent));
-
-                final boolean displayComplete = totalScanned == blocksSize && language.getBoolean("Command.Island.Level.Scanning.Finished.Should-Display-Message");
-                final MessageManager messageManager = SkyBlock.getInstance().getMessageManager();
-
-                for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
-
-                    messageManager.sendMessage(player, message);
-                    if (displayComplete)
-                        messageManager.sendMessage(player, language.getString("Command.Island.Level.Scanning.Finished.Message"));
-
-                    // Check for level ups
-                    island.getLevel().checkLevelUp();
-                }
-            }
-        });
     }
 
-    private void populate(Map<World, List<ChunkSnapshot>> snapshots, IslandWorld world, boolean paper, PopulateTask task) {
+    private void populate(Map<World, List<ChunkSnapshot>> snapshots, boolean paper, PopulateTask task) {
 
         final SkyBlock plugin = SkyBlock.getInstance();
-    
         List<ChunkSnapshot> positions = new LinkedList<>();
-        
-        ChunkLoader.startChunkLoadingPerChunk(island, IslandWorld.Normal, paper, (chunkCompletableFuture) ->
-                positions.add(chunkCompletableFuture.join().getChunkSnapshot()),
+
+        ChunkLoader.startChunkLoadingPerChunk(island, world, paper, (chunkCompletableFuture) ->
+                        positions.add(chunkCompletableFuture.join().getChunkSnapshot()),
                 value -> {
-            snapshots.put(plugin.getWorldManager().getWorld(world), positions);
-            task.onComplete();
-        });
+                    snapshots.put(plugin.getWorldManager().getWorld(world), positions);
+                    task.onComplete();
+                });
     }
 
     private interface PopulateTask {
@@ -217,4 +151,19 @@ public final class IslandScan extends BukkitRunnable {
         return doubleBlocks;
     }
 
+    public Map<CompatibleMaterial, BlockAmount> getAmounts() {
+        return Collections.unmodifiableMap(amounts);
+    }
+
+    public int getTotalScanned() {
+        return totalScanned;
+    }
+
+    public int getBlocksSize() {
+        return blocksSize;
+    }
+
+    public int getExecutions() {
+        return executions;
+    }
 }

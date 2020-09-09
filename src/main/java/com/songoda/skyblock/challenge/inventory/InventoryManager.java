@@ -20,9 +20,8 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class InventoryManager implements Listener {
-	private SkyBlock plugin;
-	private HashMap<UUID, Inventory> inventories;
-	private int task;
+	private final SkyBlock plugin;
+	private final HashMap<UUID, Inventory> inventories;
 
 	public InventoryManager(SkyBlock plugin) {
 		this.plugin = plugin;
@@ -31,7 +30,7 @@ public class InventoryManager implements Listener {
 
 	public void init() {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
-		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+		int task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
 			if (inventories.size() == 0)
 				return;
 			for (Inventory inv : inventories.values()) {

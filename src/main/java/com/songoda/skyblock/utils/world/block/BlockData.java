@@ -36,7 +36,7 @@ public class BlockData {
     private String facing;
     private int charges = 0;
 
-    private Map<Integer, String> inventory = new HashMap<>();
+    private final Map<Integer, String> inventory = new HashMap<>();
 
     private int version;
     private int x = 0;

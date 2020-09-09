@@ -34,9 +34,7 @@ public abstract class BasicPermission {
 
     public ItemStack getItem(boolean permissionEnabled, IslandRole role) {
         ItemStack is = icon.getItem();
-        FileManager.Config config = SkyBlock.getInstance().getFileManager()
-                .getConfig(new File(SkyBlock.getInstance().getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = SkyBlock.getInstance().getLanguage();
 
         List<String> itemLore = new ArrayList<>();
 

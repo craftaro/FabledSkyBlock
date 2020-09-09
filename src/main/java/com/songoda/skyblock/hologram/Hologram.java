@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Hologram {
 
-    private HologramType type;
-    private Location location;
+    private final HologramType type;
+    private final Location location;
 
     public Hologram(HologramType type, Location location, List<String> lines) {
         this.type = type;

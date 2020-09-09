@@ -21,8 +21,7 @@ public class RewardManager {
     }
 
     public void loadRewards() {
-        final Config config = skyBlock.getFileManager().getConfig(new File(skyBlock.getDataFolder(), "rewards.yml"));
-        final FileConfiguration configLoad = config.getFileConfiguration();
+        final FileConfiguration configLoad = skyBlock.getRewards();
 
         this.registeredRewards.clear();
         this.repeatRewards.clear();
@@ -59,7 +58,7 @@ public class RewardManager {
     }
 
     private LevelReward loadReward(String path) {
-        final FileConfiguration config = skyBlock.getFileManager().getConfig(new File(skyBlock.getDataFolder(), "rewards.yml")).getFileConfiguration();
+        final FileConfiguration config = this.skyBlock.getRewards();
 
         ConfigurationSection section = config.getConfigurationSection(path);
 

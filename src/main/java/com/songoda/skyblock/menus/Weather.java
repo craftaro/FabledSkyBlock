@@ -45,11 +45,9 @@ public class Weather {
         IslandManager islandManager = plugin.getIslandManager();
         PermissionManager permissionManager = plugin.getPermissionManager();
         SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            FileConfiguration configLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
-                    .getFileConfiguration();
+            FileConfiguration configLoad = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                 if (playerDataManager.hasPlayerData(player)) {
@@ -118,8 +116,7 @@ public class Weather {
                                 all.resetPlayerTime();
                                 all.resetPlayerWeather();
                                 all.setPlayerTime(island.getTime(),
-                                        fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                                .getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+                                        plugin.getConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                 all.setPlayerWeather(island.getWeather());
                             }
                         }
@@ -141,8 +138,7 @@ public class Weather {
                                 all.resetPlayerTime();
                                 all.resetPlayerWeather();
                                 all.setPlayerTime(island.getTime(),
-                                        fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                                .getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+                                        plugin.getConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                 all.setPlayerWeather(island.getWeather());
                             }
                         }
@@ -161,8 +157,7 @@ public class Weather {
 
                             for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
                                 all.setPlayerTime(islandTime,
-                                        fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
-                                                .getFileConfiguration().getBoolean("Island.Weather.Time.Cycle"));
+                                        plugin.getConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                 all.setPlayerWeather(islandWeather);
                             }
                         } else {

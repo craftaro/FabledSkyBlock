@@ -92,7 +92,7 @@ public class SetBiomeCommand extends SubCommand {
                 } else {
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
-                        biomeManager.setBiome(island, world, biome.getBiome(), null);
+                        biomeManager.setBiome(island, world, biome, null);
                         if(world.equals(IslandWorld.Normal)) {
                             island.setBiome(biome.getBiome());
                         }
@@ -106,7 +106,7 @@ public class SetBiomeCommand extends SubCommand {
                         } else {
                             CompatibleBiome finalBiome = biome;
                             IslandWorld finalWorld = world;
-                            biomeManager.setBiome(island, world, biome.getBiome(), () -> {
+                            biomeManager.setBiome(island, world, biome, () -> {
                                 if(finalWorld.equals(IslandWorld.Normal)) {
                                     island.setBiome(finalBiome.getBiome());
                                 }

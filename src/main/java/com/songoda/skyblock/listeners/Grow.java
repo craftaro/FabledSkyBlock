@@ -68,7 +68,6 @@ public class Grow implements Listener {
             // The structure is growing from one island to another.
             if (!origin.getIslandUUID().equals(growingTo.getIslandUUID())) {
                 it.remove();
-                continue;
             }
         }
     }
@@ -86,7 +85,7 @@ public class Grow implements Listener {
         // Check spawn block protection
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
-            if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
+            if (this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 return;
             }
@@ -155,7 +154,7 @@ public class Grow implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onStructureCreate(StructureGrowEvent event) {
-        if (!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Spawn.Protection")) return;
+        if (!this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) return;
 
         List<BlockState> blocks = event.getBlocks();
         if (blocks.isEmpty()) return;

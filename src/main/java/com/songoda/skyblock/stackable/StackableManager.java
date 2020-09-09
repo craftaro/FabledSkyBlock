@@ -19,8 +19,8 @@ public class StackableManager {
     // ToDO: Should pobably be a GUI for this
 
     private final SkyBlock plugin;
-    private Set<CompatibleMaterial> stackableMaterials = EnumSet.noneOf(CompatibleMaterial.class);
-    private Map<Location, Stackable> stacks = new HashMap<>();
+    private final Set<CompatibleMaterial> stackableMaterials = EnumSet.noneOf(CompatibleMaterial.class);
+    private final Map<Location, Stackable> stacks = new HashMap<>();
 
     public StackableManager(SkyBlock plugin) {
         this.plugin = plugin;
@@ -28,8 +28,7 @@ public class StackableManager {
     }
 
     public void registerStackables() {
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "stackables.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getStackables();
 
         List<String> stackableList = configLoad.getStringList("Stackables");
         if (stackableList.isEmpty()) return;

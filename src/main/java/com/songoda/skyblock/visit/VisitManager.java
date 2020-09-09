@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class VisitManager {
 
     private final SkyBlock plugin;
-    private HashMap<UUID, Visit> visitStorage = new HashMap<>();
+    private final HashMap<UUID, Visit> visitStorage = new HashMap<>();
 
     public VisitManager(SkyBlock plugin) {
         this.plugin = plugin;
@@ -40,7 +40,7 @@ public class VisitManager {
         WorldManager worldManager = plugin.getWorldManager();
         FileManager fileManager = plugin.getFileManager();
 
-        if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration()
+        if (!this.plugin.getConfiguration()
                 .getBoolean("Island.Visitor.Unload")) {
             File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
 
@@ -53,14 +53,6 @@ public class VisitManager {
                         FileConfiguration configLoad = config.getFileConfiguration();
 
                         UUID islandOwnerUUID = FastUUID.parseUUID(fileList.getName().replace(".yml", ""));
-
-                        if (islandOwnerUUID == null) {
-                            islandOwnerUUID = FastUUID.parseUUID(fileList.getName().replaceFirst("[.][^.]+$", ""));
-
-                            if (islandOwnerUUID == null) {
-                                continue;
-                            }
-                        }
 
                         List<String> islandSignature = new ArrayList<>();
 

@@ -32,8 +32,7 @@ public class InviteTask extends BukkitRunnable {
         MessageManager messageManager = plugin.getMessageManager();
         SoundManager soundManager = plugin.getSoundManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = this.plugin.getLanguage();
 
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (inviteManager.hasInvite(all.getUniqueId())) {

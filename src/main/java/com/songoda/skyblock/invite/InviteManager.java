@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class InviteManager {
 
-    private Map<UUID, Invite> inviteStorage = new HashMap<>();
+    private final Map<UUID, Invite> inviteStorage = new HashMap<>();
 
     public InviteManager(SkyBlock plugin) {
         new InviteTask(this, plugin).runTaskTimerAsynchronously(plugin, 0L, 20L);

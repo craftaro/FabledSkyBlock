@@ -50,7 +50,7 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
             if (type == null)
                 throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
-    
+
             getMap().put(type, loadFrom.getLong(key));
         }
 
@@ -67,7 +67,7 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
         if (player.hasPermission("fabledskyblock.limit.block.*")) return -1;
 
         CompatibleMaterial material = null;
-        if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
             switch (type.toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
@@ -75,7 +75,7 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
                     break;
             }
         }
-        if(material == null) {
+        if (material == null) {
             material = CompatibleMaterial.getMaterial(type);
         }
 
@@ -87,21 +87,21 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
     }
 
     public boolean isBlockLimitExceeded(Block block, long limit) {
-        return this.isBlockLimitExceeded(block.getType(), block.getLocation(), limit);
+        return this.isBlockLimitExceeded(CompatibleMaterial.getMaterial(block), block.getLocation(), limit);
     }
 
-    public boolean isBlockLimitExceeded(Material type, Location loc, long limit) {
+    public boolean isBlockLimitExceeded(CompatibleMaterial type, Location loc, long limit) {
         if (limit == -1) return false;
 
         final IslandManager islandManager = SkyBlock.getInstance().getIslandManager();
         final Island island = islandManager.getIslandAtLocation(loc);
         final long totalPlaced;
 
-        if (type == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
+        if (type == CompatibleMaterial.SPAWNER) {
             totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {
             CompatibleMaterial material = null;
-            if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
                 switch (type.toString().toUpperCase()) {
                     case "DIODE_BLOCK_OFF":
                     case "DIODE_BLOCK_ON":
@@ -109,9 +109,7 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
                         break;
                 }
             }
-            if(material == null) {
-                material = CompatibleMaterial.getMaterial(type);
-            }
+            if (material == null) material = type;
             totalPlaced = island.getLevel().getMaterialAmount(material.name());
         }
 

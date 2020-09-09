@@ -20,15 +20,12 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 public class nInventoryUtil {
 
-    private Player player;
+    private final Player player;
     private Listener listener;
 
     private Inventory inv;
@@ -36,7 +33,7 @@ public class nInventoryUtil {
     private String title;
     private int size = 9;
     private InventoryType type;
-    private Map<Integer, ItemStack> items = new HashMap<>();
+    private final Map<Integer, ItemStack> items = new HashMap<>();
 
     public nInventoryUtil(Player player, final ClickEventHandler handler) {
         this.player = player;
@@ -100,15 +97,11 @@ public class nInventoryUtil {
     }
 
     public void addItem(Item item, int... slots) {
-        for (int slotList : slots) {
-            items.put(slotList, item.prepareItem());
-        }
+        Arrays.stream(slots).forEachOrdered(slotList -> items.put(slotList, item.prepareItem()));
     }
 
     public void addItemStack(ItemStack is, int... slots) {
-        for (int slotList : slots) {
-            items.put(slotList, is);
-        }
+        Arrays.stream(slots).forEachOrdered(slotList -> items.put(slotList, is));
     }
 
     public Map<Integer, ItemStack> getItems() {
@@ -160,9 +153,7 @@ public class nInventoryUtil {
             }
         }
 
-        for(Entry<Integer, ItemStack> entry : items.entrySet()) {
-            inv.setItem(entry.getKey(), entry.getValue());
-        }
+        items.forEach((key, value) -> inv.setItem(key, value));
     }
 
     public Inventory getInventory() {
@@ -192,12 +183,12 @@ public class nInventoryUtil {
 
     public static class Item {
 
-        private ItemStack is;
-        private String itemDisplayname;
+        private final ItemStack is;
+        private final String itemDisplayname;
         private List<String> itemLore;
-        private Placeholder[] placeholders;
-        private Enchantment[] itemEnchantments;
-        private ItemFlag[] itemFlags;
+        private final Placeholder[] placeholders;
+        private final Enchantment[] itemEnchantments;
+        private final ItemFlag[] itemFlags;
 
         public Item(ItemStack is, String itemDisplayname, List<String> itemLore, Placeholder[] placeholders, Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
             this.is = is;
@@ -257,9 +248,9 @@ public class nInventoryUtil {
 
     public class ClickEvent {
 
-        private ClickType click;
-        private int slot;
-        private ItemStack is;
+        private final ClickType click;
+        private final int slot;
+        private final ItemStack is;
 
         private boolean close = true;
         private boolean destroy = true;

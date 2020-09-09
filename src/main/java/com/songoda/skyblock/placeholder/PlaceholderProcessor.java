@@ -246,7 +246,7 @@ public class PlaceholderProcessor {
                 } else {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_maxmembers.Non-empty")
-                                    .replace("{PLACEHOLDER}", "" + island.getMaxMembers()));
+                                    .replace("{PLACEHOLDER}", "" + island.getMaxMembers(player)));
                 }
                 break;
             case "fabledskyblock_island_operators":

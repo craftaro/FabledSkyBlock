@@ -66,14 +66,13 @@ public class Levelling implements Listener {
             ItemStack itemStack = x.getMaterials().getItem();
             itemStack.setAmount(1);
             itemStack.setDurability(x.getItemStack().getDurability());
-            if (itemStack == null || itemStack.getItemMeta() == null) return false;
+            if (itemStack.getItemMeta() == null) return false;
             testInventory.clear();
             testInventory.setItem(0, itemStack);
             return testInventory.getItem(0) != null;
         }).collect(Collectors.toList());
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = plugin.getLanguage();
 
         nInventoryUtil nInv = new nInventoryUtil(player, null);
         nInv.addItem(
@@ -162,8 +161,7 @@ public class Levelling implements Listener {
             SoundManager soundManager = plugin.getSoundManager();
             FileManager fileManager = plugin.getFileManager();
 
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
-            FileConfiguration configLoad = config.getFileConfiguration();
+            FileConfiguration configLoad = plugin.getLanguage();
 
             String inventoryName = "";
             if (NMSUtil.getVersionNumber() > 13) {

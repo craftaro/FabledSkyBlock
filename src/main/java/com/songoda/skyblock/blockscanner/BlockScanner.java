@@ -77,7 +77,7 @@ public final class BlockScanner extends BukkitRunnable {
         this.completedNum = new AtomicInteger();
         this.island = island;
 
-        FileConfiguration config = SkyBlock.getInstance().getFileManager().getConfig(new File(SkyBlock.getInstance().getDataFolder(), "config.yml")).getFileConfiguration();
+        FileConfiguration config = SkyBlock.getInstance().getConfiguration();
 
         int threadCount = 0;
 
