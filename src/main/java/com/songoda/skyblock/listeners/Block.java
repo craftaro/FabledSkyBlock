@@ -251,6 +251,7 @@ public class Block implements Listener {
                         if(configLoad.getBoolean("Island.Restrict.NetherBlocks." + s, false)){
                             plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getLanguage().getString("Island.Unlock.NetherBlocksPlace.Message")));
                             event.setCancelled(true);
+                            return;
                         }
                     }
                 }
@@ -264,6 +265,7 @@ public class Block implements Listener {
                         if(configLoad.getBoolean("Island.Restrict.EndBlocks." + s)){
                             plugin.getMessageManager().sendMessage(player, Objects.requireNonNull(plugin.getLanguage().getString("Island.Unlock.EndBlocksPlace.Message")));
                             event.setCancelled(true);
+                            return;
                         }
                     }
                 }
