@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.hooks.EconomyManager;
 import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -53,15 +54,15 @@ public class AdminBank extends SubCommand {
             switch (args[0].toLowerCase()) {
                 case "balance":
                     if (args.length >= 3) {
-                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + economy.formatEconomy(economy.getBalance(Bukkit.getOfflinePlayer(island.getOwnerUUID())))));
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + EconomyManager.formatEconomy(economy.getBalance(Bukkit.getOfflinePlayer(island.getOwnerUUID())))));
                     } else {
-                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + economy.formatEconomy(economy.getBalance(Bukkit.getOfflinePlayer(args[1])))));
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", "" + EconomyManager.formatEconomy(economy.getBalance(Bukkit.getOfflinePlayer(args[1])))));
                     }
                     return;
                 case "deposit":
                     if (args.length >= 3) {
                         islandManager.getIslandByOwner(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).addToBank(Double.parseDouble(args[2]));
-                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesDeposit.Message").replace("%player%",args[1]).replace("%ammount%",economy.formatEconomy(Double.parseDouble(args[2]))));
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesDeposit.Message").replace("%player%",args[1]).replace("%ammount%",EconomyManager.formatEconomy(Double.parseDouble(args[2]))));
                     }else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
                     }
@@ -69,7 +70,7 @@ public class AdminBank extends SubCommand {
                 case "withdraw":
                     if (args.length >= 3) {
                         islandManager.getIslandByOwner(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).removeFromBank(Double.parseDouble(args[2]));
-                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesWithdraw.Message").replace("%player%",args[1]).replace("%ammount%",economy.formatEconomy(Double.parseDouble(args[2]))));
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.SuccesWithdraw.Message").replace("%player%",args[1]).replace("%ammount%",EconomyManager.formatEconomy(Double.parseDouble(args[2]))));
                     }else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
                     }
@@ -118,12 +119,12 @@ public class AdminBank extends SubCommand {
         }
         switch (args[0]) {
             case "balance":
-                messageManager.sendMessage(sender,configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%",args[1]).replace("%bal%",""+ economy.formatEconomy(economy.getBalance(Bukkit.getOfflinePlayer(args[1])))));
+                messageManager.sendMessage(sender,configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%",args[1]).replace("%bal%",""+ EconomyManager.formatEconomy(economy.getBalance(Bukkit.getOfflinePlayer(args[1])))));
                 return;
             case "deposit":
                 if (args.length >= 3) {
                     islandManager.getIslandByOwner(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).addToBank(Double.parseDouble(args[2]));
-                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.SuccesDeposit.Message").replace("%player%",args[1]).replace("%ammount%",economy.formatEconomy(Double.parseDouble(args[2]))));
+                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.SuccesDeposit.Message").replace("%player%",args[1]).replace("%ammount%",EconomyManager.formatEconomy(Double.parseDouble(args[2]))));
                 }else {
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
                 }
@@ -131,7 +132,7 @@ public class AdminBank extends SubCommand {
             case "withdraw":
                 if (args.length >= 3) {
                     islandManager.getIslandByOwner(Bukkit.getOfflinePlayer(Bukkit.getPlayer(args[1]).getUniqueId())).removeFromBank(Double.parseDouble(args[2]));
-                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.SuccesWithdraw.Message").replace("%player%",args[1]).replace("%ammount%",economy.formatEconomy(Double.parseDouble(args[2]))));
+                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.SuccesWithdraw.Message").replace("%player%",args[1]).replace("%ammount%",EconomyManager.formatEconomy(Double.parseDouble(args[2]))));
                 }else {
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.ByConsole.Message"));
                 }

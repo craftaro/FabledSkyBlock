@@ -1,5 +1,6 @@
 package com.songoda.skyblock.bank;
 
+import com.songoda.core.hooks.EconomyManager;
 import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -73,7 +74,7 @@ public class BankManager {
         }
     }
 
-    public List<String> getBalanceLore(Player player) {
+    public List<String> getBalanceLore(Player player) {;
         Economy economy = plugin.getEconomyManager().getEconomy();
         
         List<String> result = new ArrayList<>();
@@ -82,8 +83,8 @@ public class BankManager {
         result.add("If this is null then its a easy to fix bug: "+island.toString());
         if (island != null) {
             result.clear();
-            result.add(player.getDisplayName()+"'s balance is "+economy.formatEconomy(economy.getBalance(player)));
-            result.add(player.getDisplayName()+"'s island has "+ economy.formatEconomy(island.getBankBalance()));
+            result.add(player.getDisplayName()+"'s balance is "+ EconomyManager.formatEconomy(economy.getBalance(player)));
+            result.add(player.getDisplayName()+"'s island has "+ EconomyManager.formatEconomy(island.getBankBalance()));
         }
         return result;
     }
