@@ -3,6 +3,7 @@ package com.songoda.skyblock.cooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CooldownTask extends BukkitRunnable {
@@ -20,7 +21,7 @@ public class CooldownTask extends BukkitRunnable {
 
             if (cooldownPlayers == null) return;
 
-            for (CooldownPlayer cooldownPlayer : cooldownPlayers) {
+            for (CooldownPlayer cooldownPlayer : new ArrayList<>(cooldownPlayers)) {
                 Cooldown cooldown = cooldownPlayer.getCooldown();
 
                 cooldown.setTime(cooldown.getTime() - 1);
@@ -29,7 +30,6 @@ public class CooldownTask extends BukkitRunnable {
                     cooldownManager.deletePlayer(cooldownType, Bukkit.getServer().getOfflinePlayer(cooldownPlayer.getUUID()));
                 }
             }
-
         }
     }
 }
