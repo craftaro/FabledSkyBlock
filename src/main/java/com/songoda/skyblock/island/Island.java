@@ -463,7 +463,7 @@ public class Island {
     }
 
     public Biome getBiome() {
-        return CompatibleBiome.valueOf(plugin.getFileManager().getConfig(
+        return CompatibleBiome.getBiome(plugin.getFileManager().getConfig(
                 new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
                 .getFileConfiguration().getString("Biome.Type")).getBiome();
     }
