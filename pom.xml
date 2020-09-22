@@ -140,7 +140,7 @@
 		</repository>
 		<repository>
 			<id>public</id>
-			<url>http://repo.songoda.com/artifactory/public/</url>
+			<url>http://repo.songoda.com/repository/public/</url>
 		</repository>
 	</repositories>
 	<dependencies>
