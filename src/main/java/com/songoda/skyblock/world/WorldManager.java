@@ -3,9 +3,11 @@ package com.songoda.skyblock.world;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.IslandWorld;
+import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import com.songoda.skyblock.world.generator.VoidGenerator;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.generator.ChunkGenerator;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -17,6 +19,9 @@ public class WorldManager {
     private org.bukkit.World normalWorld;
     private org.bukkit.World netherWorld;
     private org.bukkit.World endWorld;
+    private ChunkGenerator normalWorldWorldGenerator;
+    private ChunkGenerator netherWorldWorldGenerator;
+    private ChunkGenerator endWorldWorldGenerator;
 
     public WorldManager(SkyBlock plugin) {
         this.plugin = plugin;
@@ -38,29 +43,35 @@ public class WorldManager {
         World.Environment netherWorldEnvironment = World.Environment.valueOf(configLoad.getString("Island.World.Nether.Environment"));
         World.Environment endWorldEnvironment = World.Environment.valueOf(configLoad.getString("Island.World.End.Environment"));
 
+        String normalWorldGeneratorName = configLoad.getString("Island.World.Normal.CustomWorldGenerator");
+        String netherWorldGeneratorName = configLoad.getString("Island.World.End.CustomWorldGenerator");
+        String endWorldGeneratorName = configLoad.getString("Island.World.End.CustomWorldGenerator");
+
+        normalWorldWorldGenerator = getWorldGenerator(normalWorldName, normalWorldGeneratorName);
+        netherWorldWorldGenerator = getWorldGenerator(netherWorldName, netherWorldGeneratorName);
+        endWorldWorldGenerator = getWorldGenerator(endWorldName, endWorldGeneratorName);
+
         normalWorld = Bukkit.getServer().getWorld(normalWorldName);
         netherWorld = Bukkit.getServer().getWorld(netherWorldName);
         endWorld = Bukkit.getServer().getWorld(endWorldName);
 
         if (normalWorld == null) {
             Bukkit.getServer().getLogger().log(Level.INFO, "SkyBlock | Info: Generating VoidWorld '" + normalWorldName + "'.");
-            normalWorld = WorldCreator.name(normalWorldName).type(WorldType.FLAT).environment(normalWorldEnvironment).generator(new VoidGenerator()).createWorld();
-
-            Bukkit.getServer().getScheduler().runTask(plugin, () -> registerMultiverse(normalWorldName, normalWorldEnvironment));
+            normalWorld = WorldCreator.name(normalWorldName).type(WorldType.FLAT).environment(normalWorldEnvironment).generator(normalWorldWorldGenerator).createWorld();
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> registerMultiverse(normalWorldName, normalWorldEnvironment, normalWorldGeneratorName));
         }
 
         if (netherWorld == null && netherWorldEnabled) {
             Bukkit.getServer().getLogger().log(Level.INFO, "SkyBlock | Info: Generating VoidWorld '" + netherWorldName + "'.");
-            netherWorld = WorldCreator.name(netherWorldName).type(WorldType.FLAT).environment(netherWorldEnvironment).generator(new VoidGenerator()).createWorld();
-
-            Bukkit.getServer().getScheduler().runTask(plugin, () -> registerMultiverse(netherWorldName, netherWorldEnvironment));
+            netherWorld = WorldCreator.name(netherWorldName).type(WorldType.FLAT).environment(netherWorldEnvironment).generator(netherWorldWorldGenerator).createWorld();
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> registerMultiverse(netherWorldName, netherWorldEnvironment, netherWorldGeneratorName));
         }
 
         if (endWorld == null && endWorldEnabled) {
             Bukkit.getServer().getLogger().log(Level.INFO, "SkyBlock | Info: Generating VoidWorld '" + endWorldName + "'.");
-            endWorld = WorldCreator.name(endWorldName).type(WorldType.FLAT).environment(endWorldEnvironment).generator(new VoidGenerator()).createWorld();
+            endWorld = WorldCreator.name(endWorldName).type(WorldType.FLAT).environment(endWorldEnvironment).generator(endWorldWorldGenerator).createWorld();
 
-            Bukkit.getServer().getScheduler().runTask(plugin, () -> registerMultiverse(endWorldName, endWorldEnvironment));
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> registerMultiverse(endWorldName, endWorldEnvironment, endWorldGeneratorName));
         }
 
         if (normalWorld != null)
@@ -73,11 +84,15 @@ public class WorldManager {
             endWorld.setDifficulty(Difficulty.valueOf(configLoad.getString("Island.World.End.Difficulty")));
     }
 
-    public void registerMultiverse(String worldName, World.Environment environment) {
-        if (Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core") != null) {
-            Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv import " + worldName + " " + environment.name().toLowerCase() + " -g " + plugin.getName());
-            Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv modify set generator " + plugin.getName() + " " + worldName);
+    public void registerMultiverse(String worldName, World.Environment environment, String worldGeneratorName) {
+        if (Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core") == null) {
+            return;
         }
+        if (worldGeneratorName.toLowerCase().equals("default") || worldGeneratorName == null) {
+            worldGeneratorName = plugin.getName();
+        }
+        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv import " + worldName + " " + environment.name().toLowerCase() + " -g " + plugin.getName());
+        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv modify set generator " + worldGeneratorName + " " + worldName);
     }
 
     public World getWorld(IslandWorld world) {
@@ -122,5 +137,29 @@ public class WorldManager {
         }
 
         return location;
+    }
+
+    private ChunkGenerator getWorldGenerator(String mapName, String worldGeneratorName) {
+        if (worldGeneratorName == null || worldGeneratorName == "default" || worldGeneratorName.length() == 0) {
+            return new VoidGenerator();
+        }
+
+        ChunkGenerator customWorldGenerator = WorldCreator.getGeneratorForName(mapName, worldGeneratorName, null);
+
+        if (customWorldGenerator != null) {
+            return customWorldGenerator;
+        }
+
+        return new VoidGenerator();
+    }
+
+    public ChunkGenerator getWorldGeneratorForMapName(String mapName) {
+        if (normalWorld != null && normalWorld.getName().equals(mapName)) return normalWorldWorldGenerator;
+
+        if (netherWorld != null && netherWorld.getName().equals(mapName)) return netherWorldWorldGenerator;
+
+        if (endWorld != null && endWorld.getName().equals(mapName)) return endWorldWorldGenerator;
+
+        return new VoidGenerator();
     }
 }

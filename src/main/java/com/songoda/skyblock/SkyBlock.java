@@ -52,6 +52,9 @@ import net.coreprotect.CoreProtectAPI;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.WorldCreator;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
@@ -479,7 +482,7 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-        return new VoidGenerator();
+        return worldManager.getWorldGeneratorForMapName(worldName);
     }
 
     public LocalizationManager getLocalizationManager() {

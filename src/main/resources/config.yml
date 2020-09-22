@@ -89,6 +89,7 @@ Island:
         # Valid Difficulties: PEACEFUL, EASY, NORMAL, HARD
         Normal:
             Name: "island_normal_world"
+            CustomWorldGenerator: "default"
             IslandSpawnHeight: 72
             Environment: NORMAL
             Difficulty: NORMAL
@@ -98,6 +99,7 @@ Island:
                 Height: 60
         Nether:
             Name: "island_nether_world"
+            CustomWorldGenerator: "default"
             IslandSpawnHeight: 72
             Environment: NETHER
             UnlockPrice: 10000
@@ -109,6 +111,7 @@ Island:
                 Height: 60
         End:
             Name: "island_end_world"
+            CustomWorldGenerator: "default"
             IslandSpawnHeight: 72
             Environment: THE_END
             UnlockPrice: 50000
