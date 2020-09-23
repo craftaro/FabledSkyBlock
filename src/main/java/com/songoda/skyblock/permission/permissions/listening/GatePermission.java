@@ -23,17 +23,23 @@ public class GatePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK)
             return;
 
         Player player = event.getPlayer();
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+        if (material == null) return;
 
-        if (material == CompatibleMaterial.OAK_FENCE_GATE || material == CompatibleMaterial.ACACIA_FENCE_GATE
-                || material == CompatibleMaterial.BIRCH_FENCE_GATE || material == CompatibleMaterial.DARK_OAK_FENCE_GATE
-                || material == CompatibleMaterial.JUNGLE_FENCE_GATE || material == CompatibleMaterial.SPRUCE_FENCE_GATE)
-            cancelAndMessage(event, player, plugin, messageManager);
+        switch (material) {
+            case ACACIA_FENCE_GATE:
+            case OAK_FENCE_GATE:
+            case BIRCH_FENCE_GATE:
+            case JUNGLE_FENCE_GATE:
+            case SPRUCE_FENCE_GATE:
+            case WARPED_FENCE_GATE:
+            case CRIMSON_FENCE_GATE:
+            case DARK_OAK_FENCE_GATE:
+                cancelAndMessage(event, player, plugin, messageManager);
+        }
     }
 }

@@ -23,17 +23,23 @@ public class TrapdoorPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK)
             return;
 
         Player player = event.getPlayer();
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+        if (material == null) return;
 
-        if (material == CompatibleMaterial.OAK_TRAPDOOR || material == CompatibleMaterial.SPRUCE_TRAPDOOR
-                || material == CompatibleMaterial.BIRCH_TRAPDOOR || material == CompatibleMaterial.JUNGLE_TRAPDOOR
-                || material == CompatibleMaterial.ACACIA_TRAPDOOR || material == CompatibleMaterial.DARK_OAK_TRAPDOOR)
-            cancelAndMessage(event, player, plugin, messageManager);
+        switch (material) {
+            case OAK_TRAPDOOR:
+            case BIRCH_TRAPDOOR:
+            case ACACIA_TRAPDOOR:
+            case JUNGLE_TRAPDOOR:
+            case SPRUCE_TRAPDOOR:
+            case WARPED_TRAPDOOR:
+            case CRIMSON_TRAPDOOR:
+            case DARK_OAK_TRAPDOOR:
+                cancelAndMessage(event, player, plugin, messageManager);
+        }
     }
 }
