@@ -22,13 +22,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class FallBreak implements Listener {
+public class FallBreakListeners implements Listener {
 
     private final SkyBlock plugin;
     
     private final Set<FallingBlock> fallingBlocks;
 
-    public FallBreak(SkyBlock plugin) {
+    public FallBreakListeners(SkyBlock plugin) {
         this.plugin = plugin;
         this.fallingBlocks = new HashSet<>();
         

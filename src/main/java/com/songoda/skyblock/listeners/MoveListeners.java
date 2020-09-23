@@ -31,11 +31,11 @@ import org.bukkit.potion.PotionEffect;
 import java.io.File;
 import java.util.Objects;
 
-public class Move implements Listener {
+public class MoveListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Move(SkyBlock plugin) {
+    public MoveListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
     

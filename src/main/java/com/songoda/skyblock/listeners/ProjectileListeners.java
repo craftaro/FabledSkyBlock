@@ -7,11 +7,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
-public class Projectile implements Listener {
+public class ProjectileListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Projectile(SkyBlock plugin) {
+    public ProjectileListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

@@ -33,11 +33,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import java.io.File;
 import java.util.UUID;
 
-public class Teleport implements Listener {
+public class TeleportListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Teleport(SkyBlock plugin) {
+    public TeleportListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

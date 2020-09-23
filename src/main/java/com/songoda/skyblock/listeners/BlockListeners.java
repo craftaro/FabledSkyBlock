@@ -37,12 +37,12 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.util.*;
 
-public class Block implements Listener {
+public class BlockListeners implements Listener {
 
     private final SkyBlock plugin;
     private final Set<Location> generatorWaitingLocs;
 
-    public Block(SkyBlock plugin) {
+    public BlockListeners(SkyBlock plugin) {
         this.plugin = plugin;
         this.generatorWaitingLocs = new HashSet<>();
     }

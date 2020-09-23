@@ -6,11 +6,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
-public class Food implements Listener {
+public class FoodListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Food(SkyBlock plugin) {
+    public FoodListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

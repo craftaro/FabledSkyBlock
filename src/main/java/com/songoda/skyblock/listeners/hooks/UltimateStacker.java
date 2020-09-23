@@ -1,4 +1,4 @@
-package com.songoda.skyblock.listeners;
+package com.songoda.skyblock.listeners.hooks;
 
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;

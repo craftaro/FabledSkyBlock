@@ -30,13 +30,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Portal implements Listener {
+public class PortalListeners implements Listener {
 
     private final SkyBlock plugin;
 
     private final Map<UUID, Tick> tickCounter = new HashMap<>();
 
-    public Portal(SkyBlock plugin) {
+    public PortalListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

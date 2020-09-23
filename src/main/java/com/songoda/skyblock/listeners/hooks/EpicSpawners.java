@@ -1,4 +1,4 @@
-package com.songoda.skyblock.listeners;
+package com.songoda.skyblock.listeners.hooks;
 
 import com.songoda.epicspawners.api.events.SpawnerBreakEvent;
 import com.songoda.epicspawners.api.events.SpawnerChangeEvent;

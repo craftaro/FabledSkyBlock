@@ -26,6 +26,8 @@ import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
 import com.songoda.skyblock.listeners.*;
+import com.songoda.skyblock.listeners.hooks.EpicSpawners;
+import com.songoda.skyblock.listeners.hooks.UltimateStacker;
 import com.songoda.skyblock.localization.LocalizationManager;
 import com.songoda.skyblock.menus.admin.Creator;
 import com.songoda.skyblock.menus.admin.Generator;
@@ -224,30 +226,30 @@ public class SkyBlock extends SongodaPlugin {
         mobNetherWaterTask = MobNetherWaterTask.startTask(this);
 
         PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new Join(this), this);
-        pluginManager.registerEvents(new Quit(this), this);
-        pluginManager.registerEvents(new Block(this), this);
-        pluginManager.registerEvents(new Interact(this), this);
-        pluginManager.registerEvents(new Entity(this), this);
-        pluginManager.registerEvents(new Bucket(this), this);
-        pluginManager.registerEvents(new Projectile(this), this);
-        pluginManager.registerEvents(new Inventory(this), this);
-        pluginManager.registerEvents(new Item(this), this);
-        pluginManager.registerEvents(new Teleport(this), this);
-        pluginManager.registerEvents(new Portal(this), this);
-        pluginManager.registerEvents(new Move(this), this);
-        pluginManager.registerEvents(new Death(this), this);
-        pluginManager.registerEvents(new Respawn(this), this);
-        pluginManager.registerEvents(new Chat(this), this);
-        pluginManager.registerEvents(new Spawner(this), this);
-        pluginManager.registerEvents(new Food(this), this);
-        pluginManager.registerEvents(new Grow(this), this);
-        pluginManager.registerEvents(new Piston(this), this);
-        pluginManager.registerEvents(new FallBreak(this), this);
-        pluginManager.registerEvents(new World(this), this);
+        pluginManager.registerEvents(new JoinListeners(this), this);
+        pluginManager.registerEvents(new QuitListeners(this), this);
+        pluginManager.registerEvents(new BlockListeners(this), this);
+        pluginManager.registerEvents(new InteractListeners(this), this);
+        pluginManager.registerEvents(new EntityListeners(this), this);
+        pluginManager.registerEvents(new BucketListeners(this), this);
+        pluginManager.registerEvents(new ProjectileListeners(this), this);
+        pluginManager.registerEvents(new InventoryListeners(this), this);
+        pluginManager.registerEvents(new ItemListeners(this), this);
+        pluginManager.registerEvents(new TeleportListeners(this), this);
+        pluginManager.registerEvents(new PortalListeners(this), this);
+        pluginManager.registerEvents(new MoveListeners(this), this);
+        pluginManager.registerEvents(new DeathListeners(this), this);
+        pluginManager.registerEvents(new RespawnListeners(this), this);
+        pluginManager.registerEvents(new ChatListeners(this), this);
+        pluginManager.registerEvents(new SpawnerListeners(this), this);
+        pluginManager.registerEvents(new FoodListeners(this), this);
+        pluginManager.registerEvents(new GrowListeners(this), this);
+        pluginManager.registerEvents(new PistonListeners(this), this);
+        pluginManager.registerEvents(new FallBreakListeners(this), this);
+        pluginManager.registerEvents(new WorldListeners(this), this);
         
         if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
-            pluginManager.registerEvents(new Sponge(this), this);
+            pluginManager.registerEvents(new SpongeListeners(this), this);
         }
 
         if (pluginManager.isPluginEnabled("EpicSpawners"))

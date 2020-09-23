@@ -27,11 +27,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import java.io.File;
 import java.lang.reflect.Method;
 
-public class Join implements Listener {
+public class JoinListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Join(SkyBlock plugin) {
+    public JoinListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

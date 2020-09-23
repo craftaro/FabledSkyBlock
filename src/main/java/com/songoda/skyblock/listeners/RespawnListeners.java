@@ -17,11 +17,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import java.io.File;
 import java.util.logging.Level;
 
-public class Respawn implements Listener {
+public class RespawnListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Respawn(SkyBlock plugin) {
+    public RespawnListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 
