@@ -14,11 +14,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class Spawner implements Listener {
+public class SpawnerListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Spawner(SkyBlock plugin) {
+    public SpawnerListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

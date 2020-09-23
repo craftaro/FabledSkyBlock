@@ -15,11 +15,11 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 
 import java.io.File;
 
-public class Piston implements Listener {
+public class PistonListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Piston(SkyBlock plugin) {
+    public PistonListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

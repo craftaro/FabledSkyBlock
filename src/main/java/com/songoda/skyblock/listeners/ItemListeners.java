@@ -9,11 +9,11 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 @SuppressWarnings("deprecation")
-public class Item implements Listener {
+public class ItemListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Item(SkyBlock plugin) {
+    public ItemListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

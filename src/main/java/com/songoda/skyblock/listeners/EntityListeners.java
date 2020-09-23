@@ -41,13 +41,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class Entity implements Listener {
+public class EntityListeners implements Listener {
 
     private final SkyBlock plugin;
 
     private final Set<UUID> preventFireTicks = new HashSet<>();
 
-    public Entity(SkyBlock plugin) {
+    public EntityListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

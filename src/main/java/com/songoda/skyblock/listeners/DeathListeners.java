@@ -12,11 +12,11 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.io.File;
 
-public class Death implements Listener {
+public class DeathListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Death(SkyBlock plugin) {
+    public DeathListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

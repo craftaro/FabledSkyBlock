@@ -14,11 +14,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SpongeAbsorbEvent;
 
-public class Sponge implements Listener {
+public class SpongeListeners implements Listener {
     
     private final SkyBlock plugin;
     
-    public Sponge(SkyBlock plugin) {
+    public SpongeListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
     

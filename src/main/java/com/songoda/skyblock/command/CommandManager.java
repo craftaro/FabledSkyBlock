@@ -21,7 +21,12 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -145,16 +150,24 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     sendConsoleHelpCommands(sender);
                 } else {
                     String commandToExecute;
+                    String defaultCommand;
                     if (plugin.getIslandManager().getIsland(player) == null) {
-                        commandToExecute = mainConfig.getString("Command.Island.Aliases.NoIsland", "island create");
+                        defaultCommand = "island create";
+                        commandToExecute = mainConfig.getString("Command.Island.Aliases.NoIsland", defaultCommand);
                     } else {
-                        commandToExecute = mainConfig.getString("Command.Island.Aliases.IslandOwned", "island controlpanel");
+                        defaultCommand = "island controlpanel";
+                        commandToExecute = mainConfig.getString("Command.Island.Aliases.IslandOwned", defaultCommand);
                     }
-    
-                    if(commandToExecute.startsWith("/")) {
+
+                    if (commandToExecute.trim().equalsIgnoreCase("island") || commandToExecute.trim().equalsIgnoreCase("is")) {
+                        commandToExecute = defaultCommand;
+                        Bukkit.getLogger().warning("Cannot redirect /island to /island or /is, would result in an endless loop. Using the default.");
+                    }
+
+                    if (commandToExecute.startsWith("/")) {
                         commandToExecute = commandToExecute.substring(1);
                     }
-                    
+
                     String finalCommandToExecute = commandToExecute;
                     Bukkit.getServer().getScheduler().runTask(plugin, () ->
                             Bukkit.getServer().dispatchCommand(sender,
@@ -408,7 +421,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
         if (nextEndIndex <= -7) {
             plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Help.Page.Message"));
-            plugin.getSoundManager().playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
             return;
         }

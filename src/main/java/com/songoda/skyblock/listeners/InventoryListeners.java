@@ -6,11 +6,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
-public class Inventory implements Listener {
+public class InventoryListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Inventory(SkyBlock plugin) {
+    public InventoryListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

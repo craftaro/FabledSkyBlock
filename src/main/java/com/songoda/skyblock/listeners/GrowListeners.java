@@ -27,11 +27,11 @@ import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
-public class Grow implements Listener {
+public class GrowListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Grow(SkyBlock plugin) {
+    public GrowListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

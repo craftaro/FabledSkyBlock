@@ -42,11 +42,11 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import java.io.File;
 import java.util.HashMap;
 
-public class Interact implements Listener {
+public class InteractListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Interact(SkyBlock plugin) {
+    public InteractListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

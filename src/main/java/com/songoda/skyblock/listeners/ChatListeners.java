@@ -24,11 +24,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.io.File;
 import java.util.UUID;
 
-public class Chat implements Listener {
+public class ChatListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Chat(SkyBlock plugin) {
+    public ChatListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

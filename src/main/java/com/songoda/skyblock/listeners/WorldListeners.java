@@ -11,11 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
-public class World implements Listener {
+public class WorldListeners implements Listener {
     
     private final SkyBlock plugin;
     
-    public World(SkyBlock plugin) {
+    public WorldListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
     

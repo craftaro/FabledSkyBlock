@@ -4,7 +4,6 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.cooldown.Cooldown;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownPlayer;
@@ -32,7 +31,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -207,8 +205,9 @@ public class Levelling {
         int playerMenuPage = playerData.getPage(MenuType.LEVELLING), nextEndIndex = islandMaterials.size() - playerMenuPage * 36;
 
         nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(), configLoad.getString("Menu.Levelling.Item.Exit.Displayname"), null, null, null, null), 0, 8);
-        nInv.addItem(nInv.createItem(CompatibleMaterial.FIREWORK_STAR.getItem(), configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Rescan.Lore"), null, null,
-                new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 3, 5);
+        if (player.hasPermission("fabledskyblock.island.level.rescan"))
+            nInv.addItem(nInv.createItem(CompatibleMaterial.FIREWORK_STAR.getItem(), configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Rescan.Lore"), null, null,
+                    new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 3, 5);
         nInv.addItem(
                 nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Statistics.Lore"),
                         new Placeholder[]{new Placeholder("%level_points", NumberUtil.formatNumberByDecimal(level.getPoints())), new Placeholder("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))}, null, null),
@@ -274,14 +273,14 @@ public class Levelling {
                 is.setAmount(Math.min(Math.toIntExact(materialAmount), 64));
                 is.setType(CompatibleMaterial.getMaterial(is).getMaterial());
 
-                 long finalMaterialAmountCounted = materialAmountCounted;
+                long finalMaterialAmountCounted = materialAmountCounted;
                 List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");
                 lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned)).replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
                         .replace("%material", name).replace("%counted", NumberUtil.formatNumberByDecimal(finalMaterialAmountCounted)));
 
                 nInv.addItem(nInv.createItem(is, configLoad.getString("Menu.Levelling.Item.Material.Displayname").replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
-                        .replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)).replace("%material", name).replace("%counted", NumberUtil.formatNumberByDecimal(finalMaterialAmountCounted))
-                        ,lore, null, null, null), inventorySlot);
+                                .replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)).replace("%material", name).replace("%counted", NumberUtil.formatNumberByDecimal(finalMaterialAmountCounted))
+                        , lore, null, null, null), inventorySlot);
 
             }
         }

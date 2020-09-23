@@ -16,11 +16,11 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import java.io.File;
 
-public class Bucket implements Listener {
+public class BucketListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Bucket(SkyBlock plugin) {
+    public BucketListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 

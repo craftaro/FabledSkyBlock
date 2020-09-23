@@ -28,11 +28,11 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-public class Quit implements Listener {
+public class QuitListeners implements Listener {
 
     private final SkyBlock plugin;
 
-    public Quit(SkyBlock plugin) {
+    public QuitListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
 
