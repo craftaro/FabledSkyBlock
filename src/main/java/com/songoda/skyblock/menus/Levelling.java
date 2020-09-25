@@ -17,6 +17,7 @@ import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
@@ -210,7 +211,7 @@ public class Levelling {
                     new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 3, 5);
         nInv.addItem(
                 nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Statistics.Lore"),
-                        new Placeholder[]{new Placeholder("%level_points", NumberUtil.formatNumberByDecimal(level.getPoints())), new Placeholder("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))}, null, null),
+                        new Placeholder[]{new Placeholder("%level_points", NumberUtils.formatNumber(level.getPoints())), new Placeholder("%level", NumberUtils.formatNumber(level.getLevel()))}, null, null),
                 4);
         nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(), configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"), null, null, null, null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
@@ -275,11 +276,11 @@ public class Levelling {
 
                 long finalMaterialAmountCounted = materialAmountCounted;
                 List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");
-                lore.replaceAll(x -> x.replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned)).replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount))
-                        .replace("%material", name).replace("%counted", NumberUtil.formatNumberByDecimal(finalMaterialAmountCounted)));
+                lore.replaceAll(x -> x.replace("%points", NumberUtils.formatNumber(pointsEarned)).replace("%blocks", NumberUtils.formatNumber(materialAmount))
+                        .replace("%material", name).replace("%counted", NumberUtils.formatNumber(finalMaterialAmountCounted)));
 
-                nInv.addItem(nInv.createItem(is, configLoad.getString("Menu.Levelling.Item.Material.Displayname").replace("%points", NumberUtil.formatNumberByDecimal(pointsEarned))
-                                .replace("%blocks", NumberUtil.formatNumberByDecimal(materialAmount)).replace("%material", name).replace("%counted", NumberUtil.formatNumberByDecimal(finalMaterialAmountCounted))
+                nInv.addItem(nInv.createItem(is, configLoad.getString("Menu.Levelling.Item.Material.Displayname").replace("%points", NumberUtils.formatNumber(pointsEarned))
+                                .replace("%blocks", NumberUtils.formatNumber(materialAmount)).replace("%material", name).replace("%counted", NumberUtils.formatNumber(finalMaterialAmountCounted))
                         , lore, null, null, null), inventorySlot);
 
             }

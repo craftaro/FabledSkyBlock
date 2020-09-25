@@ -10,7 +10,7 @@ import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
@@ -123,7 +123,7 @@ public class PlaceholderProcessor {
                 } else {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_formatted.Non-empty").replace(
-                                    "{PLACEHOLDER}", "" + NumberUtil.formatNumberBySuffix(island.getLevel().getLevel())));
+                                    "{PLACEHOLDER}", "" + NumberUtils.formatWithSuffix(island.getLevel().getLevel())));
                 }
                 break;
             case "fabledskyblock_island_points":
@@ -318,7 +318,7 @@ public class PlaceholderProcessor {
                 } else {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance.Non-empty"))
-                            .replace("{PLACEHOLDER}", "" + NumberUtil.formatNumberByDecimal(island.getBankBalance()));
+                            .replace("{PLACEHOLDER}", "" + NumberUtils.formatNumber(island.getBankBalance()));
                 }
                 break;
             case "fabledskyblock_island_bank_balance_formatted":
@@ -328,7 +328,7 @@ public class PlaceholderProcessor {
                 } else {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance_formatted.Non-empty"))
-                            .replace("{PLACEHOLDER}", "" + NumberUtil.formatNumberBySuffix((long) island.getBankBalance()));
+                            .replace("{PLACEHOLDER}", "" + NumberUtils.formatWithSuffix((long) island.getBankBalance()));
                 }
                 break;
         }
@@ -362,7 +362,7 @@ public class PlaceholderProcessor {
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_votes.Non-empty")
                                     .replace("{POSITION}", "" + (value))
                                     .replace("{PLAYER}", islandOwnerName)
-                                    .replace("{VOTES}", NumberUtil.formatNumberByDecimal(visit.getVoters().size())));
+                                    .replace("{VOTES}", NumberUtils.formatNumber(visit.getVoters().size())));
                 } else {
     
                     returnValue = TextUtils.formatText(
@@ -396,7 +396,7 @@ public class PlaceholderProcessor {
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_bank.Non-empty")
                                     .replace("{POSITION}", "" + (value))
                                     .replace("{PLAYER}", islandOwnerName)
-                                    .replace("{BALANCE}", NumberUtil.formatNumberByDecimal(visit.getBankBalance())));
+                                    .replace("{BALANCE}", NumberUtils.formatNumber(visit.getBankBalance())));
                 } else {
         
                     returnValue = TextUtils.formatText(
@@ -431,8 +431,8 @@ public class PlaceholderProcessor {
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_level.Non-empty")
                                     .replace("{POSITION}", "" + (value))
                                     .replace("{PLAYER}", islandOwnerName)
-                                    .replace("{LEVEL}", NumberUtil.formatNumberByDecimal(level.getLevel()))
-                                    .replace("{POINTS}", NumberUtil.formatNumberByDecimal(level.getPoints())));
+                                    .replace("{LEVEL}", NumberUtils.formatNumber(level.getLevel()))
+                                    .replace("{POINTS}", NumberUtils.formatNumber(level.getPoints())));
                 } else {
         
                     returnValue = TextUtils.formatText(
@@ -482,7 +482,7 @@ public class PlaceholderProcessor {
                         long blockCount = island.getLevel().getMaterialAmount(materials.name());
                         returnValue = TextUtils.formatText(
                                 placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_count.Non-empty")
-                                        .replace("{PLACEHOLDER}", NumberUtil.formatNumberByDecimal(blockCount)));
+                                        .replace("{PLACEHOLDER}", NumberUtils.formatNumber(blockCount)));
                     }
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_level_block_points_")) {
@@ -499,7 +499,7 @@ public class PlaceholderProcessor {
                         long blockPoints = island.getLevel().getMaterialPoints(materials.name());
                         returnValue = TextUtils.formatText(
                                 placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_points.Non-empty")
-                                        .replace("{PLACEHOLDER}", NumberUtil.formatNumberByDecimal(blockPoints)));
+                                        .replace("{PLACEHOLDER}", NumberUtils.formatNumber(blockPoints)));
                     }
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_level_block_value_")) {
@@ -512,7 +512,7 @@ public class PlaceholderProcessor {
                     double blockValue = levellingManager.getWorth(materials);
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_level_block_value.Non-empty")
-                                    .replace("{PLACEHOLDER}", NumberUtil.formatNumberByDecimal(blockValue)));
+                                    .replace("{PLACEHOLDER}", NumberUtils.formatNumber(blockValue)));
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_has_upgrade_")) {
                 Upgrade.Type type;

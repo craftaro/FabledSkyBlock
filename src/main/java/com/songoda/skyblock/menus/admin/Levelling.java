@@ -13,7 +13,7 @@ import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.AbstractAnvilGUI;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
@@ -134,7 +134,7 @@ public class Levelling implements Listener {
                                                     .replace("%material", material.getMaterials().name())),
                                     configLoad.getStringList("Menu.Admin.Levelling.Item.Material.Lore"),
                                     new Placeholder[]{new Placeholder("%points",
-                                            NumberUtil.formatNumberByDecimal(material.getPoints()))},
+                                            NumberUtils.formatNumber(material.getPoints()))},
                                     null, null),
                             inventorySlot);
                 }
@@ -220,7 +220,7 @@ public class Levelling implements Listener {
     
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Admin.Levelling.Division.Message")
-                                                    .replace("%division", NumberUtil.formatNumberByDecimal(pointDivision)));
+                                                    .replace("%division", NumberUtils.formatNumber(pointDivision)));
                                     soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
     
                                     Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -322,7 +322,7 @@ public class Levelling implements Listener {
                                                 messageManager.sendMessage(player, configLoad
                                                         .getString("Island.Admin.Levelling.Points.Message")
                                                         .replace("%material", materials.name()).replace("%points",
-                                                                NumberUtil.formatNumberByDecimal(materialPoints)));
+                                                                NumberUtils.formatNumber(materialPoints)));
                                                 soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F,
                                                         1.0F);
                                                 player.closeInventory();

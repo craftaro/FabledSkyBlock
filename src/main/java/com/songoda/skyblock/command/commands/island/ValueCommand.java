@@ -8,7 +8,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -41,7 +41,7 @@ public class ValueCommand extends SubCommand {
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Value.Value.Message").replace("%material", WordUtils.capitalizeFully(materials.name().toLowerCase().replace("_", " ")))
-                                .replace("%points", "" + worth).replace("%level", "" + NumberUtil.formatNumberByDecimal(level)));
+                                .replace("%points", "" + worth).replace("%level", "" + NumberUtils.formatNumber(level)));
                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.None.Message"));

@@ -9,7 +9,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -109,7 +109,7 @@ public class SetSizeCommand extends SubCommand {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetSize.Set.Message")
                                     .replace("%player", targetPlayerName)
-                                    .replace("%size", NumberUtil.formatNumberByDecimal(size)));
+                                    .replace("%size", NumberUtils.formatNumber(size)));
                     soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                 }
             } else {

@@ -4,7 +4,7 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -184,6 +184,6 @@ public class Stackable {
     private String getCustomName() {
         return ChatColor
                 .translateAlternateColorCodes('&', SkyBlock.getInstance().getLanguage().getString("Hologram.Stackable.Message"))
-                .replace("%block", SkyBlock.getInstance().getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(material)).replace("%amount", NumberUtil.formatNumber(this.size));
+                .replace("%block", SkyBlock.getInstance().getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(material)).replace("%amount", NumberUtils.formatNumber(this.size));
     }
 }

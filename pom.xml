@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.songoda</groupId>
 	<artifactId>skyblock</artifactId>
-	<version>2.3.10</version>
+	<version>2.3.11</version>
 	<packaging>jar</packaging>
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -140,7 +140,7 @@
 		</repository>
 		<repository>
 			<id>public</id>
-			<url>http://repo.songoda.com/artifactory/public/</url>
+			<url>http://repo.songoda.com/repository/public/</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -229,7 +229,7 @@
 		<dependency>
 			<groupId>com.songoda</groupId>
 			<artifactId>SongodaCore</artifactId>
-			<version>2.4.8</version>
+			<version>LATEST</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

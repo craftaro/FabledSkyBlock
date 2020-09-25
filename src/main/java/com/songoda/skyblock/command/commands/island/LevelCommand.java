@@ -14,6 +14,7 @@ import com.songoda.skyblock.menus.Levelling;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.visit.Visit;
@@ -68,7 +69,7 @@ public class LevelCommand extends SubCommand {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Level.Level.Message")
                                     .replace("%player", targetPlayerName).replace("%level",
-                                    "" + NumberUtil.formatNumberByDecimal(visit.getLevel().getLevel())));
+                                    "" + NumberUtils.formatNumber(visit.getLevel().getLevel())));
                     soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                     return;

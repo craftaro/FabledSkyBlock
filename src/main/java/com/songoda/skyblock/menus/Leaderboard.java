@@ -8,7 +8,7 @@ import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
@@ -302,7 +302,7 @@ public class Leaderboard {
                                             new Placeholder("%position", "" + (leaderboard.getPosition() + 1)),
                                             new Placeholder("%owner", playerName),
                                             new Placeholder("%level", "" + visit.getLevel().getLevel()),
-                                            new Placeholder("%balance", NumberUtil.formatNumberByDecimal(visit.getBankBalance())),
+                                            new Placeholder("%balance", NumberUtils.formatNumber(visit.getBankBalance())),
                                             new Placeholder("%votes", "" + visit.getVoters().size()),
                                             new Placeholder("%members", "" + visit.getMembers())},
                                     null, null),

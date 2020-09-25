@@ -9,7 +9,7 @@ import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.visit.Visit;
@@ -119,22 +119,22 @@ public class HologramTask extends BukkitRunnable {
                         languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
                                 .replace("%position", "" + (i + 1))
                                 .replace("%player", islandOwnerName)
-                                .replace("%level", NumberUtil.formatNumberByDecimal(level.getLevel()))
-                                .replace("%points", NumberUtil.formatNumberByDecimal(level.getPoints()))));
+                                .replace("%level", NumberUtils.formatNumber(level.getLevel()))
+                                .replace("%points", NumberUtils.formatNumber(level.getPoints()))));
             } else if (type == HologramType.Bank) {
                 hologramLines.add(TextUtils.formatText(
                         languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
                                 .replace("%position", "" + (i + 1))
                                 .replace("%player", islandOwnerName)
                                 .replace("%balance",
-                                        "" + NumberUtil.formatNumberByDecimal(visit.getBankBalance()))));
+                                        "" + NumberUtils.formatNumber(visit.getBankBalance()))));
             } else if (type == HologramType.Votes) {
                 hologramLines.add(TextUtils.formatText(
                         languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
                                 .replace("%position", "" + (i + 1))
                                 .replace("%player", islandOwnerName)
                                 .replace("%votes",
-                                        "" + NumberUtil.formatNumberByDecimal(visit.getVoters().size()))));
+                                        "" + NumberUtils.formatNumber(visit.getVoters().size()))));
             }
         }
 

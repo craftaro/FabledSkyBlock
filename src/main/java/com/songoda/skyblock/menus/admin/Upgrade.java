@@ -12,7 +12,7 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.skyblock.utils.AbstractAnvilGUI;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
@@ -270,7 +270,7 @@ public class Upgrade {
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Speed.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Speed.Lore"),
                         new Placeholder[]{
-                                new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                 new Placeholder("%status", getStatus(upgrade))},
                         null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
 
@@ -288,7 +288,7 @@ public class Upgrade {
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Jump.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Jump.Lore"),
                         new Placeholder[]{
-                                new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                 new Placeholder("%status", getStatus(upgrade))},
                         null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
 
@@ -298,7 +298,7 @@ public class Upgrade {
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Crop.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Crop.Lore"),
                         new Placeholder[]{
-                                new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                 new Placeholder("%status", getStatus(upgrade))},
                         null, null), 2);
 
@@ -308,7 +308,7 @@ public class Upgrade {
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Fly.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Fly.Lore"),
                         new Placeholder[]{
-                                new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                 new Placeholder("%status", getStatus(upgrade))},
                         null, null), 3);
 
@@ -318,7 +318,7 @@ public class Upgrade {
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Drops.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Drops.Lore"),
                         new Placeholder[]{
-                                new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                 new Placeholder("%status", getStatus(upgrade))},
                         null, null), 4);
 
@@ -356,7 +356,7 @@ public class Upgrade {
                         plugin.formatText(configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Lore"),
                         new Placeholder[]{
-                                new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                 new Placeholder("%status", getStatus(upgrade))},
                         null, null), 6);
 
@@ -783,7 +783,7 @@ public class Upgrade {
                                         configLoad.getStringList("Menu.Admin.Upgrade.Size.Item.Tier.Lore"),
                                         new Placeholder[]{new Placeholder("%size", "" + upgrade.getValue()),
                                                 new Placeholder("%cost",
-                                                        NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                                        NumberUtils.formatNumber(upgrade.getCost()))},
                                         null, null), i + 3);
                             }
                         }
@@ -1210,7 +1210,7 @@ public class Upgrade {
                                         configLoad.getStringList("Menu.Admin.Upgrade.Members.Item.Tier.Lore"),
                                         new Placeholder[]{new Placeholder("%maxMembers", "" + upgrade.getValue()),
                                                 new Placeholder("%cost",
-                                                        NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                                        NumberUtils.formatNumber(upgrade.getCost()))},
                                         null, null), i + 3);
                             }
                         }
