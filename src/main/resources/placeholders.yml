@@ -1,7 +1,7 @@
 Placeholders:
   fabledskyblock_leaderboard_votes:
     Empty: 'Unclaimed'
-    Non-empty: '[{POSITION}] {PLAYER} [{VOTES]'
+    Non-empty: '[{POSITION}] {PLAYER} [{VOTES}]'
   fabledskyblock_leaderboard_bank:
     Empty: 'Unclaimed'
     Non-empty: '[{POSITION}] {PLAYER} [${BALANCE}]'
