@@ -16,7 +16,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.structure.StructureUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -113,7 +113,7 @@ public class InteractListeners implements Listener {
                 CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getItem().getType());
 
                 plugin.getMessageManager().sendMessage(player, plugin.getLanguage().getString("Island.Limit.Block.Exceeded.Message")
-                        .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
+                        .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
                 plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 event.setCancelled(true);
@@ -195,7 +195,7 @@ public class InteractListeners implements Listener {
                 if (limits.isBlockLimitExceeded(block, limit)) {
                     plugin.getMessageManager().sendMessage(player,
                             plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
-                                    .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtil.formatNumber(limit)));
+                                    .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
                     plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                     event.setCancelled(true);

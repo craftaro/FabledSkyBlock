@@ -17,6 +17,7 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.ChatComponent;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import net.md_5.bungee.api.ChatColor;

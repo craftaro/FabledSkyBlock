@@ -15,7 +15,7 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.UpgradeManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
@@ -532,7 +532,7 @@ public class Upgrade {
                                         configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                         new Placeholder("%status",
                                                 getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Speed))},
                                 null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
@@ -543,7 +543,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Speed.Claimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
                         } else {
                             nInv.addItem(nInv.createItem(potion,
@@ -551,7 +551,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Speed.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Speed.Unclaimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
                         }
                     }
@@ -585,7 +585,7 @@ public class Upgrade {
                                         configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                         new Placeholder("%status",
                                                 getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Jump))},
                                 null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
@@ -596,7 +596,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Jump.Claimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
                         } else {
                             nInv.addItem(nInv.createItem(potion,
@@ -604,7 +604,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Jump.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Jump.Unclaimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
                         }
                     }
@@ -623,7 +623,7 @@ public class Upgrade {
                                         configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                         new Placeholder("%status",
                                                 getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Crop))},
                                 null, null), 3);
@@ -634,7 +634,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 3);
                         } else {
                             nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
@@ -642,7 +642,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Crop.Unclaimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 3);
                         }
                     }
@@ -661,7 +661,7 @@ public class Upgrade {
                                         configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                         new Placeholder("%status",
                                                 getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Fly))},
                                 null, null), 4);
@@ -672,7 +672,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Fly.Claimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 4);
                         } else {
                             nInv.addItem(nInv.createItem(new ItemStack(Material.FEATHER),
@@ -680,7 +680,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Fly.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Fly.Unclaimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 4);
                         }
                     }
@@ -699,7 +699,7 @@ public class Upgrade {
                                         configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                         new Placeholder("%status",
                                                 getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Drops))},
                                 null, null), 5);
@@ -710,7 +710,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Drops.Claimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 5);
                         } else {
                             nInv.addItem(nInv.createItem(new ItemStack(Material.SPIDER_EYE),
@@ -718,7 +718,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Drops.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Drops.Unclaimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 5);
                         }
                     }
@@ -746,7 +746,7 @@ public class Upgrade {
                                                     "" + tier)),
                                     configLoad.getStringList("Menu.Upgrade.Item.Members.Claimed.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                             new Placeholder("%tier", "" + tier),
                                             new Placeholder("%maxMembers", "" + upgrade.getValue())},
                                     null, null), 6);
@@ -760,7 +760,7 @@ public class Upgrade {
                                                 configLoad.getStringList("Menu.Upgrade.Item.Members.Claimable.Lore"),
                                                 new Placeholder[]{
                                                         new Placeholder("%cost",
-                                                                NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                                NumberUtils.formatNumber(upgrade.getCost())),
                                                         new Placeholder("%tier", "" + tier),
                                                         new Placeholder("%maxMembers", "" + upgrade.getValue())},
                                                 null, null),
@@ -774,7 +774,7 @@ public class Upgrade {
                                                 configLoad.getStringList("Menu.Upgrade.Item.Members.Unclaimable.Lore"),
                                                 new Placeholder[]{
                                                         new Placeholder("%cost",
-                                                                NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                                NumberUtils.formatNumber(upgrade.getCost())),
                                                         new Placeholder("%tier", "" + tier),
                                                         new Placeholder("%maxMembers", "" + upgrade.getValue())},
                                                 null, null),
@@ -808,7 +808,7 @@ public class Upgrade {
                                                     "" + tier)),
                                     configLoad.getStringList("Menu.Upgrade.Item.Size.Claimed.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                             new Placeholder("%tier", "" + tier),
                                             new Placeholder("%size", "" + upgrade.getValue())},
                                     null, null), 7);
@@ -822,7 +822,7 @@ public class Upgrade {
                                                 configLoad.getStringList("Menu.Upgrade.Item.Size.Claimable.Lore"),
                                                 new Placeholder[]{
                                                         new Placeholder("%cost",
-                                                                NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                                NumberUtils.formatNumber(upgrade.getCost())),
                                                         new Placeholder("%tier", "" + tier),
                                                         new Placeholder("%size", "" + upgrade.getValue())},
                                                 null, null),
@@ -836,7 +836,7 @@ public class Upgrade {
                                                 configLoad.getStringList("Menu.Upgrade.Item.Size.Unclaimable.Lore"),
                                                 new Placeholder[]{
                                                         new Placeholder("%cost",
-                                                                NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                                                NumberUtils.formatNumber(upgrade.getCost())),
                                                         new Placeholder("%tier", "" + tier),
                                                         new Placeholder("%size", "" + upgrade.getValue())},
                                                 null, null),
@@ -861,7 +861,7 @@ public class Upgrade {
                                         configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimed.Lore"),
                                 new Placeholder[]{
-                                        new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost())),
+                                        new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost())),
                                         new Placeholder("%status",
                                                 getStatus(island, com.songoda.skyblock.upgrade.Upgrade.Type.Spawner))},
                                 null, null), 8);
@@ -872,7 +872,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 8);
                         } else {
                             nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
@@ -880,7 +880,7 @@ public class Upgrade {
                                             configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Spawner.Unclaimable.Lore"),
                                     new Placeholder[]{
-                                            new Placeholder("%cost", NumberUtil.formatNumberByDecimal(upgrade.getCost()))},
+                                            new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 8);
                         }
                     }

@@ -15,7 +15,7 @@ import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
@@ -347,10 +347,10 @@ public class Visit {
                 configLoad.getString("Menu.Visit.Item.Statistics.Displayname"),
                 configLoad.getStringList("Menu.Visit.Item.Statistics.Lore"),
                 new Placeholder[]{
-                        new Placeholder("%islands_open", NumberUtil.formatNumberByDecimal(visitIslands.size())),
+                        new Placeholder("%islands_open", NumberUtils.formatNumber(visitIslands.size())),
                         new Placeholder("%islands_closed",
-                                NumberUtil.formatNumberByDecimal(totalIslands - visitIslands.size())),
-                        new Placeholder("%islands", NumberUtil.formatNumberByDecimal(totalIslands))},
+                                NumberUtils.formatNumber(totalIslands - visitIslands.size())),
+                        new Placeholder("%islands", NumberUtils.formatNumber(totalIslands))},
                 null, null), 4);
         nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
                 configLoad.getString("Menu.Visit.Item.Sort.Displayname"),

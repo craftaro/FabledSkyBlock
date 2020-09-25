@@ -12,6 +12,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.structure.Structure;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import org.bukkit.Bukkit;

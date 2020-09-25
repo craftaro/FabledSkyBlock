@@ -12,7 +12,7 @@ import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -123,7 +123,7 @@ public class GuiBankSelector extends Gui {
                 case SUCCESS:
                     soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
                     messageManager.sendMessage(event.player, Objects.requireNonNull(languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
-                            "%amount%", NumberUtil.formatNumberByDecimal(amount)));
+                            "%amount%", NumberUtils.formatNumber(amount)));
 
                     break;
             }
@@ -180,7 +180,7 @@ public class GuiBankSelector extends Gui {
                     case SUCCESS:
                         soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
                         messageManager.sendMessage(e.player, Objects.requireNonNull(languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
-                                "%amount%", NumberUtil.formatNumberByDecimal(amount)));
+                                "%amount%", NumberUtils.formatNumber(amount)));
                         break;
                 }
 

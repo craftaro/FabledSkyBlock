@@ -10,7 +10,7 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.NumberUtil;
+import com.songoda.core.utils.NumberUtils;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -71,7 +71,7 @@ public class UnlockCommand extends SubCommand {
 
         if (!economy.hasBalance(player, price)) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Money.Message").replace(
-                    "%cost%", NumberUtil.formatNumberByDecimal(price)));
+                    "%cost%", NumberUtils.formatNumber(price)));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             return;
         }
