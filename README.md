@@ -21,12 +21,12 @@
     </a> 
     <br>
     <img alt="Latest" src="https://img.shields.io/badge/-ver_2.3.11-4078C0.svg?logo=github&style=flat&logoColor=white&color=blue&label=Latest&labelColor=black">
-     <a href="https://app.codacy.com/gh/songoda/EpicSpawners/dashboard">
+     <a href="https://app.codacy.com/gh/songoda/FabledSkyblock/dashboard">
         <img alt="quality" src="https://img.shields.io/codacy/grade/489f0babdfef4739a10a0859f2ae0f24">
     </a>
     <img alt="Last Updated" src="https://img.shields.io/github/last-commit/songoda/FabledSkyblock">
     <br>
-    <a href="https://bstats.org/plugin/bukkit/EpicSpawners/4181">
+    <a href="https://bstats.org/plugin/bukkit/FabledSkyblock/4544">
         <img alt="Servers" src="https://img.shields.io/bstats/servers/4544">
     </a>
     <img alt="Maintained" src="https://img.shields.io/maintenance/yes/2020"> 
