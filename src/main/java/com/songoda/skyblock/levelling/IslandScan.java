@@ -5,6 +5,7 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandLevelChangeEvent;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.blockscanner.BlockScanner;
+import com.songoda.skyblock.blockscanner.CachedChunk;
 import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
@@ -78,10 +79,10 @@ public final class IslandScan extends BukkitRunnable {
 
     private void initScan(SkyBlock plugin) {
 
-        final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
+        final Map<World, List<CachedChunk>> cachedChunk = new HashMap<>(3);
 
-        populate(snapshots, plugin.isPaperAsync(), () -> {
-            BlockScanner.startScanner(snapshots, island, true, true, true, false, (blocks) -> {
+        populate(cachedChunk, plugin.isPaperAsync(), () -> {
+            BlockScanner.startScanner(cachedChunk, island, true, true, true, false, (blocks) -> {
                 this.blocks = blocks;
                 this.blocksSize = blocks.size();
                 this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
@@ -130,15 +131,14 @@ public final class IslandScan extends BukkitRunnable {
         }
     }
 
-    private void populate(Map<World, List<ChunkSnapshot>> snapshots, boolean paper, PopulateTask task) {
+    private void populate(Map<World, List<CachedChunk>> cachedChunks, boolean paper, PopulateTask task) {
 
         final SkyBlock plugin = SkyBlock.getInstance();
-        List<ChunkSnapshot> positions = new LinkedList<>();
+        List<CachedChunk> positions = new LinkedList<>();
 
-        ChunkLoader.startChunkLoadingPerChunk(island, world, paper, (chunkCompletableFuture) ->
-                        positions.add(chunkCompletableFuture.join().getChunkSnapshot()),
+        ChunkLoader.startChunkLoadingPerChunk(island, world, paper, positions::add,
                 value -> {
-                    snapshots.put(plugin.getWorldManager().getWorld(world), positions);
+                    cachedChunks.put(plugin.getWorldManager().getWorld(world), positions);
                     task.onComplete();
                 });
     }

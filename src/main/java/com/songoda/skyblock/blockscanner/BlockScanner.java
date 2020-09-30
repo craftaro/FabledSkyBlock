@@ -39,12 +39,12 @@ public final class BlockScanner extends BukkitRunnable {
         ID_FIELD = temp;
     }
 
-    public static int getBlockTypeID(ChunkSnapshot snapshot, int x, int y, int z) {
+    public static int getBlockTypeID(CachedChunk chunk, int x, int y, int z) {
 
         int id = 0;
 
         try {
-            id = (Integer) ID_FIELD.invoke(snapshot, x, y, z);
+            id = (Integer) ID_FIELD.invoke(chunk.getSnapshot(), x, y, z);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -63,7 +63,7 @@ public final class BlockScanner extends BukkitRunnable {
     private final boolean ignoreLiquids;
     private final boolean ignoreAir;
 
-    private BlockScanner(Map<World, List<ChunkSnapshot>> snapshots,
+    private BlockScanner(Map<World, List<CachedChunk>> snapshots,
                          Island island,
                          boolean ignoreLiquids,
                          boolean ignoreLiquidsY,
@@ -81,9 +81,9 @@ public final class BlockScanner extends BukkitRunnable {
 
         int threadCount = 0;
 
-        for (Entry<World, List<ChunkSnapshot>> entry : snapshots.entrySet()) {
+        for (Entry<World, List<CachedChunk>> entry : snapshots.entrySet()) {
 
-            final List<List<ChunkSnapshot>> parts = Lists.partition(entry.getValue(), 16);
+            final List<List<CachedChunk>> parts = Lists.partition(entry.getValue(), 16);
             
             threadCount += parts.size();
 
@@ -111,7 +111,7 @@ public final class BlockScanner extends BukkitRunnable {
                 startY = !ignoreLiquidsY && liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : 0;
             }
 
-            for (List<ChunkSnapshot> sub : parts) {
+            for (List<CachedChunk> sub : parts) {
                queueWork(world, startY, sub);
             }
         }
@@ -119,7 +119,7 @@ public final class BlockScanner extends BukkitRunnable {
         this.threadCount = threadCount;
     }
 
-    private void queueWork(World world, int scanY, List<ChunkSnapshot> subList) {
+    private void queueWork(World world, int scanY, List<CachedChunk> subList) {
         WorldManager worldManager = SkyBlock.getInstance().getWorldManager();
         
         Bukkit.getServer().getScheduler().runTaskAsynchronously(SkyBlock.getInstance(), () -> {
@@ -138,7 +138,7 @@ public final class BlockScanner extends BukkitRunnable {
     
                 bounds = new LocationBounds(minX, minZ, maxX, maxZ);
             }
-            for (ChunkSnapshot shot : subList) {
+            for (CachedChunk shot : subList) {
                 final int cX = shot.getX() << 4;
                 final int cZ = shot.getZ() << 4;
                 
@@ -160,7 +160,7 @@ public final class BlockScanner extends BukkitRunnable {
                         for (int y = scanY; y < world.getMaxHeight(); y++) {
                             final CompatibleMaterial type = CompatibleMaterial.getBlockMaterial(
                                     ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)
-                                    ? shot.getBlockType(x, y, z) :
+                                    ? shot.getSnapshot().getBlockType(x, y, z) :
                                             MaterialIDHelper.getLegacyMaterial(getBlockTypeID(shot, x, y, z)));
                             
                             if(type == null){
@@ -196,7 +196,7 @@ public final class BlockScanner extends BukkitRunnable {
         cancel();
     }
 
-    public static void startScanner(Map<World, List<ChunkSnapshot>> snapshots, Island island, boolean ignoreLiquids, boolean ignoreLiquidsY, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
+    public static void startScanner(Map<World, List<CachedChunk>> snapshots, Island island, boolean ignoreLiquids, boolean ignoreLiquidsY, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
 
         if (snapshots == null) throw new IllegalArgumentException("snapshots cannot be null");
         if (tasks == null) throw new IllegalArgumentException("tasks cannot be null");
