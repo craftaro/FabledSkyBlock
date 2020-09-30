@@ -6,6 +6,7 @@ import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
+import com.songoda.skyblock.island.removal.CachedChunk;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
@@ -15,7 +16,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -34,7 +34,8 @@ public final class BlockScanner extends BukkitRunnable {
 
         try {
             temp = ChunkSnapshot.class.getMethod("getBlockTypeId", int.class, int.class, int.class);
-        } catch (NoSuchMethodException ignored) {}
+        } catch (NoSuchMethodException ignored) {
+        }
 
         ID_FIELD = temp;
     }
@@ -57,13 +58,13 @@ public final class BlockScanner extends BukkitRunnable {
     private final int threadCount;
     private final Queue<BlockInfo> blocks;
     private final ScannerTasks tasks;
-    
+
     private final Island island;
-    
+
     private final boolean ignoreLiquids;
     private final boolean ignoreAir;
 
-    private BlockScanner(Map<World, List<ChunkSnapshot>> snapshots,
+    private BlockScanner(Map<World, List<CachedChunk>> snapshots,
                          Island island,
                          boolean ignoreLiquids,
                          boolean ignoreLiquidsY,
@@ -81,93 +82,97 @@ public final class BlockScanner extends BukkitRunnable {
 
         int threadCount = 0;
 
-        for (Entry<World, List<ChunkSnapshot>> entry : snapshots.entrySet()) {
+        for (Entry<World, List<CachedChunk>> entry : snapshots.entrySet()) {
 
-            final List<List<ChunkSnapshot>> parts = Lists.partition(entry.getValue(), 16);
-            
+            final List<List<CachedChunk>> parts = Lists.partition(entry.getValue(), 16);
+
             threadCount += parts.size();
 
             World world = entry.getKey();
             final String env;
 
             switch (world.getEnvironment()) {
-            case NETHER:
-                env = "Nether";
-                break;
-            case THE_END:
-                env = "End";
-                break;
-            default:
-                env = "Normal";
-                break;
+                case NETHER:
+                    env = "Nether";
+                    break;
+                case THE_END:
+                    env = "End";
+                    break;
+                default:
+                    env = "Normal";
+                    break;
             }
 
             final ConfigurationSection liquidSection = config.getConfigurationSection("Island.World." + env + ".Liquid");
 
             int startY;
-            if(ignoreY){
+            if (ignoreY) {
                 startY = 255;
             } else {
                 startY = !ignoreLiquidsY && liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : 0;
             }
 
-            for (List<ChunkSnapshot> sub : parts) {
-               queueWork(world, startY, sub);
+            for (List<CachedChunk> sub : parts) {
+                queueWork(world, startY, sub);
             }
         }
 
         this.threadCount = threadCount;
     }
 
-    private void queueWork(World world, int scanY, List<ChunkSnapshot> subList) {
+    private void queueWork(World world, int scanY, List<CachedChunk> subList) {
         WorldManager worldManager = SkyBlock.getInstance().getWorldManager();
-        
+
         Bukkit.getServer().getScheduler().runTaskAsynchronously(SkyBlock.getInstance(), () -> {
             LocationBounds bounds = null;
-            if(island != null) {
+            if (island != null) {
                 Location islandLocation = island.getLocation(worldManager.getIslandWorld(world), IslandEnvironment.Island);
-                
+
                 Location minLocation = new Location(world, islandLocation.getBlockX() - island.getRadius(), 0, islandLocation.getBlockZ() - island.getRadius());
                 Location maxLocation = new Location(world, islandLocation.getBlockX() + island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + island.getRadius());
-    
+
                 int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
                 int minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
-    
+
                 int maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX());
                 int maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ());
-    
+
                 bounds = new LocationBounds(minX, minZ, maxX, maxZ);
             }
-            for (ChunkSnapshot shot : subList) {
+
+            for (CachedChunk cachedChunk : subList) {
+
+                ChunkSnapshot shot = cachedChunk.getSnapshot();
+
                 final int cX = shot.getX() << 4;
                 final int cZ = shot.getZ() << 4;
-                
+
                 int initX = 0;
                 int initZ = 0;
                 int lastX = 15;
                 int lastZ = 15;
-    
-                if(bounds != null) {
-                    initX = Math.max(cX, bounds.getMinX())&0x000F;
-                    initZ = Math.max(cZ, bounds.getMinZ())&0x000F;
-    
-                    lastX = Math.min(cX | 15, bounds.getMaxX()-1)&0x000F;
-                    lastZ = Math.min(cZ | 15, bounds.getMaxZ()-1)&0x000F;
+
+                if (bounds != null) {
+                    initX = Math.max(cX, bounds.getMinX()) & 0x000F;
+                    initZ = Math.max(cZ, bounds.getMinZ()) & 0x000F;
+
+                    lastX = Math.min(cX | 15, bounds.getMaxX() - 1) & 0x000F;
+                    lastZ = Math.min(cZ | 15, bounds.getMaxZ() - 1) & 0x000F;
                 }
-                
+
                 for (int x = initX; x <= lastX; x++) {
                     for (int z = initZ; z <= lastZ; z++) {
                         for (int y = scanY; y < world.getMaxHeight(); y++) {
                             final CompatibleMaterial type = CompatibleMaterial.getBlockMaterial(
                                     ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)
-                                    ? shot.getBlockType(x, y, z) :
+                                            ? shot.getBlockType(x, y, z) :
                                             MaterialIDHelper.getLegacyMaterial(getBlockTypeID(shot, x, y, z)));
-                            
-                            if(type == null){
+
+                            if (type == null) {
                                 continue;
-                            } else if(type.equals(CompatibleMaterial.AIR) && ignoreAir){
+                            } else if (type.equals(CompatibleMaterial.AIR) && ignoreAir) {
                                 continue;
-                            } else if(type.equals(CompatibleMaterial.WATER) && ignoreLiquids){
+                            } else if (type.equals(CompatibleMaterial.WATER) && ignoreLiquids) {
                                 continue;
                             }
 
@@ -196,7 +201,7 @@ public final class BlockScanner extends BukkitRunnable {
         cancel();
     }
 
-    public static void startScanner(Map<World, List<ChunkSnapshot>> snapshots, Island island, boolean ignoreLiquids, boolean ignoreLiquidsY, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
+    public static void startScanner(Map<World, List<CachedChunk>> snapshots, Island island, boolean ignoreLiquids, boolean ignoreLiquidsY, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
 
         if (snapshots == null) throw new IllegalArgumentException("snapshots cannot be null");
         if (tasks == null) throw new IllegalArgumentException("tasks cannot be null");
@@ -211,5 +216,4 @@ public final class BlockScanner extends BukkitRunnable {
         void onComplete(Queue<BlockInfo> blocks);
 
     }
-
 }

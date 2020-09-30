@@ -4,7 +4,6 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.blockscanner.BlockScanner;
-import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -16,16 +15,16 @@ import java.util.Queue;
 
 public class ChunkDeleteSplitter extends BukkitRunnable {
 
-    private final Map<World, List<ChunkSnapshot>> snapshots;
+    private final Map<World, List<CachedChunk>> snapshots;
     private Queue<BlockInfo> blocks;
 
-    private ChunkDeleteSplitter(Map<World, List<ChunkSnapshot>> snapshots) {
+    private ChunkDeleteSplitter(Map<World, List<CachedChunk>> snapshots) {
         this.snapshots = snapshots;
         start();
     }
 
     private void start() {
-        BlockScanner.startScanner(snapshots, null,false, true, true, false, (blocks) -> {
+        BlockScanner.startScanner(snapshots, null, false, true, true, false, (blocks) -> {
             this.blocks = blocks;
             this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
         });
@@ -36,7 +35,7 @@ public class ChunkDeleteSplitter extends BukkitRunnable {
 
         int deleteAmount = 0;
 
-        for (Iterator<BlockInfo> it = blocks.iterator(); it.hasNext();) {
+        for (Iterator<BlockInfo> it = blocks.iterator(); it.hasNext(); ) {
 
             if (deleteAmount == 3500) break;
 
@@ -54,8 +53,7 @@ public class ChunkDeleteSplitter extends BukkitRunnable {
         }
     }
 
-    public static void startDeletion(Map<World, List<ChunkSnapshot>> snapshots) {
+    public static void startDeletion(Map<World, List<CachedChunk>> snapshots) {
         new ChunkDeleteSplitter(snapshots);
     }
-
 }

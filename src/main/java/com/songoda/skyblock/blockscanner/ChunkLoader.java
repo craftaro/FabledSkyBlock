@@ -4,19 +4,16 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
-import io.papermc.lib.PaperLib;
-import org.bukkit.Chunk;
+import com.songoda.skyblock.island.removal.CachedChunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ChunkLoader extends BukkitRunnable {
-    public final List<CompletableFuture<Chunk>> positions = new LinkedList<>();
+    public final List<CachedChunk> positions = new LinkedList<>();
 
     private ChunkScannerTask generalTask;
     private ChunkForChunkScannerTask chunkTask;
@@ -54,7 +51,7 @@ public class ChunkLoader extends BukkitRunnable {
         Location minLocation = new Location(world, islandLocation.getBlockX() - island.getRadius(), 0, islandLocation.getBlockZ() - island.getRadius());
         Location maxLocation = new Location(world, islandLocation.getBlockX() + island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + island.getRadius());
 
-        int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4 ;
+        int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4;
         minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4;
 
         maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4 | 15;
@@ -62,8 +59,8 @@ public class ChunkLoader extends BukkitRunnable {
 
         x = minX;
         z = minZ;
-    
-        if(paper){
+
+        if (paper) {
             this.runTaskAsynchronously(SkyBlock.getInstance());
         } else {
             this.runTaskTimer(SkyBlock.getInstance(), 1L, 0L);
@@ -77,7 +74,7 @@ public class ChunkLoader extends BukkitRunnable {
                         ChunkScannerTask generalTask,
                         CompleteTask complete) {
         chunkPerTick = SkyBlock.getInstance().getConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
-    
+
         this.completeTask = complete;
         this.generalTask = generalTask;
         this.chunkForChunk = chunkForChunk;
@@ -99,7 +96,7 @@ public class ChunkLoader extends BukkitRunnable {
                 islandLocation.getBlockX() + island.getRadius(),
                 world.getMaxHeight(),
                 islandLocation.getBlockZ() + island.getRadius());
-        
+
         int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4;
         minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4;
 
@@ -108,8 +105,8 @@ public class ChunkLoader extends BukkitRunnable {
 
         x = minX;
         z = minZ;
-        
-        if(paper){
+
+        if (paper) {
             this.runTaskAsynchronously(SkyBlock.getInstance());
         } else {
             this.runTaskTimer(SkyBlock.getInstance(), 1L, 0L);
@@ -118,14 +115,14 @@ public class ChunkLoader extends BukkitRunnable {
 
     @Override
     public void run() { // TODO New algorithm that start from the center of the island
-        for(int i = 0; i < chunkPerTick || paper; i++){
-            if(x <= maxX){
-                if(z <= maxZ){
-                    if(!chunkForChunk){
-                        positions.add(PaperLib.getChunkAtAsync(world, x >> 4, z >> 4));
+        for (int i = 0; i < chunkPerTick || paper; i++) {
+            if (x <= maxX) {
+                if (z <= maxZ) {
+                    if (!chunkForChunk) {
+                        positions.add(new CachedChunk(world, x, z));
                     } else {
-                        if(chunkTask != null) {
-                            chunkTask.onChunkComplete(PaperLib.getChunkAtAsync(world, x >> 4, z >> 4));
+                        if (chunkTask != null) {
+                            chunkTask.onChunkComplete(new CachedChunk(world, x, z));
                         }
                     }
 
@@ -135,10 +132,10 @@ public class ChunkLoader extends BukkitRunnable {
                     x += 16;
                 }
             } else {
-                if(generalTask != null) {
+                if (generalTask != null) {
                     generalTask.onComplete(positions);
                 }
-                if(completeTask != null) {
+                if (completeTask != null) {
                     completeTask.onComplete(island);
                 }
                 this.cancel();
@@ -147,22 +144,22 @@ public class ChunkLoader extends BukkitRunnable {
         }
     }
 
-    public static void startChunkLoading(Island island, IslandWorld islandWorld, boolean paper, ChunkScannerTask task, CompleteTask complete){
+    public static void startChunkLoading(Island island, IslandWorld islandWorld, boolean paper, ChunkScannerTask task, CompleteTask complete) {
         new ChunkLoader(island, islandWorld, paper, false, task, complete);
     }
 
-    public static void startChunkLoadingPerChunk(Island island, IslandWorld islandWorld, boolean paper, ChunkForChunkScannerTask task, CompleteTask complete){
+    public static void startChunkLoadingPerChunk(Island island, IslandWorld islandWorld, boolean paper, ChunkForChunkScannerTask task, CompleteTask complete) {
         new ChunkLoader(island, islandWorld, paper, true, task, complete);
     }
 
     public interface ChunkScannerTask {
-        void onComplete(List<CompletableFuture<Chunk>> chunks);
+        void onComplete(List<CachedChunk> chunks);
     }
 
     public interface ChunkForChunkScannerTask {
-        void onChunkComplete(CompletableFuture<Chunk> chunk);
+        void onChunkComplete(CachedChunk chunk);
     }
-    
+
     public interface CompleteTask {
         void onComplete(Island island);
     }
