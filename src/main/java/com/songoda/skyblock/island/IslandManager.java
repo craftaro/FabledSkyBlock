@@ -12,6 +12,7 @@ import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.ban.BanManager;
+import com.songoda.skyblock.blockscanner.CachedChunk;
 import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -625,7 +626,7 @@ public class IslandManager {
     }
 
     private void startDeletion(Island island, WorldManager worldManager) {
-        final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
+        final Map<World, List<CachedChunk>> cachedChunks = new HashMap<>(3);
 
         for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
 
@@ -636,12 +637,8 @@ public class IslandManager {
             final World world = worldManager.getWorld(worldList);
     
             ChunkLoader.startChunkLoading(island, IslandWorld.Normal, plugin.isPaperAsync(), (chunks) -> {
-                List<Chunk> positions = new LinkedList<>();
-                for (CompletableFuture<Chunk> chunk : chunks) {
-                    positions.add(chunk.join());
-                }
-                snapshots.put(world, positions.stream().map(Chunk::getChunkSnapshot).collect(Collectors.toList()));
-                ChunkDeleteSplitter.startDeletion(snapshots);
+                cachedChunks.put(world, chunks);
+                ChunkDeleteSplitter.startDeletion(cachedChunks);
             }, null);
         }
 

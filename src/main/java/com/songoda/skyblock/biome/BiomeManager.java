@@ -56,8 +56,8 @@ public class BiomeManager {
         int chunkAmount = (int) Math.ceil(Math.pow(island.getSize()/16d, 2d));
         AtomicInteger progress = new AtomicInteger();
     
-        ChunkLoader.startChunkLoadingPerChunk(island, world, plugin.isPaperAsync(), (futureChunk) -> {
-            Chunk chunk = futureChunk.join();
+        ChunkLoader.startChunkLoadingPerChunk(island, world, plugin.isPaperAsync(), (cachedChunk) -> {
+            Chunk chunk = cachedChunk.getChunk();
             try {
                 if (chunk != null)
                     biome.setBiome(chunk);
