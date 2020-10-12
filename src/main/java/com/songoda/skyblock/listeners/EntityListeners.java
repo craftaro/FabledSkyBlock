@@ -3,9 +3,11 @@ package com.songoda.skyblock.listeners;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandEnvironment;
+import com.songoda.skyblock.island.IslandLevel;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.limit.impl.EntityLimitation;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
@@ -18,7 +20,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Projectile;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,10 +37,14 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class EntityListeners implements Listener {
 
@@ -61,11 +66,11 @@ public class EntityListeners implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         IslandManager islandManager = plugin.getIslandManager();
-        if(event.getEntity() instanceof Blaze){
+        if (event.getEntity() instanceof Blaze) {
             WorldManager worldManager = plugin.getWorldManager();
 
             FileConfiguration configLoad = plugin.getConfiguration();
-    
+
             if (configLoad.getBoolean("Island.Nether.BlazeImmuneToWaterInNether", false) &&
                     worldManager.getIslandWorld(event.getEntity().getWorld()).equals(IslandWorld.Nether) &&
                     event.getCause().equals(DamageCause.DROWNING)) {
@@ -87,25 +92,25 @@ public class EntityListeners implements Listener {
             }
         }
     }
-    
+
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         IslandManager islandManager = plugin.getIslandManager();
         FileConfiguration configLoad = plugin.getConfiguration();
-    
+
         org.bukkit.entity.Entity victim = event.getEntity();
         Island island = islandManager.getIslandAtLocation(victim.getLocation());
-    
-        if(island != null) {
+
+        if (island != null) {
             org.bukkit.entity.Entity attacker = event.getDamager();
-            if(attacker instanceof Projectile && ((Projectile) attacker).getShooter() instanceof org.bukkit.entity.Entity) {
+            if (attacker instanceof Projectile && ((Projectile) attacker).getShooter() instanceof org.bukkit.entity.Entity) {
                 attacker = (org.bukkit.entity.Entity) ((Projectile) attacker).getShooter();
             }
 
             // Rework with better config
-            if(victim instanceof Player && attacker instanceof Player) { // PVP
+            if (victim instanceof Player && attacker instanceof Player) { // PVP
                 if (configLoad.getBoolean("Island.Entity_Damage.PVP")) {
-                    if(plugin.getPermissionManager()
+                    if (plugin.getPermissionManager()
                             .processPermission(event, (Player) attacker, island)) {
                         plugin.getPermissionManager()
                                 .processPermission(event, (Player) victim, island);
@@ -113,28 +118,25 @@ public class EntityListeners implements Listener {
                 } else {
                     event.setCancelled(true);
                 }
-            }
-            else if(victim instanceof Player) { // EVP
+            } else if (victim instanceof Player) { // EVP
                 if (configLoad.getBoolean("Island.Entity_Damage.EVP")) {
                     plugin.getPermissionManager()
                             .processPermission(event, (Player) victim, island, true);
                 }
 
-            }
-            else if(attacker instanceof Player) { // PVE
+            } else if (attacker instanceof Player) { // PVE
                 if (configLoad.getBoolean("Island.Entity_Damage.PVE")) {
                     plugin.getPermissionManager()
                             .processPermission(event, (Player) attacker, island);
                 }
 
-            }
-            else { // EVE
+            } else { // EVE
                 if (configLoad.getBoolean("Island.Entity_Damage.PVE")) {
                     plugin.getPermissionManager()
                             .processPermission(event, island);
                 }
             }
-            
+
             // Fix a bug in minecraft where arrows with flame still apply fire ticks even if
             // the shot entity isn't damaged
             if (event.isCancelled() && event.getDamager() instanceof Arrow && event.getDamager().getFireTicks() != 0) {
@@ -221,7 +223,7 @@ public class EntityListeners implements Listener {
         if (player != null) {
             if (!plugin.getWorldManager().isIslandWorld(player.getWorld())) return;
             IslandManager islandManager = plugin.getIslandManager();
-    
+
             // Check permissions.
             plugin.getPermissionManager().processPermission(event, player,
                     islandManager.getIslandAtLocation(event.getEntity().getLocation()));
@@ -248,7 +250,7 @@ public class EntityListeners implements Listener {
         IslandManager islandManager = plugin.getIslandManager();
 
         Player p = null;
-        if(event.getRemover() instanceof Player){
+        if (event.getRemover() instanceof Player) {
             p = (Player) event.getRemover();
         }
         // Check permissions.
@@ -299,9 +301,12 @@ public class EntityListeners implements Listener {
         if ((LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0, 1, 0))
                 || LocationUtil.isLocationLocation(block.getLocation(),
                 island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0, 1, 0)))
-                && this.plugin.getConfiguration()
-                .getBoolean("Island.Spawn.Protection")) {
-            event.setCancelled(true);
+                && this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) {
+            CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                event.getEntity().remove();
+                event.getBlock().setType(material.getBlockMaterial());
+            }, 1L);
             return;
         }
 
@@ -321,7 +326,7 @@ public class EntityListeners implements Listener {
                             data = (byte) Math.ceil(data / 4.0);
                         }
                         fallingBlock.getWorld().dropItemNaturally(fallingBlock.getLocation(), new ItemStack(fallingBlock.getMaterial(), 1, data));
-                    } catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -347,7 +352,7 @@ public class EntityListeners implements Listener {
 
         removeBlockFromLevel(island, block);
         CompatibleMaterial materials;
-        
+
         if (event.getTo() != Material.AIR) {
             materials = CompatibleMaterial.getBlockMaterial(event.getTo());
 
@@ -383,7 +388,7 @@ public class EntityListeners implements Listener {
 
                 boolean removed;
                 Iterator<org.bukkit.block.Block> it = event.blockList().iterator();
-                while (it.hasNext()){
+                while (it.hasNext()) {
                     removed = false;
                     org.bukkit.block.Block block = it.next();
                     if (SkyBlock.getInstance().getConfiguration().getBoolean("Island.Spawn.Protection")) {
@@ -403,7 +408,7 @@ public class EntityListeners implements Listener {
                             CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
                             byte data = block.getData();
 
-                            int removedAmount = (int) (Math.random() * Math.min(64, stackable.getSize()-1));
+                            int removedAmount = (int) (Math.random() * Math.min(64, stackable.getSize() - 1));
                             stackable.take(removedAmount);
                             Bukkit.getScheduler().runTask(plugin, () -> {
                                 block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5),
@@ -420,19 +425,15 @@ public class EntityListeners implements Listener {
                                 removeBlockFromLevel(island, block);
                             }
 
-                            if(plugin.getCoreProtectAPI() != null) {
-                                plugin.getCoreProtectAPI().logRemoval("#" + entity.getType().toString().toLowerCase(), block.getLocation(), material.getMaterial(), null);
-                            }
-
                             it.remove();
-                            if(!removed){
+                            if (!removed) {
                                 removed = true;
                             }
                         }
                     }
                     if (this.plugin.getConfiguration()
                             .getBoolean("Island.Block.Level.Enable")) {
-                        if(!removed){
+                        if (!removed) {
                             removeBlockFromLevel(island, block);
                         }
 
@@ -442,7 +443,7 @@ public class EntityListeners implements Listener {
         }
     }
 
-    private void removeBlockFromLevel(Island island, CompatibleMaterial material){
+    private void removeBlockFromLevel(Island island, CompatibleMaterial material) {
         if (material != null) {
             IslandLevel level = island.getLevel();
 
@@ -513,15 +514,17 @@ public class EntityListeners implements Listener {
                             }
                         }
 
-                        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
                             if (livingEntity instanceof Steerable) {
                                 Steerable steerable = (Steerable) livingEntity;
-                                if (steerable.hasSaddle()) dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
+                                if (steerable.hasSaddle())
+                                    dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
                             }
                         } else {
                             if (livingEntity instanceof Pig) {
                                 Pig pig = (Pig) livingEntity;
-                                if (pig.hasSaddle()) dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
+                                if (pig.hasSaddle())
+                                    dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
                             }
                         }
                     }
@@ -560,7 +563,7 @@ public class EntityListeners implements Listener {
         if (raid != null) CHECKED_REASONS.add(raid);
 
     }
-    
+
     @EventHandler(ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
@@ -583,7 +586,7 @@ public class EntityListeners implements Listener {
             boolean isSplit = event.getSpawnReason().equals(SpawnReason.SLIME_SPLIT);
             boolean splitBypass = configLoad.getBoolean("Island.Challenge.PerIsland", true);
 
-            if(!isSplit || !splitBypass){
+            if (!isSplit || !splitBypass) {
                 long count = limits.getEntityCount(island, plugin.getWorldManager().getIslandWorld(entityLocation.getWorld()), type);
                 if (limits.hasTooMuch(count + 1, type)) {
                     entity.remove();
@@ -614,14 +617,14 @@ public class EntityListeners implements Listener {
         });
         event.setCancelled(true); // For other plugin API reasons.
     }
-    
+
     @EventHandler(ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {
         WorldManager worldManager = plugin.getWorldManager();
-        if(worldManager.isIslandWorld(event.getLocation().getWorld())) {
+        if (worldManager.isIslandWorld(event.getLocation().getWorld())) {
             org.bukkit.entity.Entity entity = event.getEntity();
-    
-            if(event.getEntity() instanceof EnderSignal) {
+
+            if (event.getEntity() instanceof EnderSignal) {
                 ((EnderSignal) entity).setTargetLocation(entity.getLocation().add(0d, 50d, 0d));
             }
         }
