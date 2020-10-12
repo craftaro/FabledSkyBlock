@@ -106,11 +106,6 @@
 	</build>
 	<repositories>
 		<repository>
-			<id>mvdw-software</id>
-			<name>MVdW Public Repositories</name>
-			<url>http://repo.mvdw-software.be/content/groups/public/</url>
-		</repository>
-		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
@@ -140,7 +135,7 @@
 		</repository>
 		<repository>
 			<id>public</id>
-			<url>http://repo.songoda.com/repository/public/</url>
+			<url>https://repo.songoda.com/repository/public/</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -161,12 +156,6 @@
 					<artifactId>paperlib</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot</artifactId>
-			<version>1.16.1</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.MilkBowl</groupId>
@@ -233,22 +222,16 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.Zrips</groupId>
-			<artifactId>Residence</artifactId>
-			<scope>provided</scope>
-			<version>4.9.0.6</version>
-		</dependency>
-		<dependency>
-			<groupId>net</groupId>
-			<artifactId>coreprotect</artifactId>
-			<scope>provided</scope>
-			<version>2.18.2</version>
-		</dependency>
-		<dependency>
 			<groupId>com.eatthepath</groupId>
 			<artifactId>fast-uuid</artifactId>
 			<version>0.1</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.Zrips</groupId>
+			<artifactId>Residence</artifactId>
+			<scope>provided</scope>
+			<version>4.9.0.6</version>
 		</dependency>
 	</dependencies>
 </project>
