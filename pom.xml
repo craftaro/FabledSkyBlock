@@ -158,6 +158,11 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot</artifactId>
+			<version>1.16.2</version>
+		</dependency>
+		<dependency>
 			<groupId>com.github.MilkBowl</groupId>
 			<artifactId>VaultAPI</artifactId>
 			<version>1.7</version>
@@ -207,7 +212,7 @@
 		<dependency>
 			<groupId>com.sk89q</groupId>
 			<artifactId>worldedit-bukkit</artifactId>
-			<version>7.1.0</version>
+			<version>7.1.0R1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>io.papermc</groupId>
