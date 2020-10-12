@@ -267,7 +267,7 @@ public class Island {
             playerData.save();
         }
     
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        save();
         
         if (!mainConfigLoad.getBoolean("Island.Coop.Unload")) {
             File coopDataFile = new File(plugin.getDataFolder().toString() + "/coop-data",
@@ -554,12 +554,12 @@ public class Island {
 
     public void addCoopPlayer(UUID uuid, IslandCoop islandCoop) {
         coopPlayers.put(uuid, islandCoop);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        save();
     }
 
     public void removeCoopPlayer(UUID uuid) {
         coopPlayers.remove(uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        save();
     }
 
     public boolean isCoopPlayer(UUID uuid) {
@@ -793,7 +793,7 @@ public class Island {
         if(!islandStatusChangeEvent.isCancelled()) {
             this.status = status;
             getVisit().setStatus(status);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+            save();
         }
     }
 
@@ -973,9 +973,10 @@ public class Island {
         return apiWrapper;
     }
     
+    
     public void addWhitelistedPlayer(UUID uuid) {
         this.whitelistedPlayers.add(uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        save();
     }
     
     public boolean isPlayerWhitelisted(UUID uuid) {
@@ -984,7 +985,7 @@ public class Island {
     
     public void removeWhitelistedPlayer(UUID uuid) {
         this.whitelistedPlayers.remove(uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        save();
     }
     
     public Set<UUID> getWhitelistedPlayers() {
