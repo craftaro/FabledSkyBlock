@@ -3,7 +3,9 @@ package com.songoda.skyblock.listeners;
 import com.songoda.core.compatibility.CompatibleHand;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.hooks.LogManager;
 import com.songoda.core.utils.ItemUtils;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
@@ -16,7 +18,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.structure.StructureUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -51,8 +52,8 @@ public class InteractListeners implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onWaterPlace(PlayerInteractEvent event){
-        if(event.getItem() == null) return;
+    public void onWaterPlace(PlayerInteractEvent event) {
+        if (event.getItem() == null) return;
         Player player = event.getPlayer();
         org.bukkit.block.Block block = event.getClickedBlock().getRelative(event.getBlockFace());
 
@@ -63,7 +64,7 @@ public class InteractListeners implements Listener {
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
                 worldManager.getIslandWorld(block.getWorld()).equals(IslandWorld.Nether) &&
-                event.getItem().getType().equals(Material.WATER_BUCKET)){
+                event.getItem().getType().equals(Material.WATER_BUCKET)) {
             Location blockLoc = block.getLocation();
 
             Island island = islandManager.getIslandAtLocation(blockLoc);
@@ -120,11 +121,11 @@ public class InteractListeners implements Listener {
                 return;
             }
 
-            if(configLoad.getBoolean("Island.Nether.AllowNetherWater", false)){
+            if (configLoad.getBoolean("Island.Nether.AllowNetherWater", false)) {
                 event.setCancelled(true);
                 block.setType(Material.WATER, true);
                 block.getWorld().playSound(block.getLocation(), CompatibleSound.ITEM_BUCKET_EMPTY.getSound(), 1f, 1f);
-                if(!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+                if (!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
                     event.getItem().setType(Material.BUCKET);
                 }
             }
@@ -169,13 +170,13 @@ public class InteractListeners implements Listener {
             } else {
                 heldType = CompatibleMaterial.AIR;
             }
-    
+
             if (stackableManager != null && block != null && stackableManager.isStacked(block.getLocation())) {
-                if(blockType.equals(CompatibleMaterial.DRAGON_EGG)){
+                if (blockType.equals(CompatibleMaterial.DRAGON_EGG)) {
                     event.setCancelled(true);
                 }
             }
-            
+
             if (stackableManager != null && stackableManager.isStackableMaterial(heldType) && blockType == heldType
                     && !player.isSneaking() && plugin.getPermissionManager().hasPermission(player, island, "Place")
                     && (!this.plugin.getConfiguration().getBoolean("Island.Stackable.RequirePermission")
@@ -245,9 +246,8 @@ public class InteractListeners implements Listener {
                     event.setCancelled(true);
                 }
 
-                if(plugin.getCoreProtectAPI() != null && material != null) {
-                    plugin.getCoreProtectAPI().logPlacement(player.getName(), location, material.getMaterial(), null);
-                }
+                if (LogManager.isEnabled() && material != null)
+                    LogManager.logPlacement(player, block);
 
                 if (player.getGameMode() != GameMode.CREATIVE)
                     ItemUtils.takeActiveItem(player, CompatibleHand.getHand(event), itemAmount);
@@ -355,7 +355,7 @@ public class InteractListeners implements Listener {
                                 }
                             }
                         }
-    
+
                         plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 10.0F, 10.0F);
 
                         event.setCancelled(true);
