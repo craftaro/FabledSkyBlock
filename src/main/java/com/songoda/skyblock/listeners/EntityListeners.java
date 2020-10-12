@@ -301,9 +301,12 @@ public class EntityListeners implements Listener {
         if ((LocationUtil.isLocationLocation(block.getLocation(), island.getLocation(world, IslandEnvironment.Main).clone().subtract(0, 1, 0))
                 || LocationUtil.isLocationLocation(block.getLocation(),
                 island.getLocation(world, IslandEnvironment.Visitor).clone().subtract(0, 1, 0)))
-                && this.plugin.getConfiguration()
-                .getBoolean("Island.Spawn.Protection")) {
-            event.setCancelled(true);
+                && this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) {
+            CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                event.getEntity().remove();
+                event.getBlock().setType(material.getBlockMaterial());
+            }, 1L);
             return;
         }
 
