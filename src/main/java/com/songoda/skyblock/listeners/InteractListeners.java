@@ -62,9 +62,13 @@ public class InteractListeners implements Listener {
         IslandLevelManager levellingManager = plugin.getLevellingManager();
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
-                worldManager.getIslandWorld(block.getWorld()).equals(IslandWorld.Nether) &&
-                event.getItem().getType().equals(Material.WATER_BUCKET)) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK
+                && worldManager.getIslandWorld(block.getWorld()).equals(IslandWorld.Nether)
+                && (event.getItem().getType().equals(Material.WATER_BUCKET)
+                || event.getItem().getType().equals(Material.TROPICAL_FISH_BUCKET)
+                || event.getItem().getType().equals(Material.COD_BUCKET)
+                || event.getItem().getType().equals(Material.SALMON_BUCKET)
+                || event.getItem().getType().equals(Material.PUFFERFISH_BUCKET))) {
             Location blockLoc = block.getLocation();
 
             Island island = islandManager.getIslandAtLocation(blockLoc);
@@ -121,14 +125,8 @@ public class InteractListeners implements Listener {
                 return;
             }
 
-            if (configLoad.getBoolean("Island.Nether.AllowNetherWater", false)) {
-                event.setCancelled(true);
+            if (configLoad.getBoolean("Island.Nether.AllowNetherWater", false))
                 block.setType(Material.WATER, true);
-                block.getWorld().playSound(block.getLocation(), CompatibleSound.ITEM_BUCKET_EMPTY.getSound(), 1f, 1f);
-                if (!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
-                    event.getItem().setType(Material.BUCKET);
-                }
-            }
         }
     }
 
