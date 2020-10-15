@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -85,6 +86,13 @@ public class InteractListeners implements Listener {
             if (levellingManager.isScanning(island)) {
                 plugin.getMessageManager().sendMessage(player,
                         plugin.getLanguage().getString("Command.Island.Level.Scanning.BlockPlacing.Message"));
+                event.setCancelled(true);
+                return;
+            }
+
+            CompatibleMaterial type = CompatibleMaterial.getMaterial(block);
+
+            if (type.name().contains("SLAB")) {
                 event.setCancelled(true);
                 return;
             }
