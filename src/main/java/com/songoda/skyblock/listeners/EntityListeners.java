@@ -493,47 +493,48 @@ public class EntityListeners implements Listener {
 
         IslandManager islandManager = plugin.getIslandManager();
 
-        if (plugin.getWorldManager().isIslandWorld(livingEntity.getWorld())) {
-            Island island = islandManager.getIslandAtLocation(livingEntity.getLocation());
+        if (!plugin.getWorldManager().isIslandWorld(livingEntity.getWorld())) return;
 
-            if (island != null) {
-                List<Upgrade> upgrades = plugin.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
+        Island island = islandManager.getIslandAtLocation(livingEntity.getLocation());
 
-                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Drops)) {
-                    Set<ItemStack> dontMultiply = new HashSet<>();
+        if (island == null) return;
 
-                    if (ServerVersion.isServerVersionAbove(ServerVersion.V1_8)) {
-                        EntityEquipment equipment = livingEntity.getEquipment();
-                        if (equipment != null) {
-                            for (ItemStack item : event.getDrops()) {
-                                if (item.equals(equipment.getHelmet()) || item.equals(equipment.getChestplate())
-                                        || item.equals(equipment.getLeggings()) || item.equals(equipment.getBoots())
-                                        || item.equals(equipment.getItemInMainHand()) || item.equals(equipment.getItemInOffHand())) {
-                                    dontMultiply.add(item);
-                                }
-                            }
-                        }
+        List<Upgrade> upgrades = plugin.getUpgradeManager().getUpgrades(Upgrade.Type.Drops);
 
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
-                            if (livingEntity instanceof Steerable) {
-                                Steerable steerable = (Steerable) livingEntity;
-                                if (steerable.hasSaddle())
-                                    dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
-                            }
-                        } else {
-                            if (livingEntity instanceof Pig) {
-                                Pig pig = (Pig) livingEntity;
-                                if (pig.hasSaddle())
-                                    dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
-                            }
+        if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Drops)) {
+            Set<ItemStack> dontMultiply = new HashSet<>();
+
+            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_8)) {
+                EntityEquipment equipment = livingEntity.getEquipment();
+                if (equipment != null) {
+                    for (ItemStack item : event.getDrops()) {
+                        if (item.equals(equipment.getHelmet()) || item.equals(equipment.getChestplate())
+                                || item.equals(equipment.getLeggings()) || item.equals(equipment.getBoots())
+                                || item.equals(equipment.getItemInMainHand()) || item.equals(equipment.getItemInOffHand())) {
+                            dontMultiply.add(item);
                         }
                     }
+                }
 
-                    for (ItemStack is : event.getDrops())
-                        if (!dontMultiply.contains(is))
-                            livingEntity.getWorld().dropItemNaturally(livingEntity.getLocation(), is);
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                    if (livingEntity instanceof Steerable) {
+                        Steerable steerable = (Steerable) livingEntity;
+                        if (steerable.hasSaddle())
+                            dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
+                    }
+                } else {
+                    if (livingEntity instanceof Pig) {
+                        Pig pig = (Pig) livingEntity;
+                        if (pig.hasSaddle())
+                            dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
+                    }
                 }
             }
+
+            for (ItemStack is : event.getDrops())
+                for (ItemStack is2 : dontMultiply)
+                    if (!is2.isSimilar(is))
+                        livingEntity.getWorld().dropItemNaturally(livingEntity.getLocation(), is);
         }
     }
 
