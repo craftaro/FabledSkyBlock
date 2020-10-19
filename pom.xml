@@ -170,6 +170,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.songoda</groupId>
+			<artifactId>SongodaCore</artifactId>
+			<version>LATEST</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.songoda</groupId>
 			<artifactId>ultimatestacker</artifactId>
 			<version>2.0.8b</version>
 			<scope>provided</scope>
@@ -219,12 +225,6 @@
 					<artifactId>paperlib</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.songoda</groupId>
-			<artifactId>SongodaCore</artifactId>
-			<version>LATEST</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.eatthepath</groupId>
