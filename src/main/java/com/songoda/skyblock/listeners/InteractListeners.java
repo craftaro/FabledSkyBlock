@@ -26,7 +26,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.data.Levelled;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -92,7 +91,14 @@ public class InteractListeners implements Listener {
 
             CompatibleMaterial type = CompatibleMaterial.getMaterial(block);
 
-            if (type.name().contains("SLAB")) {
+            if (type.name().contains("SLAB")
+                    || type == CompatibleMaterial.BROWN_MUSHROOM
+                    || type == CompatibleMaterial.RED_MUSHROOM
+                    || type == CompatibleMaterial.CHEST
+                    || type == CompatibleMaterial.ENDER_CHEST
+                    || type == CompatibleMaterial.TRAPPED_CHEST
+                    || type == CompatibleMaterial.END_PORTAL
+                    || type == CompatibleMaterial.ENCHANTING_TABLE) {
                 event.setCancelled(true);
                 return;
             }
