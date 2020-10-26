@@ -717,6 +717,10 @@ public class BlockListeners implements Listener {
         BlockFace dispenserDirection = ((org.bukkit.material.Dispenser) event.getBlock().getState().getData()).getFacing();
         org.bukkit.block.Block placeLocation = event.getBlock().getRelative(dispenserDirection);
 
+
+        if (this.plugin.getConfiguration().getBoolean("Island.Nether.AllowNetherWater", false))
+            placeLocation.setType(Material.WATER);
+
         Island island = islandManager.getIslandAtLocation(placeLocation.getLocation());
         if (island == null) return;
 
