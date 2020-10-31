@@ -57,30 +57,32 @@ public class BiomeManager {
         AtomicInteger progress = new AtomicInteger();
     
         ChunkLoader.startChunkLoadingPerChunk(island, world, plugin.isPaperAsync(), (cachedChunk) -> {
-            Chunk chunk = cachedChunk.getChunk();
-            try {
-                if (chunk != null)
-                    biome.setBiome(chunk);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-
-            progress.getAndIncrement();
-        
-            if(language.getBoolean("Command.Island.Biome.Progress.Should-Display-Message") &&
-                    progress.get() == 1 || progress.get() == chunkAmount || progress.get() % runEveryX == 0){
-                final double percent = ((double) progress.get() / (double) chunkAmount) * 100;
-            
-                String message = language.getString("Command.Island.Biome.Progress.Message");
-                message = message.replace("%current_updated_chunks%", String.valueOf(progress.get()));
-                message = message.replace("%max_chunks%", String.valueOf(chunkAmount));
-                message = message.replace("%percent_whole%", String.valueOf((int) percent));
-                message = message.replace("%percent%", NumberFormat.getInstance().format(percent));
-            
-                for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
-                    plugin.getMessageManager().sendMessage(player, message);
+            // I don't like this. But CompletableFuture#join causes a crash on some setups.
+            cachedChunk.getChunk().thenAccept(chunk -> {
+                try {
+                    if (chunk != null)
+                        biome.setBiome(chunk);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
                 }
-            }
+
+                progress.getAndIncrement();
+
+                if (language.getBoolean("Command.Island.Biome.Progress.Should-Display-Message") &&
+                        progress.get() == 1 || progress.get() == chunkAmount || progress.get() % runEveryX == 0) {
+                    final double percent = ((double) progress.get() / (double) chunkAmount) * 100;
+
+                    String message = language.getString("Command.Island.Biome.Progress.Message");
+                    message = message.replace("%current_updated_chunks%", String.valueOf(progress.get()));
+                    message = message.replace("%max_chunks%", String.valueOf(chunkAmount));
+                    message = message.replace("%percent_whole%", String.valueOf((int) percent));
+                    message = message.replace("%percent%", NumberFormat.getInstance().format(percent));
+
+                    for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
+                        plugin.getMessageManager().sendMessage(player, message);
+                    }
+                }
+            });
         }, (island1 -> {
             removeUpdatingIsland(island1);
             if(task != null) {

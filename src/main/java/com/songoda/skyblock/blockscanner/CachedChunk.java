@@ -7,6 +7,7 @@ import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class CachedChunk {
 
@@ -41,11 +42,11 @@ public class CachedChunk {
         return this.z;
     }
 
-    public Chunk getChunk() {
+    public CompletableFuture<Chunk> getChunk() {
         World world = Bukkit.getWorld(this.world);
         if (world == null)
             return null;
-        return PaperLib.getChunkAtAsync(world, this.x, this.z).join();
+        return PaperLib.getChunkAtAsync(world, this.x, this.z);
     }
 
     public ChunkSnapshot getSnapshot() {
@@ -55,7 +56,7 @@ public class CachedChunk {
     }
 
     public ChunkSnapshot takeSnapshot() {
-        return this.latestSnapshot = getChunk().getChunkSnapshot();
+        return this.latestSnapshot = getChunk().join().getChunkSnapshot();
     }
 
     @Override
