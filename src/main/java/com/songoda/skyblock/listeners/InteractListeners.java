@@ -50,6 +50,14 @@ public class InteractListeners implements Listener {
     public InteractListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
+    
+    public static String getVersion() {
+        return Bukkit.getVersion().split("\\(MC: ")[1].split("\\)")[0];
+    }
+
+    public static int getMinorVersion() {
+        return Integer.parseInt(getVersion().split("\\.")[1]);
+    }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onWaterPlace(PlayerInteractEvent event) {
@@ -62,16 +70,26 @@ public class InteractListeners implements Listener {
         IslandLevelManager levellingManager = plugin.getLevellingManager();
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK
-                && worldManager.getIslandWorld(block.getWorld()).equals(IslandWorld.Nether)
-                && (event.getItem().getType().equals(Material.WATER_BUCKET)
-                || event.getItem().getType().equals(Material.TROPICAL_FISH_BUCKET)
-                || event.getItem().getType().equals(Material.COD_BUCKET)
-                || event.getItem().getType().equals(Material.SALMON_BUCKET)
-                || event.getItem().getType().equals(Material.PUFFERFISH_BUCKET))) {
-            Location blockLoc = block.getLocation();
+            if (getMinorVersion() < 13
+                    && event.getAction() == Action.RIGHT_CLICK_BLOCK
+                    && worldManager.getIslandWorld(block.getWorld()).equals(IslandWorld.Nether)
+                    && (event.getItem().getType().equals(Material.WATER_BUCKET))) {
+                Location blockLoc = block.getLocation();
+                
+                Island island = islandManager.getIslandAtLocation(blockLoc);
+            }
+            
+            else if (event.getAction() == Action.RIGHT_CLICK_BLOCK
+                    && worldManager.getIslandWorld(block.getWorld()).equals(IslandWorld.Nether)
+                    && (event.getItem().getType().equals(Material.WATER_BUCKET)
+                    || event.getItem().getType().equals(Material.TROPICAL_FISH_BUCKET)
+                    || event.getItem().getType().equals(Material.COD_BUCKET)
+                    || event.getItem().getType().equals(Material.SALMON_BUCKET)
+                    || event.getItem().getType().equals(Material.PUFFERFISH_BUCKET))) {
+                Location blockLoc = block.getLocation();
 
-            Island island = islandManager.getIslandAtLocation(blockLoc);
+                Island island = islandManager.getIslandAtLocation(blockLoc);
+            }
 
             // Check permissions.
             if (!plugin.getPermissionManager().processPermission(event, player, island))
