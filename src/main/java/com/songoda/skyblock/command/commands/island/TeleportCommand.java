@@ -43,6 +43,12 @@ public class TeleportCommand extends SubCommand {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message", "Command.Island.Teleport.Island.None.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
+                if (plugin.getIslandManager().getIsland(player) == null) {
+                    String commandToExecute = configLoad.getString("Command.IslandTeleport.Aliases.NoIsland", "");
+                    if (!commandToExecute.equals(""))
+                        Bukkit.dispatchCommand(player, commandToExecute);
+                }
+
                 return;
             }
             UUID islandOwnerUUID = island.getOwnerUUID();

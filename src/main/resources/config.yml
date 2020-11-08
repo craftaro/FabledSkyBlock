@@ -10,6 +10,10 @@ Command:
         Aliases:
             IslandOwned: "island controlpanel"
             NoIsland: "island create"
+    IslandTeleport:
+        # What command should be executed on /island teleport
+        Aliases:
+            NoIsland: "island create"
 Sound:
     # When disabled all sounds will be disabled.
     Enable: true
