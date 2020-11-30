@@ -59,6 +59,13 @@ public class InformationCommand extends SubCommand {
 
             PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
+            if (playerData.isPreview()) {
+                messageManager.sendMessage(player,
+                        configLoad.getString("Command.Island.Information.Previewing.Message"));
+                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                return;
+            }
+
             if (islandOwnerUUID == null) {
                 if (islandManager.getIsland(player) == null) {
                     messageManager.sendMessage(player,

@@ -580,10 +580,10 @@ public class IslandManager {
                 }
 
                 // TODO - Find a way to delete also offline players
-                if (configLoad.getBoolean("Island.Deletion.ClearInventory", false)){
+                if (configLoad.getBoolean("Island.Deletion.ClearInventory", false) && !playerData.isPreview()) {
                     player.getInventory().clear();
                 }
-                if (configLoad.getBoolean("Island.Deletion.ClearEnderChest", false)){
+                if (configLoad.getBoolean("Island.Deletion.ClearEnderChest", false) && !playerData.isPreview()) {
                     player.getEnderChest().clear();
                 }
 
