@@ -841,6 +841,8 @@ Command:
         Message: '&bSkyBlock &8| &cError&8: &eYou don''t have permission to view information on other players'' Islands.'
       Owner:
         Message: '&bSkyBlock &8| &cError&8: &eYou are not an Island Owner.'
+      Previewing:
+        Message: '&bSkyBlock &8| &cError&8: &eYou are currently previewing an island.'
       Info:
         Message: '&f&oOpens the Island Information menu.'
     Reset:
