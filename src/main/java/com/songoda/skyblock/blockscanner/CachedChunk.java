@@ -49,6 +49,10 @@ public class CachedChunk {
         return PaperLib.getChunkAtAsync(world, this.x, this.z);
     }
 
+    public boolean isSnapshotAvailable() {
+        return latestSnapshot != null;
+    }
+
     public ChunkSnapshot getSnapshot() {
         if (latestSnapshot == null)
             return takeSnapshot();
