@@ -290,8 +290,7 @@ public final class LocationUtil {
 
             if (spawnLocation == null) {
                 Bukkit.getServer().getLogger().log(Level.WARNING, "SkyBlock | Error: The location for the spawn point could not be found.");
-
-                return;
+                spawnLocation = Bukkit.getServer().getWorlds().get(0).getSpawnLocation();
             }
 
             // If the spawn point is at an island, load that island
@@ -302,8 +301,9 @@ public final class LocationUtil {
                 }
             }
 
+            Location finalSpawnLocation = spawnLocation;
             Bukkit.getServer().getScheduler().runTask(plugin, () -> {
-                PaperLib.teleportAsync(player, spawnLocation);
+                PaperLib.teleportAsync(player, finalSpawnLocation);
                 player.setFallDistance(0.0F);
             });
         }
