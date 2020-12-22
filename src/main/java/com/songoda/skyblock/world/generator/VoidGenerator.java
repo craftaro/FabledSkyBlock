@@ -38,7 +38,10 @@ public class VoidGenerator extends ChunkGenerator {
 
         switch (world.getEnvironment()) {
             case NORMAL:
-                biome = CompatibleBiome.valueOf(configLoad.getString("Island.Biome.Default.Type", "PLAINS").toUpperCase()).getBiome();
+                biome = Arrays.stream(CompatibleBiome.values())
+                        .filter(compatibleBiome -> compatibleBiome.getBiome().equals(configLoad.getString("Island.Biome.Default.Type", "PLAINS").toUpperCase()))
+                        .findFirst()
+                        .orElse(CompatibleBiome.PLAINS).getBiome();
                 break;
             case NETHER:
                 biome = CompatibleBiome.NETHER_WASTES.getBiome();
