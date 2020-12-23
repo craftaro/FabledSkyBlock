@@ -47,9 +47,9 @@ public class WorldManager {
         String netherWorldGeneratorName = configLoad.getString("Island.World.End.CustomWorldGenerator");
         String endWorldGeneratorName = configLoad.getString("Island.World.End.CustomWorldGenerator");
 
-        normalWorldWorldGenerator = getWorldGenerator(normalWorldName, normalWorldGeneratorName);
-        netherWorldWorldGenerator = getWorldGenerator(netherWorldName, netherWorldGeneratorName);
-        endWorldWorldGenerator = getWorldGenerator(endWorldName, endWorldGeneratorName);
+        normalWorldWorldGenerator = getWorldGenerator(normalWorldName, normalWorldGeneratorName, IslandWorld.Normal);
+        netherWorldWorldGenerator = getWorldGenerator(netherWorldName, netherWorldGeneratorName, IslandWorld.Nether);
+        endWorldWorldGenerator = getWorldGenerator(endWorldName, endWorldGeneratorName, IslandWorld.End);
 
         normalWorld = Bukkit.getServer().getWorld(normalWorldName);
         netherWorld = Bukkit.getServer().getWorld(netherWorldName);
@@ -138,9 +138,9 @@ public class WorldManager {
         return location;
     }
 
-    private ChunkGenerator getWorldGenerator(String mapName, String worldGeneratorName) {
+    private ChunkGenerator getWorldGenerator(String mapName, String worldGeneratorName, IslandWorld islandWorld) {
         if (worldGeneratorName == null || worldGeneratorName == "default" || worldGeneratorName.length() == 0) {
-            return new VoidGenerator();
+            return new VoidGenerator(islandWorld);
         }
 
         ChunkGenerator customWorldGenerator = WorldCreator.getGeneratorForName(mapName, worldGeneratorName, null);
@@ -149,7 +149,7 @@ public class WorldManager {
             return customWorldGenerator;
         }
 
-        return new VoidGenerator();
+        return new VoidGenerator(islandWorld);
     }
 
     public ChunkGenerator getWorldGeneratorForMapName(String mapName) {
@@ -159,6 +159,6 @@ public class WorldManager {
 
         if (endWorld != null && endWorld.getName().equals(mapName)) return endWorldWorldGenerator;
 
-        return new VoidGenerator();
+        return new VoidGenerator(IslandWorld.Normal);
     }
 }

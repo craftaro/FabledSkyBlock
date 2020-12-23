@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -55,7 +54,7 @@ public class QueuedIslandScan {
             update();
 
         if (toScan.isEmpty()) {
-            finalize();
+            finalizeScan();
             return false;
         }
         IslandWorld world = toScan.poll();
@@ -63,8 +62,7 @@ public class QueuedIslandScan {
         return true;
     }
 
-    public void finalize() {
-
+    public void finalizeScan() {
         final Map<String, Long> materials = new HashMap<>(amounts.size());
 
         for (Map.Entry<CompatibleMaterial, BlockAmount> entry : amounts.entrySet()) {
