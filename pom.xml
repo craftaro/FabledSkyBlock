@@ -206,7 +206,7 @@
 		<dependency>
 			<groupId>com.songoda</groupId>
 			<artifactId>epicspawners</artifactId>
-			<version>6-pre4</version>
+			<version>7.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
