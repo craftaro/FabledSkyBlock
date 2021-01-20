@@ -11,6 +11,7 @@ import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
@@ -21,7 +22,6 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.material.Crops;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
@@ -38,7 +38,7 @@ public class GrowListeners implements Listener {
     /**
      * Checks that a structure like a tree is not growing outside or into another
      * island.
-     * 
+     *
      * @author LimeGlass
      */
     @EventHandler(ignoreCancelled = true)
@@ -48,14 +48,14 @@ public class GrowListeners implements Listener {
 
         IslandManager islandManager = plugin.getIslandManager();
         Island origin = islandManager.getIslandAtLocation(event.getLocation());
-        for (Iterator<BlockState> it = event.getBlocks().iterator(); it.hasNext();) {
+        for (Iterator<BlockState> it = event.getBlocks().iterator(); it.hasNext(); ) {
             BlockState state = it.next();
             Island growingTo = islandManager.getIslandAtLocation(state.getLocation());
             // This block is ok to continue as it's not related to Skyblock islands.
             if (origin == null && growingTo == null) continue;
 
             //Is in border of island
-            if(origin != null && !origin.isInBorder(state.getLocation())) {
+            if (origin != null && !origin.isInBorder(state.getLocation())) {
                 it.remove();
                 continue;
             }
@@ -92,7 +92,8 @@ public class GrowListeners implements Listener {
         }
 
         List<Upgrade> upgrades = plugin.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
-        if (upgrades == null || upgrades.size() == 0 || !upgrades.get(0).isEnabled() || !island.isUpgrade(Upgrade.Type.Crop)) return;
+        if (upgrades == null || upgrades.size() == 0 || !upgrades.get(0).isEnabled() || !island.isUpgrade(Upgrade.Type.Crop))
+            return;
 
         if (NMSUtil.getVersionNumber() > 12) {
             try {
@@ -121,7 +122,7 @@ public class GrowListeners implements Listener {
     /**
      * Checks that a block like a pumpkins and melons are not growing outside or
      * into another island.
-     * 
+     *
      * @author LimeGlass
      */
     @EventHandler(ignoreCancelled = true)
@@ -129,23 +130,26 @@ public class GrowListeners implements Listener {
         WorldManager worldManager = plugin.getWorldManager();
         BlockState state = event.getNewState();
         if (!worldManager.isIslandWorld(state.getWorld())) return;
-        if (CompatibleMaterial.getBlockMaterial(state.getType()) != CompatibleMaterial.PUMPKIN && CompatibleMaterial.getBlockMaterial(state.getType()) != CompatibleMaterial.MELON)  return;
 
         IslandManager islandManager = plugin.getIslandManager();
         Island origin = islandManager.getIslandAtLocation(event.getBlock().getLocation());
         Island growingTo = islandManager.getIslandAtLocation(state.getLocation());
         // This block is ok to continue as it's not related to Skyblock islands.
         if (origin == null && growingTo == null) return;
-        // The growing block is outside/inside that it's not suppose to.
-        if (origin == null || growingTo == null) {
+
+        // The growing block is outside/inside that it's not suppose to or the block is growing from one island to another.
+        if (origin == null
+                || growingTo == null
+                || !origin.getIslandUUID().equals(growingTo.getIslandUUID())) {
             event.setCancelled(true);
             return;
         }
-        // The block is growing from one island to another.
-        if (!origin.getIslandUUID().equals(growingTo.getIslandUUID())) {
-            event.setCancelled(true);
-            return;
-        }
+
+        Material type = state.getType();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (state.getBlock().getType() == type)
+                growingTo.getLevel().addMaterial(type.name(), 1);
+        }, 1L);
     }
 
     /**
@@ -182,7 +186,8 @@ public class GrowListeners implements Listener {
         if (!plugin.getWorldManager().isIslandWorld(block.getWorld())) return;
 
         PermissionManager permissionManager = plugin.getPermissionManager();
-        if (!permissionManager.hasPermission(block.getLocation(), "FireSpread", IslandRole.Owner)) event.setCancelled(true);
+        if (!permissionManager.hasPermission(block.getLocation(), "FireSpread", IslandRole.Owner))
+            event.setCancelled(true);
     }
 
     @EventHandler
@@ -191,7 +196,8 @@ public class GrowListeners implements Listener {
         if (!plugin.getWorldManager().isIslandWorld(block.getWorld())) return;
 
         PermissionManager permissionManager = plugin.getPermissionManager();
-        if (!permissionManager.hasPermission(block.getLocation(), "LeafDecay", IslandRole.Owner)) event.setCancelled(true);
+        if (!permissionManager.hasPermission(block.getLocation(), "LeafDecay", IslandRole.Owner))
+            event.setCancelled(true);
     }
 
 }
