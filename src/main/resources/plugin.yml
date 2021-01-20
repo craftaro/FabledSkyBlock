@@ -5,7 +5,7 @@ api-version: 1.13
 description: A unique SkyBlock plugin
 author: Songoda
 authors: [ Fabrimat ]
-softdepend: [ HolographicDisplays, Holograms, CMI, PlaceholderAPI, MVdWPlaceholderAPI, Vault, Reserve, PlayerPoints,
+softdepend: [ HolographicDisplays, Holograms, PlaceholderAPI, MVdWPlaceholderAPI, Vault, Reserve, PlayerPoints,
               LeaderHeads, EpicSpawners, UltimateStacker, WorldEdit, Residence, CoreProtect, CMIEInjector ]
 loadbefore: [Multiverse-Core, ProtocolLib]
 commands:
