@@ -124,9 +124,9 @@ public class PortalListeners implements Listener {
         IslandWorld toWorld = IslandWorld.Normal;
 
         if (block.getType().equals(CompatibleMaterial.NETHER_PORTAL.getMaterial())) {
-            toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.Nether : IslandWorld.Normal;
+            toWorld = fromWorld.equals(IslandWorld.Nether) ? IslandWorld.Normal : IslandWorld.Nether;
         } else if (block.getType().equals(CompatibleMaterial.END_PORTAL.getMaterial())) {
-            toWorld = fromWorld.equals(IslandWorld.Normal) ? IslandWorld.End : IslandWorld.Normal;
+            toWorld = fromWorld.equals(IslandWorld.End) ? IslandWorld.Normal : IslandWorld.End;
         }
 
         if(!perms){
