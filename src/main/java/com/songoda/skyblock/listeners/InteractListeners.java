@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -55,20 +56,22 @@ public class InteractListeners implements Listener {
     public void onWaterPlace(PlayerInteractEvent event) {
         if (event.getItem() == null) return;
         Player player = event.getPlayer();
-        org.bukkit.block.Block block = event.getClickedBlock().getRelative(event.getBlockFace());
+        Block block = event.getClickedBlock().getRelative(event.getBlockFace());
 
+        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
         IslandManager islandManager = plugin.getIslandManager();
         WorldManager worldManager = plugin.getWorldManager();
         IslandLevelManager levellingManager = plugin.getLevellingManager();
         if (!worldManager.isIslandWorld(block.getWorld())) return;
 
+        CompatibleMaterial itemMaterial = CompatibleMaterial.getMaterial(event.getItem());
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK
                 && worldManager.getIslandWorld(block.getWorld()).equals(IslandWorld.Nether)
-                && (event.getItem().getType().equals(Material.WATER_BUCKET)
-                || event.getItem().getType().equals(Material.TROPICAL_FISH_BUCKET)
-                || event.getItem().getType().equals(Material.COD_BUCKET)
-                || event.getItem().getType().equals(Material.SALMON_BUCKET)
-                || event.getItem().getType().equals(Material.PUFFERFISH_BUCKET))) {
+                && (itemMaterial.equals(CompatibleMaterial.WATER_BUCKET)
+                || itemMaterial.equals(CompatibleMaterial.TROPICAL_FISH_BUCKET)
+                || itemMaterial.equals(CompatibleMaterial.COD_BUCKET)
+                || itemMaterial.equals(CompatibleMaterial.SALMON_BUCKET)
+                || itemMaterial.equals(CompatibleMaterial.PUFFERFISH_BUCKET))) {
             Location blockLoc = block.getLocation();
 
             Island island = islandManager.getIslandAtLocation(blockLoc);
@@ -128,11 +131,10 @@ public class InteractListeners implements Listener {
 
             long limit = limits.getBlockLimit(player, Material.WATER);
 
-            if (limits.isBlockLimitExceeded(CompatibleMaterial.getMaterial(event.getItem()), block.getLocation(), limit)) {
-                CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getItem().getType());
+            if (limits.isBlockLimitExceeded(itemMaterial, block.getLocation(), limit)) {
 
                 plugin.getMessageManager().sendMessage(player, plugin.getLanguage().getString("Island.Limit.Block.Exceeded.Message")
-                        .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
+                        .replace("%type", WordUtils.capitalizeFully(itemMaterial.name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
                 plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 event.setCancelled(true);
