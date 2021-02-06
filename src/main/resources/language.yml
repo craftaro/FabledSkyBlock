@@ -3633,6 +3633,11 @@ Island:
   Preview:
     Timeout:
       Message: '&bSkyBlock &8| &aInfo&8: &eYour time to preview island has expired.'
+    Cooldown:
+      Word:
+        Minute: minute(s)
+        Second: second(s)
+      Message: '&bSkyBlock &8| &cError&8: &eYou must wait &c&o%time &ebefore previewing an Island.'
 Hologram:
   Leaderboard:
     Votes:
