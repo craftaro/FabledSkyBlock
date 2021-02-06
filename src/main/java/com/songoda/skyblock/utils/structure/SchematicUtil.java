@@ -4,6 +4,7 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.plugin.PluginManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +15,8 @@ import java.lang.reflect.Method;
 public class SchematicUtil {
 
     public static Float[] pasteSchematic(File schematicFile, org.bukkit.Location location) {
-        if (!Bukkit.getPluginManager().isPluginEnabled("WorldEdit"))
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        if (!pluginManager.isPluginEnabled("WorldEdit") && !pluginManager.isPluginEnabled("AsyncWorldEdit") && !pluginManager.isPluginEnabled("FastAsyncWorldEdit"))
             throw new IllegalStateException("Tried to generate an island using a schematic file without WorldEdit installed!");
 
         Runnable pasteTask = () -> {

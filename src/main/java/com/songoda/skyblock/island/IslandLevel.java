@@ -194,6 +194,10 @@ public class IslandLevel {
         setHighestLevel(level);
     }
 
+    public void addMaterial(String material, long amount) {
+        setMaterialAmount(material, getMaterialAmount(material) + amount);
+    }
+
     public void setMaterialAmount(String material, long amount) {
         if(ServerVersion.isServerVersion(ServerVersion.V1_8)) {
             switch (material.toUpperCase()) {

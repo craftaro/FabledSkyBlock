@@ -29,7 +29,7 @@ public class UpgradeCommand extends SubCommand {
                     configLoad.getString("Command.Island.Upgrade.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
-            if (!economy.isEnabled()) {
+            if (economy == null || !economy.isEnabled()) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Upgrade.Disabled.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 return;

@@ -21,6 +21,11 @@ import java.util.Random;
 
 public class VoidGenerator extends ChunkGenerator {
 
+    private final IslandWorld islandWorld;
+    public VoidGenerator(IslandWorld islandWorld) {
+        this.islandWorld = islandWorld;
+    }
+
     @Override
     public @Nonnull ChunkData generateChunkData(@Nonnull World world, @Nonnull Random random, int chunkX, int chunkZ, @Nonnull BiomeGrid biomeGrid) {
         final ChunkData chunkData = createChunkData(world);
@@ -28,12 +33,15 @@ public class VoidGenerator extends ChunkGenerator {
         final SkyBlock plugin = SkyBlock.getInstance();
         final Configuration configLoad = plugin.getConfiguration();
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
-        
+
         Biome biome;
 
         switch (world.getEnvironment()) {
             case NORMAL:
-                biome = CompatibleBiome.valueOf(configLoad.getString("Island.Biome.Default.Type", "PLAINS").toUpperCase()).getBiome();
+                biome = Arrays.stream(CompatibleBiome.values())
+                        .filter(compatibleBiome -> compatibleBiome.name().equals(configLoad.getString("Island.Biome.Default.Type", "PLAINS").toUpperCase()) && compatibleBiome.isCompatible())
+                        .findFirst()
+                        .orElse(CompatibleBiome.PLAINS).getBiome();
                 break;
             case NETHER:
                 biome = CompatibleBiome.NETHER_WASTES.getBiome();
@@ -50,25 +58,18 @@ public class VoidGenerator extends ChunkGenerator {
         } else {
             setChunkBiome2D(biome, biomeGrid);
         }
-        
-        for (IslandWorld worldList : IslandWorld.values()) {
-            if (world.getEnvironment() == World.Environment.NETHER
-                    || world.getEnvironment() == World.Environment.NORMAL
-                    || world.getEnvironment() == World.Environment.THE_END) {
 
-                ConfigurationSection section = worldSection.getConfigurationSection(worldList.name());
+        ConfigurationSection section = worldSection.getConfigurationSection(islandWorld.name());
 
-                if (section.getBoolean("Liquid.Enable")) {
-                    if (section.getBoolean("Liquid.Lava")) {
-                        setBlock(chunkData, CompatibleMaterial.LAVA.getBlockMaterial(), section.getInt("Liquid.Height"));
-                    } else {
-                        setBlock(chunkData, CompatibleMaterial.WATER.getBlockMaterial(), section.getInt("Liquid.Height"));
-                    }
-                }
-
-                break;
+        if (section.getBoolean("Liquid.Enable")) {
+            if (section.getBoolean("Liquid.Lava")) {
+                setBlock(chunkData, CompatibleMaterial.LAVA.getBlockMaterial(), section.getInt("Liquid.Height"));
+            } else {
+                setBlock(chunkData, CompatibleMaterial.WATER.getBlockMaterial(), section.getInt("Liquid.Height"));
             }
         }
+
+
 
         return chunkData;
     }
@@ -96,7 +97,7 @@ public class VoidGenerator extends ChunkGenerator {
             }
         }
     }
-    
+
     // Do not use - Too laggy
     private void setChunkBiome3D(Biome biome, BiomeGrid grid, World world) {
         for(int x = 0; x < 16; x++){
@@ -107,7 +108,7 @@ public class VoidGenerator extends ChunkGenerator {
             }
         }
     }
-    
+
     private void setChunkBiome2D(Biome biome, BiomeGrid grid) {
         for(int x = 0; x < 16; x++){
             for(int z = 0; z < 16; z++){

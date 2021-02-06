@@ -39,7 +39,7 @@ public class EpicSpawners implements Listener {
 
             Island island = islandManager.getIslandAtLocation(location);
 
-            int amount = event.getSpawner().getFirstStack().getStackSize();
+            int amount = event.getSpawner().getStackSize();
             EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
             FileConfiguration configLoad = plugin.getConfiguration();
@@ -107,7 +107,7 @@ public class EpicSpawners implements Listener {
 
         Island island = islandManager.getIslandAtLocation(location);
 
-        int amount = event.getSpawner().getFirstStack().getStackSize();
+        int amount = event.getSpawner().getStackSize();
         EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
         FileConfiguration configLoad = plugin.getConfiguration();

@@ -46,9 +46,10 @@ public class MoveListeners implements Listener {
         Location from = event.getFrom();
         Location to = event.getTo();
 
-        if (from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ()) {
+        if (from.getBlockX() == to.getBlockX()
+                && from.getBlockY() == to.getBlockY()
+                && from.getBlockZ() == to.getBlockZ())
             return;
-        }
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         MessageManager messageManager = plugin.getMessageManager();
@@ -56,7 +57,6 @@ public class MoveListeners implements Listener {
         PermissionManager permissionManager = plugin.getPermissionManager();
         SoundManager soundManager = plugin.getSoundManager();
         WorldManager worldManager = plugin.getWorldManager();
-        FileManager fileManager = plugin.getFileManager();
 
         if (!worldManager.isIslandWorld(player.getWorld())) return;
 

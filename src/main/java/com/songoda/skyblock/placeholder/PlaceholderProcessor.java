@@ -404,7 +404,8 @@ public class PlaceholderProcessor {
                 }
             } else if(placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_level_")){
                 List<Leaderboard> leaderboardLevelPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Level);
-    
+
+
                 String[] values = placeholder.split("_");
                 int value;
                 try {
@@ -413,7 +414,8 @@ public class PlaceholderProcessor {
                     value = 1;
                 }
     
-                if (value > 0 && value < leaderboardLevelPlayers.size()) {
+                if (value > 0 && value - 1 < leaderboardLevelPlayers.size()) {
+                    value --;
                     Leaderboard leaderboard = leaderboardLevelPlayers.get(value);
                     Visit visit = leaderboard.getVisit();
                     IslandLevel level = visit.getLevel();
@@ -429,7 +431,7 @@ public class PlaceholderProcessor {
         
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_level.Non-empty")
-                                    .replace("{POSITION}", "" + (value))
+                                    .replace("{POSITION}", "" + (value + 1))
                                     .replace("{PLAYER}", islandOwnerName)
                                     .replace("{LEVEL}", NumberUtils.formatNumber(level.getLevel()))
                                     .replace("{POINTS}", NumberUtils.formatNumber(level.getPoints())));
