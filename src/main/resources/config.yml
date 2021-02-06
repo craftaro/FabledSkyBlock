@@ -172,6 +172,12 @@ Island:
             # open the Island Visit menu.
             Bans: false
     Preview:
+        # [!] You are adviced to keep these options both enabled to prevent any issues.
+        Cooldown:
+            # When enabled, cooldown will start when a player previews an Island.
+            Enable: true
+            Time: 60
+        # Time until confirmation expires for island preview confirmation.
         Time: 10
     Visitor:
         # When an Island is unloaded if enabled players won't be able to visit the Island

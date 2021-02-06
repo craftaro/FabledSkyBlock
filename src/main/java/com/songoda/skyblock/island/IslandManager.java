@@ -397,6 +397,13 @@ public class IslandManager {
         data.setConfirmation(Confirmation.Preview);
         data.setConfirmationTime(configMain.getInt("Island.Preview.Time"));
 
+
+        FileConfiguration configLoad = this.plugin.getConfiguration();
+        if (configLoad.getBoolean("Island.Preview.Cooldown.Enable") && !player.hasPermission("fabledskyblock.bypass.cooldown")
+                && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
+            plugin.getCooldownManager().createPlayer(CooldownType.Preview, player);
+        }
+
         return true;
     }
 
@@ -563,6 +570,7 @@ public class IslandManager {
 
         boolean cooldownCreationEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Creation.Enable");
         boolean cooldownDeletionEnabled = configLoad.getBoolean("Island.Creation.Cooldown.Deletion.Enable");
+        boolean cooldownPreviewEnabled = configLoad.getBoolean("Island.Preview.Cooldown.Enable");
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if ((island.hasRole(IslandRole.Member, player.getUniqueId()) ||
@@ -595,6 +603,11 @@ public class IslandManager {
                 if (cooldownDeletionEnabled) {
                     if (!player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
                         plugin.getCooldownManager().createPlayer(CooldownType.Deletion, player);
+                    }
+                }
+                if (cooldownPreviewEnabled) {
+                    if (!player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
+                        plugin.getCooldownManager().createPlayer(CooldownType.Preview, player);
                     }
                 }
             }

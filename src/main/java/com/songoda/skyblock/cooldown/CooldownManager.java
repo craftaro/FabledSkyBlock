@@ -94,7 +94,7 @@ public class CooldownManager {
 
         int time = 0;
 
-        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
+        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion || cooldownType == CooldownType.Preview) {
             time = this.plugin.getConfiguration()
                     .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
 
