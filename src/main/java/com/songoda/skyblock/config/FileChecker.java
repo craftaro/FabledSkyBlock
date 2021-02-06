@@ -48,17 +48,8 @@ public class FileChecker {
     public void compareFiles() {
         for (File.Type fileType : File.Type.values()) {
             File file = loadedFiles.get(fileType);
-            FileConfiguration configLoad = file.getFileConfiguration();
 
-            if (fileType == File.Type.CREATED) {
-                File resourceFile = loadedFiles.get(File.Type.RESOURCE);
-
-                for (String configKeyList : file.getKeys().keySet()) {
-                    if (!resourceFile.getKeys().containsKey(configKeyList)) {
-                        configLoad.set(configKeyList, null);
-                    }
-                }
-            } else if (fileType == File.Type.RESOURCE) {
+            if (fileType == File.Type.RESOURCE) {
                 File createdFile = loadedFiles.get(File.Type.CREATED);
                 FileConfiguration createdConfigLoad = createdFile.getFileConfiguration();
 
