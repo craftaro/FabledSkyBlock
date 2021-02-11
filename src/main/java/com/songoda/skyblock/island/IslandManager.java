@@ -595,19 +595,22 @@ public class IslandManager {
                     player.getEnderChest().clear();
                 }
 
-                if (cooldownCreationEnabled) {
-                    if (!player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
-                        plugin.getCooldownManager().createPlayer(CooldownType.Creation, player);
+                if (!playerData.isPreview()) {
+                    if (cooldownCreationEnabled) {
+                        if (!player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
+                            plugin.getCooldownManager().createPlayer(CooldownType.Creation, player);
+                        }
                     }
-                }
-                if (cooldownDeletionEnabled) {
-                    if (!player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
-                        plugin.getCooldownManager().createPlayer(CooldownType.Deletion, player);
+                    if (cooldownDeletionEnabled) {
+                        if (!player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
+                            plugin.getCooldownManager().createPlayer(CooldownType.Deletion, player);
+                        }
                     }
-                }
-                if (cooldownPreviewEnabled) {
-                    if (!player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
-                        plugin.getCooldownManager().createPlayer(CooldownType.Preview, player);
+                }else{
+                    if (cooldownPreviewEnabled) {
+                        if (!player.hasPermission("fabledskyblock.bypass.cooldown") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
+                            plugin.getCooldownManager().createPlayer(CooldownType.Preview, player);
+                        }
                     }
                 }
             }

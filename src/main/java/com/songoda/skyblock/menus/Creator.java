@@ -158,45 +158,77 @@ public class Creator {
                             event.setWillDestroy(false);
 
                             return;
-                        } else if (plugin.getConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
-                                && cooldownManager.hasPlayer(CooldownType.Creation, player)) {
-                            CooldownPlayer cooldownPlayer = cooldownManager
-                                    .getCooldownPlayer(CooldownType.Creation, player);
-                            Cooldown cooldown = cooldownPlayer.getCooldown();
-
-                            if (cooldown.getTime() < 60) {
-                                messageManager.sendMessage(player, configLoad
-                                        .getString("Island.Creator.Selector.Cooldown.Message")
-                                        .replace("%time", cooldown.getTime() + " "
-                                                + configLoad.getString(
-                                                "Island.Creator.Selector.Cooldown.Word.Second")));
-                            } else {
-                                long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
-                                messageManager.sendMessage(player, configLoad
-                                        .getString("Island.Creator.Selector.Cooldown.Message")
-                                        .replace("%time", durationTime[2] + " "
-                                                + configLoad.getString(
-                                                "Island.Creator.Selector.Cooldown.Word.Minute")
-                                                + " " + durationTime[3] + " "
-                                                + configLoad.getString(
-                                                "Island.Creator.Selector.Cooldown.Word.Second")));
-                            }
-
-                            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-
-                            event.setWillClose(false);
-                            event.setWillDestroy(false);
-
-                            return;
                         }
 
                         if(event.getClick().isLeftClick()) {
+                            if (plugin.getConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
+                                    && cooldownManager.hasPlayer(CooldownType.Creation, player)) {
+                                CooldownPlayer cooldownPlayer = cooldownManager
+                                        .getCooldownPlayer(CooldownType.Creation, player);
+                                Cooldown cooldown = cooldownPlayer.getCooldown();
+
+                                if (cooldown.getTime() < 60) {
+                                    messageManager.sendMessage(player, configLoad
+                                            .getString("Island.Creator.Selector.Cooldown.Message")
+                                            .replace("%time", cooldown.getTime() + " "
+                                                    + configLoad.getString(
+                                                    "Island.Creator.Selector.Cooldown.Word.Second")));
+                                } else {
+                                    long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
+                                    messageManager.sendMessage(player, configLoad
+                                            .getString("Island.Creator.Selector.Cooldown.Message")
+                                            .replace("%time", durationTime[2] + " "
+                                                    + configLoad.getString(
+                                                    "Island.Creator.Selector.Cooldown.Word.Minute")
+                                                    + " " + durationTime[3] + " "
+                                                    + configLoad.getString(
+                                                    "Island.Creator.Selector.Cooldown.Word.Second")));
+                                }
+
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+
+                                event.setWillClose(false);
+                                event.setWillDestroy(false);
+                                return;
+                            }
+
                             if (islandManager.createIsland(player, structureList)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Creator.Selector.Created.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                             }
                         } else if(event.getClick().isRightClick()) {
+                            if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                                    .getFileConfiguration().getBoolean("Island.Preview.Cooldown.Enable")
+                                    && cooldownManager.hasPlayer(CooldownType.Preview, player)) {
+                                CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Preview, player);
+                                Cooldown cooldown = cooldownPlayer.getCooldown();
+
+                                if (cooldown.getTime() < 60) {
+                                    messageManager.sendMessage(player, configLoad
+                                            .getString("Island.Preview.Cooldown.Message")
+                                            .replace("%time", cooldown.getTime() + " "
+                                                    + configLoad.getString(
+                                                    "Island.Preview.Cooldown.Word.Second")));
+                                } else {
+                                    long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
+                                    messageManager.sendMessage(player, configLoad
+                                            .getString("Island.Preview.Cooldown.Message")
+                                            .replace("%time", durationTime[2] + " "
+                                                    + configLoad.getString(
+                                                    "Island.Preview.Cooldown.Word.Minute")
+                                                    + " " + durationTime[3] + " "
+                                                    + configLoad.getString(
+                                                    "Island.Preview.Cooldown.Word.Second")));
+                                }
+
+                                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                event.setWillClose(false);
+                                event.setWillDestroy(false);
+
+                                return;
+                            }
+
                             if (islandManager.previewIsland(player, structureList)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Creator.Selector.Preview.Message"));
