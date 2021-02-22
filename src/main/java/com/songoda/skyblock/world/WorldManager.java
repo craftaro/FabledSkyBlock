@@ -139,7 +139,7 @@ public class WorldManager {
     }
 
     private ChunkGenerator getWorldGenerator(String mapName, String worldGeneratorName, IslandWorld islandWorld) {
-        if (worldGeneratorName == null || worldGeneratorName == "default" || worldGeneratorName.length() == 0) {
+        if (worldGeneratorName == null || worldGeneratorName.equalsIgnoreCase("default") || worldGeneratorName.length() == 0) {
             return new VoidGenerator(islandWorld);
         }
 
