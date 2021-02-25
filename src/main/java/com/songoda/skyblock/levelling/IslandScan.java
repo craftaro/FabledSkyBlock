@@ -56,7 +56,7 @@ public final class IslandScan extends BukkitRunnable {
             Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> initScan(plugin));
         else
             initScan(plugin);
-        
+
         return this;
     }
 
