@@ -127,7 +127,7 @@ public class PlaceholderProcessor {
                 }
                 break;
             case "fabledskyblock_island_points":
-                returnValue = island == null ? "0" : Long.toString(island.getLevel().getPoints());
+                returnValue = island == null ? "0" : Double.toString(island.getLevel().getPoints());
                 break;
             case "fabledskyblock_island_votes":
                 if (island == null) {

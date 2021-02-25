@@ -46,7 +46,14 @@ public class QueuedIslandScan {
         this.executions += currentScan.getExecutions();
         this.totalScanned += currentScan.getTotalScanned();
         this.blocksSize += currentScan.getBlocksSize();
-        this.amounts.putAll(currentScan.getAmounts());
+
+        for (Map.Entry<CompatibleMaterial, BlockAmount> entry : currentScan.getAmounts().entrySet()) {
+            if (amounts.containsKey(entry.getKey())) {
+                amounts.get(entry.getKey()).increaseAmount(entry.getValue().getAmount());
+            } else {
+                amounts.put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     public boolean scan() {

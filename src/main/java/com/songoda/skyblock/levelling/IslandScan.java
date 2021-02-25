@@ -34,8 +34,6 @@ public final class IslandScan extends BukkitRunnable {
     private final Island island;
     private final IslandWorld world;
     private final Map<CompatibleMaterial, BlockAmount> amounts;
-    private final Configuration language;
-    private final int runEveryX;
     private final SkyBlock plugin;
 
     private int totalScanned;
@@ -48,31 +46,16 @@ public final class IslandScan extends BukkitRunnable {
         this.island = island;
         this.world = world;
         this.amounts = new EnumMap<>(CompatibleMaterial.class);
-        this.language = this.plugin.getLanguage();
-        this.runEveryX = language.getInt("Command.Island.Level.Scanning.Progress.Display-Every-X-Scan");
         this.doubleBlocks = new HashSet<>();
     }
 
     public IslandScan start() {
         final SkyBlock plugin = SkyBlock.getInstance();
 
-        final FileConfiguration config = this.plugin.getConfiguration();
-        final FileConfiguration islandData = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), this.island.getOwnerUUID().toString() + ".yml")).getFileConfiguration();
-
-        final boolean hasNether = config.getBoolean("Island.World.Nether.Enable") && islandData.getBoolean("Unlocked.Nether", false);
-        final boolean hasEnd = config.getBoolean("Island.World.End.Enable") && islandData.getBoolean("Unlocked.End", false);
-
-        final Map<World, List<ChunkSnapshot>> snapshots = new HashMap<>(3);
-
-
-        if (plugin.isPaperAsync()) {
-            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-                initScan(plugin);
-            });
-        } else {
+        if (plugin.isPaperAsync())
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> initScan(plugin));
+        else
             initScan(plugin);
-        }
-
 
         return this;
     }

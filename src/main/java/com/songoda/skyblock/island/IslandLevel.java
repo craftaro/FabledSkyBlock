@@ -24,7 +24,7 @@ public class IslandLevel {
     private UUID ownerUUID;
 
     private long lastCalculatedLevel = 0;
-    private long lastCalculatedPoints = 0;
+    private double lastCalculatedPoints = 0;
 
     private Map<String, Long> materials;
 
@@ -64,21 +64,21 @@ public class IslandLevel {
         this.ownerUUID = ownerUUID;
     }
 
-    public long getPoints() {
+    public double getPoints() {
         FileConfiguration configLoad = this.plugin.getLevelling();
 
         ConfigurationSection materialSection = configLoad.getConfigurationSection("Materials");
 
         if (materialSection == null) return 0;
 
-        long pointsEarned = 0;
+        double pointsEarned = 0;
 
         for (Entry<String, Long> entry : this.materials.entrySet()) {
             ConfigurationSection current = materialSection.getConfigurationSection(entry.getKey());
 
             if (current == null) continue;
 
-            long pointsRequired = current.getLong("Points", 0);
+            double pointsRequired = current.getDouble("Points", 0);
             long blockAmount = entry.getValue();
 
             long materialLimit = current.getLong("Limit", -1);
@@ -135,7 +135,7 @@ public class IslandLevel {
             division = 1;
         }
 
-        long points = getPoints();
+        double points = getPoints();
         long subtract = this.plugin.getConfiguration().getLong("Island.Levelling.Subtract");
         if(points >= subtract){
             points -= subtract;
@@ -143,7 +143,7 @@ public class IslandLevel {
             points = 0;
         }
 
-        return points / division;
+        return Math.round(points) / division;
     }
 
     public void checkLevelUp() {
@@ -267,11 +267,11 @@ public class IslandLevel {
         this.materials = materials;
     }
 
-    public long getLastCalculatedPoints() {
+    public double getLastCalculatedPoints() {
         return this.lastCalculatedPoints;
     }
 
-    public void setLastCalculatedPoints(long lastCalculatedPoints) {
+    public void setLastCalculatedPoints(double lastCalculatedPoints) {
         this.lastCalculatedPoints = lastCalculatedPoints;
     }
 

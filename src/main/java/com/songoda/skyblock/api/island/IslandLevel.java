@@ -17,7 +17,7 @@ public class IslandLevel {
     /**
      * @return Points of the Island from gathered materials
      */
-    public long getPoints() {
+    public double getPoints() {
         return this.handle.getIsland().getLevel().getPoints();
     }
 
@@ -31,7 +31,7 @@ public class IslandLevel {
     /**
      * @return Last calculated points of the Island
      */
-    public long getLastCalculatedPoints() {
+    public double getLastCalculatedPoints() {
         return this.handle.getIsland().getLevel().getLastCalculatedPoints();
     }
 

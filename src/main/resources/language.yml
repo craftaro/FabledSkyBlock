@@ -3326,7 +3326,7 @@ Menu:
           - '%description'
           - ''
           - '&eClick to create Island!'
-          - '&eRight-Click to create Island!'
+          - '&eRight-Click to preview Island!'
   Bank:
     Title: 'Bank'
     Item:
