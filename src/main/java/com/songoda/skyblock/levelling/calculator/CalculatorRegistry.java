@@ -8,22 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public final class CalculatorRegistry {
-
-    private CalculatorRegistry() {
-
-    }
-
+    
     private static final Map<CompatibleMaterial, List<Calculator>> calculators = new HashMap<>();
 
     public static void registerCalculator(Calculator calculator, CompatibleMaterial to) {
 
-        List<Calculator> list = calculators.get(to);
-
-        if (list == null) {
-            list = new ArrayList<>();
-            calculators.put(to, list);
-        }
-
+        List<Calculator> list = calculators.computeIfAbsent(to, k -> new ArrayList<>());
         list.add(calculator);
     }
 
