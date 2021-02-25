@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class CalculatorRegistry {
-    
+
     private static final Map<CompatibleMaterial, List<Calculator>> calculators = new HashMap<>();
 
     public static void registerCalculator(Calculator calculator, CompatibleMaterial to) {
