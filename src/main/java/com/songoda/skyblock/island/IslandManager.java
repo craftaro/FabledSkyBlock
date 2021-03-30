@@ -59,9 +59,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class IslandManager {
 
@@ -1466,14 +1464,16 @@ public class IslandManager {
                     }
     
                     double increment = island.getSize() % 2 != 0 ? 0.5d : 0.0d;
-                    
-                    if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
-                        WorldBorder.send(player, island.getBorderColor(), island.getSize(),
-                                island.getLocation(worldManager.getIslandWorld(player.getWorld()),
-                                        IslandEnvironment.Island).clone().add(increment, 0, increment));
-                    } else {
-                        WorldBorder.send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
-                    }
+
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
+                            WorldBorder.send(player, island.getBorderColor(), island.getSize(),
+                                    island.getLocation(worldManager.getIslandWorld(player.getWorld()),
+                                            IslandEnvironment.Island).clone().add(increment, 0, increment));
+                        } else {
+                            WorldBorder.send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
+                        }
+                    });
                 }
             }
         });
