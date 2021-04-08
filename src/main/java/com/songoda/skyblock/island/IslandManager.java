@@ -275,12 +275,14 @@ public class IslandManager {
 
         Bukkit.getServer().getScheduler().runTaskLater(plugin, () ->
                 plugin.getBiomeManager().setBiome(island, IslandWorld.Normal, compatibleBiome, () -> {
-            if (structure.getCommands() != null) {
-                for (String commandList : structure.getCommands()) {
-                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));
-                }
-            }
-        }), 20L);
+                    if (structure.getCommands() != null) {
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                            for (String commandList : structure.getCommands()) {
+                                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), commandList.replace("%player", player.getName()));
+                            }
+                        });
+                    }
+                }), 20L);
 
         // Recalculate island level after 5 seconds
         if (configLoad.getBoolean("Island.Levelling.ScanAutomatically"))
