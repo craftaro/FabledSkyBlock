@@ -1613,9 +1613,11 @@ public class IslandManager {
                 
                 for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                     if (worldList != IslandWorld.Nether || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
-                        for (Player all : getPlayersAtIsland(island)) {
-                            WorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island).clone().add(increment, 0, increment));
-                        }
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            for (Player all : getPlayersAtIsland(island)) {
+                                WorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island).clone().add(increment, 0, increment));
+                            }
+                        });
                     }
     
                 }
@@ -1623,9 +1625,11 @@ public class IslandManager {
         } else {
             for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
                 if (worldList != IslandWorld.Nether || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
-                    for (Player all : getPlayersAtIsland(island)) {
-                        WorldBorder.send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));
-                    }
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        for (Player all : getPlayersAtIsland(island)) {
+                            WorldBorder.send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));
+                        }
+                    });
                 }
     
             }
