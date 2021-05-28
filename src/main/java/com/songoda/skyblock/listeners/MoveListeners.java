@@ -100,7 +100,7 @@ public class MoveListeners implements Listener {
                         boolean keepItemsOnDeath;
 
                         if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
-                            keepItemsOnDeath = permissionManager.hasPermission(island,"KeepItemsOnDeath", IslandRole.Owner);
+                            keepItemsOnDeath = permissionManager.hasPermission(island, "KeepItemsOnDeath", IslandRole.Owner);
                         } else {
                             keepItemsOnDeath = configLoad.getBoolean("Island.KeepItemsOnDeath.Enable");
                         }
@@ -206,17 +206,21 @@ public class MoveListeners implements Listener {
                 }
             } else {
                 loc = island.getLocation(world, IslandEnvironment.Main);
-    
+
                 if(plugin.getConfiguration().getBoolean("Island.Teleport.RemoveWater", false)) {
                     LocationUtil.removeWaterFromLoc(loc);
                 }
             }
         } else {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                if(plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
-                    Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
-                    if (safeLoc != null) {
-                        loc = safeLoc;
+                if (plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                    Location isLoc = island.getLocation(world, IslandEnvironment.Visitor);
+
+                    if (isLoc != null) {
+                        Location safeLoc = LocationUtil.getSafeLocation(isLoc);
+                        if (safeLoc != null) {
+                            loc = safeLoc;
+                        }
                     }
                 }
             } else {
