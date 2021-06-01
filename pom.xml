@@ -126,10 +126,6 @@
 			<url>https://jitpack.io</url>
 		</repository>
 		<repository>
-			<id>reserve-repo</id>
-			<url>https://dl.bintray.com/theneweconomy/java/</url>
-		</repository>
-		<repository>
 			<id>sonatype</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 		</repository>
@@ -207,12 +203,6 @@
 			<groupId>com.songoda</groupId>
 			<artifactId>epicspawners</artifactId>
 			<version>7.0.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.songoda</groupId>
-			<artifactId>EpicAnchors</artifactId>
-			<version>1.4.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
