@@ -2,8 +2,8 @@ package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
@@ -13,7 +13,6 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.AbstractAnvilGUI;
-import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import org.bukkit.Bukkit;
@@ -26,7 +25,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
 import java.util.UUID;
 
 public class Ownership {
@@ -81,7 +79,7 @@ public class Ownership {
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Exit.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
-                    } else if ((is.getType() == SkullUtil.createItemStack().getType()) && (is.hasItemMeta())
+                    } else if ((is.getType() == CompatibleMaterial.PLAYER_HEAD.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Original.Displayname"))))) {
                         soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
@@ -248,7 +246,7 @@ public class Ownership {
 
             nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                     configLoad.getString("Menu.Ownership.Item.Exit.Displayname"), null, null, null, null), 0);
-            nInv.addItem(nInv.createItem(SkullUtil.create(playerTexture[0], playerTexture[1]),
+            nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(playerTexture[0], playerTexture[1]),
                     configLoad.getString("Menu.Ownership.Item.Original.Displayname"),
                     configLoad.getStringList("Menu.Ownership.Item.Original.Lore"),
                     new Placeholder[]{new Placeholder("%player", originalOwnerName)}, null, null), 1);

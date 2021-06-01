@@ -5,6 +5,7 @@ import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;
+import com.songoda.core.utils.ItemUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
@@ -14,7 +15,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -155,7 +155,7 @@ public class GuiCoop extends Gui {
                             }
                         }
     
-                        ItemStack is = SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]);
+                        ItemStack is = ItemUtils.getCustomHead(targetPlayerTexture[0], targetPlayerTexture[1]);
                         ItemMeta im = is.getItemMeta();
                         if (im != null) {
                             im.setDisplayName(TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Coop.Displayname")
