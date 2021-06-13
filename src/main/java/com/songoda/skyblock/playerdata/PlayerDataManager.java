@@ -195,7 +195,9 @@ public class PlayerDataManager {
         
                                 if (targetPlayerData.getOwner() != null &&
                                         targetPlayerData.getOwner().equals(island.getOwnerUUID())) {
-                                    scoreboardManager.updatePlayerScoreboardType(loopPlayer);
+                                	Bukkit.getScheduler().runTask(SkyBlock.getInstance(), () -> {
+                                		scoreboardManager.updatePlayerScoreboardType(loopPlayer);
+                                	});
                                 }
                             }
 

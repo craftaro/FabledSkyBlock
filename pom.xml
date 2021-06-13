@@ -126,23 +126,19 @@
 			<url>https://jitpack.io</url>
 		</repository>
 		<repository>
-			<id>reserve-repo</id>
-			<url>https://dl.bintray.com/theneweconomy/java/</url>
-		</repository>
-		<repository>
 			<id>sonatype</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 		</repository>
 		<repository>
-			<id>public</id>
-			<url>https://repo.songoda.com/repository/public/</url>
+		    <id>Songoda</id>
+		    <url>https://repo.songoda.com/repository/public/</url>
 		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>io.papermc</groupId>
 			<artifactId>paperlib</artifactId>
-			<version>LATEST</version>
+			<version>1.0.6</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -169,10 +165,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.songoda</groupId>
-			<artifactId>SongodaCore</artifactId>
-			<version>LATEST</version>
-			<scope>compile</scope>
+		    <groupId>com.songoda</groupId>
+		    <artifactId>SongodaCore</artifactId>
+		    <version>2.5.1</version>
+		    <scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.songoda</groupId>
