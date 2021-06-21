@@ -1,11 +1,9 @@
 package com.songoda.skyblock.utils.world.entity;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.nms.NmsManager;
-import com.songoda.core.nms.nbt.NBTEntity;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
-import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.entity.minecart.HopperMinecart;
@@ -13,7 +11,6 @@ import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Colorable;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.EulerAngle;
 
@@ -27,7 +24,7 @@ public final class EntityUtil {
         return new EntityData(NmsManager.getNbt().of(entity).serialize("Attributes"), x, y, z);
     }
 
-    public static void convertEntityDataToEntity(EntityData entityData, Location loc, BlockDegreesType type) {
+    public static void convertEntityDataToEntity(EntityData entityData, Location loc) {
         Entity entity = loc.getWorld().spawnEntity(loc, EntityType.valueOf(entityData.getEntityType().toUpperCase()));
         entity.setCustomName(entityData.getCustomName());
         entity.setCustomNameVisible(entityData.isCustomNameVisible());
@@ -88,14 +85,12 @@ public final class EntityUtil {
                     Double.parseDouble(rightLegPose[1]), Double.parseDouble(rightLegPose[2])));
         }
 
-        int NMSVersion = NMSUtil.getVersionNumber();
-
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
             EntityEquipment entityEquipment = livingEntity.getEquipment();
 
-            if (NMSVersion > 8) {
-                if (NMSVersion > 9) {
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10)) {
                     livingEntity.setAI(entityData.hasAI());
                 }
 
@@ -150,7 +145,7 @@ public final class EntityUtil {
                     Material material = CompatibleMaterial.getMaterial(materialData[0].toUpperCase()).getMaterial();
 
                     if (material != null) {
-                        if (NMSVersion > 12) {
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                             ((Enderman) entity).setCarriedBlock(Bukkit.getServer().createBlockData(material));
                         } else {
                             ((Enderman) entity).setCarriedMaterial(new MaterialData(material, data));
@@ -204,7 +199,7 @@ public final class EntityUtil {
                 villager.getInventory().setContents(items.toArray(new ItemStack[0]));
             }
 
-            if (NMSVersion > 10) {
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
                 if (entity instanceof Llama) {
                     Llama llama = ((Llama) entity);
                     llama.setColor(Llama.Color.valueOf(entityData.getLlamaColor().toUpperCase()));
@@ -219,7 +214,7 @@ public final class EntityUtil {
                     llama.getInventory().setContents(items.toArray(new ItemStack[0]));
                 }
 
-                if (NMSVersion > 11) {
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
                     if (entity instanceof Parrot) {
                         ((Parrot) entity)
                                 .setVariant(Parrot.Variant.valueOf(entityData.getParrotVariant().toUpperCase()));

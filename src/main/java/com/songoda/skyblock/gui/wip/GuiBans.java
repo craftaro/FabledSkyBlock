@@ -4,12 +4,12 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;
+import com.songoda.core.utils.ItemUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -113,7 +113,7 @@ public class GuiBans extends Gui {
                     }
                 }
 
-                ItemStack is = SkullUtil.create(targetPlayerTexture[0], targetPlayerTexture[1]);
+                ItemStack is = ItemUtils.getCustomHead(targetPlayerTexture[0], targetPlayerTexture[1]);
                 ItemMeta im = is.getItemMeta();
                 if(im != null){
                     im.setDisplayName(languageLoad.getString("Menu.Bans.Item.Ban.Displayname")

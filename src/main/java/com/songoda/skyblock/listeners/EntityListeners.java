@@ -12,7 +12,6 @@ import com.songoda.skyblock.limit.impl.EntityLimitation;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -203,7 +202,7 @@ public class EntityListeners implements Listener {
                 islandManager.getIslandAtLocation(event.getRightClicked().getLocation())))
             return;
 
-        if (NMSUtil.getVersionNumber() != 8) return;
+        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) return;
 
         StackableManager stackableManager = SkyBlock.getInstance().getStackableManager();
         if (stackableManager == null) return;

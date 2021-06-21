@@ -1,12 +1,12 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ public class AnimalBreedingPermission extends ListeningPermission {
         } else if (entity.getType() == EntityType.CHICKEN) {
             if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.WHEAT_SEEDS
                     || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.PUMPKIN_SEEDS || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.MELON_SEEDS)) {
-                if (NMSUtil.getVersionNumber() > 8) {
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                     if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.BEETROOT_SEEDS)) {
                         return;
                     }
@@ -87,14 +87,12 @@ public class AnimalBreedingPermission extends ListeningPermission {
                 return;
             }
         } else {
-            int NMSVersion = NMSUtil.getVersionNumber();
-
-            if (NMSVersion > 10) {
+            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_10)) {
                 if (entity.getType() == EntityType.LLAMA) {
                     if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.HAY_BLOCK)) {
                         return;
                     }
-                } else if (NMSVersion > 12) {
+                } else if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
                     if (entity.getType() == EntityType.TURTLE) {
                         if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.SEAGRASS)) {
                             return;

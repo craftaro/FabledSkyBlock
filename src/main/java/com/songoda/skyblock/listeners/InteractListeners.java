@@ -318,13 +318,6 @@ public class InteractListeners implements Listener {
                 if (plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getBoolean("Island.Block.EndFrame.Enable")) {
 
-                    if (Bukkit.getPluginManager().isPluginEnabled("EpicAnchors")) {
-                        if (com.songoda.epicanchors.EpicAnchors.getInstance().getAnchorManager().getAnchor(block.getLocation()) != null) {
-                            event.setCancelled(true);
-                            return;
-                        }
-                    }
-
                     if (CompatibleHand.getHand(event) == CompatibleHand.OFF_HAND) return;
 
                     ItemStack is = event.getPlayer().getItemInHand();

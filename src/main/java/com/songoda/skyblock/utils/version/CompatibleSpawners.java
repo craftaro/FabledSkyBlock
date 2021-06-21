@@ -1,10 +1,15 @@
 package com.songoda.skyblock.utils.version;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public enum CompatibleSpawners {
 
@@ -179,7 +184,7 @@ public enum CompatibleSpawners {
     }
 
     public static CompatibleSpawners getMaterials(Material material, byte data) {
-        if (NMSUtil.getVersionNumber() > 12) {
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
             return fromString(material.name());
         } else {
             return requestMaterials(material.name(), data);

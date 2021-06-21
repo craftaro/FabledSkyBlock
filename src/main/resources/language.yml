@@ -210,7 +210,7 @@ Command:
         NullIsland:
           Message: '&bSkyBlock &8| &cError&8: &eYou are not on an island, please specify a Player or move to an island. Or maybe you are on nullisland?'
         ByConsole:
-          Message: '&bSkyBlock &8| &cError&8: &eIf you are using it from the console, you need to use like this: /island admin bank [Player] [<Deposit|Withdraw|Balance>] [Ammount]'
+          Message: '&bSkyBlock &8| &cError&8: &eIf you are using it from the console, you need to use like this: /island admin bank [Player] [<Deposit|Withdraw|Balance>] [Amount]'
         Balance:
           Message: ' %player% have %bal%.'
         Info:

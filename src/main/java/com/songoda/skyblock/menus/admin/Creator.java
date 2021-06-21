@@ -2,6 +2,9 @@ package com.songoda.skyblock.menus.admin;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.gui.AnvilGui;
+import com.songoda.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -13,10 +16,7 @@ import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.structure.Structure;
 import com.songoda.skyblock.structure.StructureManager;
-import com.songoda.skyblock.utils.AbstractAnvilGUI;
-import com.songoda.skyblock.utils.item.SkullUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -78,7 +78,7 @@ public class Creator implements Listener {
             int playerMenuPage = playerData.getPage(MenuType.ADMIN_CREATOR), nextEndIndex = structures.size() - playerMenuPage * 36;
 
             if (playerMenuPage != 1) {
-                nInv.addItem(nInv.createItem(SkullUtil.create(
+                nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
                         "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
                         "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
                         configLoad.getString("Menu.Admin.Creator.Browse.Item.Previous.Displayname"), null, null, null,
@@ -86,7 +86,7 @@ public class Creator implements Listener {
             }
 
             if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-                nInv.addItem(nInv.createItem(SkullUtil.create(
+                nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
                         "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
                         "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
                         configLoad.getString("Menu.Admin.Creator.Browse.Item.Next.Displayname"), null, null, null,
@@ -268,7 +268,7 @@ public class Creator implements Listener {
             FileConfiguration configLoad = config.getFileConfiguration();
 
             String inventoryName = "";
-            if (NMSUtil.getVersionNumber() > 13) {
+            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_13)) {
                 inventoryName = event.getView().getTitle();
             } else {
                 try {
@@ -322,56 +322,50 @@ public class Creator implements Listener {
                         configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Displayname"))))) {
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                    AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                        if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
-                            if (!(player.hasPermission("fabledskyblock.admin.creator")
-                                    || player.hasPermission("fabledskyblock.admin.*")
-                                    || player.hasPermission("fabledskyblock.*"))) {
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Admin.Creator.Permission.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                            } else if (structureManager.containsStructure(event1.getName())) {
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Admin.Creator.Already.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                            } else if (!event1.getName().replace(" ", "").matches("^[a-zA-Z0-9]+$")) {
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Admin.Creator.Characters.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                            } else {
-                                structureManager.addStructure(event1.getName(), CompatibleMaterial.GRASS_BLOCK, null, null, null,
-                                        null, false, new ArrayList<>(), new ArrayList<>(), 0.0D);
-
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Admin.Creator.Created.Message")
-                                                .replace("%structure", event1.getName()));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
-
-                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                                    Config config111 = fileManager
-                                            .getConfig(new File(plugin.getDataFolder(), "structures.yml"));
-                                    FileConfiguration configLoad111 = config111.getFileConfiguration();
-
-                                    configLoad111.set("Structures." + event1.getName() + ".Name", event1.getName());
-
-                                    try {
-                                        configLoad111.save(config111.getFile());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                });
-
-                                player.closeInventory();
-
-                                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
-                            }
-
-                            event1.setWillClose(true);
-                            event1.setWillDestroy(true);
+                    AnvilGui gui = new AnvilGui(player);
+                    gui.setAction(event1 -> {
+                        if (!(player.hasPermission("fabledskyblock.admin.creator")
+                                || player.hasPermission("fabledskyblock.admin.*")
+                                || player.hasPermission("fabledskyblock.*"))) {
+                            messageManager.sendMessage(player,
+                                    configLoad.getString("Island.Admin.Creator.Permission.Message"));
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        } else if (structureManager.containsStructure(gui.getInputText())) {
+                            messageManager.sendMessage(player,
+                                    configLoad.getString("Island.Admin.Creator.Already.Message"));
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        } else if (!gui.getInputText().replace(" ", "").matches("^[a-zA-Z0-9]+$")) {
+                            messageManager.sendMessage(player,
+                                    configLoad.getString("Island.Admin.Creator.Characters.Message"));
+                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         } else {
-                            event1.setWillClose(false);
-                            event1.setWillDestroy(false);
+                            structureManager.addStructure(gui.getInputText(), CompatibleMaterial.GRASS_BLOCK, null, null, null,
+                                    null, false, new ArrayList<>(), new ArrayList<>(), 0.0D);
+
+                            messageManager.sendMessage(player,
+                                    configLoad.getString("Island.Admin.Creator.Created.Message")
+                                            .replace("%structure", gui.getInputText()));
+                            soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+
+                            Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                                Config config111 = fileManager
+                                        .getConfig(new File(plugin.getDataFolder(), "structures.yml"));
+                                FileConfiguration configLoad111 = config111.getFileConfiguration();
+
+                                configLoad111.set("Structures." + gui.getInputText() + ".Name", gui.getInputText());
+
+                                try {
+                                    configLoad111.save(config111.getFile());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+
+                            player.closeInventory();
+
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         }
+                        player.closeInventory();
                     });
 
                     is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
@@ -379,8 +373,8 @@ public class Creator implements Listener {
                     im.setDisplayName(configLoad.getString("Menu.Admin.Creator.Browse.Item.Information.Word.Enter"));
                     is.setItemMeta(im);
 
-                    gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
-                    gui.open();
+                    gui.setInput(is);
+                    plugin.getGuiManager().showGUI(player, gui);
 
                     return;
                 } else if ((event.getCurrentItem().getType() == CompatibleMaterial.BARRIER.getMaterial()) && (is.hasItemMeta())
@@ -406,67 +400,62 @@ public class Creator implements Listener {
                         if (structureManager.containsStructure(name)) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                                if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
-                                    if (!(player.hasPermission("fabledskyblock.admin.creator")
-                                            || player.hasPermission("fabledskyblock.admin.*")
-                                            || player.hasPermission("fabledskyblock.*"))) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Permission.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                                    } else if (playerData.getViewer() == null) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Selected.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            AnvilGui gui = new AnvilGui(player);
+                            gui.setAction(event1 -> {
 
-                                        player.closeInventory();
+                                if (!(player.hasPermission("fabledskyblock.admin.creator")
+                                        || player.hasPermission("fabledskyblock.admin.*")
+                                        || player.hasPermission("fabledskyblock.*"))) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Permission.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                } else if (playerData.getViewer() == null) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Selected.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-                                    } else if (!structureManager.containsStructure(name)) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Exist.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                    player.closeInventory();
 
-                                        player.closeInventory();
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
+                                } else if (!structureManager.containsStructure(name)) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Exist.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-                                    } else {
-                                        Structure structure = structureManager.getStructure(name);
-                                        structure.setDisplayname(event1.getName());
+                                    player.closeInventory();
 
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
-
-                                        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
-                                                () -> {
-                                                    Config config1 = fileManager.getConfig(
-                                                            new File(plugin.getDataFolder(), "structures.yml"));
-                                                    FileConfiguration configLoad1 = config1.getFileConfiguration();
-
-                                                    configLoad1.set(
-                                                            "Structures." + structure.getName() + ".Displayname",
-                                                            event1.getName());
-
-                                                    try {
-                                                        configLoad1.save(config1.getFile());
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                });
-
-                                        player.closeInventory();
-
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-                                    }
-
-                                    event1.setWillClose(true);
-                                    event1.setWillDestroy(true);
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
                                 } else {
-                                    event1.setWillClose(false);
-                                    event1.setWillDestroy(false);
+                                    Structure structure = structureManager.getStructure(name);
+                                    structure.setDisplayname(gui.getInputText());
+
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+
+                                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
+                                            () -> {
+                                                Config config1 = fileManager.getConfig(
+                                                        new File(plugin.getDataFolder(), "structures.yml"));
+                                                FileConfiguration configLoad1 = config1.getFileConfiguration();
+
+                                                configLoad1.set(
+                                                        "Structures." + structure.getName() + ".Displayname",
+                                                        gui.getInputText());
+
+                                                try {
+                                                    configLoad1.save(config1.getFile());
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            });
+
+                                    player.closeInventory();
+
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
                                 }
+                                player.closeInventory();
                             });
 
                             is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
@@ -475,8 +464,9 @@ public class Creator implements Listener {
                                     configLoad.getString("Menu.Admin.Creator.Options.Item.Displayname.Word.Enter"));
                             is.setItemMeta(im);
 
-                            gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
-                            gui.open();
+                            gui.setInput(is);
+                            plugin.getGuiManager().showGUI(player, gui);
+
                         } else {
                             playerData.setViewer(null);
 
@@ -541,66 +531,61 @@ public class Creator implements Listener {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                                if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
-                                    if (!(player.hasPermission("fabledskyblock.admin.creator")
-                                            || player.hasPermission("fabledskyblock.admin.*")
-                                            || player.hasPermission("fabledskyblock.*"))) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Permission.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                                    } else if (playerData.getViewer() == null) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Selected.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            AnvilGui gui = new AnvilGui(player);
+                            gui.setAction(event1 -> {
 
-                                        player.closeInventory();
+                                if (!(player.hasPermission("fabledskyblock.admin.creator")
+                                        || player.hasPermission("fabledskyblock.admin.*")
+                                        || player.hasPermission("fabledskyblock.*"))) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Permission.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                } else if (playerData.getViewer() == null) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Selected.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-                                    } else if (!structureManager.containsStructure(name)) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Exist.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                    player.closeInventory();
 
-                                        player.closeInventory();
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
+                                } else if (!structureManager.containsStructure(name)) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Exist.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-                                    } else {
-                                        structure.addLine(event1.getName());
+                                    player.closeInventory();
 
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
-
-                                        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
-                                                () -> {
-                                                    Config config13 = fileManager.getConfig(
-                                                            new File(plugin.getDataFolder(), "structures.yml"));
-                                                    FileConfiguration configLoad13 = config13.getFileConfiguration();
-
-                                                    configLoad13.set(
-                                                            "Structures." + structure.getName() + ".Description",
-                                                            structure.getDescription());
-
-                                                    try {
-                                                        configLoad13.save(config13.getFile());
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                });
-
-                                        player.closeInventory();
-
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-                                    }
-
-                                    event1.setWillClose(true);
-                                    event1.setWillDestroy(true);
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
                                 } else {
-                                    event1.setWillClose(false);
-                                    event1.setWillDestroy(false);
+                                    structure.addLine(gui.getInputText());
+
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+
+                                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
+                                            () -> {
+                                                Config config13 = fileManager.getConfig(
+                                                        new File(plugin.getDataFolder(), "structures.yml"));
+                                                FileConfiguration configLoad13 = config13.getFileConfiguration();
+
+                                                configLoad13.set(
+                                                        "Structures." + structure.getName() + ".Description",
+                                                        structure.getDescription());
+
+                                                try {
+                                                    configLoad13.save(config13.getFile());
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            });
+
+                                    player.closeInventory();
+
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
                                 }
+                                player.closeInventory();
                             });
 
                             is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
@@ -609,8 +594,9 @@ public class Creator implements Listener {
                                     configLoad.getString("Menu.Admin.Creator.Options.Item.Description.Word.Enter"));
                             is.setItemMeta(im);
 
-                            gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
-                            gui.open();
+                            gui.setInput(is);
+                            plugin.getGuiManager().showGUI(player, gui);
+
                         } else {
                             playerData.setViewer(null);
 
@@ -675,66 +661,61 @@ public class Creator implements Listener {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                                if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
-                                    if (!(player.hasPermission("fabledskyblock.admin.creator")
-                                            || player.hasPermission("fabledskyblock.admin.*")
-                                            || player.hasPermission("fabledskyblock.*"))) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Permission.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                                    } else if (playerData.getViewer() == null) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Selected.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            AnvilGui gui = new AnvilGui(player);
+                            gui.setAction(event1 -> {
 
-                                        player.closeInventory();
+                                if (!(player.hasPermission("fabledskyblock.admin.creator")
+                                        || player.hasPermission("fabledskyblock.admin.*")
+                                        || player.hasPermission("fabledskyblock.*"))) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Permission.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                } else if (playerData.getViewer() == null) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Selected.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-                                    } else if (!structureManager.containsStructure(name)) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Exist.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                    player.closeInventory();
 
-                                        player.closeInventory();
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
+                                } else if (!structureManager.containsStructure(name)) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Exist.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-                                    } else {
-                                        structure.addCommand(event1.getName());
+                                    player.closeInventory();
 
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
-
-                                        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
-                                                () -> {
-                                                    Config config15 = fileManager.getConfig(
-                                                            new File(plugin.getDataFolder(), "structures.yml"));
-                                                    FileConfiguration configLoad15 = config15.getFileConfiguration();
-
-                                                    configLoad15.set(
-                                                            "Structures." + structure.getName() + ".Commands",
-                                                            structure.getCommands());
-
-                                                    try {
-                                                        configLoad15.save(config15.getFile());
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                });
-
-                                        player.closeInventory();
-
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-                                    }
-
-                                    event1.setWillClose(true);
-                                    event1.setWillDestroy(true);
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
                                 } else {
-                                    event1.setWillClose(false);
-                                    event1.setWillDestroy(false);
+                                    structure.addCommand(gui.getInputText());
+
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+
+                                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
+                                            () -> {
+                                                Config config15 = fileManager.getConfig(
+                                                        new File(plugin.getDataFolder(), "structures.yml"));
+                                                FileConfiguration configLoad15 = config15.getFileConfiguration();
+
+                                                configLoad15.set(
+                                                        "Structures." + structure.getName() + ".Commands",
+                                                        structure.getCommands());
+
+                                                try {
+                                                    configLoad15.save(config15.getFile());
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            });
+
+                                    player.closeInventory();
+
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
                                 }
+                                player.closeInventory();
                             });
 
                             is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
@@ -743,8 +724,9 @@ public class Creator implements Listener {
                                     configLoad.getString("Menu.Admin.Creator.Options.Item.Commands.Word.Enter"));
                             is.setItemMeta(im);
 
-                            gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
-                            gui.open();
+                            gui.setInput(is);
+                            plugin.getGuiManager().showGUI(player, gui);
+
                         } else {
                             playerData.setViewer(null);
 
@@ -759,10 +741,16 @@ public class Creator implements Listener {
                     }
 
                     return;
-                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.MAP.getMaterial())
+                } else if ((event.getCurrentItem().
+
+                        getType() == CompatibleMaterial.MAP.getMaterial())
                         && (is.hasItemMeta())
-                        && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Menu.Admin.Creator.Options.Item.Permission.Displayname"))))) {
+                        && (is.getItemMeta().
+
+                        getDisplayName().
+
+                        equals(ChatColor.translateAlternateColorCodes('&',
+                                configLoad.getString("Menu.Admin.Creator.Options.Item.Permission.Displayname"))))) {
                     if (playerData.getViewer() == null) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Island.Admin.Creator.Selected.Message"));
@@ -813,9 +801,15 @@ public class Creator implements Listener {
                     }
 
                     return;
-                } else if ((event.getCurrentItem().getType() == CompatibleMaterial.PAPER.getMaterial()) && (is.hasItemMeta())
-                        && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
-                        configLoad.getString("Menu.Admin.Creator.Options.Item.File.Displayname"))))) {
+                } else if ((event.getCurrentItem().
+
+                        getType() == CompatibleMaterial.PAPER.getMaterial()) && (is.hasItemMeta())
+                        && (is.getItemMeta().
+
+                        getDisplayName().
+
+                        equals(ChatColor.translateAlternateColorCodes('&',
+                                configLoad.getString("Menu.Admin.Creator.Options.Item.File.Displayname"))))) {
                     if (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.MIDDLE
                             || event.getClick() == ClickType.RIGHT) {
                         if (playerData.getViewer() == null) {
@@ -832,127 +826,122 @@ public class Creator implements Listener {
                             if (structureManager.containsStructure(name)) {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                                    if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
-                                        if (!(player.hasPermission("fabledskyblock.admin.creator")
-                                                || player.hasPermission("fabledskyblock.admin.*")
-                                                || player.hasPermission("fabledskyblock.*"))) {
-                                            messageManager.sendMessage(player,
-                                                    configLoad.getString("Island.Admin.Creator.Permission.Message"));
-                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                                        } else if (playerData.getViewer() == null) {
-                                            messageManager.sendMessage(player,
-                                                    configLoad.getString("Island.Admin.Creator.Selected.Message"));
-                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                AnvilGui gui = new AnvilGui(player);
+                                gui.setAction(event1 -> {
 
-                                            player.closeInventory();
+                                    if (!(player.hasPermission("fabledskyblock.admin.creator")
+                                            || player.hasPermission("fabledskyblock.admin.*")
+                                            || player.hasPermission("fabledskyblock.*"))) {
+                                        messageManager.sendMessage(player,
+                                                configLoad.getString("Island.Admin.Creator.Permission.Message"));
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                    } else if (playerData.getViewer() == null) {
+                                        messageManager.sendMessage(player,
+                                                configLoad.getString("Island.Admin.Creator.Selected.Message"));
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                            Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                    () -> open(player), 1L);
-                                        } else if (!structureManager.containsStructure(name)) {
-                                            messageManager.sendMessage(player,
-                                                    configLoad.getString("Island.Admin.Creator.Exist.Message"));
-                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                        player.closeInventory();
 
-                                            player.closeInventory();
+                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                                () -> open(player), 1L);
+                                    } else if (!structureManager.containsStructure(name)) {
+                                        messageManager.sendMessage(player,
+                                                configLoad.getString("Island.Admin.Creator.Exist.Message"));
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                            Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                    () -> open(player), 1L);
-                                        } else {
-                                            String fileName = event1.getName();
-                                            if (fileManager.isFileExist(new File(plugin.getDataFolder().toString() + "/structures", fileName)) ||
-                                                    fileManager.isFileExist(new File(plugin.getDataFolder().toString() + "/schematics", fileName))) {
-                                                if (event.getClick() == ClickType.LEFT) {
-                                                    Structure structure = structureManager.getStructure(name);
-                                                    structure.setOverworldFile(fileName);
+                                        player.closeInventory();
 
-                                                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(),
-                                                            1.0F, 1.0F);
+                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                                () -> open(player), 1L);
+                                    } else {
+                                        String fileName = gui.getInputText();
+                                        if (fileManager.isFileExist(new File(plugin.getDataFolder().toString() + "/structures", fileName)) ||
+                                                fileManager.isFileExist(new File(plugin.getDataFolder().toString() + "/schematics", fileName))) {
+                                            if (event.getClick() == ClickType.LEFT) {
+                                                Structure structure = structureManager.getStructure(name);
+                                                structure.setOverworldFile(fileName);
 
-                                                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
-                                                            () -> {
-                                                                Config config17 = fileManager.getConfig(
-                                                                        new File(plugin.getDataFolder(),
-                                                                                "structures.yml"));
-                                                                FileConfiguration configLoad17 = config17
-                                                                        .getFileConfiguration();
+                                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(),
+                                                        1.0F, 1.0F);
 
-                                                                configLoad17.set("Structures." + structure.getName() + ".File.Overworld", fileName);
+                                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
+                                                        () -> {
+                                                            Config config17 = fileManager.getConfig(
+                                                                    new File(plugin.getDataFolder(),
+                                                                            "structures.yml"));
+                                                            FileConfiguration configLoad17 = config17
+                                                                    .getFileConfiguration();
 
-                                                                try {
-                                                                    configLoad17.save(config17.getFile());
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
-                                                            });
-                                                } else if (event.getClick() == ClickType.MIDDLE) {
-                                                    Structure structure = structureManager.getStructure(name);
-                                                    structure.setNetherFile(fileName);
+                                                            configLoad17.set("Structures." + structure.getName() + ".File.Overworld", fileName);
 
-                                                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(),
-                                                            1.0F, 1.0F);
+                                                            try {
+                                                                configLoad17.save(config17.getFile());
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        });
+                                            } else if (event.getClick() == ClickType.MIDDLE) {
+                                                Structure structure = structureManager.getStructure(name);
+                                                structure.setNetherFile(fileName);
 
-                                                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
-                                                            () -> {
-                                                                Config config18 = fileManager.getConfig(
-                                                                        new File(plugin.getDataFolder(),
-                                                                                "structures.yml"));
-                                                                FileConfiguration configLoad18 = config18
-                                                                        .getFileConfiguration();
+                                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(),
+                                                        1.0F, 1.0F);
 
-                                                                configLoad18.set("Structures." + structure.getName()
-                                                                        + ".File.Nether", fileName);
+                                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
+                                                        () -> {
+                                                            Config config18 = fileManager.getConfig(
+                                                                    new File(plugin.getDataFolder(),
+                                                                            "structures.yml"));
+                                                            FileConfiguration configLoad18 = config18
+                                                                    .getFileConfiguration();
 
-                                                                try {
-                                                                    configLoad18.save(config18.getFile());
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
-                                                            });
-                                                } else {
-                                                    Structure structure = structureManager.getStructure(name);
-                                                    structure.setEndFile(fileName);
+                                                            configLoad18.set("Structures." + structure.getName()
+                                                                    + ".File.Nether", fileName);
 
-                                                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(),
-                                                            1.0F, 1.0F);
-
-                                                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
-                                                            () -> {
-                                                                Config config19 = fileManager.getConfig(
-                                                                        new File(plugin.getDataFolder(),
-                                                                                "structures.yml"));
-                                                                FileConfiguration configLoad19 = config19
-                                                                        .getFileConfiguration();
-
-                                                                configLoad19.set("Structures." + structure.getName()
-                                                                        + ".File.End", fileName);
-
-                                                                try {
-                                                                    configLoad19.save(config19.getFile());
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
-                                                            });
-                                                }
+                                                            try {
+                                                                configLoad18.save(config18.getFile());
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        });
                                             } else {
-                                                messageManager.sendMessage(player,
-                                                        configLoad.getString("Island.Admin.Creator.File.Message"));
-                                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                                        1.0F);
+                                                Structure structure = structureManager.getStructure(name);
+                                                structure.setEndFile(fileName);
+
+                                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(),
+                                                        1.0F, 1.0F);
+
+                                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
+                                                        () -> {
+                                                            Config config19 = fileManager.getConfig(
+                                                                    new File(plugin.getDataFolder(),
+                                                                            "structures.yml"));
+                                                            FileConfiguration configLoad19 = config19
+                                                                    .getFileConfiguration();
+
+                                                            configLoad19.set("Structures." + structure.getName()
+                                                                    + ".File.End", fileName);
+
+                                                            try {
+                                                                configLoad19.save(config19.getFile());
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        });
                                             }
-
-                                            player.closeInventory();
-
-                                            Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                    () -> open(player), 1L);
+                                        } else {
+                                            messageManager.sendMessage(player,
+                                                    configLoad.getString("Island.Admin.Creator.File.Message"));
+                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                    1.0F);
                                         }
 
-                                        event1.setWillClose(true);
-                                        event1.setWillDestroy(true);
-                                    } else {
-                                        event1.setWillClose(false);
-                                        event1.setWillDestroy(false);
+                                        player.closeInventory();
+
+                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                                () -> open(player), 1L);
                                     }
+                                    player.closeInventory();
                                 });
 
                                 is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
@@ -961,8 +950,9 @@ public class Creator implements Listener {
                                         configLoad.getString("Menu.Admin.Creator.Options.Item.File.Word.Enter"));
                                 is.setItemMeta(im);
 
-                                gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
-                                gui.open();
+                                gui.setInput(is);
+                                plugin.getGuiManager().showGUI(player, gui);
+
                             } else {
                                 playerData.setViewer(null);
 
@@ -1036,78 +1026,75 @@ public class Creator implements Listener {
                         if (structureManager.containsStructure(name)) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                                if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
-                                    if (!(player.hasPermission("fabledskyblock.admin.creator")
-                                            || player.hasPermission("fabledskyblock.admin.*")
-                                            || player.hasPermission("fabledskyblock.*"))) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Permission.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            AnvilGui gui = new AnvilGui(player);
+                            gui.setAction(event1 -> {
 
-                                        return;
-                                    } else if (playerData.getViewer() == null) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Selected.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                if (!(player.hasPermission("fabledskyblock.admin.creator")
+                                        || player.hasPermission("fabledskyblock.admin.*")
+                                        || player.hasPermission("fabledskyblock.*"))) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Permission.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                        player.closeInventory();
+                                    return;
+                                } else if (playerData.getViewer() == null) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Selected.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-
-                                        return;
-                                    } else if (!structureManager.containsStructure(name)) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Exist.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-
-                                        player.closeInventory();
-
-                                        Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                                () -> open(player), 1L);
-
-                                        return;
-                                    } else if (!(event1.getName().matches("[0-9]+")
-                                            || event1.getName().matches("([0-9]*)\\.([0-9]{1,2}$)"))) {
-                                        messageManager.sendMessage(player,
-                                                configLoad.getString("Island.Admin.Creator.Numerical.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-
-                                        event1.setWillClose(false);
-                                        event1.setWillDestroy(false);
-
-                                        return;
-                                    }
-
-                                    double deletionCost = Double.valueOf(event1.getName());
-
-                                    Structure structure = structureManager.getStructure(name);
-                                    structure.setDeletionCost(deletionCost);
-
-                                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
-
-                                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                                        Config config112 = fileManager
-                                                .getConfig(new File(plugin.getDataFolder(), "structures.yml"));
-                                        FileConfiguration configLoad112 = config112.getFileConfiguration();
-
-                                        configLoad112.set("Structures." + structure.getName() + ".Deletion.Cost",
-                                                deletionCost);
-
-                                        try {
-                                            configLoad112.save(config112.getFile());
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    });
+                                    player.closeInventory();
 
                                     Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> open(player), 1L);
-                                } else {
-                                    event1.setWillClose(false);
-                                    event1.setWillDestroy(false);
+
+                                    return;
+                                } else if (!structureManager.containsStructure(name)) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Exist.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+
+                                    player.closeInventory();
+
+                                    Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                            () -> open(player), 1L);
+
+                                    return;
+                                } else if (!(gui.getInputText().matches("[0-9]+")
+                                        || gui.getInputText().matches("([0-9]*)\\.([0-9]{1,2}$)"))) {
+                                    messageManager.sendMessage(player,
+                                            configLoad.getString("Island.Admin.Creator.Numerical.Message"));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+
+                                    player.closeInventory();
+
+                                    return;
                                 }
+
+                                double deletionCost = Double.valueOf(gui.getInputText());
+
+                                Structure structure = structureManager.getStructure(name);
+                                structure.setDeletionCost(deletionCost);
+
+                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+
+                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                                    Config config112 = fileManager
+                                            .getConfig(new File(plugin.getDataFolder(), "structures.yml"));
+                                    FileConfiguration configLoad112 = config112.getFileConfiguration();
+
+                                    configLoad112.set("Structures." + structure.getName() + ".Deletion.Cost",
+                                            deletionCost);
+
+                                    try {
+                                        configLoad112.save(config112.getFile());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
+                                        () -> open(player), 1L);
+                                player.closeInventory();
                             });
 
                             is = new ItemStack(CompatibleMaterial.NAME_TAG.getMaterial());
@@ -1116,8 +1103,9 @@ public class Creator implements Listener {
                                     configLoad.getString("Menu.Admin.Creator.Options.Item.DeletionCost.Word.Enter"));
                             is.setItemMeta(im);
 
-                            gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
-                            gui.open();
+                            gui.setInput(is);
+                            plugin.getGuiManager().showGUI(player, gui);
+
                         } else {
                             playerData.setViewer(null);
 
@@ -1249,7 +1237,7 @@ public class Creator implements Listener {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         String inventoryName = "";
-        if (NMSUtil.getVersionNumber() > 13) {
+        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_13)) {
             inventoryName = event.getView().getTitle();
         } else {
             try {

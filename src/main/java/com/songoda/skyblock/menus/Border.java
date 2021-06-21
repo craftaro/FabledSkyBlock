@@ -2,8 +2,8 @@ package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.world.SWorldBorder;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
@@ -11,7 +11,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.world.WorldBorder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,8 +18,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-
-import java.io.File;
 
 public class Border {
 
@@ -52,11 +49,11 @@ public class Border {
 
                 return;
             } else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && plugin.getPermissionManager().hasPermission(island,"Border", IslandRole.Operator))
+                    && plugin.getPermissionManager().hasPermission(island, "Border", IslandRole.Operator))
                     || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Border.Permission.Message"));
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 return;
             } else if (!plugin.getConfiguration().getBoolean("Island.WorldBorder.Enable")) {
@@ -86,13 +83,13 @@ public class Border {
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                     configLoad.getString("Menu.Border.Item.Word.Blue")))))) {
-                if (island.getBorderColor() == WorldBorder.Color.Blue) {
+                if (island.getBorderColor() == SWorldBorder.Color.Blue) {
                     soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
                 } else {
-                    island.setBorderColor(WorldBorder.Color.Blue);
+                    island.setBorderColor(SWorldBorder.Color.Blue);
                     islandManager.updateBorder(island);
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
@@ -104,13 +101,13 @@ public class Border {
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                     configLoad.getString("Menu.Border.Item.Word.Green")))))) {
-                if (island.getBorderColor() == WorldBorder.Color.Green) {
+                if (island.getBorderColor() == SWorldBorder.Color.Green) {
                     soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
                 } else {
-                    island.setBorderColor(WorldBorder.Color.Green);
+                    island.setBorderColor(SWorldBorder.Color.Green);
                     islandManager.updateBorder(island);
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
@@ -122,13 +119,13 @@ public class Border {
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                     configLoad.getString("Menu.Border.Item.Word.Red")))))) {
-                if (island.getBorderColor() == WorldBorder.Color.Red) {
+                if (island.getBorderColor() == SWorldBorder.Color.Red) {
                     soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
                 } else {
-                    island.setBorderColor(WorldBorder.Color.Red);
+                    island.setBorderColor(SWorldBorder.Color.Red);
                     islandManager.updateBorder(island);
 
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
@@ -143,7 +140,7 @@ public class Border {
         nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                 configLoad.getString("Menu.Border.Item.Exit.Displayname"), null, null, null, null), 0);
 
-        WorldBorder.Color borderColor = island.getBorderColor();
+        SWorldBorder.Color borderColor = island.getBorderColor();
         String borderToggle;
 
         if (island.isBorder()) {
@@ -157,8 +154,8 @@ public class Border {
                 configLoad.getStringList("Menu.Border.Item.Toggle.Lore"),
                 new Placeholder[]{new Placeholder("%toggle", borderToggle)}, null, null), 1);
 
-        if(player.hasPermission("fabledskyblock.island.border.blue")){
-            if (borderColor == WorldBorder.Color.Blue) {
+        if (player.hasPermission("fabledskyblock.island.border.blue")) {
+            if (borderColor == SWorldBorder.Color.Blue) {
                 nInv.addItem(nInv.createItem(CompatibleMaterial.LIGHT_BLUE_DYE.getItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Blue")),
@@ -177,8 +174,8 @@ public class Border {
             nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                     "", null, null, null, null), 2);
         }
-        if(player.hasPermission("fabledskyblock.island.border.green")){
-            if (borderColor == WorldBorder.Color.Green) {
+        if (player.hasPermission("fabledskyblock.island.border.green")) {
+            if (borderColor == SWorldBorder.Color.Green) {
                 nInv.addItem(nInv.createItem(CompatibleMaterial.LIME_DYE.getItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Green")),
@@ -199,8 +196,8 @@ public class Border {
             nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
                     "", null, null, null, null), 3);
         }
-        if(player.hasPermission("fabledskyblock.island.border.red")){
-            if (borderColor == WorldBorder.Color.Red) {
+        if (player.hasPermission("fabledskyblock.island.border.red")) {
+            if (borderColor == SWorldBorder.Color.Red) {
                 nInv.addItem(nInv.createItem(CompatibleMaterial.RED_DYE.getItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Red")),

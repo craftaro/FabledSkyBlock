@@ -1,10 +1,10 @@
 package com.songoda.skyblock.listeners;
 
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,73 +29,75 @@ public class SpawnerListeners implements Listener {
         CreatureSpawner spawner = event.getSpawner();
         org.bukkit.Location location = spawner.getBlock().getLocation();
 
-        if (plugin.getWorldManager().isIslandWorld(location.getWorld())) {
-            Island island = islandManager.getIslandAtLocation(location);
+        if (!plugin.getWorldManager().isIslandWorld(location.getWorld()))
+            return;
 
-            if (island != null) {
-                List<Upgrade> upgrades = plugin.getUpgradeManager().getUpgrades(Upgrade.Type.Spawner);
+        Island island = islandManager.getIslandAtLocation(location);
 
-                if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
-                        && island.isUpgrade(Upgrade.Type.Spawner)) {
-                    if (NMSUtil.getVersionNumber() > 12) {
-                        if (spawner.getDelay() == 20) {
-                            spawner.setDelay(10);
-                        }
+        if (island == null)
+            return;
 
-                        spawner.setMinSpawnDelay(100);
-                        spawner.setMaxSpawnDelay(400);
-                    } else {
-                        try {
-                            Object MobSpawner;
+        List<Upgrade> upgrades = plugin.getUpgradeManager().getUpgrades(Upgrade.Type.Spawner);
 
-                            try {
-                                Field TileEntityMobSpawnerField = spawner.getClass().getDeclaredField("spawner");
-                                TileEntityMobSpawnerField.setAccessible(true);
-                                Object TileEntityMobSpawner = TileEntityMobSpawnerField.get(spawner);
-                                MobSpawner = TileEntityMobSpawner.getClass().getMethod("getSpawner")
-                                        .invoke(TileEntityMobSpawner);
-                            } catch (NoSuchFieldException ignored) {
-                                Field snapshotField = spawner.getClass().getSuperclass().getDeclaredField("snapshot");
-                                snapshotField.setAccessible(true);
-                                Object snapshot = snapshotField.get(spawner);
-                                MobSpawner = snapshot.getClass().getMethod("getSpawner").invoke(snapshot);
-                            }
+        if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()
+                && island.isUpgrade(Upgrade.Type.Spawner)) {
+            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
+                if (spawner.getDelay() == 20) {
+                    spawner.setDelay(10);
+                }
 
-                            int spawnDelay = (int) MobSpawner.getClass().getSuperclass().getField("spawnDelay")
-                                    .get(MobSpawner);
+                spawner.setMinSpawnDelay(100);
+                spawner.setMaxSpawnDelay(400);
+            } else {
+                try {
+                    Object MobSpawner;
 
-                            if (spawnDelay == 20) {
-                                Field spawnDelayField = MobSpawner.getClass().getSuperclass().getField("spawnDelay");
-                                spawnDelayField.setAccessible(true);
-                                spawnDelayField.set(MobSpawner, 10);
-                            }
-
-                            Field minSpawnDelayField = MobSpawner.getClass().getSuperclass()
-                                    .getDeclaredField("minSpawnDelay");
-                            minSpawnDelayField.setAccessible(true);
-                            int minSpawnDelay = (int) minSpawnDelayField.get(MobSpawner);
-
-                            if (minSpawnDelay != 100) {
-                                minSpawnDelayField.set(MobSpawner, 100);
-                            }
-
-                            Field maxSpawnDelayField = MobSpawner.getClass().getSuperclass()
-                                    .getDeclaredField("maxSpawnDelay");
-                            maxSpawnDelayField.setAccessible(true);
-                            int maxSpawnDelay = (int) maxSpawnDelayField.get(MobSpawner);
-
-                            if (maxSpawnDelay != 400) {
-                                maxSpawnDelayField.set(MobSpawner, 400);
-                            }
-                        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
-                                | SecurityException | InvocationTargetException | NoSuchMethodException e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        Field TileEntityMobSpawnerField = spawner.getClass().getDeclaredField("spawner");
+                        TileEntityMobSpawnerField.setAccessible(true); 
+                        Object TileEntityMobSpawner = TileEntityMobSpawnerField.get(spawner);
+                        MobSpawner = TileEntityMobSpawner.getClass().getMethod("getSpawner")
+                                .invoke(TileEntityMobSpawner);
+                    } catch (NoSuchFieldException ignored) {
+                        Field snapshotField = spawner.getClass().getSuperclass().getDeclaredField("snapshot");
+                        snapshotField.setAccessible(true); 
+                        Object snapshot = snapshotField.get(spawner);
+                        MobSpawner = snapshot.getClass().getMethod("getSpawner").invoke(snapshot);
                     }
-                    
-                    spawner.update();
+
+                    int spawnDelay = (int) MobSpawner.getClass().getSuperclass().getField("spawnDelay")
+                            .get(MobSpawner);
+
+                    if (spawnDelay == 20) {
+                        Field spawnDelayField = MobSpawner.getClass().getSuperclass().getField("spawnDelay");
+                        spawnDelayField.setAccessible(true); 
+                        spawnDelayField.set(MobSpawner, 10);
+                    }
+
+                    Field minSpawnDelayField = MobSpawner.getClass().getSuperclass()
+                            .getDeclaredField("minSpawnDelay");
+                    minSpawnDelayField.setAccessible(true); 
+                    int minSpawnDelay = (int) minSpawnDelayField.get(MobSpawner);
+
+                    if (minSpawnDelay != 100) {
+                        minSpawnDelayField.set(MobSpawner, 100);
+                    }
+
+                    Field maxSpawnDelayField = MobSpawner.getClass().getSuperclass()
+                            .getDeclaredField("maxSpawnDelay");
+                    maxSpawnDelayField.setAccessible(true); 
+                    int maxSpawnDelay = (int) maxSpawnDelayField.get(MobSpawner);
+
+                    if (maxSpawnDelay != 400) {
+                        maxSpawnDelayField.set(MobSpawner, 400);
+                    }
+                } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
+                        | SecurityException | InvocationTargetException | NoSuchMethodException e) {
+                    e.printStackTrace();
                 }
             }
+
+            spawner.update();
         }
     }
 }

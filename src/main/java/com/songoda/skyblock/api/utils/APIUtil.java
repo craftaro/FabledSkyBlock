@@ -1,8 +1,14 @@
 package com.songoda.skyblock.api.utils;
 
-import com.songoda.skyblock.api.island.*;
+import com.songoda.core.world.SWorldBorder;
+import com.songoda.skyblock.api.island.IslandBorderColor;
+import com.songoda.skyblock.api.island.IslandEnvironment;
+import com.songoda.skyblock.api.island.IslandMessage;
+import com.songoda.skyblock.api.island.IslandRole;
+import com.songoda.skyblock.api.island.IslandStatus;
+import com.songoda.skyblock.api.island.IslandUpgrade;
+import com.songoda.skyblock.api.island.IslandWorld;
 import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.skyblock.utils.world.WorldBorder;
 
 public final class APIUtil {
 
@@ -57,7 +63,7 @@ public final class APIUtil {
 
         return null;
     }
-    
+
     public static com.songoda.skyblock.island.IslandStatus toImplementation(IslandStatus status) {
         switch (status) {
             case OPEN:
@@ -67,10 +73,10 @@ public final class APIUtil {
             case WHITELISTED:
                 return com.songoda.skyblock.island.IslandStatus.WHITELISTED;
         }
-        
+
         return null;
     }
-    
+
     public static IslandStatus fromImplementation(com.songoda.skyblock.island.IslandStatus status) {
         switch (status) {
             case OPEN:
@@ -80,7 +86,7 @@ public final class APIUtil {
             case WHITELISTED:
                 return IslandStatus.WHITELISTED;
         }
-        
+
         return null;
     }
 
@@ -186,20 +192,20 @@ public final class APIUtil {
         return null;
     }
 
-    public static WorldBorder.Color toImplementation(IslandBorderColor color) {
+    public static SWorldBorder.Color toImplementation(IslandBorderColor color) {
         switch (color) {
             case Blue:
-                return WorldBorder.Color.Blue;
+                return SWorldBorder.Color.Blue;
             case Green:
-                return WorldBorder.Color.Green;
+                return SWorldBorder.Color.Green;
             case Red:
-                return WorldBorder.Color.Red;
+                return SWorldBorder.Color.Red;
         }
 
         return null;
     }
 
-    public static IslandBorderColor fromImplementation(WorldBorder.Color color) {
+    public static IslandBorderColor fromImplementation(SWorldBorder.Color color) {
         switch (color) {
             case Blue:
                 return IslandBorderColor.Blue;

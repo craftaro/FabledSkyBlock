@@ -1,7 +1,7 @@
 package com.songoda.skyblock.utils.structure;
 
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
@@ -20,7 +20,7 @@ public class SchematicUtil {
             throw new IllegalStateException("Tried to generate an island using a schematic file without WorldEdit installed!");
 
         Runnable pasteTask = () -> {
-            if (NMSUtil.getVersionNumber() > 12) { // WorldEdit 7
+            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) { // WorldEdit 7
                 com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat format = com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats.findByFile(schematicFile);
                 try (com.sk89q.worldedit.extent.clipboard.io.ClipboardReader reader = format.getReader(new FileInputStream(schematicFile))) {
                     com.sk89q.worldedit.extent.clipboard.Clipboard clipboard = reader.read();

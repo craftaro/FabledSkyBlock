@@ -1,6 +1,7 @@
 package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -10,7 +11,6 @@ import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import io.papermc.lib.PaperLib;
@@ -100,7 +100,7 @@ public class MoveListeners implements Listener {
                         boolean keepItemsOnDeath;
 
                         if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
-                            keepItemsOnDeath = permissionManager.hasPermission(island,"KeepItemsOnDeath", IslandRole.Owner);
+                            keepItemsOnDeath = permissionManager.hasPermission(island, "KeepItemsOnDeath", IslandRole.Owner);
                         } else {
                             keepItemsOnDeath = configLoad.getBoolean("Island.KeepItemsOnDeath.Enable");
                         }
@@ -122,7 +122,7 @@ public class MoveListeners implements Listener {
                                     player.setLevel(0);
                                     player.setExp(0.0F);
 
-                                    if (NMSUtil.getVersionNumber() > 8) {
+                                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                                         player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
                                     } else {
                                         player.setHealth(player.getMaxHealth());
@@ -206,17 +206,21 @@ public class MoveListeners implements Listener {
                 }
             } else {
                 loc = island.getLocation(world, IslandEnvironment.Main);
-    
+
                 if(plugin.getConfiguration().getBoolean("Island.Teleport.RemoveWater", false)) {
                     LocationUtil.removeWaterFromLoc(loc);
                 }
             }
         } else {
             if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                if(plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
-                    Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Visitor));
-                    if (safeLoc != null) {
-                        loc = safeLoc;
+                if (plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                    Location isLoc = island.getLocation(world, IslandEnvironment.Visitor);
+
+                    if (isLoc != null) {
+                        Location safeLoc = LocationUtil.getSafeLocation(isLoc);
+                        if (safeLoc != null) {
+                            loc = safeLoc;
+                        }
                     }
                 }
             } else {

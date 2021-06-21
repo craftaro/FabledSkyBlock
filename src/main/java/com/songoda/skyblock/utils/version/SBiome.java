@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils.version;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.utils.StringUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -34,7 +35,7 @@ public enum SBiome {
     THE_VOID("SKY", CompatibleMaterial.OBSIDIAN),
     WARM_OCEAN(true, CompatibleMaterial.TROPICAL_FISH);
 
-    private static final boolean isPostVersion = NMSUtil.getVersionNumber() >= 13;
+    private static final boolean isPostVersion = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13);
 
     private final String legacyName;
     private final boolean isPost13;

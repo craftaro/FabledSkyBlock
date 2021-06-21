@@ -1,8 +1,9 @@
 package com.songoda.skyblock.utils.item;
 
+import com.songoda.core.compatibility.ClassMapping;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.skyblock.utils.version.NMSUtil;
+import com.songoda.core.utils.NMSUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -22,11 +23,11 @@ public class ItemStackUtil {
         ItemStack itemStack = null;
         
         try {
-            Class<?> NBTTagCompoundClass = NMSUtil.getNMSClass("NBTTagCompound");
-            Class<?> NMSItemStackClass = NMSUtil.getNMSClass("ItemStack");
-            Object NBTTagCompound = isAbove1_16_R1 ? NMSUtil.getNMSClass("NBTCompressedStreamTools")
+            Class<?> NBTTagCompoundClass = ClassMapping.NBT_TAG_COMPOUND.getClazz();
+            Class<?> NMSItemStackClass = ClassMapping.ITEM_STACK.getClazz();
+            Object NBTTagCompound = isAbove1_16_R1 ? ClassMapping.NBT_COMPRESSED_STREAM_TOOLS.getClazz()
                     .getMethod("a", DataInput.class).invoke(null, dataInputStream)
-                    : NMSUtil.getNMSClass("NBTCompressedStreamTools")
+                    : ClassMapping.NBT_COMPRESSED_STREAM_TOOLS.getClazz()
                     .getMethod("a", DataInputStream.class).invoke(null, dataInputStream);
             Object craftItemStack;
 
@@ -40,7 +41,7 @@ public class ItemStackUtil {
                         NBTTagCompound);
             }
 
-            itemStack = (ItemStack) NMSUtil.getCraftClass("inventory.CraftItemStack")
+            itemStack = (ItemStack) NMSUtils.getCraftClass("inventory.CraftItemStack")
                     .getMethod("asBukkitCopy", NMSItemStackClass).invoke(null, craftItemStack);
 
             // TODO: This method of serialization has some issues. Not all the names are the same between versions
@@ -66,14 +67,14 @@ public class ItemStackUtil {
         DataOutputStream dataOutput = new DataOutputStream(outputStream);
 
         try {
-            Class<?> NBTTagCompoundClass = NMSUtil.getNMSClass("NBTTagCompound");
+            Class<?> NBTTagCompoundClass = ClassMapping.NBT_TAG_COMPOUND.getClazz();
             Constructor<?> nbtTagCompoundConstructor = NBTTagCompoundClass.getConstructor();
             Object NBTTagCompound = nbtTagCompoundConstructor.newInstance();
-            Object NMSItemStackClass = NMSUtil.getCraftClass("inventory.CraftItemStack")
+            Object NMSItemStackClass = NMSUtils.getCraftClass("inventory.CraftItemStack")
                     .getMethod("asNMSCopy", ItemStack.class).invoke(null, item);
-            NMSUtil.getNMSClass("ItemStack").getMethod("save", NBTTagCompoundClass).invoke(NMSItemStackClass,
+            ClassMapping.ITEM_STACK.getClazz().getMethod("save", NBTTagCompoundClass).invoke(NMSItemStackClass,
                     NBTTagCompound);
-            NMSUtil.getNMSClass("NBTCompressedStreamTools").getMethod("a", NBTTagCompoundClass, DataOutput.class)
+            ClassMapping.NBT_COMPRESSED_STREAM_TOOLS.getClazz().getMethod("a", NBTTagCompoundClass, DataOutput.class)
                     .invoke(null, NBTTagCompound, dataOutput);
         } catch (Exception e) {
             e.printStackTrace();
