@@ -1,10 +1,11 @@
 package com.songoda.skyblock.utils.world.block;
 
+import com.songoda.core.compatibility.ClassMapping;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.BlockUtils;
+import com.songoda.core.utils.NMSUtils;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.banner.Pattern;
@@ -27,8 +28,7 @@ public final class BlockUtil extends BlockUtils {
     public static BlockData convertBlockToBlockData(Block block, int x, int y, int z) {
         BlockData blockData = new BlockData(block.getType().name(), block.getData(), x, y, z, block.getBiome().toString());
 
-        int NMSVersion = NMSUtil.getVersionNumber();
-        blockData.setVersion(NMSVersion);
+        blockData.setVersion(Integer.parseInt(ServerVersion.getVersionReleaseNumber()));
 
         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
             blockData.setBlockData(block.getBlockData().getAsString());
@@ -227,24 +227,24 @@ public final class BlockUtil extends BlockUtils {
                 try {
                     World world = block.getWorld();
 
-                    Class<?> blockPositionClass = NMSUtil.getNMSClass("BlockPosition");
+                    Class<?> blockPositionClass = ClassMapping.BLOCK_POSITION.getClazz();;
 
                     Object worldHandle = world.getClass().getMethod("getHandle").invoke(world);
                     Object blockPosition = blockPositionClass.getConstructor(int.class, int.class, int.class).newInstance(block.getX(), block.getY(), block.getZ());
                     Object tileEntity = worldHandle.getClass().getMethod("getTileEntity", blockPositionClass).invoke(worldHandle, blockPosition);
 
                     Field aField = tileEntity.getClass().getDeclaredField("a");
-                    aField.setAccessible(true);
+                    aField.setAccessible(true); 
 
                     Object item = aField.get(tileEntity);
 
                     if (item != null) {
-                        Object itemStackNMS = NMSUtil.getNMSClass("ItemStack").getConstructor(NMSUtil.getNMSClass("Item")).newInstance(item);
+                        Object itemStackNMS = ClassMapping.ITEM_STACK.getClazz().getConstructor(ClassMapping.ITEM.getClazz()).newInstance(item);
 
-                        ItemStack itemStack = (ItemStack) NMSUtil.getCraftClass("inventory.CraftItemStack").getMethod("asBukkitCopy", itemStackNMS.getClass()).invoke(null, itemStackNMS);
+                        ItemStack itemStack = (ItemStack) NMSUtils.getCraftClass("inventory.CraftItemStack").getMethod("asBukkitCopy", itemStackNMS.getClass()).invoke(null, itemStackNMS);
 
                         Field fField = tileEntity.getClass().getDeclaredField("f");
-                        fField.setAccessible(true);
+                        fField.setAccessible(true); 
 
                         int data = (int) fField.get(tileEntity);
 
@@ -268,7 +268,6 @@ public final class BlockUtil extends BlockUtils {
     }
 
     public static void convertBlockDataToBlock(Block block, BlockData blockData) {
-        int NMSVersion = NMSUtil.getVersionNumber();
 
         String materialStr = blockData.getMaterial();
         if (materialStr == null) return;
@@ -461,7 +460,7 @@ public final class BlockUtil extends BlockUtils {
             state.setData(stairs);
         } else if (blockDataType == BlockDataType.FLOWERPOT) {
             setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), CompatibleMaterial.STONE, (byte) 0);
-            if (NMSVersion >= 8 && NMSVersion <= 12) {
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_8) && ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12)) {
                 if (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR) {
                     setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), CompatibleMaterial.STONE, (byte) 0);
                 }
@@ -477,12 +476,12 @@ public final class BlockUtil extends BlockUtils {
 
                         World world = block.getWorld();
 
-                        Class<?> blockPositionClass = NMSUtil.getNMSClass("BlockPosition");
+                        Class<?> blockPositionClass = ClassMapping.BLOCK_POSITION.getClazz();
 
                         Object worldHandle = world.getClass().getMethod("getHandle").invoke(world);
                         Object blockPosition = blockPositionClass.getConstructor(int.class, int.class, int.class).newInstance(block.getX(), block.getY(), block.getZ());
                         Object tileEntity = worldHandle.getClass().getMethod("getTileEntity", blockPositionClass).invoke(worldHandle, blockPosition);
-                        Object itemStack = NMSUtil.getCraftClass("inventory.CraftItemStack").getMethod("asNMSCopy", is.getClass()).invoke(null, is);
+                        Object itemStack = NMSUtils.getCraftClass("inventory.CraftItemStack").getMethod("asNMSCopy", is.getClass()).invoke(null, is);
                         Object item = itemStack.getClass().getMethod("getItem").invoke(itemStack);
                         Object data = itemStack.getClass().getMethod("getData").invoke(itemStack);
 
@@ -491,7 +490,7 @@ public final class BlockUtil extends BlockUtils {
                         aField.set(tileEntity, item);
 
                         Field fField = tileEntity.getClass().getDeclaredField("f");
-                        fField.setAccessible(true);
+                        fField.setAccessible(true); 
                         fField.set(tileEntity, data);
 
                         tileEntity.getClass().getMethod("update").invoke(tileEntity);
@@ -506,11 +505,11 @@ public final class BlockUtil extends BlockUtils {
                     materialStr = null;
 
                     if (blockData.getVersion() > 12) {
-                        if (NMSVersion > 12) {
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                             materialStr = flower[0].toUpperCase();
                         }
                     } else {
-                        if (NMSVersion < 13) {
+                        if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
                             materialStr = flower[0].toUpperCase();
                         }
                     }
@@ -531,7 +530,7 @@ public final class BlockUtil extends BlockUtils {
             if (bottomBlock.getType() == Material.AIR && !topBlock.getType().name().equals("DOUBLE_PLANT")) {
                 bottomBlock.setType(CompatibleMaterial.LARGE_FERN.getMaterial());
 
-                if (NMSVersion < 13) {
+                if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
                     try {
                         bottomBlock.getClass().getMethod("setData", byte.class).invoke(bottomBlock, (byte) 2);
                     } catch (Exception e) {

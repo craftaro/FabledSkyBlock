@@ -1,12 +1,12 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -38,7 +38,7 @@ public class DamagePermission extends ListeningPermission {
                 return;
             }
         } else {
-            if (NMSUtil.getVersionNumber() > 11) {
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
                 if (event.getCause() == EntityDamageEvent.DamageCause.valueOf("ENTITY_SWEEP_ATTACK")) {
                     EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) event;
 

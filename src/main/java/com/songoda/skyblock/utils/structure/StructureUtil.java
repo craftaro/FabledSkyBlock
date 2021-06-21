@@ -5,12 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.nms.NmsManager;
 import com.songoda.core.nms.nbt.NBTEntity;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.utils.Compression;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.utils.world.block.BlockData;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
@@ -83,7 +83,7 @@ public final class StructureUtil {
             originBlockLocation = originBlockLocation + ":" + originLocation.getYaw() + ":" + originLocation.getPitch();
         }
 
-        String JSONString = new Gson().toJson(new Storage(new Gson().toJson(blockData), new Gson().toJson(entityData), originBlockLocation, System.currentTimeMillis(), NMSUtil.getVersionNumber()), Storage.class);
+        String JSONString = new Gson().toJson(new Storage(new Gson().toJson(blockData), new Gson().toJson(entityData), originBlockLocation, System.currentTimeMillis(), Integer.parseInt(ServerVersion.getVersionReleaseNumber())), Storage.class);
 
         FileOutputStream fileOutputStream = new FileOutputStream(configFile, false);
         fileOutputStream.write(Base64.getEncoder().encode(JSONString.getBytes(StandardCharsets.UTF_8)));
@@ -198,7 +198,7 @@ public final class StructureUtil {
                             org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[0])),
                                     location.getY() - Integer.parseInt(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[2])));
                             blockLocation.add(blockRotationLocation);
-                            EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation, type);
+                            EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation);
                         }
                     } catch (Exception e) {
                         SkyBlock.getInstance().getLogger().warning("Unable to convert EntityData to Entity for type {" + entityDataList.getEntityType() + "} in structure {" + structure.getStructureFile() + "}");

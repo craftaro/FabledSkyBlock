@@ -1,6 +1,7 @@
 package com.songoda.skyblock.listeners;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
@@ -8,7 +9,6 @@ import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -95,7 +95,7 @@ public class GrowListeners implements Listener {
         if (upgrades == null || upgrades.size() == 0 || !upgrades.get(0).isEnabled() || !island.isUpgrade(Upgrade.Type.Crop))
             return;
 
-        if (NMSUtil.getVersionNumber() > 12) {
+        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
             try {
                 Object blockData = block.getClass().getMethod("getBlockData").invoke(block);
                 if (blockData instanceof org.bukkit.block.data.Ageable) {

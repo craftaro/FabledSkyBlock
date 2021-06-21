@@ -2,10 +2,10 @@ package com.songoda.skyblock.stackable;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.core.utils.NumberUtils;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -146,9 +146,8 @@ public class Stackable {
         as.setVisible(false);
         as.setGravity(false);
         as.setSmall(true);
-        if (NMSUtil.getVersionNumber() > 8) {
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9))
             as.setMarker(true);
-        }
         as.setBasePlate(true);
         as.setHelmet(material.getItem());
         as.setCustomName(this.getCustomName());

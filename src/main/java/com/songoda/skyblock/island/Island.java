@@ -4,6 +4,7 @@ import com.eatthepath.uuid.FastUUID;
 import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.utils.PlayerUtils;
+import com.songoda.core.world.SWorldBorder;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.api.utils.APIUtil;
@@ -16,7 +17,6 @@ import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.Upgrade;
 import com.songoda.core.utils.NumberUtils;
-import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.world.WorldManager;
 import org.apache.commons.lang.WordUtils;
@@ -132,7 +132,7 @@ public class Island {
 
             if (configLoad.getString("Border") == null) {
                 configLoad.set("Border.Enable", mainConfigLoad.getBoolean("Island.WorldBorder.Default", false));
-                configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
+                configLoad.set("Border.Color", SWorldBorder.Color.Blue.name());
             }
 
             if (configLoad.getString("Members") != null) {
@@ -230,7 +230,7 @@ public class Island {
             configLoad.set("UUID", islandUUID.toString());
             configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status").toUpperCase());
             configLoad.set("Border.Enable", mainConfigLoad.getBoolean("Island.WorldBorder.Default", false));
-            configLoad.set("Border.Color", WorldBorder.Color.Blue.name());
+            configLoad.set("Border.Color", SWorldBorder.Color.Blue.name());
             configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
             configLoad.set("Weather.Synchronised", mainConfigLoad.getBoolean("Island.Weather.Default.Synchronised")); // TODO: Synchronized
             configLoad.set("Weather.Time", mainConfigLoad.getInt("Island.Weather.Default.Time"));
@@ -435,13 +435,13 @@ public class Island {
                 .getFileConfiguration().set("Border.Enable", border);
     }
 
-    public WorldBorder.Color getBorderColor() {
-        return WorldBorder.Color.valueOf(plugin.getFileManager().getConfig(
+    public SWorldBorder.Color getBorderColor() {
+        return SWorldBorder.Color.valueOf(plugin.getFileManager().getConfig(
                 new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
                 .getFileConfiguration().getString("Border.Color"));
     }
 
-    public void setBorderColor(WorldBorder.Color color) {
+    public void setBorderColor(SWorldBorder.Color color) {
         plugin.getFileManager().getConfig(
                 new File(new File(plugin.getDataFolder().toString() + "/island-data"), ownerUUID.toString() + ".yml"))
                 .getFileConfiguration().set("Border.Color", color.name());

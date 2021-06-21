@@ -2,6 +2,7 @@ package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandUpgradeEvent;
@@ -17,7 +18,6 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.upgrade.UpgradeManager;
 import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -504,18 +504,17 @@ public class Upgrade {
             List<com.songoda.skyblock.upgrade.Upgrade> upgrades;
 
             ItemStack potion = new ItemStack(Material.POTION);
-            int NMSVersion = NMSUtil.getVersionNumber();
 
             if(player.hasPermission("fabledskyblock.upgrade." + com.songoda.skyblock.upgrade.Upgrade.Type.Speed.name().toLowerCase())) {
                 upgrades = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.Speed);
     
                 if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
                     com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
-        
-                    if (NMSVersion > 8) {
+
+                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                         PotionMeta pm = (PotionMeta) potion.getItemMeta();
-            
-                        if (NMSVersion > 9) {
+
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10)) {
                             pm.setBasePotionData(new PotionData(PotionType.SPEED));
                         } else {
                             pm.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1, 0), true);
@@ -564,11 +563,11 @@ public class Upgrade {
                 if (upgrades != null && upgrades.size() > 0 && upgrades.get(0).isEnabled()) {
                     com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
         
-                    if (NMSVersion > 8) {
+                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_8)) {
                         potion = new ItemStack(Material.POTION);
                         PotionMeta pm = (PotionMeta) potion.getItemMeta();
             
-                        if (NMSVersion > 9) {
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                             pm.setBasePotionData(new PotionData(PotionType.JUMP));
                         } else {
                             pm.addCustomEffect(new PotionEffect(PotionEffectType.JUMP, 1, 0), true);

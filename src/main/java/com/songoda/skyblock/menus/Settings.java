@@ -2,16 +2,21 @@ package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.gui.AnvilGui;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandMessage;
+import com.songoda.skyblock.island.IslandPermission;
+import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.visit.Visit;
 import org.bukkit.Bukkit;
@@ -97,7 +102,7 @@ public class Settings {
                                     && !permissionManager.hasPermission(island13, "Coop", IslandRole.Operator)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
-                                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -115,7 +120,7 @@ public class Settings {
                                     && !permissionManager.hasPermission(island13, "Visitor", IslandRole.Operator)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
-                                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -134,7 +139,7 @@ public class Settings {
                                     && !permissionManager.hasPermission(island13, "Member", IslandRole.Operator)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
-                                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -151,7 +156,7 @@ public class Settings {
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
-                                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -167,10 +172,10 @@ public class Settings {
                                 .equals(plugin.formatText(configLoad
                                         .getString("Menu.Settings.Categories.Item.Owner.Displayname"))))) {
                             if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && !permissionManager.hasPermission(island13,"Island", IslandRole.Operator)) {
+                                    && !permissionManager.hasPermission(island13, "Island", IslandRole.Operator)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
-                                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -342,7 +347,7 @@ public class Settings {
                         }
 
                         if (config.getFileConfiguration().getBoolean("Island.Visitor.Vote")) {
-                            switch (visit.getStatus()){
+                            switch (visit.getStatus()) {
                                 case OPEN:
                                     nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
                                             configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
@@ -378,7 +383,7 @@ public class Settings {
                                     break;
                             }
                         } else {
-                            switch (visit.getStatus()){
+                            switch (visit.getStatus()) {
                                 case OPEN:
                                     nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
                                             configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"),
@@ -1109,94 +1114,83 @@ public class Settings {
 
                                     Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> {
-                                                AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                                                    if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
-                                                        Island island1 = islandManager.getIsland(player);
+                                                AnvilGui gui = new AnvilGui(player);
+                                                gui.setAction(event1 -> {
 
-                                                        if (island1 == null) {
-                                                            messageManager.sendMessage(player,
-                                                                    configLoad.getString(
-                                                                            "Command.Island.Settings.Owner.Message"));
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                                                    1.0F);
-                                                            player.closeInventory();
+                                                    Island island1 = islandManager.getIsland(player);
 
-                                                            event1.setWillClose(true);
-                                                            event1.setWillDestroy(true);
+                                                    if (island1 == null) {
+                                                        messageManager.sendMessage(player,
+                                                                configLoad.getString(
+                                                                        "Command.Island.Settings.Owner.Message"));
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                                1.0F);
+                                                        player.closeInventory();
 
-                                                            return;
-                                                        } else if (!(island1.hasRole(IslandRole.Operator,
-                                                                player.getUniqueId())
-                                                                || island1.hasRole(IslandRole.Owner,
-                                                                player.getUniqueId()))) {
-                                                            messageManager.sendMessage(player, configLoad
-                                                                    .getString("Command.Island.Role.Message"));
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                                                    1.0F);
-                                                            player.closeInventory();
+                                                        return;
+                                                    } else if (!(island1.hasRole(IslandRole.Operator,
+                                                            player.getUniqueId())
+                                                            || island1.hasRole(IslandRole.Owner,
+                                                            player.getUniqueId()))) {
+                                                        messageManager.sendMessage(player, configLoad
+                                                                .getString("Command.Island.Role.Message"));
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                                1.0F);
+                                                        player.closeInventory();
 
-                                                            event1.setWillClose(true);
-                                                            event1.setWillDestroy(true);
+                                                        return;
+                                                    } else if (!plugin.getFileManager()
+                                                            .getConfig(new File(plugin.getDataFolder(),
+                                                                    "config.yml"))
+                                                            .getFileConfiguration()
+                                                            .getBoolean("Island.Visitor.Welcome.Enable")) {
+                                                        messageManager.sendMessage(player,
+                                                                configLoad.getString(
+                                                                        "Island.Settings.Visitor.Welcome.Disabled.Message"));
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                                1.0F);
 
-                                                            return;
-                                                        } else if (!plugin.getFileManager()
-                                                                .getConfig(new File(plugin.getDataFolder(),
-                                                                        "config.yml"))
-                                                                .getFileConfiguration()
-                                                                .getBoolean("Island.Visitor.Welcome.Enable")) {
-                                                            messageManager.sendMessage(player,
-                                                                    configLoad.getString(
-                                                                            "Island.Settings.Visitor.Welcome.Disabled.Message"));
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                                                    1.0F);
+                                                        player.closeInventory();
 
-                                                            event1.setWillClose(true);
-                                                            event1.setWillDestroy(true);
-
-                                                            return;
-                                                        }
-
-                                                        Config config1 = plugin.getFileManager()
-                                                                .getConfig(new File(plugin.getDataFolder(),
-                                                                        "config.yml"));
-                                                        FileConfiguration configLoad1 = config1
-                                                                .getFileConfiguration();
-
-                                                        if (island1.getMessage(IslandMessage.Welcome)
-                                                                .size() > configLoad1
-                                                                .getInt("Island.Visitor.Welcome.Lines")
-                                                                || event1.getName().length() > configLoad1
-                                                                .getInt("Island.Visitor.Welcome.Length")) {
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                                                    1.0F);
-                                                        } else {
-                                                            List<String> welcomeMessage = island1
-                                                                    .getMessage(IslandMessage.Welcome);
-                                                            welcomeMessage.add(event1.getName());
-                                                            island1.setMessage(IslandMessage.Welcome,
-                                                                    player.getName(), welcomeMessage);
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F,
-                                                                    1.0F);
-                                                        }
-
-                                                        Bukkit.getServer().getScheduler()
-                                                                .runTaskLater(plugin,
-                                                                        () -> open(player,
-                                                                                Type.Panel,
-                                                                                null,
-                                                                                Panel.Welcome), 1L);
-
-                                                        event1.setWillClose(true);
-                                                        event1.setWillDestroy(true);
-                                                    } else {
-                                                        event1.setWillClose(false);
-                                                        event1.setWillDestroy(false);
+                                                        return;
                                                     }
+
+                                                    Config config1 = plugin.getFileManager()
+                                                            .getConfig(new File(plugin.getDataFolder(),
+                                                                    "config.yml"));
+                                                    FileConfiguration configLoad1 = config1
+                                                            .getFileConfiguration();
+
+                                                    if (island1.getMessage(IslandMessage.Welcome)
+                                                            .size() > configLoad1
+                                                            .getInt("Island.Visitor.Welcome.Lines")
+                                                            || gui.getInputText().length() > configLoad1
+                                                            .getInt("Island.Visitor.Welcome.Length")) {
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                                1.0F);
+                                                    } else {
+                                                        List<String> welcomeMessage = island1
+                                                                .getMessage(IslandMessage.Welcome);
+                                                        welcomeMessage.add(gui.getInputText());
+                                                        island1.setMessage(IslandMessage.Welcome,
+                                                                player.getName(), welcomeMessage);
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F,
+                                                                1.0F);
+                                                    }
+
+                                                    Bukkit.getServer().getScheduler()
+                                                            .runTaskLater(plugin,
+                                                                    () -> open(player,
+                                                                            Type.Panel,
+                                                                            null,
+                                                                            Panel.Welcome), 1L);
+
+                                                    player.closeInventory();
                                                 });
 
                                                 ItemStack is1 = new ItemStack(Material.NAME_TAG);
@@ -1205,8 +1199,9 @@ public class Settings {
                                                         "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Word.Enter"));
                                                 is1.setItemMeta(im);
 
-                                                gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is1);
-                                                gui.open();
+                                                gui.setInput(is1);
+                                                plugin.getGuiManager().showGUI(player, gui);
+
                                             }, 1L);
                                 }
                             } else if ((is.getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta()
@@ -1366,94 +1361,81 @@ public class Settings {
 
                                     Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                             () -> {
-                                                AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                                                    if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
-                                                        Island island1 = islandManager.getIsland(player);
+                                                AnvilGui gui = new AnvilGui(player);
+                                                gui.setAction(event1 -> {
 
-                                                        if (island1 == null) {
-                                                            messageManager.sendMessage(player,
-                                                                    configLoad.getString(
-                                                                            "Command.Island.Settings.Owner.Message"));
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                                                    1.0F);
-                                                            player.closeInventory();
+                                                    Island island1 = islandManager.getIsland(player);
 
-                                                            event1.setWillClose(true);
-                                                            event1.setWillDestroy(true);
+                                                    if (island1 == null) {
+                                                        messageManager.sendMessage(player,
+                                                                configLoad.getString(
+                                                                        "Command.Island.Settings.Owner.Message"));
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                                1.0F);
+                                                        player.closeInventory();
+                                                        return;
+                                                    } else if (!(island1.hasRole(IslandRole.Operator,
+                                                            player.getUniqueId())
+                                                            || island1.hasRole(IslandRole.Owner,
+                                                            player.getUniqueId()))) {
+                                                        messageManager.sendMessage(player, configLoad
+                                                                .getString("Command.Island.Role.Message"));
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                                1.0F);
+                                                        player.closeInventory();
+                                                        return;
+                                                    } else if (!plugin.getFileManager()
+                                                            .getConfig(new File(plugin.getDataFolder(),
+                                                                    "config.yml"))
+                                                            .getFileConfiguration().getBoolean(
+                                                                    "Island.Visitor.Signature.Enable")) {
+                                                        messageManager.sendMessage(player,
+                                                                configLoad.getString(
+                                                                        "Island.Settings.Visitor.Signature.Disabled.Message"));
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                                1.0F);
 
-                                                            return;
-                                                        } else if (!(island1.hasRole(IslandRole.Operator,
-                                                                player.getUniqueId())
-                                                                || island1.hasRole(IslandRole.Owner,
-                                                                player.getUniqueId()))) {
-                                                            messageManager.sendMessage(player, configLoad
-                                                                    .getString("Command.Island.Role.Message"));
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                                                    1.0F);
-                                                            player.closeInventory();
+                                                        player.closeInventory();
 
-                                                            event1.setWillClose(true);
-                                                            event1.setWillDestroy(true);
-
-                                                            return;
-                                                        } else if (!plugin.getFileManager()
-                                                                .getConfig(new File(plugin.getDataFolder(),
-                                                                        "config.yml"))
-                                                                .getFileConfiguration().getBoolean(
-                                                                        "Island.Visitor.Signature.Enable")) {
-                                                            messageManager.sendMessage(player,
-                                                                    configLoad.getString(
-                                                                            "Island.Settings.Visitor.Signature.Disabled.Message"));
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                                                    1.0F);
-
-                                                            event1.setWillClose(true);
-                                                            event1.setWillDestroy(true);
-
-                                                            return;
-                                                        }
-
-                                                        Config config1 = plugin.getFileManager()
-                                                                .getConfig(new File(plugin.getDataFolder(),
-                                                                        "config.yml"));
-                                                        FileConfiguration configLoad1 = config1
-                                                                .getFileConfiguration();
-
-                                                        if (island1.getMessage(IslandMessage.Signature)
-                                                                .size() > configLoad1.getInt(
-                                                                "Island.Visitor.Signature.Lines")
-                                                                || event1.getName().length() > configLoad1
-                                                                .getInt("Island.Visitor.Signature.Length")) {
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                                                    1.0F);
-                                                        } else {
-                                                            List<String> signatureMessage = island1
-                                                                    .getMessage(IslandMessage.Signature);
-                                                            signatureMessage.add(event1.getName());
-                                                            island1.setMessage(IslandMessage.Signature,
-                                                                    player.getName(), signatureMessage);
-                                                            soundManager.playSound(player,
-                                                                    CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F,
-                                                                    1.0F);
-                                                        }
-
-                                                        Bukkit.getServer().getScheduler()
-                                                                .runTaskLater(plugin,
-                                                                        () -> open(player,
-                                                                                Type.Panel,
-                                                                                null,
-                                                                                Panel.Signature), 1L);
-
-                                                        event1.setWillClose(true);
-                                                        event1.setWillDestroy(true);
-                                                    } else {
-                                                        event1.setWillClose(false);
-                                                        event1.setWillDestroy(false);
+                                                        return;
                                                     }
+
+                                                    Config config1 = plugin.getFileManager()
+                                                            .getConfig(new File(plugin.getDataFolder(),
+                                                                    "config.yml"));
+                                                    FileConfiguration configLoad1 = config1
+                                                            .getFileConfiguration();
+
+                                                    if (island1.getMessage(IslandMessage.Signature)
+                                                            .size() > configLoad1.getInt(
+                                                            "Island.Visitor.Signature.Lines")
+                                                            || gui.getInputText().length() > configLoad1
+                                                            .getInt("Island.Visitor.Signature.Length")) {
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
+                                                                1.0F);
+                                                    } else {
+                                                        List<String> signatureMessage = island1
+                                                                .getMessage(IslandMessage.Signature);
+                                                        signatureMessage.add(gui.getInputText());
+                                                        island1.setMessage(IslandMessage.Signature,
+                                                                player.getName(), signatureMessage);
+                                                        soundManager.playSound(player,
+                                                                CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F,
+                                                                1.0F);
+                                                    }
+
+                                                    Bukkit.getServer().getScheduler()
+                                                            .runTaskLater(plugin,
+                                                                    () -> open(player,
+                                                                            Type.Panel,
+                                                                            null,
+                                                                            Panel.Signature), 1L);
+
+                                                    player.closeInventory();
                                                 });
 
                                                 ItemStack is12 = new ItemStack(Material.NAME_TAG);
@@ -1462,8 +1444,9 @@ public class Settings {
                                                         "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Word.Enter"));
                                                 is12.setItemMeta(im);
 
-                                                gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is12);
-                                                gui.open();
+                                                gui.setInput(is12);
+                                                plugin.getGuiManager().showGUI(player, gui);
+
                                             }, 1L);
                                 }
                             } else if ((is.getType() == Material.ARROW) && (is.hasItemMeta()) && (is.getItemMeta()

@@ -2,6 +2,7 @@ package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -21,7 +22,6 @@ import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -267,7 +267,7 @@ public class Levelling {
 
                 String name = plugin.getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(materials);
 
-                if (materials == CompatibleMaterial.FARMLAND && NMSUtil.getVersionNumber() < 9)
+                if (materials == CompatibleMaterial.FARMLAND && ServerVersion.isServerVersionBelow(ServerVersion.V1_9))
                     materials = CompatibleMaterial.DIRT;
 
                 ItemStack is = materials.getItem();

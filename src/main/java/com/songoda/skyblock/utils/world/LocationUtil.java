@@ -10,7 +10,6 @@ import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.utils.math.VectorUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.world.WorldManager;
 import io.papermc.lib.PaperLib;
@@ -90,7 +89,7 @@ public final class LocationUtil {
                 locChecked.getBlock().getType().isBlock() &&
                 locChecked.add(0d,1d,0d).getBlock().getType().equals(CompatibleMaterial.AIR.getMaterial()) &&
                 locChecked.add(0d,2d,0d).getBlock().getType().equals(CompatibleMaterial.AIR.getMaterial()) &&
-                !(NMSUtil.getVersionNumber() >= 13 && locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
+                !(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
             safe = true;
             switch(CompatibleMaterial.getMaterial(locChecked.getBlock())){
                 case ACACIA_DOOR: // <= 1.8.8

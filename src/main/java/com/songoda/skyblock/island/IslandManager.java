@@ -9,6 +9,7 @@ import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.world.SWorldBorder;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.*;
 import com.songoda.skyblock.ban.BanManager;
@@ -36,9 +37,7 @@ import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.player.PlayerUtil;
 import com.songoda.skyblock.utils.structure.SchematicUtil;
 import com.songoda.skyblock.utils.structure.StructureUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
-import com.songoda.skyblock.utils.world.WorldBorder;
 import com.songoda.skyblock.utils.world.block.BlockDegreesType;
 import com.songoda.skyblock.visit.VisitManager;
 import com.songoda.skyblock.world.WorldManager;
@@ -1460,7 +1459,7 @@ public class IslandManager {
                     updateFlight(player);
 
                     if (world == IslandWorld.Nether) {
-                        if (NMSUtil.getVersionNumber() < 13) {
+                        if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
                             return;
                         }
                     }
@@ -1469,11 +1468,11 @@ public class IslandManager {
 
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
-                            WorldBorder.send(player, island.getBorderColor(), island.getSize(),
+                            SWorldBorder.send(player, island.getBorderColor(), island.getSize(),
                                     island.getLocation(worldManager.getIslandWorld(player.getWorld()),
                                             IslandEnvironment.Island).clone().add(increment, 0, increment));
                         } else {
-                            WorldBorder.send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
+                            SWorldBorder.send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
                         }
                     });
                 }
@@ -1615,7 +1614,7 @@ public class IslandManager {
                     if (worldList != IslandWorld.Nether || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                         Bukkit.getScheduler().runTask(plugin, () -> {
                             for (Player all : getPlayersAtIsland(island)) {
-                                WorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island).clone().add(increment, 0, increment));
+                                SWorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.Island).clone().add(increment, 0, increment));
                             }
                         });
                     }
@@ -1627,7 +1626,7 @@ public class IslandManager {
                 if (worldList != IslandWorld.Nether || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         for (Player all : getPlayersAtIsland(island)) {
-                            WorldBorder.send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));
+                            SWorldBorder.send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));
                         }
                     });
                 }

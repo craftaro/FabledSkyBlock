@@ -2,6 +2,7 @@ package com.songoda.skyblock.menus;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -13,7 +14,6 @@ import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import org.bukkit.Bukkit;
@@ -92,17 +92,13 @@ public class Bans {
                         soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
-                            AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                                if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+                            AnvilGui gui = new AnvilGui(player);
+                            gui.setAction(event1 -> {
                                     Bukkit.getServer().dispatchCommand(player,
-                                            "island ban " + event1.getName());
-
-                                    event1.setWillClose(true);
-                                    event1.setWillDestroy(true);
-                                } else {
-                                    event1.setWillClose(false);
-                                    event1.setWillDestroy(false);
-                                }
+                                            "island ban " + gui.getInputText());
+                                Bukkit.getServer().getScheduler()
+                                        .runTaskLater(plugin, () -> open(player), 1L);
+                                    player.closeInventory();
                             });
 
                             ItemStack is1 = new ItemStack(Material.NAME_TAG);
@@ -110,8 +106,8 @@ public class Bans {
                             im.setDisplayName(configLoad.getString("Menu.Bans.Item.Word.Enter"));
                             is1.setItemMeta(im);
 
-                            gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is1);
-                            gui.open();
+                            gui.setInput(is);
+                            plugin.getGuiManager().showGUI(player, gui);
                         }, 1L);
                     } else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(plugin.formatText(

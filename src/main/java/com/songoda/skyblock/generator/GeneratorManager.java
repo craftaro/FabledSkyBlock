@@ -2,10 +2,10 @@ package com.songoda.skyblock.generator;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.IslandWorld;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -105,7 +105,7 @@ public class GeneratorManager {
 
     @SuppressWarnings("deprecation")
     private int getLiquidLevel(Block block) {
-        if (NMSUtil.getVersionNumber() > 12 && block.getState().getBlockData() instanceof Levelled) {
+        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12) && block.getState().getBlockData() instanceof Levelled) {
             Levelled levelled = (Levelled) block.getState().getBlockData();
             return levelled.getLevel();
         } else {
@@ -125,7 +125,7 @@ public class GeneratorManager {
         plugin.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 10.0F);
 
 
-        if (NMSUtil.getVersionNumber() > 12) {
+        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
             block.setType(materials.getMaterial());
         } else {
             ItemStack is = materials.getItem();

@@ -2,6 +2,8 @@ package com.songoda.skyblock.menus.admin;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -13,10 +15,8 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.skyblock.utils.AbstractAnvilGUI;
 import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -164,7 +164,7 @@ public class Levelling implements Listener {
             FileConfiguration configLoad = plugin.getLanguage();
 
             String inventoryName = "";
-            if (NMSUtil.getVersionNumber() > 13) {
+            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_13)) {
                 inventoryName = event.getView().getTitle();
             } else {
                 try {
@@ -206,8 +206,9 @@ public class Levelling implements Listener {
                         configLoad.getString("Menu.Admin.Levelling.Item.Information.Displayname"))))) {
                     soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                    AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                        if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+
+                    AnvilGui gui = new AnvilGui(player);
+                    gui.setAction(event1 -> {
                             if (!(player.hasPermission("fabledskyblock.admin.level")
                                     || player.hasPermission("fabledskyblock.admin.*")
                                     || player.hasPermission("fabledskyblock.*"))) {
@@ -216,7 +217,7 @@ public class Levelling implements Listener {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                             } else {
                                 try {
-                                    double pointDivision = Double.parseDouble(event1.getName());
+                                    double pointDivision = Double.parseDouble(gui.getInputText());
     
                                     messageManager.sendMessage(player,
                                             configLoad.getString("Island.Admin.Levelling.Division.Message")
@@ -246,13 +247,7 @@ public class Levelling implements Listener {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                 }
                             }
-
-                            event1.setWillClose(true);
-                            event1.setWillDestroy(true);
-                        } else {
-                            event1.setWillClose(false);
-                            event1.setWillDestroy(false);
-                        }
+                        player.closeInventory();
                     });
 
                     is = new ItemStack(Material.NAME_TAG);
@@ -260,8 +255,8 @@ public class Levelling implements Listener {
                     im.setDisplayName(configLoad.getString("Menu.Admin.Levelling.Item.Information.Word.Enter"));
                     is.setItemMeta(im);
 
-                    gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
-                    gui.open();
+                    gui.setInput(is);
+                    plugin.getGuiManager().showGUI(player, gui);
 
                     return;
                 } else if ((event.getCurrentItem().getType() == Material.BARRIER) && (is.hasItemMeta())
@@ -306,8 +301,8 @@ public class Levelling implements Listener {
                             if (event.getClick() == ClickType.LEFT) {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                                AbstractAnvilGUI gui = new AbstractAnvilGUI(player, event1 -> {
-                                    if (event1.getSlot() == AbstractAnvilGUI.AnvilSlot.OUTPUT) {
+                                AnvilGui gui = new AnvilGui(player);
+                                gui.setAction(ev -> {
                                         if (!(player.hasPermission("fabledskyblock.admin.level")
                                                 || player.hasPermission("fabledskyblock.admin.*")
                                                 || player.hasPermission("fabledskyblock.*"))) {
@@ -316,7 +311,7 @@ public class Levelling implements Listener {
                                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                         } else if (levellingManager.hasWorth(materials)) {
                                             try {
-                                                double materialPoints = Double.parseDouble(event1.getName());
+                                                double materialPoints = Double.parseDouble(gui.getInputText());
                                                 materialList.setPoints(materialPoints);
 
                                                 messageManager.sendMessage(player, configLoad
@@ -360,13 +355,6 @@ public class Levelling implements Listener {
                                                     configLoad.getString("Island.Admin.Levelling.Exist.Message"));
                                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                                         }
-
-                                        event1.setWillClose(true);
-                                        event1.setWillDestroy(true);
-                                    } else {
-                                        event1.setWillClose(false);
-                                        event1.setWillDestroy(false);
-                                    }
                                 });
 
                                 is = new ItemStack(Material.NAME_TAG);
@@ -375,8 +363,8 @@ public class Levelling implements Listener {
                                         configLoad.getString("Menu.Admin.Levelling.Item.Material.Word.Enter"));
                                 is.setItemMeta(im);
 
-                                gui.setSlot(AbstractAnvilGUI.AnvilSlot.INPUT_LEFT, is);
-                                gui.open();
+                                gui.setOutput(is);
+                                plugin.getGuiManager().showGUI(player, gui);
                             } else if (event.getClick() == ClickType.RIGHT) {
                                 levellingManager.removeWorth(materialList.getMaterials());
                                 open(player);
@@ -408,7 +396,7 @@ public class Levelling implements Listener {
 
                 CompatibleMaterial materials = CompatibleMaterial.getMaterial(event.getCurrentItem().getType());
 
-                if (NMSUtil.getVersionNumber() < 13) {
+                if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
                     materials.getItem().setData(event.getCurrentItem().getData());
                 }
 

@@ -1,6 +1,5 @@
 package com.songoda.skyblock.utils.item;
-
-import com.songoda.skyblock.utils.version.NMSUtil;
+import com.songoda.core.compatibility.ServerVersion;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ public class InventoryUtil {
             ItemStack is = ammo.get(index);
             ItemMeta im = is.getItemMeta();
 
-            if (NMSUtil.getVersionNumber() > 12) {
+            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
                 if (((Damageable) im).getDamage() != 0) {
                     continue;
                 }
@@ -57,7 +56,7 @@ public class InventoryUtil {
                 ItemMeta im = is.getItemMeta();
 
                 if (!im.hasDisplayName()) {
-                    if (NMSUtil.getVersionNumber() > 12) {
+                    if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
                         if (((Damageable) im).getDamage() != 0) {
                             continue;
                         }

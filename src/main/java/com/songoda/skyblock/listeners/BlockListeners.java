@@ -21,7 +21,6 @@ import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
 import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
-import com.songoda.skyblock.utils.version.NMSUtil;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import org.apache.commons.lang.WordUtils;
@@ -176,9 +175,8 @@ public class BlockListeners implements Listener {
                     break;
             }
         }
-        if (material == null) {
+        if (material == null)
             material = CompatibleMaterial.getMaterial(block);
-        }
 
         if (material == null) return;
 
@@ -653,7 +651,7 @@ public class BlockListeners implements Listener {
         IslandManager islandManager = plugin.getIslandManager();
         // PortalCreateEvent.getBlocks() changed from ArrayList<Block> to
         // ArrayList<BlockState> in 1.14.1
-        if (NMSUtil.getVersionNumber() > 13) {
+        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_13)) {
             List<BlockState> blocks = event.getBlocks(); // TODO 1.8
             if (event.getBlocks().isEmpty()) return;
 
