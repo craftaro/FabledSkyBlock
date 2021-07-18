@@ -48,13 +48,7 @@ public class ChatListeners implements Listener {
 
                 PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, island.getAPIWrapper(),
                         event.getMessage(), languageLoad.getString("Island.Chat.Format.Message"));
-
-                Runnable callEvent = () -> Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
-                if (Bukkit.isPrimaryThread()) {
-                    callEvent.run();
-                } else {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, callEvent);
-                }
+                Bukkit.getServer().getPluginManager().callEvent(islandChatEvent);
             }
         }
     }
