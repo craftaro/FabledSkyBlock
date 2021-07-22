@@ -136,7 +136,7 @@ public class PlaceholderProcessor {
                 } else {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_votes.Non-empty")
-                                    .replace("{PLACEHOLDER}", "" + visitManager.getIslands().get(player.getUniqueId()).getVoters().size()));
+                                    .replace("{PLACEHOLDER}", "" + visitManager.getIslands().get(island.getOwnerUUID()).getVoters().size()));
                 }
                 break;
             case "fabledskyblock_island_role":
