@@ -41,11 +41,11 @@ public class UnbanCommand extends SubCommand {
                     .getBoolean("Island.Visitor.Banning")) {
                 if (island.hasRole(IslandRole.Owner, player.getUniqueId())
                         || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                        && plugin.getPermissionManager().hasPermission(island,"Unban", IslandRole.Operator))) {
+                        && plugin.getPermissionManager().hasPermission(island, "Unban", IslandRole.Operator))) {
                     Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
-                    UUID targetPlayerUUID = null;
-                    String targetPlayerName = null;
+                    UUID targetPlayerUUID;
+                    String targetPlayerName;
 
                     if (targetPlayer == null) {
                         OfflinePlayer targetPlayerOffline = new OfflinePlayer(args[0]);
@@ -82,7 +82,7 @@ public class UnbanCommand extends SubCommand {
                     }
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Permission.Message"));
-                    soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Disabled.Message"));
