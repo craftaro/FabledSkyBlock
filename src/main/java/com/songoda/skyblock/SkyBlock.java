@@ -65,7 +65,7 @@ public class SkyBlock extends SongodaPlugin {
     private static SkyBlock INSTANCE;
 
     private FileManager fileManager;
-    private WorldManager worldManager;
+    private final WorldManager worldManager = new WorldManager(this);
     private UserCacheManager userCacheManager;
     private VisitManager visitManager;
     private BanManager banManager;
@@ -166,7 +166,7 @@ public class SkyBlock extends SongodaPlugin {
 
         permissionManager = new PermissionManager(this);
         localizationManager = new LocalizationManager();
-        worldManager = new WorldManager(this);
+        worldManager.loadWorlds();
         userCacheManager = new UserCacheManager(this);
         visitManager = new VisitManager(this);
         banManager = new BanManager(this);
@@ -183,7 +183,6 @@ public class SkyBlock extends SongodaPlugin {
         commandManager = new CommandManager(this);
         structureManager = new StructureManager(this);
         soundManager = new SoundManager(this);
-
 
         if (this.config.getBoolean("Island.Generator.Enable")) {
             generatorManager = new GeneratorManager(this);
@@ -205,7 +204,6 @@ public class SkyBlock extends SongodaPlugin {
         rewardManager.loadRewards();
 
         bankManager = new BankManager(this);
-
 
         if (this.config.getBoolean("Island.Task.PlaytimeTask")) {
             new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
@@ -322,7 +320,6 @@ public class SkyBlock extends SongodaPlugin {
     public List<Config> getExtraConfig() {
         return null;
     }
-
 
     private boolean loadConfigs() {
         try {
@@ -500,7 +497,6 @@ public class SkyBlock extends SongodaPlugin {
         return economyManager;
     }
 
-
     public FileConfiguration getBiomes() {
         return biomes;
     }
@@ -556,5 +552,4 @@ public class SkyBlock extends SongodaPlugin {
     public FileConfiguration getScoreboard() {
         return scoreboard;
     }
-
 }
