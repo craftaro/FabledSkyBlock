@@ -5,6 +5,7 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.hooks.LogManager;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.generator.Generator;
 import com.songoda.skyblock.generator.GeneratorManager;
@@ -19,7 +20,6 @@ import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -187,7 +187,6 @@ public class BlockListeners implements Listener {
             if (CompatibleMaterial.getMaterial(belowBlock).isTall()) {
                 block = belowBlock;
             }
-
         }
 
         if (block.getType() == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
@@ -513,7 +512,6 @@ public class BlockListeners implements Listener {
                 event.setCancelled(true);
             }
         }
-
     }
 
     private boolean performStackCheck(org.bukkit.block.Block block, List<org.bukkit.block.Block> list, BlockFace blockFace) {
@@ -715,7 +713,6 @@ public class BlockListeners implements Listener {
         BlockFace dispenserDirection = ((org.bukkit.material.Dispenser) event.getBlock().getState().getData()).getFacing();
         org.bukkit.block.Block placeLocation = event.getBlock().getRelative(dispenserDirection);
 
-
         if (CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.WATER_BUCKET
                 && this.plugin.getConfiguration().getBoolean("Island.Nether.AllowNetherWater", false))
             placeLocation.setType(Material.WATER);
@@ -762,7 +759,7 @@ public class BlockListeners implements Listener {
             return;
 
         IslandLevel level = island.getLevel();
-        if (level.hasMaterial(destmaterial.name())) {
+        if (destmaterial != null && level.hasMaterial(destmaterial.name())) {
             long materialAmount = level.getMaterialAmount(destmaterial.name());
 
             if (materialAmount - 1 <= 0) {
