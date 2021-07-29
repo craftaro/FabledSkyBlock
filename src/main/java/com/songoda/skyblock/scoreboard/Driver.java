@@ -30,14 +30,14 @@ class Driver extends BukkitRunnable {
 
         ConfigurationSection config = scoreboardLoad.getConfigurationSection(boardType.getConfigSection());
 
-        if(config != null) {
+        if (config != null) {
             List<String> lines = config.getStringList("Title.Content");
             int interval = config.getInt("Title.Interval");
             title = new Row(lines, interval);
 
-            for(int i = 1; i<16; i++) {
+            for (int i = 1; i < 16; i++) {
                 List<String> rowLines = config.getStringList("Rows." + i + ".Content");
-                if(!rowLines.isEmpty()) {
+                if (!rowLines.isEmpty()) {
                     Row row = new Row(rowLines, config.getInt("Rows." + i + ".Interval"));
                     rows.add(row);
                 }
@@ -56,33 +56,41 @@ class Driver extends BukkitRunnable {
     }
 
     void registerHolder(Holder holder) {
-        holders.add(holder);
+        synchronized (this.holders) {
+            this.holders.add(holder);
+        }
     }
 
     void unregisterHolder(Holder holder) {
-        holders.remove(holder);
+        synchronized (this.holders) {
+            this.holders.remove(holder);
+        }
     }
 
     void unregisterHolder(Player player) {
-        Iterator<Holder> it = holders.iterator();
-        while(it.hasNext()) {
-            Holder holder = it.next();
-            if(holder.getPlayer().equals(player)) {
-                it.remove();
-                break;
+        synchronized (this.holders) {
+            Iterator<Holder> it = this.holders.iterator();
+            while (it.hasNext()) {
+                Holder holder = it.next();
+                if (holder.getPlayer().equals(player)) {
+                    it.remove();
+                    break;
+                }
             }
         }
     }
-    
+
     @Override
     public void run() {
         title.update();
-        for(Row row : rows) {
+        for (Row row : rows) {
             row.update();
         }
 
-        for(Holder holder : holders) {
-            holder.update();
+        synchronized (this.holders) {
+            for (Holder holder : holders) {
+                holder.update();
+            }
         }
     }
 
