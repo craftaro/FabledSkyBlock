@@ -2,12 +2,13 @@ name: FabledSkyBlock
 main: com.songoda.skyblock.SkyBlock
 version: maven-version-number
 api-version: 1.13
+load: STARTUP
 description: A unique SkyBlock plugin
 author: Songoda
 authors: [ Fabrimat ]
 softdepend: [ HolographicDisplays, Holograms, PlaceholderAPI, MVdWPlaceholderAPI, Vault, Reserve, PlayerPoints,
               LeaderHeads, EpicSpawners, UltimateStacker, WorldEdit, Residence, CoreProtect, CMIEInjector ]
-loadbefore: [Multiverse-Core, ProtocolLib]
+loadbefore: [ Multiverse-Core, ProtocolLib ]
 commands:
   island:
     description: Island command

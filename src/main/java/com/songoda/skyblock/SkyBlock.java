@@ -53,7 +53,10 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 
@@ -164,120 +167,134 @@ public class SkyBlock extends SongodaPlugin {
             return;
         }
 
-        permissionManager = new PermissionManager(this);
-        localizationManager = new LocalizationManager();
-        worldManager.loadWorlds();
-        userCacheManager = new UserCacheManager(this);
-        visitManager = new VisitManager(this);
-        banManager = new BanManager(this);
-        islandManager = new IslandManager(this);
-        upgradeManager = new UpgradeManager(this);
-        playerDataManager = new PlayerDataManager(this);
-        cooldownManager = new CooldownManager(this);
-        limitationHandler = new LimitationInstanceHandler();
-        fabledChallenge = new FabledChallenge(this);
-        scoreboardManager = new ScoreboardManager(this);
-        inviteManager = new InviteManager(this);
-        biomeManager = new BiomeManager(this);
-        levellingManager = new IslandLevelManager(this);
-        commandManager = new CommandManager(this);
-        structureManager = new StructureManager(this);
-        soundManager = new SoundManager(this);
+        final SkyBlock plugin = this;
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            boolean alreadyRun = false;
 
-        if (this.config.getBoolean("Island.Generator.Enable")) {
-            generatorManager = new GeneratorManager(this);
-        }
+            @EventHandler
+            private void onServerLoaded(ServerLoadEvent e) {
+                if (!alreadyRun) {
+                    alreadyRun = true;
 
-        if (this.config.getBoolean("Island.Stackable.Enable")) {
-            stackableManager = new StackableManager(this);
-            Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> stackableManager.loadSavedStackables(), 5L);
-        }
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        permissionManager = new PermissionManager(plugin);
+                        localizationManager = new LocalizationManager();
+                        worldManager.loadWorlds();
+                        userCacheManager = new UserCacheManager(plugin);
+                        visitManager = new VisitManager(plugin);
+                        banManager = new BanManager(plugin);
+                        islandManager = new IslandManager(plugin);
+                        upgradeManager = new UpgradeManager(plugin);
+                        playerDataManager = new PlayerDataManager(plugin);
+                        cooldownManager = new CooldownManager(plugin);
+                        limitationHandler = new LimitationInstanceHandler();
+                        fabledChallenge = new FabledChallenge(plugin);
+                        scoreboardManager = new ScoreboardManager(plugin);
+                        inviteManager = new InviteManager(plugin);
+                        biomeManager = new BiomeManager(plugin);
+                        levellingManager = new IslandLevelManager(plugin);
+                        commandManager = new CommandManager(plugin);
+                        structureManager = new StructureManager(plugin);
+                        soundManager = new SoundManager(plugin);
 
-        leaderboardManager = new LeaderboardManager(this);
+                        if (plugin.config.getBoolean("Island.Generator.Enable")) {
+                            generatorManager = new GeneratorManager(plugin);
+                        }
 
-        placeholderManager = new PlaceholderManager(this);
-        placeholderManager.registerPlaceholders();
+                        if (plugin.config.getBoolean("Island.Stackable.Enable")) {
+                            stackableManager = new StackableManager(plugin);
+                            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> stackableManager.loadSavedStackables(), 5L);
+                        }
 
-        messageManager = new MessageManager(this);
+                        leaderboardManager = new LeaderboardManager(plugin);
 
-        rewardManager = new RewardManager(this);
-        rewardManager.loadRewards();
+                        placeholderManager = new PlaceholderManager(plugin);
+                        placeholderManager.registerPlaceholders();
 
-        bankManager = new BankManager(this);
+                        messageManager = new MessageManager(plugin);
 
-        if (this.config.getBoolean("Island.Task.PlaytimeTask")) {
-            new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
-        }
+                        rewardManager = new RewardManager(plugin);
+                        rewardManager.loadRewards();
 
-        if (this.config.getBoolean("Island.Task.VisitTask")) {
-            new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
-        }
+                        bankManager = new BankManager(plugin);
 
-        new ConfirmationTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
+                        if (plugin.config.getBoolean("Island.Task.PlaytimeTask")) {
+                            new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(plugin, 0L, 20L);
+                        }
 
-        // Start Tasks
-        hologramTask = HologramTask.startTask(this);
-        mobNetherWaterTask = MobNetherWaterTask.startTask(this);
+                        if (plugin.config.getBoolean("Island.Task.VisitTask")) {
+                            new VisitTask(playerDataManager).runTaskTimerAsynchronously(plugin, 0L, 20L);
+                        }
 
-        PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new JoinListeners(this), this);
-        pluginManager.registerEvents(new QuitListeners(this), this);
-        pluginManager.registerEvents(new BlockListeners(this), this);
-        pluginManager.registerEvents(new InteractListeners(this), this);
-        pluginManager.registerEvents(new EntityListeners(this), this);
-        pluginManager.registerEvents(new BucketListeners(this), this);
-        pluginManager.registerEvents(new ProjectileListeners(this), this);
-        pluginManager.registerEvents(new InventoryListeners(this), this);
-        pluginManager.registerEvents(new ItemListeners(this), this);
-        pluginManager.registerEvents(new TeleportListeners(this), this);
-        pluginManager.registerEvents(new PortalListeners(this), this);
-        pluginManager.registerEvents(new MoveListeners(this), this);
-        pluginManager.registerEvents(new DeathListeners(this), this);
-        pluginManager.registerEvents(new RespawnListeners(this), this);
-        pluginManager.registerEvents(new ChatListeners(this), this);
-        pluginManager.registerEvents(new SpawnerListeners(this), this);
-        pluginManager.registerEvents(new FoodListeners(this), this);
-        pluginManager.registerEvents(new GrowListeners(this), this);
-        pluginManager.registerEvents(new PistonListeners(this), this);
-        pluginManager.registerEvents(new FallBreakListeners(this), this);
-        pluginManager.registerEvents(new WorldListeners(this), this);
+                        new ConfirmationTask(playerDataManager).runTaskTimerAsynchronously(plugin, 0L, 20L);
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
-            pluginManager.registerEvents(new SpongeListeners(this), this);
-        }
+                        // Start Tasks
+                        hologramTask = HologramTask.startTask(plugin);
+                        mobNetherWaterTask = MobNetherWaterTask.startTask(plugin);
 
-        if (pluginManager.isPluginEnabled("EpicSpawners"))
-            pluginManager.registerEvents(new EpicSpawners(this), this);
-        if (pluginManager.isPluginEnabled("UltimateStacker"))
-            pluginManager.registerEvents(new UltimateStacker(this), this);
+                        PluginManager pluginManager = getServer().getPluginManager();
+                        pluginManager.registerEvents(new JoinListeners(plugin), plugin);
+                        pluginManager.registerEvents(new QuitListeners(plugin), plugin);
+                        pluginManager.registerEvents(new BlockListeners(plugin), plugin);
+                        pluginManager.registerEvents(new InteractListeners(plugin), plugin);
+                        pluginManager.registerEvents(new EntityListeners(plugin), plugin);
+                        pluginManager.registerEvents(new BucketListeners(plugin), plugin);
+                        pluginManager.registerEvents(new ProjectileListeners(plugin), plugin);
+                        pluginManager.registerEvents(new InventoryListeners(plugin), plugin);
+                        pluginManager.registerEvents(new ItemListeners(plugin), plugin);
+                        pluginManager.registerEvents(new TeleportListeners(plugin), plugin);
+                        pluginManager.registerEvents(new PortalListeners(plugin), plugin);
+                        pluginManager.registerEvents(new MoveListeners(plugin), plugin);
+                        pluginManager.registerEvents(new DeathListeners(plugin), plugin);
+                        pluginManager.registerEvents(new RespawnListeners(plugin), plugin);
+                        pluginManager.registerEvents(new ChatListeners(plugin), plugin);
+                        pluginManager.registerEvents(new SpawnerListeners(plugin), plugin);
+                        pluginManager.registerEvents(new FoodListeners(plugin), plugin);
+                        pluginManager.registerEvents(new GrowListeners(plugin), plugin);
+                        pluginManager.registerEvents(new PistonListeners(plugin), plugin);
+                        pluginManager.registerEvents(new FallBreakListeners(plugin), plugin);
+                        pluginManager.registerEvents(new WorldListeners(plugin), plugin);
 
-        pluginManager.registerEvents(new Levelling(), this);
-        pluginManager.registerEvents(new Generator(), this);
-        pluginManager.registerEvents(new Creator(), this);
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                            pluginManager.registerEvents(new SpongeListeners(plugin), plugin);
+                        }
 
-        this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
+                        if (pluginManager.isPluginEnabled("EpicSpawners"))
+                            pluginManager.registerEvents(new EpicSpawners(plugin), plugin);
+                        if (pluginManager.isPluginEnabled("UltimateStacker"))
+                            pluginManager.registerEvents(new UltimateStacker(plugin), plugin);
 
-        if (pluginManager.isPluginEnabled("Vault")) {
-            this.vaultPermission = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
-        }
+                        pluginManager.registerEvents(new Levelling(), plugin);
+                        pluginManager.registerEvents(new Generator(), plugin);
+                        pluginManager.registerEvents(new Creator(), plugin);
 
-        switch (this.config.getString("Economy.Manager", "Default")) {
-            case "Vault":
-                getEconomyManager().setEconomy("Vault");
-                break;
-            case "PlayerPoints":
-                getEconomyManager().setEconomy("PlayerPoints");
-                break;
-            case "Reserve":
-                getEconomyManager().setEconomy("Reserve");
-                break;
-            default:
-                this.getLogger().warning("EconomyManager is default");
-        }
+                        plugin.getCommand("skyblock").setExecutor(new SkyBlockCommand());
 
-        LogManager.load();
+                        if (pluginManager.isPluginEnabled("Vault")) {
+                            plugin.vaultPermission = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
+                        }
 
-        SkyBlockAPI.setImplementation(INSTANCE);
+                        switch (plugin.config.getString("Economy.Manager", "Default")) {
+                            case "Vault":
+                                getEconomyManager().setEconomy("Vault");
+                                break;
+                            case "PlayerPoints":
+                                getEconomyManager().setEconomy("PlayerPoints");
+                                break;
+                            case "Reserve":
+                                getEconomyManager().setEconomy("Reserve");
+                                break;
+                            default:
+                                plugin.getLogger().warning("EconomyManager is default");
+                        }
+
+                        LogManager.load();
+                    });
+
+                    SkyBlockAPI.setImplementation(INSTANCE);
+                }
+            }
+        }, this);
     }
 
     @Override
