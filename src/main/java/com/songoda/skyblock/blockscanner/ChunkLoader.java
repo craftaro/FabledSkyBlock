@@ -4,14 +4,12 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ChunkLoader extends BukkitRunnable {
     public final List<CachedChunk> positions = new LinkedList<>();
@@ -116,14 +114,14 @@ public class ChunkLoader extends BukkitRunnable {
 
     @Override
     public void run() { // TODO New algorithm that start from the center of the island
-        for (int i = 0; i < chunkPerTick || paper; i++) {
+        for (int i = 0; i < chunkPerTick || paper; ++i) {
             if (x <= maxX) {
                 if (z <= maxZ) {
                     if (!chunkForChunk) {
-                        positions.add(new CachedChunk(world, x >> 4, z >> 4));
+                        positions.add(new CachedChunk(world, x, z));
                     } else {
                         if (chunkTask != null) {
-                            chunkTask.onChunkComplete(new CachedChunk(world, x >> 4, z >> 4));
+                            chunkTask.onChunkComplete(new CachedChunk(world, x, z));
                         }
                     }
 

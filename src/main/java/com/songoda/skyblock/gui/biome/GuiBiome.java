@@ -74,15 +74,15 @@ public class GuiBiome extends Gui {
             soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
-    
+
         List<String> lore = languageLoad.getStringList("Menu.Biome.Item.Info.Lore");
         for (ListIterator<String> i = lore.listIterator(); i.hasNext(); ) {
             i.set(TextUtils.formatText(i.next().replace("%biome_type", island.getBiomeName())));
         }
-        
+
         setItem(4, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING, // Info
                 TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Info.Displayname")), lore));
-        
+
         for(int i=9; i<18; i++){
             setItem(i, CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
         }
@@ -122,9 +122,9 @@ public class GuiBiome extends Gui {
 
         if(biomes.size() > 0){
             biomes.sort(Comparator.comparing(m -> m.biome.name()));
-    
+
             this.pages = (int) Math.max(1, Math.ceil((double) biomes.size() / 27d));
-    
+
             if (page != 1)
                 setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
                         TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Last.Displayname"))),
@@ -132,7 +132,7 @@ public class GuiBiome extends Gui {
                             page--;
                             paint();
                         });
-    
+
             if (page != pages)
                 setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
                         TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Next.Displayname"))),
@@ -157,7 +157,7 @@ public class GuiBiome extends Gui {
                 if(icon.biome.getBiome().equals(island.getBiome())){
                     icon.enchant();
                 }
-                
+
                 setButton(i, icon.displayItem, event -> {
                     if (cooldownManager.hasPlayer(CooldownType.Biome, player) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
                         CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome, player);
@@ -191,7 +191,7 @@ public class GuiBiome extends Gui {
                                 soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
                             }
                         });
-                        island.setBiome(icon.biome.getBiome());
+                        island.setBiome(icon.biome.getBiome()); // FIXME: A event is fired with has a setBiome method...
                         island.save();
                     });
 
