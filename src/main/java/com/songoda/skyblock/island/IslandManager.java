@@ -61,7 +61,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class IslandManager {
-
     private final SkyBlock plugin;
 
     private final List<IslandPosition> islandPositions = new ArrayList<>();
@@ -169,7 +168,7 @@ public class IslandManager {
                             posY = (int) (r - (a % en));
                             break;
                         default:
-                            System.err.println("[FabledSkyblock][prepareNextAvailableLocation] Erreur dans la spirale, valeur : " + loc);
+                            plugin.getLogger().warning("[FabledSkyblock][prepareNextAvailableLocation] Error in the spiral value: " + loc);
                             return null;
                     }
                     posX = posX * offset;
