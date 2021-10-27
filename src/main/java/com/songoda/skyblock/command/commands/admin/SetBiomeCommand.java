@@ -45,24 +45,24 @@ public class SetBiomeCommand extends SubCommand {
 
         Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-        
+
         if (args.length >= 2) {
             String biomeName = args[1].toUpperCase().trim();
-    
+
             IslandWorld world = null;
-            if(args[2] != null) {
+            if (args.length > 2) {
                 String worldName = args[2].toUpperCase().trim();
-                for(IslandWorld islandWorld : IslandWorld.values()) {
-                    if(islandWorld.name().equalsIgnoreCase(worldName)) {
+                for (IslandWorld islandWorld : IslandWorld.values()) {
+                    if (islandWorld.name().equalsIgnoreCase(worldName)) {
                         world = islandWorld;
                     }
                 }
             }
-            
-            if(world == null) {
+
+            if (world == null) {
                 world = IslandWorld.Normal;
             }
-            
+
             CompatibleBiome biome = null;
             for (CompatibleBiome cbiome : CompatibleBiome.values()) {
                 if (cbiome.isCompatible() && cbiome.name().equals(biomeName)) {
@@ -88,12 +88,12 @@ public class SetBiomeCommand extends SubCommand {
                 if (islandOwnerUUID == null) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetBiome.Island.Owner.Message"));
-                    soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 } else {
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                         biomeManager.setBiome(island, world, biome, null);
-                        if(world.equals(IslandWorld.Normal)) {
+                        if (world.equals(IslandWorld.Normal)) {
                             island.setBiome(biome.getBiome());
                         }
                     } else {
@@ -107,7 +107,7 @@ public class SetBiomeCommand extends SubCommand {
                             CompatibleBiome finalBiome = biome;
                             IslandWorld finalWorld = world;
                             biomeManager.setBiome(island, world, biome, () -> {
-                                if(finalWorld.equals(IslandWorld.Normal)) {
+                                if (finalWorld.equals(IslandWorld.Normal)) {
                                     island.setBiome(finalBiome.getBiome());
                                 }
                             });

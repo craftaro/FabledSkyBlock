@@ -25,8 +25,6 @@ public class WorldManager {
 
     public WorldManager(SkyBlock plugin) {
         this.plugin = plugin;
-
-        loadWorlds();
     }
 
     public void loadWorlds() {
