@@ -896,7 +896,7 @@ public class IslandManager {
 
     public void loadIslandAtLocation(Location location) {
         FileManager fileManager = plugin.getFileManager();
-        File configFile = new File(plugin.getDataFolder().toString() + "/island-data");
+        File configFile = new File(plugin.getDataFolder(), "island-data");
 
         if (!configFile.exists()) return;
         
