@@ -6,7 +6,7 @@
 
     <groupId>com.songoda</groupId>
     <artifactId>skyblock</artifactId>
-    <version>2.3.30</version>
+    <version>2.4.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -76,8 +76,7 @@
                         </goals>
 
                         <configuration>
-                            <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml
-                            </dependencyReducedPomLocation>
+                            <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <minimizeJar>true</minimizeJar>
@@ -194,7 +193,8 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.17</version>
+            <version>1.18</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -207,7 +207,7 @@
         <dependency>
             <groupId>com.songoda</groupId>
             <artifactId>SongodaCore</artifactId>
-            <version>LATEST</version>
+            <version>2.6.5</version>
             <scope>compile</scope>
         </dependency>
 
