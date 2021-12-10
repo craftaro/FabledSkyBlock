@@ -18,7 +18,6 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -88,14 +87,9 @@ public class GuiBiome extends Gui {
         }
 
         List<BiomeIcon> biomes = new ArrayList<>();
-        for(CompatibleBiome biome : CompatibleBiome.getCompatibleBiomes()) {
-            if(biome.isCompatible()){
-                try { // Hotfix for core misconfiguration
-                    biome.getBiome();
-                } catch (IllegalArgumentException ex) {
-                    continue;
-                }
-                BiomeIcon icon = new BiomeIcon(plugin,  biome);
+        for (CompatibleBiome biome : CompatibleBiome.getCompatibleBiomes()) {
+            if (biome.isCompatible()) {
+                BiomeIcon icon = new BiomeIcon(plugin, biome);
                 if (icon.biome != null &&
                         (!icon.permission ||
                                 player.hasPermission("fabledskyblock.biome." + biome.name().toLowerCase()))) {
