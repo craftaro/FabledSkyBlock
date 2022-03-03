@@ -1304,7 +1304,7 @@ public class IslandManager {
             OfflinePlayer offlinePlayerData = new OfflinePlayer(offlinePlayer.getUniqueId());
             loadIsland(offlinePlayer);
 
-            if (offlinePlayerData.getOwner() != null && islandStorage.containsKey(offlinePlayer.getUniqueId())) {
+            if (offlinePlayerData.getOwner() != null && islandStorage.containsKey(offlinePlayerData.getOwner())) {
                 return islandStorage.get(offlinePlayerData.getOwner());
             }
         }
