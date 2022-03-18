@@ -2,6 +2,7 @@ package com.songoda.skyblock.utils.world.block;
 
 import com.songoda.core.compatibility.ClassMapping;
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.MethodMapping;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.BlockUtils;
 import com.songoda.core.utils.NMSUtils;
@@ -502,10 +503,10 @@ public final class BlockUtil extends BlockUtils {
 
                         Class<?> blockPositionClass = ClassMapping.BLOCK_POSITION.getClazz();
 
-                        Object worldHandle = world.getClass().getMethod("getHandle").invoke(world);
+                        Object worldHandle = MethodMapping.CB_GENERIC__GET_HANDLE.getMethod(world.getClass()).invoke(world);
                         Object blockPosition = blockPositionClass.getConstructor(int.class, int.class, int.class).newInstance(block.getX(), block.getY(), block.getZ());
                         Object tileEntity = worldHandle.getClass().getMethod("getTileEntity", blockPositionClass).invoke(worldHandle, blockPosition);
-                        Object itemStack = NMSUtils.getCraftClass("inventory.CraftItemStack").getMethod("asNMSCopy", is.getClass()).invoke(null, is);
+                        Object itemStack = MethodMapping.CB_ITEM_STACK__AS_NMS_COPY.getMethod(ClassMapping.CRAFT_ITEM_STACK.getClazz()).invoke(null, is);
                         Object item = itemStack.getClass().getMethod("getItem").invoke(itemStack);
                         Object data = itemStack.getClass().getMethod("getData").invoke(itemStack);
 
