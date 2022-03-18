@@ -6,8 +6,32 @@ import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.BlockUtils;
 import com.songoda.core.utils.NMSUtils;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
-import org.bukkit.*;
-import org.bukkit.block.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.SkullType;
+import org.bukkit.World;
+import org.bukkit.block.Banner;
+import org.bukkit.block.Barrel;
+import org.bukkit.block.Beacon;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Chest;
+import org.bukkit.block.CommandBlock;
+import org.bukkit.block.CreatureSpawner;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Dropper;
+import org.bukkit.block.EndGateway;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Hopper;
+import org.bukkit.block.Jukebox;
+import org.bukkit.block.ShulkerBox;
+import org.bukkit.block.Sign;
+import org.bukkit.block.Skull;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.block.data.type.RespawnAnchor;
@@ -192,27 +216,27 @@ public final class BlockUtil extends BlockUtils {
                         blockData.setStateType(BlockStateType.SHULKERBOX.toString());
                     }
                 }
-                
-                if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)){
+
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
                     if (blockState instanceof Barrel) {
                         Barrel barrel = (Barrel) blockState;
-        
+
                         for (int i = 0; i < barrel.getInventory().getSize(); i++) {
                             ItemStack is = barrel.getInventory().getItem(i);
-            
+
                             if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
                                 blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                             }
                         }
-        
+
                         blockData.setStateType(BlockStateType.BARREL.toString());
                     }
-                    
-                    if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
-                         if (blockState instanceof RespawnAnchor) {
-                             RespawnAnchor respawnAnchor = (RespawnAnchor) blockState;
-                             blockData.setCharges(respawnAnchor.getCharges());
-                             blockData.setStateType(BlockStateType.RESPAWN_ANCHOR.toString());
+
+                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                        if (blockState instanceof RespawnAnchor) {
+                            RespawnAnchor respawnAnchor = (RespawnAnchor) blockState;
+                            blockData.setCharges(respawnAnchor.getCharges());
+                            blockData.setStateType(BlockStateType.RESPAWN_ANCHOR.toString());
                         }
                     }
                 }
@@ -227,14 +251,14 @@ public final class BlockUtil extends BlockUtils {
                 try {
                     World world = block.getWorld();
 
-                    Class<?> blockPositionClass = ClassMapping.BLOCK_POSITION.getClazz();;
+                    Class<?> blockPositionClass = ClassMapping.BLOCK_POSITION.getClazz();
 
                     Object worldHandle = world.getClass().getMethod("getHandle").invoke(world);
                     Object blockPosition = blockPositionClass.getConstructor(int.class, int.class, int.class).newInstance(block.getX(), block.getY(), block.getZ());
                     Object tileEntity = worldHandle.getClass().getMethod("getTileEntity", blockPositionClass).invoke(worldHandle, blockPosition);
 
                     Field aField = tileEntity.getClass().getDeclaredField("a");
-                    aField.setAccessible(true); 
+                    aField.setAccessible(true);
 
                     Object item = aField.get(tileEntity);
 
@@ -244,7 +268,7 @@ public final class BlockUtil extends BlockUtils {
                         ItemStack itemStack = (ItemStack) NMSUtils.getCraftClass("inventory.CraftItemStack").getMethod("asBukkitCopy", itemStackNMS.getClass()).invoke(null, itemStackNMS);
 
                         Field fField = tileEntity.getClass().getDeclaredField("f");
-                        fField.setAccessible(true); 
+                        fField.setAccessible(true);
 
                         int data = (int) fField.get(tileEntity);
 
@@ -428,10 +452,10 @@ public final class BlockUtil extends BlockUtils {
                             }
                         }
                     }
-                    if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)){
+                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
                         if (blockTypeState.equals(BlockStateType.BARREL)) {
                             Barrel barrel = (Barrel) state;
-    
+
                             for (Integer slotList : blockData.getInventory().keySet()) {
                                 if (slotList < barrel.getInventory().getSize()) {
                                     ItemStack is = ItemStackUtil.deserializeItemStack(blockData.getInventory().get(slotList));
@@ -440,8 +464,8 @@ public final class BlockUtil extends BlockUtils {
                             }
                         }
                     }
-    
-                    if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
+
+                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
                         if (blockTypeState.equals(BlockStateType.RESPAWN_ANCHOR)) {
                             RespawnAnchor respawnAnchor = (RespawnAnchor) state;
                             respawnAnchor.setCharges(blockData.getCharges());
@@ -490,7 +514,7 @@ public final class BlockUtil extends BlockUtils {
                         aField.set(tileEntity, item);
 
                         Field fField = tileEntity.getClass().getDeclaredField("f");
-                        fField.setAccessible(true); 
+                        fField.setAccessible(true);
                         fField.set(tileEntity, data);
 
                         tileEntity.getClass().getMethod("update").invoke(tileEntity);

@@ -7,7 +7,12 @@ import com.songoda.core.utils.NMSUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
@@ -21,7 +26,7 @@ public class ItemStackUtil {
         DataInputStream dataInputStream = new DataInputStream(inputStream);
 
         ItemStack itemStack = null;
-        
+
         try {
             Class<?> NBTTagCompoundClass = ClassMapping.NBT_TAG_COMPOUND.getClazz();
             Class<?> NMSItemStackClass = ClassMapping.ITEM_STACK.getClazz();
