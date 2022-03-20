@@ -2,12 +2,18 @@ package com.songoda.skyblock.utils.item;
 
 import com.songoda.core.compatibility.ClassMapping;
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.compatibility.MethodMapping;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.NMSUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
@@ -21,7 +27,7 @@ public class ItemStackUtil {
         DataInputStream dataInputStream = new DataInputStream(inputStream);
 
         ItemStack itemStack = null;
-        
+
         try {
             Class<?> NBTTagCompoundClass = ClassMapping.NBT_TAG_COMPOUND.getClazz();
             Class<?> NMSItemStackClass = ClassMapping.ITEM_STACK.getClazz();
@@ -70,10 +76,15 @@ public class ItemStackUtil {
             Class<?> NBTTagCompoundClass = ClassMapping.NBT_TAG_COMPOUND.getClazz();
             Constructor<?> nbtTagCompoundConstructor = NBTTagCompoundClass.getConstructor();
             Object NBTTagCompound = nbtTagCompoundConstructor.newInstance();
-            Object NMSItemStackClass = NMSUtils.getCraftClass("inventory.CraftItemStack")
-                    .getMethod("asNMSCopy", ItemStack.class).invoke(null, item);
-            ClassMapping.ITEM_STACK.getClazz().getMethod("save", NBTTagCompoundClass).invoke(NMSItemStackClass,
-                    NBTTagCompound);
+
+            Object nmsItemStack = MethodMapping.CB_ITEM_STACK__AS_NMS_COPY
+                    .getMethod(ClassMapping.CRAFT_ITEM_STACK.getClazz())
+                    .invoke(null, item);
+
+            MethodMapping.ITEM_STACK__SAVE
+                    .getMethod(ClassMapping.ITEM_STACK.getClazz())
+                    .invoke(nmsItemStack, NBTTagCompound);
+
             ClassMapping.NBT_COMPRESSED_STREAM_TOOLS.getClazz().getMethod("a", NBTTagCompoundClass, DataOutput.class)
                     .invoke(null, NBTTagCompound, dataOutput);
         } catch (Exception e) {
