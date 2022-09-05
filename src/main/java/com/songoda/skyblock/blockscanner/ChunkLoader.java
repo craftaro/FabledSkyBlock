@@ -114,14 +114,14 @@ public class ChunkLoader extends BukkitRunnable {
 
     @Override
     public void run() { // TODO New algorithm that start from the center of the island
-        for (int i = 0; i < chunkPerTick || paper; ++i) {
+        for (int i = 0; i < chunkPerTick || paper; i++) {
             if (x <= maxX) {
                 if (z <= maxZ) {
                     if (!chunkForChunk) {
-                        positions.add(new CachedChunk(world, x, z));
+                        positions.add(new CachedChunk(world, x >> 4, z >> 4));
                     } else {
                         if (chunkTask != null) {
-                            chunkTask.onChunkComplete(new CachedChunk(world, x, z));
+                            chunkTask.onChunkComplete(new CachedChunk(world, x >> 4, z >> 4));
                         }
                     }
 
