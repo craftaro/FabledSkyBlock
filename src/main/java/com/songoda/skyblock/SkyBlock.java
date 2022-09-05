@@ -7,6 +7,7 @@ import com.songoda.core.compatibility.ServerProject;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.configuration.Config;
 import com.songoda.core.gui.GuiManager;
+import com.songoda.core.hooks.HologramManager;
 import com.songoda.core.hooks.LogManager;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
@@ -155,7 +156,7 @@ public class SkyBlock extends SongodaPlugin {
         economyManager = new EconomyManager(this);
 
         // Load Holograms
-        com.songoda.core.hooks.HologramManager.load(this);
+        HologramManager.load(this);
 
         fileManager = new FileManager(this);
 
