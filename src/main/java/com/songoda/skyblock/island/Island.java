@@ -214,14 +214,12 @@ public class Island {
                 }
                 configLoad.set("Visitor.Open", null);
                 configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status"));
-                save();
             } else {
                 if(configLoad.getString("Visitor.Status") != null) {
                     status = IslandStatus.getEnum(configLoad.getString("Visitor.Status"));
                 } else {
                     status = IslandStatus.WHITELISTED;
                     configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status"));
-                    save();
                 }
             }
         } else {
@@ -266,8 +264,6 @@ public class Island {
             playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
             playerData.save();
         }
-    
-        save();
         
         if (!mainConfigLoad.getBoolean("Island.Coop.Unload")) {
             File coopDataFile = new File(plugin.getDataFolder().toString() + "/coop-data",
@@ -284,6 +280,8 @@ public class Island {
                 }
             }
         }
+
+        save();
 
         this.apiWrapper = new com.songoda.skyblock.api.island.Island(this, player);
     }
