@@ -15,7 +15,6 @@ import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.version.SBiome;
@@ -27,8 +26,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-
-import java.io.File;
 
 public class Biome {
 
@@ -53,7 +50,7 @@ public class Biome {
         BiomeManager biomeManager = plugin.getBiomeManager();
         SoundManager soundManager = plugin.getSoundManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             FileConfiguration langConfig = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {

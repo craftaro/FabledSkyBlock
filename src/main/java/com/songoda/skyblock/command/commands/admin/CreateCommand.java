@@ -15,7 +15,7 @@ public class CreateCommand extends SubCommand {
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         SoundManager soundManager = plugin.getSoundManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             playerDataManager.getPlayerData(player).setViewer(null);
         }
 

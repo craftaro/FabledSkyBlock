@@ -20,7 +20,7 @@ public class VisitCommand extends SubCommand {
         SoundManager soundManager = plugin.getSoundManager();
 
         if (args.length == 0) {
-            if (!plugin.getPlayerDataManager().hasPlayerData(player))
+            if (!plugin.getPlayerDataManager().isPlayerDataLoaded(player))
                 plugin.getPlayerDataManager().createPlayerData(player);
 
             PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);

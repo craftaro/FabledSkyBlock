@@ -26,7 +26,7 @@ public class LeaderboardCommand extends SubCommand {
         Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             if (args.length == 0) {
                 if (this.plugin.getConfiguration()
                         .getBoolean("Island.Visitor.Vote")) {

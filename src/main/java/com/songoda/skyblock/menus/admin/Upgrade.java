@@ -53,7 +53,7 @@ public class Upgrade {
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
 
-        if (playerDataManager.hasPlayerData(player) && playerDataManager.getPlayerData(player).getViewer() != null) {
+        if (playerDataManager.isPlayerDataLoaded(player) && playerDataManager.getPlayerData(player).getViewer() != null) {
             FileConfiguration configLoad = plugin.getLanguage();
             Viewer viewer = (Upgrade.Viewer) playerDataManager.getPlayerData(player).getViewer();
 
@@ -138,7 +138,7 @@ public class Upgrade {
                         if (event.getClick() == ClickType.LEFT) {
                             upgrade.setEnabled(!upgrade.isEnabled());
 
-                            if (playerDataManager.hasPlayerData(player)) {
+                            if (playerDataManager.isPlayerDataLoaded(player)) {
                                 com.songoda.skyblock.upgrade.Upgrade.Type upgradeType = ((Viewer) playerDataManager
                                         .getPlayerData(player).getViewer()).getUpgrade();
 
@@ -193,7 +193,7 @@ public class Upgrade {
                                         return;
                                     }
 
-                                    if (playerDataManager.hasPlayerData(player)) {
+                                    if (playerDataManager.isPlayerDataLoaded(player)) {
                                         double upgradeCost = Double.valueOf(gui.getInputText());
                                         com.songoda.skyblock.upgrade.Upgrade.Type upgradeType = ((Viewer) playerDataManager
                                                 .getPlayerData(player).getViewer()).getUpgrade();
@@ -372,7 +372,7 @@ public class Upgrade {
                         return;
                     }
 
-                    if (playerDataManager.hasPlayerData(player)) {
+                    if (playerDataManager.isPlayerDataLoaded(player)) {
                         PlayerData playerData = playerDataManager.getPlayerData(player);
                         ItemStack is = event.getItem();
 
@@ -405,7 +405,7 @@ public class Upgrade {
                                             AnvilGui gui = new AnvilGui(player);
                                             gui.setAction(event1 -> {
 
-                                                if (playerDataManager.hasPlayerData(player)
+                                                if (playerDataManager.isPlayerDataLoaded(player)
                                                         && playerDataManager
                                                         .getPlayerData(player) != null) {
                                                     if (!gui.getInputText().matches("[0-9]+")) {
@@ -531,7 +531,7 @@ public class Upgrade {
                                                         return;
                                                     }
 
-                                                    if (playerDataManager.hasPlayerData(player)
+                                                    if (playerDataManager.isPlayerDataLoaded(player)
                                                             && playerDataManager
                                                             .getPlayerData(player) != null) {
                                                         if (!gui.getInputText().matches("[0-9]+")) {
@@ -650,7 +650,7 @@ public class Upgrade {
                                                         return;
                                                     }
 
-                                                    if (playerDataManager.hasPlayerData(player)
+                                                    if (playerDataManager.isPlayerDataLoaded(player)
                                                             && playerDataManager
                                                             .getPlayerData(player) != null) {
                                                         if (!(gui.getInputText().matches("[0-9]+")
@@ -791,7 +791,7 @@ public class Upgrade {
                         return;
                     }
 
-                    if (playerDataManager.hasPlayerData(player)) {
+                    if (playerDataManager.isPlayerDataLoaded(player)) {
                         PlayerData playerData = playerDataManager.getPlayerData(player);
                         ItemStack is = event.getItem();
 
@@ -824,7 +824,7 @@ public class Upgrade {
                                             AnvilGui gui = new AnvilGui(player);
                                             gui.setAction(event1 -> {
 
-                                                if (playerDataManager.hasPlayerData(player)
+                                                if (playerDataManager.isPlayerDataLoaded(player)
                                                         && playerDataManager
                                                         .getPlayerData(player) != null) {
                                                     if (!gui.getInputText().matches("[0-9]+")) {
@@ -952,7 +952,7 @@ public class Upgrade {
                                                         return;
                                                     }
 
-                                                    if (playerDataManager.hasPlayerData(player)
+                                                    if (playerDataManager.isPlayerDataLoaded(player)
                                                             && playerDataManager
                                                             .getPlayerData(player) != null) {
                                                         if (!gui.getInputText().matches("[0-9]+")) {
@@ -1071,7 +1071,7 @@ public class Upgrade {
                                                         return;
                                                     }
 
-                                                    if (playerDataManager.hasPlayerData(player)
+                                                    if (playerDataManager.isPlayerDataLoaded(player)
                                                             && playerDataManager
                                                             .getPlayerData(player) != null) {
                                                         if (!(gui.getInputText().matches("[0-9]+")

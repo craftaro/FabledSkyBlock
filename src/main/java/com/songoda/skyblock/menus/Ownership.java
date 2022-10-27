@@ -47,11 +47,11 @@ public class Ownership {
         IslandManager islandManager = plugin.getIslandManager();
         SoundManager soundManager = plugin.getSoundManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             FileConfiguration configLoad = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                if (playerDataManager.hasPlayerData(player)) {
+                if (playerDataManager.isPlayerDataLoaded(player)) {
                     PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
                     Island island = islandManager.getIsland(player);
 
@@ -102,7 +102,7 @@ public class Ownership {
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AnvilGui gui = new AnvilGui(player);
                             gui.setAction(event1 -> {
-                                    if (playerDataManager.hasPlayerData(player)) {
+                                    if (playerDataManager.isPlayerDataLoaded(player)) {
                                         Island island1 = islandManager.getIsland(player);
 
                                         if (island1 == null) {
@@ -176,7 +176,7 @@ public class Ownership {
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AnvilGui gui = new AnvilGui(player);
                             gui.setAction(event1 -> {
-                                    if (playerDataManager.hasPlayerData(player)) {
+                                    if (playerDataManager.isPlayerDataLoaded(player)) {
                                         Island island12 = islandManager.getIsland(player);
 
                                         if (island12 == null) {

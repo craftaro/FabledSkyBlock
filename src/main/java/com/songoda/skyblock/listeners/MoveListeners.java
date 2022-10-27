@@ -3,8 +3,6 @@ package com.songoda.skyblock.listeners;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.*;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
@@ -15,7 +13,6 @@ import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -28,7 +25,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 
-import java.io.File;
 import java.util.Objects;
 
 public class MoveListeners implements Listener {
@@ -68,7 +64,7 @@ public class MoveListeners implements Listener {
 
                 messageManager.sendMessage(player, configLoad.getString("Island.World.Message").replace(configLoad.getString("Island.World.Word." + world.name()), world.name()));
 
-                if (playerDataManager.hasPlayerData(player)) {
+                if (playerDataManager.isPlayerDataLoaded(player)) {
                     PlayerData playerData = playerDataManager.getPlayerData(player);
 
                     if (playerData.getIsland() != null) {
@@ -87,7 +83,7 @@ public class MoveListeners implements Listener {
             }
         }
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
             if (playerData.getIsland() != null) {

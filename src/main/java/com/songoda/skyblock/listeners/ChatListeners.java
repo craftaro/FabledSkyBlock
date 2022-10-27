@@ -34,7 +34,7 @@ public class ChatListeners implements Listener {
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
             Island island = null;
 

@@ -6,6 +6,10 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerProject;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.configuration.Config;
+import com.songoda.core.database.DataMigrationManager;
+import com.songoda.core.database.DatabaseConnector;
+import com.songoda.core.database.MySQLConnector;
+import com.songoda.core.database.SQLiteConnector;
 import com.songoda.core.gui.GuiManager;
 import com.songoda.core.hooks.HologramManager;
 import com.songoda.core.hooks.LogManager;
@@ -19,6 +23,15 @@ import com.songoda.skyblock.command.commands.SkyBlockCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.confirmation.ConfirmationTask;
 import com.songoda.skyblock.cooldown.CooldownManager;
+import com.songoda.skyblock.database.DataManager;
+import com.songoda.skyblock.database.DataProvider;
+import com.songoda.skyblock.database.DatabaseType;
+import com.songoda.skyblock.database.sources.FlatFileDataProvider;
+import com.songoda.skyblock.database.sources.MariaDBDataProvider;
+import com.songoda.skyblock.database.sources.MongoDBDataProvider;
+import com.songoda.skyblock.database.sources.MySQLDataProvider;
+import com.songoda.skyblock.database.sources.PostgreSQLDataProvider;
+import com.songoda.skyblock.database.sources.SQLiteDataProvider;
 import com.songoda.skyblock.economy.EconomyManager;
 import com.songoda.skyblock.generator.GeneratorManager;
 import com.songoda.skyblock.invite.InviteManager;
@@ -123,6 +136,14 @@ public class SkyBlock extends SongodaPlugin {
     private FileConfiguration stackables;
     private FileConfiguration upgrades;
 
+
+    private DataManager dataManager;
+    private DatabaseConnector databaseConnector;
+    private DataMigrationManager dataMigrationManager;
+
+    private DataProvider dataProvider;
+    private DatabaseType databaseType;
+
     @Override
     public void onPluginLoad() {
         INSTANCE = this;
@@ -165,6 +186,42 @@ public class SkyBlock extends SongodaPlugin {
             return;
         }
 
+        //Database stuff
+        databaseType = DatabaseType.FLATFILE;
+        switch (databaseType) {
+            case MYSQL:
+                this.databaseConnector = new MySQLConnector(this, "localhost", 3306, "songoda", "Admin", "pass", false, 10);
+                dataProvider = new MySQLDataProvider(databaseConnector, this);
+                break;
+            case SQLITE:
+                databaseConnector = new SQLiteConnector(this);
+                dataProvider = new SQLiteDataProvider(databaseConnector, this);
+                break;
+            //TODO: Implement more database types
+            case MARIADB:
+                dataProvider = new MariaDBDataProvider();
+                break;
+            case MONGODB:
+                dataProvider = new MongoDBDataProvider();
+                break;
+            case POSTGRESQL:
+                dataProvider = new PostgreSQLDataProvider();
+                break;
+            default:
+                dataProvider = new FlatFileDataProvider();
+                break;
+        }
+
+        dataProvider.init(this);
+        dataManager = new DataManager(dataProvider, databaseType, this);
+
+        //TODO Run migrations for all database types
+        //this.dataMigrationManager = new DataMigrationManager();
+        //this.dataMigrationManager.runMigrations();
+
+        //Database stuff end
+
+        //Init stuff after database is ready to provide data
         permissionManager = new PermissionManager(this);
         localizationManager = new LocalizationManager();
         worldManager.loadWorlds();
@@ -184,6 +241,7 @@ public class SkyBlock extends SongodaPlugin {
         commandManager = new CommandManager(this);
         structureManager = new StructureManager(this);
         soundManager = new SoundManager(this);
+
 
         if (this.config.getBoolean("Island.Generator.Enable")) {
             generatorManager = new GeneratorManager(this);
@@ -294,7 +352,7 @@ public class SkyBlock extends SongodaPlugin {
         if (this.banManager != null)
             this.banManager.onDisable();
         if (this.playerDataManager != null)
-            this.playerDataManager.onDisable();
+            this.playerDataManager.save();
         if (this.cooldownManager != null)
             this.cooldownManager.onDisable();
         if (this.hologramTask != null)
@@ -345,12 +403,28 @@ public class SkyBlock extends SongodaPlugin {
         }
     }
 
+    public static String getTable(String table) {
+        return "fabledskyblock_"+table;
+    }
+
     public String formatText(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
     public FileManager getFileManager() {
         return fileManager;
+    }
+
+    public DatabaseConnector getDatabaseConnector() {
+        return databaseConnector;
+    }
+
+    public DataManager getDataManager() {
+        return dataManager;
+    }
+
+    public DatabaseType getdatabaseType() {
+        return databaseType;
     }
 
     public WorldManager getWorldManager() {

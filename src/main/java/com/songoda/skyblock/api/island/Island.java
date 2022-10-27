@@ -23,11 +23,8 @@ import java.util.UUID;
 public class Island {
 
 	private com.songoda.skyblock.island.Island handle;
-	private OfflinePlayer player;
-
-	public Island(com.songoda.skyblock.island.Island handle, OfflinePlayer player) {
+	public Island(com.songoda.skyblock.island.Island handle) {
 		this.handle = handle;
-		this.player = player;
 	}
 
 	/**
@@ -465,7 +462,7 @@ public class Island {
 	 */
 	public void load() {
 		if (this.handle == null) {
-			SkyBlockAPI.getImplementation().getIslandManager().loadIsland(player);
+			SkyBlockAPI.getImplementation().getIslandManager().loadIsland();
 			this.handle = SkyBlockAPI.getImplementation().getIslandManager().getIsland(player);
 		}
 	}

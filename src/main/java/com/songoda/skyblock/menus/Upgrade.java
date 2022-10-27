@@ -7,7 +7,6 @@ import com.songoda.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandUpgradeEvent;
 import com.songoda.skyblock.api.utils.APIUtil;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
@@ -31,7 +30,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
-import java.io.File;
 import java.util.List;
 
 public class Upgrade {
@@ -65,7 +63,7 @@ public class Upgrade {
             return;
         }
 
-        if (playerDataManager.hasPlayerData(player) && playerDataManager.getPlayerData(player).getOwner() != null) {
+        if (playerDataManager.isPlayerDataLoaded(player) && playerDataManager.getPlayerData(player).getOwner() != null) {
             Island island = islandManager.getIsland(player);
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
@@ -76,7 +74,7 @@ public class Upgrade {
                     return;
                 }
 
-                if (playerDataManager.hasPlayerData(player)) {
+                if (playerDataManager.isPlayerDataLoaded(player)) {
                     PlayerData playerData = playerDataManager.getPlayerData(player);
 
                     if (playerData.getOwner() == null) {

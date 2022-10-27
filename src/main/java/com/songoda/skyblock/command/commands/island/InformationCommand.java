@@ -27,7 +27,7 @@ public class InformationCommand extends SubCommand {
         IslandManager islandManager = plugin.getIslandManager();
         SoundManager soundManager = plugin.getSoundManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 

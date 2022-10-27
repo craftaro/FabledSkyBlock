@@ -3,7 +3,6 @@ package com.songoda.skyblock.menus;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
@@ -22,8 +21,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-
-import java.io.File;
 
 public class Weather {
 
@@ -46,11 +43,11 @@ public class Weather {
         PermissionManager permissionManager = plugin.getPermissionManager();
         SoundManager soundManager = plugin.getSoundManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             FileConfiguration configLoad = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                if (playerDataManager.hasPlayerData(player)) {
+                if (playerDataManager.isPlayerDataLoaded(player)) {
                     Island island = islandManager.getIsland(player);
 
                     if (island == null) {

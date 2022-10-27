@@ -22,8 +22,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -91,7 +89,8 @@ public class AcceptCommand extends SubCommand {
 
                             playerData.setPlaytime(0);
                             playerData.setOwner(invite.getOwnerUUID());
-                            playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+                            playerData.setMemberSince(System.currentTimeMillis());
+                            //playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
                             playerData.save();
 
                             island.setRole(IslandRole.Member, player.getUniqueId());
@@ -127,7 +126,7 @@ public class AcceptCommand extends SubCommand {
 
                             for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
                                 if (!loopPlayer.getUniqueId().equals(player.getUniqueId())) {
-                                    if (playerDataManager.hasPlayerData(loopPlayer)) {
+                                    if (playerDataManager.isPlayerDataLoaded(loopPlayer)) {
                                         playerData = playerDataManager.getPlayerData(loopPlayer);
 
                                         if (playerData.getOwner() != null

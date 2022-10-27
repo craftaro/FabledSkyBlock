@@ -43,7 +43,7 @@ public class ConfirmCommand extends SubCommand {
         ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
         Economy economy = plugin.getEconomyManager().getEconomy();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
             Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));

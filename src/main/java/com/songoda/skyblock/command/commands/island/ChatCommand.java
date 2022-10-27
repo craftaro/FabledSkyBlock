@@ -63,7 +63,7 @@ public class ChatCommand extends SubCommand {
                 soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
             }
         } else {
-            if (playerDataManager.hasPlayerData(player)) {
+            if (playerDataManager.isPlayerDataLoaded(player)) {
                 if (playerData.getOwner() != null) {
                     island = plugin.getIslandManager().getIsland(player);
                 }

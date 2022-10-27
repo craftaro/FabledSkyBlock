@@ -55,7 +55,7 @@ public class Visit {
         FileConfiguration configLoad = plugin.getLanguage();
 
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-            if (playerDataManager.hasPlayerData(player)) {
+            if (playerDataManager.isPlayerDataLoaded(player)) {
                 PlayerData playerData = playerDataManager.getPlayerData(player);
 
                 if (playerData.getType() == null || playerData.getSort() == null) {
@@ -402,7 +402,7 @@ public class Visit {
                     } else {
                         targetPlayerName = targetPlayer.getName();
 
-                        if (playerDataManager.hasPlayerData(targetPlayer)) {
+                        if (playerDataManager.isPlayerDataLoaded(targetPlayer)) {
                             targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
                         } else {
                             targetPlayerTexture = new String[]{null, null};

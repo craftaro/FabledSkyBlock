@@ -152,7 +152,8 @@ public class KickCommand extends SubCommand {
 
                                         playerData = playerDataManager.getPlayerData(targetPlayer);
                                         playerData.setPlaytime(0);
-                                        playerData.setMemberSince(null);
+                                        //playerData.setMemberSince(null);
+                                        playerData.clearMemberSince();
                                         playerData.setOwner(null);
                                         playerData.setChat(false);
                                         playerData.save();

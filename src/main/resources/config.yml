@@ -1,3 +1,26 @@
+# Valid types in recommended order: POSTGRESQL, MARIADB, MONGODB, MYSQL, SQLITE, FLATFILE
+Database:
+    Type: FLATFILE
+
+    #Only in POSTGRESQL, MARIADB, MYSQL, MONGODB
+    Connection:
+        Host: localhost
+        Port: 3306
+        Database: fabledskyblock
+        Username: root
+        Password: root
+
+        Settings:
+            # Only in POSTGRESQL, MARIADB, MYSQL
+            ConnectionMaxLifetime: 1800000 # 30 minutes
+            ConnectionTimeout: 5000 # 5 seconds
+            MinPoolSize: 10
+            MaxPoolSize: 10
+
+
+
+
+
 Command:
     Help:
         # Lists all commands rather than pages.

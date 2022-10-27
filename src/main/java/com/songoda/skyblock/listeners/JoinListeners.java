@@ -3,8 +3,6 @@ package com.songoda.skyblock.listeners;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownType;
 import com.songoda.skyblock.island.Island;
@@ -24,7 +22,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.io.File;
 import java.lang.reflect.Method;
 
 public class JoinListeners implements Listener {
@@ -74,7 +71,7 @@ public class JoinListeners implements Listener {
         
             playerDataManager.loadPlayerData(player);
         
-            if (playerDataManager.hasPlayerData(player)) {
+            if (playerDataManager.isPlayerDataLoaded(player)) {
                 String[] playerTexture;
             
                 try {

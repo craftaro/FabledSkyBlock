@@ -7,8 +7,6 @@ import com.songoda.skyblock.api.event.player.PlayerIslandEnterEvent;
 import com.songoda.skyblock.api.event.player.PlayerIslandExitEvent;
 import com.songoda.skyblock.api.event.player.PlayerIslandSwitchEvent;
 import com.songoda.skyblock.api.island.Island;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.island.IslandWorld;
@@ -30,7 +28,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.io.File;
 import java.util.UUID;
 
 public class TeleportListeners implements Listener {
@@ -88,7 +85,7 @@ public class TeleportListeners implements Listener {
                 return;
         }
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
             com.songoda.skyblock.island.Island island = islandManager.getIslandAtLocation(event.getTo());

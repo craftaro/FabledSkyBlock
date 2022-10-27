@@ -52,7 +52,7 @@ public class Leaderboard {
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         SoundManager soundManager = plugin.getSoundManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             FileConfiguration configLoad = plugin.getLanguage();
 
             Viewer viewer = (Viewer) playerDataManager.getPlayerData(player).getViewer();
@@ -60,7 +60,7 @@ public class Leaderboard {
             nInventoryUtil nInv;
             if (viewer.getType() == Viewer.Type.Browse) {
                 nInv = new nInventoryUtil(player, event -> {
-                    if (playerDataManager.hasPlayerData(player)) {
+                    if (playerDataManager.isPlayerDataLoaded(player)) {
                         ItemStack is = event.getItem();
 
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
@@ -148,7 +148,7 @@ public class Leaderboard {
 
             } else {
                 nInv = new nInventoryUtil(player, event -> {
-                    if (playerDataManager.hasPlayerData(player)) {
+                    if (playerDataManager.isPlayerDataLoaded(player)) {
                         ItemStack is = event.getItem();
 
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())) {
@@ -255,7 +255,7 @@ public class Leaderboard {
                     } else {
                         playerName = targetPlayer.getName();
 
-                        if (playerDataManager.hasPlayerData(targetPlayer)) {
+                        if (playerDataManager.isPlayerDataLoaded(targetPlayer)) {
                             playerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
                         } else {
                             playerTexture = new String[] {null, null};

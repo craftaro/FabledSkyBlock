@@ -51,7 +51,8 @@ public class QuitListeners implements Listener {
         PlayerData playerData = playerDataManager.getPlayerData(player);
 
         try {
-            playerData.setLastOnline(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+            //playerData.setLastOnline(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+            playerData.setLastOnline(System.currentTimeMillis());
         } catch (Exception ignored) {}
 
         Island island = islandManager.getIsland(player);

@@ -106,7 +106,7 @@ public class GuiBans extends Gui {
                 } else {
                     targetPlayerName = targetPlayer.getName();
 
-                    if (playerDataManager.hasPlayerData(targetPlayer)) {
+                    if (playerDataManager.isPlayerDataLoaded(targetPlayer)) {
                         targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
                     } else {
                         targetPlayerTexture = new String[]{null, null};

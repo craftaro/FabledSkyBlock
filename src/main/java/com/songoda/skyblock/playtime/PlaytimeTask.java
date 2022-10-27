@@ -20,7 +20,7 @@ public class PlaytimeTask extends BukkitRunnable {
     @Override
     public void run() {
         for (Player all : Bukkit.getOnlinePlayers()) {
-            if (playerDataManager.hasPlayerData(all) && islandManager.getIsland(all) != null) {
+            if (playerDataManager.isPlayerDataLoaded(all) && islandManager.getIsland(all) != null) {
                 PlayerData playerData = playerDataManager.getPlayerData(all);
                 playerData.setPlaytime(playerData.getPlaytime() + 1);
             }

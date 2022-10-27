@@ -100,6 +100,14 @@ public class IslandManager {
         }
     }
 
+    public synchronized void addIsland(Island island) {
+        islandStorage.put(island.getOwnerUUID(), island);
+    }
+
+    public synchronized void removeIsland(Island island) {
+        islandStorage.remove(island.getOwnerUUID());
+    }
+
     public synchronized void saveNextAvailableLocation(IslandWorld world) {
         FileManager fileManager = plugin.getFileManager();
         Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "worlds.yml"));
@@ -201,7 +209,7 @@ public class IslandManager {
 
         PlayerData data = plugin.getPlayerDataManager().getPlayerData(player);
 
-        long amt = 0;
+        int amt = 0;
 
         if (data != null) {
             final int highest = PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.create", true, 2);
@@ -541,13 +549,13 @@ public class IslandManager {
 
                 if (player != null) {
 
-                    long amt = 0;
+                    int amt = 0;
                     final int highest = PlayerUtil.getNumberFromPermission(player, "fabledskyblock.limit.delete", true, 1);
 
                     if ((amt = data.getIslandDeletionCount()) >= highest) return false;
 
                     data.setIslandDeletionCount(amt + 1);
-                    data.deleteTransactions();
+                    //data.deleteTransactions();
                 }
             }
         }
@@ -574,10 +582,11 @@ public class IslandManager {
             if ((island.hasRole(IslandRole.Member, player.getUniqueId()) ||
                     island.hasRole(IslandRole.Operator, player.getUniqueId()) ||
                     island.hasRole(IslandRole.Owner, player.getUniqueId())) &&
-                    playerDataManager.hasPlayerData(player)) {
+                    playerDataManager.isPlayerDataLoaded(player)) {
                 PlayerData playerData = playerDataManager.getPlayerData(player);
                 playerData.setOwner(null);
-                playerData.setMemberSince(null);
+                //playerData.setMemberSince(null);
+                playerData.clearMemberSince();
                 playerData.setChat(false);
                 playerData.save();
 
@@ -1293,7 +1302,7 @@ public class IslandManager {
         Player player = offlinePlayer.getPlayer();
         if (offlinePlayer.isOnline() && player != null) {
 
-            if (playerDataManager.hasPlayerData(player)) {
+            if (playerDataManager.isPlayerDataLoaded(player)) {
                 PlayerData playerData = playerDataManager.getPlayerData(player);
 
                 if (playerData.getOwner() != null && islandStorage.containsKey(playerData.getOwner())) {
@@ -1413,7 +1422,7 @@ public class IslandManager {
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
             if (playerData.getIsland() != null) {
@@ -1430,7 +1439,7 @@ public class IslandManager {
     public boolean isPlayerAtAnIsland(Player player) {
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
             return playerData.getIsland() != null;

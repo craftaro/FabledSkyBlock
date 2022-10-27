@@ -46,11 +46,11 @@ public class Visitors {
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             FileConfiguration configLoad = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                if (playerDataManager.hasPlayerData(player)) {
+                if (playerDataManager.isPlayerDataLoaded(player)) {
                     PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
                     Island island = islandManager.getIsland(player);
 

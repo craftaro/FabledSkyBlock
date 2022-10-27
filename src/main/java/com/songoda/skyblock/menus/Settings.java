@@ -54,7 +54,7 @@ public class Settings {
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             Island island = islandManager.getIsland(player);
 
             FileConfiguration mainConfig = plugin.getConfiguration();
@@ -62,7 +62,7 @@ public class Settings {
 
             if (menuType == Settings.Type.Categories) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                    if (playerDataManager.hasPlayerData(player)) {
+                    if (playerDataManager.isPlayerDataLoaded(player)) {
                         Island island13 = islandManager.getIsland(player);
 
                         if (island13 == null) {
@@ -226,7 +226,7 @@ public class Settings {
                 Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
             } else if (menuType == Settings.Type.Role && role != null) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                    if (playerDataManager.hasPlayerData(player)) {
+                    if (playerDataManager.isPlayerDataLoaded(player)) {
                         Island island14 = islandManager.getIsland(player);
 
                         if (island14 == null) {
@@ -1032,7 +1032,7 @@ public class Settings {
             } else if (menuType == Settings.Type.Panel) {
                 if (panel == Settings.Panel.Welcome) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                        if (playerDataManager.hasPlayerData(player)) {
+                        if (playerDataManager.isPlayerDataLoaded(player)) {
                             Island island15 = islandManager.getIsland(player);
 
                             if (island15 == null) {
@@ -1279,7 +1279,7 @@ public class Settings {
                     Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
                 } else if (panel == Settings.Panel.Signature) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                        if (playerDataManager.hasPlayerData(player)) {
+                        if (playerDataManager.isPlayerDataLoaded(player)) {
                             Island island12 = islandManager.getIsland(player);
 
                             if (island12 == null) {

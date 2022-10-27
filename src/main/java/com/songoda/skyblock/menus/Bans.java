@@ -48,14 +48,14 @@ public class Bans {
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
             Island island = plugin.getIslandManager().getIsland(player);
 
             FileConfiguration configLoad = plugin.getLanguage();
 
             nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                if (playerDataManager.hasPlayerData(player)) {
+                if (playerDataManager.isPlayerDataLoaded(player)) {
                     PlayerData playerData1 = playerDataManager.getPlayerData(player);
                     Island island1 = islandManager.getIsland(player);
 
@@ -206,7 +206,7 @@ public class Bans {
                         } else {
                             targetPlayerName = targetPlayer.getName();
 
-                            if (playerDataManager.hasPlayerData(targetPlayer)) {
+                            if (playerDataManager.isPlayerDataLoaded(targetPlayer)) {
                                 targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
                             } else {
                                 targetPlayerTexture = new String[]{null, null};

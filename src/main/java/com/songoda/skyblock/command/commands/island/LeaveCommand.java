@@ -67,7 +67,8 @@ public class LeaveCommand extends SubCommand {
 
                 playerData.setPlaytime(0);
                 playerData.setOwner(null);
-                playerData.setMemberSince(null);
+                //playerData.setMemberSince(null);
+                playerData.clearMemberSince();
                 playerData.setChat(false);
                 playerData.save();
 

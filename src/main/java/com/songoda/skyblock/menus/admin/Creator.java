@@ -1250,7 +1250,7 @@ public class Creator implements Listener {
         if (inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Creator.Title")))) {
             PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
 
-            if (playerDataManager.hasPlayerData(player)) {
+            if (playerDataManager.isPlayerDataLoaded(player)) {
                 Creator.Viewer viewer = (Viewer) playerDataManager.getPlayerData(player).getViewer();
 
                 if (viewer != null) {

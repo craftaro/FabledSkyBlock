@@ -1,10 +1,9 @@
 package com.songoda.skyblock.playerdata;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.database.DataProvider;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLocation;
 import com.songoda.skyblock.island.IslandManager;
@@ -23,88 +22,52 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class PlayerDataManager {
     private final SkyBlock plugin;
-    private final Map<UUID, PlayerData> playerDataStorage = new HashMap<>();
-
+    private final DataProvider dataProvider;
     public PlayerDataManager(SkyBlock plugin) {
         this.plugin = plugin;
-
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            loadPlayerData(all);
-
-            if (!hasPlayerData(all)) {
-                createPlayerData(all);
-                loadPlayerData(all);
-            }
-
-            storeIsland(all);
-        }
+        this.dataProvider = plugin.getDataManager().getDataProvider();
     }
 
-    public void onDisable() {
-        for (PlayerData data : playerDataStorage.values()) {
-            data.save();
-        }
+    public void save() {
+
+    }
+
+    public synchronized void addData(PlayerData data) {
+        playerDataStorage.put(data.getPlayerUUID(), data);
+    }
+
+    public synchronized void removeData(PlayerData data) {
+        playerDataStorage.remove(data.getPlayerUUID());
     }
 
     public void createPlayerData(Player player) {
-        Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId() + ".yml"));
-        FileConfiguration configLoad = config.getFileConfiguration();
-
-        String[] playerTexture;
-
-        try {
-            Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
-            Method getProfileMethod = entityPlayer.getClass().getMethod("getProfile");
-            GameProfile gameProfile = (GameProfile) getProfileMethod.invoke(entityPlayer);
-            Property property = gameProfile.getProperties().get("textures").iterator().next();
-            playerTexture = new String[] {property.getSignature(), property.getValue()};
-        } catch (Exception e) {
-            playerTexture = new String[] {
-                    "K9P4tCIENYbNpDuEuuY0shs1x7iIvwXi4jUUVsATJfwsAIZGS+9OZ5T2HB0tWBoxRvZNi73Vr+syRdvTLUWPusVXIg+2fhXmQoaNEtnQvQVGQpjdQP0TkZtYG8PbvRxE6Z75ddq+DVx/65OSNHLWIB/D+Rg4vINh4ukXNYttn9QvauDHh1aW7/IkIb1Bc0tLcQyqxZQ3mdglxJfgIerqnlA++Lt7TxaLdag4y1NhdZyd3OhklF5B0+B9zw/qP8QCzsZU7VzJIcds1+wDWKiMUO7+60OSrIwgE9FPamxOQDFoDvz5BOULQEeNx7iFMB+eBYsapCXpZx0zf1bduppBUbbVC9wVhto/J4tc0iNyUq06/esHUUB5MHzdJ0Y6IZJAD/xIw15OLCUH2ntvs8V9/cy5/n8u3JqPUM2zhUGeQ2p9FubUGk4Q928L56l3omRpKV+5QYTrvF+AxFkuj2hcfGQG3VE2iYZO6omXe7nRPpbJlHkMKhE8Xvd1HP4PKpgivSkHBoZ92QEUAmRzZydJkp8CNomQrZJf+MtPiNsl/Q5RQM+8CQThg3+4uWptUfP5dDFWOgTnMdA0nIODyrjpp+bvIJnsohraIKJ7ZDnj4tIp4ObTNKDFC/8j8JHz4VCrtr45mbnzvB2DcK8EIB3JYT7ElJTHnc5BKMyLy5SKzuw=",
-                    "eyJ0aW1lc3RhbXAiOjE1MjkyNTg0MTE4NDksInByb2ZpbGVJZCI6Ijg2NjdiYTcxYjg1YTQwMDRhZjU0NDU3YTk3MzRlZWQ3IiwicHJvZmlsZU5hbWUiOiJTdGV2ZSIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGMxYzc3Y2U4ZTU0OTI1YWI1ODEyNTQ0NmVjNTNiMGNkZDNkMGNhM2RiMjczZWI5MDhkNTQ4Mjc4N2VmNDAxNiJ9LCJDQVBFIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjc2N2Q0ODMyNWVhNTMyNDU2MTQwNmI4YzgyYWJiZDRlMjc1NWYxMTE1M2NkODVhYjA1NDVjYzIifX19"};
+        if (dataProvider.hasPlayerData(player)) {
+            throw new RuntimeException("Player data already exists for " + player.getName());
         }
-
-        configLoad.set("Texture.Signature", playerTexture[0]);
-        configLoad.set("Texture.Value", playerTexture[1]);
-        configLoad.set("Statistics.Island.Playtime", 0);
-
-        try {
-            configLoad.save(config.getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        plugin.getDataManager().getDataProvider().createPlayerData(player);
     }
 
     public void loadPlayerData(Player player) {
-        if (plugin.getFileManager().isFileExist(new File(plugin.getDataFolder().toString() + "/player-data", player.getUniqueId().toString() + ".yml"))) {
-            PlayerData playerData = new PlayerData(player);
-            playerDataStorage.put(player.getUniqueId(), playerData);
-        }
+       if (dataProvider.hasPlayerData(player)) {
+           addData(dataProvider.loadPlayerData(player));
+       }
     }
 
     public void unloadPlayerData(Player player) {
-        if (hasPlayerData(player)) {
-            plugin.getFileManager().unloadConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
-            playerDataStorage.remove(player.getUniqueId());
+        if (isPlayerDataLoaded(player)) {
+            dataProvider.unloadPlayerData(player);
         }
     }
 
     public void savePlayerData(Player player) {
-        if (hasPlayerData(player)) {
-            Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
-
-            try {
-                config.getFileConfiguration().save(config.getFile());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (isPlayerDataLoaded(player)) {
+            dataProvider.savePlayerData(player);
         }
     }
 
@@ -116,7 +79,7 @@ public class PlayerDataManager {
         return playerDataStorage.get(uuid);
     }
 
-    public boolean hasPlayerData(UUID uuid) {
+    public boolean isPlayerDataLoaded(UUID uuid) {
         return playerDataStorage.containsKey(uuid);
     }
 
@@ -124,8 +87,8 @@ public class PlayerDataManager {
         return getPlayerData(player.getUniqueId());
     }
 
-    public boolean hasPlayerData(Player player) {
-        return hasPlayerData(player.getUniqueId());
+    public boolean isPlayerDataLoaded(Player player) {
+        return isPlayerDataLoaded(player.getUniqueId());
     }
 
     public void storeIsland(Player player) {
@@ -136,7 +99,7 @@ public class PlayerDataManager {
 
         FileConfiguration configLoad = plugin.getLanguage();
 
-        if (hasPlayerData(player)) {
+        if (isPlayerDataLoaded(player)) {
             if (worldManager.isIslandWorld(player.getWorld())) {
                 IslandWorld world = worldManager.getIslandWorld(player.getWorld());
                 Island island = islandManager.getIslandAtLocation(player.getLocation());

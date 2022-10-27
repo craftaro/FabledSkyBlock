@@ -51,7 +51,7 @@ public class Information {
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
 
-        if (playerDataManager.hasPlayerData(player)) {
+        if (playerDataManager.isPlayerDataLoaded(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
 
             if (playerData.getViewer() != null) {
@@ -110,7 +110,7 @@ public class Information {
 
                 if (viewer.getType() == Information.Viewer.Type.Categories) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                        if (playerDataManager.hasPlayerData(player)) {
+                        if (playerDataManager.isPlayerDataLoaded(player)) {
                             PlayerData playerData13 = playerDataManager.getPlayerData(player);
                             ItemStack is = event.getItem();
 
@@ -260,7 +260,7 @@ public class Information {
                     Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
                 } else if (viewer.getType() == Information.Viewer.Type.Members) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                        if (playerDataManager.hasPlayerData(player)) {
+                        if (playerDataManager.isPlayerDataLoaded(player)) {
                             PlayerData playerData1 = playerDataManager.getPlayerData(player);
                             ItemStack is = event.getItem();
 
@@ -419,7 +419,7 @@ public class Information {
                     Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
                 } else if (viewer.getType() == Information.Viewer.Type.Visitors) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
-                        if (playerDataManager.hasPlayerData(player)) {
+                        if (playerDataManager.isPlayerDataLoaded(player)) {
                             PlayerData playerData12 = playerDataManager.getPlayerData(player);
                             ItemStack is = event.getItem();
 

@@ -30,7 +30,7 @@ public class UpgradeCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Upgrade.Disabled.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
-            if (playerDataManager.hasPlayerData(player)) {
+            if (playerDataManager.isPlayerDataLoaded(player)) {
                 playerDataManager.getPlayerData(player)
                         .setViewer(new Upgrade.Viewer(Upgrade.Viewer.Type.Upgrades, null));
                 Upgrade.getInstance().open(player);

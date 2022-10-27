@@ -11,6 +11,7 @@ import com.songoda.skyblock.api.utils.APIUtil;
 import com.songoda.skyblock.ban.Ban;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
+import com.songoda.skyblock.database.exceptions.NoIslandDataException;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.BasicPermission;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -26,12 +27,15 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -47,11 +51,65 @@ public class Island {
 
     private UUID islandUUID;
     private UUID ownerUUID;
+    //TODO change owner to island UUID
     private final IslandLevel level;
     private IslandStatus status;
     private int size;
     private int maxMembers;
     private boolean deleted = false;
+    private Biome biome;
+
+    private boolean isWeatherSynced;
+    private int islandTime;
+    private FileConfiguration islandData;
+
+    public Island(UUID islandUUID) {
+        this.plugin = SkyBlock.getInstance();
+        this.islandUUID = islandUUID;
+
+        switch (plugin.getDataManager().getDatabaseType()) {
+            case POSTGRESQL:
+            case MARIADB:
+            case MYSQL:
+            case SQLITE:
+
+                try (Connection connection = plugin.getDatabaseConnector().getConnection()) {
+                    PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + SkyBlock.getTable("islands")+ " WHERE uuid = ?");
+                    statement.setString(1, FastUUID.toString(islandUUID));
+                    ResultSet data = statement.executeQuery();
+                    if (data.next()) {
+                        this.ownerUUID = FastUUID.parseUUID(data.getString("owner"));
+                        this.status = IslandStatus.valueOf(data.getString("status"));
+                        this.size = data.getInt("size");
+                        this.maxMembers = data.getInt("maxMembers");
+                        this.biome = CompatibleBiome.getBiome(data.getString("biome")).getBiome();
+                    } else {
+                        throw new NoIslandDataException();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+                break;
+            case MONGODB:
+                throw new RuntimeException("MongoDB is not supported yet");
+            //Flatfile
+            default:
+                File dataFile = new File(new File(plugin.getDataFolder().toString() + "/island-data"), FastUUID.toString(islandUUID) + ".yml");
+                this.islandData = YamlConfiguration.loadConfiguration(dataFile);
+                break;
+        }
+
+
+        this.ownerUUID = FastUUID.parseUUID(data.getString("owner"));
+        this.size = data.getInt("size");
+        if (size > 1000 || size < 0) {
+            size = 51;
+        }
+        this.level = new IslandLevel(ownerUUID, plugin);
+        this.apiWrapper = new com.songoda.skyblock.api.island.Island(this);
+    }
 
     public Island(@Nonnull OfflinePlayer player) {
         this.plugin = SkyBlock.getInstance();
@@ -64,7 +122,7 @@ public class Island {
         this.maxMembers =  this.plugin.getConfiguration().getInt("Island.Member.Capacity", 3);
 
         if (this.size > 1000) {
-            this.size = 50;
+            this.size = 51;
         }
 
         if (player.isOnline()) {
@@ -254,14 +312,15 @@ public class Island {
 
             Player onlinePlayer = Bukkit.getServer().getPlayer(ownerUUID);
 
-            if (!plugin.getPlayerDataManager().hasPlayerData(onlinePlayer)) {
+            if (!plugin.getPlayerDataManager().isPlayerDataLoaded(onlinePlayer)) {
                 plugin.getPlayerDataManager().createPlayerData(onlinePlayer);
             }
 
             PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(onlinePlayer);
             playerData.setPlaytime(0);
             playerData.setOwner(ownerUUID);
-            playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+            //playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+            playerData.setMemberSince(System.currentTimeMillis());
             playerData.save();
         }
         
@@ -283,7 +342,7 @@ public class Island {
 
         save();
 
-        this.apiWrapper = new com.songoda.skyblock.api.island.Island(this, player);
+        this.apiWrapper = new com.songoda.skyblock.api.island.Island(this);
     }
 
     public UUID getIslandUUID() {

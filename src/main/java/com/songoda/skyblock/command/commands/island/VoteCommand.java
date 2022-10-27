@@ -83,7 +83,7 @@ public class VoteCommand extends SubCommand {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Vote.Island.Member.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                    } else if (playerDataManager.hasPlayerData(player)) {
+                    } else if (playerDataManager.isPlayerDataLoaded(player)) {
                         PlayerData playerData = playerDataManager.getPlayerData(player);
 
                         if (playerData.getIsland() != null && playerData.getIsland().equals(island.getOwnerUUID())) {

@@ -60,7 +60,7 @@ public class Levelling {
         SoundManager soundManager = plugin.getSoundManager();
         FileManager fileManager = plugin.getFileManager();
 
-        if (!playerDataManager.hasPlayerData(player))
+        if (!playerDataManager.isPlayerDataLoaded(player))
             return;
 
         PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
@@ -74,7 +74,7 @@ public class Levelling {
                 return;
             }
 
-            if (!playerDataManager.hasPlayerData(player))
+            if (!playerDataManager.isPlayerDataLoaded(player))
                 return;
 
             ItemStack is = event.getItem();
