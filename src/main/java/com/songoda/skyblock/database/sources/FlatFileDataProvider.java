@@ -59,6 +59,11 @@ public class FlatFileDataProvider implements DataProvider {
     }
 
     @Override
+    public PlayerData getPlayerData(UUID playerUUID) {
+        return playerDataStorage.get(playerUUID);
+    }
+
+    @Override
     public void unloadPlayerData(UUID playerUUID) {
         playerDataStorage.remove(playerUUID);
     }
@@ -89,6 +94,21 @@ public class FlatFileDataProvider implements DataProvider {
     }
 
     @Override
+    public boolean hasIsland(UUID playerUUID) {
+        return playerDataStorage.get(playerUUID).getIsland() != null;
+    }
+
+    @Override
+    public Island getPlayerIsland(UUID playerUUID) {
+        return getIsland(playerDataStorage.get(playerUUID).getIsland());
+    }
+
+    @Override
+    public boolean isPlayerIslandLoaded(UUID playerUUID) {
+        return islandStorage.containsKey(playerDataStorage.get(playerUUID).getIsland());
+    }
+
+    @Override
     public Island loadIsland(UUID islandUUID) {
         return null;
     }
@@ -99,6 +119,11 @@ public class FlatFileDataProvider implements DataProvider {
     }
 
     @Override
+    public Island getIsland(UUID islandUUID) {
+        return islandStorage.get(islandUUID);
+    }
+
+    @Override
     public void unloadIslandData(UUID islandUUID) {
         islandStorage.remove(islandUUID);
     }
@@ -106,11 +131,6 @@ public class FlatFileDataProvider implements DataProvider {
     @Override
     public void createIslandData(UUID islandUUID) {
 
-    }
-
-    @Override
-    public void saveIsland(Island island) {
-        saveIsland(island.getIslandUUID());
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.songoda.skyblock.api.biome.BiomeManager;
 import com.songoda.skyblock.api.island.IslandManager;
 import com.songoda.skyblock.api.levelling.LevellingManager;
 import com.songoda.skyblock.api.structure.StructureManager;
+import com.songoda.skyblock.database.DataManager;
+import com.songoda.skyblock.database.DataProvider;
 
 public class SkyBlockAPI {
 
@@ -45,17 +47,6 @@ public class SkyBlockAPI {
     }
 
     /**
-     * @return The BiomeManager implementation
-     */
-    public static BiomeManager getBiomeManager() {
-        if (biomeManager == null) {
-            biomeManager = new BiomeManager(implementation.getBiomeManager());
-        }
-
-        return biomeManager;
-    }
-
-    /**
      * @return The LevellingManager implementation
      */
     public static LevellingManager getLevellingManager() {
@@ -75,5 +66,20 @@ public class SkyBlockAPI {
         }
 
         return structureManager;
+    }
+
+    /**
+     * @return The DataManager implementation
+     */
+    public static DataManager getDataManager() {
+        return implementation.getDataManager();
+    }
+
+    /**
+     * Use this method to use or modify Island and Player data
+     * @return The DataProvider implementation
+     */
+    public static DataProvider getDataProvider() {
+        return implementation.getDataManager().getDataProvider();
     }
 }

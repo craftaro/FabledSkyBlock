@@ -21,7 +21,7 @@ public class LevellingManager {
      */
     public void calculatePoints(Island island) {
         Preconditions.checkArgument(island != null, "Cannot calculate points to null island");
-        this.levellingManager.startScan(null, island.getIsland());
+        this.levellingManager.startScan(null, island);
     }
     
     /**

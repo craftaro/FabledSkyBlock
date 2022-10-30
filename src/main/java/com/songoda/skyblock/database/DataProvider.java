@@ -195,6 +195,81 @@ public interface DataProvider {
     Set<PlayerData> getLoadedPlayers();
 
     /**
+     * Check if a player is member of any island
+     * @param player The player to check
+     * @return true if member of any island false otherwise
+     */
+    default boolean hasIsland(Player player) {
+        return hasIsland(player.getUniqueId());
+    }
+
+    /**
+     * Check if a player is member of any island
+     * @param player The player to check
+     * @return true if member of any island false otherwise
+     */
+    default boolean hasIsland(OfflinePlayer player) {
+        return hasIsland(player.getUniqueId());
+    }
+
+    /**
+     * Check if a player is member of any island
+     * @param playerUUID The player's UUID to check
+     * @return true if member of any island false otherwise
+     */
+    boolean hasIsland(UUID playerUUID);
+
+    /**
+     * Get the island of a player
+     * @param player The player to get its island
+     * @return The island of the player if the island loaded in memory, null otherwise
+     */
+    default Island getPlayerIsland(Player player) {
+        return getPlayerIsland(player.getUniqueId());
+    }
+
+    /**
+     * Get the island of a player
+     * @param player The player to get its island
+     * @return The island of the player if the island loaded in memory, null otherwise
+     */
+    default Island getPlayerIsland(OfflinePlayer player) {
+        return getPlayerIsland(player.getUniqueId());
+    }
+
+    /**
+     * Get the island of a player
+     * @param playerUUID The player's UUID to get its island
+     * @return The island of the player if the island loaded in memory, null otherwise
+     */
+    Island getPlayerIsland(UUID playerUUID);
+
+    /**
+     * Check if a player's island is loaded in memory
+     * @param player The player to check
+     * @return true if the island is loaded false otherwise
+     */
+    default boolean isPlayerIslandLoaded(Player player) {
+        return isPlayerIslandLoaded(player.getUniqueId());
+    }
+
+    /**
+     * Check if a player's island is loaded in memory
+     * @param player The player to check
+     * @return true if the island is loaded false otherwise
+     */
+    default boolean isPlayerIslandLoaded(OfflinePlayer player) {
+        return isPlayerIslandLoaded(player.getUniqueId());
+    }
+
+    /**
+     * Check if a player's island is loaded in memory
+     * @param playerUUID The player's UUID to check
+     * @return true if the island is loaded false otherwise
+     */
+    boolean isPlayerIslandLoaded(UUID playerUUID);
+
+    /**
      * Check if an island has data in the database
      * @param islandUUID The island's UUID to check
      */

@@ -44,10 +44,14 @@ public class Island {
     private final SkyBlock plugin;
     private final com.songoda.skyblock.api.island.Island apiWrapper;
 
-    private final Map<IslandRole, List<IslandPermission>> islandPermissions = new HashMap<>();
-    private final List<IslandLocation> islandLocations = new ArrayList<>();
-    private final Map<UUID, IslandCoop> coopPlayers = new HashMap<>();
-    private final Set<UUID> whitelistedPlayers = new HashSet<>();
+    private final Map<IslandRole, List<IslandPermission>> islandPermissions;
+    private final List<IslandLocation> islandLocations;
+    private final Map<UUID, IslandCoop> coopPlayers;
+    //TODO load island these in constructor
+    private final Set<UUID> whitelistedPlayers;
+    private final Map<UUID, Ban> bannedPlayers;
+    private final Map<UUID, Visit> visits;
+    private final Map<UUID, PlayerData> islandMembers;
 
     private UUID islandUUID;
     private UUID ownerUUID;
@@ -58,7 +62,6 @@ public class Island {
     private int maxMembers;
     private boolean deleted = false;
     private Biome biome;
-
     private boolean isWeatherSynced;
     private int islandTime;
     private FileConfiguration islandData;
@@ -66,6 +69,13 @@ public class Island {
     public Island(UUID islandUUID) {
         this.plugin = SkyBlock.getInstance();
         this.islandUUID = islandUUID;
+        this.islandPermissions = new HashMap<>();
+        this.islandLocations = new ArrayList<>();
+        this.coopPlayers = new HashMap<>();
+        this.whitelistedPlayers = new HashSet<>();
+        this.bannedPlayers = new HashMap<>();
+        this.visits = new HashMap<>();
+        this.islandMembers = new HashMap<>();
 
         switch (plugin.getDataManager().getDatabaseType()) {
             case POSTGRESQL:
@@ -98,21 +108,27 @@ public class Island {
             default:
                 File dataFile = new File(new File(plugin.getDataFolder().toString() + "/island-data"), FastUUID.toString(islandUUID) + ".yml");
                 this.islandData = YamlConfiguration.loadConfiguration(dataFile);
+                this.ownerUUID = FastUUID.parseUUID(islandData.getString("Owner"));
                 break;
         }
 
-
-        this.ownerUUID = FastUUID.parseUUID(data.getString("owner"));
-        this.size = data.getInt("size");
         if (size > 1000 || size < 0) {
             size = 51;
+            plugin.getLogger().severe("Island size is not valid, resetting to default size of 51 for island: " + islandUUID);
         }
-        this.level = new IslandLevel(ownerUUID, plugin);
+        this.level = new IslandLevel(islandUUID, plugin);
         this.apiWrapper = new com.songoda.skyblock.api.island.Island(this);
     }
 
     public Island(@Nonnull OfflinePlayer player) {
         this.plugin = SkyBlock.getInstance();
+        this.islandPermissions = new HashMap<>();
+        this.islandLocations = new ArrayList<>();
+        this.coopPlayers = new HashMap<>();
+        this.whitelistedPlayers = new HashSet<>();
+        this.bannedPlayers = new HashMap<>();
+        this.visits = new HashMap<>();
+        this.islandMembers = new HashMap<>();
 
         FileManager fileManager = plugin.getFileManager();
 

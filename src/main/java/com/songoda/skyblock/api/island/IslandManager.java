@@ -14,98 +14,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class IslandManager {
+public interface IslandManager {
 
-    private final com.songoda.skyblock.island.IslandManager islandManager;
-    private final PermissionManager permissionManager;
 
-    public IslandManager(com.songoda.skyblock.island.IslandManager islandManager) {
-        this.islandManager = islandManager;
-        this.permissionManager = SkyBlock.getInstance().getPermissionManager();
-    }
-
-    /**
-     * @return true of conditions met, false otherwise
-     */
-    public static boolean hasIsland(OfflinePlayer player) {
-        Preconditions.checkArgument(player != null, "Cannot check island to null player");
-        return new com.songoda.skyblock.utils.player.OfflinePlayer(player.getUniqueId()).getOwner() != null;
-    }
-
-    /**
-     * Updates the Island border for players occupying an Island
-     */
-    public void updateBorder(Island island) {
-        Preconditions.checkArgument(island != null, "Cannot update border to null island");
-
-        this.islandManager.updateBorder(island.getIsland());
-    }
-
-    /**
-     * Gives Island ownership to a player of their Island
-     */
-    public void giveOwnership(Island island, OfflinePlayer player) {
-        Preconditions.checkArgument(player != null, "Cannot give ownership to null island");
-        Preconditions.checkArgument(player != null, "Cannot give ownership to null player");
-
-        this.islandManager.giveOwnership(island.getIsland(), player);
-    }
-
-    /**
-     * @return The Visitors occupying an Island
-     */
-    public Set<UUID> getVisitorsAtIsland(Island island) {
-        Preconditions.checkArgument(island != null, "Cannot get visitors at island to null island");
-
-        return this.islandManager.getVisitorsAtIsland(island.getIsland());
-    }
-
-    /**
-     * Makes a player a Visitor of an Island
-     */
-    public void visitIsland(Player player, Island island) {
-        Preconditions.checkArgument(player != null, "Cannot visit island to null player");
-        Preconditions.checkArgument(island != null, "Cannot visit island to null island");
-
-        this.islandManager.visitIsland(player, island.getIsland());
-    }
-
-    /**
-     * Closes an Island from Visitors
-     */
-    public void closeIsland(Island island) {
-        Preconditions.checkArgument(island != null, "Cannot closed island to null island");
-
-        this.islandManager.closeIsland(island.getIsland());
-    }
-
-    /**
-     * @return A Set of Members of an Island that are online
-     */
-    public Set<UUID> getMembersOnline(Island island) {
-        Preconditions.checkArgument(island != null, "Cannot get online members to null island");
-
-        return this.islandManager.getMembersOnline(island.getIsland());
-    }
-
-    /**
-     * @return A List of Players at an Island
-     */
-    public List<Player> getPlayersAtIsland(Island island) {
-        Preconditions.checkArgument(island != null, "Cannot get players at island to null island");
-
-        return this.islandManager.getPlayersAtIsland(island.getIsland());
-    }
-
-    /**
-     * @return A List of Players at an Island by IslandWorld
-     */
-    public List<Player> getPlayersAtIsland(Island island, IslandWorld world) {
-        Preconditions.checkArgument(island != null, "Cannot get players at island to null island");
-        Preconditions.checkArgument(world != null, "Cannot get players at island to null world");
-
-        return this.islandManager.getPlayersAtIsland(island.getIsland(), APIUtil.toImplementation(world));
-    }
 
     /**
      * Gives the Island Upgrades to a player
@@ -312,49 +223,5 @@ public class IslandManager {
     public void resetIsland(Island island) {
         Preconditions.checkArgument(island != null, "Cannot reset island to null island");
         this.islandManager.resetIsland(island.getIsland());
-    }
-
-    /**
-     * @return The Island of a player
-     */
-    public Island getIsland(OfflinePlayer player) {
-        Preconditions.checkArgument(player != null, "Cannot get island to null player");
-
-        com.songoda.skyblock.island.Island island = this.islandManager.getIsland(player);
-
-        if (island != null) {
-            return island.getAPIWrapper();
-        }
-
-        return new Island(null, player);
-    }
-
-    /**
-     * Gets an Island by its UUID
-     * Returns null if an Island with the given UUID does not exist
-     *
-     * @param islandUUID The UUID of the Island
-     * @return The Island with the given UUID, or null if one was not found
-     */
-    public Island getIslandByUUID(UUID islandUUID) {
-        Preconditions.checkArgument(islandUUID != null, "Cannot get island with a null UUID");
-
-        com.songoda.skyblock.island.Island island = this.islandManager.getIslandByUUID(islandUUID);
-
-        return island != null ? island.getAPIWrapper() : null;
-    }
-
-    /**
-     * @return A List of loaded Islands
-     */
-    public List<Island> getIslands() {
-        List<Island> islands = new ArrayList<>();
-
-        for (int i = 0; i < this.islandManager.getIslands().size(); i++) {
-            islands.add(this.islandManager.getIslands().get(this.islandManager.getIslands().keySet().toArray()[i])
-                    .getAPIWrapper());
-        }
-
-        return islands;
     }
 }

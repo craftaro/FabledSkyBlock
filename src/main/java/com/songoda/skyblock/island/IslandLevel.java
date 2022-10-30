@@ -21,7 +21,7 @@ public class IslandLevel {
 
     private final SkyBlock plugin;
 
-    private UUID ownerUUID;
+    private UUID islandUUID;
 
     private long lastCalculatedLevel = 0;
     private double lastCalculatedPoints = 0;
@@ -31,11 +31,11 @@ public class IslandLevel {
     // Highest level achieved, to prevent reward farming (since is level can decrease)
     private long highestLevel;
 
-    public IslandLevel(UUID ownerUUID, SkyBlock plugin) {
+    public IslandLevel(UUID islandUUID, SkyBlock plugin) {
         this.plugin = plugin;
-        this.ownerUUID = ownerUUID;
-
-        final Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), ownerUUID.toString() + ".yml"));
+        this.islandUUID = islandUUID;
+        //TODO load data by database type
+        final Config config = plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/level-data"), islandUUID.toString() + ".yml"));
         final FileConfiguration configLoad = config.getFileConfiguration();
 
         final ConfigurationSection section = configLoad.getConfigurationSection("Levelling.Materials");
@@ -58,10 +58,6 @@ public class IslandLevel {
         this.materials = materials;
 
         this.highestLevel = configLoad.contains("Levelling.Highest-Level") ? configLoad.getLong("Levelling.Highest-Level") : getLevel();
-    }
-
-    public void setOwnerUUID(UUID ownerUUID) {
-        this.ownerUUID = ownerUUID;
     }
 
     public double getPoints() {
