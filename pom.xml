@@ -1,22 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.songoda</groupId>
     <artifactId>skyblock</artifactId>
     <version>2.5.2</version>
-    <packaging>jar</packaging>
+
+    <name>FabledSkyBlock</name>
+    <description>Bring your server's SkyBlock experience to the next level with the ability to fine-tune island settings, create custom islands, view leaderboards, and much more</description>
+    <url>https://craftaro.com/marketplace/product/17</url>
 
     <properties>
+        <maven.compiler.release>8</maven.compiler.release>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <build>
-        <defaultGoal>clean install</defaultGoal>
-        <finalName>FabledSkyblock-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+                            <finalName>${project.name}-${project.version}</finalName>
+
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
+                            <minimizeJar>true</minimizeJar>
+
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.songoda.core</pattern>
+                                    <shadedPattern>com.songoda.skyblock.core</shadedPattern>
+                                </relocation>
+
+                                <relocation>
+                                    <pattern>io.papermc.lib</pattern>
+                                    <shadedPattern>com.songoda.skyblock.third_party.io.papermc.lib</shadedPattern>
+                                </relocation>
+
+                                <relocation>
+                                    <pattern>com.eatthepath.uuid</pattern>
+                                    <shadedPattern>com.songoda.skyblock.third_party.com.eatthepath.uuid</shadedPattern>
+                                </relocation>
+                            </relocations>
+
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                        <exclude>LICENSE</exclude>
+                                        <exclude>LICENSE.**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
 
         <resources>
             <resource>
@@ -24,120 +81,22 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-
-        <plugins>
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>1.5.3</version>
-
-                <executions>
-                    <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                    </execution>
-                </executions>
-
-                <configuration>
-                    <file>${project.build.directory}/classes/plugin.yml</file>
-
-                    <replacements>
-                        <replacement>
-                            <token>maven-version-number</token>
-                            <value>${project.version}</value>
-                        </replacement>
-                    </replacements>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
-
-                <executions>
-                    <execution>
-                        <id>shaded</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-
-                        <configuration>
-                            <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <minimizeJar>true</minimizeJar>
-
-                            <artifactSet>
-                                <includes>
-                                    <include>com.songoda:SongodaCore</include>
-                                    <include>io.papermc:paperlib</include>
-                                    <include>com.eatthepath:fast-uuid</include>
-                                </includes>
-                            </artifactSet>
-
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-
-                            <relocations>
-                                <relocation>
-                                    <pattern>com.songoda.core</pattern>
-                                    <shadedPattern>${project.groupId}.skyblock.core</shadedPattern>
-                                </relocation>
-
-                                <relocation>
-                                    <pattern>io.papermc.lib</pattern>
-                                    <shadedPattern>${project.groupId}.paperlib</shadedPattern>
-                                </relocation>
-
-                                <relocation>
-                                    <pattern>com.eatthepath.uuid</pattern>
-                                    <shadedPattern>${project.groupId}.fast-uuid</shadedPattern>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 
     <repositories>
         <repository>
-            <id>spigot-repo</id>
+            <id>craftaro-minecraft-plugins</id>
+            <url>https://repo.craftaro.com/repository/minecraft-plugins/</url>
+        </repository>
+
+        <repository>
+            <id>SpigotMC</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
 
         <repository>
             <id>papermc</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
-
-        <repository>
-            <id>minecraft-repo</id>
-            <url>https://libraries.minecraft.net/</url>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
 
         <repository>
@@ -146,13 +105,13 @@
         </repository>
 
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>enginehub-maven</id>
+            <url>https://maven.enginehub.org/repo/</url>
         </repository>
 
         <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io/</url>
         </repository>
 
         <repository>
@@ -163,30 +122,30 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.papermc</groupId>
-            <artifactId>paperlib</artifactId>
-            <version>LATEST</version>
+            <groupId>com.songoda</groupId>
+            <artifactId>SongodaCore</artifactId>
+            <version>2.6.19</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <groupId>io.papermc</groupId>
+            <artifactId>paperlib</artifactId>
+            <version>1.0.7</version>
+            <scope>compile</scope>
+        </dependency>
 
-            <exclusions>
-                <exclusion>
-                    <groupId>io.papermc</groupId>
-                    <artifactId>paperlib</artifactId>
-                </exclusion>
-            </exclusions>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.18</version>
+            <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -198,30 +157,16 @@
         </dependency>
 
         <dependency>
-            <groupId>com.songoda</groupId>
-            <artifactId>SongodaCore</artifactId>
-            <version>2.6.19</version>
-            <scope>compile</scope>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.11.3</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.songoda</groupId>
             <artifactId>UltimateStacker</artifactId>
             <version>2.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.9.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>me.robin</groupId>
-            <artifactId>LeaderHeadsAPI</artifactId>
-            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -233,30 +178,33 @@
         </dependency>
 
         <dependency>
-            <groupId>com.sk89q</groupId>
+            <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>7.1.0R1</version>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>io.papermc</groupId>
-                    <artifactId>paperlib</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>7.2.9</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.eatthepath</groupId>
             <artifactId>fast-uuid</artifactId>
-            <version>0.1</version>
+            <version>0.2.0</version>
             <scope>compile</scope>
         </dependency>
 
+        <!-- TODO: Check what repo has LeaderHeadsAPI -->
         <dependency>
             <groupId>com.Zrips</groupId>
             <artifactId>Residence</artifactId>
             <scope>provided</scope>
             <version>4.9.0.6</version>
+        </dependency>
+
+        <!-- TODO: Check what repo has LeaderHeadsAPI – The project is abandoned so removing support for it might be worth a thought -->
+        <dependency>
+            <groupId>me.robin</groupId>
+            <artifactId>LeaderHeadsAPI</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

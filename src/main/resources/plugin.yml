@@ -1,13 +1,31 @@
-name: FabledSkyBlock
-main: com.songoda.skyblock.SkyBlock
-version: maven-version-number
+name: ${project.name}
+description: ${project.description}
+version: ${project.version}
 api-version: 1.13
-description: A unique SkyBlock plugin
-author: Songoda
+
+main: com.songoda.skyblock.SkyBlock
+softdepend:
+  - CMIEInjector
+  - CoreProtect
+  - EpicSpawners
+  - Holograms
+  - HolographicDisplays
+  - LeaderHeads
+  - PlaceholderAPI
+  - PlayerPoints
+  - Reserve
+  - Residence
+  - UltimateStacker
+  - Vault
+  - WorldEdit
+loadbefore:
+  - Multiverse-Core
+  - ProtocolLib
+
+author: Craftaro
 authors: [ Fabrimat ]
-softdepend: [ HolographicDisplays, Holograms, PlaceholderAPI, Vault, Reserve, PlayerPoints,
-              LeaderHeads, EpicSpawners, UltimateStacker, WorldEdit, Residence, CoreProtect, CMIEInjector ]
-loadbefore: [Multiverse-Core, ProtocolLib]
+website: ${project.url}
+
 commands:
   island:
     description: Island command
