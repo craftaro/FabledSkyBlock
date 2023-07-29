@@ -1,0 +1,26 @@
+root = true
+
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+# max_line_length = 120
+tab_width = 4
+trim_trailing_whitespace = true
+ij_continuation_indent_size = 8
+ij_formatter_off_tag = @formatter:off
+ij_formatter_on_tag = @formatter:on
+ij_formatter_tags_enabled = true
+
+
+[{*.yaml,*.yml,*.json,*.lang,*.graphqlconfig,*.har,*.jsb2,*.jsb3,*.webmanifest,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
+indent_size = 2
+tab_width = 2
+
+
+[{*.markdown,*.md,*.html,*.htm,*.ng,*.sht,*.shtm,*.shtml,*.ts,*.ats,*.js,*.cjs,*.bash,*.sh,*.zsh}]
+indent_size = 2
+tab_width = 2
