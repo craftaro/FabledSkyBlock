@@ -1,15 +1,14 @@
 package com.songoda.skyblock.scoreboard;
 
 class ScoreboardLine {
-
     private final String prefix;
     private final String suffix;
 
     ScoreboardLine(String prefix, String suffix, int limit) {
-        if(prefix.length() > limit) {
+        if (prefix.length() > limit) {
             prefix = prefix.substring(0, limit);
         }
-        if(suffix.length() > limit) {
+        if (suffix.length() > limit) {
             suffix = suffix.substring(0, limit);
         }
         this.prefix = prefix;
@@ -17,10 +16,10 @@ class ScoreboardLine {
     }
 
     String getPrefix() {
-        return prefix;
+        return this.prefix;
     }
 
     String getSuffix() {
-        return suffix;
+        return this.suffix;
     }
 }

@@ -17,7 +17,6 @@ import javax.annotation.Nullable;
 import java.io.File;
 
 public class GuiPermissionsSelector extends Gui {
-
     public GuiPermissionsSelector(@Nonnull SkyBlock plugin, @Nullable Player player, @Nullable Island island, @Nullable Gui returnGui) {
         super(1, returnGui);
         setDefaultItem(null);
@@ -33,23 +32,23 @@ public class GuiPermissionsSelector extends Gui {
         setButton(2, GuiUtils.createButtonItem(CompatibleMaterial.OAK_SIGN,
                 TextUtils.formatText(configLoad.getString("Menu." + admin + "Settings.Categories.Item.Visitor.Displayname")),
                 TextUtils.formatText(configLoad.getStringList("Menu." + admin + "Settings.Categories.Item.Visitor.Lore"))), (event) ->
-                guiManager.showGUI(event.player, island == null ?
-                        new GuiAdminPermissions(plugin, IslandRole.Visitor, this) :
-                        new GuiPermissions(plugin, player, island, IslandRole.Visitor, this)));
+                this.guiManager.showGUI(event.player, island == null ?
+                        new GuiAdminPermissions(plugin, IslandRole.VISITOR, this) :
+                        new GuiPermissions(plugin, player, island, IslandRole.VISITOR, this)));
 
         setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING,
                 TextUtils.formatText(configLoad.getString("Menu." + admin + "Settings.Categories.Item.Member.Displayname")),
                 TextUtils.formatText(configLoad.getStringList("Menu." + admin + "Settings.Categories.Item.Member.Lore"))), (event) ->
-                guiManager.showGUI(event.player, island == null ?
-                        new GuiAdminPermissions(plugin, IslandRole.Member, this) :
-                        new GuiPermissions(plugin, player, island, IslandRole.Member, this)));
+                this.guiManager.showGUI(event.player, island == null ?
+                        new GuiAdminPermissions(plugin, IslandRole.MEMBER, this) :
+                        new GuiPermissions(plugin, player, island, IslandRole.MEMBER, this)));
 
         setButton(4, GuiUtils.createButtonItem(CompatibleMaterial.ITEM_FRAME,
                 TextUtils.formatText(configLoad.getString("Menu." + admin + "Settings.Categories.Item.Operator.Displayname")),
                 TextUtils.formatText(configLoad.getStringList("Menu." + admin + "Settings.Categories.Item.Operator.Lore"))), (event) ->
-                guiManager.showGUI(event.player, island == null ?
-                    new GuiAdminPermissions(plugin, IslandRole.Operator, this) :
-                    new GuiPermissions(plugin, player, island, IslandRole.Operator, this)));
+                this.guiManager.showGUI(event.player, island == null ?
+                        new GuiAdminPermissions(plugin, IslandRole.OPERATOR, this) :
+                        new GuiPermissions(plugin, player, island, IslandRole.OPERATOR, this)));
 
         boolean isCoop = plugin.getConfiguration()
                 .getBoolean("Island.Coop.Enable");
@@ -60,20 +59,20 @@ public class GuiPermissionsSelector extends Gui {
             event.player.closeInventory();
         });
 
-        if (isCoop)
+        if (isCoop) {
             setButton(6, GuiUtils.createButtonItem(CompatibleMaterial.NAME_TAG,
                     TextUtils.formatText(configLoad.getString("Menu." + admin + "Settings.Categories.Item.Coop.Displayname")),
-                            TextUtils.formatText(configLoad.getStringList("Menu.Settings.Categories.Item.Coop.Lore"))), (event) ->
-                            guiManager.showGUI(event.player, island == null ?
-                                    new GuiAdminPermissions(plugin, IslandRole.Coop, this) :
-                                    new GuiPermissions(plugin, player, island, IslandRole.Coop, this)));
+                    TextUtils.formatText(configLoad.getStringList("Menu.Settings.Categories.Item.Coop.Lore"))), (event) ->
+                    this.guiManager.showGUI(event.player, island == null ?
+                            new GuiAdminPermissions(plugin, IslandRole.COOP, this) :
+                            new GuiPermissions(plugin, player, island, IslandRole.COOP, this)));
+        }
 
         setButton(isCoop ? 7 : 8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_SAPLING.getItem(),
                 TextUtils.formatText(configLoad.getString("Menu." + admin + "Settings.Categories.Item.Owner.Displayname")),
-                        TextUtils.formatText(configLoad.getStringList("Menu." + admin + "Settings.Categories.Item.Owner.Lore"))), (event) ->
-                        guiManager.showGUI(event.player, island == null ?
-                                new GuiAdminPermissions(plugin, IslandRole.Owner, this) :
-                                new GuiPermissions(plugin, player, island, IslandRole.Owner, this)));
-
+                TextUtils.formatText(configLoad.getStringList("Menu." + admin + "Settings.Categories.Item.Owner.Lore"))), (event) ->
+                this.guiManager.showGUI(event.player, island == null ?
+                        new GuiAdminPermissions(plugin, IslandRole.OWNER, this) :
+                        new GuiPermissions(plugin, player, island, IslandRole.OWNER, this)));
     }
 }

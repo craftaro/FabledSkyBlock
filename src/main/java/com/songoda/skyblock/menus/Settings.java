@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Settings {
-
     private static Settings instance;
 
     public static Settings getInstance() {
@@ -45,7 +44,7 @@ public class Settings {
     }
 
     public void open(Player player, Settings.Type menuType, IslandRole role, Settings.Panel panel) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         MessageManager messageManager = plugin.getMessageManager();
@@ -60,7 +59,7 @@ public class Settings {
             FileConfiguration mainConfig = plugin.getConfiguration();
             FileConfiguration configLoad = plugin.getLanguage();
 
-            if (menuType == Settings.Type.Categories) {
+            if (menuType == Settings.Type.CATEGORIES) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                     if (playerDataManager.hasPlayerData(player)) {
                         Island island13 = islandManager.getIsland(player);
@@ -72,8 +71,8 @@ public class Settings {
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
-                        } else if (!(island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                || island13.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+                        } else if (!(island13.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                || island13.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Role.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
@@ -98,8 +97,8 @@ public class Settings {
                                 return;
                             }
 
-                            if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && !permissionManager.hasPermission(island13, "Coop", IslandRole.Operator)) {
+                            if (island13.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                    && !permissionManager.hasPermission(island13, "Coop", IslandRole.OPERATOR)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -112,12 +111,12 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Coop, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.ROLE, IslandRole.COOP, null), 1L);
                         } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad
                                         .getString("Menu.Settings.Categories.Item.Visitor.Displayname"))))) {
-                            if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && !permissionManager.hasPermission(island13, "Visitor", IslandRole.Operator)) {
+                            if (island13.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                    && !permissionManager.hasPermission(island13, "Visitor", IslandRole.OPERATOR)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -130,13 +129,13 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.ROLE, IslandRole.VISITOR, null), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad
                                         .getString("Menu.Settings.Categories.Item.Member.Displayname"))))) {
-                            if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && !permissionManager.hasPermission(island13, "Member", IslandRole.Operator)) {
+                            if (island13.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                    && !permissionManager.hasPermission(island13, "Member", IslandRole.OPERATOR)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -149,11 +148,11 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Member, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.ROLE, IslandRole.MEMBER, null), 1L);
                         } else if ((is.getType() == Material.ITEM_FRAME) && (is.hasItemMeta()) && (is.getItemMeta()
                                 .getDisplayName().equals(plugin.formatText(configLoad
                                         .getString("Menu.Settings.Categories.Item.Operator.Displayname"))))) {
-                            if (island13.hasRole(IslandRole.Operator, player.getUniqueId())) {
+                            if (island13.hasRole(IslandRole.OPERATOR, player.getUniqueId())) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -166,13 +165,13 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Operator, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.ROLE, IslandRole.OPERATOR, null), 1L);
                         } else if ((is.getType() == CompatibleMaterial.OAK_SAPLING.getMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad
                                         .getString("Menu.Settings.Categories.Item.Owner.Displayname"))))) {
-                            if (island13.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    && !permissionManager.hasPermission(island13, "Island", IslandRole.Operator)) {
+                            if (island13.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                    && !permissionManager.hasPermission(island13, "Island", IslandRole.OPERATOR)) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -185,7 +184,7 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Owner, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.ROLE, IslandRole.OWNER, null), 1L);
                         }
                     }
                 });
@@ -223,8 +222,8 @@ public class Settings {
                 nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Settings.Categories.Title")));
                 nInv.setRows(1);
 
-                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
-            } else if (menuType == Settings.Type.Role && role != null) {
+                Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
+            } else if (menuType == Settings.Type.ROLE && role != null) {
                 nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                     if (playerDataManager.hasPlayerData(player)) {
                         Island island14 = islandManager.getIsland(player);
@@ -235,21 +234,21 @@ public class Settings {
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
-                        } else if (!(island14.hasRole(IslandRole.Operator, player.getUniqueId())
-                                || island14.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+                        } else if (!(island14.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                || island14.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Settings.Role.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
-                        } else if (island14.hasRole(IslandRole.Operator, player.getUniqueId())
-                                && !permissionManager.hasPermission(island14, role.name(), IslandRole.Operator)) {
+                        } else if (island14.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                && !permissionManager.hasPermission(island14, role.name(), IslandRole.OPERATOR)) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             return;
-                        } else if (role == IslandRole.Coop) {
+                        } else if (role == IslandRole.COOP) {
                             if (!fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Coop.Enable")) {
                                 messageManager.sendMessage(player,
@@ -267,18 +266,18 @@ public class Settings {
                                 .equals(plugin.formatText(configLoad.getString("Menu.Settings." + role.name() + ".Item.Return.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Categories, null, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.CATEGORIES, null, null), 1L);
                         } else if ((is.getType() == Material.PAPER) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Signature.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Panel, null, Panel.Signature), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.PANEL, null, Panel.SIGNATURE), 1L);
                         } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Panel, null, Panel.Welcome), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.PANEL, null, Panel.WELCOME), 1L);
                         } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta()) && (is.getItemMeta()
                                 .getDisplayName().equals(plugin.formatText(configLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname"))))) {
                             switch (island14.getStatus()) {
@@ -296,7 +295,7 @@ public class Settings {
                                     break;
                             }
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.ROLE, IslandRole.VISITOR, null), 1L);
                         } else if (is.hasItemMeta()) {
                             String roleName = getRoleName(role);
 
@@ -328,13 +327,13 @@ public class Settings {
 
                             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
-                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.Role, role, null), 1L);
+                            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.ROLE, role, null), 1L);
                         }
                     }
                 });
 
-                if (role == IslandRole.Visitor || role == IslandRole.Member || role == IslandRole.Coop) {
-                    if (role == IslandRole.Visitor) {
+                if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP) {
+                    if (role == IslandRole.VISITOR) {
                         Config config = plugin.getFileManager()
                                 .getConfig(new File(plugin.getDataFolder(), "config.yml"));
                         Visit visit = island.getVisit();
@@ -483,7 +482,7 @@ public class Settings {
                     nInv.setTitle(plugin.formatText(
                             configLoad.getString("Menu.Settings." + role.name() + ".Title")));
                     nInv.setRows(6);
-                } else if (role == IslandRole.Operator) {
+                } else if (role == IslandRole.OPERATOR) {
                     if (mainConfig.getBoolean("Island.Visitor.Banning")) {
                         if (mainConfig.getBoolean("Island.Coop.Enable")) {
                             if (mainConfig.getBoolean("Island.WorldBorder.Enable")) {
@@ -692,7 +691,7 @@ public class Settings {
 
                     nInv.setTitle(plugin.formatText(
                             configLoad.getString("Menu.Settings." + role.name() + ".Title")));
-                } else if (role == IslandRole.Owner) {
+                } else if (role == IslandRole.OWNER) {
                     if (mainConfig.getBoolean("Island.Settings.PvP.Enable")) {
                         if (mainConfig.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
                             if (mainConfig.getBoolean("Island.Settings.Damage.Enable")) {
@@ -1028,9 +1027,9 @@ public class Settings {
                         configLoad.getString("Menu.Settings." + role.name() + ".Item.Return.Displayname"), null, null,
                         null, null), 0, 8);
 
-                Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
-            } else if (menuType == Settings.Type.Panel) {
-                if (panel == Settings.Panel.Welcome) {
+                Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
+            } else if (menuType == Settings.Type.PANEL) {
+                if (panel == Settings.Panel.WELCOME) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                         if (playerDataManager.hasPlayerData(player)) {
                             Island island15 = islandManager.getIsland(player);
@@ -1041,8 +1040,8 @@ public class Settings {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 return;
-                            } else if (!(island15.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    || island15.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+                            } else if (!(island15.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                    || island15.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Role.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -1069,7 +1068,7 @@ public class Settings {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                        () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
+                                        () -> open(player, Type.ROLE, IslandRole.VISITOR, null), 1L);
                             } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     plugin.formatText(configLoad.getString(
@@ -1090,7 +1089,7 @@ public class Settings {
                                 }
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                        () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
+                                        () -> open(player, Type.ROLE, IslandRole.VISITOR, null), 1L);
                             } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
                                     .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname"))))) {
@@ -1102,7 +1101,7 @@ public class Settings {
                                     .getDisplayName()
                                     .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname"))))) {
-                                if (island15.getMessage(IslandMessage.Welcome).size() >= plugin.getFileManager()
+                                if (island15.getMessage(IslandMessage.WELCOME).size() >= plugin.getFileManager()
                                         .getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                         .getFileConfiguration().getInt("Island.Visitor.Welcome.Lines")) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -1129,9 +1128,9 @@ public class Settings {
                                                         player.closeInventory();
 
                                                         return;
-                                                    } else if (!(island1.hasRole(IslandRole.Operator,
+                                                    } else if (!(island1.hasRole(IslandRole.OPERATOR,
                                                             player.getUniqueId())
-                                                            || island1.hasRole(IslandRole.Owner,
+                                                            || island1.hasRole(IslandRole.OWNER,
                                                             player.getUniqueId()))) {
                                                         messageManager.sendMessage(player, configLoad
                                                                 .getString("Command.Island.Role.Message"));
@@ -1164,7 +1163,7 @@ public class Settings {
                                                     FileConfiguration configLoad1 = config1
                                                             .getFileConfiguration();
 
-                                                    if (island1.getMessage(IslandMessage.Welcome)
+                                                    if (island1.getMessage(IslandMessage.WELCOME)
                                                             .size() > configLoad1
                                                             .getInt("Island.Visitor.Welcome.Lines")
                                                             || gui.getInputText().length() > configLoad1
@@ -1174,9 +1173,9 @@ public class Settings {
                                                                 1.0F);
                                                     } else {
                                                         List<String> welcomeMessage = island1
-                                                                .getMessage(IslandMessage.Welcome);
+                                                                .getMessage(IslandMessage.WELCOME);
                                                         welcomeMessage.add(gui.getInputText());
-                                                        island1.setMessage(IslandMessage.Welcome,
+                                                        island1.setMessage(IslandMessage.WELCOME,
                                                                 player.getName(), welcomeMessage);
                                                         soundManager.playSound(player,
                                                                 CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F,
@@ -1186,9 +1185,9 @@ public class Settings {
                                                     Bukkit.getServer().getScheduler()
                                                             .runTaskLater(plugin,
                                                                     () -> open(player,
-                                                                            Type.Panel,
+                                                                            Type.PANEL,
                                                                             null,
-                                                                            Panel.Welcome), 1L);
+                                                                            Panel.WELCOME), 1L);
 
                                                     player.closeInventory();
                                                 });
@@ -1208,27 +1207,27 @@ public class Settings {
                                     .getDisplayName()
                                     .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Displayname"))))) {
-                                List<String> welcomeMessage = island15.getMessage(IslandMessage.Welcome);
+                                List<String> welcomeMessage = island15.getMessage(IslandMessage.WELCOME);
 
-                                if (welcomeMessage.size() == 0) {
+                                if (welcomeMessage.isEmpty()) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                     event.setWillClose(false);
                                     event.setWillDestroy(false);
                                 } else {
                                     welcomeMessage.remove(welcomeMessage.size() - 1);
-                                    island15.setMessage(IslandMessage.Welcome,
-                                            island15.getMessageAuthor(IslandMessage.Welcome), welcomeMessage);
+                                    island15.setMessage(IslandMessage.WELCOME,
+                                            island15.getMessageAuthor(IslandMessage.WELCOME), welcomeMessage);
                                     soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                            () -> open(player, Type.Panel, null, Panel.Welcome), 1L);
+                                            () -> open(player, Type.PANEL, null, Panel.WELCOME), 1L);
                                 }
                             }
                         }
                     });
 
-                    List<String> welcomeMessage = island.getMessage(IslandMessage.Welcome);
+                    List<String> welcomeMessage = island.getMessage(IslandMessage.WELCOME);
 
                     if (welcomeMessage.size() == mainConfig
                             .getInt("Island.Visitor.Welcome.Lines")) {
@@ -1244,7 +1243,7 @@ public class Settings {
                                 null, null, null), 1);
                     }
 
-                    if (welcomeMessage.size() == 0) {
+                    if (welcomeMessage.isEmpty()) {
                         List<String> itemLore = new ArrayList<>();
                         itemLore.add(
                                 configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Word.Empty"));
@@ -1276,8 +1275,8 @@ public class Settings {
                     nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title")));
                     nInv.setType(InventoryType.HOPPER);
 
-                    Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
-                } else if (panel == Settings.Panel.Signature) {
+                    Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
+                } else if (panel == Settings.Panel.SIGNATURE) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                         if (playerDataManager.hasPlayerData(player)) {
                             Island island12 = islandManager.getIsland(player);
@@ -1288,8 +1287,8 @@ public class Settings {
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                                 return;
-                            } else if (!(island12.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    || island12.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+                            } else if (!(island12.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                    || island12.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Role.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -1316,7 +1315,7 @@ public class Settings {
                                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                        () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
+                                        () -> open(player, Type.ROLE, IslandRole.VISITOR, null), 1L);
                             } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     plugin.formatText(configLoad.getString(
@@ -1337,7 +1336,7 @@ public class Settings {
                                 }
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                        () -> open(player, Type.Role, IslandRole.Visitor, null), 1L);
+                                        () -> open(player, Type.ROLE, IslandRole.VISITOR, null), 1L);
                             } else if ((is.hasItemMeta()) && (is.getItemMeta().getDisplayName()
                                     .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Signature.Item.Message.Displayname"))))) {
@@ -1349,7 +1348,7 @@ public class Settings {
                                     .getDisplayName()
                                     .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Displayname"))))) {
-                                if (island12.getMessage(IslandMessage.Signature).size() >= plugin.getFileManager()
+                                if (island12.getMessage(IslandMessage.SIGNATURE).size() >= plugin.getFileManager()
                                         .getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                         .getFileConfiguration().getInt("Island.Visitor.Signature.Lines")) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -1375,9 +1374,9 @@ public class Settings {
                                                                 1.0F);
                                                         player.closeInventory();
                                                         return;
-                                                    } else if (!(island1.hasRole(IslandRole.Operator,
+                                                    } else if (!(island1.hasRole(IslandRole.OPERATOR,
                                                             player.getUniqueId())
-                                                            || island1.hasRole(IslandRole.Owner,
+                                                            || island1.hasRole(IslandRole.OWNER,
                                                             player.getUniqueId()))) {
                                                         messageManager.sendMessage(player, configLoad
                                                                 .getString("Command.Island.Role.Message"));
@@ -1409,7 +1408,7 @@ public class Settings {
                                                     FileConfiguration configLoad1 = config1
                                                             .getFileConfiguration();
 
-                                                    if (island1.getMessage(IslandMessage.Signature)
+                                                    if (island1.getMessage(IslandMessage.SIGNATURE)
                                                             .size() > configLoad1.getInt(
                                                             "Island.Visitor.Signature.Lines")
                                                             || gui.getInputText().length() > configLoad1
@@ -1419,9 +1418,9 @@ public class Settings {
                                                                 1.0F);
                                                     } else {
                                                         List<String> signatureMessage = island1
-                                                                .getMessage(IslandMessage.Signature);
+                                                                .getMessage(IslandMessage.SIGNATURE);
                                                         signatureMessage.add(gui.getInputText());
-                                                        island1.setMessage(IslandMessage.Signature,
+                                                        island1.setMessage(IslandMessage.SIGNATURE,
                                                                 player.getName(), signatureMessage);
                                                         soundManager.playSound(player,
                                                                 CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F,
@@ -1431,9 +1430,9 @@ public class Settings {
                                                     Bukkit.getServer().getScheduler()
                                                             .runTaskLater(plugin,
                                                                     () -> open(player,
-                                                                            Type.Panel,
+                                                                            Type.PANEL,
                                                                             null,
-                                                                            Panel.Signature), 1L);
+                                                                            Panel.SIGNATURE), 1L);
 
                                                     player.closeInventory();
                                                 });
@@ -1453,7 +1452,7 @@ public class Settings {
                                     .getDisplayName()
                                     .equals(plugin.formatText(configLoad.getString(
                                             "Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.Displayname"))))) {
-                                List<String> signatureMessage = island12.getMessage(IslandMessage.Signature);
+                                List<String> signatureMessage = island12.getMessage(IslandMessage.SIGNATURE);
 
                                 if (signatureMessage.size() == 0) {
                                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -1462,19 +1461,19 @@ public class Settings {
                                     event.setWillDestroy(false);
                                 } else {
                                     signatureMessage.remove(signatureMessage.size() - 1);
-                                    island12.setMessage(IslandMessage.Signature,
-                                            island12.getMessageAuthor(IslandMessage.Signature), signatureMessage);
+                                    island12.setMessage(IslandMessage.SIGNATURE,
+                                            island12.getMessageAuthor(IslandMessage.SIGNATURE), signatureMessage);
                                     soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                            () -> open(player, Type.Panel, null,
-                                                    Panel.Signature), 1L);
+                                            () -> open(player, Type.PANEL, null,
+                                                    Panel.SIGNATURE), 1L);
                                 }
                             }
                         }
                     });
 
-                    List<String> signatureMessage = island.getMessage(IslandMessage.Signature);
+                    List<String> signatureMessage = island.getMessage(IslandMessage.SIGNATURE);
 
                     if (signatureMessage.size() == mainConfig
                             .getInt("Island.Visitor.Signature.Lines")) {
@@ -1491,7 +1490,7 @@ public class Settings {
                                 null, null, null), 1);
                     }
 
-                    if (signatureMessage.size() == 0) {
+                    if (signatureMessage.isEmpty()) {
                         List<String> itemLore = new ArrayList<>();
                         itemLore.add(
                                 configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Word.Empty"));
@@ -1524,14 +1523,14 @@ public class Settings {
                             configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")));
                     nInv.setType(InventoryType.HOPPER);
 
-                    Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+                    Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
                 }
             }
         }
     }
 
     private ItemStack createItem(Island island, IslandRole role, String setting, ItemStack is) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
         PermissionManager permissionManager = plugin.getPermissionManager();
 
         Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
@@ -1543,7 +1542,7 @@ public class Settings {
 
         String roleName = role.name();
 
-        if (role == IslandRole.Visitor || role == IslandRole.Member || role == IslandRole.Coop) {
+        if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP) {
             roleName = "Default";
         }
 
@@ -1570,7 +1569,7 @@ public class Settings {
     }
 
     private String getRoleName(IslandRole role) {
-        if (role == IslandRole.Visitor || role == IslandRole.Member || role == IslandRole.Coop) {
+        if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP) {
             return "Default";
         }
 
@@ -1578,33 +1577,29 @@ public class Settings {
     }
 
     private boolean hasPermission(Island island, Player player, IslandRole role) {
-        PermissionManager permissionManager = SkyBlock.getInstance().getPermissionManager();
-        if (role == IslandRole.Visitor || role == IslandRole.Member || role == IslandRole.Coop
-                || role == IslandRole.Owner) {
+        PermissionManager permissionManager = SkyBlock.getPlugin(SkyBlock.class).getPermissionManager();
+        if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP
+                || role == IslandRole.OWNER) {
             String roleName = role.name();
 
-            if (role == IslandRole.Owner) {
+            if (role == IslandRole.OWNER) {
                 roleName = "Island";
             }
 
-            return !island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    || permissionManager.hasPermission(island, roleName, IslandRole.Operator);
-        } else if (role == IslandRole.Operator) {
-            return island.hasRole(IslandRole.Owner, player.getUniqueId());
+            return !island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                    || permissionManager.hasPermission(island, roleName, IslandRole.OPERATOR);
+        } else if (role == IslandRole.OPERATOR) {
+            return island.hasRole(IslandRole.OWNER, player.getUniqueId());
         }
 
         return true;
     }
 
     public enum Panel {
-
-        Welcome, Signature
-
+        WELCOME, SIGNATURE
     }
 
     public enum Type {
-
-        Categories, Panel, Role
-
+        CATEGORIES, PANEL, ROLE
     }
 }

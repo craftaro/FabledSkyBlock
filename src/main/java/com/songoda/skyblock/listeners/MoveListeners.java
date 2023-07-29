@@ -3,9 +3,12 @@ package com.songoda.skyblock.listeners;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandEnvironment;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -15,7 +18,6 @@ import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -28,17 +30,15 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 
-import java.io.File;
 import java.util.Objects;
 
 public class MoveListeners implements Listener {
-
     private final SkyBlock plugin;
 
     public MoveListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
-    
+
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
@@ -48,23 +48,25 @@ public class MoveListeners implements Listener {
 
         if (from.getBlockX() == to.getBlockX()
                 && from.getBlockY() == to.getBlockY()
-                && from.getBlockZ() == to.getBlockZ())
+                && from.getBlockZ() == to.getBlockZ()) {
             return;
+        }
 
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        PermissionManager permissionManager = plugin.getPermissionManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        WorldManager worldManager = plugin.getWorldManager();
-
-        if (!worldManager.isIslandWorld(player.getWorld())) return;
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        PermissionManager permissionManager = this.plugin.getPermissionManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
+        if (!worldManager.isIslandWorld(player.getWorld())) {
+            return;
+        }
 
         IslandWorld world = worldManager.getIslandWorld(player.getWorld());
 
-        if (world == IslandWorld.Nether || world == IslandWorld.End) {
+        if (world == IslandWorld.NETHER || world == IslandWorld.END) {
             if (!this.plugin.getConfiguration().getBoolean("Island.World." + world.name() + ".Enable")) {
-                FileConfiguration configLoad = plugin.getLanguage();
+                FileConfiguration configLoad = this.plugin.getLanguage();
 
                 messageManager.sendMessage(player, configLoad.getString("Island.World.Message").replace(configLoad.getString("Island.World.Word." + world.name()), world.name()));
 
@@ -95,12 +97,12 @@ public class MoveListeners implements Listener {
 
                 if (island != null) {
                     if (islandManager.isLocationAtIsland(island, to)) {
-                        FileConfiguration configLoad = plugin.getConfiguration();
+                        FileConfiguration configLoad = this.plugin.getConfiguration();
 
                         boolean keepItemsOnDeath;
 
                         if (configLoad.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
-                            keepItemsOnDeath = permissionManager.hasPermission(island, "KeepItemsOnDeath", IslandRole.Owner);
+                            keepItemsOnDeath = permissionManager.hasPermission(island, "KeepItemsOnDeath", IslandRole.OWNER);
                         } else {
                             keepItemsOnDeath = configLoad.getBoolean("Island.KeepItemsOnDeath.Enable");
                         }
@@ -145,16 +147,16 @@ public class MoveListeners implements Listener {
                             }
                         }
                     } else {
-                        if(!islandManager.isLocationAtIsland(island, to)) {
+                        if (!islandManager.isLocationAtIsland(island, to)) {
                             teleportPlayerToIslandSpawn(player, world, island);
-                            FileConfiguration configLoad = plugin.getConfiguration();
+                            FileConfiguration configLoad = this.plugin.getConfiguration();
 
 
-                            if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
+                            if (!configLoad.getBoolean("Island.Teleport.FallDamage", true)) {
                                 player.setFallDistance(0.0F);
                             }
 
-                            messageManager.sendMessage(player, plugin.getLanguage()
+                            messageManager.sendMessage(player, this.plugin.getLanguage()
                                     .getString("Island.WorldBorder.Outside.Message"));
                             soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                         }
@@ -165,28 +167,28 @@ public class MoveListeners implements Listener {
             }
 
             Location playerLoc = player.getLocation();
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
                 // Load the island they are now on if one exists
                 islandManager.loadIslandAtLocation(playerLoc);
-                Bukkit.getScheduler().runTask(plugin, () -> {
+                Bukkit.getScheduler().runTask(this.plugin, () -> {
                     Island loadedIsland = islandManager.getIslandAtLocation(playerLoc);
                     if (loadedIsland != null) {
                         if (player.hasPermission("fabledskyblock.bypass")) {
                             playerData.setIsland(loadedIsland.getOwnerUUID());
                             return;
                         }
-        
-                        if(loadedIsland.getStatus().equals(IslandStatus.OPEN) ||
-                                (loadedIsland.getStatus().equals(IslandStatus.WHITELISTED) && loadedIsland.isPlayerWhitelisted(player))){
+
+                        if (loadedIsland.getStatus() == IslandStatus.OPEN ||
+                                (loadedIsland.getStatus() == IslandStatus.WHITELISTED && loadedIsland.isPlayerWhitelisted(player))) {
                             loadedIsland.getVisit().addVisitor(player.getUniqueId());
                             return;
                         }
                     }
-    
+
                     LocationUtil.teleportPlayerToSpawn(player);
-    
+
                     messageManager.sendMessage(player,
-                            plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
+                            this.plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
                     soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                 });
             });
@@ -195,26 +197,26 @@ public class MoveListeners implements Listener {
 
     private void teleportPlayerToIslandSpawn(Player player, IslandWorld world, Island island) {
         Location loc = null;
-        if (island.hasRole(IslandRole.Member, player.getUniqueId()) || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                if(plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
-                    Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.Main));
+        if (island.hasRole(IslandRole.MEMBER, player.getUniqueId()) || island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
+            if (player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR) {
+                if (this.plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                    Location safeLoc = LocationUtil.getSafeLocation(island.getLocation(world, IslandEnvironment.MAIN));
                     if (safeLoc != null) {
                         loc = safeLoc;
                     }
                 }
             } else {
-                loc = island.getLocation(world, IslandEnvironment.Main);
+                loc = island.getLocation(world, IslandEnvironment.MAIN);
 
-                if(plugin.getConfiguration().getBoolean("Island.Teleport.RemoveWater", false)) {
+                if (this.plugin.getConfiguration().getBoolean("Island.Teleport.RemoveWater", false)) {
                     LocationUtil.removeWaterFromLoc(loc);
                 }
             }
         } else {
-            if (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-                if (plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
-                    Location isLoc = island.getLocation(world, IslandEnvironment.Visitor);
+            if (player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR) {
+                if (this.plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+                    Location isLoc = island.getLocation(world, IslandEnvironment.VISITOR);
 
                     if (isLoc != null) {
                         Location safeLoc = LocationUtil.getSafeLocation(isLoc);
@@ -224,28 +226,28 @@ public class MoveListeners implements Listener {
                     }
                 }
             } else {
-                loc = island.getLocation(world, IslandEnvironment.Visitor);
+                loc = island.getLocation(world, IslandEnvironment.VISITOR);
             }
         }
         Location finalLoc = loc;
-        if(finalLoc != null){
+        if (finalLoc != null) {
             PaperLib.teleportAsync(player, finalLoc);
         } else {
             LocationUtil.teleportPlayerToSpawn(player);
-            player.sendMessage(plugin.formatText(plugin.getLanguage().getString("Command.Island.Teleport.Unsafe.Message")));
+            player.sendMessage(this.plugin.formatText(this.plugin.getLanguage().getString("Command.Island.Teleport.Unsafe.Message")));
         }
     }
 
     private void teleportPlayerToIslandSpawn(Player player, Island island) {
-        this.teleportPlayerToIslandSpawn(player, IslandWorld.Normal, island);
+        this.teleportPlayerToIslandSpawn(player, IslandWorld.NORMAL, island);
     }
 
     private void teleportPlayerToIslandSpawn(Player player, SoundManager soundManager, Island island) {
         teleportPlayerToIslandSpawn(player, island);
 
-        FileConfiguration configLoad = plugin.getConfiguration();
+        FileConfiguration configLoad = this.plugin.getConfiguration();
 
-        if(!configLoad.getBoolean("Island.Teleport.FallDamage", true)){
+        if (!configLoad.getBoolean("Island.Teleport.FallDamage", true)) {
             player.setFallDistance(0.0F);
         }
         soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
@@ -254,18 +256,18 @@ public class MoveListeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent e) { // TODO We should wait for the player island to be loaded in 1.8.8 - Fabrimat
         final Player player = e.getPlayer();
-        final WorldManager worldManager = plugin.getWorldManager();
-        if(e.getTo() != null && e.getTo().getWorld() != null){
-            if(Bukkit.isPrimaryThread()){
+        final WorldManager worldManager = this.plugin.getWorldManager();
+        if (e.getTo() != null && e.getTo().getWorld() != null) {
+            if (Bukkit.isPrimaryThread()) {
                 e.getTo().getWorld().loadChunk(e.getTo().getChunk()); // Is that needed?
             }
-            if(worldManager.isIslandWorld(e.getTo().getWorld())
-                    && (!e.getTo().getWorld().equals(e.getFrom().getWorld()) || e.getTo().distance(e.getFrom()) > 1.0d)){ // We should not care of self block tp
-                if(plugin.getIslandManager().getIslandAtLocation(e.getTo()) == null){
+            if (worldManager.isIslandWorld(e.getTo().getWorld())
+                    && (!e.getTo().getWorld().equals(e.getFrom().getWorld()) || e.getTo().distance(e.getFrom()) > 1.0d)) { // We should not care of self block tp
+                if (this.plugin.getIslandManager().getIslandAtLocation(e.getTo()) == null) {
                     e.setCancelled(true);
-                    plugin.getMessageManager().sendMessage(player,
-                            plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
-                    plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                    this.plugin.getMessageManager().sendMessage(player,
+                            this.plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
+                    this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                 }
             }
         }

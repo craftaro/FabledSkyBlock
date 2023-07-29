@@ -7,8 +7,6 @@ import com.songoda.skyblock.api.event.player.PlayerIslandEnterEvent;
 import com.songoda.skyblock.api.event.player.PlayerIslandExitEvent;
 import com.songoda.skyblock.api.event.player.PlayerIslandSwitchEvent;
 import com.songoda.skyblock.api.island.Island;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.island.IslandWorld;
@@ -30,11 +28,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.io.File;
 import java.util.UUID;
 
 public class TeleportListeners implements Listener {
-
     private final SkyBlock plugin;
 
     public TeleportListeners(SkyBlock plugin) {
@@ -45,16 +41,16 @@ public class TeleportListeners implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
 
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        WorldManager worldManager = plugin.getWorldManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
 
-        FileConfiguration configLoad = plugin.getLanguage();
+        FileConfiguration configLoad = this.plugin.getLanguage();
 
-        if(worldManager.isIslandWorld(event.getFrom().getWorld()) || worldManager.isIslandWorld(event.getTo().getWorld())) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> islandManager.updateFlight(player), 1L);
+        if (worldManager.isIslandWorld(event.getFrom().getWorld()) || worldManager.isIslandWorld(event.getTo().getWorld())) {
+            Bukkit.getScheduler().runTaskLater(this.plugin, () -> islandManager.updateFlight(player), 1L);
         }
         islandManager.loadPlayer(player);
 
@@ -62,30 +58,30 @@ public class TeleportListeners implements Listener {
         // Fix for bug that tp you in the real Nether/End when entering in a portal in an island // TODO Simplify
         if (event.getTo() != null && (worldManager.isIslandWorld(event.getFrom().getWorld())
                 && !worldManager.isIslandWorld(event.getTo().getWorld())
-                && (event.getFrom().getBlock().getType().equals(CompatibleMaterial.END_PORTAL.getMaterial())
-                || event.getFrom().getBlock().getType().equals(CompatibleMaterial.NETHER_PORTAL.getMaterial()))
+                && (event.getFrom().getBlock().getType() == CompatibleMaterial.END_PORTAL.getMaterial()
+                || event.getFrom().getBlock().getType() == CompatibleMaterial.NETHER_PORTAL.getMaterial())
                 && (event.getTo().getWorld() != null
-                && event.getTo().getWorld().getEnvironment().equals(World.Environment.NETHER)
-                || event.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END)))
+                && event.getTo().getWorld().getEnvironment() == World.Environment.NETHER
+                || event.getTo().getWorld().getEnvironment() == World.Environment.THE_END))
                 || event.getTo() != null
                 && (worldManager.isIslandWorld(event.getFrom().getWorld())
                 && !worldManager.isIslandWorld(event.getTo().getWorld())
-                && (event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)
-                || event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)
-                || event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL))
+                && (event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL
+                || event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL
+                || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)
                 && (event.getTo().getWorld() != null
-                && event.getTo().getWorld().getEnvironment().equals(World.Environment.NETHER)
-                || event.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END)))) {
+                && event.getTo().getWorld().getEnvironment() == World.Environment.NETHER
+                || event.getTo().getWorld().getEnvironment() == World.Environment.THE_END))) {
             event.setCancelled(true);
         }
 
         if (worldManager.isIslandWorld(player.getWorld())) {
-
             com.songoda.skyblock.island.Island island = islandManager.getIslandAtLocation(event.getTo());
 
             // Check permissions.
-            if (!plugin.getPermissionManager().processPermission(event, player, island))
+            if (!this.plugin.getPermissionManager().processPermission(event, player, island)) {
                 return;
+            }
         }
 
         if (playerDataManager.hasPlayerData(player)) {
@@ -96,9 +92,9 @@ public class TeleportListeners implements Listener {
             if (island != null) {
                 if (!island.getOwnerUUID().equals(playerData.getOwner())) {
                     if (!player.hasPermission("fabledskyblock.bypass") && !player.hasPermission("fabledskyblock.bypass.*") && !player.hasPermission("fabledskyblock.*")) {
-                        if (!island.getStatus().equals(IslandStatus.OPEN) &&
+                        if (island.getStatus() != IslandStatus.OPEN &&
                                 !island.isCoopPlayer(player.getUniqueId()) &&
-                                !(island.getStatus().equals(IslandStatus.WHITELISTED) && island.isPlayerWhitelisted(player))) {
+                                !(island.getStatus() == IslandStatus.WHITELISTED && island.isPlayerWhitelisted(player))) {
                             event.setCancelled(true);
 
                             messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Plugin.Message"));
@@ -131,7 +127,7 @@ public class TeleportListeners implements Listener {
                     playerData.setVisitTime(0);
                 }
 
-                if (worldManager.getIslandWorld(event.getTo().getWorld()) == IslandWorld.Normal) {
+                if (worldManager.getIslandWorld(event.getTo().getWorld()) == IslandWorld.NORMAL) {
                     if (!island.isWeatherSynchronized()) {
                         player.setPlayerTime(island.getTime(), this.plugin.getConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                         player.setPlayerWeather(island.getWeather());
@@ -184,19 +180,22 @@ public class TeleportListeners implements Listener {
 
     @EventHandler
     public void onEntityTeleport(EntityPortalEvent e) {
-        WorldManager worldManager = plugin.getWorldManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
 
         // Do not handle player
-        if (e.getEntityType() == EntityType.PLAYER)
+        if (e.getEntityType() == EntityType.PLAYER) {
             return;
+        }
 
         Location from = e.getFrom();
         Location to = e.getTo();
 
-        if (to == null || from.getWorld() == to.getWorld())
+        if (to == null || from.getWorld() == to.getWorld()) {
             return;
+        }
 
-        if (worldManager.getIslandWorld(e.getFrom().getWorld()) != null)
+        if (worldManager.getIslandWorld(e.getFrom().getWorld()) != null) {
             e.setCancelled(true);
+        }
     }
 }

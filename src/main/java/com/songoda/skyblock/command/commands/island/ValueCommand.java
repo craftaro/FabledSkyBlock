@@ -2,13 +2,14 @@ package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.utils.NumberUtils;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.core.utils.NumberUtils;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,16 +18,19 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class ValueCommand extends SubCommand {
+    public ValueCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @SuppressWarnings("deprecation")
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        IslandLevelManager levellingManager = plugin.getLevellingManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        IslandLevelManager levellingManager = this.plugin.getLevellingManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (player.getItemInHand() == null) {
@@ -41,7 +45,7 @@ public class ValueCommand extends SubCommand {
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Value.Value.Message").replace("%material", WordUtils.capitalizeFully(materials.name().toLowerCase().replace("_", " ")))
-                                .replace("%points", "" + worth).replace("%level", "" + NumberUtils.formatNumber(level)));
+                                .replace("%points", "" + worth).replace("%level", NumberUtils.formatNumber(level)));
                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.None.Message"));

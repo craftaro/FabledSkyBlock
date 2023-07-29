@@ -4,7 +4,6 @@ import com.songoda.skyblock.SkyBlock;
 import org.bukkit.Location;
 
 public class IslandLocation {
-
     private final IslandWorld world;
     private final IslandEnvironment environment;
 
@@ -19,8 +18,9 @@ public class IslandLocation {
         this.world = world;
         this.environment = environment;
 
-        if (location == null)
+        if (location == null) {
             return;
+        }
 
         this.x = location.getX();
         this.y = location.getY();
@@ -59,7 +59,7 @@ public class IslandLocation {
     }
 
     public Location getLocation() {
-        return new Location(SkyBlock.getInstance().getWorldManager().getWorld(world), x, y, z, yaw, pitch);
+        return new Location(SkyBlock.getPlugin(SkyBlock.class).getWorldManager().getWorld(this.world), this.x, this.y, this.z, this.yaw, this.pitch);
     }
 
     public void setLocation(Location location) {

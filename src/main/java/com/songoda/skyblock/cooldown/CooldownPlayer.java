@@ -3,7 +3,6 @@ package com.songoda.skyblock.cooldown;
 import java.util.UUID;
 
 public class CooldownPlayer {
-
     private UUID uuid;
     private Cooldown cooldown;
 
@@ -13,7 +12,7 @@ public class CooldownPlayer {
     }
 
     public UUID getUUID() {
-        return uuid;
+        return this.uuid;
     }
 
     public void setUUID(UUID uuid) {
@@ -21,7 +20,7 @@ public class CooldownPlayer {
     }
 
     public Cooldown getCooldown() {
-        return cooldown;
+        return this.cooldown;
     }
 
     public void setCooldown(Cooldown cooldown) {

@@ -4,11 +4,11 @@ import com.songoda.skyblock.api.island.Island;
 import com.songoda.skyblock.api.island.IslandMessage;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class IslandMessageChangeEvent extends IslandEvent implements Cancellable {
-
     private static final HandlerList HANDLERS = new HandlerList();
     private final IslandMessage message;
     private boolean cancelled = false;
@@ -27,11 +27,11 @@ public class IslandMessageChangeEvent extends IslandEvent implements Cancellable
     }
 
     public IslandMessage getMessage() {
-        return message;
+        return this.message;
     }
 
     public List<String> getLines() {
-        return lines;
+        return this.lines;
     }
 
     public void setLines(List<String> lines) {
@@ -39,7 +39,7 @@ public class IslandMessageChangeEvent extends IslandEvent implements Cancellable
     }
 
     public String getAuthor() {
-        return author;
+        return this.author;
     }
 
     public void setAuthor(String author) {
@@ -48,7 +48,7 @@ public class IslandMessageChangeEvent extends IslandEvent implements Cancellable
 
     @Override
     public boolean isCancelled() {
-        return cancelled;
+        return this.cancelled;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class IslandMessageChangeEvent extends IslandEvent implements Cancellable
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -16,6 +17,9 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class RefreshHologramsCommand extends SubCommand {
+    public RefreshHologramsCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
@@ -28,20 +32,20 @@ public class RefreshHologramsCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            LeaderboardManager leaderboardManager = this.plugin.getLeaderboardManager();
             leaderboardManager.clearLeaderboard();
             leaderboardManager.resetLeaderboard();
             leaderboardManager.setupLeaderHeads();
 
-            Bukkit.getScheduler().runTask(plugin, () -> plugin.getHologramTask().updateHologram());
+            Bukkit.getScheduler().runTask(this.plugin, () -> this.plugin.getHologramTask().updateHologram());
         });
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RefreshHolograms.Refreshed.Message"));

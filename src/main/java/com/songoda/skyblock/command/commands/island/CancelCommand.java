@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.invite.Invite;
@@ -18,15 +19,18 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class CancelCommand extends SubCommand {
+    public CancelCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        InviteManager inviteManager = plugin.getInviteManager();
-        SoundManager soundManager = plugin.getSoundManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        InviteManager inviteManager = this.plugin.getInviteManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -34,18 +38,18 @@ public class CancelCommand extends SubCommand {
 
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Owner.Message"));
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-            } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
-                    || island.hasRole(IslandRole.Operator, player.getUniqueId())) {
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
+                    || island.hasRole(IslandRole.OPERATOR, player.getUniqueId())) {
                 String playerName = args[0];
                 Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
 
                 if (targetPlayer == null) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Offline.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                } else if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())
-                        || island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())
-                        || island.hasRole(IslandRole.Owner, targetPlayer.getUniqueId())) {
+                } else if (island.hasRole(IslandRole.MEMBER, targetPlayer.getUniqueId())
+                        || island.hasRole(IslandRole.OPERATOR, targetPlayer.getUniqueId())
+                        || island.hasRole(IslandRole.OWNER, targetPlayer.getUniqueId())) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Member.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else if (inviteManager.hasInvite(targetPlayer.getUniqueId())) {
@@ -69,7 +73,7 @@ public class CancelCommand extends SubCommand {
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Permission.Message"));
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Invalid.Message"));

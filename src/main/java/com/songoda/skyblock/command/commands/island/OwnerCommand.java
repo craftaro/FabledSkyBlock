@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -17,7 +18,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.ChatComponent;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import net.md_5.bungee.api.ChatColor;
@@ -35,18 +35,21 @@ import java.io.File;
 import java.util.UUID;
 
 public class OwnerCommand extends SubCommand {
+    public OwnerCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        CooldownManager cooldownManager = plugin.getCooldownManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        CooldownManager cooldownManager = this.plugin.getCooldownManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+        PlayerData playerData = this.plugin.getPlayerDataManager().getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -55,15 +58,15 @@ public class OwnerCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (args.length == 0) {
-            if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-                playerData.setType(Ownership.Visibility.Hidden);
+            if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
+                playerData.setType(Ownership.Visibility.HIDDEN);
                 Ownership.getInstance().open(player);
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
 
                 return;
             }
         } else if (args.length == 1) {
-            if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+            if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                 if (playerData.getConfirmationTime() > 0) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Ownership.Confirmation.Pending.Message"));
@@ -83,9 +86,9 @@ public class OwnerCommand extends SubCommand {
                         targetPlayerName = targetPlayer.getName();
                     }
 
-                    if (targetPlayerUUID == null || (!island.hasRole(IslandRole.Member, targetPlayerUUID)
-                            && !island.hasRole(IslandRole.Operator, targetPlayerUUID)
-                            && !island.hasRole(IslandRole.Owner, targetPlayerUUID))) {
+                    if (targetPlayerUUID == null || (!island.hasRole(IslandRole.MEMBER, targetPlayerUUID)
+                            && !island.hasRole(IslandRole.OPERATOR, targetPlayerUUID)
+                            && !island.hasRole(IslandRole.OWNER, targetPlayerUUID))) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Ownership.Member.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -93,9 +96,9 @@ public class OwnerCommand extends SubCommand {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Ownership.Yourself.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                    } else if (cooldownManager.hasPlayer(CooldownType.Ownership,
+                    } else if (cooldownManager.hasPlayer(CooldownType.OWNERSHIP,
                             Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()))) {
-                        CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Ownership,
+                        CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.OWNERSHIP,
                                 Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                         Cooldown cooldown = cooldownPlayer.getCooldown();
                         long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
@@ -123,14 +126,14 @@ public class OwnerCommand extends SubCommand {
                                             + configLoad.getString("Command.Island.Ownership.Cooldown.Word.Second")));
                         }
 
-                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                         return;
                     } else {
                         int confirmationTime = this.plugin.getConfiguration().getInt("Island.Confirmation.Timeout");
 
                         playerData.setOwnership(targetPlayerUUID);
-                        playerData.setConfirmation(Confirmation.Ownership);
+                        playerData.setConfirmation(Confirmation.OWNERSHIP);
                         playerData.setConfirmationTime(confirmationTime);
 
                         String confirmationMessage = configLoad
@@ -167,8 +170,7 @@ public class OwnerCommand extends SubCommand {
                                                                     .replace("%time", "" + confirmationTime)),
                                                     false, null, null, null));
 
-                                            chatComponent.addExtra(
-                                                    new TextComponent(ComponentSerializer.parse("{text: \"\n\"}")));
+                                            chatComponent.addExtra(new TextComponent(ComponentSerializer.parse("{text: \"\n\"}")));
                                         }
                                     } else {
                                         chatComponent
@@ -182,7 +184,7 @@ public class OwnerCommand extends SubCommand {
                                     if (confirmationMessages.length == 1 || i + 1 != confirmationMessages.length) {
                                         chatComponent.addExtraChatComponent(new ChatComponent(
                                                 configLoad.getString(
-                                                        "Command.Island.Ownership.Confirmation.Confirm.Word.Confirm")
+                                                                "Command.Island.Ownership.Confirmation.Confirm.Word.Confirm")
                                                         .toUpperCase(),
                                                 true, ChatColor.RED,
                                                 new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/island confirm"),
@@ -208,9 +210,9 @@ public class OwnerCommand extends SubCommand {
                 if (island.hasPassword()) {
                     if (args[0].equalsIgnoreCase(island.getPassword())) {
                         for (Player all : Bukkit.getOnlinePlayers()) {
-                            if ((island.hasRole(IslandRole.Member, all.getUniqueId())
-                                    || island.hasRole(IslandRole.Operator, all.getUniqueId())
-                                    || island.hasRole(IslandRole.Owner, all.getUniqueId()))
+                            if ((island.hasRole(IslandRole.MEMBER, all.getUniqueId())
+                                    || island.hasRole(IslandRole.OPERATOR, all.getUniqueId())
+                                    || island.hasRole(IslandRole.OWNER, all.getUniqueId()))
                                     && (!all.getUniqueId().equals(player.getUniqueId()))) {
                                 all.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Command.Island.Ownership.Assigned.Broadcast.Message")
@@ -225,7 +227,7 @@ public class OwnerCommand extends SubCommand {
 
                         islandManager.giveOwnership(island, player);
 
-                        cooldownManager.createPlayer(CooldownType.Ownership,
+                        cooldownManager.createPlayer(CooldownType.OWNERSHIP,
                                 Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                     } else {
                         messageManager.sendMessage(player,

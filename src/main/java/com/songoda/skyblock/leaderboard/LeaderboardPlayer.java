@@ -3,7 +3,6 @@ package com.songoda.skyblock.leaderboard;
 import java.util.UUID;
 
 public class LeaderboardPlayer {
-
     private final UUID uuid;
     private final long value;
 
@@ -13,10 +12,10 @@ public class LeaderboardPlayer {
     }
 
     public UUID getUUID() {
-        return uuid;
+        return this.uuid;
     }
 
     public long getValue() {
-        return value;
+        return this.value;
     }
 }

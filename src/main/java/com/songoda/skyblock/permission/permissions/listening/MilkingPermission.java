@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class MilkingPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -30,14 +29,14 @@ public class MilkingPermission extends ListeningPermission {
         Entity entity = event.getRightClicked();
 
         if (entity.getType() == EntityType.COW) {
-            if (CompatibleMaterial.getMaterial(player.getItemInHand()) == CompatibleMaterial.BUCKET)
-                cancelAndMessage(event, player, plugin, messageManager);
+            if (CompatibleMaterial.getMaterial(player.getItemInHand()) == CompatibleMaterial.BUCKET) {
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
+            }
         } else if (entity.getType() == EntityType.MUSHROOM_COW) {
             if (CompatibleMaterial.getMaterial(player.getItemInHand()) == CompatibleMaterial.BUCKET
-                    || CompatibleMaterial.getMaterial(player.getItemInHand()) == CompatibleMaterial.BOWL)
-                cancelAndMessage(event, player, plugin, messageManager);
-
+                    || CompatibleMaterial.getMaterial(player.getItemInHand()) == CompatibleMaterial.BOWL) {
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
+            }
         }
     }
 }
-

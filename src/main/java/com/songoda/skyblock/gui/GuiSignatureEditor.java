@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiSignatureEditor extends Gui {
-
     private final SkyBlock plugin;
     private final FileConfiguration configLoad;
     private final Gui returnGui;
@@ -41,95 +40,95 @@ public class GuiSignatureEditor extends Gui {
         this.messageManager = plugin.getMessageManager();
         this.islandManager = plugin.getIslandManager();
         setDefaultItem(null);
-        setTitle(TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")));
+        setTitle(TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Title")));
         paint();
     }
 
     public void paint() {
-        List<String> signatureMessage = island.getMessage(IslandMessage.Signature);
+        List<String> signatureMessage = this.island.getMessage(IslandMessage.SIGNATURE);
         setButton(2, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"))),
-                (event) -> guiManager.showGUI(event.player, returnGui));
+                        TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"))),
+                (event) -> this.guiManager.showGUI(event.player, this.returnGui));
         setButton(6, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"))),
-                (event) -> guiManager.showGUI(event.player, returnGui));
+                        TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Return.Displayname"))),
+                (event) -> this.guiManager.showGUI(event.player, this.returnGui));
 
         setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Displayname")),
-                TextUtils.formatText(configLoad.getStringList(
-                        signatureMessage.size() == mainConfig.getFileConfiguration().getInt("Island.Visitor.Signature.Lines")
-                                ? "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Limit.Lore"
-                                : "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.More.Lore"))),
+                        TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Displayname")),
+                        TextUtils.formatText(this.configLoad.getStringList(
+                                signatureMessage.size() == this.mainConfig.getFileConfiguration().getInt("Island.Visitor.Signature.Lines")
+                                        ? "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Limit.Lore"
+                                        : "Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.More.Lore"))),
                 (event -> {
                     AnvilGui gui = new AnvilGui(event.player, this);
                     gui.setAction((e -> {
                         if (!hasPermission(e.player))
                             return;
-                        if (island.getMessage(IslandMessage.Signature)
-                                .size() > mainConfig.getFileConfiguration().getInt(
+                        if (this.island.getMessage(IslandMessage.SIGNATURE)
+                                .size() > this.mainConfig.getFileConfiguration().getInt(
                                 "Island.Visitor.Signature.Lines")
-                                || gui.getInputText().length() > mainConfig.getFileConfiguration()
+                                || gui.getInputText().length() > this.mainConfig.getFileConfiguration()
                                 .getInt("Island.Visitor.Signature.Length")) {
-                            plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                            this.plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                         } else {
                             signatureMessage.add(gui.getInputText().trim());
-                            island.setMessage(IslandMessage.Signature, e.player.getName(), signatureMessage);
-                            plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1f, 1f);
+                            this.island.setMessage(IslandMessage.SIGNATURE, e.player.getName(), signatureMessage);
+                            this.plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1f, 1f);
                         }
                         e.player.closeInventory();
                         paint();
                     }));
-                    gui.setTitle(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Word.Enter"));
-                    guiManager.showGUI(event.player, gui);
+                    gui.setTitle(this.configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Add.Word.Enter"));
+                    this.guiManager.showGUI(event.player, gui);
                 }));
 
         List<String> itemLore = new ArrayList<>();
-        itemLore.add(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Word.Empty"));
+        itemLore.add(this.configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Word.Empty"));
         setItem(4, GuiUtils.createButtonItem(CompatibleMaterial.OAK_SIGN,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Displayname")),
-                TextUtils.formatText(signatureMessage.size() == 0 ? itemLore : signatureMessage)));
+                TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Message.Displayname")),
+                TextUtils.formatText(signatureMessage.isEmpty() ? itemLore : signatureMessage)));
 
         setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.Displayname")),
-                TextUtils.formatText(configLoad.getStringList(
-                        signatureMessage.size() == 0
-                                ? "Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.None.Lore"
-                                : "Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.Lines.Lore"))),
+                        TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.Displayname")),
+                        TextUtils.formatText(this.configLoad.getStringList(
+                                signatureMessage.isEmpty()
+                                        ? "Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.None.Lore"
+                                        : "Menu.Settings.Visitor.Panel.Signature.Item.Line.Remove.Lines.Lore"))),
                 (event -> {
                     signatureMessage.remove(signatureMessage.size() - 1);
-                    island.setMessage(IslandMessage.Signature, event.player.getName(), signatureMessage);
+                    this.island.setMessage(IslandMessage.SIGNATURE, event.player.getName(), signatureMessage);
                     paint();
                 }));
     }
 
     private boolean hasPermission(Player player) {
-        Island island1 = islandManager.getIsland(player);
+        Island island1 = this.islandManager.getIsland(player);
 
         if (island1 == null) {
-            messageManager.sendMessage(player,
-                    configLoad.getString(
+            this.messageManager.sendMessage(player,
+                    this.configLoad.getString(
                             "Command.Island.Settings.Owner.Message"));
-            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             player.closeInventory();
             return false;
-        } else if (!(island1.hasRole(IslandRole.Operator,
+        } else if (!(island1.hasRole(IslandRole.OPERATOR,
                 player.getUniqueId())
-                || island1.hasRole(IslandRole.Owner,
+                || island1.hasRole(IslandRole.OWNER,
                 player.getUniqueId()))) {
-            messageManager.sendMessage(player, configLoad
+            this.messageManager.sendMessage(player, this.configLoad
                     .getString("Command.Island.Role.Message"));
-            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             player.closeInventory();
             return false;
-        } else if (!plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(),
+        } else if (!this.plugin.getFileManager()
+                .getConfig(new File(this.plugin.getDataFolder(),
                         "config.yml"))
                 .getFileConfiguration().getBoolean(
                         "Island.Visitor.Signature.Enable")) {
-            messageManager.sendMessage(player,
-                    configLoad.getString(
+            this.messageManager.sendMessage(player,
+                    this.configLoad.getString(
                             "Island.Settings.Visitor.Signature.Disabled.Message"));
-            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             return false;
         }
         return true;

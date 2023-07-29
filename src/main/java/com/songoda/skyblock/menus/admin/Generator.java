@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Generator implements Listener {
-
     private static Generator instance;
 
     public static Generator getInstance() {
@@ -48,7 +47,7 @@ public class Generator implements Listener {
     }
 
     public void open(Player player) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         GeneratorManager generatorManager = plugin.getGeneratorManager();
         FileManager fileManager = plugin.getFileManager();
@@ -63,7 +62,7 @@ public class Generator implements Listener {
             List<com.songoda.skyblock.generator.Generator> generators = generatorManager.getGenerators();
 
             nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
-                    configLoad.getString("Menu.Admin.Generator.Browse.Item.Exit.Displayname"), null, null, null, null),
+                            configLoad.getString("Menu.Admin.Generator.Browse.Item.Exit.Displayname"), null, null, null, null),
                     0, 8);
             nInv.addItem(
                     nInv.createItem(new ItemStack(CompatibleMaterial.OAK_SIGN.getMaterial()),
@@ -79,21 +78,21 @@ public class Generator implements Listener {
 
             if (playerMenuPage != 1) {
                 nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                        "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
-                        "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
+                                "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
+                                "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
                         configLoad.getString("Menu.Admin.Generator.Browse.Item.Previous.Displayname"), null, null, null,
                         null), 1);
             }
 
             if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
                 nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                        "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
-                        "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
+                                "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
+                                "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
                         configLoad.getString("Menu.Admin.Generator.Browse.Item.Next.Displayname"), null, null, null,
                         null), 7);
             }
 
-            if (generators.size() == 0) {
+            if (generators.isEmpty()) {
                 nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER),
                         configLoad.getString("Menu.Admin.Generator.Browse.Item.Nothing.Displayname"), null, null, null,
                         null), 31);
@@ -144,7 +143,7 @@ public class Generator implements Listener {
 
             List<GeneratorMaterial> generatorMaterials = generator.getGeneratorMaterials();
 
-            if (generatorMaterials.size() == 0) {
+            if (generatorMaterials.isEmpty()) {
                 nInv.addItem(nInv.createItem(new ItemStack(Material.BARRIER),
                         configLoad.getString("Menu.Admin.Generator.Generator.Item.Nothing.Displayname"), null, null,
                         null, null), 31);
@@ -154,7 +153,9 @@ public class Generator implements Listener {
                         inventorySlot = 17;
 
                 for (; index < endIndex; index++) {
-                    if (generatorMaterials.size() <= index) continue;
+                    if (generatorMaterials.size() <= index) {
+                        continue;
+                    }
                     inventorySlot++;
 
                     GeneratorMaterial generatorMaterial = generatorMaterials.get(index);
@@ -174,15 +175,17 @@ public class Generator implements Listener {
 
         Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
     }
-    
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         ItemStack is = event.getCurrentItem();
 
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+            return;
+        }
 
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         GeneratorManager generatorManager = plugin.getGeneratorManager();
         MessageManager messageManager = plugin.getMessageManager();
@@ -202,8 +205,9 @@ public class Generator implements Listener {
             }
         }
 
-        if (!inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Generator.Title"))))
+        if (!inventoryName.equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Admin.Generator.Title")))) {
             return;
+        }
         event.setCancelled(true);
 
         PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
@@ -261,47 +265,47 @@ public class Generator implements Listener {
 
             AnvilGui gui = new AnvilGui(player);
             gui.setAction(event1 -> {
-                    if (!(player.hasPermission("fabledskyblock.admin.generator")
-                            || player.hasPermission("fabledskyblock.admin.*")
-                            || player.hasPermission("fabledskyblock.*"))) {
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Island.Admin.Generator.Permission.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                    } else if (generatorManager.containsGenerator(gui.getInputText())) {
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Island.Admin.Generator.Already.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                    } else if (!gui.getInputText().replace(" ", "").matches("^[a-zA-Z0-9]+$")) {
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Island.Admin.Generator.Characters.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                    } else {
-                        generatorManager.addGenerator(gui.getInputText(), IslandWorld.Normal, new ArrayList<>(), 0, false);
+                if (!(player.hasPermission("fabledskyblock.admin.generator")
+                        || player.hasPermission("fabledskyblock.admin.*")
+                        || player.hasPermission("fabledskyblock.*"))) {
+                    messageManager.sendMessage(player,
+                            configLoad.getString("Island.Admin.Generator.Permission.Message"));
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                } else if (generatorManager.containsGenerator(gui.getInputText())) {
+                    messageManager.sendMessage(player,
+                            configLoad.getString("Island.Admin.Generator.Already.Message"));
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                } else if (!gui.getInputText().replace(" ", "").matches("^[a-zA-Z0-9]+$")) {
+                    messageManager.sendMessage(player,
+                            configLoad.getString("Island.Admin.Generator.Characters.Message"));
+                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                } else {
+                    generatorManager.addGenerator(gui.getInputText(), IslandWorld.NORMAL, new ArrayList<>(), 0, false);
 
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Island.Admin.Generator.Created.Message")
-                                        .replace("%generator", gui.getInputText()));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(player,
+                            configLoad.getString("Island.Admin.Generator.Created.Message")
+                                    .replace("%generator", gui.getInputText()));
+                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
-                        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                            Config config14 = fileManager
-                                    .getConfig(new File(plugin.getDataFolder(), "generators.yml"));
-                            FileConfiguration configLoad14 = plugin.getGenerators();
+                    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                        Config config14 = fileManager
+                                .getConfig(new File(plugin.getDataFolder(), "generators.yml"));
+                        FileConfiguration configLoad14 = plugin.getGenerators();
 
-                            configLoad14.set("Generators." + gui.getInputText() + ".Name", gui.getInputText());
+                        configLoad14.set("Generators." + gui.getInputText() + ".Name", gui.getInputText());
 
-                            try {
-                                configLoad14.save(config14.getFile());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
+                        try {
+                            configLoad14.save(config14.getFile());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
 
-                        player.closeInventory();
-
-                        Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
-                    }
                     player.closeInventory();
+
+                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
+                }
+                player.closeInventory();
             });
 
             is = new ItemStack(Material.NAME_TAG);
@@ -350,21 +354,16 @@ public class Generator implements Listener {
                             e.printStackTrace();
                         }
                     });
-
-                    player.closeInventory();
-
-                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 } else {
                     playerData.setViewer(null);
 
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Admin.Generator.Exist.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-
-                    player.closeInventory();
-
-                    Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
+
+                player.closeInventory();
+                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
             }
 
             return;
@@ -416,7 +415,7 @@ public class Generator implements Listener {
                                 && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName().equals(
                                 ChatColor.translateAlternateColorCodes('&', configLoad.getString(
-                                        "Menu.Admin.Generator.Generator.Item.Material.Displayname")
+                                                "Menu.Admin.Generator.Generator.Item.Material.Displayname")
                                         .replace("%material",
                                                 generatorMaterialList.getMaterials().name()))))) {
                             if (event.getClick() == ClickType.LEFT) {
@@ -454,11 +453,10 @@ public class Generator implements Listener {
                                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
                                                 1.0F, 1.0F);
                                     } else {
-                                        double materialChance = Double.valueOf(gui.getInputText());
+                                        double materialChance = Double.parseDouble(gui.getInputText());
                                         double totalMaterialChance = materialChance;
 
-                                        for (GeneratorMaterial generatorMaterialList1 : generator
-                                                .getGeneratorMaterials()) {
+                                        for (GeneratorMaterial generatorMaterialList1 : generator.getGeneratorMaterials()) {
                                             if (generatorMaterialList1 != generatorMaterialList) {
                                                 totalMaterialChance = totalMaterialChance
                                                         + generatorMaterialList1.getChance();
@@ -492,8 +490,8 @@ public class Generator implements Listener {
 
                                                         try {
                                                             configLoad12.save(config12.getFile());
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
+                                                        } catch (IOException ex) {
+                                                            ex.printStackTrace();
                                                         }
                                                     });
 
@@ -503,13 +501,12 @@ public class Generator implements Listener {
                                                     .runTaskLater(plugin, () -> open(player), 1L);
                                         }
                                     }
-                                player.closeInventory();
+                                    player.closeInventory();
                                 });
 
                                 is = new ItemStack(Material.NAME_TAG);
                                 ItemMeta im = is.getItemMeta();
-                                im.setDisplayName(configLoad
-                                        .getString("Menu.Admin.Generator.Generator.Item.Material.Word.Enter"));
+                                im.setDisplayName(configLoad.getString("Menu.Admin.Generator.Generator.Item.Material.Word.Enter"));
                                 is.setItemMeta(im);
 
                                 gui.setInput(is);
@@ -530,16 +527,15 @@ public class Generator implements Listener {
 
                                             try {
                                                 configLoad15.save(config15.getFile());
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
+                                            } catch (IOException ex) {
+                                                ex.printStackTrace();
                                             }
                                         });
 
                                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                                 player.closeInventory();
 
-                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                        () -> open(player), 1L);
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                             }
 
                             return;
@@ -584,8 +580,8 @@ public class Generator implements Listener {
 
                         try {
                             configLoad16.save(config16.getFile());
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     });
 
@@ -639,8 +635,8 @@ public class Generator implements Listener {
 
                             try {
                                 configLoad13.save(config13.getFile());
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
                             }
                         });
 
@@ -660,8 +656,7 @@ public class Generator implements Listener {
         }
     }
 
-    public class Viewer {
-
+    public static class Viewer {
         private final String name;
 
         public Viewer(String name) {
@@ -669,7 +664,7 @@ public class Generator implements Listener {
         }
 
         public String getName() {
-            return name;
+            return this.name;
         }
     }
 }

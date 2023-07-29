@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class HopperPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -26,25 +25,22 @@ public class HopperPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
-        if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.HOPPER)
-            cancelAndMessage(event, player, plugin, messageManager);
+        if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.HOPPER) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 
     @PermissionHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
-
-
-        Player player = event.getPlayer();
-
-        if (event.getRightClicked().getType() == EntityType.MINECART_HOPPER)
-            cancelAndMessage(event, player, plugin, messageManager);
+        if (event.getRightClicked().getType() == EntityType.MINECART_HOPPER) {
+            cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
+        }
     }
 }

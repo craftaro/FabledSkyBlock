@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 
 public class ShearingPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,6 +22,6 @@ public class ShearingPermission extends ListeningPermission {
     @PermissionHandler
     public void onShear(PlayerShearEntityEvent event) {
         Player player = event.getPlayer();
-        cancelAndMessage(event, player, plugin, messageManager);
+        cancelAndMessage(event, player, this.plugin, this.messageManager);
     }
 }

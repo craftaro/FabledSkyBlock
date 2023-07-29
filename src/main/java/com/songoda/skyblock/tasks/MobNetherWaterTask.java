@@ -3,7 +3,6 @@ package com.songoda.skyblock.tasks;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -11,13 +10,21 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Blaze;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Ghast;
+import org.bukkit.entity.Hoglin;
+import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Piglin;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Strider;
+import org.bukkit.entity.Wither;
+import org.bukkit.entity.Zoglin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
-
-public class MobNetherWaterTask  extends BukkitRunnable {
-
+public class MobNetherWaterTask extends BukkitRunnable {
     private static MobNetherWaterTask instance;
     private static SkyBlock plugin;
 
@@ -37,29 +44,29 @@ public class MobNetherWaterTask  extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (plugin.getConfiguration().getBoolean("Island.Nether.WaterDisappearWithNetherMobs", false)){
-            for(World world : Bukkit.getServer().getWorlds()){
-                if(plugin.getWorldManager().isIslandWorld(world) && plugin.getWorldManager().getIslandWorld(world).equals(IslandWorld.Nether)){
-                    for(Entity ent : world.getEntities()) {
+        if (plugin.getConfiguration().getBoolean("Island.Nether.WaterDisappearWithNetherMobs", false)) {
+            for (World world : Bukkit.getServer().getWorlds()) {
+                if (plugin.getWorldManager().isIslandWorld(world) && plugin.getWorldManager().getIslandWorld(world) == IslandWorld.NETHER) {
+                    for (Entity ent : world.getEntities()) {
                         boolean witherSkeleton;
                         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
-                            witherSkeleton = ent.getType().equals(EntityType.WITHER_SKELETON);
+                            witherSkeleton = ent.getType() == EntityType.WITHER_SKELETON;
                         } else {
-                            witherSkeleton = ent instanceof Skeleton && ((Skeleton) ent).getSkeletonType().equals(Skeleton.SkeletonType.WITHER);
+                            witherSkeleton = ent instanceof Skeleton && ((Skeleton) ent).getSkeletonType() == Skeleton.SkeletonType.WITHER;
                         }
-                        if((((ent instanceof Blaze || ent instanceof MagmaCube) || ent instanceof Wither) || ent instanceof Ghast) || witherSkeleton){
+                        if ((((ent instanceof Blaze || ent instanceof MagmaCube) || ent instanceof Wither) || ent instanceof Ghast) || witherSkeleton) {
                             Block block = ent.getLocation().getBlock();
                             removeWater(world, block);
                             removeWater(world, block.getRelative(BlockFace.UP));
                         } else {
-                            if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)){
-                                if(((ent instanceof Piglin || ent instanceof Hoglin) || ent instanceof Strider) || ent instanceof Zoglin) {
+                            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                                if (((ent instanceof Piglin || ent instanceof Hoglin) || ent instanceof Strider) || ent instanceof Zoglin) {
                                     Block block = ent.getLocation().getBlock();
                                     removeWater(world, block);
                                     removeWater(world, block.getRelative(BlockFace.UP));
                                 }
                             } else {
-                                if(ent instanceof PigZombie) {
+                                if (ent instanceof PigZombie) {
                                     Block block = ent.getLocation().getBlock();
                                     removeWater(world, block);
                                     removeWater(world, block.getRelative(BlockFace.UP));
@@ -73,7 +80,7 @@ public class MobNetherWaterTask  extends BukkitRunnable {
     }
 
     private void removeWater(World world, Block block) {
-        if (block.getType().equals(Material.WATER)) {
+        if (block.getType() == Material.WATER) {
             block.setType(Material.AIR, true);
             block.getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
             world.playEffect(block.getLocation(), Effect.SMOKE, 1);
@@ -82,6 +89,4 @@ public class MobNetherWaterTask  extends BukkitRunnable {
 
     public void onDisable() {
     }
-
-
 }

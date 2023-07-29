@@ -49,7 +49,6 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 public final class BlockUtil extends BlockUtils {
-
     public static BlockData convertBlockToBlockData(Block block, int x, int y, int z) {
         BlockData blockData = new BlockData(block.getType().name(), block.getData(), x, y, z, block.getBiome().toString());
 
@@ -293,16 +292,20 @@ public final class BlockUtil extends BlockUtils {
     }
 
     public static void convertBlockDataToBlock(Block block, BlockData blockData) {
-
         String materialStr = blockData.getMaterial();
-        if (materialStr == null) return;
+        if (materialStr == null) {
+            return;
+        }
         Material material = Material.valueOf(materialStr);
-        if (material == Material.AIR) return;
+        if (material == Material.AIR) {
+            return;
+        }
 
-        if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12))
+        if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12)) {
             setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
-        else
+        } else {
             block.setBlockData(Bukkit.getServer().createBlockData(blockData.getBlockData()));
+        }
 
         // TODO Create a class to support biome changes
         // block.setBiome(Biome.valueOf(blockData.getBiome().toUpperCase()));
@@ -311,7 +314,7 @@ public final class BlockUtil extends BlockUtils {
 
         BlockState state = block.getState();
 
-        if (blockTypeState.equals(BlockStateType.BANNER)) {
+        if (blockTypeState == BlockStateType.BANNER) {
             Banner banner = (Banner) state;
             banner.setBaseColor(DyeColor.valueOf(blockData.getBaseColor().toUpperCase()));
 
@@ -320,7 +323,7 @@ public final class BlockUtil extends BlockUtils {
                 banner.addPattern(new Pattern(DyeColor.valueOf(pattern[1].toUpperCase()), PatternType.valueOf(pattern[0].toUpperCase())));
             }
             state.update();
-        } else if (blockTypeState.equals(BlockStateType.BEACON)) {
+        } else if (blockTypeState == BlockStateType.BEACON) {
             Beacon beacon = (Beacon) state;
             String[] potionEffect = blockData.getPotionEffect().split(":");
             if (!potionEffect[0].equals("null")) {
@@ -331,17 +334,17 @@ public final class BlockUtil extends BlockUtils {
                 beacon.setSecondaryEffect(PotionEffectType.getByName(potionEffect[1].toUpperCase()));
             }
             state.update();
-        } else if (blockTypeState.equals(BlockStateType.BREWINGSTAND) && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
+        } else if (blockTypeState == BlockStateType.BREWINGSTAND && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
             BrewingStand brewingStand = (BrewingStand) state;
             brewingStand.setBrewingTime(blockData.getBrewingTime());
             brewingStand.setFuelLevel(blockData.getFuelLevel());
             state.update();
-        } else if (blockTypeState.equals(BlockStateType.COMMANDBLOCK)) {
+        } else if (blockTypeState == BlockStateType.COMMANDBLOCK) {
             CommandBlock commandBlock = (CommandBlock) state;
             commandBlock.setCommand(blockData.getCommand());
             commandBlock.setName(blockData.getCommandBlockName());
             state.update();
-        } else if (blockTypeState.equals(BlockStateType.CHEST)) {
+        } else if (blockTypeState == BlockStateType.CHEST) {
             Chest chest = (Chest) state;
 
             for (Integer slotList : blockData.getInventory().keySet()) {
@@ -350,7 +353,7 @@ public final class BlockUtil extends BlockUtils {
                     chest.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState.equals(BlockStateType.DISPENSER)) {
+        } else if (blockTypeState == BlockStateType.DISPENSER) {
             Dispenser dispenser = (Dispenser) state;
 
             for (Integer slotList : blockData.getInventory().keySet()) {
@@ -359,7 +362,7 @@ public final class BlockUtil extends BlockUtils {
                     dispenser.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState.equals(BlockStateType.DROPPER)) {
+        } else if (blockTypeState == BlockStateType.DROPPER) {
             Dropper dropper = (Dropper) state;
 
             for (Integer slotList : blockData.getInventory().keySet()) {
@@ -368,7 +371,7 @@ public final class BlockUtil extends BlockUtils {
                     dropper.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState.equals(BlockStateType.HOPPER)) {
+        } else if (blockTypeState == BlockStateType.HOPPER) {
             Hopper hopper = (Hopper) state;
 
             for (Integer slotList : blockData.getInventory().keySet()) {
@@ -377,7 +380,7 @@ public final class BlockUtil extends BlockUtils {
                     hopper.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState.equals(BlockStateType.CREATURESPAWNER)) {
+        } else if (blockTypeState == BlockStateType.CREATURESPAWNER) {
             CreatureSpawner creatureSpawner = (CreatureSpawner) state;
 
             if (blockData.getEntity() != null) {
@@ -386,7 +389,7 @@ public final class BlockUtil extends BlockUtils {
 
             creatureSpawner.setDelay(blockData.getDelay());
             state.update();
-        } else if (blockTypeState.equals(BlockStateType.FURNACE)) {
+        } else if (blockTypeState == BlockStateType.FURNACE) {
             Furnace furnace = (Furnace) state;
             furnace.setBurnTime(blockData.getBurnTime());
             furnace.setCookTime(blockData.getCookTime());
@@ -399,21 +402,21 @@ public final class BlockUtil extends BlockUtils {
                     furnace.getInventory().setItem(slotList, is);
                 }
             }
-        } else if (blockTypeState.equals(BlockStateType.JUKEBOX)) {
+        } else if (blockTypeState == BlockStateType.JUKEBOX) {
             Jukebox jukebox = (Jukebox) state;
 
             if (blockData.getPlaying() != null) {
                 jukebox.setPlaying(Material.valueOf(blockData.getPlaying().toUpperCase()));
             }
             state.update();
-        } else if (blockTypeState.equals(BlockStateType.SIGN)) {
+        } else if (blockTypeState == BlockStateType.SIGN) {
             Sign sign = (Sign) state;
 
             for (int i = 0; i < blockData.getSignLines().length; i++) {
                 sign.setLine(i, ChatColor.translateAlternateColorCodes('&', blockData.getSignLines()[i]));
             }
             state.update();
-        } else if (blockTypeState.equals(BlockStateType.SKULL)) {
+        } else if (blockTypeState == BlockStateType.SKULL) {
             Skull skull = (Skull) state;
 
             skull.setRotation(BlockFace.valueOf(blockData.getRotateFace().toUpperCase()));
@@ -427,7 +430,7 @@ public final class BlockUtil extends BlockUtils {
             state.update();
         } else {
             if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
-                if (blockTypeState.equals(BlockStateType.ENDGATEWAY)) {
+                if (blockTypeState == BlockStateType.ENDGATEWAY) {
                     EndGateway endGateway = (EndGateway) state;
                     endGateway.setExactTeleport(blockData.isExactTeleport());
 
@@ -443,7 +446,7 @@ public final class BlockUtil extends BlockUtils {
                 }
 
                 if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
-                    if (blockTypeState.equals(BlockStateType.SHULKERBOX)) {
+                    if (blockTypeState == BlockStateType.SHULKERBOX) {
                         ShulkerBox shulkerBox = (ShulkerBox) state;
 
                         for (Integer slotList : blockData.getInventory().keySet()) {
@@ -454,7 +457,7 @@ public final class BlockUtil extends BlockUtils {
                         }
                     }
                     if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
-                        if (blockTypeState.equals(BlockStateType.BARREL)) {
+                        if (blockTypeState == BlockStateType.BARREL) {
                             Barrel barrel = (Barrel) state;
 
                             for (Integer slotList : blockData.getInventory().keySet()) {
@@ -467,7 +470,7 @@ public final class BlockUtil extends BlockUtils {
                     }
 
                     if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
-                        if (blockTypeState.equals(BlockStateType.RESPAWN_ANCHOR)) {
+                        if (blockTypeState == BlockStateType.RESPAWN_ANCHOR) {
                             RespawnAnchor respawnAnchor = (RespawnAnchor) state;
                             respawnAnchor.setCharges(blockData.getCharges());
                             state.update();
@@ -548,7 +551,7 @@ public final class BlockUtil extends BlockUtils {
             }
         }
 
-        if (materialStr.equals("DOUBLE_PLANT")) {
+        if ("DOUBLE_PLANT".equals(materialStr)) {
             Block topBlock = block.getLocation().add(0.0D, 1.0D, 0.0D).getBlock();
             Block bottomBlock = block.getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock();
 
@@ -558,8 +561,8 @@ public final class BlockUtil extends BlockUtils {
                 if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
                     try {
                         bottomBlock.getClass().getMethod("setData", byte.class).invoke(bottomBlock, (byte) 2);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -569,9 +572,9 @@ public final class BlockUtil extends BlockUtils {
     public static List<Block> getNearbyBlocks(Location loc, int rx, int ry, int rz) {
         final List<Block> nearbyBlocks = new ArrayList<>((rx + ry + rz) * 2);
 
-        for (int x = -(rx); x <= rx; x++) {
-            for (int y = -(ry); y <= ry; y++) {
-                for (int z = -(rz); z <= rz; z++) {
+        for (int x = -(rx); x <= rx; ++x) {
+            for (int y = -(ry); y <= ry; ++y) {
+                for (int z = -(rz); z <= rz; ++z) {
                     nearbyBlocks.add(new Location(loc.getWorld(), loc.getX() + x, loc.getY() + y, loc.getZ() + z).getBlock());
                 }
             }

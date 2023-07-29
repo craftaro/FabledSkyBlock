@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Visit {
-
     private final Island handle;
 
     public Visit(Island handle) {
@@ -94,6 +93,6 @@ public class Visit {
      * @return Implementation for the Island
      */
     public Island getIsland() {
-        return handle;
+        return this.handle;
     }
 }

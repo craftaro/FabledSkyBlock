@@ -15,7 +15,6 @@ import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class BlockData {
-
     private String material;
     private String blockData = "";
     private String biome;
@@ -39,9 +38,9 @@ public class BlockData {
     private final Map<Integer, String> inventory = new HashMap<>();
 
     private int version;
-    private int x = 0;
-    private int y = 0;
-    private int z = 0;
+    private int x;
+    private int y;
+    private int z;
     private int brewingTime = 0;
     private int fuelLevel = 0;
     private int delay = 0;
@@ -75,7 +74,7 @@ public class BlockData {
     }
 
     public String getBlockData() {
-        return blockData;
+        return this.blockData;
     }
 
     public void setBlockData(String blockData) {
@@ -220,7 +219,7 @@ public class BlockData {
     }
 
     public int getVersion() {
-        return version;
+        return this.version;
     }
 
     public void setVersion(int version) {
@@ -300,7 +299,7 @@ public class BlockData {
     }
 
     public List<String> getPatterns() {
-        return patterns;
+        return this.patterns;
     }
 
     public void setPatterns(List<String> patterns) {
@@ -314,11 +313,11 @@ public class BlockData {
     public void setExactTeleport(boolean exactTeleport) {
         this.exactTeleport = exactTeleport;
     }
-    
+
     public int getCharges() {
-        return charges;
+        return this.charges;
     }
-    
+
     public void setCharges(int charges) {
         this.charges = charges;
     }

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
@@ -18,6 +19,9 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class LevelScanCommand extends SubCommand {
+    public LevelScanCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
@@ -30,13 +34,13 @@ public class LevelScanCommand extends SubCommand {
     }
 
     private void onCommand(CommandSender sender, String[] args) {
-        IslandLevelManager levellingManager = plugin.getLevellingManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        IslandLevelManager levellingManager = this.plugin.getLevellingManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        FileManager.Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 0) {

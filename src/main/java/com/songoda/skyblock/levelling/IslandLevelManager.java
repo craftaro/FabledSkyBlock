@@ -25,11 +25,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public final class IslandLevelManager {
-
     private final Map<Island, QueuedIslandScan> inScan;
     private final Map<CompatibleMaterial, Double> worth;
     private final Map<CompatibleMaterial, AmountMaterialPair> cachedPairs;
@@ -46,23 +49,26 @@ public final class IslandLevelManager {
 
     public void startScan(Player attemptScanner, Island island) {
         if (!Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTask(SkyBlock.getInstance(), () -> startScan(attemptScanner, island));
+            Bukkit.getScheduler().runTask(this.plugin, () -> startScan(attemptScanner, island));
             return;
         }
 
-        if (island == null) throw new IllegalArgumentException("island cannot be null");
+        if (island == null) {
+            throw new IllegalArgumentException("island cannot be null");
+        }
 
-        Configuration config = SkyBlock.getInstance().getLanguage();
-        MessageManager messageManager = SkyBlock.getInstance().getMessageManager();
+        Configuration config = this.plugin.getLanguage();
+        MessageManager messageManager = this.plugin.getMessageManager();
 
-        if (inScan.containsKey(island)) {
-            if (attemptScanner != null) messageManager.sendMessage(attemptScanner, config.getString("Command.Island.Level.Scanning.InScan.Message"));
+        if (this.inScan.containsKey(island)) {
+            if (attemptScanner != null) {
+                messageManager.sendMessage(attemptScanner, config.getString("Command.Island.Level.Scanning.InScan.Message"));
+            }
             return;
         }
 
         if (attemptScanner != null) {
-
-            if (SkyBlock.getInstance().getIslandManager().getIslandPlayerAt(attemptScanner) != island) {
+            if (this.plugin.getIslandManager().getIslandPlayerAt(attemptScanner) != island) {
                 messageManager.sendMessage(attemptScanner, config.getString("Command.Island.Level.Scanning.NotOnIsland.Message"));
                 return;
             }
@@ -70,40 +76,47 @@ public final class IslandLevelManager {
             messageManager.sendMessage(attemptScanner, config.getString("Command.Island.Level.Scanning.Started.Message"));
         }
 
-        QueuedIslandScan queuedIslandScan = new QueuedIslandScan(plugin, island);
+        QueuedIslandScan queuedIslandScan = new QueuedIslandScan(this.plugin, island);
 
-        queuedIslandScan.addToScan(IslandWorld.Normal);
-        if (island.isRegionUnlocked(null, IslandWorld.Nether))
-            queuedIslandScan.addToScan(IslandWorld.Nether);
-        if (island.isRegionUnlocked(null, IslandWorld.End))
-            queuedIslandScan.addToScan(IslandWorld.End);
+        queuedIslandScan.addToScan(IslandWorld.NORMAL);
+        if (island.isRegionUnlocked(null, IslandWorld.NETHER)) {
+            queuedIslandScan.addToScan(IslandWorld.NETHER);
+        }
+        if (island.isRegionUnlocked(null, IslandWorld.END)) {
+            queuedIslandScan.addToScan(IslandWorld.END);
+        }
 
         queuedIslandScan.scan();
 
-        inScan.put(island, queuedIslandScan);
+        this.inScan.put(island, queuedIslandScan);
     }
 
     public boolean isScanning(Island island) {
-        return inScan.containsKey(island);
+        return this.inScan.containsKey(island);
     }
 
     void stopScan(Island island) {
 
-        final QueuedIslandScan queuedIslandScan = inScan.get(island);
+        final QueuedIslandScan queuedIslandScan = this.inScan.get(island);
 
-        if (queuedIslandScan == null) return;
+        if (queuedIslandScan == null) {
+            return;
+        }
 
-        if (!queuedIslandScan.scan())
-            inScan.remove(island);
+        if (!queuedIslandScan.scan()) {
+            this.inScan.remove(island);
+        }
     }
 
     public void reloadWorth() {
-        worth.clear();
+        this.worth.clear();
 
-        final Configuration config = SkyBlock.getInstance().getLevelling();
+        final Configuration config = this.plugin.getLevelling();
         final ConfigurationSection materialSection = config.getConfigurationSection("Materials");
 
-        if (materialSection == null) return;
+        if (materialSection == null) {
+            return;
+        }
 
         for (String key : materialSection.getKeys(false)) {
 
@@ -111,25 +124,27 @@ public final class IslandLevelManager {
 
             final CompatibleMaterial material = CompatibleMaterial.getMaterial(key);
 
-            if (material == null) continue;
+            if (material == null) {
+                continue;
+            }
 
-            worth.put(material, current.getDouble("Points", 0.0));
+            this.worth.put(material, current.getDouble("Points", 0.0));
         }
     }
 
     public void addWorth(CompatibleMaterial material, double points) {
-        worth.put(material, points);
+        this.worth.put(material, points);
     }
 
     public void removeWorth(CompatibleMaterial material) {
-        worth.remove(material);
+        this.worth.remove(material);
     }
 
     public List<LevellingMaterial> getWorthsAsLevelingMaterials() {
 
-        final List<LevellingMaterial> materials = new ArrayList<>(worth.size());
+        final List<LevellingMaterial> materials = new ArrayList<>(this.worth.size());
 
-        for (Entry<CompatibleMaterial, Double> entry : worth.entrySet()) {
+        for (Entry<CompatibleMaterial, Double> entry : this.worth.entrySet()) {
             materials.add(new LevellingMaterial(entry.getKey(), entry.getValue()));
         }
 
@@ -137,25 +152,27 @@ public final class IslandLevelManager {
     }
 
     public Map<CompatibleMaterial, Double> getWorths() {
-        return worth;
+        return this.worth;
     }
 
     public double getWorth(CompatibleMaterial material) {
-        return worth.getOrDefault(material, 0d);
+        return this.worth.getOrDefault(material, 0d);
     }
 
     public boolean hasWorth(CompatibleMaterial material) {
-        return worth.containsKey(material);
+        return this.worth.containsKey(material);
     }
 
     private void registerCalculators() {
         final CompatibleMaterial spawner = CompatibleMaterial.SPAWNER;
         final PluginManager pm = Bukkit.getPluginManager();
 
-        if (pm.isPluginEnabled("EpicSpawners"))
+        if (pm.isPluginEnabled("EpicSpawners")) {
             CalculatorRegistry.registerCalculator(new EpicSpawnerCalculator(), spawner);
-        if (pm.isPluginEnabled("UltimateStacker"))
+        }
+        if (pm.isPluginEnabled("UltimateStacker")) {
             CalculatorRegistry.registerCalculator(new UltimateStackerCalculator(), spawner);
+        }
     }
 
     private static final AmountMaterialPair EMPTY = new AmountMaterialPair(null, 0);
@@ -165,15 +182,21 @@ public final class IslandLevelManager {
         Block block = info.getWorld().getBlockAt(info.getX(), info.getY(), info.getZ());
         CompatibleMaterial blockType = CompatibleMaterial.getBlockMaterial(block.getType());
 
-        if (blockType == CompatibleMaterial.AIR) return EMPTY;
+        if (blockType == CompatibleMaterial.AIR) {
+            return EMPTY;
+        }
 
         CompatibleMaterial compMaterial = CompatibleMaterial.getMaterial(block);
 
-        if (compMaterial == null) return EMPTY;
+        if (compMaterial == null) {
+            return EMPTY;
+        }
 
         final Location blockLocation = block.getLocation();
 
-        if (scan.getDoubleBlocks().contains(blockLocation)) return EMPTY;
+        if (scan.getDoubleBlocks().contains(blockLocation)) {
+            return EMPTY;
+        }
 
         if (compMaterial.isTall()) {
             final Block belowBlock = block.getRelative(BlockFace.DOWN);
@@ -186,25 +209,27 @@ public final class IslandLevelManager {
             } else {
                 scan.getDoubleBlocks().add(block.getRelative(BlockFace.UP).getLocation());
             }
-
         }
 
         final List<Calculator> calculators = CalculatorRegistry.getCalculators(blockType);
-        final StackableManager stackableManager = SkyBlock.getInstance().getStackableManager();
-
+        final StackableManager stackableManager = this.plugin.getStackableManager();
 
         final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(blockLocation, compMaterial);
 
         if (calculators == null) {
 
-            if (stackSize > 1) return new AmountMaterialPair(compMaterial, stackSize);
+            if (stackSize > 1) {
+                return new AmountMaterialPair(compMaterial, stackSize);
+            }
 
-            AmountMaterialPair cachedPair = cachedPairs.get(compMaterial);
+            AmountMaterialPair cachedPair = this.cachedPairs.get(compMaterial);
 
-            if (cachedPair != null) return cachedPair;
+            if (cachedPair != null) {
+                return cachedPair;
+            }
 
             cachedPair = new AmountMaterialPair(compMaterial, 1);
-            cachedPairs.put(compMaterial, cachedPair);
+            this.cachedPairs.put(compMaterial, cachedPair);
 
             return cachedPair;
         }
@@ -215,7 +240,9 @@ public final class IslandLevelManager {
             amount += calc.getAmount(block);
         }
 
-        if (amount == 0) amount = 1;
+        if (amount == 0) {
+            amount = 1;
+        }
 
         return new AmountMaterialPair(compMaterial, amount + stackSize);
     }
@@ -232,7 +259,7 @@ public final class IslandLevelManager {
         // This shouldn't cause any issues besides the task number being increased
         // insanely fast.
         if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
-            Bukkit.getScheduler().runTask(plugin, () -> {
+            Bukkit.getScheduler().runTask(this.plugin, () -> {
                 updateLevelLocation(island, location);
             });
         } else {
@@ -255,25 +282,30 @@ public final class IslandLevelManager {
             material = CompatibleMaterial.getMaterial(block);
         }
 
-        if (material == null || material == CompatibleMaterial.AIR) return;
+        if (material == null || material == CompatibleMaterial.AIR) {
+            return;
+        }
 
         if (material == CompatibleMaterial.SPAWNER) {
             if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") ||
                     Bukkit.getPluginManager().isPluginEnabled("UltimateStacker") ||
-                    Bukkit.getPluginManager().isPluginEnabled("WildStacker"))
+                    Bukkit.getPluginManager().isPluginEnabled("WildStacker")) {
                 return;
+            }
 
             CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
 
-            if (spawner != null)
+            if (spawner != null) {
                 material = CompatibleMaterial.getBlockMaterial(spawner.getMaterial());
+            }
         }
 
         long materialAmount = 0;
         IslandLevel level = island.getLevel();
 
-        if (level.hasMaterial(material.name()))
+        if (level.hasMaterial(material.name())) {
             materialAmount = level.getMaterialAmount(material.name());
+        }
 
         level.setMaterialAmount(material.name(), materialAmount + 1);
     }

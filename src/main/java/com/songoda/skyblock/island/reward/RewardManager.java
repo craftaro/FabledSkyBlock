@@ -1,15 +1,16 @@
 package com.songoda.skyblock.island.reward;
 
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager.Config;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RewardManager {
-
     private final SkyBlock skyBlock;
 
     private final Map<Long, LevelReward> registeredRewards = new HashMap<>();
@@ -21,7 +22,7 @@ public class RewardManager {
     }
 
     public void loadRewards() {
-        final FileConfiguration configLoad = skyBlock.getRewards();
+        final FileConfiguration configLoad = this.skyBlock.getRewards();
 
         this.registeredRewards.clear();
         this.repeatRewards.clear();
@@ -64,7 +65,9 @@ public class RewardManager {
 
         LevelReward levelReward = new LevelReward();
 
-        if (section == null) return levelReward;
+        if (section == null) {
+            return levelReward;
+        }
 
         double money = section.getDouble("money", 0);
         levelReward.setMoney(money);
@@ -86,7 +89,9 @@ public class RewardManager {
         List<LevelReward> levelRewards = new ArrayList<>();
 
         for (long loopLevel : this.repeatRewards.keySet()) {
-            if (level % loopLevel == 0) levelRewards.add(this.repeatRewards.get(loopLevel));
+            if (level % loopLevel == 0) {
+                levelRewards.add(this.repeatRewards.get(loopLevel));
+            }
         }
 
         return levelRewards;

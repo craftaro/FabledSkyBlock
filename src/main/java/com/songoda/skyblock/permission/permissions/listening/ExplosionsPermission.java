@@ -19,7 +19,6 @@ import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 public class ExplosionsPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
 
     public ExplosionsPermission(SkyBlock plugin) {
@@ -41,47 +40,50 @@ public class ExplosionsPermission extends ListeningPermission {
     public void onVehicleDamage(VehicleDamageEvent event) {
         if (event.getAttacker() instanceof TNTPrimed
                 || event.getAttacker() instanceof ExplosiveMinecart
-                || event.getAttacker() instanceof Creeper)
+                || event.getAttacker() instanceof Creeper) {
             event.setCancelled(true);
+        }
     }
 
     @PermissionHandler
     public void onVehicleDestroy(VehicleDestroyEvent event) {
         if (event.getAttacker() instanceof TNTPrimed
                 || event.getAttacker() instanceof ExplosiveMinecart
-                || event.getAttacker() instanceof Creeper)
+                || event.getAttacker() instanceof Creeper) {
             event.setCancelled(true);
+        }
     }
 
     @PermissionHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)
-                || event.getCause().equals(EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)
+        if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION
+                || event.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION
                 || event.getDamager() instanceof TNTPrimed
                 || event.getDamager() instanceof ExplosiveMinecart
-                || event.getDamager() instanceof Creeper)
+                || event.getDamager() instanceof Creeper) {
             event.setCancelled(true);
+        }
     }
 
     @PermissionHandler
     public void onHangingBreak(HangingBreakEvent event) {
-        if (event.getCause().equals(HangingBreakEvent.RemoveCause.EXPLOSION)) {
+        if (event.getCause() == HangingBreakEvent.RemoveCause.EXPLOSION) {
             event.setCancelled(true);
         }
     }
 
     @PermissionHandler
     public void onHangingBreak(HangingBreakByEntityEvent event) {
-        if(event.getCause().equals(HangingBreakEvent.RemoveCause.EXPLOSION)){
+        if (event.getCause() == HangingBreakEvent.RemoveCause.EXPLOSION) {
             event.setCancelled(true);
         }
     }
 
     @PermissionHandler
     public void onTNTInteract(PlayerInteractEvent event) {
-        if(event.getItem() != null && event.getItem().getType().equals(CompatibleMaterial.FLINT_AND_STEEL.getMaterial())
-                && event.getClickedBlock().getType().equals(CompatibleMaterial.TNT.getBlockMaterial())){
-            cancelAndMessage(event, event.getPlayer(), plugin, plugin.getMessageManager());
+        if (event.getItem() != null && event.getItem().getType() == CompatibleMaterial.FLINT_AND_STEEL.getMaterial()
+                && event.getClickedBlock().getType() == CompatibleMaterial.TNT.getBlockMaterial()) {
+            cancelAndMessage(event, event.getPlayer(), this.plugin, this.plugin.getMessageManager());
         }
     }
 }

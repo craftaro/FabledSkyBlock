@@ -12,10 +12,14 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class CooldownManager {
-
     private final SkyBlock plugin;
 
     private final Map<CooldownType, List<CooldownPlayer>> cooldownStorage = new EnumMap<>(CooldownType.class);
@@ -31,9 +35,9 @@ public class CooldownManager {
             for (Player all : Bukkit.getOnlinePlayers()) {
                 CooldownPlayer cooldownPlayer = null;
 
-                if (cooldownTypeList == CooldownType.Biome || cooldownTypeList == CooldownType.Creation || cooldownTypeList == CooldownType.Deletion) {
+                if (cooldownTypeList == CooldownType.BIOME || cooldownTypeList == CooldownType.CREATION || cooldownTypeList == CooldownType.DELETION) {
                     cooldownPlayer = loadCooldownPlayer(cooldownTypeList, all);
-                } else if (cooldownTypeList == CooldownType.Levelling || cooldownTypeList == CooldownType.Ownership) {
+                } else if (cooldownTypeList == CooldownType.LEVELLING || cooldownTypeList == CooldownType.OWNERSHIP) {
                     Island island = islandManager.getIsland(all);
 
                     if (island != null) {
@@ -50,7 +54,7 @@ public class CooldownManager {
                 }
             }
 
-            cooldownStorage.put(cooldownTypeList, cooldownPlayers);
+            this.cooldownStorage.put(cooldownTypeList, cooldownPlayers);
         }
 
         new CooldownTask(this).runTaskTimerAsynchronously(plugin, 0L, 20L);
@@ -64,17 +68,17 @@ public class CooldownManager {
     }
 
     public CooldownPlayer loadCooldownPlayer(CooldownType cooldownType, OfflinePlayer player) {
-        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-            Config config = plugin.getFileManager()
-                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+        if (cooldownType == CooldownType.BIOME || cooldownType == CooldownType.CREATION || cooldownType == CooldownType.DELETION) {
+            Config config = this.plugin.getFileManager()
+                    .getConfig(new File(new File(this.plugin.getDataFolder(), "player-data"), player.getUniqueId() + ".yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getString("Island." + cooldownType.name() + ".Cooldown") != null) {
                 return new CooldownPlayer(player.getUniqueId(), new Cooldown(configLoad.getInt("Island." + cooldownType.name() + ".Cooldown")));
             }
-        } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-            Config config = plugin.getFileManager()
-                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
+        } else if (cooldownType == CooldownType.LEVELLING || cooldownType == CooldownType.OWNERSHIP) {
+            Config config = this.plugin.getFileManager()
+                    .getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), player.getUniqueId() + ".yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (configLoad.getString(cooldownType.name() + ".Cooldown") != null) {
@@ -86,20 +90,22 @@ public class CooldownManager {
     }
 
     public void createPlayer(CooldownType cooldownType, OfflinePlayer player) {
-        FileManager fileManager = plugin.getFileManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        List<CooldownPlayer> cooldowns = cooldownStorage.get(cooldownType);
+        List<CooldownPlayer> cooldowns = this.cooldownStorage.get(cooldownType);
 
-        if (cooldowns == null) return;
+        if (cooldowns == null) {
+            return;
+        }
 
         int time = 0;
 
-        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion || cooldownType == CooldownType.Preview) {
+        if (cooldownType == CooldownType.BIOME || cooldownType == CooldownType.CREATION || cooldownType == CooldownType.DELETION || cooldownType == CooldownType.PREVIEW) {
             time = this.plugin.getConfiguration()
                     .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
 
             Config config = fileManager
-                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+                    .getConfig(new File(new File(this.plugin.getDataFolder(), "player-data"), player.getUniqueId() + ".yml"));
             File configFile = config.getFile();
             FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -107,15 +113,15 @@ public class CooldownManager {
 
             try {
                 configLoad.save(configFile);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
+        } else if (cooldownType == CooldownType.LEVELLING || cooldownType == CooldownType.OWNERSHIP) {
             time = this.plugin.getConfiguration()
                     .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
 
-            Config config = plugin.getFileManager()
-                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
+            Config config = this.plugin.getFileManager()
+                    .getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), player.getUniqueId() + ".yml"));
             File configFile = config.getFile();
             FileConfiguration configLoad = config.getFileConfiguration();
 
@@ -123,8 +129,8 @@ public class CooldownManager {
 
             try {
                 configLoad.save(configFile);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
 
@@ -132,16 +138,16 @@ public class CooldownManager {
     }
 
     public void deletePlayer(CooldownType cooldownType, OfflinePlayer player) {
-        for (Iterator<CooldownPlayer> it = getCooldownPlayersOrEmptyList(cooldownType).iterator(); it.hasNext();) {
+        for (Iterator<CooldownPlayer> it = getCooldownPlayersOrEmptyList(cooldownType).iterator(); it.hasNext(); ) {
             if (it.next().getUUID().equals(player.getUniqueId())) {
-                if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-                    plugin.getFileManager()
-                            .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"),
+                if (cooldownType == CooldownType.BIOME || cooldownType == CooldownType.CREATION || cooldownType == CooldownType.DELETION) {
+                    this.plugin.getFileManager()
+                            .getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/player-data"),
                                     player.getUniqueId().toString() + ".yml"))
                             .getFileConfiguration().set("Island." + cooldownType.name() + ".Cooldown", null);
-                } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-                    plugin.getFileManager().getConfig(
-                            new File(new File(plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"))
+                } else if (cooldownType == CooldownType.LEVELLING || cooldownType == CooldownType.OWNERSHIP) {
+                    this.plugin.getFileManager().getConfig(
+                                    new File(new File(this.plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"))
                             .getFileConfiguration().set(cooldownType.name() + ".Cooldown", null);
                 }
                 it.remove();
@@ -151,7 +157,6 @@ public class CooldownManager {
     }
 
     public boolean hasPlayer(CooldownType cooldownType, OfflinePlayer player) {
-
         for (CooldownPlayer cooldownPlayerList : getCooldownPlayersOrEmptyList(cooldownType)) {
             if (cooldownPlayerList.getUUID().equals(player.getUniqueId())) {
                 return true;
@@ -175,7 +180,7 @@ public class CooldownManager {
     }
 
     public void removeCooldownPlayer(CooldownType cooldownType, OfflinePlayer player) {
-        for (Iterator<CooldownPlayer> it = getCooldownPlayersOrEmptyList(cooldownType).iterator(); it.hasNext();) {
+        for (Iterator<CooldownPlayer> it = getCooldownPlayersOrEmptyList(cooldownType).iterator(); it.hasNext(); ) {
             if (it.next().getUUID().equals(player.getUniqueId())) {
                 it.remove();
                 break;
@@ -192,15 +197,14 @@ public class CooldownManager {
     public void setCooldownPlayer(CooldownType cooldownType, OfflinePlayer player) {
         for (CooldownPlayer cooldownPlayerList : getCooldownPlayersOrEmptyList(cooldownType)) {
             if (cooldownPlayerList.getUUID().equals(player.getUniqueId())) {
-                if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-                    plugin.getFileManager()
-                            .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"),
+                if (cooldownType == CooldownType.BIOME || cooldownType == CooldownType.CREATION || cooldownType == CooldownType.DELETION) {
+                    this.plugin.getFileManager()
+                            .getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/player-data"),
                                     player.getUniqueId().toString() + ".yml"))
                             .getFileConfiguration().set("Island." + cooldownType + ".Cooldown", cooldownPlayerList.getCooldown().getTime());
-                } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-                    plugin.getFileManager()
-                            .getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"),
-                                    player.getUniqueId().toString() + ".yml"))
+                } else if (cooldownType == CooldownType.LEVELLING || cooldownType == CooldownType.OWNERSHIP) {
+                    this.plugin.getFileManager()
+                            .getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), player.getUniqueId() + ".yml"))
                             .getFileConfiguration().set(cooldownType.name() + ".Cooldown", cooldownPlayerList.getCooldown().getTime());
                 }
                 break;
@@ -217,30 +221,32 @@ public class CooldownManager {
     public void saveCooldownPlayer(CooldownType cooldownType, OfflinePlayer player) {
         Config config = null;
 
-        if (cooldownType == CooldownType.Biome || cooldownType == CooldownType.Creation || cooldownType == CooldownType.Deletion) {
-            config = plugin.getFileManager()
-                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
-        } else if (cooldownType == CooldownType.Levelling || cooldownType == CooldownType.Ownership) {
-            config = plugin.getFileManager()
-                    .getConfig(new File(new File(plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
+        if (cooldownType == CooldownType.BIOME || cooldownType == CooldownType.CREATION || cooldownType == CooldownType.DELETION) {
+            config = this.plugin.getFileManager()
+                    .getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/player-data"), player.getUniqueId().toString() + ".yml"));
+        } else if (cooldownType == CooldownType.LEVELLING || cooldownType == CooldownType.OWNERSHIP) {
+            config = this.plugin.getFileManager()
+                    .getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"));
         }
 
         if (config != null) {
             try {
                 config.getFileConfiguration().save(config.getFile());
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }
 
     public void addCooldownPlayer(CooldownType cooldownType, CooldownPlayer cooldownPlayer) {
+        if (cooldownType == null || cooldownPlayer == null) {
+            return;
+        }
 
-        if (cooldownType == null || cooldownPlayer == null) return;
-
-        List<CooldownPlayer> cooldowns = cooldownStorage.get(cooldownType);
-
-        if (cooldowns == null) return;
+        List<CooldownPlayer> cooldowns = this.cooldownStorage.get(cooldownType);
+        if (cooldowns == null) {
+            return;
+        }
 
         cooldowns.add(cooldownPlayer);
     }
@@ -256,7 +262,7 @@ public class CooldownManager {
     }
 
     public List<CooldownPlayer> getCooldownPlayers(CooldownType cooldownType) {
-        return cooldownStorage.get(cooldownType);
+        return this.cooldownStorage.get(cooldownType);
     }
 
     /**
@@ -266,11 +272,10 @@ public class CooldownManager {
      * key, cooldownType.
      */
     public List<CooldownPlayer> getCooldownPlayersOrEmptyList(CooldownType cooldownType) {
-        return cooldownStorage.getOrDefault(cooldownType, Collections.emptyList());
+        return this.cooldownStorage.getOrDefault(cooldownType, Collections.emptyList());
     }
 
     public boolean hasCooldownType(CooldownType cooldownType) {
-        return cooldownStorage.containsKey(cooldownType);
+        return this.cooldownStorage.containsKey(cooldownType);
     }
-
 }

@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 public class FoodListeners implements Listener {
-
     private final SkyBlock plugin;
 
     public FoodListeners(SkyBlock plugin) {
@@ -18,9 +17,9 @@ public class FoodListeners implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         Player player = (Player) event.getEntity();
 
-        if (plugin.getWorldManager().isIslandWorld(player.getWorld())) {
+        if (this.plugin.getWorldManager().isIslandWorld(player.getWorld())) {
             // Check permissions.
-            plugin.getPermissionManager().processPermission(event, player, player.getLocation());
+            this.plugin.getPermissionManager().processPermission(event, player, player.getLocation());
         }
     }
 }

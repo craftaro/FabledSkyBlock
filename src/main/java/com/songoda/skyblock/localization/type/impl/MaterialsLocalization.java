@@ -1,10 +1,8 @@
 package com.songoda.skyblock.localization.type.impl;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
- 
 
 public class MaterialsLocalization extends EnumLocalization<CompatibleMaterial> {
-
     public MaterialsLocalization(String keysPath) {
         super(keysPath, CompatibleMaterial.class);
     }
@@ -18,5 +16,4 @@ public class MaterialsLocalization extends EnumLocalization<CompatibleMaterial> 
     public String getDefaultLocaleFor(CompatibleMaterial obj) {
         return super.getDefaultLocaleFor(obj).replace("_", " ");
     }
-
 }

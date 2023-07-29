@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class MobRidingPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -33,12 +32,12 @@ public class MobRidingPermission extends ListeningPermission {
         if (entity.getType() == EntityType.HORSE || entity.getType() == EntityType.PIG) {
             if (entity.getType() == EntityType.HORSE) {
                 Horse horse = (Horse) event.getRightClicked();
-                if (horse.getInventory().getSaddle() == null)
-                    cancelAndMessage(event, player, plugin, messageManager);
+                if (horse.getInventory().getSaddle() == null) {
+                    cancelAndMessage(event, player, this.plugin, this.messageManager);
+                }
             } else if (entity.getType() == EntityType.PIG) {
-                cancelAndMessage(event, player, plugin, messageManager);
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
             }
         }
     }
 }
-

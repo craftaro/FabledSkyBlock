@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerVoteEvent;
 import com.songoda.skyblock.api.event.player.PlayerVoteRemoveEvent;
 import com.songoda.skyblock.command.SubCommand;
@@ -26,17 +27,20 @@ import java.io.File;
 import java.util.UUID;
 
 public class VoteCommand extends SubCommand {
+    public VoteCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        VisitManager visitManager = plugin.getVisitManager();
-        FileManager fileManager = plugin.getFileManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        VisitManager visitManager = this.plugin.getVisitManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -72,14 +76,14 @@ public class VoteCommand extends SubCommand {
                 if (!islandManager.containsIsland(islandOwnerUUID)) {
                     islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                 }
-    
+
                 Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 
-                if (visit.getStatus().equals(IslandStatus.OPEN)) {
+                if (visit.getStatus() == IslandStatus.OPEN) {
 
-                    if (island.hasRole(IslandRole.Member, player.getUniqueId())
-                            || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                            || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+                    if (island.hasRole(IslandRole.MEMBER, player.getUniqueId())
+                            || island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                            || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Vote.Island.Member.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -98,8 +102,9 @@ public class VoteCommand extends SubCommand {
                             } else {
                                 PlayerVoteEvent playerVoteEvent = new PlayerVoteEvent(player, island.getAPIWrapper());
                                 Bukkit.getServer().getPluginManager().callEvent(playerVoteEvent);
-                                if (playerVoteEvent.isCancelled())
+                                if (playerVoteEvent.isCancelled()) {
                                     return;
+                                }
 
                                 visit.addVoter(player.getUniqueId());
 

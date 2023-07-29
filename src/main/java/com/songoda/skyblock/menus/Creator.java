@@ -3,7 +3,6 @@ package com.songoda.skyblock.menus;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.cooldown.Cooldown;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownPlayer;
@@ -12,7 +11,6 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.structure.Structure;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import org.bukkit.Bukkit;
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Creator {
-
     private static Creator instance;
 
     public static Creator getInstance() {
@@ -38,7 +35,7 @@ public class Creator {
     }
 
     public void open(Player player) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         CooldownManager cooldownManager = plugin.getCooldownManager();
         MessageManager messageManager = plugin.getMessageManager();
@@ -69,7 +66,7 @@ public class Creator {
 
         int inventoryRows = 0;
 
-        if (availableStructures.size() == 0) {
+        if (availableStructures.isEmpty()) {
             plugin.getMessageManager().sendMessage(player,
                     configLoad.getString("Island.Creator.Selector.None.Message"));
             plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -92,7 +89,7 @@ public class Creator {
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
             if (islandManager.getIsland(player) != null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 return;
             }
@@ -160,11 +157,11 @@ public class Creator {
                             return;
                         }
 
-                        if(event.getClick().isLeftClick()) {
+                        if (event.getClick().isLeftClick()) {
                             if (plugin.getConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
-                                    && cooldownManager.hasPlayer(CooldownType.Creation, player)) {
+                                    && cooldownManager.hasPlayer(CooldownType.CREATION, player)) {
                                 CooldownPlayer cooldownPlayer = cooldownManager
-                                        .getCooldownPlayer(CooldownType.Creation, player);
+                                        .getCooldownPlayer(CooldownType.CREATION, player);
                                 Cooldown cooldown = cooldownPlayer.getCooldown();
 
                                 if (cooldown.getTime() < 60) {
@@ -197,11 +194,11 @@ public class Creator {
                                         configLoad.getString("Island.Creator.Selector.Created.Message"));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                             }
-                        } else if(event.getClick().isRightClick()) {
+                        } else if (event.getClick().isRightClick()) {
                             if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
                                     .getFileConfiguration().getBoolean("Island.Preview.Cooldown.Enable")
-                                    && cooldownManager.hasPlayer(CooldownType.Preview, player)) {
-                                CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Preview, player);
+                                    && cooldownManager.hasPlayer(CooldownType.PREVIEW, player)) {
+                                CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.PREVIEW, player);
                                 Cooldown cooldown = cooldownPlayer.getCooldown();
 
                                 if (cooldown.getTime() < 60) {
@@ -222,7 +219,7 @@ public class Creator {
                                                     "Island.Preview.Cooldown.Word.Second")));
                                 }
 
-                                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
 
@@ -270,6 +267,6 @@ public class Creator {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Creator.Selector.Title")));
         nInv.setRows(inventoryRows);
 
-        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
     }
 }

@@ -1,7 +1,6 @@
 package com.songoda.skyblock.utils.structure;
 
 public class Structure {
-
     private final Storage storage;
     private final String file;
 
@@ -11,7 +10,7 @@ public class Structure {
     }
 
     public Storage getStructureStorage() {
-        return storage;
+        return this.storage;
     }
 
     public String getStructureFile() {

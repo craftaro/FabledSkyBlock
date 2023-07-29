@@ -9,13 +9,16 @@ import com.songoda.skyblock.cooldown.Cooldown;
 import com.songoda.skyblock.cooldown.CooldownManager;
 import com.songoda.skyblock.cooldown.CooldownPlayer;
 import com.songoda.skyblock.cooldown.CooldownType;
-import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandEnvironment;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.version.SBiome;
@@ -28,10 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
-
 public class Biome {
-
     private static Biome instance;
 
     public static Biome getInstance() {
@@ -43,7 +43,7 @@ public class Biome {
     }
 
     public void open(Player player) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         CooldownManager cooldownManager = plugin.getCooldownManager();
@@ -66,12 +66,12 @@ public class Biome {
                     player.closeInventory();
 
                     return;
-                } else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                        && permissionManager.hasPermission(island, "Biome", IslandRole.Operator))
-                        || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+                } else if (!((island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                        && permissionManager.hasPermission(island, "Biome", IslandRole.OPERATOR))
+                        || island.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                     messageManager.sendMessage(player,
                             langConfig.getString("Command.Island.Biome.Permission.Message"));
-                    soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                     player.closeInventory();
 
                     return;
@@ -105,8 +105,8 @@ public class Biome {
                         event.setWillClose(false);
                         event.setWillDestroy(false);
                     } else {
-                        if (cooldownManager.hasPlayer(CooldownType.Biome, player) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
-                            CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome, player);
+                        if (cooldownManager.hasPlayer(CooldownType.BIOME, player) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
+                            CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.BIOME, player);
                             Cooldown cooldown = cooldownPlayer.getCooldown();
 
                             if (cooldown.getTime() < 60) {
@@ -125,7 +125,7 @@ public class Biome {
                                                         + langConfig.getString("Island.Biome.Cooldown.Word.Second")));
                             }
 
-                            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -136,15 +136,15 @@ public class Biome {
                         @SuppressWarnings("deprecation")
                         SBiome selectedBiomeType = SBiome.getFromGuiIcon(is.getType(), is.getData().getData());
 
-                        cooldownManager.createPlayer(CooldownType.Biome, player);
-                        biomeManager.setBiome(island,IslandWorld.Normal, CompatibleBiome.getBiome(selectedBiomeType.getBiome()), null);
+                        cooldownManager.createPlayer(CooldownType.BIOME, player);
+                        biomeManager.setBiome(island, IslandWorld.NORMAL, CompatibleBiome.getBiome(selectedBiomeType.getBiome()), null);
                         island.setBiome(selectedBiomeType.getBiome());
                         island.save();
 
-                        soundManager.playSound(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island),
+                        soundManager.playSound(island.getLocation(IslandWorld.NORMAL, IslandEnvironment.ISLAND),
                                 CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
 
-                        if (!islandManager.isPlayerAtIsland(island, player, IslandWorld.Normal)) {
+                        if (!islandManager.isPlayerAtIsland(island, player, IslandWorld.NORMAL)) {
                             soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
                         }
 
@@ -164,12 +164,12 @@ public class Biome {
                     new Placeholder[]{new Placeholder("%biome_type", islandBiomeName)}, null, null), 4);
 
             nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
-                    langConfig.getString("Menu.Biome.Item.Exit.Displayname"), null, null, null, null),
+                            langConfig.getString("Menu.Biome.Item.Exit.Displayname"), null, null, null, null),
                     0, 8);
 
             nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
-                    plugin.formatText(langConfig.getString("Menu.Biome.Item.Barrier.Displayname")),
-                    null, null, null, null),
+                            plugin.formatText(langConfig.getString("Menu.Biome.Item.Barrier.Displayname")),
+                            null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 
             FileConfiguration settings = plugin.getConfiguration();
@@ -179,32 +179,33 @@ public class Biome {
 
             int slotIndex = 18;
             for (SBiome biome : SBiome.values()) {
-                if (!biome.isAvailable())
+                if (!biome.isAvailable()) {
                     continue;
-
-                if (!allowNetherBiome && biome.equals(SBiome.NETHER))
+                }
+                if (!allowNetherBiome && biome == SBiome.NETHER) {
                     continue;
-
-                if (!allowEndBiome && (biome.equals(SBiome.THE_END) || biome.equals(SBiome.THE_VOID)))
+                }
+                if (!allowEndBiome && (biome == SBiome.THE_END || biome == SBiome.THE_VOID)) {
                     continue;
-
-                if (!player.hasPermission("fabledskyblock.biome.*") && !player.hasPermission("fabledskyblock.biome." + biome.name().toLowerCase()))
+                }
+                if (!player.hasPermission("fabledskyblock.biome.*") && !player.hasPermission("fabledskyblock.biome." + biome.name().toLowerCase())) {
                     continue;
+                }
 
-                if (islandBiome.equals(biome.getBiome())) {
+                if (islandBiome == biome.getBiome()) {
                     nInv.addItem(nInv.createItem(biome.getGuiIcon(),
-                            ChatColor.translateAlternateColorCodes('&',
-                                    langConfig.getString("Menu.Biome.Item.Biome.Current.Displayname")
-                                            .replace("%biome_type", biome.getFormattedBiomeName())),
-                            langConfig.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
-                            new Enchantment[]{Enchantment.THORNS}, new ItemFlag[]{ItemFlag.HIDE_ENCHANTS}),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            langConfig.getString("Menu.Biome.Item.Biome.Current.Displayname")
+                                                    .replace("%biome_type", biome.getFormattedBiomeName())),
+                                    langConfig.getStringList("Menu.Biome.Item.Biome.Current.Lore"), null,
+                                    new Enchantment[]{Enchantment.THORNS}, new ItemFlag[]{ItemFlag.HIDE_ENCHANTS}),
                             slotIndex);
                 } else {
                     nInv.addItem(nInv.createItem(biome.getGuiIcon(),
-                            ChatColor.translateAlternateColorCodes('&',
-                                    langConfig.getString("Menu.Biome.Item.Biome.Select.Displayname")
-                                            .replace("%biome_type", biome.getFormattedBiomeName())),
-                            langConfig.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null),
+                                    ChatColor.translateAlternateColorCodes('&',
+                                            langConfig.getString("Menu.Biome.Item.Biome.Select.Displayname")
+                                                    .replace("%biome_type", biome.getFormattedBiomeName())),
+                                    langConfig.getStringList("Menu.Biome.Item.Biome.Select.Lore"), null, null, null),
                             slotIndex);
                 }
 
@@ -214,7 +215,7 @@ public class Biome {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', langConfig.getString("Menu.Biome.Title")));
             nInv.setRows(4);
 
-            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
         }
     }
 }

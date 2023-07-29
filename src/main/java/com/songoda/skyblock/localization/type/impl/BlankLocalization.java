@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class BlankLocalization extends Localization<Object> {
-
     public BlankLocalization(String keysPath, Class<Object> type) {
         super(keysPath, type);
     }
@@ -26,5 +25,4 @@ public final class BlankLocalization extends Localization<Object> {
     public String getLocale(Object obj) {
         return getDefaultLocaleFor(obj);
     }
-
 }

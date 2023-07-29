@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -18,6 +19,9 @@ import java.io.File;
 import java.util.UUID;
 
 public class OwnerCommand extends SubCommand {
+    public OwnerCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
@@ -30,12 +34,12 @@ public class OwnerCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -57,7 +61,7 @@ public class OwnerCommand extends SubCommand {
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.Owner.Island.None.Message"));
-                soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             } else if (islandOwnerUUID.equals(targetPlayerUUID)) {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.Owner.Island.Owner.Message").replace("%player",

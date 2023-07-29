@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class Challenge {
-
     private final ChallengeCategory category;
     private final int id;
     private final String name;
@@ -56,8 +55,10 @@ public class Challenge {
         // Requires
         for (String str : requires) {
             int idx = str.indexOf(':');
-            if (idx == -1)
+            if (idx == -1) {
                 throw new IllegalArgumentException("Line \"" + str + "\" isn't a correct line");
+            }
+
             String arg0 = str.substring(0, idx);
             String arg1 = str.substring(idx + 1);
             try {
@@ -72,8 +73,10 @@ public class Challenge {
         // Rewards
         for (String str : rewards) {
             int idx = str.indexOf(':');
-            if (idx == -1)
+            if (idx == -1) {
                 throw new IllegalArgumentException("Line " + str + " isn't a correct line");
+            }
+
             String arg0 = str.substring(0, idx);
             String arg1 = str.substring(idx + 1);
             try {
@@ -90,35 +93,35 @@ public class Challenge {
     // GETTERS
 
     public ChallengeCategory getCategory() {
-        return category;
+        return this.category;
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public int getMaxTimes() {
-        return maxTimes;
+        return this.maxTimes;
     }
 
     public boolean isShowInChat() {
-        return showInChat;
+        return this.showInChat;
     }
 
     public List<Peer<Type, Object>> getRequires() {
-        return requires;
+        return this.requires;
     }
 
     public List<Peer<Type, Object>> getRewards() {
-        return rewards;
+        return this.rewards;
     }
 
     public ItemChallenge getItem() {
-        return item;
+        return this.item;
     }
 
     public enum Type {
@@ -149,14 +152,14 @@ public class Challenge {
             @Override
             public boolean has(Player p, Object obj) {
                 List<Integer> is = (List<Integer>) obj;
-                SkyBlock instance = SkyBlock.getInstance();
+                SkyBlock instance = SkyBlock.getPlugin(SkyBlock.class);
                 FileManager.Config config = instance.getFileManager().getConfig(new File(new File(instance.getDataFolder(), "challenge-data"), p.getUniqueId().toString() + ".yml"));
                 FileConfiguration fileConfig = config.getFileConfiguration();
                 ConfigurationSection section = fileConfig.getConfigurationSection("challenges");
                 for (String k : (section != null) ? section.getKeys(false) : new HashSet<String>()) {
                     int id = fileConfig.getInt("challenges." + k + ".id");
                     if (is.get(0) == id) {
-                        ChallengeCategory cc = SkyBlock.getInstance().getFabledChallenge().getChallengeManager().getChallenge(id);
+                        ChallengeCategory cc = SkyBlock.getPlugin(SkyBlock.class).getFabledChallenge().getChallengeManager().getChallenge(id);
                         if (cc != null) {
                             ConfigurationSection section2 = fileConfig.getConfigurationSection("challenges." + k + ".challenges");
                             if (section2 != null && !section2.getKeys(false).isEmpty() && section2.getKeys(false).stream().map(d -> "challenges." + k + ".challenges." + d).anyMatch(key -> is.get(1) == fileConfig.getInt(key + ".id") && fileConfig.getInt(key + ".count") >= is.get(2))) {
@@ -186,17 +189,18 @@ public class Challenge {
              */
             @Override
             public ItemStack convert(String value) throws IllegalArgumentException {
-                if (value == null || "".equalsIgnoreCase(value.trim()))
+                if (value == null || "".equalsIgnoreCase(value.trim())) {
                     throw new IllegalArgumentException("Value is empty or null");
+                }
                 int index = value.indexOf(' ');
                 // The id
                 String id = index == -1 ? value : value.substring(0, index);
                 // Check if it's a Minecraft item
                 CompatibleMaterial m = CompatibleMaterial.getMaterial(id);
                 //Material m = Material.matchMaterial(id);
-                if (m == null)
-                    throw new IllegalArgumentException(
-                            "\"" + id + "\" isn't a correct Minecraft Material (value = \"" + value + "\")");
+                if (m == null) {
+                    throw new IllegalArgumentException("\"" + id + "\" isn't a correct Minecraft Material (value = \"" + value + "\")");
+                }
                 int amount = 1;
                 if (index != -1) {
                     String strAmount = value.substring(index + 1);
@@ -214,13 +218,14 @@ public class Challenge {
 
             @Override
             public boolean has(Player p, Object obj) {
-                boolean ignoreLore = SkyBlock.getInstance().getConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
+                boolean ignoreLore = SkyBlock.getPlugin(SkyBlock.class).getConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
                 if (obj instanceof ItemStack) {
                     // Check if player has specific item in his inventory
                     ItemStack is = (ItemStack) obj;
                     CompatibleMaterial material = CompatibleMaterial.getMaterial(is);
-                    if (ignoreLore)
+                    if (ignoreLore) {
                         return findSimilar(p, material) >= is.getAmount();
+                    }
                     return p.getInventory().containsAtLeast(is, is.getAmount());
                 }
                 return false;
@@ -228,22 +233,26 @@ public class Challenge {
 
             private int findSimilar(Player p, CompatibleMaterial material) {
                 int amountFound = 0;
-                for (ItemStack item : p.getInventory().getContents())
-                    if (CompatibleMaterial.getMaterial(item) == material)
+                for (ItemStack item : p.getInventory().getContents()) {
+                    if (CompatibleMaterial.getMaterial(item) == material) {
                         amountFound += item.getAmount();
+                    }
+                }
                 return amountFound;
             }
 
             @Override
             public void executeRequire(Player p, Object obj) {
-                boolean ignoreLore = SkyBlock.getInstance().getConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
+                boolean ignoreLore = SkyBlock.getPlugin(SkyBlock.class).getConfiguration().getBoolean("Island.Challenge.IgnoreItemLore", false);
 
                 if (obj instanceof ItemStack) {
                     // Remove specific item in player's inventory
                     ItemStack is = (ItemStack) obj;
                     int toRemove = is.getAmount();
                     for (ItemStack jis : p.getInventory().getContents()) {
-                        if (jis == null) continue;
+                        if (jis == null) {
+                            continue;
+                        }
                         if (ignoreLore ? CompatibleMaterial.getMaterial(jis) == CompatibleMaterial.getMaterial(is) : jis.isSimilar(is)) {
                             if (jis.getAmount() <= toRemove) {
                                 toRemove -= jis.getAmount();
@@ -266,8 +275,9 @@ public class Challenge {
                 // Give specific item to player
                 ItemStack is = (ItemStack) obj;
                 HashMap<Integer, ItemStack> rest = p.getInventory().addItem(is.clone());
-                for (ItemStack restIs : rest.values())
+                for (ItemStack restIs : rest.values()) {
                     p.getWorld().dropItem(p.getLocation(), restIs);
+                }
             }
         },
         CMD {
@@ -276,8 +286,9 @@ public class Challenge {
             @Override
             public String convert(String value) throws IllegalArgumentException {
                 // Here we don't have to convert the value because the value is the command
-                if (value == null || "".equalsIgnoreCase(value))
+                if (value == null || "".equalsIgnoreCase(value)) {
                     throw new IllegalArgumentException("Value is empty or null");
+                }
                 return value;
             }
 
@@ -306,8 +317,9 @@ public class Challenge {
             public Integer convert(String value) throws IllegalArgumentException {
                 // Convert the value to an Integer representing the minimum level of island
                 // required
-                if (value == null || "".equalsIgnoreCase(value))
+                if (value == null || "".equalsIgnoreCase(value)) {
                     throw new IllegalArgumentException("Value is empty or null");
+                }
                 try {
                     return Integer.parseInt(value);
                 } catch (NumberFormatException ex) {
@@ -320,7 +332,7 @@ public class Challenge {
             public boolean has(Player p, Object obj) {
                 // Check if the level of player's island is greater or equals to the required
                 // level
-                Island is = SkyBlock.getInstance().getIslandManager().getIsland(p);
+                Island is = SkyBlock.getPlugin(SkyBlock.class).getIslandManager().getIsland(p);
                 // Player doesn't have an island
                 if (is != null && obj instanceof Number) {
                     return is.getLevel().getLevel() >= ((Number) obj).longValue();
@@ -342,8 +354,9 @@ public class Challenge {
             @Override
             public Peer<EntityType, Integer> convert(String value) throws IllegalArgumentException {
                 // We returns the entity type and the number of entity required
-                if (value == null || "".equalsIgnoreCase(value))
+                if (value == null || "".equalsIgnoreCase(value)) {
                     throw new IllegalArgumentException("Value is empty or null");
+                }
                 int index = value.indexOf(' ');
                 // The id
                 String id = index == -1 ? value : value.substring(0, index);
@@ -352,8 +365,7 @@ public class Challenge {
                 try {
                     et = EntityType.valueOf(id.toUpperCase());
                 } catch (Exception ex) {
-                    throw new IllegalArgumentException(
-                            "\"" + id + "\" isn't a correct Minecraft EntityType (value = \"" + value + "\")");
+                    throw new IllegalArgumentException("\"" + id + "\" isn't a correct Minecraft EntityType (value = \"" + value + "\")");
                 }
                 int amount = 1;
                 if (index != -1) {
@@ -361,11 +373,10 @@ public class Challenge {
                     try {
                         amount = Integer.parseInt(strAmount);
                     } catch (NumberFormatException ex) {
-                        throw new IllegalArgumentException(
-                                "\"" + strAmount + "\" isn't a correct number (value = \"" + value + "\")");
+                        throw new IllegalArgumentException("\"" + strAmount + "\" isn't a correct number (value = \"" + value + "\")");
                     }
                 }
-                return new Peer<EntityType, Integer>(et, amount);
+                return new Peer<>(et, amount);
             }
 
             @Override
@@ -375,10 +386,12 @@ public class Challenge {
                 List<Entity> entities = p.getNearbyEntities(60, 60, 60);
                 int count = 0;
                 for (Entity e : entities) {
-                    if (e.getType() == peer.getKey())
+                    if (e.getType() == peer.getKey()) {
                         count++;
-                    if (count == peer.getValue())
+                    }
+                    if (count == peer.getValue()) {
                         return true;
+                    }
                 }
                 return false;
             }
@@ -400,30 +413,31 @@ public class Challenge {
             @Override
             public Peer<PotionType, Peer<Integer, Integer>> convert(String value) throws IllegalArgumentException {
                 // We returns the potion required
-                if (value == null || "".equalsIgnoreCase(value))
+                if (value == null || "".equalsIgnoreCase(value)) {
                     throw new IllegalArgumentException("Value is empty or null");
-                String[] split = space.split(value);
-                if (split.length != 3)
+                }
+                String[] split = this.space.split(value);
+                if (split.length != 3) {
                     throw new IllegalArgumentException("Incorrect value : \"" + value + "\"");
+                }
                 // The id
                 // Check if it's a Minecraft item
                 PotionType pt;
                 try {
                     pt = PotionType.valueOf(split[0].toUpperCase());
                 } catch (Exception ex) {
-                    throw new IllegalArgumentException(
-                            "\"" + split[0] + "\" isn't a correct Minecraft PotionType (value = \"" + value + "\")");
+                    throw new IllegalArgumentException("\"" + split[0] + "\" isn't a correct Minecraft PotionType (value = \"" + value + "\")");
                 }
                 // The data
                 int data;
                 try {
                     data = Integer.parseInt(split[1]);
                 } catch (NumberFormatException ex) {
-                    throw new IllegalArgumentException(
-                            "\"" + split[1] + "\" isn't a correct number (value = \"" + value + "\")");
+                    throw new IllegalArgumentException("\"" + split[1] + "\" isn't a correct number (value = \"" + value + "\")");
                 }
-                if (data < 0 || data > 8)
+                if (data < 0 || data > 8) {
                     throw new IllegalArgumentException("Data must be between 0 and 8, but is \"" + split[1] + "\"");
+                }
                 int amount;
                 try {
                     amount = Integer.parseInt(split[2]);
@@ -444,8 +458,9 @@ public class Challenge {
                             && isSame(is, peer.getKey(), peer.getValue().getKey())) {
                         // Same potion
                         count += is.getAmount();
-                        if (count >= peer.getValue().getValue())
+                        if (count >= peer.getValue().getValue()) {
                             return true;
+                        }
                     }
                 }
                 return false;
@@ -479,12 +494,13 @@ public class Challenge {
                 Peer<PotionType, Peer<Integer, Integer>> peer = (Peer<PotionType, Peer<Integer, Integer>>) obj;
                 ItemStack is = null;
                 int data = peer.getValue().getKey();
-                if (data <= 2)
+                if (data <= 2) {
                     is = new ItemStack(Material.POTION, peer.getValue().getValue());
-                else if (data <= 5)
+                } else if (data <= 5) {
                     is = new ItemStack(Material.LINGERING_POTION, peer.getValue().getValue());
-                else if (data <= 8)
+                } else if (data <= 8) {
                     is = new ItemStack(Material.SPLASH_POTION, peer.getValue().getValue());
+                }
                 PotionMeta pm = (PotionMeta) is.getItemMeta();
                 pm.setBasePotionData(new PotionData(peer.getKey(), data == 1 || data == 4 || data == 7,
                         data == 2 || data == 5 || data == 8));
@@ -492,8 +508,9 @@ public class Challenge {
 
                 // Add item or drop if inventory is full
                 HashMap<Integer, ItemStack> rest = p.getInventory().addItem(is);
-                for (ItemStack restIs : rest.values())
+                for (ItemStack restIs : rest.values()) {
                     p.getWorld().dropItem(p.getLocation(), restIs);
+                }
 
                 // TODO LOG
             }
@@ -518,28 +535,32 @@ public class Challenge {
              * </ul>
              */
             private boolean isSame(ItemStack is, PotionType type, int data) {
-                if (data <= 2 && is.getType() != Material.POTION)
+                if (data <= 2 && is.getType() != Material.POTION) {
                     return false;
-                else if (data >= 3 && data <= 5 && is.getType() != Material.LINGERING_POTION)
+                } else if (data >= 3 && data <= 5 && is.getType() != Material.LINGERING_POTION) {
                     return false;
-                else if (data >= 6 && data <= 8 && is.getType() != Material.SPLASH_POTION)
+                } else if (data >= 6 && data <= 8 && is.getType() != Material.SPLASH_POTION) {
                     return false;
+                }
                 PotionMeta pm = (PotionMeta) is.getItemMeta();
                 PotionData pd = pm.getBasePotionData();
-                if (pd.getType() != type)
+                if (pd.getType() != type) {
                     return false;
-                else if ((data == 0 || data == 3 || data == 6) && (pd.isExtended() || pd.isUpgraded()))
+                } else if ((data == 0 || data == 3 || data == 6) && (pd.isExtended() || pd.isUpgraded())) {
                     return false;
-                else if ((data == 1 || data == 4 || data == 7) && !pd.isExtended())
+                } else if ((data == 1 || data == 4 || data == 7) && !pd.isExtended()) {
                     return false;
-                else return (data != 2 && data != 5 && data != 8) || pd.isUpgraded();
+                } else {
+                    return (data != 2 && data != 5 && data != 8) || pd.isUpgraded();
+                }
             }
         },
         ECO {
             @Override
             public Double convert(String value) throws IllegalArgumentException {
-                if (value == null || "".equalsIgnoreCase(value))
+                if (value == null || "".equalsIgnoreCase(value)) {
                     throw new IllegalArgumentException("Value is empty or null");
+                }
                 try {
                     return Double.parseDouble(value);
                 } catch (NumberFormatException ex) {
@@ -550,7 +571,7 @@ public class Challenge {
 
             @Override
             public boolean has(Player p, Object obj) {
-                Economy economy = SkyBlock.getInstance().getEconomyManager().getEconomy();
+                Economy economy = SkyBlock.getPlugin(SkyBlock.class).getEconomyManager().getEconomy();
                 if (obj instanceof Number) {
                     return economy.getBalance(p) >= ((Number) obj).doubleValue();
                 }
@@ -559,7 +580,7 @@ public class Challenge {
 
             @Override
             public void executeRequire(Player p, Object obj) {
-                Economy economy = SkyBlock.getInstance().getEconomyManager().getEconomy();
+                Economy economy = SkyBlock.getPlugin(SkyBlock.class).getEconomyManager().getEconomy();
                 if (obj instanceof Number && ((Number) obj).doubleValue() > 0) {
                     economy.withdrawBalance(p, ((Number) obj).doubleValue());
                 }
@@ -567,7 +588,7 @@ public class Challenge {
 
             @Override
             public void executeReward(Player p, Object obj) {
-                Economy economy = SkyBlock.getInstance().getEconomyManager().getEconomy();
+                Economy economy = SkyBlock.getPlugin(SkyBlock.class).getEconomyManager().getEconomy();
                 if (obj instanceof Number && ((Number) obj).doubleValue() > 0) {
                     economy.deposit(p, ((Number) obj).doubleValue());
                 }
@@ -576,8 +597,9 @@ public class Challenge {
         BANK {
             @Override
             public Double convert(String value) throws IllegalArgumentException {
-                if (value == null || "".equalsIgnoreCase(value))
+                if (value == null || "".equalsIgnoreCase(value)) {
                     throw new IllegalArgumentException("Value is empty or null");
+                }
                 try {
                     return Double.parseDouble(value);
                 } catch (NumberFormatException ex) {
@@ -588,7 +610,7 @@ public class Challenge {
 
             @Override
             public boolean has(Player p, Object obj) {
-                Island is = SkyBlock.getInstance().getIslandManager().getIsland(p);
+                Island is = SkyBlock.getPlugin(SkyBlock.class).getIslandManager().getIsland(p);
 
                 if (is != null && obj instanceof Number && ((Number) obj).doubleValue() > 0) {
                     return is.getBankBalance() >= ((Number) obj).doubleValue();
@@ -598,8 +620,8 @@ public class Challenge {
 
             @Override
             public void executeRequire(Player p, Object obj) {
-                Island is = SkyBlock.getInstance().getIslandManager().getIsland(p);
-                BankManager bankManager = SkyBlock.getInstance().getBankManager();
+                Island is = SkyBlock.getPlugin(SkyBlock.class).getIslandManager().getIsland(p);
+                BankManager bankManager = SkyBlock.getPlugin(SkyBlock.class).getBankManager();
 
                 if (is != null && obj instanceof Number && ((Number) obj).doubleValue() > 0) {
                     bankManager.withdraw(p, is, ((Number) obj).doubleValue(), false);
@@ -608,8 +630,8 @@ public class Challenge {
 
             @Override
             public void executeReward(Player p, Object obj) {
-                Island is = SkyBlock.getInstance().getIslandManager().getIsland(p);
-                BankManager bankManager = SkyBlock.getInstance().getBankManager();
+                Island is = SkyBlock.getPlugin(SkyBlock.class).getIslandManager().getIsland(p);
+                BankManager bankManager = SkyBlock.getPlugin(SkyBlock.class).getBankManager();
 
                 if (is != null && obj instanceof Number) {
                     bankManager.deposit(p, is, ((Number) obj).doubleValue(), false);

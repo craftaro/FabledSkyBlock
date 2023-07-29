@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GuiAdminPermissions extends Gui {
-
     private final PermissionManager permissionManager;
     private final SoundManager soundManager;
     private final IslandRole role;
@@ -35,72 +34,75 @@ public class GuiAdminPermissions extends Gui {
         this.soundManager = plugin.getSoundManager();
         this.role = role;
         this.returnGui = returnGui;
-        this.configLoad = plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
-        settingsConfig = plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(), "settings.yml"));
-        settingsConfigLoad = settingsConfig.getFileConfiguration();
-        setTitle(TextUtils.formatText(configLoad.getString("Menu.Settings." + role.name() + ".Title")));
+        this.configLoad = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+        this.settingsConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "settings.yml"));
+        this.settingsConfigLoad = this.settingsConfig.getFileConfiguration();
+        setTitle(TextUtils.formatText(this.configLoad.getString("Menu.Settings." + role.name() + ".Title")));
         setDefaultItem(null);
         paint();
     }
 
     public void paint() {
-        if (inventory != null)
-            inventory.clear();
+        if (this.inventory != null) {
+            this.inventory.clear();
+        }
         setActionForRange(0, 0, 5, 9, null);
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
-            guiManager.showGUI(event.player, returnGui);
+                TextUtils.formatText(this.configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
+            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.guiManager.showGUI(event.player, this.returnGui);
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
-            guiManager.showGUI(event.player, returnGui);
+                TextUtils.formatText(this.configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
+            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.guiManager.showGUI(event.player, this.returnGui);
         });
 
-        List<BasicPermission> permissions = permissionManager.getPermissions().stream()
-                .filter(p -> p.getType() == getType(role))
+        List<BasicPermission> permissions = this.permissionManager.getPermissions().stream()
+                .filter(p -> p.getType() == getType(this.role))
                 .collect(Collectors.toList());
         double itemCount = permissions.size();
         this.pages = (int) Math.max(1, Math.ceil(itemCount / 36));
 
-        if (page != 1)
+        if (this.page != 1) {
             setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                    TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Last.Displayname"))),
+                            TextUtils.formatText(this.configLoad.getString("Menu.Settings.Categories.Item.Last.Displayname"))),
                     (event) -> {
-                        page--;
+                        this.page--;
                         paint();
                     });
+        }
 
-        if (page != pages)
+        if (this.page != this.pages) {
             setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                    TextUtils.formatText(configLoad.getString("Menu.Settings.Categories.Item.Next.Displayname"))),
+                            TextUtils.formatText(this.configLoad.getString("Menu.Settings.Categories.Item.Next.Displayname"))),
                     (event) -> {
-                        page++;
+                        this.page++;
                         paint();
                     });
+        }
 
         for (int i = 9; i < 45; i++) {
-            int current = ((page - 1) * 36) - 9;
+            int current = ((this.page - 1) * 36) - 9;
             if (current + i >= permissions.size()) {
                 setItem(i, null);
                 continue;
             }
             BasicPermission permission = permissions.get(current + i);
-            if (permission == null) continue;
+            if (permission == null) {
+                continue;
+            }
 
-            final String path = "Settings." + role.name() + "." + permission.getName();
-            boolean setting = settingsConfigLoad.getBoolean(path);
-            setButton(i, permission.getItem(setting, role), (event) -> {
-                settingsConfigLoad.set(path, !setting);
+            final String path = "Settings." + this.role.name() + "." + permission.getName();
+            boolean setting = this.settingsConfigLoad.getBoolean(path);
+            setButton(i, permission.getItem(setting, this.role), (event) -> {
+                this.settingsConfigLoad.set(path, !setting);
                 try {
-                    settingsConfigLoad.save(settingsConfig.getFile());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    this.settingsConfigLoad.save(this.settingsConfig.getFile());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
                 paint();
             });
@@ -110,13 +112,13 @@ public class GuiAdminPermissions extends Gui {
     public PermissionType getType(IslandRole role) {
         switch (role) {
             default:
-            case Visitor:
-            case Member:
-            case Coop:
+            case VISITOR:
+            case MEMBER:
+            case COOP:
                 return PermissionType.GENERIC;
-            case Operator:
+            case OPERATOR:
                 return PermissionType.OPERATOR;
-            case Owner:
+            case OWNER:
                 return PermissionType.ISLAND;
         }
     }

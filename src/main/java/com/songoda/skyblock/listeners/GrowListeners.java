@@ -28,7 +28,6 @@ import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class GrowListeners implements Listener {
-
     private final SkyBlock plugin;
 
     public GrowListeners(SkyBlock plugin) {
@@ -43,16 +42,20 @@ public class GrowListeners implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onStructureGrow(StructureGrowEvent event) {
-        WorldManager worldManager = plugin.getWorldManager();
-        if (!worldManager.isIslandWorld(event.getWorld())) return;
+        WorldManager worldManager = this.plugin.getWorldManager();
+        if (!worldManager.isIslandWorld(event.getWorld())) {
+            return;
+        }
 
-        IslandManager islandManager = plugin.getIslandManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
         Island origin = islandManager.getIslandAtLocation(event.getLocation());
         for (Iterator<BlockState> it = event.getBlocks().iterator(); it.hasNext(); ) {
             BlockState state = it.next();
             Island growingTo = islandManager.getIslandAtLocation(state.getLocation());
             // This block is ok to continue as it's not related to Skyblock islands.
-            if (origin == null && growingTo == null) continue;
+            if (origin == null && growingTo == null) {
+                continue;
+            }
 
             //Is in border of island
             if (origin != null && !origin.isInBorder(state.getLocation())) {
@@ -75,12 +78,16 @@ public class GrowListeners implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onCropUpgrade(BlockGrowEvent event) {
         org.bukkit.block.Block block = event.getBlock();
-        WorldManager worldManager = plugin.getWorldManager();
-        if (!plugin.getWorldManager().isIslandWorld(block.getWorld())) return;
+        WorldManager worldManager = this.plugin.getWorldManager();
+        if (!this.plugin.getWorldManager().isIslandWorld(block.getWorld())) {
+            return;
+        }
 
-        IslandManager islandManager = plugin.getIslandManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
         Island island = islandManager.getIslandAtLocation(block.getLocation());
-        if (island == null) return;
+        if (island == null) {
+            return;
+        }
 
         // Check spawn block protection
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
@@ -91,9 +98,10 @@ public class GrowListeners implements Listener {
             }
         }
 
-        List<Upgrade> upgrades = plugin.getUpgradeManager().getUpgrades(Upgrade.Type.Crop);
-        if (upgrades == null || upgrades.size() == 0 || !upgrades.get(0).isEnabled() || !island.isUpgrade(Upgrade.Type.Crop))
+        List<Upgrade> upgrades = this.plugin.getUpgradeManager().getUpgrades(Upgrade.Type.CROP);
+        if (upgrades == null || upgrades.isEmpty() || !upgrades.get(0).isEnabled() || !island.isUpgrade(Upgrade.Type.CROP)) {
             return;
+        }
 
         if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
             try {
@@ -103,8 +111,9 @@ public class GrowListeners implements Listener {
                     ageable.setAge(ageable.getAge() + 1);
                     block.getClass().getMethod("setBlockData", Class.forName("org.bukkit.block.data.BlockData")).invoke(block, ageable);
                 }
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException e) {
-                e.printStackTrace();
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |
+                     NoSuchMethodException | SecurityException | ClassNotFoundException ex) {
+                ex.printStackTrace();
             }
         } else {
             CompatibleMaterial type = CompatibleMaterial.getBlockMaterial(block.getType());
@@ -112,8 +121,9 @@ public class GrowListeners implements Listener {
                     || type.name().equals("WHEAT") || type.name().equals("CROPS")) {
                 try {
                     block.getClass().getMethod("setData", byte.class).invoke(block, (byte) (block.getData() + 1));
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                    e.printStackTrace();
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |
+                         NoSuchMethodException | SecurityException ex) {
+                    ex.printStackTrace();
                 }
             }
         }
@@ -127,17 +137,21 @@ public class GrowListeners implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onBlockGrow(BlockGrowEvent event) {
-        WorldManager worldManager = plugin.getWorldManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
         BlockState state = event.getNewState();
-        if (!worldManager.isIslandWorld(state.getWorld())) return;
+        if (!worldManager.isIslandWorld(state.getWorld())) {
+            return;
+        }
 
-        IslandManager islandManager = plugin.getIslandManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
         Island origin = islandManager.getIslandAtLocation(event.getBlock().getLocation());
         Island growingTo = islandManager.getIslandAtLocation(state.getLocation());
         // This block is ok to continue as it's not related to Skyblock islands.
-        if (origin == null && growingTo == null) return;
+        if (origin == null && growingTo == null) {
+            return;
+        }
 
-        // The growing block is outside/inside that it's not suppose to or the block is growing from one island to another.
+        // The growing block is outside/inside that it's not supposed to or the block is growing from one island to another.
         if (origin == null
                 || growingTo == null
                 || !origin.getIslandUUID().equals(growingTo.getIslandUUID())) {
@@ -146,9 +160,10 @@ public class GrowListeners implements Listener {
         }
 
         Material type = state.getType();
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (state.getBlock().getType() == type)
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+            if (state.getBlock().getType() == type) {
                 growingTo.getLevel().addMaterial(type.name(), 1);
+            }
         }, 1L);
     }
 
@@ -158,15 +173,21 @@ public class GrowListeners implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onStructureCreate(StructureGrowEvent event) {
-        if (!this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) return;
+        if (!this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) {
+            return;
+        }
 
         List<BlockState> blocks = event.getBlocks();
-        if (blocks.isEmpty()) return;
+        if (blocks.isEmpty()) {
+            return;
+        }
 
-        WorldManager worldManager = plugin.getWorldManager();
-        IslandManager islandManager = plugin.getIslandManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
         Island island = islandManager.getIslandAtLocation(event.getLocation());
-        if (island == null) return;
+        if (island == null) {
+            return;
+        }
 
         // Check spawn block protection
         IslandWorld world = worldManager.getIslandWorld(blocks.get(0).getWorld());
@@ -180,24 +201,31 @@ public class GrowListeners implements Listener {
 
     @EventHandler
     public void onFireSpread(BlockSpreadEvent event) {
-        if (event.getSource().getType() != Material.FIRE) return;
+        if (event.getSource().getType() != Material.FIRE) {
+            return;
+        }
 
         org.bukkit.block.Block block = event.getBlock();
-        if (!plugin.getWorldManager().isIslandWorld(block.getWorld())) return;
+        if (!this.plugin.getWorldManager().isIslandWorld(block.getWorld())) {
+            return;
+        }
 
-        PermissionManager permissionManager = plugin.getPermissionManager();
-        if (!permissionManager.hasPermission(block.getLocation(), "FireSpread", IslandRole.Owner))
+        PermissionManager permissionManager = this.plugin.getPermissionManager();
+        if (!permissionManager.hasPermission(block.getLocation(), "FireSpread", IslandRole.OWNER)) {
             event.setCancelled(true);
+        }
     }
 
     @EventHandler
     public void onLeavesDecay(LeavesDecayEvent event) {
         org.bukkit.block.Block block = event.getBlock();
-        if (!plugin.getWorldManager().isIslandWorld(block.getWorld())) return;
+        if (!this.plugin.getWorldManager().isIslandWorld(block.getWorld())) {
+            return;
+        }
 
-        PermissionManager permissionManager = plugin.getPermissionManager();
-        if (!permissionManager.hasPermission(block.getLocation(), "LeafDecay", IslandRole.Owner))
+        PermissionManager permissionManager = this.plugin.getPermissionManager();
+        if (!permissionManager.hasPermission(block.getLocation(), "LeafDecay", IslandRole.OWNER)) {
             event.setCancelled(true);
+        }
     }
-
 }

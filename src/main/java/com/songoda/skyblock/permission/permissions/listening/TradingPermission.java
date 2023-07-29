@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class TradingPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -24,13 +23,12 @@ public class TradingPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
-
-
         Player player = event.getPlayer();
 
         if (event.getRightClicked().getType() == EntityType.VILLAGER
                 || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)
-                && event.getRightClicked().getType() == EntityType.WANDERING_TRADER)
-            cancelAndMessage(event, player, plugin, messageManager);
+                && event.getRightClicked().getType() == EntityType.WANDERING_TRADER) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }

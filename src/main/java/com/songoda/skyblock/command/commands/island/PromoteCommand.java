@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
@@ -20,14 +21,17 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PromoteCommand extends SubCommand {
+    public PromoteCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length != 1) {
@@ -44,19 +48,19 @@ public class PromoteCommand extends SubCommand {
             return;
         }
 
-        if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+        if (!island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Promote.Permission.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             return;
         }
         Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
         if (targetPlayer == null) {
             OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);
-            Set<UUID> islandOperators = island.getRole(IslandRole.Operator);
+            Set<UUID> islandOperators = island.getRole(IslandRole.OPERATOR);
 
             if (offlinePlayer.getUniqueId() != null
-                    && (island.getRole(IslandRole.Member).contains(offlinePlayer.getUniqueId())
+                    && (island.getRole(IslandRole.MEMBER).contains(offlinePlayer.getUniqueId())
                     || islandOperators.contains(offlinePlayer.getUniqueId()))) {
                 if (islandOperators.contains(offlinePlayer.getUniqueId())) {
                     messageManager.sendMessage(player,
@@ -70,9 +74,9 @@ public class PromoteCommand extends SubCommand {
 
                     for (Player all : Bukkit.getOnlinePlayers()) {
                         if (!all.getUniqueId().equals(player.getUniqueId())) {
-                            if (island.hasRole(IslandRole.Member, player.getUniqueId())
-                                    || island.hasRole(IslandRole.Operator, all.getUniqueId())
-                                    || island.hasRole(IslandRole.Owner, all.getUniqueId())) {
+                            if (island.hasRole(IslandRole.MEMBER, player.getUniqueId())
+                                    || island.hasRole(IslandRole.OPERATOR, all.getUniqueId())
+                                    || island.hasRole(IslandRole.OWNER, all.getUniqueId())) {
                                 all.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                         configLoad
                                                 .getString("Command.Island.Promote.Promoted.Broadcast.Message")
@@ -82,7 +86,7 @@ public class PromoteCommand extends SubCommand {
                         }
                     }
 
-                    island.setRole(IslandRole.Operator, offlinePlayer.getUniqueId());
+                    island.setRole(IslandRole.OPERATOR, offlinePlayer.getUniqueId());
                 }
             } else {
                 messageManager.sendMessage(player,
@@ -91,9 +95,9 @@ public class PromoteCommand extends SubCommand {
             }
             return;
         }
-        if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())
-                || island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())) {
-            if (island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())) {
+        if (island.hasRole(IslandRole.MEMBER, targetPlayer.getUniqueId())
+                || island.hasRole(IslandRole.OPERATOR, targetPlayer.getUniqueId())) {
+            if (island.hasRole(IslandRole.OPERATOR, targetPlayer.getUniqueId())) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Promote.Operator.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -109,9 +113,9 @@ public class PromoteCommand extends SubCommand {
 
                 for (Player all : Bukkit.getOnlinePlayers()) {
                     if (!all.getUniqueId().equals(player.getUniqueId())) {
-                        if (island.hasRole(IslandRole.Member, player.getUniqueId())
-                                || island.hasRole(IslandRole.Operator, all.getUniqueId())
-                                || island.hasRole(IslandRole.Owner, all.getUniqueId())) {
+                        if (island.hasRole(IslandRole.MEMBER, player.getUniqueId())
+                                || island.hasRole(IslandRole.OPERATOR, all.getUniqueId())
+                                || island.hasRole(IslandRole.OWNER, all.getUniqueId())) {
                             all.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     configLoad
                                             .getString("Command.Island.Promote.Promoted.Broadcast.Message")
@@ -121,7 +125,7 @@ public class PromoteCommand extends SubCommand {
                     }
                 }
 
-                island.setRole(IslandRole.Operator, targetPlayer.getUniqueId());
+                island.setRole(IslandRole.OPERATOR, targetPlayer.getUniqueId());
             }
         } else {
             messageManager.sendMessage(player,

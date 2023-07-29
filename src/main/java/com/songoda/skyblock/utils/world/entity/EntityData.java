@@ -1,7 +1,6 @@
 package com.songoda.skyblock.utils.world.entity;
 
 public class EntityData {
-
     private byte[] serializedNBT;
 
     private String entityType;
@@ -74,8 +73,7 @@ public class EntityData {
     private boolean baby;
 
     @Deprecated
-    public EntityData(String entityType, double x, double y, double z, String customName, boolean customNameVisible,
-                      int fireTicks, int ticksLived) {
+    public EntityData(String entityType, double x, double y, double z, String customName, boolean customNameVisible, int fireTicks, int ticksLived) {
         this.entityType = entityType;
 
         this.x = x;

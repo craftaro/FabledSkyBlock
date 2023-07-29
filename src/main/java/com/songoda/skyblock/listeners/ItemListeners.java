@@ -8,9 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-@SuppressWarnings("deprecation")
 public class ItemListeners implements Listener {
-
     private final SkyBlock plugin;
 
     public ItemListeners(SkyBlock plugin) {
@@ -19,25 +17,27 @@ public class ItemListeners implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        IslandManager islandManager = plugin.getIslandManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
         Player player = event.getPlayer();
 
-        if (!plugin.getWorldManager().isIslandWorld(player.getWorld())) return;
+        if (!this.plugin.getWorldManager().isIslandWorld(player.getWorld())) {
+            return;
+        }
 
         // Check permissions.
-        plugin.getPermissionManager().processPermission(event, player,
-                islandManager.getIslandAtLocation(event.getItemDrop().getLocation()));
+        this.plugin.getPermissionManager().processPermission(event, player, islandManager.getIslandAtLocation(event.getItemDrop().getLocation()));
     }
 
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        IslandManager islandManager = plugin.getIslandManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
         Player player = event.getPlayer();
 
-        if (!plugin.getWorldManager().isIslandWorld(player.getWorld())) return;
+        if (!this.plugin.getWorldManager().isIslandWorld(player.getWorld())) {
+            return;
+        }
 
         // Check permissions.
-        plugin.getPermissionManager().processPermission(event, player,
-                islandManager.getIslandAtLocation(event.getItem().getLocation()));
+        this.plugin.getPermissionManager().processPermission(event, player, islandManager.getIslandAtLocation(event.getItem().getLocation()));
     }
 }

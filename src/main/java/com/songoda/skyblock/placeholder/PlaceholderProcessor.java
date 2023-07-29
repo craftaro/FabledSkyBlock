@@ -1,16 +1,20 @@
 package com.songoda.skyblock.placeholder;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.invite.Invite;
-import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandLevel;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.upgrade.Upgrade;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.visit.Visit;
 import com.songoda.skyblock.visit.VisitManager;
@@ -24,13 +28,12 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PlaceholderProcessor {
-    
     public String processPlaceholder(Player player, String placeholder) {
-        if(player == null || placeholder == null) {
+        if (player == null || placeholder == null) {
             return "";
         }
-        
-        SkyBlock plugin = SkyBlock.getInstance();
+
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
         IslandManager islandManager = plugin.getIslandManager();
         VisitManager visitManager = plugin.getVisitManager();
         IslandLevelManager levellingManager = plugin.getLevellingManager();
@@ -40,14 +43,14 @@ public class PlaceholderProcessor {
         FileConfiguration placeholdersLoad = fileManager.getConfig(
                 new File(plugin.getDataFolder(), "placeholders.yml")).getFileConfiguration();
 
-        if(placeholdersLoad == null) {
+        if (placeholdersLoad == null) {
             return "Error";
         }
 
         Island island = islandManager.getIsland(player);
-    
+
         String returnValue = null;
-        
+
         switch (placeholder.toLowerCase()) {
             case "fabledskyblock_island_exists":
                 if (island == null) {
@@ -77,7 +80,7 @@ public class PlaceholderProcessor {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_status.Empty"));
                 } else {
-                    switch(island.getStatus()){
+                    switch (island.getStatus()) {
                         case OPEN:
                             returnValue = TextUtils.formatText(
                                     placeholdersLoad.getString("Placeholders.fabledskyblock_island_status.Open"));
@@ -123,7 +126,7 @@ public class PlaceholderProcessor {
                 } else {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_formatted.Non-empty").replace(
-                                    "{PLACEHOLDER}", "" + NumberUtils.formatWithSuffix(island.getLevel().getLevel())));
+                                    "{PLACEHOLDER}", NumberUtils.formatWithSuffix(island.getLevel().getLevel())));
                 }
                 break;
             case "fabledskyblock_island_points":
@@ -160,7 +163,7 @@ public class PlaceholderProcessor {
                 } else {
                     UUID islandOwnerUUID = island.getOwnerUUID();
                     Player targetPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
-    
+
                     if (targetPlayer == null) {
                         returnValue = TextUtils.formatText(
                                 placeholdersLoad.getString("Placeholders.fabledskyblock_island_owner.Non-empty.Other").replace(
@@ -225,8 +228,8 @@ public class PlaceholderProcessor {
                 } else {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_members_total.Non-empty")
-                                    .replace("{PLACEHOLDER}", "" + (island.getRole(IslandRole.Member).size()
-                                            + island.getRole(IslandRole.Operator).size() + 1)));
+                                    .replace("{PLACEHOLDER}", "" + (island.getRole(IslandRole.MEMBER).size()
+                                            + island.getRole(IslandRole.OPERATOR).size() + 1)));
                 }
                 break;
             case "fabledskyblock_island_members":
@@ -236,7 +239,7 @@ public class PlaceholderProcessor {
                 } else {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_members.Non-empty")
-                                    .replace("{PLACEHOLDER}", "" + island.getRole(IslandRole.Member).size()));
+                                    .replace("{PLACEHOLDER}", "" + island.getRole(IslandRole.MEMBER).size()));
                 }
                 break;
             case "fabledskyblock_island_maxmembers":
@@ -256,7 +259,7 @@ public class PlaceholderProcessor {
                 } else {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_operators.Non-empty")
-                                    .replace("{PLACEHOLDER}", "" + island.getRole(IslandRole.Operator).size()));
+                                    .replace("{PLACEHOLDER}", "" + island.getRole(IslandRole.OPERATOR).size()));
                 }
                 break;
             case "fabledskyblock_island_coops":
@@ -296,16 +299,16 @@ public class PlaceholderProcessor {
                 } else {
                     Map<UUID, Invite> invites = plugin.getInviteManager().getInvites();
                     int invitedPlayers = 0;
-    
+
                     for (int i = 0; i < invites.size(); i++) {
                         UUID uuid = (UUID) invites.keySet().toArray()[i];
                         Invite invite = invites.get(uuid);
-        
+
                         if (invite.getOwnerUUID().equals(island.getOwnerUUID())) {
                             invitedPlayers++;
                         }
                     }
-    
+
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_invites.Non-empty")
                                     .replace("{PLACEHOLDER}", "" + invitedPlayers));
@@ -317,7 +320,7 @@ public class PlaceholderProcessor {
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance.Empty"));
                 } else {
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance.Non-empty"))
+                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance.Non-empty"))
                             .replace("{PLACEHOLDER}", "" + NumberUtils.formatNumber(island.getBankBalance()));
                 }
                 break;
@@ -327,108 +330,108 @@ public class PlaceholderProcessor {
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance_formatted.Empty"));
                 } else {
                     returnValue = TextUtils.formatText(
-                            placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance_formatted.Non-empty"))
+                                    placeholdersLoad.getString("Placeholders.fabledskyblock_island_bank_balance_formatted.Non-empty"))
                             .replace("{PLACEHOLDER}", "" + NumberUtils.formatWithSuffix((long) island.getBankBalance()));
                 }
                 break;
         }
-            
-        if(returnValue == null) {
-            if(placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_votes_")){
-                List<Leaderboard> leaderboardVotesPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Votes);
-    
+
+        if (returnValue == null) {
+            if (placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_votes_")) {
+                List<Leaderboard> leaderboardVotesPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.VOTES);
+
                 String[] values = placeholder.split("_");
                 int value;
                 try {
-                    value = Integer.parseInt(values[values.length-1]);
-                } catch(NumberFormatException ignored) {
+                    value = Integer.parseInt(values[values.length - 1]);
+                } catch (NumberFormatException ignored) {
                     value = 1;
                 }
-    
+
                 if (value > 0 && value < leaderboardVotesPlayers.size()) {
                     Leaderboard leaderboard = leaderboardVotesPlayers.get(value);
                     Visit visit = leaderboard.getVisit();
-        
+
                     Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
                     String islandOwnerName;
-        
+
                     if (targetPlayer == null) {
                         islandOwnerName = new OfflinePlayer(visit.getOwnerUUID()).getName();
                     } else {
                         islandOwnerName = targetPlayer.getName();
                     }
-    
+
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_votes.Non-empty")
                                     .replace("{POSITION}", "" + (value))
                                     .replace("{PLAYER}", islandOwnerName)
                                     .replace("{VOTES}", NumberUtils.formatNumber(visit.getVoters().size())));
                 } else {
-    
+
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_votes.Empty"));
                 }
-            } else if(placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_bank_")){
-                List<Leaderboard> leaderboardBankPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Bank);
-    
+            } else if (placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_bank_")) {
+                List<Leaderboard> leaderboardBankPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.BANK);
+
                 String[] values = placeholder.split("_");
                 int value;
                 try {
-                    value = Integer.parseInt(values[values.length-1]);
-                } catch(NumberFormatException ignored) {
+                    value = Integer.parseInt(values[values.length - 1]);
+                } catch (NumberFormatException ignored) {
                     value = 1;
                 }
-    
+
                 if (value > 0 && value < leaderboardBankPlayers.size()) {
                     Leaderboard leaderboard = leaderboardBankPlayers.get(value);
                     Visit visit = leaderboard.getVisit();
-        
+
                     Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
                     String islandOwnerName;
-        
+
                     if (targetPlayer == null) {
                         islandOwnerName = new OfflinePlayer(visit.getOwnerUUID()).getName();
                     } else {
                         islandOwnerName = targetPlayer.getName();
                     }
-        
+
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_bank.Non-empty")
                                     .replace("{POSITION}", "" + (value))
                                     .replace("{PLAYER}", islandOwnerName)
                                     .replace("{BALANCE}", NumberUtils.formatNumber(visit.getBankBalance())));
                 } else {
-        
+
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_bank.Empty"));
                 }
-            } else if(placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_level_")){
-                List<Leaderboard> leaderboardLevelPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.Level);
+            } else if (placeholder.toLowerCase().startsWith("fabledskyblock_leaderboard_level_")) {
+                List<Leaderboard> leaderboardLevelPlayers = leaderboardManager.getLeaderboard(Leaderboard.Type.LEVEL);
 
 
                 String[] values = placeholder.split("_");
                 int value;
                 try {
-                    value = Integer.parseInt(values[values.length-1]);
-                } catch(NumberFormatException ignored) {
+                    value = Integer.parseInt(values[values.length - 1]);
+                } catch (NumberFormatException ignored) {
                     value = 1;
                 }
-    
+
                 if (value > 0 && value - 1 < leaderboardLevelPlayers.size()) {
-                    value --;
+                    value--;
                     Leaderboard leaderboard = leaderboardLevelPlayers.get(value);
                     Visit visit = leaderboard.getVisit();
                     IslandLevel level = visit.getLevel();
-    
+
                     Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
                     String islandOwnerName;
-        
+
                     if (targetPlayer == null) {
                         islandOwnerName = new OfflinePlayer(visit.getOwnerUUID()).getName();
                     } else {
                         islandOwnerName = targetPlayer.getName();
                     }
-        
+
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_level.Non-empty")
                                     .replace("{POSITION}", "" + (value + 1))
@@ -436,7 +439,7 @@ public class PlaceholderProcessor {
                                     .replace("{LEVEL}", NumberUtils.formatNumber(level.getLevel()))
                                     .replace("{POINTS}", NumberUtils.formatNumber(level.getPoints())));
                 } else {
-        
+
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_leaderboard_level.Empty"));
                 }
@@ -445,7 +448,7 @@ public class PlaceholderProcessor {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_level_rank.Empty"));
                 } else {
-                    int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Level);
+                    int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.LEVEL);
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_level_rank.Non-empty")
                                     .replace("{PLACEHOLDER}", "" + rank));
@@ -455,7 +458,7 @@ public class PlaceholderProcessor {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_bank_rank.Empty"));
                 } else {
-                    int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Bank);
+                    int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.BANK);
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_bank_rank.Non-empty")
                                     .replace("{PLACEHOLDER}", "" + rank));
@@ -465,7 +468,7 @@ public class PlaceholderProcessor {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_votes_rank.Empty"));
                 } else {
-                    int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.Votes);
+                    int rank = leaderboardManager.getPlayerIslandLeaderboardPosition(player, Leaderboard.Type.VOTES);
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_leaderboard_votes_rank.Non-empty")
                                     .replace("{PLACEHOLDER}", "" + rank));
@@ -518,12 +521,12 @@ public class PlaceholderProcessor {
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_island_has_upgrade_")) {
                 Upgrade.Type type;
-        
+
                 final String lower = placeholder.replace("fabledskyblock_island_has_upgrade_", "").toLowerCase();
-    
+
                 if (!lower.isEmpty()) {
                     final String toParse = lower.substring(0, 1).toUpperCase() + lower.substring(1);
-    
+
                     try {
                         type = Upgrade.Type.valueOf(toParse);
                         returnValue = Boolean.toString(island.hasUpgrade(type));
@@ -535,7 +538,7 @@ public class PlaceholderProcessor {
                 }
             }
         }
-        
+
         return returnValue;
     }
 }

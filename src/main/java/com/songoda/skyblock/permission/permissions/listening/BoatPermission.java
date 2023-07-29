@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class BoatPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,12 +22,10 @@ public class BoatPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
-
-
         Player player = event.getPlayer();
 
-        if (event.getRightClicked().getType() == EntityType.BOAT)
-            cancelAndMessage(event, player, plugin, messageManager);
+        if (event.getRightClicked().getType() == EntityType.BOAT) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }
-

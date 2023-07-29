@@ -1,7 +1,6 @@
 package com.songoda.skyblock.utils.structure;
 
 public class Location {
-
     private final int x;
     private final int y;
     private final int z;
@@ -28,6 +27,6 @@ public class Location {
     }
 
     public boolean isOriginLocation() {
-        return originLocation;
+        return this.originLocation;
     }
 }

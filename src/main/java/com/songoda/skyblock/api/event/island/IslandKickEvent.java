@@ -5,9 +5,9 @@ import com.songoda.skyblock.api.island.IslandRole;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class IslandKickEvent extends IslandEvent {
-
     private static final HandlerList HANDLERS = new HandlerList();
     private final Player kicker;
     private final OfflinePlayer kicked;
@@ -26,19 +26,19 @@ public class IslandKickEvent extends IslandEvent {
     }
 
     public OfflinePlayer getKicked() {
-        return kicked;
+        return this.kicked;
     }
 
     public Player getKicker() {
-        return kicker;
+        return this.kicker;
     }
 
     public IslandRole getRole() {
-        return role;
+        return this.role;
     }
 
     public boolean isCancelled() {
-        return cancelled;
+        return this.cancelled;
     }
 
     public void setCancelled(boolean cancel) {
@@ -46,7 +46,7 @@ public class IslandKickEvent extends IslandEvent {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

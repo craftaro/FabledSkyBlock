@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class LeashPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,15 +22,13 @@ public class LeashPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
-
-
         Player player = event.getPlayer();
         ItemStack is = player.getItemInHand();
 
         if (CompatibleMaterial.getMaterial(is) != CompatibleMaterial.AIR) {
-            if (CompatibleMaterial.getMaterial(is) == CompatibleMaterial.LEAD)
-                cancelAndMessage(event, player, plugin, messageManager);
+            if (CompatibleMaterial.getMaterial(is) == CompatibleMaterial.LEAD) {
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
+            }
         }
     }
 }
-

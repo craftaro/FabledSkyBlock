@@ -4,9 +4,9 @@ import com.songoda.skyblock.api.island.Island;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerIslandChatEvent extends PlayerEvent implements Cancellable {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private boolean cancelled = false;
@@ -23,7 +23,7 @@ public class PlayerIslandChatEvent extends PlayerEvent implements Cancellable {
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public void setMessage(String message) {
@@ -31,7 +31,7 @@ public class PlayerIslandChatEvent extends PlayerEvent implements Cancellable {
     }
 
     public String getFormat() {
-        return format;
+        return this.format;
     }
 
     public void setFormat(String format) {
@@ -39,7 +39,7 @@ public class PlayerIslandChatEvent extends PlayerEvent implements Cancellable {
     }
 
     public boolean isCancelled() {
-        return cancelled;
+        return this.cancelled;
     }
 
     public void setCancelled(boolean cancelled) {
@@ -47,7 +47,7 @@ public class PlayerIslandChatEvent extends PlayerEvent implements Cancellable {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

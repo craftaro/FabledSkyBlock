@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class EntityPlacementPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -27,7 +26,7 @@ public class EntityPlacementPermission extends ListeningPermission {
             if (CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.ARMOR_STAND
                     || event.getItem().getType().name().contains("BOAT")
                     || event.getItem().getType().name().contains("MINECART")) {
-                cancelAndMessage(event, player, plugin, messageManager);
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
                 player.updateInventory();
             }
         }

@@ -2,11 +2,9 @@ package com.songoda.skyblock.structure;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Structure implements com.songoda.skyblock.api.structure.Structure {
-
     private CompatibleMaterial material;
 
     private final String name;
@@ -38,11 +36,11 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public CompatibleMaterial getMaterial() {
-        return material;
+        return this.material;
     }
 
     public void setMaterial(CompatibleMaterial material) {
@@ -50,7 +48,7 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
     }
 
     public String getOverworldFile() {
-        return overworldFile;
+        return this.overworldFile;
     }
 
     public void setOverworldFile(String file) {
@@ -58,7 +56,7 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
     }
 
     public String getNetherFile() {
-        return netherFile;
+        return this.netherFile;
     }
 
     public void setNetherFile(String file) {
@@ -66,7 +64,7 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
     }
 
     public String getEndFile() {
-        return endFile;
+        return this.endFile;
     }
 
     public void setEndFile(String file) {
@@ -74,7 +72,7 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
     }
 
     public String getDisplayname() {
-        return displayName;
+        return this.displayName;
     }
 
     public void setDisplayname(String displayName) {
@@ -82,11 +80,11 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
     }
 
     public boolean isPermission() {
-        return permission;
+        return this.permission;
     }
 
     public String getPermission() {
-        return "fabledskyblock.island." + name.toLowerCase().replace(" ", "_");
+        return "fabledskyblock.island." + this.name.toLowerCase().replace(" ", "_");
     }
 
     public void setPermission(boolean permission) {
@@ -94,31 +92,31 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
     }
 
     public List<String> getDescription() {
-        return description;
+        return this.description;
     }
 
     public void addLine(String line) {
-        description.add(line);
+        this.description.add(line);
     }
 
     public void removeLine(int index) {
-        description.remove(index);
+        this.description.remove(index);
     }
 
     public List<String> getCommands() {
-        return commands;
+        return this.commands;
     }
 
     public void addCommand(String command) {
-        commands.add(command);
+        this.commands.add(command);
     }
 
     public void removeCommand(int index) {
-        commands.remove(index);
+        this.commands.remove(index);
     }
 
     public double getDeletionCost() {
-        return deletionCost;
+        return this.deletionCost;
     }
 
     public void setDeletionCost(double deletionCost) {

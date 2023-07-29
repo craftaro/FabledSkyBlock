@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -15,15 +16,18 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class LeaderboardCommand extends SubCommand {
+    public LeaderboardCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (playerDataManager.hasPlayerData(player)) {
@@ -31,23 +35,23 @@ public class LeaderboardCommand extends SubCommand {
                 if (this.plugin.getConfiguration()
                         .getBoolean("Island.Visitor.Vote")) {
                     playerDataManager.getPlayerData(player)
-                            .setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Browse));
+                            .setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.BROWSE));
                 } else {
                     playerDataManager.getPlayerData(player)
-                            .setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Level));
+                            .setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.LEVEL));
                 }
             } else if (args.length == 1) {
                 String type = args[0].toLowerCase();
                 switch (type) {
                     case "level":
-                        playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Level));
+                        playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.LEVEL));
                         break;
                     case "bank":
-                        playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Bank));
+                        playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.BANK));
                         break;
                     case "votes":
                         if (this.plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
-                            playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.Votes));
+                            playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.VOTES));
                         } else {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Disabled.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);

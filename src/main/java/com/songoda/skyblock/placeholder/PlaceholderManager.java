@@ -7,33 +7,32 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 public class PlaceholderManager extends Manager {
-    
-    private boolean PlaceholderAPIEnabled = false;
-    
+    private boolean placeholderAPIEnabled = false;
+
     public PlaceholderManager(SkyBlock plugin) {
         super(plugin);
-        
+
         PluginManager pluginManager = plugin.getServer().getPluginManager();
-        
+
         if (pluginManager.getPlugin("PlaceholderAPI") != null) {
-            PlaceholderAPIEnabled = true;
+            this.placeholderAPIEnabled = true;
         }
     }
-    
+
     public void registerPlaceholders() {
-        if (PlaceholderAPIEnabled) {
-            new PlaceholderAPI(plugin).register();
+        if (this.placeholderAPIEnabled) {
+            new PlaceholderAPI(this.plugin).register();
         }
     }
-    
+
     public boolean isPlaceholderAPIEnabled() {
-        return PlaceholderAPIEnabled;
+        return this.placeholderAPIEnabled;
     }
-    
+
     public String parsePlaceholders(Player player, String message) {
         String retValue = message;
-        
-        if(PlaceholderAPIEnabled) {
+
+        if (this.placeholderAPIEnabled) {
             retValue = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message);
         }
         return retValue;

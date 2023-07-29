@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SpawnEggPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -22,12 +21,10 @@ public class SpawnEggPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        Player player = event.getPlayer();
         if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()) != CompatibleMaterial.AIR) {
             if (event.getItem().getType().name().contains("SPAWN_EGG") || event.getItem().getType().name().equals("MONSTER_EGG")) {
-                cancelAndMessage(event, player, plugin, messageManager);
+                Player player = event.getPlayer();
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
                 player.updateInventory();
             }
         }

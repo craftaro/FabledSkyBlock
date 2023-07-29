@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
@@ -17,15 +18,18 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class OpenCommand extends SubCommand {
+    public OpenCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        PermissionManager permissionManager = plugin.getPermissionManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        PermissionManager permissionManager = this.plugin.getPermissionManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -33,10 +37,10 @@ public class OpenCommand extends SubCommand {
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Open.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
-                || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && permissionManager.hasPermission(island, "Visitor", IslandRole.Operator))) {
-            if (island.getStatus().equals(IslandStatus.OPEN)) {
+        } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
+                || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                && permissionManager.hasPermission(island, "Visitor", IslandRole.OPERATOR))) {
+            if (island.getStatus() == IslandStatus.OPEN) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Open.Already.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             } else {
@@ -47,7 +51,7 @@ public class OpenCommand extends SubCommand {
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Open.Permission.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }
 

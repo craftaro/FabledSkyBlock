@@ -3,9 +3,9 @@ package com.songoda.skyblock.stackable;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
-import com.songoda.core.utils.NumberUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.UUID;
 
 public class Stackable {
-
     private final UUID uuid;
 
     private Location location;
@@ -33,7 +32,7 @@ public class Stackable {
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(location, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(location, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         this.save();
     }
 
@@ -43,7 +42,7 @@ public class Stackable {
         this.material = material;
         this.maxSize = maxSize;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(location, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(location, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         this.save();
     }
 
@@ -87,7 +86,7 @@ public class Stackable {
     }
 
     public int getMaxSize() {
-        return maxSize;
+        return this.maxSize;
     }
 
     public void setMaxSize(int maxSize) {
@@ -97,36 +96,38 @@ public class Stackable {
     public void addOne() {
         this.size++;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(this.location, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(this.location, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
         this.save();
     }
 
     public void takeOne() {
         this.size--;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
         this.save();
     }
 
     public void take(int n) {
-        this.size-=n;
+        this.size -= n;
         this.updateDisplay();
-        SkyBlock.getInstance().getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
         this.save();
     }
 
-    public boolean isMaxSize(){
-        return size > maxSize;
+    public boolean isMaxSize() {
+        return this.size > this.maxSize;
     }
 
     private void updateDisplay() {
         // The chunk needs to be loaded otherwise the getNearbyEntities() in
         // removeDisplay() won't find anything
-        if (!this.location.getWorld().isChunkLoaded(this.location.getBlockX() >> 4, this.location.getBlockZ() >> 4)) this.location.getChunk().load();
+        if (!this.location.getWorld().isChunkLoaded(this.location.getBlockX() >> 4, this.location.getBlockZ() >> 4)) {
+            this.location.getChunk().load();
+        }
 
         if (this.size > 1) {
 
-            if (display == null || !display.isValid()) {
+            if (this.display == null || !this.display.isValid()) {
                 this.createDisplay();
             } else {
                 this.display.setCustomName(this.getCustomName());
@@ -146,13 +147,14 @@ public class Stackable {
         as.setVisible(false);
         as.setGravity(false);
         as.setSmall(true);
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9))
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
             as.setMarker(true);
+        }
         as.setBasePlate(true);
-        as.setHelmet(material.getItem());
+        as.setHelmet(this.material.getItem());
         as.setCustomName(this.getCustomName());
         as.setCustomNameVisible(true);
-        as.setMetadata("StackableArmorStand", new FixedMetadataValue(SkyBlock.getInstance(), ""));
+        as.setMetadata("StackableArmorStand", new FixedMetadataValue(SkyBlock.getPlugin(SkyBlock.class), ""));
         this.display = as;
     }
 
@@ -162,13 +164,16 @@ public class Stackable {
         }
 
         // Find any stragglers
-        for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.25, 0.5, 0.25))
-            if (entity instanceof ArmorStand) entity.remove();
+        for (Entity entity : this.location.getWorld().getNearbyEntities(this.location.clone().add(0.5, 0.55, 0.5), 0.25, 0.5, 0.25)) {
+            if (entity instanceof ArmorStand) {
+                entity.remove();
+            }
+        }
     }
 
     private void save() {
-        File configFile = new File(SkyBlock.getInstance().getDataFolder().toString() + "/island-data");
-        FileManager.Config config = SkyBlock.getInstance().getFileManager().getConfig(new File(configFile, SkyBlock.getInstance().getIslandManager().getIslandAtLocation(this.location).getOwnerUUID() + ".yml"));
+        File configFile = new File(SkyBlock.getPlugin(SkyBlock.class).getDataFolder() + "/island-data");
+        FileManager.Config config = SkyBlock.getPlugin(SkyBlock.class).getFileManager().getConfig(new File(configFile, SkyBlock.getPlugin(SkyBlock.class).getIslandManager().getIslandAtLocation(this.location).getOwnerUUID() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (this.getSize() == 0) {
@@ -182,7 +187,7 @@ public class Stackable {
 
     private String getCustomName() {
         return ChatColor
-                .translateAlternateColorCodes('&', SkyBlock.getInstance().getLanguage().getString("Hologram.Stackable.Message"))
-                .replace("%block", SkyBlock.getInstance().getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(material)).replace("%amount", NumberUtils.formatNumber(this.size));
+                .translateAlternateColorCodes('&', SkyBlock.getPlugin(SkyBlock.class).getLanguage().getString("Hologram.Stackable.Message"))
+                .replace("%block", SkyBlock.getPlugin(SkyBlock.class).getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(this.material)).replace("%amount", NumberUtils.formatNumber(this.size));
     }
 }

@@ -10,12 +10,10 @@ import com.songoda.skyblock.localization.type.impl.EnumLocalization;
 import com.songoda.skyblock.localization.type.impl.MaterialsLocalization;
 import org.bukkit.configuration.Configuration;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class LocalizationManager {
-
     private final Localization<?> def = new BlankLocalization("", Object.class);
 
     private final Map<Class<?>, Localization<?>> map;
@@ -27,35 +25,37 @@ public final class LocalizationManager {
     }
 
     public void registerLocalizationFor(Class<?> type, Localization<?> toUse) {
+        if (type == null) {
+            throw new IllegalArgumentException("type cannot be null");
+        }
+        if (toUse == null) {
+            throw new IllegalArgumentException("toUse cannot be null");
+        }
+        if (toUse == this.def) {
+            throw new IllegalArgumentException("Cannot register default localization.");
+        }
 
-        if (type == null) throw new IllegalArgumentException("type cannot be null");
-        if (toUse == null) throw new IllegalArgumentException("toUse cannot be null");
-        if (toUse == def) throw new IllegalArgumentException("Cannot register default localization.");
+        this.map.put(type, toUse);
 
-        map.put(type, toUse);
-
-        final SkyBlock inst = SkyBlock.getInstance();
-
+        final SkyBlock inst = SkyBlock.getPlugin(SkyBlock.class);
         toUse.reload(inst.getLanguage().getConfigurationSection(toUse.getKeysPath()));
     }
 
     public void reloadAll() {
-
-        final SkyBlock inst = SkyBlock.getInstance();
+        final SkyBlock inst = SkyBlock.getPlugin(SkyBlock.class);
         final Configuration config = inst.getLanguage();
 
-        Sets.newHashSet(map.values()).forEach(locale -> locale.reload(config.getConfigurationSection(locale.getKeysPath())));
-
+        Sets.newHashSet(this.map.values()).forEach(locale -> locale.reload(config.getConfigurationSection(locale.getKeysPath())));
     }
 
     @SuppressWarnings("unchecked")
     public <T> Localization<T> getLocalizationFor(Class<T> type) {
+        Localization<T> locale = (Localization<T>) this.map.get(type);
 
-        Localization<T> locale = (Localization<T>) map.get(type);
-
-        if (locale == null) locale = (Localization<T>) def;
+        if (locale == null) {
+            locale = (Localization<T>) this.def;
+        }
 
         return locale;
     }
-
 }

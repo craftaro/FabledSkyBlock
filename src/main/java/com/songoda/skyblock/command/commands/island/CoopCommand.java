@@ -1,11 +1,16 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.gui.coop.GuiCoop;
-import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandCoop;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandStatus;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -20,16 +25,19 @@ import java.io.File;
 import java.util.UUID;
 
 public class CoopCommand extends SubCommand {
+    public CoopCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        PermissionManager permissionManager = plugin.getPermissionManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        PermissionManager permissionManager = this.plugin.getPermissionManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -41,9 +49,9 @@ public class CoopCommand extends SubCommand {
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else if (this.plugin.getConfiguration()
                 .getBoolean("Island.Coop.Enable")) {
-            if (island.hasRole(IslandRole.Owner, player.getUniqueId())
-                    || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && permissionManager.hasPermission(island, "CoopPlayers", IslandRole.Operator))) {
+            if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
+                    || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                    && permissionManager.hasPermission(island, "CoopPlayers", IslandRole.OPERATOR))) {
                 if (args.length == 1 || args.length == 2) {
                     Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
@@ -71,9 +79,9 @@ public class CoopCommand extends SubCommand {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Coop.Yourself.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                    } else if (island.hasRole(IslandRole.Member, targetPlayerUUID)
-                            || island.hasRole(IslandRole.Operator, targetPlayerUUID)
-                            || island.hasRole(IslandRole.Owner, targetPlayerUUID)) {
+                    } else if (island.hasRole(IslandRole.MEMBER, targetPlayerUUID)
+                            || island.hasRole(IslandRole.OPERATOR, targetPlayerUUID)
+                            || island.hasRole(IslandRole.OWNER, targetPlayerUUID)) {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Member.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     } else if (island.getBan().isBanned(targetPlayerUUID)) {
@@ -82,14 +90,13 @@ public class CoopCommand extends SubCommand {
                     } else if (island.isCoopPlayer(targetPlayerUUID)) {
                         if (targetPlayer != null) {
                             if (islandManager.getVisitorsAtIsland(island).contains(targetPlayerUUID)) {
-                                if (!(island.getStatus().equals(IslandStatus.OPEN) ||
-                                        (island.getStatus().equals(IslandStatus.WHITELISTED) && island.isPlayerWhitelisted(player)))) {
+                                if (!(island.getStatus() == IslandStatus.OPEN ||
+                                        (island.getStatus() == IslandStatus.WHITELISTED && island.isPlayerWhitelisted(player)))) {
                                     LocationUtil.teleportPlayerToSpawn(targetPlayer);
 
                                     messageManager.sendMessage(targetPlayer,
                                             configLoad.getString("Command.Island.Coop.Removed.Target.Message"));
-                                    soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F,
-                                            1.0F);
+                                    soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                                 }
                             }
                         }
@@ -102,8 +109,9 @@ public class CoopCommand extends SubCommand {
                         soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                     } else {
                         IslandCoop type = IslandCoop.NORMAL;
-                        if (args.length == 2 && args[1].equalsIgnoreCase(temp))
+                        if (args.length == 2 && args[1].equalsIgnoreCase(temp)) {
                             type = IslandCoop.TEMP;
+                        }
 
                         island.addCoopPlayer(targetPlayerUUID, type);
 
@@ -125,8 +133,8 @@ public class CoopCommand extends SubCommand {
 
                     return;
                 }
-    
-                plugin.getGuiManager().showGUI(player, new GuiCoop(plugin, island, null));
+
+                this.plugin.getGuiManager().showGUI(player, new GuiCoop(this.plugin, island, null));
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Permission.Message"));

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StructureManager {
-
     private final List<Structure> structureStorage = new ArrayList<>();
 
     public StructureManager(SkyBlock plugin) {
@@ -75,7 +74,7 @@ public class StructureManager {
                     }
                 }
 
-                structureStorage.add(new Structure(configLoad.getString("Structures." + structureList + ".Name"),
+                this.structureStorage.add(new Structure(configLoad.getString("Structures." + structureList + ".Name"),
                         materials, overworldFile, netherFile, endFile,
                         configLoad.getString("Structures." + structureList + ".Displayname"),
                         configLoad.getBoolean("Structures." + structureList + ".Permission"),
@@ -87,29 +86,28 @@ public class StructureManager {
     }
 
     public void loadStructures() {
-
     }
 
     public void addStructure(String name, CompatibleMaterial materials, String overworldFile, String netherFile, String endFile,
                              String displayName, boolean permission, List<String> description, List<String> commands,
                              double deletionCost) {
-        structureStorage.add(new Structure(name, materials, overworldFile, netherFile, endFile, displayName, permission,
+        this.structureStorage.add(new Structure(name, materials, overworldFile, netherFile, endFile, displayName, permission,
                 description, commands, deletionCost));
     }
 
     public void removeStructure(Structure structure) {
-        structureStorage.remove(structure);
+        this.structureStorage.remove(structure);
     }
 
     public Structure getStructure(String name) {
-        return structureStorage.stream().filter(structureList -> structureList.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+        return this.structureStorage.stream().filter(structureList -> structureList.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
     public boolean containsStructure(String name) {
-        return structureStorage.stream().anyMatch(structureList -> structureList.getName().equalsIgnoreCase(name));
+        return this.structureStorage.stream().anyMatch(structureList -> structureList.getName().equalsIgnoreCase(name));
     }
 
     public List<Structure> getStructures() {
-        return structureStorage;
+        return this.structureStorage;
     }
 }

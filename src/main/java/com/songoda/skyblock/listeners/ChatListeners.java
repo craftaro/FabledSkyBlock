@@ -21,7 +21,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.util.UUID;
 
 public class ChatListeners implements Listener {
-
     private final SkyBlock plugin;
 
     public ChatListeners(SkyBlock plugin) {
@@ -32,19 +31,19 @@ public class ChatListeners implements Listener {
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
 
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
 
         if (playerDataManager.hasPlayerData(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
             Island island = null;
 
             if (playerData.getOwner() != null) {
-                island = plugin.getIslandManager().getIsland(player);
+                island = this.plugin.getIslandManager().getIsland(player);
             }
 
             if (playerData.isChat() && island != null) {
                 event.setCancelled(true);
-                FileConfiguration languageLoad = plugin.getLanguage();
+                FileConfiguration languageLoad = this.plugin.getLanguage();
 
                 PlayerIslandChatEvent islandChatEvent = new PlayerIslandChatEvent(player, island.getAPIWrapper(),
                         event.getMessage(), languageLoad.getString("Island.Chat.Format.Message"));
@@ -55,22 +54,22 @@ public class ChatListeners implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onIslandChat(PlayerIslandChatEvent event) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
 
         Island island = event.getIsland().getIsland();
         Player player = event.getPlayer();
 
-        FileConfiguration languageLoad = plugin.getLanguage();
+        FileConfiguration languageLoad = this.plugin.getLanguage();
 
         String islandRole = null;
 
-        if (island.hasRole(IslandRole.Member, player.getUniqueId())) {
+        if (island.hasRole(IslandRole.MEMBER, player.getUniqueId())) {
             islandRole = languageLoad.getString("Island.Chat.Format.Role.Member");
-        } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
+        } else if (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())) {
             islandRole = languageLoad.getString("Island.Chat.Format.Role.Operator");
-        } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+        } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             islandRole = languageLoad.getString("Island.Chat.Format.Role.Owner");
         }
         if (islandRole == null) {
@@ -80,7 +79,7 @@ public class ChatListeners implements Listener {
         for (UUID islandMembersOnlineList : islandManager.getMembersOnline(island)) {
             Player targetPlayer = Bukkit.getServer().getPlayer(islandMembersOnlineList);
             String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
-                    event.getFormat().replace("%role", islandRole).replace("%player", player.getName())))
+                            event.getFormat().replace("%role", islandRole).replace("%player", player.getName())))
                     .replace("%message", event.getMessage());
             messageManager.sendMessage(targetPlayer, message);
         }
@@ -93,7 +92,7 @@ public class ChatListeners implements Listener {
                 PlayerData pd = playerDataManager.getPlayerData(targetPlayer);
                 if (pd != null && pd.isChatSpy() && (pd.isGlobalChatSpy() || pd.isChatSpyIsland(island))) {
                     String message = ChatColor.translateAlternateColorCodes('&', messageManager.replaceMessage(targetPlayer,
-                            languageLoad.getString("Island.Chat.Spy.Format.Message").replace("%role", islandRole).replace("%player", player.getName())))
+                                    languageLoad.getString("Island.Chat.Spy.Format.Message").replace("%role", islandRole).replace("%player", player.getName())))
                             .replace("%islandOwner", new OfflinePlayer(island.getOwnerUUID()).getName())
                             .replace("%message", event.getMessage());
                     messageManager.sendMessage(targetPlayer, message);

@@ -3,9 +3,9 @@ package com.songoda.skyblock.api.event.island;
 import com.songoda.skyblock.api.island.Island;
 import org.bukkit.WeatherType;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class IslandWeatherChangeEvent extends IslandEvent {
-
     private static final HandlerList HANDLERS = new HandlerList();
     private final boolean sync;
     private final WeatherType weather;
@@ -23,19 +23,19 @@ public class IslandWeatherChangeEvent extends IslandEvent {
     }
 
     public WeatherType getWeather() {
-        return weather;
+        return this.weather;
     }
 
     public int getTime() {
-        return time;
+        return this.time;
     }
 
     public boolean isSync() {
-        return sync;
+        return this.sync;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

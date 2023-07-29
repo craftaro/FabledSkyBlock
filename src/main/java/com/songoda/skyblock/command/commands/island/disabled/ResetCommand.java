@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island.disabled;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -23,34 +24,37 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class ResetCommand extends SubCommand {
+    public ResetCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+        PlayerData playerData = this.plugin.getPlayerDataManager().getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Reset.Owner.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-        } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+        } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             if (playerData.getConfirmationTime() > 0) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Reset.Confirmation.Pending.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
             } else {
-                int confirmationTime = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                int confirmationTime = fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getInt("Island.Confirmation.Timeout");
 
-                playerData.setConfirmation(Confirmation.Reset);
+                playerData.setConfirmation(Confirmation.RESET);
                 playerData.setConfirmationTime(confirmationTime);
 
                 player.spigot().sendMessage(new ChatComponent(
@@ -69,7 +73,7 @@ public class ResetCommand extends SubCommand {
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Reset.Permission.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }
 

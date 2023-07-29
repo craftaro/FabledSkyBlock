@@ -31,34 +31,34 @@ import java.util.Random;
 import java.util.logging.Level;
 
 public final class LocationUtil {
-
     public static void removeWaterFromLoc(Location loc) {
         Location tempLoc = LocationUtil.getDefinitiveLocation(loc.clone());
-        if(tempLoc.getBlock().getType().equals(Material.WATER)){
+        if (tempLoc.getBlock().getType() == Material.WATER) {
             tempLoc.getBlock().setType(Material.AIR);
-        } else if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)){
+        } else if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
             LocationUtil113.removeWaterLoggedFromLocation(tempLoc);
         }
     }
 
-    public static @Nullable Location getSafeLocation(@Nonnull Location loc){
+    @Nullable
+    public static Location getSafeLocation(@Nonnull Location loc) {
         Location locChecked = null;
         boolean found = false;
-        if(loc.getWorld() != null){
+        if (loc.getWorld() != null) {
             locChecked = loc.clone();
             loc.getWorld().loadChunk(loc.getWorld().getChunkAt(loc));
-            for(int i=loc.getBlockY(); i>=0 && !found; i--){
+            for (int i = loc.getBlockY(); i >= 0 && !found; i--) {
                 locChecked = locChecked.subtract(0d, 1d, 0d);
                 found = checkBlock(locChecked);
             }
-            if(!found){
-                for(int i=loc.getBlockY(); i<256 && !found; i++){
+            if (!found) {
+                for (int i = loc.getBlockY(); i < 256 && !found; i++) {
                     locChecked = locChecked.add(0d, 1d, 0d);
                     found = checkBlock(locChecked);
                 }
             }
             if (found) {
-                locChecked = locChecked.add(0d,1d,0d);
+                locChecked = locChecked.add(0d, 1d, 0d);
             } else {
                 locChecked = null;
             }
@@ -66,13 +66,14 @@ public final class LocationUtil {
         return locChecked;
     }
 
-    public static @Nonnull Location getDefinitiveLocation(@Nonnull Location loc){
+    @Nonnull
+    public static Location getDefinitiveLocation(@Nonnull Location loc) {
         Location locWorking = loc.clone();
-        for(locWorking.setY(locWorking.getBlockY()); locWorking.getBlockY()>=0; locWorking.setY(locWorking.getBlockY()-1)){
-            if(!locWorking.getBlock().isEmpty()){
-                if(locWorking.getBlock().getType().equals(CompatibleMaterial.WATER.getMaterial()) ||
-                        (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && 
-                                locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
+        for (locWorking.setY(locWorking.getBlockY()); locWorking.getBlockY() >= 0; locWorking.setY(locWorking.getBlockY() - 1)) {
+            if (!locWorking.getBlock().isEmpty()) {
+                if (locWorking.getBlock().getType() == CompatibleMaterial.WATER.getMaterial() ||
+                        (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
+                                locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)) {
                     loc = locWorking;
                 }
                 break;
@@ -83,15 +84,15 @@ public final class LocationUtil {
 
     private static boolean checkBlock(Location locChecked) {
         boolean safe = false;
-        if(!locChecked.getBlock().isEmpty() &&
+        if (!locChecked.getBlock().isEmpty() &&
                 !locChecked.getBlock().isLiquid() &&
                 locChecked.getBlock().getType().isSolid() &&
                 locChecked.getBlock().getType().isBlock() &&
-                locChecked.add(0d,1d,0d).getBlock().getType().equals(CompatibleMaterial.AIR.getMaterial()) &&
-                locChecked.add(0d,2d,0d).getBlock().getType().equals(CompatibleMaterial.AIR.getMaterial()) &&
-                !(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)){
+                locChecked.add(0d, 1d, 0d).getBlock().getType() == CompatibleMaterial.AIR.getMaterial() &&
+                locChecked.add(0d, 2d, 0d).getBlock().getType() == CompatibleMaterial.AIR.getMaterial() &&
+                !(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)) {
             safe = true;
-            switch(CompatibleMaterial.getMaterial(locChecked.getBlock())){
+            switch (CompatibleMaterial.getMaterial(locChecked.getBlock())) {
                 case ACACIA_DOOR: // <= 1.8.8
                 case ACACIA_FENCE_GATE:
                 case BIRCH_DOOR:
@@ -130,18 +131,19 @@ public final class LocationUtil {
     }
 
     public static boolean isLocationAffectingIslandSpawn(Location location, Island island, IslandWorld world) {
-        return isLocationAffectingLocation(location, island.getLocation(world, IslandEnvironment.Main))
-                || isLocationAffectingLocation(location, island.getLocation(world, IslandEnvironment.Visitor));
+        return isLocationAffectingLocation(location, island.getLocation(world, IslandEnvironment.MAIN))
+                || isLocationAffectingLocation(location, island.getLocation(world, IslandEnvironment.VISITOR));
     }
 
     private static boolean isLocationAffectingLocation(Location location1, Location location2) {
         location2 = location2.clone();
 
         /*
-         * First isLocationLocation() call is HeadHeight, second feetHeight, and the
+         * The first #isLocationLocation() call is HeadHeight, second feetHeight, and the
          * final one is GroundHeight.
          */
-        return isLocationLocation(location2.add(0, 1, 0), location1) || isLocationLocation(location2.subtract(0, 1, 0), location1)
+        return isLocationLocation(location2.add(0, 1, 0), location1) ||
+                isLocationLocation(location2.subtract(0, 1, 0), location1)
                 || isLocationLocation(location2.subtract(0, 1, 0), location1);
     }
 
@@ -152,12 +154,11 @@ public final class LocationUtil {
         }
         double x = Math.abs(location1.getX() - location2.getX());
         double z = Math.abs(location1.getZ() - location2.getZ());
-        
+
         return x < radius && z < radius;
     }
 
     public static List<Location> getLocations(Location minLocation, Location maxLocation) {
-
         int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
         int minY = Math.min(maxLocation.getBlockY(), minLocation.getBlockY());
         int minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
@@ -168,9 +169,9 @@ public final class LocationUtil {
 
         List<Location> locations = new ArrayList<>(maxX + maxY + maxZ + 3);
 
-        for (int x = minX; x <= maxX; x++) {
-            for (int y = minY; y <= maxY; y++) {
-                for (int z = minZ; z <= maxZ; z++) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
                     locations.add(new Location(minLocation.getWorld(), x, y, z));
                 }
             }
@@ -180,24 +181,24 @@ public final class LocationUtil {
     }
 
     public static boolean isInsideArea(Location targetLocation, Location minLocation, Location maxLocation) {
-        int MinX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
-        int MinY = Math.min(maxLocation.getBlockY(), minLocation.getBlockY());
-        int MinZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
+        int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
+        int minY = Math.min(maxLocation.getBlockY(), minLocation.getBlockY());
+        int minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
 
-        int MaxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX());
-        int MaxY = Math.max(maxLocation.getBlockY(), minLocation.getBlockY());
-        int MaxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ());
+        int maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX());
+        int maxY = Math.max(maxLocation.getBlockY(), minLocation.getBlockY());
+        int maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ());
 
-        return MinX < targetLocation.getX() && MaxX > targetLocation.getX() && MinY < targetLocation.getY() && MaxY > targetLocation.getY() && MinZ < targetLocation.getZ()
-                && MaxZ > targetLocation.getZ();
+        return minX < targetLocation.getX() && maxX > targetLocation.getX() &&
+                minY < targetLocation.getY() && maxY > targetLocation.getY() &&
+                minZ < targetLocation.getZ() && maxZ > targetLocation.getZ();
     }
 
     public static Location getHighestBlock(Location location) {
-        for (int y = location.getWorld().getMaxHeight(); y > 0; y--) {
+        for (int y = location.getWorld().getMaxHeight(); y > 0; --y) {
             location.setY(y);
 
             Block block = location.getBlock();
-
             if (!(block.getType() == Material.AIR)) {
                 return location;
             }
@@ -274,7 +275,7 @@ public final class LocationUtil {
     }
 
     public static void teleportPlayerToSpawn(Player player) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         IslandManager islandManager = plugin.getIslandManager();
         WorldManager worldManager = plugin.getWorldManager();
@@ -309,7 +310,7 @@ public final class LocationUtil {
     }
 
     public static Location getSpawnLocation() {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         FileManager fileManager = plugin.getFileManager();
 
@@ -332,7 +333,9 @@ public final class LocationUtil {
         int rndX = rnd.nextInt(xRange);
         int rndZ = rnd.nextInt(zRange);
 
-        if (loadChunk) world.getChunkAt(new Location(world, rndX, 10, rndZ));
+        if (loadChunk) {
+            world.getChunkAt(new Location(world, rndX, 10, rndZ));
+        }
 
         double rndY = -1;
 
@@ -366,15 +369,15 @@ public final class LocationUtil {
             return rndLoc;
         }
     }
-    
+
     public static Location toCenterLocation(Location loc) {
         Location centerLoc = loc.clone();
-        centerLoc.setX((double)loc.getBlockX() + 0.5D);
-        centerLoc.setY((double)loc.getBlockY() + 0.5D);
-        centerLoc.setZ((double)loc.getBlockZ() + 0.5D);
+        centerLoc.setX((double) loc.getBlockX() + 0.5D);
+        centerLoc.setY((double) loc.getBlockY() + 0.5D);
+        centerLoc.setZ((double) loc.getBlockZ() + 0.5D);
         return centerLoc;
     }
-    
+
     public static Location toBlockLocation(Location loc) {
         Location blockLoc = loc.clone();
         blockLoc.setX(loc.getBlockX());

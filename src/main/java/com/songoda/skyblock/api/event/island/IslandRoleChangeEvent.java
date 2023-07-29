@@ -4,9 +4,9 @@ import com.songoda.skyblock.api.island.Island;
 import com.songoda.skyblock.api.island.IslandRole;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class IslandRoleChangeEvent extends IslandEvent {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final OfflinePlayer player;
@@ -23,15 +23,15 @@ public class IslandRoleChangeEvent extends IslandEvent {
     }
 
     public OfflinePlayer getPlayer() {
-        return player;
+        return this.player;
     }
 
     public IslandRole getRole() {
-        return role;
+        return this.role;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

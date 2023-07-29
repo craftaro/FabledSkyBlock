@@ -2,34 +2,31 @@ package com.songoda.skyblock.levelling;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.api.event.island.IslandLevelChangeEvent;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.blockscanner.BlockScanner;
 import com.songoda.skyblock.blockscanner.CachedChunk;
 import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.island.Island;
-import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.levelling.amount.AmountMaterialPair;
 import com.songoda.skyblock.levelling.amount.BlockAmount;
-import com.songoda.skyblock.message.MessageManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
-import java.text.NumberFormat;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
 public final class IslandScan extends BukkitRunnable {
-
-
     private final Set<Location> doubleBlocks;
     private final Island island;
     private final IslandWorld world;
@@ -41,7 +38,10 @@ public final class IslandScan extends BukkitRunnable {
     private Queue<BlockInfo> blocks;
 
     public IslandScan(SkyBlock plugin, Island island, IslandWorld world) {
-        if (island == null) throw new IllegalArgumentException("island cannot be null");
+        if (island == null) {
+            throw new IllegalArgumentException("island cannot be null");
+        }
+
         this.plugin = plugin;
         this.island = island;
         this.world = world;
@@ -50,25 +50,22 @@ public final class IslandScan extends BukkitRunnable {
     }
 
     public IslandScan start() {
-        final SkyBlock plugin = SkyBlock.getInstance();
-
-        if (plugin.isPaperAsync())
-            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> initScan(plugin));
-        else
-            initScan(plugin);
-
+        if (this.plugin.isPaperAsync()) {
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, this::initScan);
+        } else {
+            initScan();
+        }
         return this;
     }
 
-    private void initScan(SkyBlock plugin) {
-
+    private void initScan() {
         final Map<World, List<CachedChunk>> cachedChunk = new HashMap<>(3);
 
-        populate(cachedChunk, plugin.isPaperAsync(), () -> {
-            BlockScanner.startScanner(cachedChunk, island, true, true, true, false, (blocks) -> {
+        populate(cachedChunk, this.plugin.isPaperAsync(), () -> {
+            BlockScanner.startScanner(cachedChunk, this.island, true, true, true, false, (blocks) -> {
                 this.blocks = blocks;
                 this.blocksSize = blocks.size();
-                this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
+                this.runTaskTimer(this.plugin, 20, 20);
             });
         });
     }
@@ -77,21 +74,22 @@ public final class IslandScan extends BukkitRunnable {
 
     @Override
     public void run() {
-        executions += 1;
+        this.executions += 1;
 
         int scanned = 0;
 
-        for (Iterator<BlockInfo> it = blocks.iterator(); it.hasNext(); ) {
+        for (Iterator<BlockInfo> it = this.blocks.iterator(); it.hasNext(); ) {
 
             final BlockInfo info = it.next();
 
-            if (scanned == 8500) break;
+            if (scanned == 8500) {
+                break;
+            }
 
-            final AmountMaterialPair pair = SkyBlock.getInstance().getLevellingManager().getAmountAndType(this, info);
+            final AmountMaterialPair pair = this.plugin.getLevellingManager().getAmountAndType(this, info);
 
             if (pair.getType() != null) {
-
-                BlockAmount cachedAmount = amounts.get(pair.getType());
+                BlockAmount cachedAmount = this.amounts.get(pair.getType());
 
                 if (cachedAmount == null) {
                     cachedAmount = new BlockAmount(pair.getAmount());
@@ -99,29 +97,27 @@ public final class IslandScan extends BukkitRunnable {
                     cachedAmount.increaseAmount(pair.getAmount());
                 }
 
-                amounts.put(pair.getType(), cachedAmount);
+                this.amounts.put(pair.getType(), cachedAmount);
             }
 
             scanned += 1;
             it.remove();
         }
 
-        totalScanned += scanned;
+        this.totalScanned += scanned;
 
-        if (blocks.isEmpty()) {
+        if (this.blocks.isEmpty()) {
             cancel();
-            SkyBlock.getInstance().getLevellingManager().stopScan(island);
+            this.plugin.getLevellingManager().stopScan(this.island);
         }
     }
 
     private void populate(Map<World, List<CachedChunk>> cachedChunks, boolean paper, PopulateTask task) {
-
-        final SkyBlock plugin = SkyBlock.getInstance();
         List<CachedChunk> positions = new LinkedList<>();
 
-        ChunkLoader.startChunkLoadingPerChunk(island, world, paper, positions::add,
+        ChunkLoader.startChunkLoadingPerChunk(this.island, this.world, paper, positions::add,
                 value -> {
-                    cachedChunks.put(plugin.getWorldManager().getWorld(world), positions);
+                    cachedChunks.put(this.plugin.getWorldManager().getWorld(this.world), positions);
                     task.onComplete();
                 });
     }
@@ -131,22 +127,22 @@ public final class IslandScan extends BukkitRunnable {
     }
 
     public Set<Location> getDoubleBlocks() {
-        return doubleBlocks;
+        return this.doubleBlocks;
     }
 
     public Map<CompatibleMaterial, BlockAmount> getAmounts() {
-        return Collections.unmodifiableMap(amounts);
+        return Collections.unmodifiableMap(this.amounts);
     }
 
     public int getTotalScanned() {
-        return totalScanned;
+        return this.totalScanned;
     }
 
     public int getBlocksSize() {
-        return blocksSize;
+        return this.blocksSize;
     }
 
     public int getExecutions() {
-        return executions;
+        return this.executions;
     }
 }

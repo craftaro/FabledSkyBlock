@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
 public class ExperienceOrbPickupPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,12 +22,11 @@ public class ExperienceOrbPickupPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onTargetEntity(EntityTargetLivingEntityEvent event) {
-        Player player = (Player) event.getTarget();
-
-        if (!(event.getEntity() instanceof ExperienceOrb))
+        if (!(event.getEntity() instanceof ExperienceOrb)) {
             return;
+        }
 
-        cancelAndMessage(event, player, plugin, messageManager);
+        Player player = (Player) event.getTarget();
+        cancelAndMessage(event, player, this.plugin, this.messageManager);
     }
 }
-

@@ -5,7 +5,6 @@ import com.songoda.core.utils.TextUtils;
 import java.util.List;
 
 class Row {
-    
     private final int interval;
     private final List<String> lines;
     private String line;
@@ -19,26 +18,26 @@ class Row {
         this.interval = interval;
         this.current = 0;
         this.count = 0;
-    
-        static_line = interval < 0 || lines.isEmpty() || lines.size() <= 1;
 
-        if(lines.isEmpty()) {
-            line = "";
+        this.static_line = interval < 0 || lines.isEmpty() || lines.size() <= 1;
+
+        if (lines.isEmpty()) {
+            this.line = "";
         } else {
-            line = TextUtils.formatText(lines.get(current));
+            this.line = TextUtils.formatText(lines.get(this.current));
         }
     }
 
     void update() {
-        if (!static_line) {
-            if (count >= interval) {
-                count = 0;
-                current++;
-                if (current >= lines.size())
-                    current = 0;
-                line = TextUtils.formatText(lines.get(current));
+        if (!this.static_line) {
+            if (this.count >= this.interval) {
+                this.count = 0;
+                this.current++;
+                if (this.current >= this.lines.size())
+                    this.current = 0;
+                this.line = TextUtils.formatText(this.lines.get(this.current));
             } else {
-                count++;
+                this.count++;
             }
         }
     }
@@ -46,5 +45,4 @@ class Row {
     String getLine() {
         return this.line;
     }
-    
 }

@@ -18,7 +18,6 @@ import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
 public class ItemStackUtil {
-
     private static final boolean isAbove1_16_R1 = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)
             && !ServerVersion.getServerVersionString().equals("v1_16_R1");
 
@@ -61,8 +60,8 @@ public class ItemStackUtil {
                     itemStack = new ItemStack(CompatibleMaterial.MELON_SLICE.getMaterial(), 1);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         return itemStack;
@@ -87,11 +86,10 @@ public class ItemStackUtil {
 
             ClassMapping.NBT_COMPRESSED_STREAM_TOOLS.getClazz().getMethod("a", NBTTagCompoundClass, DataOutput.class)
                     .invoke(null, NBTTagCompound, dataOutput);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         return new BigInteger(1, outputStream.toByteArray()).toString(32);
     }
-
 }

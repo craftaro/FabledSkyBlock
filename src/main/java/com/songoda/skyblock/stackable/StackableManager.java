@@ -3,7 +3,6 @@ package com.songoda.skyblock.stackable;
 import com.eatthepath.uuid.FastUUID;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,12 +10,16 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
-import java.util.*;
- 
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 
 public class StackableManager {
-
-    // ToDO: Should pobably be a GUI for this
+    // TODO: Should probably be a GUI for this
 
     private final SkyBlock plugin;
     private final Set<CompatibleMaterial> stackableMaterials = EnumSet.noneOf(CompatibleMaterial.class);
@@ -28,10 +31,12 @@ public class StackableManager {
     }
 
     public void registerStackables() {
-        FileConfiguration configLoad = plugin.getStackables();
+        FileConfiguration configLoad = this.plugin.getStackables();
 
         List<String> stackableList = configLoad.getStringList("Stackables");
-        if (stackableList.isEmpty()) return;
+        if (stackableList.isEmpty()) {
+            return;
+        }
 
         for (String stackableStr : stackableList) {
             try {
@@ -59,77 +64,79 @@ public class StackableManager {
      * Stackable(FastUUID.parseUUID(uuid), location, material, size)); } } }
      */
 
-    @SuppressWarnings("deprecation")
     public void loadSavedStackables() {
-        final File path = new File(plugin.getDataFolder(), "island-data");
+        final File path = new File(this.plugin.getDataFolder(), "island-data");
         final File[] files = path.listFiles();
 
-        if (files == null) return;
+        if (files == null) {
+            return;
+        }
 
         for (File file : files) {
-            final FileConfiguration config = plugin.getFileManager().getConfig(file).getFileConfiguration();
+            final FileConfiguration config = this.plugin.getFileManager().getConfig(file).getFileConfiguration();
 
             ConfigurationSection stackableSection = config.getConfigurationSection("Stackables");
-
-            if (stackableSection == null) continue;
+            if (stackableSection == null) {
+                continue;
+            }
 
             for (String key : stackableSection.getKeys(false)) {
-
                 final ConfigurationSection currentSection = stackableSection.getConfigurationSection(key);
                 final Location loc = (Location) currentSection.get("Location");
                 final Block block = loc.getWorld().getBlockAt(loc);
 
-                if (block.getType() == Material.AIR) continue;
+                if (block.getType() == Material.AIR) {
+                    continue;
+                }
 
                 final CompatibleMaterial type = CompatibleMaterial.getMaterial(block.getType());
-
-                if (type == null) continue;
+                if (type == null) {
+                    continue;
+                }
 
                 final int size = currentSection.getInt("Size");
-
-                if (size == 0) continue;
+                if (size == 0) {
+                    continue;
+                }
 
                 this.addStack(new Stackable(FastUUID.parseUUID(key), loc, type, size));
-
             }
-
         }
-
     }
 
     public void unregisterStackables() {
-        stackableMaterials.clear();
+        this.stackableMaterials.clear();
     }
 
     public Set<CompatibleMaterial> getStackableMaterials() {
-        return Collections.unmodifiableSet(stackableMaterials);
+        return Collections.unmodifiableSet(this.stackableMaterials);
     }
 
     public boolean isStackableMaterial(CompatibleMaterial material) {
-        return stackableMaterials.contains(material);
+        return this.stackableMaterials.contains(material);
     }
 
     public Map<Location, Stackable> getStacks() {
-        return Collections.unmodifiableMap(stacks);
+        return Collections.unmodifiableMap(this.stacks);
     }
 
     public boolean isStacked(Location location) {
-        return stacks.containsKey(location);
+        return this.stacks.containsKey(location);
     }
 
     public Stackable getStack(Location location, CompatibleMaterial material) {
-        Stackable stackable = stacks.get(location);
+        Stackable stackable = this.stacks.get(location);
 
         return stackable != null && stackable.getMaterial() == material ? stackable : null;
     }
 
     public Stackable addStack(Stackable stackable) {
-        return stacks.put(stackable.getLocation(), stackable);
+        return this.stacks.put(stackable.getLocation(), stackable);
     }
 
     public void removeStack(Stackable stackable) {
         stackable.setSize(0);
-        stacks.remove(stackable.getLocation());
+        this.stacks.remove(stackable.getLocation());
     }
 
     public long getStackSizeOf(Location loc, CompatibleMaterial type) {

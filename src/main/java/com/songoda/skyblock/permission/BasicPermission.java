@@ -3,7 +3,6 @@ package com.songoda.skyblock.permission;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandRole;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,12 +11,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BasicPermission {
-
     private final String name;
     private final CompatibleMaterial icon;
     private final PermissionType type;
@@ -33,7 +30,7 @@ public abstract class BasicPermission {
     }
 
     public ItemStack getItem(boolean permissionEnabled, IslandRole role) {
-        ItemStack is = icon.getItem();
+        ItemStack is = this.icon.getItem();
         FileConfiguration configLoad = SkyBlock.getInstance().getLanguage();
 
         List<String> itemLore = new ArrayList<>();
@@ -42,19 +39,19 @@ public abstract class BasicPermission {
 
         String roleName = role.name();
 
-        if (role == IslandRole.Visitor
-                || role == IslandRole.Member
-                || role == IslandRole.Coop)
+        if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP) {
             roleName = "Default";
+        }
 
-        String nameFinal = TextUtils.formatText(configLoad.getString("Menu.Settings." + roleName + ".Item.Setting." + name + ".Displayname", name));
+        String nameFinal = TextUtils.formatText(configLoad.getString("Menu.Settings." + roleName + ".Item.Setting." + this.name + ".Displayname", this.name));
 
-        if(im != null){
+        if (im != null) {
             im.setDisplayName(nameFinal);
             for (String itemLoreList : configLoad
                     .getStringList("Menu.Settings." + roleName + ".Item.Setting.Status."
-                            + (permissionEnabled ? "Enabled" : "Disabled") + ".Lore"))
+                            + (permissionEnabled ? "Enabled" : "Disabled") + ".Lore")) {
                 itemLore.add(TextUtils.formatText(itemLoreList));
+            }
 
             im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             im.setLore(itemLore);
@@ -65,14 +62,14 @@ public abstract class BasicPermission {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public CompatibleMaterial getIcon() {
-        return icon;
+        return this.icon;
     }
 
     public PermissionType getType() {
-        return type;
+        return this.type;
     }
 }

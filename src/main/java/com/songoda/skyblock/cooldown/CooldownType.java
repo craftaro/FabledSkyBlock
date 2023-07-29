@@ -5,19 +5,17 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public enum CooldownType {
+    BIOME,
+    CREATION,
+    DELETION,
+    PREVIEW,
+    LEVELLING,
+    OWNERSHIP,
+    TELEPORT;
 
-    Biome,
-    Creation,
-    Deletion,
-    Preview,
-    Levelling,
-    Ownership,
-    Teleport;
-
-    private static final Set<CooldownType> types = Collections.unmodifiableSet(EnumSet.allOf(CooldownType.class));
+    private static final Set<CooldownType> TYPES = Collections.unmodifiableSet(EnumSet.allOf(CooldownType.class));
 
     public static Set<CooldownType> getTypes() {
-        return types;
+        return TYPES;
     }
-
 }

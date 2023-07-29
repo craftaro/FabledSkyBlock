@@ -3,7 +3,6 @@ package com.songoda.skyblock.island;
 import com.songoda.skyblock.permission.BasicPermission;
 
 public class IslandPermission {
-
     private final BasicPermission permission;
     private boolean status;
 
@@ -13,11 +12,11 @@ public class IslandPermission {
     }
 
     public BasicPermission getPermission() {
-        return permission;
+        return this.permission;
     }
 
     public boolean getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(boolean status) {

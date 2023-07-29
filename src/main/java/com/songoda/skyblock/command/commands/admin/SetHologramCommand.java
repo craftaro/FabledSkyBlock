@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -18,15 +19,18 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class SetHologramCommand extends SubCommand {
+    public SetHologramCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        HologramTask hologramManager = plugin.getHologramTask();
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        HologramTask hologramManager = this.plugin.getHologramTask();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -34,43 +38,41 @@ public class SetHologramCommand extends SubCommand {
 
             switch (args[0].toLowerCase()) {
                 case "level":
-                    hologramType = HologramType.Level;
+                    hologramType = HologramType.LEVEL;
                     break;
                 case "bank":
-                    hologramType = HologramType.Bank;
+                    hologramType = HologramType.BANK;
                     break;
                 case "votes":
-                    hologramType = HologramType.Votes;
+                    hologramType = HologramType.VOTES;
                     break;
             }
 
             if (hologramType != null) {
                 fileManager.setLocation(
-                        fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml")),
+                        fileManager.getConfig(new File(this.plugin.getDataFolder(), "locations.yml")),
                         "Location.Hologram.Leaderboard." + hologramType.name(), player.getLocation(), true);
 
 
-                Bukkit.getServer().getScheduler().runTask(plugin, () -> {
+                Bukkit.getServer().getScheduler().runTask(this.plugin, () -> {
                     HologramType hologramType1 = HologramType.valueOf(WordUtils.capitalize(args[0].toLowerCase()));
                     Hologram hologram = hologramManager.getHologram(hologramType1);
 
-                    if (hologram != null)
+                    if (hologram != null) {
                         hologramManager.removeHologram(hologram);
-
+                    }
                     hologramManager.spawnHologram(hologramType1);
                 });
 
                 messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.Admin.SetHologram.Set.Message").replace("%type",
-                                hologramType.name()));
+                        configLoad.getString("Command.Island.Admin.SetHologram.Set.Message").replace("%type", hologramType.name()));
                 soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                 return;
             }
         }
 
-        messageManager.sendMessage(player,
-                configLoad.getString("Command.Island.Admin.SetHologram.Invalid.Message"));
+        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetHologram.Invalid.Message"));
         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
     }
 

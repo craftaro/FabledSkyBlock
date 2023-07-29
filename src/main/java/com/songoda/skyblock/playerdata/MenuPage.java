@@ -6,20 +6,20 @@ public class MenuPage {
     MenuType type;
     int page;
 
-    public MenuPage(MenuType type, int page){
+    public MenuPage(MenuType type, int page) {
         this.type = type;
         this.page = page;
     }
 
-    public void setPage(int page){
+    public void setPage(int page) {
         this.page = page;
     }
 
-    public MenuType getType(){
-        return type;
+    public MenuType getType() {
+        return this.type;
     }
 
-    public int getPage(){
-        return page;
+    public int getPage() {
+        return this.page;
     }
 }

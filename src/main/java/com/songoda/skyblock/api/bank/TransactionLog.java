@@ -10,14 +10,16 @@ import java.util.List;
 import java.util.UUID;
 
 public class TransactionLog {
-
     public BankManager getImplementation() {
-        return SkyBlock.getInstance().getBankManager();
+        return SkyBlock.getPlugin(SkyBlock.class).getBankManager();
     }
 
     public List<Transaction> getLogForPlayer(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
-        if (player == null) return null;
+        if (player == null) {
+            return null;
+        }
+
         return getImplementation().getTransactionList(player);
     }
 }

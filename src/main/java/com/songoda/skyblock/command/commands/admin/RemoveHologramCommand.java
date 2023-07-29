@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -20,6 +21,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class RemoveHologramCommand extends SubCommand {
+    public RemoveHologramCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
@@ -32,31 +36,31 @@ public class RemoveHologramCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        HologramTask hologramManager = plugin.getHologramTask();
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        HologramTask hologramManager = this.plugin.getHologramTask();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
             HologramType hologramType = null;
 
             switch (args[0].toLowerCase()) {
-            case "level":
-                hologramType = HologramType.Level;
-                break;
-            case "bank":
-                hologramType = HologramType.Bank;
-                break;
-            case "votes":
-                hologramType = HologramType.Votes;
-                break;
+                case "level":
+                    hologramType = HologramType.LEVEL;
+                    break;
+                case "bank":
+                    hologramType = HologramType.BANK;
+                    break;
+                case "votes":
+                    hologramType = HologramType.VOTES;
+                    break;
             }
 
             if (hologramType != null) {
-                Config locationsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
+                Config locationsConfig = fileManager.getConfig(new File(this.plugin.getDataFolder(), "locations.yml"));
                 FileConfiguration locationsConfigLoad = locationsConfig.getFileConfiguration();
 
                 if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + hologramType.name()) == null) {
@@ -67,16 +71,17 @@ public class RemoveHologramCommand extends SubCommand {
 
                     try {
                         locationsConfigLoad.save(locationsConfig.getFile());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
 
-                    Bukkit.getServer().getScheduler().runTask(plugin, () -> {
+                    Bukkit.getServer().getScheduler().runTask(this.plugin, () -> {
                         HologramType hologramType1 = HologramType.valueOf(WordUtils.capitalize(args[0].toLowerCase()));
                         Hologram hologram = hologramManager.getHologram(hologramType1);
 
-                        if (hologram != null)
+                        if (hologram != null) {
                             hologramManager.removeHologram(hologram);
+                        }
                     });
 
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message").replace("%type", hologramType.name()));
@@ -108,6 +113,6 @@ public class RemoveHologramCommand extends SubCommand {
 
     @Override
     public String[] getArguments() {
-        return new String[] { "level", "bank", "votes" };
+        return new String[]{"level", "bank", "votes"};
     }
 }

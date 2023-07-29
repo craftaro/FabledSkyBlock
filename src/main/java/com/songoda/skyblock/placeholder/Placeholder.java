@@ -1,7 +1,6 @@
 package com.songoda.skyblock.placeholder;
 
 public class Placeholder {
-
     private final String placeholder;
     private final String result;
 
@@ -11,10 +10,10 @@ public class Placeholder {
     }
 
     public String getPlaceholder() {
-        return placeholder;
+        return this.placeholder;
     }
 
     public String getResult() {
-        return result;
+        return this.result;
     }
 }

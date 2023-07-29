@@ -14,13 +14,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.io.File;
 
 public class GuiCoopChoose extends Gui {
-    
     private final SkyBlock plugin;
     private final FileConfiguration languageLoad;
     private final Gui returnGui;
     private final String targetPlayer;
     private final Island island;
-    
+
     public GuiCoopChoose(SkyBlock plugin, Island island, Gui returnGui, String targetPlayer) {
         super(1, returnGui);
         this.plugin = plugin;
@@ -30,44 +29,44 @@ public class GuiCoopChoose extends Gui {
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
         setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
-        setTitle(TextUtils.formatText(
-                languageLoad.getString("Menu.Coop.Item.Word.Normal") + " / " + languageLoad.getString("Menu.Coop.Item.Word.Temp")));
+        setTitle(TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Word.Normal") + " / " + this.languageLoad.getString("Menu.Coop.Item.Word.Temp")));
         paint();
     }
-    
+
     public void paint() {
-        SoundManager soundManager = plugin.getSoundManager();
-        
-        if (inventory != null)
-            inventory.clear();
-        
+        SoundManager soundManager = this.plugin.getSoundManager();
+
+        if (this.inventory != null) {
+            this.inventory.clear();
+        }
+
         setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
         setActionForRange(0, 4, null);
-    
+
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
-                TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Exit.Displayname"))), (event) -> {
+                TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Exit.Displayname"))), (event) -> {
             soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
-            guiManager.showGUI(event.player, returnGui);
+            this.guiManager.showGUI(event.player, this.returnGui);
         });
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
-                TextUtils.formatText(languageLoad.getString("Menu.Coop.Item.Exit.Displayname"))), (event) -> {
+                TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Exit.Displayname"))), (event) -> {
             soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
-            guiManager.showGUI(event.player, returnGui);
+            this.guiManager.showGUI(event.player, this.returnGui);
         });
-    
+
         setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.OBSIDIAN, // Normal
-                TextUtils.formatText("&r" + languageLoad.getString("Menu.Coop.Item.Word.Normal"))),
-                (event) ->  {
-            Bukkit.getServer().dispatchCommand(event.player,
-                        "island coop " + targetPlayer + " " + languageLoad.getString("Menu.Coop.Item.Word.Normal"));
-                    guiManager.showGUI(event.player, new GuiCoop(plugin, island, null));
-        });
-        setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.GLASS, // Temp
-                TextUtils.formatText("&r" + languageLoad.getString("Menu.Coop.Item.Word.Temp"))),
+                        TextUtils.formatText("&r" + this.languageLoad.getString("Menu.Coop.Item.Word.Normal"))),
                 (event) -> {
-            Bukkit.getServer().dispatchCommand(event.player,
-                    "island coop " + targetPlayer + " " + languageLoad.getString("Menu.Coop.Item.Word.Temp"));
-                    guiManager.showGUI(event.player, new GuiCoop(plugin, island, null));
-        });
+                    Bukkit.getServer().dispatchCommand(event.player,
+                            "island coop " + this.targetPlayer + " " + this.languageLoad.getString("Menu.Coop.Item.Word.Normal"));
+                    this.guiManager.showGUI(event.player, new GuiCoop(this.plugin, this.island, null));
+                });
+        setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.GLASS, // Temp
+                        TextUtils.formatText("&r" + this.languageLoad.getString("Menu.Coop.Item.Word.Temp"))),
+                (event) -> {
+                    Bukkit.getServer().dispatchCommand(event.player,
+                            "island coop " + this.targetPlayer + " " + this.languageLoad.getString("Menu.Coop.Item.Word.Temp"));
+                    this.guiManager.showGUI(event.player, new GuiCoop(this.plugin, this.island, null));
+                });
     }
 }

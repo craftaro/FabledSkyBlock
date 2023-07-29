@@ -20,11 +20,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class nInventoryUtil {
-
     private final Player player;
     private Listener listener;
 
@@ -46,7 +48,7 @@ public class nInventoryUtil {
                         return;
                     }
 
-                    if (inv != null && event.getInventory().equals(inv)) {
+                    if (nInventoryUtil.this.inv != null && event.getInventory().equals(nInventoryUtil.this.inv)) {
                         event.setCancelled(true);
 
                         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
@@ -92,20 +94,20 @@ public class nInventoryUtil {
                 }
             };
 
-            Bukkit.getPluginManager().registerEvents(listener, SkyBlock.getInstance());
+            Bukkit.getPluginManager().registerEvents(this.listener, SkyBlock.getPlugin(SkyBlock.class));
         }
     }
 
     public void addItem(Item item, int... slots) {
-        Arrays.stream(slots).forEachOrdered(slotList -> items.put(slotList, item.prepareItem()));
+        Arrays.stream(slots).forEachOrdered(slotList -> this.items.put(slotList, item.prepareItem()));
     }
 
     public void addItemStack(ItemStack is, int... slots) {
-        Arrays.stream(slots).forEachOrdered(slotList -> items.put(slotList, is));
+        Arrays.stream(slots).forEachOrdered(slotList -> this.items.put(slotList, is));
     }
 
     public Map<Integer, ItemStack> getItems() {
-        return items;
+        return this.items;
     }
 
     public Item createItem(ItemStack is, String itemDisplayname, List<String> itemLore, Placeholder[] placeholders, Enchantment[] itemEnchantments, ItemFlag[] itemFlags) {
@@ -114,7 +116,7 @@ public class nInventoryUtil {
 
     public void open() {
         createInventory();
-        player.openInventory(inv);
+        this.player.openInventory(this.inv);
     }
 
     public void setTitle(String title) {
@@ -127,7 +129,7 @@ public class nInventoryUtil {
 
     public void setRows(int rows) {
         if (rows > 6 || rows < 0) {
-            size = 9;
+            this.size = 9;
             return;
         }
 
@@ -139,25 +141,25 @@ public class nInventoryUtil {
     }
 
     public void createInventory() {
-        if (type == null) {
-            if (title == null) {
-                inv = Bukkit.createInventory(null, size);
+        if (this.type == null) {
+            if (this.title == null) {
+                this.inv = Bukkit.createInventory(null, this.size);
             } else {
-                inv = Bukkit.createInventory(null, size, title);
+                this.inv = Bukkit.createInventory(null, this.size, this.title);
             }
         } else {
-            if (title == null) {
-                inv = Bukkit.createInventory(null, type);
+            if (this.title == null) {
+                this.inv = Bukkit.createInventory(null, this.type);
             } else {
-                inv = Bukkit.createInventory(null, type, title);
+                this.inv = Bukkit.createInventory(null, this.type, this.title);
             }
         }
 
-        items.forEach((key, value) -> inv.setItem(key, value));
+        this.items.forEach((key, value) -> this.inv.setItem(key, value));
     }
 
     public Inventory getInventory() {
-        return inv;
+        return this.inv;
     }
 
     public void setInventory(Inventory inv) {
@@ -165,16 +167,16 @@ public class nInventoryUtil {
     }
 
     public void destroy() {
-        if (listener != null) {
-            HandlerList.unregisterAll(listener);
+        if (this.listener != null) {
+            HandlerList.unregisterAll(this.listener);
         }
 
-        title = null;
-        type = null;
-        inv = null;
-        items.clear();
+        this.title = null;
+        this.type = null;
+        this.inv = null;
+        this.items.clear();
 
-        listener = null;
+        this.listener = null;
     }
 
     public interface ClickEventHandler {
@@ -182,7 +184,6 @@ public class nInventoryUtil {
     }
 
     public static class Item {
-
         private final ItemStack is;
         private final String itemDisplayname;
         private List<String> itemLore;
@@ -200,12 +201,12 @@ public class nInventoryUtil {
         }
 
         public void setLore() {
-            if (itemLore != null) {
-                List<String> formattedItemLore = new ArrayList<>(itemLore.size());
+            if (this.itemLore != null) {
+                List<String> formattedItemLore = new ArrayList<>(this.itemLore.size());
 
-                for (String itemLoreList : itemLore) {
-                    if (placeholders != null) {
-                        for (Placeholder placeholderList : placeholders) {
+                for (String itemLoreList : this.itemLore) {
+                    if (this.placeholders != null) {
+                        for (Placeholder placeholderList : this.placeholders) {
                             if (itemLoreList.contains(placeholderList.getPlaceholder())) {
                                 itemLoreList = ChatColor.translateAlternateColorCodes('&', itemLoreList.replace(placeholderList.getPlaceholder(), placeholderList.getResult()));
                             }
@@ -215,39 +216,38 @@ public class nInventoryUtil {
                     formattedItemLore.add(ChatColor.translateAlternateColorCodes('&', itemLoreList));
                 }
 
-                itemLore.clear();
-                itemLore = formattedItemLore;
+                this.itemLore.clear();
+                this.itemLore = formattedItemLore;
             }
         }
 
         public void setItemMeta() {
-            ItemMeta im = is.hasItemMeta() ? is.getItemMeta() : Bukkit.getItemFactory().getItemMeta(is.getType());
-            im.setDisplayName(itemDisplayname);
-            im.setLore(itemLore);
+            ItemMeta im = this.is.hasItemMeta() ? this.is.getItemMeta() : Bukkit.getItemFactory().getItemMeta(this.is.getType());
+            im.setDisplayName(this.itemDisplayname);
+            im.setLore(this.itemLore);
 
-            if (itemFlags != null) {
-                im.addItemFlags(itemFlags);
+            if (this.itemFlags != null) {
+                im.addItemFlags(this.itemFlags);
             }
 
-            if (itemEnchantments != null) {
-                for (Enchantment itemEnchantmentList : itemEnchantments) {
+            if (this.itemEnchantments != null) {
+                for (Enchantment itemEnchantmentList : this.itemEnchantments) {
                     im.addEnchant(itemEnchantmentList, 1, true);
                 }
             }
 
-            is.setItemMeta(im);
+            this.is.setItemMeta(im);
         }
 
         public ItemStack prepareItem() {
             setLore();
             setItemMeta();
 
-            return is;
+            return this.is;
         }
     }
 
-    public class ClickEvent {
-
+    public static class ClickEvent {
         private final ClickType click;
         private final int slot;
         private final ItemStack is;
@@ -263,19 +263,19 @@ public class nInventoryUtil {
         }
 
         public ClickType getClick() {
-            return click;
+            return this.click;
         }
 
         public int getSlot() {
-            return slot;
+            return this.slot;
         }
 
         public ItemStack getItem() {
-            return is;
+            return this.is;
         }
 
         public boolean getWillClose() {
-            return close;
+            return this.close;
         }
 
         public void setWillClose(boolean close) {
@@ -283,7 +283,7 @@ public class nInventoryUtil {
         }
 
         public boolean getWillDestroy() {
-            return destroy;
+            return this.destroy;
         }
 
         public void setWillDestroy(boolean destroy) {
@@ -291,7 +291,7 @@ public class nInventoryUtil {
         }
 
         public boolean getCancelled() {
-            return cancelled;
+            return this.cancelled;
         }
 
         public void setCancelled(boolean cancelled) {

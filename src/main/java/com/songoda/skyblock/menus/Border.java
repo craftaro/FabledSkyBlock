@@ -20,7 +20,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
 public class Border {
-
     private static Border instance;
 
     public static Border getInstance() {
@@ -32,7 +31,7 @@ public class Border {
     }
 
     public void open(Player player) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         MessageManager messageManager = plugin.getMessageManager();
         IslandManager islandManager = plugin.getIslandManager();
@@ -48,9 +47,9 @@ public class Border {
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                 return;
-            } else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && plugin.getPermissionManager().hasPermission(island, "Border", IslandRole.Operator))
-                    || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+            } else if (!((island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                    && plugin.getPermissionManager().hasPermission(island, "Border", IslandRole.OPERATOR))
+                    || island.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Border.Permission.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
@@ -220,6 +219,6 @@ public class Border {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Border.Title")));
         nInv.setType(InventoryType.HOPPER);
 
-        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
     }
 }

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.Stackable;
@@ -13,21 +14,23 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
- 
+
 
 public class StackableCommand extends SubCommand {
+    public StackableCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        final MessageManager messageManager = plugin.getMessageManager();
+        final MessageManager messageManager = this.plugin.getMessageManager();
 
         if (args.length == 0) {
             player.sendMessage(StringUtil.color("&e/island admin stackable setsize <size> &7- &f&osets the target block's stack size if applicable"));
             return;
         }
 
-        final FileConfiguration messageConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+        final FileConfiguration messageConfig = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml")).getFileConfiguration();
 
         if (args[0].equalsIgnoreCase("setsize")) {
 
@@ -36,7 +39,7 @@ public class StackableCommand extends SubCommand {
                 return;
             }
 
-            int amount = 0;
+            int amount;
 
             try {
                 amount = Integer.parseInt(args[1]);
@@ -46,13 +49,12 @@ public class StackableCommand extends SubCommand {
             }
 
             final Block block = player.getTargetBlock(null, 6);
-
             if (block == null) {
                 messageManager.sendMessage(player, messageConfig.getString("Command.Island.Admin.Stackable.Target.None"));
                 return;
             }
 
-            final StackableManager stackableManager = plugin.getStackableManager();
+            final StackableManager stackableManager = this.plugin.getStackableManager();
             final CompatibleMaterial type = CompatibleMaterial.getMaterial(block.getType());
 
             if (!stackableManager.isStackableMaterial(type)) {
@@ -65,7 +67,9 @@ public class StackableCommand extends SubCommand {
 
             if (amount <= 1) {
                 messageManager.sendMessage(player, messageConfig.getString("Command.Island.Admin.Stackable.Target.Remove-Stack"));
-                if (stack != null) stackableManager.removeStack(stack);
+                if (stack != null) {
+                    stackableManager.removeStack(stack);
+                }
                 return;
             }
 
@@ -90,7 +94,6 @@ public class StackableCommand extends SubCommand {
         } else {
             messageManager.sendMessage(player, messageConfig.getString("Command.Island.Argument.Unrecognised.Message"));
         }
-
     }
 
     @Override
@@ -110,12 +113,11 @@ public class StackableCommand extends SubCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[] { "stackables" };
+        return new String[]{"stackables"};
     }
 
     @Override
     public String[] getArguments() {
-        return new String[] { "setsize" };
+        return new String[]{"setsize"};
     }
-
 }

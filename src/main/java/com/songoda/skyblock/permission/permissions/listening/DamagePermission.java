@@ -17,7 +17,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import java.io.File;
 
 public class DamagePermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final FileManager fileManager;
 
@@ -49,7 +48,7 @@ public class DamagePermission extends ListeningPermission {
             }
         }
 
-        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+        FileManager.Config config = this.fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Settings.Damage.Enable", false)
@@ -61,10 +60,11 @@ public class DamagePermission extends ListeningPermission {
     @PermissionHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
+        if (entity.getType() != EntityType.PLAYER) {
+            return;
+        }
 
-        if (entity.getType() != EntityType.PLAYER) return;
-
-        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+        FileManager.Config config = this.fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getBoolean("Island.Settings.Damage.Enable", false)

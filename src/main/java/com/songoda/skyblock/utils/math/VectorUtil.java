@@ -3,7 +3,6 @@ package com.songoda.skyblock.utils.math;
 import org.bukkit.util.Vector;
 
 public final class VectorUtil {
-
     public static Vector rotateAroundAxisX(Vector v, double angle) {
         angle = Math.toRadians(angle);
 

@@ -13,11 +13,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Visit {
-
     private final SkyBlock plugin;
     private final IslandLevel islandLevel;
     private UUID islandOwnerUUID;
@@ -29,7 +32,7 @@ public class Visit {
     private final double islandBankBalance;
     private List<String> islandSignature;
     private final Set<UUID> islandVisitors;
-    
+
     private IslandStatus status;
 
     protected Visit(SkyBlock plugin, UUID islandOwnerUUID, IslandLocation[] islandLocations, int islandSize,
@@ -45,19 +48,19 @@ public class Visit {
         this.islandSignature = islandSignature;
         this.status = status;
         this.islandVisitors = new HashSet<>();
-    
+
         FileConfiguration configLoad = plugin.getFileManager()
-                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
+                .getConfig(new File(new File(plugin.getDataFolder(), "visit-data"),
                         islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
-    
+
         for (String visitor : configLoad.getStringList("Visitors")) {
-            islandVisitors.add(FastUUID.parseUUID(visitor));
+            this.islandVisitors.add(FastUUID.parseUUID(visitor));
         }
     }
 
     public UUID getOwnerUUID() {
-        return islandOwnerUUID;
+        return this.islandOwnerUUID;
     }
 
     public void setOwnerUUID(UUID islandOwnerUUID) {
@@ -65,7 +68,7 @@ public class Visit {
     }
 
     public String getOwnerName() {
-        return islandOwnerName;
+        return this.islandOwnerName;
     }
 
     public void setOwnerName(String islandOwnerName) {
@@ -74,19 +77,19 @@ public class Visit {
 
     public IslandLocation getLocation(IslandWorld world) {
         switch (world) {
-            case End:
-                return islandLocations[2];
-            case Nether:
-                return islandLocations[1];
-            case Normal:
-                return islandLocations[0];
+            case END:
+                return this.islandLocations[2];
+            case NETHER:
+                return this.islandLocations[1];
+            case NORMAL:
+                return this.islandLocations[0];
         }
 
         return null;
     }
 
     public int getMembers() {
-        return islandMembers;
+        return this.islandMembers;
     }
 
     public void setMembers(int islandMembers) {
@@ -94,7 +97,7 @@ public class Visit {
     }
 
     public int getSafeLevel() {
-        return safeLevel;
+        return this.safeLevel;
     }
 
     public void setSafeLevel(int safeLevel) {
@@ -102,7 +105,7 @@ public class Visit {
     }
 
     public int getRadius() {
-        return islandSize;
+        return this.islandSize;
     }
 
     public void setSize(int islandSize) {
@@ -114,7 +117,7 @@ public class Visit {
     }
 
     public IslandLevel getLevel() {
-        return islandLevel;
+        return this.islandLevel;
     }
 
     public boolean isVisitor(UUID uuid) {
@@ -122,17 +125,17 @@ public class Visit {
     }
 
     public Set<UUID> getVisitors() {
-        return islandVisitors;
+        return this.islandVisitors;
     }
 
     public void addVisitor(UUID uuid) {
-        islandVisitors.add(uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        this.islandVisitors.add(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, this::save);
     }
 
     public void removeVisitor(UUID uuid) {
-        islandVisitors.remove(uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        this.islandVisitors.remove(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, this::save);
     }
 
     public boolean isVoter(UUID uuid) {
@@ -142,9 +145,9 @@ public class Visit {
     public Set<UUID> getVoters() {
         Set<UUID> islandVoters = new HashSet<>();
 
-        for (String islandVisitorList : plugin.getFileManager()
-                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
-                        islandOwnerUUID.toString() + ".yml"))
+        for (String islandVisitorList : this.plugin.getFileManager()
+                .getConfig(new File(new File(this.plugin.getDataFolder(), "/visit-data"),
+                        this.islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration().getStringList("Voters")) {
             islandVoters.add(FastUUID.parseUUID(islandVisitorList));
         }
@@ -153,13 +156,12 @@ public class Visit {
     }
 
     public void addVoter(UUID uuid) {
-        List<String> islandVoters = new ArrayList<>();
-        FileConfiguration configLoad = plugin.getFileManager()
-                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
-                        islandOwnerUUID.toString() + ".yml"))
+        FileConfiguration configLoad = this.plugin.getFileManager()
+                .getConfig(new File(new File(this.plugin.getDataFolder(), "visit-data"),
+                        this.islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
-        islandVoters.addAll(configLoad.getStringList("Voters"));
+        List<String> islandVoters = new ArrayList<>(configLoad.getStringList("Voters"));
 
         islandVoters.add(FastUUID.toString(uuid));
         configLoad.set("Voters", islandVoters);
@@ -167,9 +169,9 @@ public class Visit {
 
     public void removeVoter(UUID uuid) {
         List<String> islandVoters = new ArrayList<>();
-        FileConfiguration configLoad = plugin.getFileManager()
-                .getConfig(new File(new File(plugin.getDataFolder().toString() + "/visit-data"),
-                        islandOwnerUUID.toString() + ".yml"))
+        FileConfiguration configLoad = this.plugin.getFileManager()
+                .getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/visit-data"),
+                        this.islandOwnerUUID.toString() + ".yml"))
                 .getFileConfiguration();
 
         for (String islandVoterList : configLoad.getStringList("Voters")) {
@@ -181,8 +183,16 @@ public class Visit {
         configLoad.set("Voters", islandVoters);
     }
 
+    /**
+     * @deprecated Use {@link #getSignature()} instead.
+     */
+    @Deprecated
     public List<String> getSiganture() {
-        return islandSignature;
+        return this.islandSignature;
+    }
+
+    public List<String> getSignature() {
+        return this.islandSignature;
     }
 
     public void setSignature(List<String> islandSignature) {
@@ -190,26 +200,26 @@ public class Visit {
     }
 
     public Ban getBan() {
-        return plugin.getBanManager().getIsland(getOwnerUUID());
+        return this.plugin.getBanManager().getIsland(getOwnerUUID());
     }
 
     public synchronized void save() {
-        FileManager.Config config = plugin.getFileManager().getConfig(new File(
-                new File(plugin.getDataFolder().toString() + "/visit-data"), islandOwnerUUID.toString() + ".yml"));
-    
-        config.getFileConfiguration().set("Visitors", new ArrayList<>(islandVisitors.stream().map(UUID::toString).collect(Collectors.toSet())));
-        
+        FileManager.Config config = this.plugin.getFileManager().getConfig(new File(
+                new File(this.plugin.getDataFolder(), "visit-data"), this.islandOwnerUUID.toString() + ".yml"));
+
+        config.getFileConfiguration().set("Visitors", new ArrayList<>(this.islandVisitors.stream().map(UUID::toString).collect(Collectors.toSet())));
+
         try {
             config.getFileConfiguration().save(config.getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
-    
+
     public IslandStatus getStatus() {
-        return status;
+        return this.status;
     }
-    
+
     public void setStatus(IslandStatus status) {
         this.status = status;
     }

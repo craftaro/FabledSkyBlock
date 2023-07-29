@@ -10,9 +10,7 @@ import java.util.Scanner;
 import java.util.UUID;
 
 public final class NameFetcher {
-
     private NameFetcher() {
-
     }
 
     public static Names[] getNames(UUID uuid) throws IOException {
@@ -30,16 +28,15 @@ public final class NameFetcher {
     }
 
     public static class Names {
-
         public String name;
         public long changedToAt;
 
         public String getName() {
-            return name;
+            return this.name;
         }
 
         public Date getChangeDate() {
-            return new Date(changedToAt);
+            return new Date(this.changedToAt);
         }
     }
 }

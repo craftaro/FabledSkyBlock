@@ -7,7 +7,6 @@ import com.songoda.skyblock.permission.PermissionType;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class ItemPickupPermission extends ListeningPermission {
-
     public ItemPickupPermission() {
         super("ItemPickup", CompatibleMaterial.MELON_SEEDS, PermissionType.GENERIC);
     }

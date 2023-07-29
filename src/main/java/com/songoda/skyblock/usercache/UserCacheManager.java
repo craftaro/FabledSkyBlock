@@ -16,7 +16,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public final class UserCacheManager {
-
     private final SkyBlock plugin;
     private final Config config;
 
@@ -34,12 +33,14 @@ public final class UserCacheManager {
                 Bukkit.getServer().getLogger().log(Level.INFO, "SkyBlock | Info: Fetching user information from island data. This may take a while...");
 
                 for (File fileList : configFile.listFiles()) {
-
-                    if (fileList == null) continue;
+                    if (fileList == null) {
+                        continue;
+                    }
 
                     final String fileName = fileList.getName();
-
-                    if (fileName.length() < 35 || !fileName.endsWith(".yml")) continue;
+                    if (fileName.length() < 35 || !fileName.endsWith(".yml")) {
+                        continue;
+                    }
 
                     try {
                         final FileConfiguration configLoad = new Config(fileManager, fileList).getFileConfiguration();
@@ -65,7 +66,7 @@ public final class UserCacheManager {
                                 }
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ex) {
                         usersIgnored++;
                     }
 
@@ -87,11 +88,11 @@ public final class UserCacheManager {
     }
 
     public void addUser(UUID uuid, String name) {
-        config.getFileConfiguration().set(FastUUID.toString(uuid), name);
+        this.config.getFileConfiguration().set(FastUUID.toString(uuid), name);
     }
 
     public String getUser(UUID uuid) {
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = this.config.getFileConfiguration();
 
         if (configLoad.getString(FastUUID.toString(uuid)) != null) {
             return configLoad.getString(FastUUID.toString(uuid));
@@ -101,7 +102,7 @@ public final class UserCacheManager {
     }
 
     public UUID getUser(String name) {
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = this.config.getFileConfiguration();
 
         for (String userList : configLoad.getConfigurationSection("").getKeys(false)) {
             if (configLoad.getString(userList).equalsIgnoreCase(name)) {
@@ -113,24 +114,24 @@ public final class UserCacheManager {
     }
 
     public boolean hasUser(UUID uuid) {
-        return config.getFileConfiguration().getString(FastUUID.toString(uuid)) != null;
+        return this.config.getFileConfiguration().getString(FastUUID.toString(uuid)) != null;
     }
 
     public boolean hasUser(String name) {
-        FileConfiguration configLoad = config.getFileConfiguration();
+        FileConfiguration configLoad = this.config.getFileConfiguration();
 
         return configLoad.getConfigurationSection("").getKeys(false).stream().anyMatch(userList -> configLoad.getString(userList).equalsIgnoreCase(name));
     }
 
     public void saveAsync() {
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> save());
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(this.plugin, this::save);
     }
 
     public synchronized void save() {
         try {
-            config.getFileConfiguration().save(config.getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
+            this.config.getFileConfiguration().save(this.config.getFile());
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

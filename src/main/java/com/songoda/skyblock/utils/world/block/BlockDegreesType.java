@@ -1,7 +1,6 @@
 package com.songoda.skyblock.utils.world.block;
 
 public enum BlockDegreesType {
-
     ROTATE_90(90F), ROTATE_180(180F), ROTATE_270(270F), ROTATE_360(360F);
 
     private final float angle;
@@ -11,6 +10,6 @@ public enum BlockDegreesType {
     }
 
     public float getAngle() {
-        return angle;
+        return this.angle;
     }
 }

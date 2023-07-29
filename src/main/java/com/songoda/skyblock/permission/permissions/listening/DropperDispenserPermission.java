@@ -11,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class DropperDispenserPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,15 +22,15 @@ public class DropperDispenserPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         Player player = event.getPlayer();
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
 
-        if (material == CompatibleMaterial.DROPPER || material == CompatibleMaterial.DISPENSER)
-            cancelAndMessage(event, player, plugin, messageManager);
+        if (material == CompatibleMaterial.DROPPER || material == CompatibleMaterial.DISPENSER) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }

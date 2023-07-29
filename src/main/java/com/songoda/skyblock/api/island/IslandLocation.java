@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 public class IslandLocation {
-
     private final IslandEnvironment environment;
     private final IslandWorld world;
     private final Location location;
@@ -16,30 +15,30 @@ public class IslandLocation {
     }
 
     public IslandEnvironment getEnvironment() {
-        return environment;
+        return this.environment;
     }
 
     public IslandWorld getWorld() {
-        return world;
+        return this.world;
     }
 
     public Location getLocation() {
-        return location;
+        return this.location;
     }
 
     public World getBukkitWorld() {
-        return location.getWorld();
+        return this.location.getWorld();
     }
 
     public int getX() {
-        return location.getBlockX();
+        return this.location.getBlockX();
     }
 
     public int getY() {
-        return location.getBlockY();
+        return this.location.getBlockY();
     }
 
     public int getZ() {
-        return location.getBlockZ();
+        return this.location.getBlockZ();
     }
 }

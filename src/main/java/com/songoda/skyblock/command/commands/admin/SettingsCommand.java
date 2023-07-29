@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.gui.permissions.GuiPermissionsSelector;
 import com.songoda.skyblock.sound.SoundManager;
@@ -8,12 +9,15 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class SettingsCommand extends SubCommand {
+    public SettingsCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        SoundManager soundManager = plugin.getSoundManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
-        plugin.getGuiManager().showGUI(player, new GuiPermissionsSelector(plugin, player, null, null));
+        this.plugin.getGuiManager().showGUI(player, new GuiPermissionsSelector(this.plugin, player, null, null));
         soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
     }
 

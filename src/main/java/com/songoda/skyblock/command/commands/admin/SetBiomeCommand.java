@@ -2,6 +2,7 @@ package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -24,6 +25,9 @@ import java.io.File;
 import java.util.UUID;
 
 public class SetBiomeCommand extends SubCommand {
+    public SetBiomeCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
@@ -36,14 +40,14 @@ public class SetBiomeCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        BiomeManager biomeManager = plugin.getBiomeManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        BiomeManager biomeManager = this.plugin.getBiomeManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length >= 2) {
@@ -60,7 +64,7 @@ public class SetBiomeCommand extends SubCommand {
             }
 
             if (world == null) {
-                world = IslandWorld.Normal;
+                world = IslandWorld.NORMAL;
             }
 
             CompatibleBiome biome = null;
@@ -86,14 +90,13 @@ public class SetBiomeCommand extends SubCommand {
                 }
 
                 if (islandOwnerUUID == null) {
-                    messageManager.sendMessage(sender,
-                            configLoad.getString("Command.Island.Admin.SetBiome.Island.Owner.Message"));
+                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetBiome.Island.Owner.Message"));
                     soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 } else {
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
                         biomeManager.setBiome(island, world, biome, null);
-                        if (world.equals(IslandWorld.Normal)) {
+                        if (world == IslandWorld.NORMAL) {
                             island.setBiome(biome.getBiome());
                         }
                     } else {
@@ -107,7 +110,7 @@ public class SetBiomeCommand extends SubCommand {
                             CompatibleBiome finalBiome = biome;
                             IslandWorld finalWorld = world;
                             biomeManager.setBiome(island, world, biome, () -> {
-                                if (finalWorld.equals(IslandWorld.Normal)) {
+                                if (finalWorld == IslandWorld.NORMAL) {
                                     island.setBiome(finalBiome.getBiome());
                                 }
                             });

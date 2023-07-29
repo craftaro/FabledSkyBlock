@@ -3,9 +3,9 @@ package com.songoda.skyblock.api.event.island;
 import com.songoda.skyblock.api.island.Island;
 import org.bukkit.block.Biome;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class IslandBiomeChangeEvent extends IslandEvent {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private Biome biome;
@@ -20,7 +20,7 @@ public class IslandBiomeChangeEvent extends IslandEvent {
     }
 
     public Biome getBiome() {
-        return biome;
+        return this.biome;
     }
 
     public void setBiome(Biome biome) {
@@ -28,7 +28,7 @@ public class IslandBiomeChangeEvent extends IslandEvent {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

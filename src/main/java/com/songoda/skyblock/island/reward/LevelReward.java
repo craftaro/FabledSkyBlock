@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelReward {
-
     private List<String> commands = new ArrayList<>();
 
     private double money = 0;
@@ -22,20 +21,21 @@ public class LevelReward {
     public void give(Player player, SkyBlock plugin, long level) {
         Economy economy = plugin.getEconomyManager().getEconomy();
 
-        if (islandBalance > 0) {
+        if (this.islandBalance > 0) {
             Island island = plugin.getIslandManager().getIsland(player);
-            island.addToBank(islandBalance);
+            island.addToBank(this.islandBalance);
         }
 
-        if (money > 0)
-            economy.deposit(player, money);
+        if (this.money > 0) {
+            economy.deposit(player, this.money);
+        }
 
-        if (!commands.isEmpty()) {
-            for (String cmd : commands) {
+        if (!this.commands.isEmpty()) {
+            for (String cmd : this.commands) {
                 cmd = cmd.replace("%level%", String.valueOf(level))
                         .replace("%player%", player.getName())
                         .trim();
-    
+
                 plugin.getServer().dispatchCommand(plugin.getConsole(), cmd);
             }
         }

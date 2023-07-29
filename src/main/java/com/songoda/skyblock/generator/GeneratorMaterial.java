@@ -3,7 +3,6 @@ package com.songoda.skyblock.generator;
 import com.songoda.core.compatibility.CompatibleMaterial;
 
 public class GeneratorMaterial {
-
     private final CompatibleMaterial materials;
     private double chance;
 
@@ -13,11 +12,11 @@ public class GeneratorMaterial {
     }
 
     public CompatibleMaterial getMaterials() {
-        return materials;
+        return this.materials;
     }
 
     public double getChance() {
-        return chance;
+        return this.chance;
     }
 
     public void setChance(double chance) {

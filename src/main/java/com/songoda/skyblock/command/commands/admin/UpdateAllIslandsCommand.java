@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.IslandManager;
@@ -14,26 +15,29 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class UpdateAllIslandsCommand extends SubCommand {
-    
+    public UpdateAllIslandsCommand(SkyBlock plugin) {
+        super(plugin);
+    }
+
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
         processCommand(player, args);
     }
-    
+
     @Override
     public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
         processCommand(sender, args);
     }
-    
+
     public void processCommand(CommandSender sender, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        FileManager fileManager = plugin.getFileManager();
-        SoundManager soundManager = plugin.getSoundManager();
-    
-        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        FileManager fileManager = this.plugin.getFileManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+
+        FileManager.Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-    
+
         if (args.length < 1) {
             messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.UpdateAllIslands.NoArgs.Message"));
             soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
@@ -75,24 +79,24 @@ public class UpdateAllIslandsCommand extends SubCommand {
             }
         }
     }
-    
+
     @Override
     public String getName() {
         return "updateallislands";
     }
-    
+
     @Override
     public String getInfoMessagePath() {
         return "Command.Island.Admin.UpdateAllIslands.Info.Message";
     }
-    
+
     @Override
     public String[] getAliases() {
         return new String[0];
     }
-    
+
     @Override
     public String[] getArguments() {
-        return new String[] {"SetSize", "AdjustSize"};
+        return new String[]{"SetSize", "AdjustSize"};
     }
 }

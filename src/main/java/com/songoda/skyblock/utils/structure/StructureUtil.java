@@ -9,7 +9,6 @@ import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.nms.NmsManager;
 import com.songoda.core.nms.nbt.NBTEntity;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.utils.Compression;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.utils.world.block.BlockData;
@@ -32,19 +31,22 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 public final class StructureUtil {
-
     public static void saveStructure(File configFile, org.bukkit.Location originLocation, org.bukkit.Location[] positions) throws Exception {
         if (!configFile.exists()) {
             configFile.createNewFile();
         }
 
-        LinkedHashMap<Block, Location> blocks = SelectionLocation.getBlocks(originLocation, positions[0], positions[1]);
-        LinkedHashMap<Entity, Location> entities = SelectionLocation.getEntities(originLocation, positions[0], positions[1]);
+        Map<Block, Location> blocks = SelectionLocation.getBlocks(originLocation, positions[0], positions[1]);
+        Map<Entity, Location> entities = SelectionLocation.getEntities(originLocation, positions[0], positions[1]);
 
         List<BlockData> blockData = new ArrayList<>();
         List<EntityData> entityData = new ArrayList<>();
@@ -83,23 +85,25 @@ public final class StructureUtil {
             originBlockLocation = originBlockLocation + ":" + originLocation.getYaw() + ":" + originLocation.getPitch();
         }
 
-        String JSONString = new Gson().toJson(new Storage(new Gson().toJson(blockData), new Gson().toJson(entityData), originBlockLocation, System.currentTimeMillis(), Integer.parseInt(ServerVersion.getVersionReleaseNumber())), Storage.class);
+        String jsonString = new Gson().toJson(new Storage(new Gson().toJson(blockData), new Gson().toJson(entityData), originBlockLocation, System.currentTimeMillis(), Integer.parseInt(ServerVersion.getVersionReleaseNumber())), Storage.class);
 
         FileOutputStream fileOutputStream = new FileOutputStream(configFile, false);
-        fileOutputStream.write(Base64.getEncoder().encode(JSONString.getBytes(StandardCharsets.UTF_8)));
+        fileOutputStream.write(Base64.getEncoder().encode(jsonString.getBytes(StandardCharsets.UTF_8)));
         fileOutputStream.flush();
         fileOutputStream.close();
     }
 
     private static String getBase64String(File file) {
-        if (!file.exists()) return null;
+        if (!file.exists()) {
+            return null;
+        }
 
         String firstLine = null;
 
         try {
             firstLine = Files.asCharSource(file, StandardCharsets.UTF_8).readFirstLine();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
 
         return firstLine;
@@ -118,16 +122,16 @@ public final class StructureUtil {
         if (!pattern.matcher(new String(content)).find()) {
             try {
                 storage = new Gson().fromJson(Compression.decompress(content), Storage.class);
-            } catch (JsonSyntaxException e) {
-                e.printStackTrace();
+            } catch (JsonSyntaxException ex) {
+                ex.printStackTrace();
                 return null;
             }
         } else {
             String base64 = getBase64String(configFile);
 
             if (base64 == null) {
-                base64 = getBase64String(new File(SkyBlock.getInstance().getDataFolder() + "/" + "structures", "default.structure"));
-                SkyBlock.getInstance().getLogger().log(Level.SEVERE, "Unable to load structure '" + configFile.getAbsolutePath() + "' using default instead.");
+                base64 = getBase64String(new File(SkyBlock.getPlugin(SkyBlock.class).getDataFolder() + "/structures", "default.structure"));
+                SkyBlock.getPlugin(SkyBlock.class).getLogger().log(Level.SEVERE, "Unable to load structure '" + configFile.getAbsolutePath() + "' using default instead.");
             }
 
             if (base64 == null) {
@@ -135,8 +139,8 @@ public final class StructureUtil {
             }
             try {
                 storage = new Gson().fromJson(new String(Base64.getDecoder().decode(base64.getBytes(StandardCharsets.UTF_8))), Storage.class);
-            } catch (JsonSyntaxException e) {
-                e.printStackTrace();
+            } catch (JsonSyntaxException ex) {
+                ex.printStackTrace();
                 return null;
             }
         }
@@ -156,16 +160,17 @@ public final class StructureUtil {
 
         float yaw = 0.0F, pitch = 0.0F;
 
-        if (originLocationPositions.length == 6) {
-            yaw = Float.valueOf(originLocationPositions[4]);
-            pitch = Float.valueOf(originLocationPositions[5]);
+        if (originLocationPositions != null && originLocationPositions.length == 6) {
+            yaw = Float.parseFloat(originLocationPositions[4]);
+            pitch = Float.parseFloat(originLocationPositions[5]);
         }
 
-        List<BlockData> blockData = new Gson().fromJson(storage.getBlocks(), new TypeToken<List<BlockData>>() {}.getType());
+        List<BlockData> blockData = new Gson().fromJson(storage.getBlocks(), new TypeToken<List<BlockData>>() {
+        }.getType());
 
         for (BlockData blockDataList : blockData) {
 
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getPlugin(SkyBlock.class), () -> {
                 try {
                     org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), blockDataList.getX(), blockDataList.getY(), blockDataList.getZ()), type);
                     org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[0])),
@@ -173,16 +178,16 @@ public final class StructureUtil {
                     blockLocation.add(blockRotationLocation);
                     BlockUtil.convertBlockDataToBlock(blockLocation.getBlock(), blockDataList);
                 } catch (Exception e) {
-                    SkyBlock.getInstance().getLogger()
+                    SkyBlock.getPlugin(SkyBlock.class).getLogger()
                             .warning("Unable to convert BlockData to Block for type {" + blockDataList.getMaterial() + ":" + blockDataList.getData() + "} in structure {" + structure.getStructureFile() + "}");
                 }
             });
         }
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getPlugin(SkyBlock.class), () -> {
             for (EntityData entityDataList : (List<EntityData>) new Gson().fromJson(storage.getEntities(), new TypeToken<List<EntityData>>() {
             }.getType())) {
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyBlock.getPlugin(SkyBlock.class), () -> {
                     try {
                         if (entityDataList.getSerializedNBT() != null) {
                             org.bukkit.Location blockRotationLocation = LocationUtil.rotateLocation(new org.bukkit.Location(location.getWorld(), entityDataList.getX(), entityDataList.getY(), entityDataList.getZ()), type);
@@ -201,20 +206,17 @@ public final class StructureUtil {
                             EntityUtil.convertEntityDataToEntity(entityDataList, blockLocation);
                         }
                     } catch (Exception e) {
-                        SkyBlock.getInstance().getLogger().warning("Unable to convert EntityData to Entity for type {" + entityDataList.getEntityType() + "} in structure {" + structure.getStructureFile() + "}");
+                        SkyBlock.getPlugin(SkyBlock.class).getLogger().warning("Unable to convert EntityData to Entity for type {" + entityDataList.getEntityType() + "} in structure {" + structure.getStructureFile() + "}");
                     }
                 });
             }
         }, 60L);
 
-        return new Float[] { yaw, pitch };
+        return new Float[]{yaw, pitch};
     }
 
-    public static ItemStack getTool() throws Exception {
-        SkyBlock plugin = SkyBlock.getInstance();
-
-        FileManager fileManager = plugin.getFileManager();
-
+    public static ItemStack getTool() {
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
         FileConfiguration configLoad = plugin.getLanguage();
 
         ItemStack is = new ItemStack(Material.valueOf(plugin.getConfiguration().getString("Island.Admin.Structure.Selector")));
@@ -247,6 +249,6 @@ public final class StructureUtil {
             location2Fixed.setZ(location1.getZ());
         }
 
-        return new org.bukkit.Location[] { location1Fixed, location2Fixed };
+        return new org.bukkit.Location[]{location1Fixed, location2Fixed};
     }
 }

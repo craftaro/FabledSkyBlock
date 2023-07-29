@@ -9,11 +9,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
-import java.util.*;
- 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
 
 public final class MenuClickRegistry {
-
     private static MenuClickRegistry instance;
 
     public static MenuClickRegistry getInstance() {
@@ -29,51 +32,47 @@ public final class MenuClickRegistry {
     }
 
     public void register(MenuPopulator populator) {
-        populator.populate(executors);
-        populators.add(populator);
+        populator.populate(this.executors);
+        this.populators.add(populator);
     }
 
     public void reloadAll() {
-        executors.clear();
-        for (MenuPopulator populator : populators) {
-            populator.populate(executors);
+        this.executors.clear();
+        for (MenuPopulator populator : this.populators) {
+            populator.populate(this.executors);
         }
     }
 
     public void dispatch(Player clicker, ClickEvent e) {
-
         final ItemStack item = e.getItem();
-
-        if (item == null) return;
+        if (item == null) {
+            return;
+        }
 
         final ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return;
+        }
 
-        if (meta == null) return;
-
-        @SuppressWarnings("deprecation")
-        final MenuExecutor executor = executors.get(RegistryKey.fromName(meta.getDisplayName(), CompatibleMaterial.getMaterial(item)));
+        @SuppressWarnings("deprecation") final MenuExecutor executor = this.executors.get(RegistryKey.fromName(meta.getDisplayName(), CompatibleMaterial.getMaterial(item)));
 
 
-        if (executor == null) return;
-
-        executor.onClick(SkyBlock.getInstance(), clicker, e);
+        if (executor == null) {
+            return;
+        }
+        executor.onClick(SkyBlock.getPlugin(SkyBlock.class), clicker, e);
     }
 
     public interface MenuPopulator {
-
         void populate(Map<RegistryKey, MenuExecutor> executors);
-
     }
 
     public interface MenuExecutor {
-
         void onClick(SkyBlock plugin, Player clicker, ClickEvent e);
-
     }
 
     public static class RegistryKey {
-
-        private static final File path = new File(SkyBlock.getInstance().getDataFolder(), "language.yml");
+        private static final File path = new File(SkyBlock.getPlugin(SkyBlock.class).getDataFolder(), "language.yml");
 
         private final String name;
         private final CompatibleMaterial type;
@@ -85,17 +84,21 @@ public final class MenuClickRegistry {
 
         @Override
         public int hashCode() {
-            return Objects.hash(name, type);
+            return Objects.hash(this.name, this.type);
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (!(obj instanceof RegistryKey)) return false;
+            if (this == obj) {
+                return true;
+            }
+            if (!(obj instanceof RegistryKey)) {
+                return false;
+            }
 
             final RegistryKey other = (RegistryKey) obj;
 
-            return Objects.equals(name, other.name) && type == other.type;
+            return Objects.equals(this.name, other.name) && this.type == other.type;
         }
 
         public static RegistryKey fromName(String name, CompatibleMaterial type) {
@@ -103,8 +106,7 @@ public final class MenuClickRegistry {
         }
 
         public static RegistryKey fromLanguageFile(String namePath, CompatibleMaterial type) {
-            return new RegistryKey(StringUtil.color(SkyBlock.getInstance().getFileManager().getConfig(path).getFileConfiguration().getString(namePath)), type);
+            return new RegistryKey(StringUtil.color(SkyBlock.getPlugin(SkyBlock.class).getFileManager().getConfig(path).getFileConfiguration().getString(namePath)), type);
         }
     }
-
 }

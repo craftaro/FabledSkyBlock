@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.menus.Members;
 import com.songoda.skyblock.playerdata.PlayerData;
@@ -11,20 +12,23 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class MembersCommand extends SubCommand {
+    public MembersCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        SoundManager soundManager = plugin.getSoundManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
-        if (plugin.getIslandManager().getIsland(player) == null) {
-            plugin.getMessageManager().sendMessage(player,
-                    plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"))
+        if (this.plugin.getIslandManager().getIsland(player) == null) {
+            this.plugin.getMessageManager().sendMessage(player,
+                    this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"))
                             .getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
-            PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
-            playerData.setType(Members.Type.Default);
-            playerData.setSort(Members.Sort.Default);
+            PlayerData playerData = this.plugin.getPlayerDataManager().getPlayerData(player);
+            playerData.setType(Members.Type.DEFAULT);
+            playerData.setSort(Members.Sort.DEFAULT);
 
             Members.getInstance().open(player, (Members.Type) playerData.getType(),
                     (Members.Sort) playerData.getSort());

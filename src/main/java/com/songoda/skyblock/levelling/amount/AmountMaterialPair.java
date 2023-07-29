@@ -1,10 +1,9 @@
 package com.songoda.skyblock.levelling.amount;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
- 
+
 
 public class AmountMaterialPair {
-
     private final long amount;
     private final CompatibleMaterial material;
 
@@ -14,11 +13,10 @@ public class AmountMaterialPair {
     }
 
     public long getAmount() {
-        return amount;
+        return this.amount;
     }
 
     public CompatibleMaterial getType() {
-        return material;
+        return this.material;
     }
-
 }

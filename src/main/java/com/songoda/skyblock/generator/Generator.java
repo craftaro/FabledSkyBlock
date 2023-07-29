@@ -6,7 +6,6 @@ import com.songoda.skyblock.island.IslandWorld;
 import java.util.List;
 
 public class Generator {
-
     private final String name;
     private final IslandWorld isWorld;
     private final CompatibleMaterial materials;
@@ -24,34 +23,34 @@ public class Generator {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public IslandWorld getIsWorld() {
-        return isWorld;
+        return this.isWorld;
     }
 
     public CompatibleMaterial getMaterials() {
-        return materials;
+        return this.materials;
     }
 
     public List<GeneratorMaterial> getGeneratorMaterials() {
-        return generatorMaterials;
+        return this.generatorMaterials;
     }
 
     public boolean isPermission() {
-        return permission;
+        return this.permission;
     }
 
     public String getPermission() {
-        return "fabledskyblock.generator." + name.toLowerCase().replace(" ", "_");
+        return "fabledskyblock.generator." + this.name.toLowerCase().replace(" ", "_");
     }
 
     public void setPermission(boolean permission) {
         this.permission = permission;
     }
-    
+
     public long getLevel() {
-        return level;
+        return this.level;
     }
 }

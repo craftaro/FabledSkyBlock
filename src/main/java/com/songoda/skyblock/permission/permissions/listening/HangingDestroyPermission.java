@@ -15,7 +15,6 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class HangingDestroyPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -28,34 +27,37 @@ public class HangingDestroyPermission extends ListeningPermission {
     @PermissionHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
-
-        if (entity instanceof Hanging) {
-
-            Player player;
-            if (event.getDamager() instanceof Player)
-                player = (Player)event.getDamager();
-            else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player)
-                player = (Player) ((Projectile) event.getDamager()).getShooter();
-            else return;
-
-            cancelAndMessage(event, player, plugin, messageManager);
-
+        if (!(entity instanceof Hanging)) {
+            return;
         }
+
+        Player player;
+        if (event.getDamager() instanceof Player) {
+            player = (Player) event.getDamager();
+        } else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player) {
+            player = (Player) ((Projectile) event.getDamager()).getShooter();
+        } else {
+            return;
+        }
+
+        cancelAndMessage(event, player, this.plugin, this.messageManager);
     }
 
     @PermissionHandler
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
-        if (!(event.getRemover() instanceof Player))
+        if (!(event.getRemover() instanceof Player)) {
             return;
+        }
 
-        cancelAndMessage(event, (Player) event.getRemover(), plugin, messageManager);
+        cancelAndMessage(event, (Player) event.getRemover(), this.plugin, this.messageManager);
     }
 
     @PermissionHandler
     public void onInteractEntity(PlayerInteractEntityEvent event) {
-        if (!(event.getRightClicked() instanceof Hanging))
+        if (!(event.getRightClicked() instanceof Hanging)) {
             return;
+        }
 
-        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+        cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
     }
 }

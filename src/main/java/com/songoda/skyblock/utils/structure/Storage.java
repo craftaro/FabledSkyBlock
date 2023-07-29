@@ -1,7 +1,6 @@
 package com.songoda.skyblock.utils.structure;
 
 public class Storage {
-
     private final String blocks;
     private final String entities;
     private final String originLocation;
@@ -19,22 +18,22 @@ public class Storage {
     }
 
     public int getVersion() {
-        return version;
+        return this.version;
     }
 
     public String getBlocks() {
-        return blocks;
+        return this.blocks;
     }
 
     public String getEntities() {
-        return entities;
+        return this.entities;
     }
 
     public String getOriginLocation() {
-        return originLocation;
+        return this.originLocation;
     }
 
     public long getTime() {
-        return time;
+        return this.time;
     }
 }

@@ -10,8 +10,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
-
 public class BiomeIcon {
     public final CompatibleBiome biome;
     public final ItemStack displayItem;
@@ -20,24 +18,24 @@ public class BiomeIcon {
     public final boolean nether;
     public final boolean end;
 
-    public BiomeIcon(SkyBlock plugin, CompatibleBiome biome){
+    public BiomeIcon(SkyBlock plugin, CompatibleBiome biome) {
         this.biome = biome;
         FileConfiguration biomeConfig = plugin.getBiomes();
         CompatibleMaterial tempMat = CompatibleMaterial.getMaterial(biomeConfig.getString("Biomes." + biome.name() + ".DisplayItem.Material"));
-        if(tempMat == null){
+        if (tempMat == null) {
             tempMat = CompatibleMaterial.STONE;
         }
         byte tempData = (byte) biomeConfig.getInt("Biomes." + biome.name() + ".DisplayItem.Data", 0);
-        
+
         CompatibleMaterial displayMaterial = CompatibleMaterial.getMaterial(tempMat.getMaterial(), tempData);
-        if(displayMaterial == null) {
+        if (displayMaterial == null) {
             displayMaterial = CompatibleMaterial.STONE;
         }
         this.displayItem = displayMaterial.getItem();
-        ItemMeta im = displayItem.getItemMeta();
-        if(im != null){
+        ItemMeta im = this.displayItem.getItemMeta();
+        if (im != null) {
             im.setDisplayName(ChatColor.translateAlternateColorCodes('&', biomeConfig.getString("Biomes." + biome.name() + ".DisplayName", biome.name())));
-            displayItem.setItemMeta(im);
+            this.displayItem.setItemMeta(im);
         }
         this.permission = biomeConfig.getBoolean("Biomes." + biome.name() + ".Permission", true);
         this.normal = biomeConfig.getBoolean("Biomes." + biome.name() + ".Normal", false);
@@ -45,11 +43,11 @@ public class BiomeIcon {
         this.end = biomeConfig.getBoolean("Biomes." + biome.name() + ".End", false);
     }
 
-    public BiomeIcon(CompatibleBiome biome, ItemStack displayItem, String displayName, boolean permission, boolean normal, boolean nether, boolean end){
+    public BiomeIcon(CompatibleBiome biome, ItemStack displayItem, String displayName, boolean permission, boolean normal, boolean nether, boolean end) {
         this.biome = biome;
         this.displayItem = displayItem;
         ItemMeta im = displayItem.getItemMeta();
-        if(im != null){
+        if (im != null) {
             im.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
             displayItem.setItemMeta(im);
         }
@@ -58,13 +56,13 @@ public class BiomeIcon {
         this.nether = nether;
         this.end = end;
     }
-    
-    public void enchant(){
-        ItemMeta im = displayItem.getItemMeta();
-        if(im != null){
-            im.addEnchant(Enchantment.DURABILITY,1, true);
+
+    public void enchant() {
+        ItemMeta im = this.displayItem.getItemMeta();
+        if (im != null) {
+            im.addEnchant(Enchantment.DURABILITY, 1, true);
             im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            displayItem.setItemMeta(im);
+            this.displayItem.setItemMeta(im);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
@@ -19,20 +20,23 @@ import java.util.Set;
 import java.util.UUID;
 
 public class ChatSpyCommand extends SubCommand {
-    
+    public ChatSpyCommand(SkyBlock plugin) {
+        super(plugin);
+    }
+
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        FileManager fileManager = plugin.getFileManager();
-        SoundManager soundManager = plugin.getSoundManager();
-    
-        FileManager.Config language = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        FileManager fileManager = this.plugin.getFileManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+
+        FileManager.Config language = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration languageLoad = language.getFileConfiguration();
-        
+
         PlayerData playerData = playerDataManager.getPlayerData(player);
-    
+
         if (args.length < 1) {
             toggleSpy(player, messageManager, languageLoad, playerData);
         } else {
@@ -41,7 +45,7 @@ public class ChatSpyCommand extends SubCommand {
                     toggleSpy(player, messageManager, languageLoad, playerData);
                     break;
                 case "global":
-                    if(!playerData.isGlobalChatSpy()){
+                    if (!playerData.isGlobalChatSpy()) {
                         playerData.enableGlobalChatSpy();
                         messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.GlobalEnabled.Message"));
                     } else {
@@ -50,10 +54,10 @@ public class ChatSpyCommand extends SubCommand {
                     }
                     break;
                 case "add":
-                    if(args.length == 2){
+                    if (args.length == 2) {
                         OfflinePlayer offlinePlayer = new OfflinePlayer(args[1]);
                         Island island = islandManager.getIslandByOwner(offlinePlayer.getBukkitOfflinePlayer());
-                        if(island != null) {
+                        if (island != null) {
                             playerData.addChatSpyIsland(island);
                             messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Add.Message")
                                     .replace("%owner", new OfflinePlayer(island.getOwnerUUID()).getName()));
@@ -66,10 +70,10 @@ public class ChatSpyCommand extends SubCommand {
                     }
                     break;
                 case "remove":
-                    if(args.length == 2){
+                    if (args.length == 2) {
                         OfflinePlayer offlinePlayer = new OfflinePlayer(args[1]);
                         Island island = islandManager.getIslandByOwner(offlinePlayer.getBukkitOfflinePlayer());
-                        if(island != null) {
+                        if (island != null) {
                             playerData.removeChatSpyIsland(island);
                             messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Remove.Message")
                                     .replace("%owner", new OfflinePlayer(island.getOwnerUUID()).getName()));
@@ -83,9 +87,9 @@ public class ChatSpyCommand extends SubCommand {
                     break;
                 case "list":
                     Set<UUID> uuidSet = playerData.getChatSpyIslands();
-                    if(!uuidSet.isEmpty()){
+                    if (!uuidSet.isEmpty()) {
                         messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.List.Start.Message"));
-                        for(UUID uuid : uuidSet) {
+                        for (UUID uuid : uuidSet) {
                             messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.List.List.Message")
                                     .replace("%owner", new OfflinePlayer(uuid).getName()));
                         }
@@ -101,10 +105,10 @@ public class ChatSpyCommand extends SubCommand {
             }
         }
     }
-    
+
     private void toggleSpy(Player player, MessageManager messageManager, FileConfiguration languageLoad, PlayerData playerData) {
-        if(playerData != null) {
-            if(playerData.isChatSpy()){
+        if (playerData != null) {
+            if (playerData.isChatSpy()) {
                 playerData.setChatSpy(false);
                 messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.Disabled.Message"));
             } else {
@@ -113,27 +117,27 @@ public class ChatSpyCommand extends SubCommand {
             }
         }
     }
-    
+
     @Override
     public void onCommandByConsole(ConsoleCommandSender sender, String[] args) {
         sender.sendMessage("SkyBlock | Error: You must be a player to perform that command.");
     }
-    
+
     @Override
     public String getName() {
         return "chatspy";
     }
-    
+
     @Override
     public String getInfoMessagePath() {
         return "Command.Island.Admin.ChatSpy.Info.Message";
     }
-    
+
     @Override
     public String[] getAliases() {
         return new String[]{"spychat", "spy"};
     }
-    
+
     @Override
     public String[] getArguments() {
         return new String[]{"toggle", "global", "add", "remove", "list"};

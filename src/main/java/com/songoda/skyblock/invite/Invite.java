@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class Invite {
-
     private final UUID playerUUID;
     private final UUID senderUUID;
     private UUID islandOwnerUUID;
@@ -21,15 +20,15 @@ public class Invite {
     }
 
     public UUID getPlayerUUID() {
-        return playerUUID;
+        return this.playerUUID;
     }
 
     public UUID getSenderUUID() {
-        return senderUUID;
+        return this.senderUUID;
     }
 
     public UUID getOwnerUUID() {
-        return islandOwnerUUID;
+        return this.islandOwnerUUID;
     }
 
     public void setOwnerUUID(UUID islandOwnerUUID) {
@@ -37,11 +36,11 @@ public class Invite {
     }
 
     public String getSenderName() {
-        return senderName;
+        return this.senderName;
     }
 
     public int getTime() {
-        return time;
+        return this.time;
     }
 
     public void setTime(int time) {

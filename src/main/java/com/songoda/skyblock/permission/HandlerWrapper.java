@@ -3,7 +3,6 @@ package com.songoda.skyblock.permission;
 import java.lang.reflect.Method;
 
 public class HandlerWrapper {
-
     private final BasicPermission permission;
     private final Method handler;
 
@@ -13,10 +12,10 @@ public class HandlerWrapper {
     }
 
     public BasicPermission getPermission() {
-        return permission;
+        return this.permission;
     }
 
     public Method getHandler() {
-        return handler;
+        return this.handler;
     }
 }

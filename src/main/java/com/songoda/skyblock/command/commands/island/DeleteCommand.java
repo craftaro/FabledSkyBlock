@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -16,7 +17,6 @@ import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.ChatComponent;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -31,30 +31,33 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class DeleteCommand extends SubCommand {
+    public DeleteCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        CooldownManager cooldownManager = plugin.getCooldownManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        CooldownManager cooldownManager = this.plugin.getCooldownManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+        PlayerData playerData = this.plugin.getPlayerDataManager().getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Owner.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
-        } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+        } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
+            if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                     .getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
-                    && cooldownManager.hasPlayer(CooldownType.Deletion, player)) {
-                CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Deletion, player);
+                    && cooldownManager.hasPlayer(CooldownType.DELETION, player)) {
+                CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.DELETION, player);
                 Cooldown cooldown = cooldownPlayer.getCooldown();
 
                 if (cooldown.getTime() < 60) {
@@ -82,10 +85,10 @@ public class DeleteCommand extends SubCommand {
                         configLoad.getString("Command.Island.Delete.Confirmation.Pending.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
             } else {
-                int confirmationTime = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                int confirmationTime = fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getInt("Island.Confirmation.Timeout");
 
-                playerData.setConfirmation(Confirmation.Deletion);
+                playerData.setConfirmation(Confirmation.DELETION);
                 playerData.setConfirmationTime(confirmationTime);
 
                 String confirmationMessage = configLoad.getString("Command.Island.Delete.Confirmation.Confirm.Message")
@@ -155,7 +158,7 @@ public class DeleteCommand extends SubCommand {
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Permission.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }
 

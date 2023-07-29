@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CooldownTask extends BukkitRunnable {
-
     private final CooldownManager cooldownManager;
 
     public CooldownTask(CooldownManager cooldownManager) {
@@ -17,7 +16,7 @@ public class CooldownTask extends BukkitRunnable {
     @Override
     public void run() {
         for (CooldownType cooldownType : CooldownType.getTypes()) {
-            List<CooldownPlayer> cooldownPlayers = cooldownManager.getCooldownPlayers(cooldownType);
+            List<CooldownPlayer> cooldownPlayers = this.cooldownManager.getCooldownPlayers(cooldownType);
 
             if (cooldownPlayers == null) return;
 
@@ -27,7 +26,7 @@ public class CooldownTask extends BukkitRunnable {
                 cooldown.setTime(cooldown.getTime() - 1);
 
                 if (cooldown.getTime() <= 0) {
-                    cooldownManager.deletePlayer(cooldownType, Bukkit.getServer().getOfflinePlayer(cooldownPlayer.getUUID()));
+                    this.cooldownManager.deletePlayer(cooldownType, Bukkit.getServer().getOfflinePlayer(cooldownPlayer.getUUID()));
                 }
             }
         }

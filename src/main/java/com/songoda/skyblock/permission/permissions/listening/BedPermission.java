@@ -11,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class BedPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,10 +22,9 @@ public class BedPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
         Player player = event.getPlayer();
@@ -38,7 +36,8 @@ public class BedPermission extends ListeningPermission {
                 || material == CompatibleMaterial.LIGHT_GRAY_BED || material == CompatibleMaterial.CYAN_BED
                 || material == CompatibleMaterial.PURPLE_BED || material == CompatibleMaterial.BLUE_BED
                 || material == CompatibleMaterial.BROWN_BED || material == CompatibleMaterial.GREEN_BED
-                || material == CompatibleMaterial.RED_BED || material == CompatibleMaterial.BLACK_BED)
-            cancelAndMessage(event, player, plugin, messageManager);
+                || material == CompatibleMaterial.RED_BED || material == CompatibleMaterial.BLACK_BED) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }

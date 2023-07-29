@@ -6,16 +6,15 @@ import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.hooks.economies.Economy;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.core.utils.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
 import java.util.Objects;
 
 public class GuiBankSelector extends Gui {
@@ -44,31 +43,33 @@ public class GuiBankSelector extends Gui {
         this.admin = admin;
         this.languageLoad = this.plugin.getLanguage();
         setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
-        setTitle(TextUtils.formatText(languageLoad.getString("Menu.Input.Title")));
+        setTitle(TextUtils.formatText(this.languageLoad.getString("Menu.Input.Title")));
         paint();
     }
 
     public void paint() {
-        Economy economy = plugin.getEconomyManager().getEconomy();
-        if (inventory != null)
-            inventory.clear();
+        Economy economy = this.plugin.getEconomyManager().getEconomy();
+        if (this.inventory != null) {
+            this.inventory.clear();
+        }
+
         setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
         setActionForRange(0, 0, 1, 8, null);
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
-                TextUtils.formatText(languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+                TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
+            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
-                TextUtils.formatText(languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+                TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
+            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
         String action;
-        switch(type){
+        switch (this.type) {
             case DEPOSIT:
                 action = "Deposit";
                 break;
@@ -76,127 +77,127 @@ public class GuiBankSelector extends Gui {
                 action = "Withdraw";
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + type);
+                throw new IllegalStateException("Unexpected value: " + this.type);
         }
         final String finalAction = action;
 
         setButton(2, GuiUtils.createButtonItem(CompatibleMaterial.GOLD_BLOCK, // All
-                TextUtils.formatText(languageLoad.getString("Menu.Input.Item.All.Displayname")),
-                TextUtils.formatText(languageLoad.getString("Menu.Input.Item.All.Lore")
-                        .replace("%action%", languageLoad.getString("Menu.Bank.Words." + action)))), (event -> {
-            MessageManager messageManager = plugin.getMessageManager();
+                TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.All.Displayname")),
+                TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.All.Lore")
+                        .replace("%action%", this.languageLoad.getString("Menu.Bank.Words." + action)))), (event -> {
+            MessageManager messageManager = this.plugin.getMessageManager();
             BankManager.BankResponse response;
             double amount;
 
-            switch(type){
+            switch (this.type) {
                 case DEPOSIT:
                     amount = economy.getBalance(event.player);
                     if (!this.plugin.getConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
                         amount = Math.floor(amount);
                     }
-                    response = bankManager.deposit(event.player, island, amount, admin);
+                    response = this.bankManager.deposit(event.player, this.island, amount, this.admin);
                     break;
                 case WITHDRAW:
-                    amount = island.getBankBalance();
+                    amount = this.island.getBankBalance();
                     if (!this.plugin.getConfiguration().getBoolean("Island.Bank.AllowDecimals")) {
                         amount = Math.floor(amount);
                     }
-                    response = bankManager.withdraw(event.player, island, amount, admin);
+                    response = this.bankManager.withdraw(event.player, this.island, amount, this.admin);
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + type);
+                    throw new IllegalStateException("Unexpected value: " + this.type);
             }
 
-            switch(response){
+            switch (response) {
                 case NOT_ENOUGH_MONEY:
-                    messageManager.sendMessage(event.player, languageLoad.getString("Command.Island.Bank.Short2.Message"));
-                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    messageManager.sendMessage(event.player, this.languageLoad.getString("Command.Island.Bank.Short2.Message"));
+                    this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     break;
                 case DECIMALS_NOT_ALLOWED:
-                    messageManager.sendMessage(event.player, languageLoad.getString("Command.Island.Bank.Short6.Message"));
-                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    messageManager.sendMessage(event.player, this.languageLoad.getString("Command.Island.Bank.Short6.Message"));
+                    this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     break;
                 case NEGATIVE_AMOUNT:
-                    messageManager.sendMessage(event.player, languageLoad.getString("Command.Island.Bank.Short5.Message"));
-                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    messageManager.sendMessage(event.player, this.languageLoad.getString("Command.Island.Bank.Short5.Message"));
+                    this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     break;
                 case SUCCESS:
-                    soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
-                    messageManager.sendMessage(event.player, Objects.requireNonNull(languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
+                    this.soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
+                    messageManager.sendMessage(event.player, Objects.requireNonNull(this.languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
                             "%amount%", NumberUtils.formatNumber(amount)));
 
                     break;
             }
-            guiManager.showGUI(event.player, returnGui);
+            this.guiManager.showGUI(event.player, this.returnGui);
         }));
 
         setButton(6, GuiUtils.createButtonItem(CompatibleMaterial.PAPER, // Custom
-                TextUtils.formatText(languageLoad.getString("Menu.Input.Item.Custom.Displayname")),
-                TextUtils.formatText(languageLoad.getString("Menu.Input.Item.Custom.Lore")
-                        .replace("%action%", languageLoad.getString("Menu.Bank.Words." + action)))), (event) -> {
-            AnvilGui gui = new AnvilGui(event.player, returnGui);
+                TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Custom.Displayname")),
+                TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Custom.Lore")
+                        .replace("%action%", this.languageLoad.getString("Menu.Bank.Words." + action)))), (event) -> {
+            AnvilGui gui = new AnvilGui(event.player, this.returnGui);
             gui.setAction((e -> {
-                MessageManager messageManager = plugin.getMessageManager();
+                MessageManager messageManager = this.plugin.getMessageManager();
 
                 double amount;
                 try {
-                    if(gui.getInputText() != null) {
+                    if (gui.getInputText() != null) {
                         amount = Double.parseDouble(gui.getInputText().trim());
                     } else {
                         amount = 0;
                     }
                 } catch (NumberFormatException e1) {
-                    messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short4.Message"));
-                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    messageManager.sendMessage(e.player, this.languageLoad.getString("Command.Island.Bank.Short4.Message"));
+                    this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                     return;
                 }
 
                 BankManager.BankResponse response;
 
-                switch(type){
+                switch (this.type) {
                     case DEPOSIT:
-                        response = bankManager.deposit(event.player, island, amount, admin);
+                        response = this.bankManager.deposit(event.player, this.island, amount, this.admin);
                         break;
                     case WITHDRAW:
-                        response = bankManager.withdraw(event.player, island, amount, admin);
+                        response = this.bankManager.withdraw(event.player, this.island, amount, this.admin);
                         break;
                     default:
-                        throw new IllegalStateException("Unexpected value: " + type);
+                        throw new IllegalStateException("Unexpected value: " + this.type);
                 }
 
-                switch(response){
+                switch (response) {
                     case NOT_ENOUGH_MONEY:
-                        messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short2.Message"));
-                        soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        messageManager.sendMessage(e.player, this.languageLoad.getString("Command.Island.Bank.Short2.Message"));
+                        this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                         break;
                     case DECIMALS_NOT_ALLOWED:
-                        messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short6.Message"));
-                        soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        messageManager.sendMessage(e.player, this.languageLoad.getString("Command.Island.Bank.Short6.Message"));
+                        this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                         break;
                     case NEGATIVE_AMOUNT:
-                        messageManager.sendMessage(e.player, languageLoad.getString("Command.Island.Bank.Short5.Message"));
-                        soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        messageManager.sendMessage(e.player, this.languageLoad.getString("Command.Island.Bank.Short5.Message"));
+                        this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                         break;
                     case SUCCESS:
-                        soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
-                        messageManager.sendMessage(e.player, Objects.requireNonNull(languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
+                        this.soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
+                        messageManager.sendMessage(e.player, Objects.requireNonNull(this.languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
                                 "%amount%", NumberUtils.formatNumber(amount)));
                         break;
                 }
 
                 e.player.closeInventory();
-                guiManager.showGUI(event.player, returnGui);
+                this.guiManager.showGUI(event.player, this.returnGui);
             }));
-            
-            switch(type){
+
+            switch (this.type) {
                 case DEPOSIT:
-                    gui.setTitle(languageLoad.getString("Menu.Bank.Words.Deposit"));
+                    gui.setTitle(this.languageLoad.getString("Menu.Bank.Words.Deposit"));
                     break;
                 case WITHDRAW:
-                    gui.setTitle(languageLoad.getString("Menu.Bank.Words.Withdraw"));
+                    gui.setTitle(this.languageLoad.getString("Menu.Bank.Words.Withdraw"));
                     break;
             }
-            guiManager.showGUI(event.player, gui);
+            this.guiManager.showGUI(event.player, gui);
         });
     }
 }

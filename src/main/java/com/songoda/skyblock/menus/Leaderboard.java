@@ -25,15 +25,15 @@ import java.util.List;
 public class Leaderboard {
     private static Leaderboard instance;
 
-    private static final String[] steveSkinTexture = new String[] {
+    private static final String[] steveSkinTexture = new String[]{
             "otpbxDm9B+opW7jEzZF8BVDeZSqaqdF0dyLlnlyMh7Q5ysJFDL48/9J/IOHp8JqNm1oarmVdvxrroy9dlNI2Mz4BVuJM2pcCOJwk2h+aZ4dzNZGxst+MYNPSw+i4sMoYu7OV07UVHrQffolFF7MiaBUst1hFwM07IpTE6UtIQz4rqWisXe9Iz5+ooqX4wj0IB3dPntsh6u5nVlL8acWCBDAW4YqcPt2Y4CKK+KtskjzusjqGAdEO+4lRcW1S0ldo2RNtUHEzZADWQcADjg9KKiKq9QIpIpYURIoIAA+pDGb5Q8L5O6CGI+i1+FxqXbgdBvcm1EG0OPdw9WpSqAxGGeXSwlzjILvlvBzYbd6gnHFBhFO+X7iwRJYNd+qQakjUa6ZwR8NbkpbN3ABb9+6YqVkabaEmgfky3HdORE+bTp/AT6LHqEMQo0xdNkvF9gtFci7RWhFwuTLDvQ1esby1IhlgT+X32CPuVHuxEvPCjN7+lmRz2OyOZ4REo2tAIFUKakqu3nZ0NcF98b87wAdA9B9Qyd2H/rEtUToQhpBjP732Sov6TlJkb8echGYiLL5bu/Q7hum72y4+j2GNnuRiOJtJidPgDqrYMg81GfenfPyS6Ynw6KhdEhnwmJ1FJlJhYvXZyqZwLAV1c26DNYkrTMcFcv3VXmcd5/2Zn9FnZtw=",
             "ewogICJ0aW1lc3RhbXAiIDogMTYyMTcxNTMxMjI5MCwKICAicHJvZmlsZUlkIiA6ICJiNTM5NTkyMjMwY2I0MmE0OWY5YTRlYmYxNmRlOTYwYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJtYXJpYW5hZmFnIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzFhNGFmNzE4NDU1ZDRhYWI1MjhlN2E2MWY4NmZhMjVlNmEzNjlkMTc2OGRjYjEzZjdkZjMxOWE3MTNlYjgxMGIiCiAgICB9CiAgfQp9"
     };
-    private static final String[] alexSkinTexture = new String[] {
+    private static final String[] alexSkinTexture = new String[]{
             "rZvLQoZsgLYaoKqEuASopYAs7IAlZlsGkwagoM8ZX38cP9kalseZrWY5OHZVfoiftdQJ+lGOzkiFfyx6kNJDTZniLrnRa8sd3X6D65ZihT1sOm/RInCwxpS1K0zGCM2h9ErkWswfwaviIf7hJtrwk8/zL0bfzDk2IgX/IBvIZpVoYTfmQsVY9jgSwORrS9ObePGIfFgmThMoZnCYWQMVpS2+yTFA2wnw9hmisQK9UWBU+iBZv55bMmkMcyEuXw1w14DaEu+/M0UGD91LU4GmJLPA9T4GCuIV8GxOcraSVIajki1cMlOBQwIaibB2NE6KAwq1Zh6NnsNYucy6qFM+136lXfBchQ1Nx4FDRZQgt8VRqTMy/OQFpr2nTbWWbRU4gRFpKC3R0518DqUH0Qm612kPWniKku/QzUUBSe1PSVljBaZCyyRx0OB1a1/8MexboKRnPXuTDnmPa9UPfuH4VO0q+qYkjV2KUzP6e5vIP5aQ6USPrMie7MmAHFJzwAMIbLjgkTVx91GWtYqg/t7qBlvrdBRLIPPsy/DSOqa+2+4hABouVCPZrBMCMLzstPPQoqZAyiCqcKb2HqWSU0h9Bhx19yoIcbHCeI3zsQs8PqIBjUL4mO6VQT4lzHy0e3M61Xsdd8S1GtsakSetTvEtMdUwCEDfBA5PRRTLOVYTY+g=",
             "ewogICJ0aW1lc3RhbXAiIDogMTYyMTcxNTQ5ODM0MywKICAicHJvZmlsZUlkIiA6ICIxYTc1ZTNiYmI1NTk0MTc2OTVjMmY4NTY1YzNlMDAzZCIsCiAgInByb2ZpbGVOYW1lIiA6ICJUZXJvZmFyIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzNiNjBhMWY2ZDU2MmY1MmFhZWJiZjE0MzRmMWRlMTQ3OTMzYTNhZmZlMGU3NjRmYTQ5ZWEwNTc1MzY2MjNjZDMiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ=="
     };
-    private static final String[] questionMarkSkinTexture = new String[] {
+    private static final String[] questionMarkSkinTexture = new String[]{
             "gi+wnQt/y4Z6E9rn65iDWmt8vUOM2WXY66XvtydqDJZTzwgFrjVcx2c5YwdzvtOIRtiX2nZt4n2uWesUFKb59xS24YWbxCDXnalHhCpPFcIP58SQbCm9AYp3UPzkcRNWzuV4BddrS608QQZGyIFOUaLPOPasGITZu51VLcOKcTyFOCKu1QE2yRo1orTH8bWfdpE769BB/VYGdny0qJtm1amc12wGiVifMJRutZmYo2ZdA0APhIJVaNsPppNESVcbeBCvk60l4QK43C/p98/QEe5U6UJ6Z6N01pBQcswubMu8lCuPLasep+vX3v2K+Ui9jnTQNreGNIZPWVjf6V1GH4xMbbUVQJsoPdcaXG855VdzyoW+kyHdWYEojSn0qAY/moH6JCLnx6PLCv9mITSvOIUHq8ITet0M7Z9KALY5s6eg6VdA8TvClRy2TTm9tIRt//TJo5JxBoTYujawGNSR7ryODj2UEDQ2xOyWSagxAXZpispdrO5jHxRmBZUwX9vxnAp+CNWxifpu9sINJTlqYsT/KlGOJQC483gv5B6Nm5VBB1DRFmQkohzO6Wc2eDixgEbaU795GlLxrNaFfNjVH6Bwr1e7df2H3nE0P0bexs4wYdWplijn4gPyHwjT2LDBPGFQK3Vo2SlaXfPYbkIHX21c9qaz3eWHpLEXUBQfnWc=",
             "eyJ0aW1lc3RhbXAiOjE1MzE3MTcxNjY3MDAsInByb2ZpbGVJZCI6IjYwNmUyZmYwZWQ3NzQ4NDI5ZDZjZTFkMzMyMWM3ODM4IiwicHJvZmlsZU5hbWUiOiJNSEZfUXVlc3Rpb24iLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2QzNGUwNjNjYWZiNDY3YTVjOGRlNDNlYzc4NjE5Mzk5ZjM2OWY0YTUyNDM0ZGE4MDE3YTk4M2NkZDkyNTE2YTAifX19"
     };
@@ -47,7 +47,7 @@ public class Leaderboard {
     }
 
     public void open(Player player) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         SoundManager soundManager = plugin.getSoundManager();
@@ -58,14 +58,14 @@ public class Leaderboard {
             Viewer viewer = (Viewer) playerDataManager.getPlayerData(player).getViewer();
 
             nInventoryUtil nInv;
-            if (viewer.getType() == Viewer.Type.Browse) {
+            if (viewer.getType() == Viewer.Type.BROWSE) {
                 nInv = new nInventoryUtil(player, event -> {
                     if (playerDataManager.hasPlayerData(player)) {
                         ItemStack is = event.getItem();
 
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(plugin.formatText(configLoad.getString("Menu.Leaderboard." + Viewer.Type.Browse.name()
+                                .equals(plugin.formatText(configLoad.getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
                                         + ".Item.Exit.Displayname"))))) {
                             soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
 
@@ -74,26 +74,26 @@ public class Leaderboard {
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&',
                                         configLoad
-                                                .getString("Menu.Leaderboard." + Viewer.Type.Browse.name()
+                                                .getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
                                                         + ".Item.Leaderboard.Displayname")
-                                                .replace("%leaderboard", Viewer.Type.Level.name()))))) {
-                            playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.Level));
+                                                .replace("%leaderboard", Viewer.Type.LEVEL.name()))))) {
+                            playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.LEVEL));
                         } else if ((is.getType() == Material.GOLD_INGOT) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&',
                                         configLoad
-                                                .getString("Menu.Leaderboard." + Viewer.Type.Browse.name()
+                                                .getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
                                                         + ".Item.Leaderboard.Displayname")
-                                                .replace("%leaderboard", Viewer.Type.Bank.name()))))) {
-                            playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.Bank));
+                                                .replace("%leaderboard", Viewer.Type.BANK.name()))))) {
+                            playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.BANK));
                         } else if ((is.getType() == Material.EMERALD) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&',
                                         configLoad
-                                                .getString("Menu.Leaderboard." + Viewer.Type.Browse.name()
+                                                .getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
                                                         + ".Item.Leaderboard.Displayname")
-                                                .replace("%leaderboard", Viewer.Type.Votes.name()))))) {
-                            playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.Votes));
+                                                .replace("%leaderboard", Viewer.Type.VOTES.name()))))) {
+                            playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.VOTES));
                         }
 
                         soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
@@ -109,10 +109,10 @@ public class Leaderboard {
                         nInv.createItem(new ItemStack(Material.DIAMOND), configLoad
                                         .getString(
                                                 "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
-                                        .replace("%leaderboard", Viewer.Type.Level.name()),
+                                        .replace("%leaderboard", Viewer.Type.LEVEL.name()),
                                 configLoad.getStringList(
                                         "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
-                                new Placeholder[] {new Placeholder("%leaderboard", Viewer.Type.Level.name())}, null,
+                                new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.LEVEL.name())}, null,
                                 null),
                         1);
 
@@ -121,10 +121,10 @@ public class Leaderboard {
                             nInv.createItem(new ItemStack(Material.GOLD_INGOT), configLoad
                                             .getString(
                                                     "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
-                                            .replace("%leaderboard", Viewer.Type.Bank.name()),
+                                            .replace("%leaderboard", Viewer.Type.BANK.name()),
                                     configLoad.getStringList(
                                             "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
-                                    new Placeholder[] {new Placeholder("%leaderboard", Viewer.Type.Bank.name())}, null,
+                                    new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.BANK.name())}, null,
                                     null),
                             2);
                 } else {
@@ -135,10 +135,10 @@ public class Leaderboard {
                         nInv.createItem(new ItemStack(Material.EMERALD), configLoad
                                         .getString(
                                                 "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
-                                        .replace("%leaderboard", Viewer.Type.Votes.name()),
+                                        .replace("%leaderboard", Viewer.Type.VOTES.name()),
                                 configLoad.getStringList(
                                         "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
-                                new Placeholder[] {new Placeholder("%leaderboard", Viewer.Type.Votes.name())}, null,
+                                new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.VOTES.name())}, null,
                                 null),
                         3);
 
@@ -160,7 +160,7 @@ public class Leaderboard {
                                             .getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname")))) {
                                 if (plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
                                     playerDataManager.getPlayerData(player)
-                                            .setViewer(new Viewer(Viewer.Type.Browse));
+                                            .setViewer(new Viewer(Viewer.Type.BROWSE));
                                     soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
@@ -258,7 +258,7 @@ public class Leaderboard {
                         if (playerDataManager.hasPlayerData(targetPlayer)) {
                             playerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
                         } else {
-                            playerTexture = new String[] {null, null};
+                            playerTexture = new String[]{null, null};
                         }
                     }
 
@@ -289,11 +289,11 @@ public class Leaderboard {
                     for (String itemLoreList : configLoad.getStringList(
                             "Menu.Leaderboard.Leaderboard.Item.Island." + viewer.getType().name() + ".Lore")) {
                         if (itemLoreList.contains("%signature")) {
-                            if (visit.getSiganture() == null || visit.getSiganture().size() == 0) {
+                            if (visit.getSignature() == null || visit.getSignature().isEmpty()) {
                                 itemLore.add(
                                         configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Word.Empty"));
                             } else {
-                                itemLore.addAll(visit.getSiganture());
+                                itemLore.addAll(visit.getSignature());
                             }
                         } else {
                             itemLore.add(itemLoreList);
@@ -314,7 +314,7 @@ public class Leaderboard {
                                             .replace("%owner", playerName)
                                             .replace("%position", "" + (leaderboard.getPosition() + 1)),
                                     itemLore,
-                                    new Placeholder[] {
+                                    new Placeholder[]{
                                             new Placeholder("%position", "" + (leaderboard.getPosition() + 1)),
                                             new Placeholder("%owner", playerName),
                                             new Placeholder("%level", "" + visit.getLevel().getLevel()),
@@ -325,7 +325,7 @@ public class Leaderboard {
                             itemSlot);
                 }
 
-                int[] itemSlots = new int[] {13, 21, 22, 23, 29, 31, 33, 37, 40, 43};
+                int[] itemSlots = new int[]{13, 21, 22, 23, 29, 31, 33, 37, 40, 43};
 
                 for (int i = 0; i < itemSlots.length; i++) {
                     if (!nInv.getItems().containsKey(itemSlots[i])) {
@@ -333,7 +333,7 @@ public class Leaderboard {
                                         configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Empty.Displayname")
                                                 .replace("%position", "" + (i + 1)),
                                         configLoad.getStringList("Menu.Leaderboard.Leaderboard.Item.Empty.Lore"),
-                                        new Placeholder[] {new Placeholder("%position", "" + (i + 1))}, null, null),
+                                        new Placeholder[]{new Placeholder("%position", "" + (i + 1))}, null, null),
                                 itemSlots[i]);
                     }
                 }
@@ -348,7 +348,6 @@ public class Leaderboard {
     }
 
     public static class Viewer {
-
         private final Type type;
 
         public Viewer(Type type) {
@@ -356,13 +355,11 @@ public class Leaderboard {
         }
 
         public Type getType() {
-            return type;
+            return this.type;
         }
 
         public enum Type {
-
-            Browse, Level, Bank, Votes
-
+            BROWSE, LEVEL, BANK, VOTES
         }
     }
 }

@@ -42,57 +42,62 @@ public class GuiBans extends Gui {
     }
 
     public void paint() { // TODO Item to add ban
-        if (inventory != null)
-            inventory.clear();
+        if (this.inventory != null) {
+            this.inventory.clear();
+        }
         setActionForRange(0, 0, 1, 8, null);
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
-                TextUtils.formatText(languageLoad.getString("Menu.Bans.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+                TextUtils.formatText(this.languageLoad.getString("Menu.Bans.Item.Exit.Displayname"))), (event) -> {
+            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
-                TextUtils.formatText(languageLoad.getString("Menu.Bans.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+                TextUtils.formatText(this.languageLoad.getString("Menu.Bans.Item.Exit.Displayname"))), (event) -> {
+            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
-        for(int i=9; i<18; i++){
+        for (int i = 9; i < 18; i++) {
             setItem(i, CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
         }
 
-        List<UUID> bans = new ArrayList<>(island.getBan().getBans());
+        List<UUID> bans = new ArrayList<>(this.island.getBan().getBans());
 
-        if(bans.size() == 0){
+        if (bans.isEmpty()) {
             setItem(31, CompatibleMaterial.BARRIER.getItem());
         } else {
             this.pages = (int) Math.max(1, Math.ceil((double) bans.size() / 36d));
 
-            if (page != 1)
+            if (this.page != 1) {
                 setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                        TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Last.Displayname"))),
+                                TextUtils.formatText(this.languageLoad.getString("Menu.Bank.Item.Last.Displayname"))),
                         (event) -> {
-                            page--;
+                            this.page--;
                             paint();
                         });
+            }
 
-            if (page != pages)
+            if (this.page != this.pages) {
                 setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                        TextUtils.formatText(languageLoad.getString("Menu.Bank.Item.Next.Displayname"))),
+                                TextUtils.formatText(this.languageLoad.getString("Menu.Bank.Item.Next.Displayname"))),
                         (event) -> {
-                            page++;
+                            this.page++;
                             paint();
                         });
+            }
 
-            for (int i = 9; i < ((getRows()-2)*9)+18; i++) {
-                int current = ((page - 1) * 36) - 18;
+            for (int i = 9; i < ((getRows() - 2) * 9) + 18; i++) {
+                int current = ((this.page - 1) * 36) - 18;
                 if (current + i >= bans.size()) {
                     setItem(i, null);
                     continue;
                 }
                 UUID uuid = bans.get(current + i);
-                if (uuid == null) continue;
+                if (uuid == null) {
+                    continue;
+                }
 
                 String targetPlayerName;
                 String[] targetPlayerTexture;
@@ -106,8 +111,8 @@ public class GuiBans extends Gui {
                 } else {
                     targetPlayerName = targetPlayer.getName();
 
-                    if (playerDataManager.hasPlayerData(targetPlayer)) {
-                        targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+                    if (this.playerDataManager.hasPlayerData(targetPlayer)) {
+                        targetPlayerTexture = this.playerDataManager.getPlayerData(targetPlayer).getTexture();
                     } else {
                         targetPlayerTexture = new String[]{null, null};
                     }
@@ -115,10 +120,10 @@ public class GuiBans extends Gui {
 
                 ItemStack is = ItemUtils.getCustomHead(targetPlayerTexture[0], targetPlayerTexture[1]);
                 ItemMeta im = is.getItemMeta();
-                if(im != null){
-                    im.setDisplayName(languageLoad.getString("Menu.Bans.Item.Ban.Displayname")
+                if (im != null) {
+                    im.setDisplayName(this.languageLoad.getString("Menu.Bans.Item.Ban.Displayname")
                             .replace("%player", targetPlayerName == null ? "" : targetPlayerName));
-                    im.setLore(languageLoad.getStringList("Menu.Bans.Item.Ban.Lore"));
+                    im.setLore(this.languageLoad.getStringList("Menu.Bans.Item.Ban.Lore"));
                     is.setItemMeta(im);
                 }
 

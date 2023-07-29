@@ -3,7 +3,6 @@ package com.songoda.skyblock.api.invite;
 import org.bukkit.entity.Player;
 
 public class IslandInvitation {
-
     private final Player invited, inviter;
     private final int time;
 
@@ -14,14 +13,14 @@ public class IslandInvitation {
     }
 
     public Player getInvited() {
-        return invited;
+        return this.invited;
     }
 
     public Player getInviter() {
-        return inviter;
+        return this.inviter;
     }
 
     public int getTime() {
-        return time;
+        return this.time;
     }
 }

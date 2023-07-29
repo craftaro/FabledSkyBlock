@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.confirmation.Confirmation;
@@ -23,46 +24,49 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class PreviewCommand extends SubCommand {
+    public PreviewCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        CooldownManager cooldownManager = plugin.getCooldownManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
-        FileManager.Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        CooldownManager cooldownManager = this.plugin.getCooldownManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
+        FileManager.Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLang = config.getFileConfiguration();
 
-        if(args.length != 1) {
-            plugin.getMessageManager().sendMessage(player, configLang.getString("Command.Island.Preview.Argument.Count.Message"));
+        if (args.length != 1) {
+            this.plugin.getMessageManager().sendMessage(player, configLang.getString("Command.Island.Preview.Argument.Count.Message"));
             return;
         }
 
-        PlayerData data = plugin.getPlayerDataManager().getPlayerData(player);
-        Island island = plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(player.getUniqueId()));
+        PlayerData data = this.plugin.getPlayerDataManager().getPlayerData(player);
+        Island island = this.plugin.getIslandManager().getIsland(Bukkit.getOfflinePlayer(player.getUniqueId()));
 
         if (args[0].equals("confirm")) {
-            if(data.getConfirmation() == Confirmation.Preview && data.getConfirmationTime() > 0) {
-                Structure islandStructure = plugin.getStructureManager().getStructure(island.getStructure());
+            if (data.getConfirmation() == Confirmation.PREVIEW && data.getConfirmationTime() > 0) {
+                Structure islandStructure = this.plugin.getStructureManager().getStructure(island.getStructure());
 
-                if(plugin.getIslandManager().deleteIsland(island, true)) {
+                if (this.plugin.getIslandManager().deleteIsland(island, true)) {
                     island.setDeleted(true);
                     data.setPreview(false);
-                    if(player.getGameMode() == GameMode.SPECTATOR) {
+                    if (player.getGameMode() == GameMode.SPECTATOR) {
                         player.setGameMode(GameMode.SURVIVAL);
                     }
 
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                        if(plugin.getIslandManager().createIsland(player, islandStructure)) {
-                            plugin.getMessageManager().sendMessage(player, configLang.getString("Island.Creator.Selector.Created.Message"));
-                            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                    Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+                        if (this.plugin.getIslandManager().createIsland(player, islandStructure)) {
+                            this.plugin.getMessageManager().sendMessage(player, configLang.getString("Island.Creator.Selector.Created.Message"));
+                            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                         }
                     }, 30L);
                 }
             }
         } else if (args[0].equals("cancel")) {
-            if(data.getConfirmation() == Confirmation.Preview && data.getConfirmationTime() > 0) {
-                if(plugin.getIslandManager().deleteIsland(island, true)) {
+            if (data.getConfirmation() == Confirmation.PREVIEW && data.getConfirmationTime() > 0) {
+                if (this.plugin.getIslandManager().deleteIsland(island, true)) {
                     island.setDeleted(true);
                     data.setPreview(false);
                     if (player.getGameMode() == GameMode.SPECTATOR) {
@@ -72,10 +76,10 @@ public class PreviewCommand extends SubCommand {
             }
         } else {
             // Do not preview if cooldown is still active
-            if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+            if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                     .getFileConfiguration().getBoolean("Island.Preview.Cooldown.Enable")
-                    && cooldownManager.hasPlayer(CooldownType.Preview, player)) {
-                CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Preview, player);
+                    && cooldownManager.hasPlayer(CooldownType.PREVIEW, player)) {
+                CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.PREVIEW, player);
                 Cooldown cooldown = cooldownPlayer.getCooldown();
 
                 if (cooldown.getTime() < 60) {
@@ -94,21 +98,21 @@ public class PreviewCommand extends SubCommand {
                                             .getString("Island.Preview.Cooldown.Word.Second")));
                 }
 
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                 return;
             }
-        	// Do not preview if user has an island
-        	if (island != null) {
-                plugin.getMessageManager().sendMessage(player, configLang.getString("Command.Island.Preview.Island.Message"));
-                return;
-        	}
-            Structure structure = plugin.getStructureManager().getStructure(args[0]);
-            if(structure == null) {
-                plugin.getMessageManager().sendMessage(player, configLang.getString("Command.Island.Preview.File.Message"));
+            // Do not preview if user has an island
+            if (island != null) {
+                this.plugin.getMessageManager().sendMessage(player, configLang.getString("Command.Island.Preview.Island.Message"));
                 return;
             }
-            plugin.getIslandManager().previewIsland(player, structure);
+            Structure structure = this.plugin.getStructureManager().getStructure(args[0]);
+            if (structure == null) {
+                this.plugin.getMessageManager().sendMessage(player, configLang.getString("Command.Island.Preview.File.Message"));
+                return;
+            }
+            this.plugin.getIslandManager().previewIsland(player, structure);
         }
     }
 

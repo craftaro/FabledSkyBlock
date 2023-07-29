@@ -6,7 +6,7 @@ public enum IslandStatus {
     OPEN,
     CLOSED,
     WHITELISTED;
-    
+
     public static IslandStatus getEnum(String value) {
         return Arrays.stream(values())
                 .filter(status -> value.toUpperCase().equals(status.name()))

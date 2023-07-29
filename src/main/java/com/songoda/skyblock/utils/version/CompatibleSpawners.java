@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 public enum CompatibleSpawners {
-
     SPAWNER("MOB_SPAWNER", 0),
     SPAWNER_BAT(null, -1),
     SPAWNER_BLAZE(null, -1),
@@ -76,36 +75,40 @@ public enum CompatibleSpawners {
 
     static int newV = -1;
     private static final Map<String, CompatibleSpawners> cachedSearch = new HashMap<>();
-    String old13Mat;
-    String old12Mat;
-    int data;
-    boolean is13Plusonly;
+    final String old13Mat;
+    final String old12Mat;
+    final int data;
+    final boolean is13PlusOnly;
     private Material cachedMaterial;
     private boolean isMaterialParsed = false;
     private String actualMaterials;
 
-    CompatibleSpawners(String old13Mat, String old12Mat, int data, boolean is13Plusonly) {
+    CompatibleSpawners(String old13Mat, String old12Mat, int data, boolean is13PlusOnly) {
         this.old13Mat = old13Mat;
         this.old12Mat = old12Mat;
         this.data = data;
-        this.is13Plusonly = is13Plusonly;
+        this.is13PlusOnly = is13PlusOnly;
     }
 
     CompatibleSpawners(String old12Mat, int data) {
         this(null, old12Mat, data, false);
     }
 
-    CompatibleSpawners(String old12Mat, int data, boolean is13Plusonly) {
-        this(null, old12Mat, data, is13Plusonly);
+    CompatibleSpawners(String old12Mat, int data, boolean is13PlusOnly) {
+        this(null, old12Mat, data, is13PlusOnly);
     }
 
     public CompatibleSpawners getActualMaterials() {
-        return actualMaterials == null ? null : CompatibleSpawners.valueOf(actualMaterials);
+        return this.actualMaterials == null ? null : CompatibleSpawners.valueOf(this.actualMaterials);
     }
 
     public static boolean isNewVersion() {
-        if (newV == 0) return false;
-        if (newV == 1) return true;
+        if (newV == 0) {
+            return false;
+        }
+        if (newV == 1) {
+            return true;
+        }
         Material mat = Material.matchMaterial("RED_WOOL");
         if (mat != null) {
             newV = 1;
@@ -116,11 +119,12 @@ public enum CompatibleSpawners {
     }
 
     public static CompatibleSpawners requestMaterials(String name, byte data) {
-
         final String blockName = name.toUpperCase() + "," + data;
         CompatibleSpawners cached = cachedSearch.get(blockName);
 
-        if (cached != null) return cached;
+        if (cached != null) {
+            return cached;
+        }
 
         CompatibleSpawners pmat = internalRequestMaterials(name, data);
         if (pmat != null || data == 0) {
@@ -139,24 +143,36 @@ public enum CompatibleSpawners {
         // Try 1.13+ names
         for (CompatibleSpawners mat : ALL) {
             if (name.equalsIgnoreCase(mat.name())) {
-                if (pmat == null) pmat = mat;
+                if (pmat == null) {
+                    pmat = mat;
+                }
 
                 final CompatibleSpawners actual = mat.getActualMaterials();
 
-                if (actual != null && mat.is13Plusonly) return actual;
-                if (((byte) mat.data) == data) return mat;
+                if (actual != null && mat.is13PlusOnly) {
+                    return actual;
+                }
+                if (((byte) mat.data) == data) {
+                    return mat;
+                }
             }
         }
 
         // Try 1.12- names
         for (CompatibleSpawners mat : ALL) {
             if (name.equalsIgnoreCase(mat.old12Mat)) {
-                if (pmat == null) pmat = mat;
+                if (pmat == null) {
+                    pmat = mat;
+                }
 
                 final CompatibleSpawners actual = mat.getActualMaterials();
 
-                if (actual != null && mat.is13Plusonly) return actual;
-                if (((byte) mat.data) == data) return mat;
+                if (actual != null && mat.is13PlusOnly) {
+                    return actual;
+                }
+                if (((byte) mat.data) == data) {
+                    return mat;
+                }
             }
         }
 
@@ -168,38 +184,38 @@ public enum CompatibleSpawners {
     }
 
     public static CompatibleSpawners fromString(String key) {
-        CompatibleSpawners xmat = null;
         try {
-            xmat = CompatibleSpawners.valueOf(key);
-            return xmat;
+            return CompatibleSpawners.valueOf(key);
         } catch (IllegalArgumentException e) {
             String[] split = key.split(":");
+
             if (split.length == 1) {
-                xmat = requestMaterials(key, (byte) 0);
-            } else {
-                xmat = requestMaterials(split[0], (byte) Integer.parseInt(split[1]));
+                return requestMaterials(key, (byte) 0);
             }
-            return xmat;
+            return requestMaterials(split[0], (byte) Integer.parseInt(split[1]));
         }
     }
 
     public static CompatibleSpawners getMaterials(Material material, byte data) {
         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
             return fromString(material.name());
-        } else {
-            return requestMaterials(material.name(), data);
         }
+
+        return requestMaterials(material.name(), data);
     }
 
     public boolean isAvailable() {
         if (this.isSpawner() && this != CompatibleSpawners.SPAWNER) {
             String spawnerType = this.name().replace("SPAWNER_", "");
-            for (EntityType entityType : EntityType.values())
-                if (entityType.name().equalsIgnoreCase(spawnerType)) return true;
+            for (EntityType entityType : EntityType.values()) {
+                if (entityType.name().equalsIgnoreCase(spawnerType)) {
+                    return true;
+                }
+            }
             return false;
         }
 
-        return isNewVersion() || !this.is13Plusonly;
+        return isNewVersion() || !this.is13PlusOnly;
     }
 
     public boolean isSpawner() {
@@ -220,14 +236,16 @@ public enum CompatibleSpawners {
     }
 
     public Material getMaterial() {
-        if (this.cachedMaterial != null || this.isMaterialParsed) return this.cachedMaterial;
+        if (this.cachedMaterial != null || this.isMaterialParsed) {
+            return this.cachedMaterial;
+        }
 
         if (this.isSpawner() && this != CompatibleSpawners.SPAWNER) {
             this.cachedMaterial = CompatibleMaterial.SPAWNER.getMaterial();
             return this.cachedMaterial;
         }
 
-        this.cachedMaterial = Material.matchMaterial(old12Mat);
+        this.cachedMaterial = Material.matchMaterial(this.old12Mat);
         this.isMaterialParsed = true;
         return this.cachedMaterial;
     }

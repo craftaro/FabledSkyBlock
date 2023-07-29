@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MessageManager {
-
     private final SkyBlock plugin;
 
     public MessageManager(SkyBlock plugin) {
@@ -19,12 +18,12 @@ public class MessageManager {
     }
 
     public void sendMessage(CommandSender sender, String message) {
-
-        if (message == null || message.equals("")) return;
-        
+        if (message == null || message.isEmpty()) {
+            return;
+        }
 
         if (sender instanceof Player) {
-            PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
+            PlaceholderManager placeholderManager = this.plugin.getPlaceholderManager();
             Player player = (Player) sender;
 
             if (placeholderManager.isPlaceholderAPIEnabled()) {
@@ -40,7 +39,7 @@ public class MessageManager {
                     messages.add(ChatColor.translateAlternateColorCodes('&', messageList));
                 }
 
-                sender.sendMessage(messages.toArray(new String[messages.size()]));
+                sender.sendMessage(messages.toArray(new String[0]));
             } else {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
             }
@@ -49,7 +48,7 @@ public class MessageManager {
 
                 message = message.replace("\\n", "\n");
 
-                sender.sendMessage(Arrays.stream(message.split("\n")).map(messageList -> ChatColor.stripColor(plugin.formatText(messageList))).toArray(String[]::new));
+                sender.sendMessage(Arrays.stream(message.split("\n")).map(messageList -> ChatColor.stripColor(this.plugin.formatText(messageList))).toArray(String[]::new));
             } else {
                 sender.sendMessage(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)));
             }
@@ -57,7 +56,7 @@ public class MessageManager {
     }
 
     public String replaceMessage(Player player, String message) {
-        PlaceholderManager placeholderManager = plugin.getPlaceholderManager();
+        PlaceholderManager placeholderManager = this.plugin.getPlaceholderManager();
 
         if (placeholderManager.isPlaceholderAPIEnabled()) {
             message = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message.replace("&", "clr")).replace("clr", "&");

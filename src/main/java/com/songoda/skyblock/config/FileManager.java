@@ -9,7 +9,18 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
@@ -24,7 +35,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 
 public class FileManager {
-
     private final SkyBlock plugin;
     private final Map<String, Config> loadedConfigs = new HashMap<>();
 
@@ -37,11 +47,11 @@ public class FileManager {
     }
 
     public void loadConfigs() {
-        if (!plugin.getDataFolder().exists()) {
-            plugin.getDataFolder().mkdir();
+        if (!this.plugin.getDataFolder().exists()) {
+            this.plugin.getDataFolder().mkdir();
         }
 
-        File structureDirectory = new File(plugin.getDataFolder().toString() + "/structures");
+        File structureDirectory = new File(this.plugin.getDataFolder(), "structures");
 
         if (!structureDirectory.exists()) {
             structureDirectory.mkdir();
@@ -50,30 +60,30 @@ public class FileManager {
         // Will remain null unless WorldEdit is present.
         File schematicsDirectory;
 
-        if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !(schematicsDirectory = new File(plugin.getDataFolder().toString() + "/schematics")).exists()) {
+        if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit") && !(schematicsDirectory = new File(this.plugin.getDataFolder(), "schematics")).exists()) {
             schematicsDirectory.mkdir();
         }
 
         Map<String, File> configFiles = new LinkedHashMap<>();
-        configFiles.put("limits.yml", new File(plugin.getDataFolder(), "limits.yml"));
-        configFiles.put("worlds.yml", new File(plugin.getDataFolder(), "worlds.yml"));
-        configFiles.put("levelling.yml", new File(plugin.getDataFolder(), "levelling.yml"));
-        configFiles.put("config.yml", new File(plugin.getDataFolder(), "config.yml"));
-        configFiles.put("language.yml", new File(plugin.getDataFolder(), "language.yml"));
-        configFiles.put("settings.yml", new File(plugin.getDataFolder(), "settings.yml"));
-        configFiles.put("upgrades.yml", new File(plugin.getDataFolder(), "upgrades.yml"));
-        configFiles.put("biomes.yml", new File(plugin.getDataFolder(), "biomes.yml"));
+        configFiles.put("limits.yml", new File(this.plugin.getDataFolder(), "limits.yml"));
+        configFiles.put("worlds.yml", new File(this.plugin.getDataFolder(), "worlds.yml"));
+        configFiles.put("levelling.yml", new File(this.plugin.getDataFolder(), "levelling.yml"));
+        configFiles.put("config.yml", new File(this.plugin.getDataFolder(), "config.yml"));
+        configFiles.put("language.yml", new File(this.plugin.getDataFolder(), "language.yml"));
+        configFiles.put("settings.yml", new File(this.plugin.getDataFolder(), "settings.yml"));
+        configFiles.put("upgrades.yml", new File(this.plugin.getDataFolder(), "upgrades.yml"));
+        configFiles.put("biomes.yml", new File(this.plugin.getDataFolder(), "biomes.yml"));
         // configFiles.put("menus.yml", new File(plugin.getDataFolder(), "menus.yml"));
-        configFiles.put("scoreboard.yml", new File(plugin.getDataFolder(), "scoreboard.yml"));
-        configFiles.put("placeholders.yml", new File(plugin.getDataFolder(), "placeholders.yml"));
-        configFiles.put("generators.yml", new File(plugin.getDataFolder(), "generators.yml"));
-        configFiles.put("stackables.yml", new File(plugin.getDataFolder(), "stackables.yml"));
-        configFiles.put("structures.yml", new File(plugin.getDataFolder(), "structures.yml"));
-        configFiles.put("rewards.yml", new File(plugin.getDataFolder(), "rewards.yml"));
-        configFiles.put("structures/default.structure", new File(plugin.getDataFolder().toString() + "/structures", "default.structure"));
-        configFiles.put("challenges.yml", new File(plugin.getDataFolder(), "challenges.yml"));
+        configFiles.put("scoreboard.yml", new File(this.plugin.getDataFolder(), "scoreboard.yml"));
+        configFiles.put("placeholders.yml", new File(this.plugin.getDataFolder(), "placeholders.yml"));
+        configFiles.put("generators.yml", new File(this.plugin.getDataFolder(), "generators.yml"));
+        configFiles.put("stackables.yml", new File(this.plugin.getDataFolder(), "stackables.yml"));
+        configFiles.put("structures.yml", new File(this.plugin.getDataFolder(), "structures.yml"));
+        configFiles.put("rewards.yml", new File(this.plugin.getDataFolder(), "rewards.yml"));
+        configFiles.put("structures/default.structure", new File(this.plugin.getDataFolder() + "/structures", "default.structure"));
+        configFiles.put("challenges.yml", new File(this.plugin.getDataFolder(), "challenges.yml"));
 
-        File oldStructureFile = new File(plugin.getDataFolder().toString() + "/structures", "default.structure");
+        File oldStructureFile = new File(this.plugin.getDataFolder().toString() + "/structures", "default.structure");
         oldStructureFile.delete();
 
         for (Entry<String, File> configEntry : configFiles.entrySet()) {
@@ -85,15 +95,15 @@ public class FileManager {
                 configFile.delete();
                 try {
                     configFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-                try (InputStream is = plugin.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
-                    if(is != null){
+                try (InputStream is = this.plugin.getResource(fileName); OutputStream os = Files.newOutputStream(configFile.toPath())) {
+                    if (is != null) {
                         ByteStreams.copy(is, os);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
                 continue;
             }
@@ -108,9 +118,9 @@ public class FileManager {
                     FileChecker fileChecker;
 
                     if (fileName.equals("config.yml") || fileName.equals("biomes.yml")) {
-                        fileChecker = new FileChecker(plugin, this, fileName, true);
+                        fileChecker = new FileChecker(this.plugin, this, fileName, true);
                     } else {
-                        fileChecker = new FileChecker(plugin, this, fileName, false);
+                        fileChecker = new FileChecker(this.plugin, this, fileName, false);
                     }
 
                     fileChecker.loadSections();
@@ -120,8 +130,8 @@ public class FileManager {
             } else {
                 try {
                     configFile.createNewFile();
-                    try (InputStream is = plugin.getResource(fileName); OutputStream os = new FileOutputStream(configFile)) {
-                        if(is != null){
+                    try (InputStream is = this.plugin.getResource(fileName); OutputStream os = Files.newOutputStream(configFile.toPath())) {
+                        if (is != null) {
                             ByteStreams.copy(is, os);
                         }
                     }
@@ -157,7 +167,6 @@ public class FileManager {
     }
 
     public void setLocation(Config config, String path, Location location, boolean direction) {
-
         final ConfigurationSection section = config.getFileConfiguration().createSection(path);
 
         section.set("world", location.getWorld().getName());
@@ -176,23 +185,23 @@ public class FileManager {
             ex.printStackTrace();
         }
     }
-    
+
     public void backupIfNeeded() {
-        File languageFile = new File(plugin.getDataFolder(), "language.yml");
-        File scoreboardFile = new File(plugin.getDataFolder(), "scoreboard.yml");
-        File placeholderFile = new File(plugin.getDataFolder(), "placeholders.yml");
-        if(languageFile.exists() && (!scoreboardFile.exists() || !placeholderFile.exists())) {
-            File backupDir = new File(plugin.getDataFolder().toString() + "/backup");
-            if(!backupDir.exists()) {
+        File languageFile = new File(this.plugin.getDataFolder(), "language.yml");
+        File scoreboardFile = new File(this.plugin.getDataFolder(), "scoreboard.yml");
+        File placeholderFile = new File(this.plugin.getDataFolder(), "placeholders.yml");
+        if (languageFile.exists() && (!scoreboardFile.exists() || !placeholderFile.exists())) {
+            File backupDir = new File(this.plugin.getDataFolder().toString() + "/backup");
+            if (!backupDir.exists()) {
                 backupDir.mkdir();
             }
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
             LocalDateTime now = LocalDateTime.now();
-    
-            
+
+
             Path oldLanguagePath = languageFile.toPath();
-            Path newLanguagePath = new File(plugin.getDataFolder().toString() + "/backup", "language" + dtf.format(now) + ".yml").toPath();
-    
+            Path newLanguagePath = new File(this.plugin.getDataFolder() + "/backup", "language" + dtf.format(now) + ".yml").toPath();
+
             CopyOption[] options = new CopyOption[]{
                     StandardCopyOption.REPLACE_EXISTING,
                     StandardCopyOption.COPY_ATTRIBUTES
@@ -200,17 +209,17 @@ public class FileManager {
 
             try {
                 Files.copy(oldLanguagePath, newLanguagePath, options);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }
 
     public Location getLocation(Config config, String path, boolean direction) {
-
         ConfigurationSection section = config.getFileConfiguration().getConfigurationSection(path);
-
-        if (section == null) return null;
+        if (section == null) {
+            return null;
+        }
 
         String world = section.getString("world");
         double x = section.getDouble("x");
@@ -233,37 +242,39 @@ public class FileManager {
     }
 
     public void unloadConfig(File configPath) {
-        loadedConfigs.remove(configPath.getPath());
+        this.loadedConfigs.remove(configPath.getPath());
     }
 
     public void deleteConfig(File configPath) {
         Config config = getConfig(configPath);
         config.getFile().delete();
-        loadedConfigs.remove(configPath.getPath());
+        this.loadedConfigs.remove(configPath.getPath());
     }
 
     public Config getConfig(File configPath) {
-        Config cached = loadedConfigs.get(configPath.getPath());
+        Config cached = this.loadedConfigs.get(configPath.getPath());
 
-        if (cached != null) return cached;
+        if (cached != null) {
+            return cached;
+        }
 
         Config config = new Config(this, configPath);
-        loadedConfigs.put(configPath.getPath(), config);
+        this.loadedConfigs.put(configPath.getPath(), config);
 
         return config;
     }
 
     public Map<String, Config> getConfigs() {
-        return loadedConfigs;
+        return this.loadedConfigs;
     }
 
     public boolean isConfigLoaded(java.io.File configPath) {
-        return loadedConfigs.containsKey(configPath.getPath());
+        return this.loadedConfigs.containsKey(configPath.getPath());
     }
 
     public InputStream getConfigContent(Reader reader) {
         try {
-            String addLine, currentLine, pluginName = plugin.getDescription().getName();
+            String addLine, currentLine, pluginName = this.plugin.getDescription().getName();
             int commentNum = 0;
 
             StringBuilder whole = new StringBuilder();
@@ -284,8 +295,8 @@ public class FileManager {
             bufferedReader.close();
 
             return configStream;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
 
             return null;
         }
@@ -298,8 +309,8 @@ public class FileManager {
 
         try {
             return getConfigContent(new FileReader(configFile));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
         }
 
         return null;
@@ -310,8 +321,12 @@ public class FileManager {
         StringBuilder config = new StringBuilder();
 
         for (String line : lines) {
-            if (line.contains(plugin.getDescription().getName() + "_COMMENT")) {
-                config.append(line.replace("IMPORTANT", "[!]").replace("\n", "").replace(plugin.getDescription().getName() + "_COMMENT_", "#").replaceAll("[0-9]+:", "")).append("\n");
+            if (line.contains(this.plugin.getDescription().getName() + "_COMMENT")) {
+                config.append(line.replace("IMPORTANT", "[!]")
+                                .replace("\n", "")
+                                .replace(this.plugin.getDescription().getName() + "_COMMENT_", "#")
+                                .replaceAll("[0-9]+:", ""))
+                        .append("\n");
             } else if (line.contains(":")) {
                 config.append(line).append("\n");
             }
@@ -326,38 +341,37 @@ public class FileManager {
             writer.write(prepareConfigString(configString));
             writer.flush();
             writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
     public static class Config {
-
         private final File configFile;
         private FileConfiguration configLoad;
 
         public Config(FileManager fileManager, java.io.File configPath) {
-            configFile = configPath;
+            this.configFile = configPath;
 
             if (configPath.getName().equals("config.yml")) {
-                configLoad = YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
+                this.configLoad = YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(this.configFile)));
             } else {
-                configLoad = YamlConfiguration.loadConfiguration(configPath);
+                this.configLoad = YamlConfiguration.loadConfiguration(configPath);
             }
         }
 
         public File getFile() {
-            return configFile;
+            return this.configFile;
         }
 
         public FileConfiguration getFileConfiguration() {
-            return configLoad;
+            return this.configLoad;
         }
 
         public FileConfiguration loadFile() {
-            configLoad = YamlConfiguration.loadConfiguration(configFile);
+            this.configLoad = YamlConfiguration.loadConfiguration(this.configFile);
 
-            return configLoad;
+            return this.configLoad;
         }
     }
 }

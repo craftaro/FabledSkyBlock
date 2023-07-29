@@ -5,7 +5,6 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import java.util.List;
 
 public interface Structure {
-
     String getName();
 
     CompatibleMaterial getMaterial();

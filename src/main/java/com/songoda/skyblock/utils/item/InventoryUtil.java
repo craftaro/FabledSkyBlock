@@ -1,4 +1,5 @@
 package com.songoda.skyblock.utils.item;
+
 import com.songoda.core.compatibility.ServerVersion;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -11,7 +12,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Map;
 
 public class InventoryUtil {
-
     @SuppressWarnings("deprecation")
     public static void removeItem(Inventory inv, int amount, boolean hasDisplayname, Material material) {
         Map<Integer, ? extends ItemStack> ammo = inv.all(material);
@@ -47,7 +47,7 @@ public class InventoryUtil {
 
     @SuppressWarnings("deprecation")
     public static boolean isInventoryFull(Inventory inv, int subtract, int amount, Material material) {
-        for (int i = 0; i < inv.getSize() - subtract; i++) {
+        for (int i = 0; i < inv.getSize() - subtract; ++i) {
             ItemStack is = inv.getItem(i);
 
             if (is == null) {
@@ -77,7 +77,9 @@ public class InventoryUtil {
     }
 
     public static void takeItem(Player player, int amount) {
-        if (player.getGameMode() == GameMode.CREATIVE) return;
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
 
         ItemStack item = player.getInventory().getItemInMainHand();
 

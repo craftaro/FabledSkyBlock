@@ -12,34 +12,33 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 public class WorldListeners implements Listener {
-    
     private final SkyBlock plugin;
-    
+
     public WorldListeners(SkyBlock plugin) {
         this.plugin = plugin;
     }
-    
+
     // Hotfix for wrong biome in other worlds;
     @EventHandler(ignoreCancelled = true)
     public void onWorldChange(PlayerChangedWorldEvent event) {
-        IslandManager islandManager = plugin.getIslandManager();
-        BiomeManager biomeManager = plugin.getBiomeManager();
-        
+        IslandManager islandManager = this.plugin.getIslandManager();
+        BiomeManager biomeManager = this.plugin.getBiomeManager();
+
         Location to = event.getPlayer().getLocation();
         Island island = islandManager.getIslandAtLocation(to);
-        
-        if(island != null) {
+
+        if (island != null) {
             switch (to.getWorld().getEnvironment()) {
                 case NORMAL:
                     break;
                 case NETHER:
-                    if(!to.getBlock().getBiome().equals(CompatibleBiome.NETHER_WASTES.getBiome())) {
-                        biomeManager.setBiome(island, IslandWorld.Nether, CompatibleBiome.NETHER_WASTES, null);
+                    if (to.getBlock().getBiome() != CompatibleBiome.NETHER_WASTES.getBiome()) {
+                        biomeManager.setBiome(island, IslandWorld.NETHER, CompatibleBiome.NETHER_WASTES, null);
                     }
                     break;
                 case THE_END:
-                    if(!to.getBlock().getBiome().equals(CompatibleBiome.THE_END.getBiome())) {
-                        biomeManager.setBiome(island, IslandWorld.End, CompatibleBiome.THE_END, null);
+                    if (to.getBlock().getBiome() != CompatibleBiome.THE_END.getBiome()) {
+                        biomeManager.setBiome(island, IslandWorld.END, CompatibleBiome.THE_END, null);
                     }
                     break;
             }

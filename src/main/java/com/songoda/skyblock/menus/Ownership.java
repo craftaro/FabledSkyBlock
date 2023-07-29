@@ -28,7 +28,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.UUID;
 
 public class Ownership {
-
     private static Ownership instance;
 
     public static Ownership getInstance() {
@@ -40,7 +39,7 @@ public class Ownership {
     }
 
     public void open(Player player) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         MessageManager messageManager = plugin.getMessageManager();
@@ -61,16 +60,16 @@ public class Ownership {
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
-                    } else if (!island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+                    } else if (!island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Ownership.Role.Message"));
-                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
 
                     if (playerData.getType() == null) {
-                        playerData.setType(Visibility.Hidden);
+                        playerData.setType(Visibility.HIDDEN);
                     }
 
                     ItemStack is = event.getItem();
@@ -102,30 +101,30 @@ public class Ownership {
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AnvilGui gui = new AnvilGui(player);
                             gui.setAction(event1 -> {
-                                    if (playerDataManager.hasPlayerData(player)) {
-                                        Island island1 = islandManager.getIsland(player);
+                                if (playerDataManager.hasPlayerData(player)) {
+                                    Island island1 = islandManager.getIsland(player);
 
-                                        if (island1 == null) {
-                                            messageManager.sendMessage(player, configLoad
-                                                    .getString("Command.Island.Ownership.Owner.Message"));
-                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
-                                                    1.0F, 1.0F);
+                                    if (island1 == null) {
+                                        messageManager.sendMessage(player, configLoad
+                                                .getString("Command.Island.Ownership.Owner.Message"));
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
+                                                1.0F, 1.0F);
 
-                                            return;
-                                        } else if (!island1.hasRole(IslandRole.Owner,
-                                                player.getUniqueId())) {
-                                            messageManager.sendMessage(player, configLoad
-                                                    .getString("Command.Island.Ownership.Role.Message"));
-                                            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(),
-                                                    1.0F, 1.0F);
+                                        return;
+                                    } else if (!island1.hasRole(IslandRole.OWNER,
+                                            player.getUniqueId())) {
+                                        messageManager.sendMessage(player, configLoad
+                                                .getString("Command.Island.Ownership.Role.Message"));
+                                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(),
+                                                1.0F, 1.0F);
 
-                                            return;
-                                        }
-
-                                        Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getServer().dispatchCommand(player,
-                                                "island ownership " + gui.getInputText()));
+                                        return;
                                     }
-                                    player.closeInventory();
+
+                                    Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getServer().dispatchCommand(player,
+                                            "island ownership " + gui.getInputText()));
+                                }
+                                player.closeInventory();
                             });
 
                             ItemStack is1 = new ItemStack(Material.NAME_TAG);
@@ -143,10 +142,10 @@ public class Ownership {
                             if (event.getClick() == ClickType.MIDDLE) {
                                 Visibility visibility = (Visibility) playerData.getType();
 
-                                if (visibility == Visibility.Hidden) {
-                                    playerData.setType(Visibility.Visible);
+                                if (visibility == Visibility.HIDDEN) {
+                                    playerData.setType(Visibility.VISIBLE);
                                 } else {
-                                    playerData.setType(Visibility.Hidden);
+                                    playerData.setType(Visibility.HIDDEN);
                                 }
 
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
@@ -176,35 +175,35 @@ public class Ownership {
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AnvilGui gui = new AnvilGui(player);
                             gui.setAction(event1 -> {
-                                    if (playerDataManager.hasPlayerData(player)) {
-                                        Island island12 = islandManager.getIsland(player);
+                                if (playerDataManager.hasPlayerData(player)) {
+                                    Island island12 = islandManager.getIsland(player);
 
-                                        if (island12 == null) {
-                                            messageManager.sendMessage(player, configLoad
-                                                    .getString("Command.Island.Ownership.Owner.Message"));
-                                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
-                                                    1.0F, 1.0F);
+                                    if (island12 == null) {
+                                        messageManager.sendMessage(player, configLoad
+                                                .getString("Command.Island.Ownership.Owner.Message"));
+                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
+                                                1.0F, 1.0F);
 
-                                            return;
-                                        } else if (!island12.hasRole(IslandRole.Owner,
-                                                player.getUniqueId())) {
-                                            messageManager.sendMessage(player, configLoad
-                                                    .getString("Command.Island.Ownership.Role.Message"));
-                                            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(),
-                                                    1.0F, 1.0F);
+                                        return;
+                                    } else if (!island12.hasRole(IslandRole.OWNER,
+                                            player.getUniqueId())) {
+                                        messageManager.sendMessage(player, configLoad
+                                                .getString("Command.Island.Ownership.Role.Message"));
+                                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(),
+                                                1.0F, 1.0F);
 
-                                            return;
-                                        }
-
-                                        island12.setPassword(
-                                                gui.getInputText().replace("&", "").replace(" ", ""));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_USE.getSound(), 1.0F,
-                                                1.0F);
-
-                                        Bukkit.getServer().getScheduler()
-                                                .runTaskLater(plugin, () -> open(player), 1L);
+                                        return;
                                     }
-                                    player.closeInventory();
+
+                                    island12.setPassword(
+                                            gui.getInputText().replace("&", "").replace(" ", ""));
+                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_USE.getSound(), 1.0F,
+                                            1.0F);
+
+                                    Bukkit.getServer().getScheduler()
+                                            .runTaskLater(plugin, () -> open(player), 1L);
+                                }
+                                player.closeInventory();
                             });
 
                             ItemStack is12 = new ItemStack(Material.NAME_TAG);
@@ -253,7 +252,7 @@ public class Ownership {
                     configLoad.getStringList("Menu.Ownership.Item.Assign.Lore"), null, null, null), 3);
 
             if (island.hasPassword()) {
-                if (playerDataManager.getPlayerData(player).getType() == Ownership.Visibility.Hidden) {
+                if (playerDataManager.getPlayerData(player).getType() == Ownership.Visibility.HIDDEN) {
                     nInv.addItem(nInv.createItem(CompatibleMaterial.MAP.getItem(),
                             configLoad.getString("Menu.Ownership.Item.Password.Displayname"),
                             configLoad.getStringList("Menu.Ownership.Item.Password.Hidden.Lore"), null, null, null), 4);
@@ -276,13 +275,11 @@ public class Ownership {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Ownership.Title")));
             nInv.setType(InventoryType.HOPPER);
 
-            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
         }
     }
 
     public enum Visibility {
-
-        Visible, Hidden
-
+        VISIBLE, HIDDEN
     }
 }

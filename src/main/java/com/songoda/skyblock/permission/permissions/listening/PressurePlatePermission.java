@@ -11,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PressurePlatePermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,10 +22,9 @@ public class PressurePlatePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.PHYSICAL)
+        if (event.getAction() != Action.PHYSICAL) {
             return;
+        }
 
         Player player = event.getPlayer();
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
@@ -35,7 +33,8 @@ public class PressurePlatePermission extends ListeningPermission {
                 || material == CompatibleMaterial.SPRUCE_PRESSURE_PLATE || material == CompatibleMaterial.BIRCH_PRESSURE_PLATE
                 || material == CompatibleMaterial.JUNGLE_PRESSURE_PLATE || material == CompatibleMaterial.ACACIA_PRESSURE_PLATE
                 || material == CompatibleMaterial.DARK_OAK_PRESSURE_PLATE || material == CompatibleMaterial.LIGHT_WEIGHTED_PRESSURE_PLATE
-                || material == CompatibleMaterial.HEAVY_WEIGHTED_PRESSURE_PLATE)
-            cancelAndMessage(event, player, plugin, messageManager);
+                || material == CompatibleMaterial.HEAVY_WEIGHTED_PRESSURE_PLATE) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }

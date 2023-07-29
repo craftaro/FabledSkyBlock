@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class Localization<T> {
-
     private final Class<T> type;
     private final String keysPath;
     private final Map<T, String> values;
@@ -22,33 +21,32 @@ public abstract class Localization<T> {
     protected abstract Map<T, String> newValueMapInstance(Class<T> type);
 
     protected final Map<T, String> getValues() {
-        return values;
+        return this.values;
     }
 
     public final String getKeysPath() {
-        return keysPath;
+        return this.keysPath;
     }
 
     public final Class<T> getType() {
-        return type;
+        return this.type;
     }
 
     public String getLocale(T object) {
-
         String value = getValues().get(object);
-
-        if (value == null) value = getDefaultLocaleFor(object);
+        if (value == null) {
+            value = getDefaultLocaleFor(object);
+        }
 
         return value;
     }
 
     public String getDefaultLocaleFor(T object) {
-
         String name = object.toString().toLowerCase();
-
-        if (name.length() > 1) name = name.substring(0, 1).toUpperCase() + name.substring(1);
+        if (name.length() > 1) {
+            name = name.substring(0, 1).toUpperCase() + name.substring(1);
+        }
 
         return name;
     }
-
 }

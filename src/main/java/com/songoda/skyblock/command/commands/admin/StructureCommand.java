@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.message.MessageManager;
@@ -28,13 +29,16 @@ import java.util.Base64;
 import java.util.logging.Level;
 
 public class StructureCommand extends SubCommand {
+    public StructureCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
@@ -88,21 +92,21 @@ public class StructureCommand extends SubCommand {
                                                             "Command.Island.Admin.Structure.Save.Info.Message")))
                                                     .create())).getTextComponent());
                     player.spigot()
-                        .sendMessage(
-                            new ChatComponent(
-                                prefix.replace("%info",
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
-                                        "Command.Island.Admin.Structure.Convert.Info.Message")))
-                                    + "/island admin structure convert"
-                                    + suffix.replace("%info", ChatColor.translateAlternateColorCodes(
-                                    '&',
-                                    configLoad.getString(
-                                        "Command.Island.Admin.Structure.Convert.Info.Message"))),
-                                false, null, null,
-                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
-                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
-                                        "Command.Island.Admin.Structure.Convert.Info.Message")))
-                                    .create())).getTextComponent());
+                            .sendMessage(
+                                    new ChatComponent(
+                                            prefix.replace("%info",
+                                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                                            "Command.Island.Admin.Structure.Convert.Info.Message")))
+                                                    + "/island admin structure convert"
+                                                    + suffix.replace("%info", ChatColor.translateAlternateColorCodes(
+                                                    '&',
+                                                    configLoad.getString(
+                                                            "Command.Island.Admin.Structure.Convert.Info.Message"))),
+                                            false, null, null,
+                                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+                                                    ChatColor.translateAlternateColorCodes('&', configLoad.getString(
+                                                            "Command.Island.Admin.Structure.Convert.Info.Message")))
+                                                    .create())).getTextComponent());
                 } else {
                     messageManager.sendMessage(player, helpLines);
                 }
@@ -143,7 +147,7 @@ public class StructureCommand extends SubCommand {
                 return;
             } else if (args[0].equalsIgnoreCase("save")) {
                 if (args.length == 2) {
-                    PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+                    PlayerData playerData = this.plugin.getPlayerDataManager().getPlayerData(player);
 
                     Location position1Location = playerData.getArea().getPosition(1);
                     Location position2Location = playerData.getArea().getPosition(2);
@@ -174,7 +178,7 @@ public class StructureCommand extends SubCommand {
                     } else {
                         try {
                             File configFile = new File(
-                                    plugin.getDataFolder().toString() + "/structures/" + args[1] + ".structure");
+                                    this.plugin.getDataFolder().toString() + "/structures/" + args[1] + ".structure");
                             StructureUtil.saveStructure(configFile, player.getLocation(),
                                     StructureUtil.getFixedLocations(position1Location, position2Location));
 
@@ -185,11 +189,11 @@ public class StructureCommand extends SubCommand {
                                             .replace("%name", args[1]));
                             soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
                             return;
-                        } catch (Exception e) {
+                        } catch (Exception ex) {
                             messageManager.sendMessage(player, configLoad
                                     .getString("Command.Island.Admin.Structure.Save.Saved.Failed.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                            e.printStackTrace();
+                            ex.printStackTrace();
                         }
                     }
                 } else {
@@ -201,11 +205,11 @@ public class StructureCommand extends SubCommand {
 
             } else if (args[0].equalsIgnoreCase("convert")) {
                 if (args.length == 2) {
-                    File structureFile = new File(new File(plugin.getDataFolder().toString() + "/structures"), args[1]);
+                    File structureFile = new File(new File(this.plugin.getDataFolder().toString() + "/structures"), args[1]);
                     if (!structureFile.exists()) {
                         messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.Admin.Structure.Convert.Invalid.Message")
-                                .replace("%name", args[1]));
+                                configLoad.getString("Command.Island.Admin.Structure.Convert.Invalid.Message")
+                                        .replace("%name", args[1]));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         return;
                     }
@@ -214,8 +218,8 @@ public class StructureCommand extends SubCommand {
                         FileInputStream fileInputStream = new FileInputStream(structureFile);
                         fileInputStream.read(content);
                         fileInputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
 
                     try {
@@ -223,29 +227,29 @@ public class StructureCommand extends SubCommand {
                         fileOutputStream.write(Base64.getEncoder().encode(Compression.decompress(content).getBytes()));
                         fileOutputStream.flush();
                         fileOutputStream.close();
-                    } catch (IOException e) {
+                    } catch (IOException ex) {
                         messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.Admin.Structure.Convert.Converted.Failed.Message")
-                                .replace("%name", args[1]));
+                                configLoad.getString("Command.Island.Admin.Structure.Convert.Converted.Failed.Message")
+                                        .replace("%name", args[1]));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                        e.printStackTrace();
+                        ex.printStackTrace();
                     }
 
                     messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.Admin.Structure.Convert.Converted.Successful.Message")
-                            .replace("%name", args[1]));
+                            configLoad.getString("Command.Island.Admin.Structure.Convert.Converted.Successful.Message")
+                                    .replace("%name", args[1]));
                     soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
                 } else {
                     messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.Admin.Structure.Convert.Invalid.Message"));
+                            configLoad.getString("Command.Island.Admin.Structure.Convert.Invalid.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 }
 
                 return;
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         }
     }
@@ -274,5 +278,4 @@ public class StructureCommand extends SubCommand {
     public String[] getArguments() {
         return new String[]{"tool", "save", "convert"};
     }
-
 }

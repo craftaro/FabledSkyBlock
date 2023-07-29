@@ -12,7 +12,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class BrewingPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -24,15 +23,15 @@ public class BrewingPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
-        if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.BREWING_STAND)
-            cancelAndMessage(event, player, plugin, messageManager);
+        if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.BREWING_STAND) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.songoda.skyblock.upgrade;
 
 public class Upgrade {
-
     private double cost;
     private int value;
     private boolean enabled = true;
@@ -16,7 +15,7 @@ public class Upgrade {
     }
 
     public double getCost() {
-        return cost;
+        return this.cost;
     }
 
     public void setCost(double cost) {
@@ -24,7 +23,7 @@ public class Upgrade {
     }
 
     public int getValue() {
-        return value;
+        return this.value;
     }
 
     public void setValue(int value) {
@@ -32,7 +31,7 @@ public class Upgrade {
     }
 
     public boolean isEnabled() {
-        return enabled;
+        return this.enabled;
     }
 
     public void setEnabled(boolean enabled) {
@@ -40,8 +39,6 @@ public class Upgrade {
     }
 
     public enum Type {
-
-        Crop, Spawner, Fly, Drops, Size, Speed, Jump, Members
-
+        CROP, SPAWNER, FLY, DROPS, SIZE, SPEED, JUMP, MEMBERS
     }
 }

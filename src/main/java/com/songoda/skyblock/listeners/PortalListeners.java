@@ -3,8 +3,6 @@ package com.songoda.skyblock.listeners;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
-import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandManager;
@@ -25,13 +23,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class PortalListeners implements Listener {
-
     private final SkyBlock plugin;
 
     private final Map<UUID, Tick> tickCounter = new HashMap<>();
@@ -46,57 +42,65 @@ public class PortalListeners implements Listener {
         org.bukkit.block.Block from = event.getFrom().getBlock();
         org.bukkit.block.Block to = event.getTo().getBlock();
 
-        IslandManager islandManager = plugin.getIslandManager();
+        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
+            return;
+        }
 
-        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) return;
-
+        IslandManager islandManager = this.plugin.getIslandManager();
         Island island = islandManager.getIslandAtLocation(to.getLocation());
-
-        if (island == null) return;
+        if (island == null) {
+            return;
+        }
 
         // Check permissions.
-        plugin.getPermissionManager().processPermission(event, player,
+        this.plugin.getPermissionManager().processPermission(event, player,
                 islandManager.getIslandAtLocation(event.getTo()));
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onEntityPortalEnter(EntityPortalEnterEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
 
         Player player = (Player) event.getEntity();
         org.bukkit.block.Block block = event.getLocation().getBlock();
 
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        WorldManager worldManager = plugin.getWorldManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
 
-        if (!worldManager.isIslandWorld(player.getWorld())) return;
+        if (!worldManager.isIslandWorld(player.getWorld())) {
+            return;
+        }
 
         Island island = islandManager.getIslandAtLocation(player.getLocation());
 
-        if (island == null) return;
+        if (island == null) {
+            return;
+        }
 
-        FileConfiguration configLoad = plugin.getConfiguration();
+        FileConfiguration configLoad = this.plugin.getConfiguration();
 
         IslandEnvironment spawnEnvironment;
         switch (island.getRole(player)) {
-            case Operator:
-            case Owner:
-            case Member:
-            case Coop:
-                spawnEnvironment = IslandEnvironment.Main;
+            case OPERATOR:
+            case OWNER:
+            case MEMBER:
+            case COOP:
+                spawnEnvironment = IslandEnvironment.MAIN;
                 break;
 
             default:
-                spawnEnvironment = IslandEnvironment.Visitor;
+                spawnEnvironment = IslandEnvironment.VISITOR;
         }
 
         Tick tick;
-        if (!tickCounter.containsKey(player.getUniqueId())) {
-            tick = tickCounter.put(player.getUniqueId(), new Tick());
+        if (!this.tickCounter.containsKey(player.getUniqueId())) {
+            tick = this.tickCounter.put(player.getUniqueId(), new Tick());
         } else {
-            tick = tickCounter.get(player.getUniqueId());
+            tick = this.tickCounter.get(player.getUniqueId());
 
             tick.setTick(tick.getTick() + 1);
 
@@ -106,33 +110,35 @@ public class PortalListeners implements Listener {
                 tick.setLast(System.currentTimeMillis());
             }
             if (tick.getTick() >= 100) {
-                messageManager.sendMessage(player, plugin.getLanguage().getString("Island.Portal.Stuck.Message"));
+                messageManager.sendMessage(player, this.plugin.getLanguage().getString("Island.Portal.Stuck.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                 LocationUtil.teleportPlayerToSpawn(player);
                 return;
             }
         }
 
-        if (tick == null) return;
+        if (tick == null) {
+            return;
+        }
 
         PlayerEnterPortalEvent playerEnterPortalEvent = new PlayerEnterPortalEvent(player, player.getLocation());
         // Check permissions.
-        boolean perms = !plugin.getPermissionManager().processPermission(playerEnterPortalEvent,
+        boolean perms = !this.plugin.getPermissionManager().processPermission(playerEnterPortalEvent,
                 player, island);
 
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
-        IslandWorld toWorld = IslandWorld.Normal;
+        IslandWorld toWorld = IslandWorld.NORMAL;
 
-        if (block.getType().equals(CompatibleMaterial.NETHER_PORTAL.getMaterial())) {
-            toWorld = fromWorld.equals(IslandWorld.Nether) ? IslandWorld.Normal : IslandWorld.Nether;
-        } else if (block.getType().equals(CompatibleMaterial.END_PORTAL.getMaterial())) {
-            toWorld = fromWorld.equals(IslandWorld.End) ? IslandWorld.Normal : IslandWorld.End;
+        if (block.getType() == CompatibleMaterial.NETHER_PORTAL.getMaterial()) {
+            toWorld = fromWorld == IslandWorld.NETHER ? IslandWorld.NORMAL : IslandWorld.NETHER;
+        } else if (block.getType() == CompatibleMaterial.END_PORTAL.getMaterial()) {
+            toWorld = fromWorld == IslandWorld.END ? IslandWorld.NORMAL : IslandWorld.END;
         }
 
-        if(!perms){
+        if (!perms) {
             switch (toWorld) {
-                case End:
-                case Nether:
+                case END:
+                case NETHER:
                     if (configLoad.getBoolean("Island.World." + toWorld.name() + ".Enable") && island.isRegionUnlocked(player, toWorld)) {
                         teleportPlayerToWorld(player, soundManager, island, spawnEnvironment, tick, toWorld);
                     }
@@ -141,16 +147,16 @@ public class PortalListeners implements Listener {
                 default:
                     IslandWorld toWorldF = toWorld;
 
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> PaperLib.teleportAsync(player, island.getLocation(toWorldF, spawnEnvironment)), 1L);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> PaperLib.teleportAsync(player, island.getLocation(toWorldF, spawnEnvironment)), 1L);
                     soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
                     player.setFallDistance(0.0F);
                     tick.setTick(1);
                     break;
             }
         } else {
-            if(toWorld.equals(IslandWorld.End)){
+            if (toWorld == IslandWorld.END) {
                 player.setVelocity(player.getLocation().getDirection().multiply(-.50).setY(.6f));
-            } else if(toWorld.equals(IslandWorld.Nether)) {
+            } else if (toWorld == IslandWorld.NETHER) {
                 player.setVelocity(player.getLocation().getDirection().multiply(-.50));
             }
         }
@@ -158,10 +164,9 @@ public class PortalListeners implements Listener {
     }
 
     private void teleportPlayerToWorld(Player player, SoundManager soundManager, Island island, IslandEnvironment spawnEnvironment, Tick tick, IslandWorld toWorld) {
-        IslandWorld toWorldF = toWorld;
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Location loc = island.getLocation(toWorldF, spawnEnvironment);
-            if(plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+            Location loc = island.getLocation(toWorld, spawnEnvironment);
+            if (this.plugin.getConfiguration().getBoolean("Island.Teleport.SafetyCheck", true)) {
                 Location safeLoc = LocationUtil.getSafeLocation(loc);
                 if (safeLoc != null) {
                     loc = safeLoc;
@@ -180,8 +185,10 @@ public class PortalListeners implements Listener {
         private long last = System.currentTimeMillis() - 1001;
 
         public int getTick() {
-            if (System.currentTimeMillis() - last >= 1500) tick = 0;
-            return tick;
+            if (System.currentTimeMillis() - this.last >= 1500) {
+                this.tick = 0;
+            }
+            return this.tick;
         }
 
         public void setTick(int tick) {
@@ -189,7 +196,7 @@ public class PortalListeners implements Listener {
         }
 
         public long getLast() {
-            return last;
+            return this.last;
         }
 
         public void setLast(long last) {

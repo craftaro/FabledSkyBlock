@@ -12,7 +12,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class CauldronPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -25,15 +24,15 @@ public class CauldronPermission extends ListeningPermission {
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            if(event.getItem() != null && !event.getItem().getType().isBlock()){
+            if (event.getItem() != null && !event.getItem().getType().isBlock()) {
                 Player player = event.getPlayer();
                 Block block = event.getClickedBlock();
 
 
-                if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.CAULDRON)
-                    cancelAndMessage(event, player, plugin, messageManager);
+                if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.CAULDRON) {
+                    cancelAndMessage(event, player, this.plugin, this.messageManager);
+                }
             }
         }
-
     }
 }

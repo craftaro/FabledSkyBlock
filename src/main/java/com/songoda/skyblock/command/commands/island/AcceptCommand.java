@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerIslandJoinEvent;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -28,23 +29,26 @@ import java.util.Map;
 import java.util.UUID;
 
 public class AcceptCommand extends SubCommand {
+    public AcceptCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        ScoreboardManager scoreboardManager = this.plugin.getScoreboardManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
         PlayerData playerData = playerDataManager.getPlayerData(player);
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
-            InviteManager inviteManager = plugin.getInviteManager();
+            InviteManager inviteManager = this.plugin.getInviteManager();
 
             if (inviteManager.hasInvite(player.getUniqueId())) {
                 Invite invite = inviteManager.getInvite(player.getUniqueId());
@@ -94,11 +98,10 @@ public class AcceptCommand extends SubCommand {
                             playerData.setMemberSince(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
                             playerData.save();
 
-                            island.setRole(IslandRole.Member, player.getUniqueId());
+                            island.setRole(IslandRole.MEMBER, player.getUniqueId());
                             island.save();
 
-                            if ((island.getRole(IslandRole.Member).size() + island.getRole(IslandRole.Operator).size()
-                                    + 1) >= island.getMaxMembers(player)) {
+                            if ((island.getRole(IslandRole.MEMBER).size() + island.getRole(IslandRole.OPERATOR).size() + 1) >= island.getMaxMembers(player)) {
                                 Map<UUID, Invite> invites = inviteManager.getInvites();
 
                                 for (UUID inviteList : invites.keySet()) {
@@ -113,7 +116,7 @@ public class AcceptCommand extends SubCommand {
                                             targetInvitePlayer
                                                     .sendMessage(ChatColor.translateAlternateColorCodes('&',
                                                             configLoad.getString(
-                                                                    "Command.Island.Accept.Capacity.Broadcast.Message")
+                                                                            "Command.Island.Accept.Capacity.Broadcast.Message")
                                                                     .replace("%player", targetInvite.getSenderName())));
                                             soundManager.playSound(targetInvitePlayer,
                                                     CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
@@ -121,9 +124,8 @@ public class AcceptCommand extends SubCommand {
                                     }
                                 }
                             }
-    
-                            plugin.getVisitManager().getIsland(invite.getOwnerUUID())
-                                    .removeVoter(player.getUniqueId());
+
+                            this.plugin.getVisitManager().getIsland(invite.getOwnerUUID()).removeVoter(player.getUniqueId());
 
                             for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
                                 if (!loopPlayer.getUniqueId().equals(player.getUniqueId())) {
@@ -140,16 +142,15 @@ public class AcceptCommand extends SubCommand {
                                             soundManager.playSound(loopPlayer, CompatibleSound.ENTITY_FIREWORK_ROCKET_BLAST.getSound(), 1.0F,
                                                     1.0F);
 
-                                            
-                                            if (island.getRole(IslandRole.Member).size() == 1
-                                                    && island.getRole(IslandRole.Operator).size() == 0) {
+
+                                            if (island.getRole(IslandRole.MEMBER).size() == 1 && island.getRole(IslandRole.OPERATOR).isEmpty()) {
                                                 scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                             }
                                         }
                                     }
                                 }
                             }
-    
+
                             scoreboardManager.updatePlayerScoreboardType(player);
                         }
                     } else {

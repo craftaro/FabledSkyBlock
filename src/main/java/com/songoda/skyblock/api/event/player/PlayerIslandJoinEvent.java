@@ -3,9 +3,9 @@ package com.songoda.skyblock.api.event.player;
 import com.songoda.skyblock.api.island.Island;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerIslandJoinEvent extends PlayerEvent {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private boolean cancelled = false;
@@ -19,7 +19,7 @@ public class PlayerIslandJoinEvent extends PlayerEvent {
     }
 
     public boolean isCancelled() {
-        return cancelled;
+        return this.cancelled;
     }
 
     public void setCancelled(boolean cancel) {
@@ -27,7 +27,7 @@ public class PlayerIslandJoinEvent extends PlayerEvent {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

@@ -15,7 +15,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.HorseInventory;
 
 public class HorseInventoryPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -32,17 +31,17 @@ public class HorseInventoryPermission extends ListeningPermission {
 
         if (entity.getType() == EntityType.HORSE) {
             Horse horse = (Horse) event.getRightClicked();
-            if (horse.getInventory().getSaddle() != null && player.isSneaking())
-                cancelAndMessage(event, player, plugin, messageManager);
+            if (horse.getInventory().getSaddle() != null && player.isSneaking()) {
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
+            }
         }
     }
 
     @PermissionHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (!(event.getInventory() instanceof HorseInventory))
+        if (!(event.getInventory() instanceof HorseInventory)) {
             return;
-
-        cancelAndMessage(event, (Player) event.getPlayer(), plugin, messageManager);
+        }
+        cancelAndMessage(event, (Player) event.getPlayer(), this.plugin, this.messageManager);
     }
 }
-

@@ -6,30 +6,29 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChatComponent {
-
     private final TextComponent textComponent;
 
     public ChatComponent(String text, boolean bold, ChatColor color, ClickEvent clickEvent, HoverEvent hoverEvent) {
-        textComponent = new TextComponent(ChatColor.translateAlternateColorCodes('&', text));
-        textComponent.setBold(bold);
+        this.textComponent = new TextComponent(ChatColor.translateAlternateColorCodes('&', text));
+        this.textComponent.setBold(bold);
 
         if (color != null) {
-            textComponent.setColor(color);
+            this.textComponent.setColor(color);
         }
 
         if (clickEvent != null) {
-            textComponent.setClickEvent(clickEvent);
+            this.textComponent.setClickEvent(clickEvent);
         }
 
         if (hoverEvent != null) {
-            textComponent.setHoverEvent(hoverEvent);
+            this.textComponent.setHoverEvent(hoverEvent);
         }
     }
 
     public TextComponent addExtra(ChatComponent chatComponent) {
-        textComponent.addExtra(chatComponent.getTextComponent());
+        this.textComponent.addExtra(chatComponent.getTextComponent());
 
-        return textComponent;
+        return this.textComponent;
     }
 
     public ChatComponent addExtra(TextComponent textComponent) {
@@ -39,12 +38,12 @@ public class ChatComponent {
     }
 
     public ChatComponent addExtraChatComponent(ChatComponent chatComponent) {
-        textComponent.addExtra(chatComponent.getTextComponent());
+        this.textComponent.addExtra(chatComponent.getTextComponent());
 
         return this;
     }
 
     public TextComponent getTextComponent() {
-        return textComponent;
+        return this.textComponent;
     }
 }

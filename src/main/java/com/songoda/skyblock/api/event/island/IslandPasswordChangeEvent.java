@@ -2,9 +2,9 @@ package com.songoda.skyblock.api.event.island;
 
 import com.songoda.skyblock.api.island.Island;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class IslandPasswordChangeEvent extends IslandEvent {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private String password;
@@ -19,7 +19,7 @@ public class IslandPasswordChangeEvent extends IslandEvent {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -27,7 +27,7 @@ public class IslandPasswordChangeEvent extends IslandEvent {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

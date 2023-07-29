@@ -9,7 +9,6 @@ import com.songoda.skyblock.levelling.calculator.CalculatorRegistry;
 import org.bukkit.Material;
 
 public class LevellingManager {
-
     private final IslandLevelManager levellingManager;
 
     public LevellingManager(IslandLevelManager levellingManager) {
@@ -23,13 +22,11 @@ public class LevellingManager {
         Preconditions.checkArgument(island != null, "Cannot calculate points to null island");
         this.levellingManager.startScan(null, island.getIsland());
     }
-    
+
     /**
      * Register a new material calculator for a determined material
-     * @param calculator
-     * @param material
      */
-    public void registerCalculator(Calculator calculator, Material material){
+    public void registerCalculator(Calculator calculator, Material material) {
         Preconditions.checkArgument(calculator != null, "Cannot use a null calculator");
         Preconditions.checkArgument(material != null, "Cannot use a null material");
         CalculatorRegistry.registerCalculator(calculator, CompatibleMaterial.getMaterial(material));

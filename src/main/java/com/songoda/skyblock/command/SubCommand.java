@@ -1,20 +1,16 @@
 package com.songoda.skyblock.command;
 
 import com.songoda.skyblock.SkyBlock;
-import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 
-import java.io.File;
-
 public abstract class SubCommand {
-
     protected final SkyBlock plugin;
     protected final String info;
 
-    public SubCommand() {
-        this.plugin = SkyBlock.getInstance();
+    public SubCommand(SkyBlock plugin) {
+        this.plugin = plugin;
         this.info = this.plugin.formatText(this.plugin.getLanguage().getString(this.getInfoMessagePath()));
     }
 
@@ -35,12 +31,12 @@ public abstract class SubCommand {
     }
 
     public boolean hasPermission(Permissible toCheck, boolean isAdmin) {
-        if (toCheck.hasPermission("fabledskyblock.*"))
+        if (toCheck.hasPermission("fabledskyblock.*")) {
             return true;
+        }
 
         return isAdmin
                 ? toCheck.hasPermission("fabledskyblock.admin.*") || toCheck.hasPermission("fabledskyblock.admin." + this.getName())
                 : toCheck.hasPermission("fabledskyblock.island.*") || toCheck.hasPermission("fabledskyblock.island." + this.getName());
     }
-
 }

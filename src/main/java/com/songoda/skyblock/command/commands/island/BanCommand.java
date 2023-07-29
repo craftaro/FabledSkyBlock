@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.ban.Ban;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -22,17 +23,20 @@ import java.io.File;
 import java.util.UUID;
 
 public class BanCommand extends SubCommand {
+    public BanCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            MessageManager messageManager = plugin.getMessageManager();
-            PermissionManager permissionManager = plugin.getPermissionManager();
-            IslandManager islandManager = plugin.getIslandManager();
-            SoundManager soundManager = plugin.getSoundManager();
-            FileManager fileManager = plugin.getFileManager();
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            MessageManager messageManager = this.plugin.getMessageManager();
+            PermissionManager permissionManager = this.plugin.getPermissionManager();
+            IslandManager islandManager = this.plugin.getIslandManager();
+            SoundManager soundManager = this.plugin.getSoundManager();
+            FileManager fileManager = this.plugin.getFileManager();
 
-            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+            Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             if (args.length == 1) {
@@ -42,8 +46,8 @@ public class BanCommand extends SubCommand {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Owner.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else if (this.plugin.getConfiguration().getBoolean("Island.Visitor.Banning")) {
-                    if (island.hasRole(IslandRole.Owner, player.getUniqueId())
-                            || (island.hasRole(IslandRole.Operator, player.getUniqueId()) && permissionManager.hasPermission(island, "Ban", IslandRole.Operator))) {
+                    if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
+                            || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId()) && permissionManager.hasPermission(island, "Ban", IslandRole.OPERATOR))) {
                         Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
                         UUID targetPlayerUUID;
@@ -67,8 +71,8 @@ public class BanCommand extends SubCommand {
                         } else if (targetPlayerUUID.equals(player.getUniqueId())) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Yourself.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                        } else if (island.hasRole(IslandRole.Member, targetPlayerUUID) || island.hasRole(IslandRole.Operator, targetPlayerUUID)
-                                || island.hasRole(IslandRole.Owner, targetPlayerUUID)) {
+                        } else if (island.hasRole(IslandRole.MEMBER, targetPlayerUUID) || island.hasRole(IslandRole.OPERATOR, targetPlayerUUID)
+                                || island.hasRole(IslandRole.OWNER, targetPlayerUUID)) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Member.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                         } else if (island.getBan().isBanned(targetPlayerUUID)) {

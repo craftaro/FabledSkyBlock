@@ -3,6 +3,7 @@ package com.songoda.skyblock.menus;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.utils.ItemUtils;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerVoteEvent;
 import com.songoda.skyblock.config.FileManager;
@@ -15,7 +16,6 @@ import com.songoda.skyblock.placeholder.Placeholder;
 import com.songoda.skyblock.playerdata.PlayerData;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
@@ -28,10 +28,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class Visit {
-
     private static Visit instance;
 
     public static Visit getInstance() {
@@ -43,7 +45,7 @@ public class Visit {
     }
 
     public void open(Player player, Visit.Type type, Visit.Sort sort) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         MessageManager messageManager = plugin.getMessageManager();
@@ -59,8 +61,8 @@ public class Visit {
                 PlayerData playerData = playerDataManager.getPlayerData(player);
 
                 if (playerData.getType() == null || playerData.getSort() == null) {
-                    playerData.setType(Type.Default);
-                    playerData.setSort(Sort.Default);
+                    playerData.setType(Type.DEFAULT);
+                    playerData.setSort(Sort.DEFAULT);
                 }
 
                 ItemStack is = event.getItem();
@@ -89,7 +91,7 @@ public class Visit {
                         Type type1 = (Type) playerData.getType();
 
                         if (type1.ordinal() + 1 == Type.values().length) {
-                            playerData.setType(Type.Default);
+                            playerData.setType(Type.DEFAULT);
                         } else {
                             playerData.setType(Type.values()[type1.ordinal() + 1]);
                         }
@@ -98,7 +100,7 @@ public class Visit {
                         Sort sort1 = (Sort) playerData.getSort();
 
                         if (sort1.ordinal() + 1 == Sort.values().length) {
-                            playerData.setSort(Sort.Default);
+                            playerData.setSort(Sort.DEFAULT);
                         } else {
                             playerData.setSort(Sort.values()[sort1.ordinal() + 1]);
                         }
@@ -156,7 +158,7 @@ public class Visit {
                                 }
                             }
 
-                            if (visit.getStatus().equals(IslandStatus.OPEN) || isCoopPlayer || isWhitelistedPlayer || player.hasPermission("fabledskyblock.bypass")
+                            if (visit.getStatus() == IslandStatus.OPEN || isCoopPlayer || isWhitelistedPlayer || player.hasPermission("fabledskyblock.bypass")
                                     || player.hasPermission("fabledskyblock.bypass.*")
                                     || player.hasPermission("fabledskyblock.*")) {
                                 if (!islandManager.containsIsland(targetPlayerUUID)) {
@@ -165,9 +167,9 @@ public class Visit {
 
                                 Island island = islandManager.getIsland(offlinePlayer);
 
-                                if ((!island.hasRole(IslandRole.Member, player.getUniqueId())
-                                        && !island.hasRole(IslandRole.Operator, player.getUniqueId())
-                                        && !island.hasRole(IslandRole.Owner, player.getUniqueId()))
+                                if ((!island.hasRole(IslandRole.MEMBER, player.getUniqueId())
+                                        && !island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                        && !island.hasRole(IslandRole.OWNER, player.getUniqueId()))
                                         && plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
                                     if (event.getClick() == ClickType.RIGHT) {
                                         if (playerData.getIsland() != null
@@ -266,15 +268,15 @@ public class Visit {
 
         boolean keepBannedIslands = plugin.getConfiguration().getBoolean("Island.Visit.Menu.Bans");
 
-        for (int i = 0; i < openIslands.size(); i++) {
+        for (int i = 0; i < openIslands.size(); ++i) {
             UUID islandOwnerUUID = (UUID) openIslands.keySet().toArray()[i];
             com.songoda.skyblock.visit.Visit visit = openIslands.get(islandOwnerUUID);
 
-            if (type == Visit.Type.Solo) {
+            if (type == Visit.Type.SOLO) {
                 if (visit.getMembers() != 1) {
                     continue;
                 }
-            } else if (type == Visit.Type.Team) {
+            } else if (type == Visit.Type.TEAM) {
                 if (visit.getMembers() == 1) {
                     continue;
                 }
@@ -289,44 +291,40 @@ public class Visit {
 
         openIslands.clear();
 
-        if (sort == Visit.Sort.Players || sort == Visit.Sort.Level || sort == Visit.Sort.Members
-                || sort == Visit.Sort.Visits || sort == Visit.Sort.Votes) {
-            visitIslands.sort(new Comparator<com.songoda.skyblock.visit.Visit>() {
-                @Override
-                public int compare(com.songoda.skyblock.visit.Visit visit1,
-                                   com.songoda.skyblock.visit.Visit visit2) {
-                    if (sort == Visit.Sort.Players) {
-                        int playersAtIsland1 = 0;
+        if (sort == Visit.Sort.PLAYERS || sort == Visit.Sort.LEVEL || sort == Visit.Sort.MEMBERS
+                || sort == Visit.Sort.VISITS || sort == Visit.Sort.VOTES) {
+            visitIslands.sort((visit1, visit2) -> {
+                if (sort == Sort.PLAYERS) {
+                    int playersAtIsland1 = 0;
 
-                        if (islandManager.containsIsland(visit1.getOwnerUUID())) {
-                            playersAtIsland1 = islandManager
-                                    .getPlayersAtIsland(islandManager
-                                            .getIsland(Bukkit.getServer().getOfflinePlayer(visit1.getOwnerUUID())))
-                                    .size();
-                        }
-
-                        int playersAtIsland2 = 0;
-
-                        if (islandManager.containsIsland(visit2.getOwnerUUID())) {
-                            playersAtIsland2 = islandManager
-                                    .getPlayersAtIsland(islandManager
-                                            .getIsland(Bukkit.getServer().getOfflinePlayer(visit2.getOwnerUUID())))
-                                    .size();
-                        }
-
-                        return Integer.valueOf(playersAtIsland2).compareTo(playersAtIsland1);
-                    } else if (sort == Visit.Sort.Level) {
-                        return Long.valueOf(visit2.getLevel().getLevel()).compareTo(visit1.getLevel().getLevel());
-                    } else if (sort == Visit.Sort.Members) {
-                        return Integer.valueOf(visit2.getMembers()).compareTo(visit1.getMembers());
-                    } else if (sort == Visit.Sort.Visits) {
-                        return Integer.valueOf(visit2.getVisitors().size()).compareTo(visit1.getVisitors().size());
-                    } else if (sort == Visit.Sort.Votes) {
-                        return Integer.valueOf(visit2.getVoters().size()).compareTo(visit1.getVoters().size());
+                    if (islandManager.containsIsland(visit1.getOwnerUUID())) {
+                        playersAtIsland1 = islandManager
+                                .getPlayersAtIsland(islandManager
+                                        .getIsland(Bukkit.getServer().getOfflinePlayer(visit1.getOwnerUUID())))
+                                .size();
                     }
 
-                    return 0;
+                    int playersAtIsland2 = 0;
+
+                    if (islandManager.containsIsland(visit2.getOwnerUUID())) {
+                        playersAtIsland2 = islandManager
+                                .getPlayersAtIsland(islandManager
+                                        .getIsland(Bukkit.getServer().getOfflinePlayer(visit2.getOwnerUUID())))
+                                .size();
+                    }
+
+                    return Integer.compare(playersAtIsland2, playersAtIsland1);
+                } else if (sort == Sort.LEVEL) {
+                    return Long.compare(visit2.getLevel().getLevel(), visit1.getLevel().getLevel());
+                } else if (sort == Sort.MEMBERS) {
+                    return Integer.compare(visit2.getMembers(), visit1.getMembers());
+                } else if (sort == Sort.VISITS) {
+                    return Integer.compare(visit2.getVisitors().size(), visit1.getVisitors().size());
+                } else if (sort == Sort.VOTES) {
+                    return Integer.compare(visit2.getVoters().size(), visit1.getVoters().size());
                 }
+
+                return 0;
             });
         }
 
@@ -339,7 +337,7 @@ public class Visit {
         nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
                 configLoad.getString("Menu.Visit.Item.Type.Displayname"),
                 configLoad.getStringList("Menu.Visit.Item.Type.Lore"),
-                new Placeholder[]{new Placeholder("%type", StringUtil.capatilizeUppercaseLetters(type.name()))},
+                new Placeholder[]{new Placeholder("%type", StringUtil.capitalizeUppercaseLetters(type.name()))},
                 null, null), 3);
         nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
                 configLoad.getString("Menu.Visit.Item.Statistics.Displayname"),
@@ -353,7 +351,7 @@ public class Visit {
         nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
                 configLoad.getString("Menu.Visit.Item.Sort.Displayname"),
                 configLoad.getStringList("Menu.Visit.Item.Sort.Lore"),
-                new Placeholder[]{new Placeholder("%sort", StringUtil.capatilizeUppercaseLetters(sort.name()))},
+                new Placeholder[]{new Placeholder("%sort", StringUtil.capitalizeUppercaseLetters(sort.name()))},
                 null, null), 5);
         nInv.addItem(
                 nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
@@ -362,15 +360,15 @@ public class Visit {
 
         if (playerMenuPage != 1) {
             nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                    "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
-                    "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
+                            "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
+                            "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
                     configLoad.getString("Menu.Visit.Item.Previous.Displayname"), null, null, null, null), 1);
         }
 
         if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
             nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                    "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
-                    "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
+                            "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
+                            "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
                     configLoad.getString("Menu.Visit.Item.Next.Displayname"), null, null, null, null), 7);
         }
 
@@ -417,7 +415,7 @@ public class Visit {
 
                     List<String> itemLore = new ArrayList<>();
 
-                    String safety = "";
+                    String safety;
 
                     if (visit.getSafeLevel() > 0) {
                         safety = configLoad.getString("Menu.Visit.Item.Island.Vote.Word.Unsafe");
@@ -426,7 +424,7 @@ public class Visit {
                     }
 
                     if (voteEnabled) {
-                        String voteAction = "";
+                        String voteAction;
 
                         if (visit.getVoters().contains(player.getUniqueId())) {
                             voteAction = configLoad
@@ -438,9 +436,9 @@ public class Visit {
                         if (signatureEnabled) {
                             List<String> correctItemLore;
 
-                            if (island != null && (island.hasRole(IslandRole.Member, player.getUniqueId())
-                                    || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+                            if (island != null && (island.hasRole(IslandRole.MEMBER, player.getUniqueId())
+                                    || island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                    || island.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                                 correctItemLore = configLoad.getStringList(
                                         "Menu.Visit.Item.Island.Vote.Enabled.Signature.Enabled.Member.Lore");
                             } else {
@@ -464,9 +462,9 @@ public class Visit {
                                 }
                             }
                         } else {
-                            if (island != null && (island.hasRole(IslandRole.Member, player.getUniqueId())
-                                    || island.hasRole(IslandRole.Operator, player.getUniqueId())
-                                    || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+                            if (island != null && (island.hasRole(IslandRole.MEMBER, player.getUniqueId())
+                                    || island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                    || island.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                                 itemLore.addAll(configLoad.getStringList(
                                         "Menu.Visit.Item.Island.Vote.Enabled.Signature.Disabled.Member.Lore"));
                             } else {
@@ -531,18 +529,14 @@ public class Visit {
         nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Visit.Title")));
         nInv.setRows(6);
 
-        Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+        Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
     }
 
     public enum Type {
-
-        Default, Solo, Team
-
+        DEFAULT, SOLO, TEAM
     }
 
     public enum Sort {
-
-        Default, Players, Level, Members, Visits, Votes
-
+        DEFAULT, PLAYERS, LEVEL, MEMBERS, VISITS, VOTES
     }
 }

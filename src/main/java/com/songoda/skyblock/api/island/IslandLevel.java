@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 public class IslandLevel {
-
     private final Island handle;
 
     public IslandLevel(Island handle) {
@@ -115,15 +114,14 @@ public class IslandLevel {
      * @return Implementation for the Island
      */
     public Island getIsland() {
-        return handle;
+        return this.handle;
     }
-    
+
     /**
      * Update the island level for a determined location
-     * @param location
      */
-    public void updateLevel(Location location){
+    public void updateLevel(Location location) {
         Preconditions.checkArgument(location != null, "Cannot update level of a null island");
-        SkyBlock.getInstance().getLevellingManager().updateLevel(this.handle.getIsland(), location);
+        SkyBlock.getPlugin(SkyBlock.class).getLevellingManager().updateLevel(this.handle.getIsland(), location);
     }
 }

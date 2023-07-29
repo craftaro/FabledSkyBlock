@@ -1,6 +1,8 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.core.utils.NumberUtils;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.cooldown.Cooldown;
@@ -14,7 +16,6 @@ import com.songoda.skyblock.menus.Levelling;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.visit.Visit;
@@ -28,23 +29,26 @@ import java.io.File;
 import java.util.UUID;
 
 public class LevelCommand extends SubCommand {
+    public LevelCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        IslandLevelManager levellingManager = plugin.getLevellingManager();
-        CooldownManager cooldownManager = plugin.getCooldownManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        VisitManager visitManager = plugin.getVisitManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        IslandLevelManager levellingManager = this.plugin.getLevellingManager();
+        CooldownManager cooldownManager = this.plugin.getCooldownManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        VisitManager visitManager = this.plugin.getVisitManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
             Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
-            UUID islandOwnerUUID = null;
+            UUID islandOwnerUUID;
             String targetPlayerName;
 
             if (targetPlayer == null) {
@@ -68,8 +72,7 @@ public class LevelCommand extends SubCommand {
 
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Level.Level.Message")
-                                    .replace("%player", targetPlayerName).replace("%level",
-                                    "" + NumberUtils.formatNumber(visit.getLevel().getLevel())));
+                                    .replace("%player", targetPlayerName).replace("%level", NumberUtils.formatNumber(visit.getLevel().getLevel())));
                     soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
 
                     return;
@@ -99,8 +102,8 @@ public class LevelCommand extends SubCommand {
             if (!island.getLevel().hasMaterials()) {
                 org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
 
-                if (cooldownManager.hasPlayer(CooldownType.Levelling, offlinePlayer)) {
-                    CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Levelling,
+                if (cooldownManager.hasPlayer(CooldownType.LEVELLING, offlinePlayer)) {
+                    CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.LEVELLING,
                             offlinePlayer);
                     Cooldown cooldown = cooldownPlayer.getCooldown();
 
@@ -129,7 +132,7 @@ public class LevelCommand extends SubCommand {
                                                 + configLoad.getString("Command.Island.Level.Cooldown.Word.Second")));
                     }
 
-                    soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
@@ -137,7 +140,7 @@ public class LevelCommand extends SubCommand {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Processing.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
 
-                cooldownManager.createPlayer(CooldownType.Levelling,
+                cooldownManager.createPlayer(CooldownType.LEVELLING,
                         Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                 levellingManager.startScan(player, island);
             } else {

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -13,7 +14,6 @@ import com.songoda.skyblock.menus.Creator;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.structure.Structure;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.NumberUtil;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,61 +23,62 @@ import java.io.File;
 import java.util.List;
 
 public class CreateCommand extends SubCommand {
+    public CreateCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        CooldownManager cooldownManager = plugin.getCooldownManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        CooldownManager cooldownManager = this.plugin.getCooldownManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
         if (islandManager.getIsland(player) == null) {
-            Config mainConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"));
+            Config mainConfig = fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"));
 
             if (args.length == 1) {
-                Structure structure = plugin.getStructureManager().getStructure(args[0]);
+                Structure structure = this.plugin.getStructureManager().getStructure(args[0]);
 
                 if (structure != null && islandManager.createIsland(player, structure)) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
                 } else if (structure == null) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.StructureNotFound.Message"));
-                    soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                 }
             } else if (mainConfig.getFileConfiguration().getBoolean("Island.Creation.Menu.Enable")) {
                 Creator.getInstance().open(player);
                 soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
             } else {
-                List<Structure> structures = plugin.getStructureManager().getStructures();
+                List<Structure> structures = this.plugin.getStructureManager().getStructures();
 
-                if (structures.size() == 0) {
+                if (structures.isEmpty()) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.None.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 } else if (!fileManager
-                        .isFileExist(new File(new File(plugin.getDataFolder().toString() + "/structures"),
-                                structures.get(0).getOverworldFile()))) {
+                        .isFileExist(new File(new File(this.plugin.getDataFolder() + "/structures"), structures.get(0).getOverworldFile()))) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
                 } else if (!fileManager
-                        .isFileExist(new File(new File(plugin.getDataFolder().toString() + "/structures"),
-                                structures.get(0).getNetherFile()))) {
+                        .isFileExist(new File(new File(this.plugin.getDataFolder() + "/structures"), structures.get(0).getNetherFile()))) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                     return;
-                } else if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                } else if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
-                        && cooldownManager.hasPlayer(CooldownType.Creation, player)) {
-                    CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Creation, player);
+                        && cooldownManager.hasPlayer(CooldownType.CREATION, player)) {
+                    CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.CREATION, player);
                     Cooldown cooldown = cooldownPlayer.getCooldown();
 
                     if (cooldown.getTime() < 60) {
@@ -96,7 +97,7 @@ public class CreateCommand extends SubCommand {
                                                 .getString("Island.Creator.Selector.Cooldown.Word.Second")));
                     }
 
-                    soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
@@ -108,7 +109,7 @@ public class CreateCommand extends SubCommand {
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }
 

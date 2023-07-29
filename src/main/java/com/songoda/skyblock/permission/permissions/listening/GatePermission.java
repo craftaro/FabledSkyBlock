@@ -11,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class GatePermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,12 +22,15 @@ public class GatePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         Player player = event.getPlayer();
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
-        if (material == null) return;
+        if (material == null) {
+            return;
+        }
 
         switch (material) {
             case ACACIA_FENCE_GATE:
@@ -39,7 +41,7 @@ public class GatePermission extends ListeningPermission {
             case WARPED_FENCE_GATE:
             case CRIMSON_FENCE_GATE:
             case DARK_OAK_FENCE_GATE:
-                cancelAndMessage(event, player, plugin, messageManager);
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }
 }

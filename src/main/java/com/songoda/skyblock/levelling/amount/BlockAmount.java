@@ -1,7 +1,6 @@
 package com.songoda.skyblock.levelling.amount;
 
 public class BlockAmount {
-
     private long amount;
 
     public BlockAmount(long amount) {
@@ -9,7 +8,7 @@ public class BlockAmount {
     }
 
     public long getAmount() {
-        return amount;
+        return this.amount;
     }
 
     public void increaseAmount(long by) {
@@ -19,5 +18,4 @@ public class BlockAmount {
     public void setAmount(long newValue) {
         this.amount = newValue;
     }
-
 }

@@ -12,16 +12,15 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 public final class EntityLimitation extends EnumLimitation<EntityType> {
-    
     private final LimitationInstanceHandler limitationInstanceHandler;
-    
+
     public EntityLimitation(LimitationInstanceHandler limitationInstanceHandler) {
         super(EntityType.class);
         this.limitationInstanceHandler = limitationInstanceHandler;
     }
 
     public long getEntityCount(Island island, IslandWorld islandWorld, EntityType type) {
-        final Location islandLocation = island.getLocation(islandWorld, IslandEnvironment.Island);
+        final Location islandLocation = island.getLocation(islandWorld, IslandEnvironment.ISLAND);
         final World world = islandLocation.getWorld();
 
         final Location minLocation = new Location(world, islandLocation.getBlockX() - island.getRadius(), 0,
@@ -39,11 +38,13 @@ public final class EntityLimitation extends EnumLimitation<EntityType> {
 
         for (int x = minX; x < maxX + 16; x += 16) {
             for (int z = minZ; z < maxZ + 16; z += 16) {
-                if (limitationInstanceHandler.isLoadChunks() || world.isChunkLoaded(x >> 4, z >> 4)) {
+                if (this.limitationInstanceHandler.isLoadChunks() || world.isChunkLoaded(x >> 4, z >> 4)) {
                     final Chunk chunk = world.getChunkAt(x >> 4, z >> 4);
-    
+
                     for (Entity ent : chunk.getEntities()) {
-                        if (ent.getType() == type) count++;
+                        if (ent.getType() == type) {
+                            count++;
+                        }
                     }
                 }
             }
@@ -55,5 +56,4 @@ public final class EntityLimitation extends EnumLimitation<EntityType> {
     public String getSectionName() {
         return "entity";
     }
-
 }

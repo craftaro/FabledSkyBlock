@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.menus.ControlPanel;
@@ -12,17 +13,19 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class ControlPanelCommand extends SubCommand {
+    public ControlPanelCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        SoundManager soundManager = plugin.getSoundManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (plugin.getIslandManager().getIsland(player) == null) {
-            plugin.getMessageManager().sendMessage(player,
-                    configLoad.getString("Command.Island.ControlPanel.Owner.Message"));
+        if (this.plugin.getIslandManager().getIsland(player) == null) {
+            this.plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.ControlPanel.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
         } else {
             ControlPanel.getInstance().open(player);

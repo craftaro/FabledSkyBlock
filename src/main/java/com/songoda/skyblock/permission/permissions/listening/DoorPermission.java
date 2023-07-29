@@ -9,10 +9,8 @@ import com.songoda.skyblock.permission.PermissionType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Openable;
 
 public class DoorPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -24,13 +22,17 @@ public class DoorPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         Player player = event.getPlayer();
 
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
-        if (material == null) return;
+        if (material == null) {
+            return;
+        }
+
         switch (material) {
             case OAK_DOOR:
             case BIRCH_DOOR:
@@ -56,8 +58,7 @@ public class DoorPermission extends ListeningPermission {
             case WARPED_FENCE_GATE:
             case CRIMSON_FENCE_GATE:
             case DARK_OAK_FENCE_GATE:
-                cancelAndMessage(event, player, plugin, messageManager);
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }
 }
-

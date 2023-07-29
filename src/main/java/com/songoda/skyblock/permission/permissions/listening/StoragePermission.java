@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class StoragePermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -26,10 +25,10 @@ public class StoragePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
             Player player = event.getPlayer();
-    
+
             if (material != null) {
                 switch (material) {
                     case CHEST:
@@ -54,11 +53,11 @@ public class StoragePermission extends ListeningPermission {
                     case YELLOW_SHULKER_BOX:
                     case WHITE_SHULKER_BOX:
                     case BARREL:
-                        cancelAndMessage(event, player, plugin, messageManager);
+                        cancelAndMessage(event, player, this.plugin, this.messageManager);
                 }
             }
         }
-    
+
     }
 
     @PermissionHandler
@@ -66,8 +65,8 @@ public class StoragePermission extends ListeningPermission {
         Player player = event.getPlayer();
 
         if (event.getRightClicked().getType().equals(EntityType.ITEM_FRAME)
-                || event.getRightClicked() instanceof StorageMinecart)
-            cancelAndMessage(event, player, plugin, messageManager);
-
+                || event.getRightClicked() instanceof StorageMinecart) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }

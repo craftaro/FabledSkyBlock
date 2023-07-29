@@ -5,7 +5,6 @@ import org.bukkit.OfflinePlayer;
 import java.util.Date;
 
 public class Transaction {
-
     public OfflinePlayer player;
     public float amount;
     public Date timestamp;

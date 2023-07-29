@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 
 public class FishingPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -27,7 +26,7 @@ public class FishingPermission extends ListeningPermission {
         org.bukkit.entity.Projectile projectile = event.getEntity();
         if (projectile instanceof FishHook && projectile.getShooter() instanceof Player) {
             Player shooter = (Player) projectile.getShooter();
-            cancelAndMessage(event, shooter, plugin, messageManager);
+            cancelAndMessage(event, shooter, this.plugin, this.messageManager);
         }
     }
 }

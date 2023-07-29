@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class WaterCollectionPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -22,14 +21,12 @@ public class WaterCollectionPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
         Player player = event.getPlayer();
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
         if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()) != CompatibleMaterial.AIR) {
             if (CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.GLASS_BOTTLE) {
                 if (material == CompatibleMaterial.WATER || material == CompatibleMaterial.CAULDRON) {
-                    cancelAndMessage(event, player, plugin, messageManager);
+                    cancelAndMessage(event, player, this.plugin, this.messageManager);
                     player.updateInventory();
                 }
             }

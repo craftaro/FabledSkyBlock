@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -20,6 +21,9 @@ import java.io.File;
 import java.util.UUID;
 
 public class SetAlwaysLoadedCommand extends SubCommand {
+    public SetAlwaysLoadedCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
@@ -32,21 +36,19 @@ public class SetAlwaysLoadedCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-
-        FileManager fileManager = plugin.getFileManager();
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        FileManager fileManager = this.plugin.getFileManager();
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-        MessageManager messageManager = plugin.getMessageManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
 
         if (args.length == 0) {
-            messageManager.sendMessage(sender,
-                    configLoad.getString("Command.Island.Admin.SetAlwaysLoaded.No-Player-Input.Message"));
+            messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetAlwaysLoaded.No-Player-Input.Message"));
             return;
         }
 
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
         if (args.length == 1) {
             Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);

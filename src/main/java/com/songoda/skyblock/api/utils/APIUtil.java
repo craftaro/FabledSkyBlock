@@ -11,15 +11,14 @@ import com.songoda.skyblock.api.island.IslandWorld;
 import com.songoda.skyblock.upgrade.Upgrade;
 
 public final class APIUtil {
-
     public static com.songoda.skyblock.island.IslandWorld toImplementation(IslandWorld world) {
         switch (world) {
             case NETHER:
-                return com.songoda.skyblock.island.IslandWorld.Nether;
+                return com.songoda.skyblock.island.IslandWorld.NETHER;
             case OVERWORLD:
-                return com.songoda.skyblock.island.IslandWorld.Normal;
+                return com.songoda.skyblock.island.IslandWorld.NORMAL;
             case END:
-                return com.songoda.skyblock.island.IslandWorld.End;
+                return com.songoda.skyblock.island.IslandWorld.END;
         }
 
         return null;
@@ -27,11 +26,11 @@ public final class APIUtil {
 
     public static IslandWorld fromImplementation(com.songoda.skyblock.island.IslandWorld world) {
         switch (world) {
-            case Nether:
+            case NETHER:
                 return IslandWorld.NETHER;
-            case Normal:
+            case NORMAL:
                 return IslandWorld.OVERWORLD;
-            case End:
+            case END:
                 return IslandWorld.END;
         }
 
@@ -41,11 +40,11 @@ public final class APIUtil {
     public static com.songoda.skyblock.island.IslandEnvironment toImplementation(IslandEnvironment environment) {
         switch (environment) {
             case ISLAND:
-                return com.songoda.skyblock.island.IslandEnvironment.Island;
+                return com.songoda.skyblock.island.IslandEnvironment.ISLAND;
             case MAIN:
-                return com.songoda.skyblock.island.IslandEnvironment.Main;
+                return com.songoda.skyblock.island.IslandEnvironment.MAIN;
             case VISITOR:
-                return com.songoda.skyblock.island.IslandEnvironment.Visitor;
+                return com.songoda.skyblock.island.IslandEnvironment.VISITOR;
         }
 
         return null;
@@ -53,11 +52,11 @@ public final class APIUtil {
 
     public static IslandEnvironment fromImplementation(com.songoda.skyblock.island.IslandEnvironment environment) {
         switch (environment) {
-            case Island:
+            case ISLAND:
                 return IslandEnvironment.ISLAND;
-            case Main:
+            case MAIN:
                 return IslandEnvironment.MAIN;
-            case Visitor:
+            case VISITOR:
                 return IslandEnvironment.VISITOR;
         }
 
@@ -93,15 +92,15 @@ public final class APIUtil {
     public static com.songoda.skyblock.island.IslandRole toImplementation(IslandRole role) {
         switch (role) {
             case VISITOR:
-                return com.songoda.skyblock.island.IslandRole.Visitor;
+                return com.songoda.skyblock.island.IslandRole.VISITOR;
             case COOP:
-                return com.songoda.skyblock.island.IslandRole.Coop;
+                return com.songoda.skyblock.island.IslandRole.COOP;
             case MEMBER:
-                return com.songoda.skyblock.island.IslandRole.Member;
+                return com.songoda.skyblock.island.IslandRole.MEMBER;
             case OPERATOR:
-                return com.songoda.skyblock.island.IslandRole.Operator;
+                return com.songoda.skyblock.island.IslandRole.OPERATOR;
             case OWNER:
-                return com.songoda.skyblock.island.IslandRole.Owner;
+                return com.songoda.skyblock.island.IslandRole.OWNER;
         }
 
         return null;
@@ -109,15 +108,15 @@ public final class APIUtil {
 
     public static IslandRole fromImplementation(com.songoda.skyblock.island.IslandRole role) {
         switch (role) {
-            case Visitor:
+            case VISITOR:
                 return IslandRole.VISITOR;
-            case Coop:
+            case COOP:
                 return IslandRole.COOP;
-            case Member:
+            case MEMBER:
                 return IslandRole.MEMBER;
-            case Operator:
+            case OPERATOR:
                 return IslandRole.OPERATOR;
-            case Owner:
+            case OWNER:
                 return IslandRole.OWNER;
         }
 
@@ -127,19 +126,19 @@ public final class APIUtil {
     public static Upgrade.Type toImplementation(IslandUpgrade upgrade) {
         switch (upgrade) {
             case CROP:
-                return Upgrade.Type.Crop;
+                return Upgrade.Type.CROP;
             case DROPS:
-                return Upgrade.Type.Drops;
+                return Upgrade.Type.DROPS;
             case FLY:
-                return Upgrade.Type.Fly;
+                return Upgrade.Type.FLY;
             case JUMP:
-                return Upgrade.Type.Jump;
+                return Upgrade.Type.JUMP;
             case SIZE:
-                return Upgrade.Type.Size;
+                return Upgrade.Type.SIZE;
             case SPAWNER:
-                return Upgrade.Type.Spawner;
+                return Upgrade.Type.SPAWNER;
             case SPEED:
-                return Upgrade.Type.Speed;
+                return Upgrade.Type.SPEED;
         }
 
         return null;
@@ -147,19 +146,19 @@ public final class APIUtil {
 
     public static IslandUpgrade fromImplementation(Upgrade.Type upgrade) {
         switch (upgrade) {
-            case Crop:
+            case CROP:
                 return IslandUpgrade.CROP;
-            case Drops:
+            case DROPS:
                 return IslandUpgrade.DROPS;
-            case Fly:
+            case FLY:
                 return IslandUpgrade.FLY;
-            case Jump:
+            case JUMP:
                 return IslandUpgrade.JUMP;
-            case Size:
+            case SIZE:
                 return IslandUpgrade.SIZE;
-            case Spawner:
+            case SPAWNER:
                 return IslandUpgrade.SPAWNER;
-            case Speed:
+            case SPEED:
                 return IslandUpgrade.SPEED;
         }
 
@@ -169,11 +168,11 @@ public final class APIUtil {
     public static com.songoda.skyblock.island.IslandMessage toImplementation(IslandMessage message) {
         switch (message) {
             case SIGN:
-                return com.songoda.skyblock.island.IslandMessage.Sign;
+                return com.songoda.skyblock.island.IslandMessage.SIGN;
             case SIGNATURE:
-                return com.songoda.skyblock.island.IslandMessage.Signature;
+                return com.songoda.skyblock.island.IslandMessage.SIGNATURE;
             case WELCOME:
-                return com.songoda.skyblock.island.IslandMessage.Welcome;
+                return com.songoda.skyblock.island.IslandMessage.WELCOME;
         }
 
         return null;
@@ -181,11 +180,11 @@ public final class APIUtil {
 
     public static IslandMessage fromImplementation(com.songoda.skyblock.island.IslandMessage message) {
         switch (message) {
-            case Sign:
+            case SIGN:
                 return IslandMessage.SIGN;
-            case Signature:
+            case SIGNATURE:
                 return IslandMessage.SIGNATURE;
-            case Welcome:
+            case WELCOME:
                 return IslandMessage.WELCOME;
         }
 
@@ -194,11 +193,11 @@ public final class APIUtil {
 
     public static SWorldBorder.Color toImplementation(IslandBorderColor color) {
         switch (color) {
-            case Blue:
+            case BLUE:
                 return SWorldBorder.Color.Blue;
-            case Green:
+            case GREEN:
                 return SWorldBorder.Color.Green;
-            case Red:
+            case RED:
                 return SWorldBorder.Color.Red;
         }
 
@@ -208,11 +207,11 @@ public final class APIUtil {
     public static IslandBorderColor fromImplementation(SWorldBorder.Color color) {
         switch (color) {
             case Blue:
-                return IslandBorderColor.Blue;
+                return IslandBorderColor.BLUE;
             case Green:
-                return IslandBorderColor.Green;
+                return IslandBorderColor.GREEN;
             case Red:
-                return IslandBorderColor.Red;
+                return IslandBorderColor.RED;
         }
 
         return null;

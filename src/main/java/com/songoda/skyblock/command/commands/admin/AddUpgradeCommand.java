@@ -2,6 +2,7 @@ package com.songoda.skyblock.command.commands.admin;
 
 import com.eatthepath.uuid.FastUUID;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -24,6 +25,9 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class AddUpgradeCommand extends SubCommand {
+    public AddUpgradeCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
@@ -36,13 +40,13 @@ public class AddUpgradeCommand extends SubCommand {
     }
 
     public void onCommand(CommandSender sender, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 2) {
@@ -58,30 +62,27 @@ public class AddUpgradeCommand extends SubCommand {
                 islandOwnerUUID = playerDataManager.getPlayerData(targetPlayer).getOwner();
                 targetPlayerName = targetPlayer.getName();
             }
-    
+
             Upgrade.Type upgrade = null;
-            for(Upgrade.Type type : Upgrade.Type.values()) {
-                if(type.name().toUpperCase().equals(args[1].toUpperCase())) {
+            for (Upgrade.Type type : Upgrade.Type.values()) {
+                if (type.name().equalsIgnoreCase(args[1])) {
                     upgrade = type;
                     break;
                 }
             }
 
             if (islandOwnerUUID == null) {
-                messageManager.sendMessage(sender,
-                        configLoad.getString("Command.Island.Admin.AddUpgrade.Island.Owner.Message"));
-                soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.AddUpgrade.Island.Owner.Message"));
+                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             } else if (upgrade == null) {
-                messageManager.sendMessage(sender,
-                        configLoad.getString("Command.Island.Admin.AddUpgrade.Upgrade.Exist.Message"));
-                soundManager.playSound(sender,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.AddUpgrade.Upgrade.Exist.Message"));
+                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             } else {
                 if (islandManager.containsIsland(islandOwnerUUID)) {
                     Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 
                     if (island.hasUpgrade(upgrade)) {
-                        messageManager.sendMessage(sender,
-                                configLoad.getString("Command.Island.Admin.AddUpgrade.Upgrade.Already.Message"));
+                        messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.AddUpgrade.Upgrade.Already.Message"));
                         soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         return;
@@ -89,8 +90,7 @@ public class AddUpgradeCommand extends SubCommand {
 
                     island.setUpgrade(null, upgrade, true);
                 } else {
-                    File islandDataFile = new File(plugin.getDataFolder().toString() + "/island-data",
-                            FastUUID.toString(islandOwnerUUID) + ".yml");
+                    File islandDataFile = new File(this.plugin.getDataFolder() + "/island-data", FastUUID.toString(islandOwnerUUID) + ".yml");
 
                     if (!fileManager.isFileExist(islandDataFile)) {
                         messageManager.sendMessage(sender,
@@ -114,8 +114,8 @@ public class AddUpgradeCommand extends SubCommand {
 
                     try {
                         islandDataConfigLoad.save(islandDataFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
                 }
 

@@ -15,7 +15,8 @@ enum ScoreboardType {
         this.configSection = configSection;
     }
 
-    public @Nonnull String getConfigSection() {
+    @Nonnull
+    public String getConfigSection() {
         return this.configSection;
     }
 }

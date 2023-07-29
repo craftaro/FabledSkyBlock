@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class CachedChunk {
-
     private final String world;
     private final int x;
     private final int z;
@@ -44,19 +43,21 @@ public class CachedChunk {
 
     public CompletableFuture<Chunk> getChunk() {
         World world = Bukkit.getWorld(this.world);
-        if (world == null)
+        if (world == null) {
             return null;
+        }
         return PaperLib.getChunkAtAsync(world, this.x, this.z);
     }
 
     public boolean isSnapshotAvailable() {
-        return latestSnapshot != null;
+        return this.latestSnapshot != null;
     }
 
     public ChunkSnapshot getSnapshot() {
-        if (latestSnapshot == null)
+        if (this.latestSnapshot == null) {
             return takeSnapshot();
-        return latestSnapshot;
+        }
+        return this.latestSnapshot;
     }
 
     public ChunkSnapshot takeSnapshot() {
@@ -64,11 +65,15 @@ public class CachedChunk {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof Chunk) {
-            Chunk other = (Chunk) o;
-            return this.world.equals(other.getWorld().getName()) && this.x == other.getX() && this.z == other.getZ();
-        } else return false;
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Chunk)) {
+            return false;
+        }
+
+        Chunk other = (Chunk) obj;
+        return this.world.equals(other.getWorld().getName()) &&
+                this.x == other.getX() &&
+                this.z == other.getZ();
     }
 
     @Override

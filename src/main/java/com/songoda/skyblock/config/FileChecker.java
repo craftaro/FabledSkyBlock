@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class FileChecker {
-
     private final FileManager fileManager;
 
     private final Map<File.Type, File> loadedFiles;
@@ -20,21 +19,21 @@ public class FileChecker {
     public FileChecker(SkyBlock plugin, FileManager fileManager, String configurationFileName, boolean applyComments) {
         this.fileManager = fileManager;
 
-        loadedFiles = new EnumMap<>(File.Type.class);
+        this.loadedFiles = new EnumMap<>(File.Type.class);
 
         java.io.File configFile = new java.io.File(plugin.getDataFolder(), configurationFileName);
-        loadedFiles.put(File.Type.CREATED, new File(fileManager, configFile, YamlConfiguration.loadConfiguration(configFile)));
+        this.loadedFiles.put(File.Type.CREATED, new File(fileManager, configFile, YamlConfiguration.loadConfiguration(configFile)));
 
         if (applyComments) {
-            loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(new InputStreamReader(plugin.getResource(configurationFileName)))))));
+            this.loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(new InputStreamReader(plugin.getResource(configurationFileName)))))));
         } else {
-            loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(configurationFileName)))));
+            this.loadedFiles.put(File.Type.RESOURCE, new File(null, null, YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(configurationFileName)))));
         }
     }
 
     public void loadSections() {
         for (File.Type fileType : File.Type.values()) {
-            File file = loadedFiles.get(fileType);
+            File file = this.loadedFiles.get(fileType);
             FileConfiguration configLoad = file.getFileConfiguration();
 
             Set<String> configKeys = configLoad.getKeys(true);
@@ -47,10 +46,10 @@ public class FileChecker {
 
     public void compareFiles() {
         for (File.Type fileType : File.Type.values()) {
-            File file = loadedFiles.get(fileType);
+            File file = this.loadedFiles.get(fileType);
 
             if (fileType == File.Type.RESOURCE) {
-                File createdFile = loadedFiles.get(File.Type.CREATED);
+                File createdFile = this.loadedFiles.get(File.Type.CREATED);
                 FileConfiguration createdConfigLoad = createdFile.getFileConfiguration();
 
                 for (String configKeyList : file.getKeys().keySet()) {
@@ -63,21 +62,20 @@ public class FileChecker {
     }
 
     public void saveChanges() {
-        File file = loadedFiles.get(File.Type.CREATED);
+        File file = this.loadedFiles.get(File.Type.CREATED);
 
         try {
             if (file.getFile().getName().equals("config.yml")) {
-                fileManager.saveConfig(file.getFileConfiguration().saveToString(), file.getFile());
+                this.fileManager.saveConfig(file.getFileConfiguration().saveToString(), file.getFile());
             } else {
                 file.getFileConfiguration().save(file.getFile());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
     public static class File {
-
         private final java.io.File configFile;
         private FileConfiguration configLoad;
 
@@ -86,7 +84,7 @@ public class FileChecker {
         public File(FileManager fileManager, java.io.File configFile, FileConfiguration configLoad) {
             this.configFile = configFile;
             this.configLoad = configLoad;
-            configKeys = new HashMap<>();
+            this.configKeys = new HashMap<>();
 
             if (configFile != null && configFile.getName().equals("config.yml")) {
                 this.configLoad = YamlConfiguration.loadConfiguration(new InputStreamReader(fileManager.getConfigContent(configFile)));
@@ -94,19 +92,19 @@ public class FileChecker {
         }
 
         public java.io.File getFile() {
-            return configFile;
+            return this.configFile;
         }
 
         public FileConfiguration getFileConfiguration() {
-            return configLoad;
+            return this.configLoad;
         }
 
         public HashMap<String, Object> getKeys() {
-            return configKeys;
+            return this.configKeys;
         }
 
         public void addKey(String key, Object object) {
-            configKeys.put(key, object);
+            this.configKeys.put(key, object);
         }
 
         public enum Type {

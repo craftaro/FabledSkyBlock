@@ -3,9 +3,9 @@ package com.songoda.skyblock.api.event.island;
 import com.songoda.skyblock.api.invite.IslandInvitation;
 import com.songoda.skyblock.api.island.Island;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class IslandInviteEvent extends IslandEvent {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final IslandInvitation invite;
@@ -16,11 +16,11 @@ public class IslandInviteEvent extends IslandEvent {
     }
 
     public IslandInvitation getInvite() {
-        return invite;
+        return this.invite;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 

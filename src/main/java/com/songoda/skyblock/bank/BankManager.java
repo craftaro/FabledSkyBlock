@@ -8,21 +8,23 @@ import com.songoda.skyblock.island.Island;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class BankManager {
-
     private final HashMap<UUID, List<Transaction>> log;
-    
+
     private final SkyBlock plugin;
 
     public FileConfiguration lang;
 
     public BankManager(SkyBlock plugin) {
         this.plugin = plugin;
-        lang = this.plugin.getLanguage();
-        log = new HashMap<>();
+        this.lang = this.plugin.getLanguage();
+        this.log = new HashMap<>();
         loadTransactions();
     }
 
@@ -49,42 +51,43 @@ public class BankManager {
     }
 
     public List<Transaction> getTransactions(UUID uuid) {
-        if (log.containsKey(uuid)
-                && log.get(uuid) != null
-                && !log.get(uuid).isEmpty()) {
-            return new ArrayList<>(log.get(uuid));
-        }else {
+        if (this.log.containsKey(uuid)
+                && this.log.get(uuid) != null
+                && !this.log.get(uuid).isEmpty()) {
+            return new ArrayList<>(this.log.get(uuid));
+        } else {
             return new ArrayList<>();
         }
     }
 
     public void addTransaction(Player p, Transaction transaction) {
-        if (log.containsKey(p.getUniqueId())) {
-            log.get(p.getUniqueId()).add(transaction);
-         }else {
+        if (this.log.containsKey(p.getUniqueId())) {
+            this.log.get(p.getUniqueId()).add(transaction);
+        } else {
             List<Transaction> t = new ArrayList<>();
             t.add(transaction);
-            log.put(p.getUniqueId(),t);
+            this.log.put(p.getUniqueId(), t);
         }
     }
 
     private void loadTransactions() {
-        for (UUID uid:SkyBlock.getInstance().getPlayerDataManager().getPlayerData().keySet()) {
-            log.put(uid,SkyBlock.getInstance().getPlayerDataManager().getPlayerData().get(uid).getTransactions());
+        for (UUID uid : SkyBlock.getInstance().getPlayerDataManager().getPlayerData().keySet()) {
+            this.log.put(uid, SkyBlock.getInstance().getPlayerDataManager().getPlayerData().get(uid).getTransactions());
         }
     }
 
-    public List<String> getBalanceLore(Player player) {;
-        Economy economy = plugin.getEconomyManager().getEconomy();
-        
+    public List<String> getBalanceLore(Player player) {
+        ;
+        Economy economy = this.plugin.getEconomyManager().getEconomy();
+
         List<String> result = new ArrayList<>();
         result.add("Some error occurred while loading your balance!");
-        Island island = SkyBlock.getInstance().getIslandManager().getIsland(player);
-        result.add("If this is null then its a easy to fix bug: "+island.toString());
+        Island island = SkyBlock.getPlugin(SkyBlock.class).getIslandManager().getIsland(player);
+        result.add("If this is null then its a easy to fix bug: " + island.toString());
         if (island != null) {
             result.clear();
-            result.add(player.getDisplayName()+"'s balance is "+ EconomyManager.formatEconomy(economy.getBalance(player)));
-            result.add(player.getDisplayName()+"'s island has "+ EconomyManager.formatEconomy(island.getBankBalance()));
+            result.add(player.getDisplayName() + "'s balance is " + EconomyManager.formatEconomy(economy.getBalance(player)));
+            result.add(player.getDisplayName() + "'s island has " + EconomyManager.formatEconomy(island.getBankBalance()));
         }
         return result;
     }
@@ -94,12 +97,12 @@ public class BankManager {
     }
 
     public List<Transaction> getTransactionList(UUID uuid) {
-        return log.get(uuid);
+        return this.log.get(uuid);
     }
 
     public BankResponse deposit(Player player, Island island, double amt, boolean admin) {
-        Economy economy = plugin.getEconomyManager().getEconomy();
-        FileManager fileManager = plugin.getFileManager();
+        Economy economy = this.plugin.getEconomyManager().getEconomy();
+        FileManager fileManager = this.plugin.getFileManager();
 
         // Make sure the amount is positive
         if (amt <= 0) {
@@ -114,11 +117,11 @@ public class BankManager {
             }
         }
 
-        if(!admin) {
+        if (!admin) {
             if (!economy.hasBalance(player, amt)) {
                 return BankResponse.NOT_ENOUGH_MONEY;
             }
-    
+
             economy.withdrawBalance(player, amt);
         }
 
@@ -134,7 +137,7 @@ public class BankManager {
     }
 
     public BankResponse withdraw(Player player, Island island, double amt, boolean admin) {
-        Economy economy = plugin.getEconomyManager().getEconomy();
+        Economy economy = this.plugin.getEconomyManager().getEconomy();
 
         // Make sure the amount is positive
         if (amt <= 0) {
@@ -149,11 +152,11 @@ public class BankManager {
             }
         }
 
-        if(!admin){
+        if (!admin) {
             if (amt > island.getBankBalance()) {
                 return BankResponse.NOT_ENOUGH_MONEY;
             }
-    
+
             economy.deposit(player, amt);
         }
 
@@ -168,7 +171,7 @@ public class BankManager {
         return BankResponse.SUCCESS;
     }
 
-    public enum BankResponse{
+    public enum BankResponse {
         NOT_ENOUGH_MONEY,
         DECIMALS_NOT_ALLOWED,
         NEGATIVE_AMOUNT,

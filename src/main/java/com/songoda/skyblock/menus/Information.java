@@ -4,7 +4,6 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
@@ -31,7 +30,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Information {
-
     private static Information instance;
 
     public static Information getInstance() {
@@ -43,13 +41,12 @@ public class Information {
     }
 
     public void open(Player player) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         MessageManager messageManager = plugin.getMessageManager();
         IslandManager islandManager = plugin.getIslandManager();
         SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
 
         if (playerDataManager.hasPlayerData(player)) {
             PlayerData playerData = playerDataManager.getPlayerData(player);
@@ -72,15 +69,15 @@ public class Information {
                     return;
                 }
 
-                if (viewer.getType() == Information.Viewer.Type.Visitors) {
-                    if (!island.getStatus().equals(IslandStatus.CLOSED)) {
-                        if (islandManager.getVisitorsAtIsland(island).size() == 0) {
+                if (viewer.getType() == Information.Viewer.Type.VISITORS) {
+                    if (island.getStatus() != IslandStatus.CLOSED) {
+                        if (islandManager.getVisitorsAtIsland(island).isEmpty()) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Island.Information.Visitors.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                             playerData.setViewer(
-                                    new Information.Viewer(viewer.getOwner(), Information.Viewer.Type.Categories));
+                                    new Information.Viewer(viewer.getOwner(), Information.Viewer.Type.CATEGORIES));
                             open(player);
 
                             return;
@@ -90,7 +87,7 @@ public class Information {
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
 
                         playerData.setViewer(
-                                new Information.Viewer(viewer.getOwner(), Information.Viewer.Type.Categories));
+                                new Information.Viewer(viewer.getOwner(), Information.Viewer.Type.CATEGORIES));
                         open(player);
 
                         return;
@@ -108,7 +105,7 @@ public class Information {
                     islandOwnerName = targetPlayer.getName();
                 }
 
-                if (viewer.getType() == Information.Viewer.Type.Categories) {
+                if (viewer.getType() == Information.Viewer.Type.CATEGORIES) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                         if (playerDataManager.hasPlayerData(player)) {
                             PlayerData playerData13 = playerDataManager.getPlayerData(player);
@@ -125,7 +122,7 @@ public class Information {
                                             "Menu.Information.Categories.Item.Members.Displayname"))))) {
                                 playerData13.setViewer(new Viewer(
                                         ((Viewer) playerData13.getViewer()).getOwner(),
-                                        Viewer.Type.Members));
+                                        Viewer.Type.MEMBERS));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
@@ -145,7 +142,7 @@ public class Information {
                                             "Menu.Information.Categories.Item.Visitors.Displayname"))))) {
                                 playerData13.setViewer(new Viewer(
                                         ((Viewer) playerData13.getViewer()).getOwner(),
-                                        Viewer.Type.Visitors));
+                                        Viewer.Type.VISITORS));
                                 soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
@@ -168,8 +165,7 @@ public class Information {
 
                     List<String> itemLore = new ArrayList<>();
 
-                    String safety = "";
-
+                    String safety;
                     if (visit.getSafeLevel() > 0) {
                         safety = configLoad.getString("Menu.Information.Categories.Item.Information.Vote.Word.Unsafe");
                     } else {
@@ -181,9 +177,9 @@ public class Information {
                             for (String itemLoreList : configLoad.getStringList(
                                     "Menu.Information.Categories.Item.Information.Vote.Enabled.Signature.Enabled.Lore")) {
                                 if (itemLoreList.contains("%signature")) {
-                                    List<String> islandSignature = visit.getSiganture();
+                                    List<String> islandSignature = visit.getSignature();
 
-                                    if (islandSignature.size() == 0) {
+                                    if (islandSignature.isEmpty()) {
                                         itemLore.add(configLoad.getString(
                                                 "Menu.Information.Categories.Item.Information.Vote.Word.Empty"));
                                     } else {
@@ -218,9 +214,9 @@ public class Information {
                             for (String itemLoreList : configLoad.getStringList(
                                     "Menu.Information.Categories.Item.Information.Vote.Disabled.Signature.Enabled.Lore")) {
                                 if (itemLoreList.contains("%signature")) {
-                                    List<String> islandSignature = visit.getSiganture();
+                                    List<String> islandSignature = visit.getSignature();
 
-                                    if (islandSignature.size() == 0) {
+                                    if (islandSignature.isEmpty()) {
                                         itemLore.add(configLoad.getString(
                                                 "Menu.Information.Categories.Item.Information.Vote.Word.Empty"));
                                     } else {
@@ -257,8 +253,8 @@ public class Information {
                             configLoad.getString("Menu.Information.Categories.Title")));
                     nInv.setType(InventoryType.HOPPER);
 
-                    Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
-                } else if (viewer.getType() == Information.Viewer.Type.Members) {
+                    Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
+                } else if (viewer.getType() == Information.Viewer.Type.MEMBERS) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                         if (playerDataManager.hasPlayerData(player)) {
                             PlayerData playerData1 = playerDataManager.getPlayerData(player);
@@ -270,7 +266,7 @@ public class Information {
                                             "Menu.Information.Members.Item.Return.Displayname"))))) {
                                 playerData1.setViewer(new Viewer(
                                         ((Viewer) playerData1.getViewer()).getOwner(),
-                                        Viewer.Type.Categories));
+                                        Viewer.Type.CATEGORIES));
                                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
@@ -323,8 +319,8 @@ public class Information {
 
                     List<UUID> displayedMembers = new ArrayList<>();
 
-                    Set<UUID> islandMembers = island.getRole(IslandRole.Member);
-                    Set<UUID> islandOperators = island.getRole(IslandRole.Operator);
+                    Set<UUID> islandMembers = island.getRole(IslandRole.MEMBER);
+                    Set<UUID> islandOperators = island.getRole(IslandRole.OPERATOR);
 
                     displayedMembers.add(island.getOwnerUUID());
                     displayedMembers.addAll(islandOperators);
@@ -340,7 +336,7 @@ public class Information {
                                     new Placeholder[]{
                                             new Placeholder("%island_members",
                                                     "" + (islandMembers.size() + islandOperators.size() + 1)),
-                                            new Placeholder("%island_capacity", // %island_capacity
+                                            new Placeholder("%island_capacity",
                                                     "" + island.getMaxMembers(player)),
                                             new Placeholder("%members", "" + islandMembers.size()),
                                             new Placeholder("%operators", "" + islandOperators.size())},
@@ -355,16 +351,16 @@ public class Information {
 
                     if (playerMenuPage != 1) {
                         nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                                "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
-                                "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
+                                        "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
+                                        "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
                                 configLoad.getString("Menu.Information.Members.Item.Previous.Displayname"), null, null,
                                 null, null), 1);
                     }
 
                     if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
                         nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                                "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
-                                "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
+                                        "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
+                                        "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
                                 configLoad.getString("Menu.Information.Members.Item.Next.Displayname"), null, null,
                                 null, null), 7);
                     }
@@ -416,8 +412,8 @@ public class Information {
                             configLoad.getString("Menu.Information.Members.Title")));
                     nInv.setRows(6);
 
-                    Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
-                } else if (viewer.getType() == Information.Viewer.Type.Visitors) {
+                    Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
+                } else if (viewer.getType() == Information.Viewer.Type.VISITORS) {
                     nInventoryUtil nInv = new nInventoryUtil(player, event -> {
                         if (playerDataManager.hasPlayerData(player)) {
                             PlayerData playerData12 = playerDataManager.getPlayerData(player);
@@ -429,7 +425,7 @@ public class Information {
                                             "Menu.Information.Visitors.Item.Return.Displayname"))))) {
                                 playerData12.setViewer(new Viewer(
                                         ((Viewer) playerData12.getViewer()).getOwner(),
-                                        Viewer.Type.Categories));
+                                        Viewer.Type.CATEGORIES));
                                 soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
@@ -480,8 +476,7 @@ public class Information {
                         }
                     });
 
-                    List<UUID> displayedVisitors = new ArrayList<>();
-                    displayedVisitors.addAll(islandManager.getVisitorsAtIsland(island));
+                    List<UUID> displayedVisitors = new ArrayList<>(islandManager.getVisitorsAtIsland(island));
 
                     nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
                             configLoad.getString("Menu.Information.Visitors.Item.Return.Displayname"), null, null, null,
@@ -500,16 +495,16 @@ public class Information {
 
                     if (playerMenuPage != 1) {
                         nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                                "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
-                                "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
+                                        "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
+                                        "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
                                 configLoad.getString("Menu.Information.Visitors.Item.Previous.Displayname"), null, null,
                                 null, null), 1);
                     }
 
                     if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
                         nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                                "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
-                                "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
+                                        "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
+                                        "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
                                 configLoad.getString("Menu.Information.Visitors.Item.Next.Displayname"), null, null,
                                 null, null), 7);
                     }
@@ -552,7 +547,7 @@ public class Information {
                             configLoad.getString("Menu.Information.Visitors.Title")));
                     nInv.setRows(6);
 
-                    Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+                    Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
                 }
 
                 islandManager.unloadIsland(island, null);
@@ -561,7 +556,6 @@ public class Information {
     }
 
     public static class Viewer {
-
         private final UUID islandOwnerUUID;
         private final Type type;
 
@@ -571,17 +565,15 @@ public class Information {
         }
 
         public UUID getOwner() {
-            return islandOwnerUUID;
+            return this.islandOwnerUUID;
         }
 
         public Type getType() {
-            return type;
+            return this.type;
         }
 
         public enum Type {
-
-            Categories, Members, Visitors
-
+            CATEGORIES, MEMBERS, VISITORS
         }
     }
 }

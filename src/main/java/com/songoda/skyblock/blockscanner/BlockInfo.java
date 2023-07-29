@@ -3,7 +3,6 @@ package com.songoda.skyblock.blockscanner;
 import org.bukkit.World;
 
 public final class BlockInfo {
-
     private final World world;
 
     private final int x;
@@ -18,19 +17,18 @@ public final class BlockInfo {
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     public int getZ() {
-        return z;
+        return this.z;
     }
 
     public World getWorld() {
-        return world;
+        return this.world;
     }
-
 }

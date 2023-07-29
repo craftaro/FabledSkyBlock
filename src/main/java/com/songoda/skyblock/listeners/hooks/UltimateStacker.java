@@ -1,7 +1,6 @@
 package com.songoda.skyblock.listeners.hooks;
 
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
@@ -15,10 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.io.File;
-
 public class UltimateStacker implements Listener {
-
     private final SkyBlock plugin;
 
     public UltimateStacker(SkyBlock plugin) {
@@ -27,17 +23,18 @@ public class UltimateStacker implements Listener {
 
     @EventHandler
     public void onSpawnerPlace(SpawnerPlaceEvent event) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
-            IslandManager islandManager = plugin.getIslandManager();
-            WorldManager worldManager = plugin.getWorldManager();
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getPlugin(SkyBlock.class), () -> {
+            IslandManager islandManager = this.plugin.getIslandManager();
+            WorldManager worldManager = this.plugin.getWorldManager();
 
             Location location = event.getBlock().getLocation();
-            if (!worldManager.isIslandWorld(location.getWorld())) return;
+            if (!worldManager.isIslandWorld(location.getWorld())) {
+                return;
+            }
 
             Island island = islandManager.getIslandAtLocation(location);
 
-            FileConfiguration configLoad = plugin.getConfiguration();
-
+            FileConfiguration configLoad = this.plugin.getConfiguration();
             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
                 CompatibleSpawners materials = CompatibleSpawners.getSpawner(event.getSpawnerType());
                 if (materials != null) {
@@ -56,16 +53,17 @@ public class UltimateStacker implements Listener {
 
     @EventHandler
     public void onSpawnerBreak(SpawnerBreakEvent event) {
-        IslandManager islandManager = plugin.getIslandManager();
-        WorldManager worldManager = plugin.getWorldManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
 
         Location location = event.getBlock().getLocation();
-        if (!worldManager.isIslandWorld(location.getWorld())) return;
+        if (!worldManager.isIslandWorld(location.getWorld())) {
+            return;
+        }
 
         Island island = islandManager.getIslandAtLocation(location);
 
-        FileConfiguration configLoad = plugin.getConfiguration();
-
+        FileConfiguration configLoad = this.plugin.getConfiguration();
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
             CompatibleSpawners materials = CompatibleSpawners.getSpawner(event.getSpawnerType());
             if (materials != null) {
@@ -83,5 +81,4 @@ public class UltimateStacker implements Listener {
             }
         }
     }
-
 }

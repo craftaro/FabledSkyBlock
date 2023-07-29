@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.message.MessageManager;
@@ -16,27 +17,30 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class ScoreboardCommand extends SubCommand {
+    public ScoreboardCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-    
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        MessageManager messageManager = this.plugin.getMessageManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        ScoreboardManager scoreboardManager = this.plugin.getScoreboardManager();
+
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
-    
+
         PlayerData playerData = playerDataManager.getPlayerData(player);
-    
+
         if (playerData == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Scoreboard.Error.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        } else if(!plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"))
+        } else if (!this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Island.Scoreboard.Enable", false)) {
             messageManager.sendMessage(player, configLoad.getString("Command.Scoreboard.GlobalDisable.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        }else if (playerData.isScoreboard()) {
+        } else if (playerData.isScoreboard()) {
             playerData.setScoreboard(false);
             scoreboardManager.addDisabledPlayer(player);
 
@@ -45,8 +49,7 @@ public class ScoreboardCommand extends SubCommand {
         } else {
             playerData.setScoreboard(true);
             scoreboardManager.removeDisabledPlayer(player);
-            Bukkit.getScheduler().runTask(plugin, () ->
-                    scoreboardManager.updatePlayerScoreboardType(player));
+            Bukkit.getScheduler().runTask(this.plugin, () -> scoreboardManager.updatePlayerScoreboardType(player));
 
             messageManager.sendMessage(player, configLoad.getString("Command.Scoreboard.Enabled.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1.0F, 1.0F);

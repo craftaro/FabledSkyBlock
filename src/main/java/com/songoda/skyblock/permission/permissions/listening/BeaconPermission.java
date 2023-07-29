@@ -13,7 +13,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class BeaconPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -25,15 +24,16 @@ public class BeaconPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
-        if (block.getState() instanceof Beacon) // ChunkCollectors support
-            cancelAndMessage(event, player, plugin, messageManager);
+        if (block.getState() instanceof Beacon) {
+            // ChunkCollectors support
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }

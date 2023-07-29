@@ -3,10 +3,7 @@ package com.songoda.skyblock.levelling;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import org.bukkit.inventory.ItemStack;
 
- 
-
 public final class LevellingMaterial {
-
     private final CompatibleMaterial materials;
     private double points;
 
@@ -16,11 +13,11 @@ public final class LevellingMaterial {
     }
 
     public CompatibleMaterial getMaterials() {
-        return materials;
+        return this.materials;
     }
 
     public double getPoints() {
-        return points;
+        return this.points;
     }
 
     public void setPoints(double points) {
@@ -28,6 +25,6 @@ public final class LevellingMaterial {
     }
 
     public ItemStack getItemStack() {
-        return materials.getItem();
+        return this.materials.getItem();
     }
 }

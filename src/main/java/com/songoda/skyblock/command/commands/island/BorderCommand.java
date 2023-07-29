@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -18,16 +19,19 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class BorderCommand extends SubCommand {
+    public BorderCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        PermissionManager permissionManager = plugin.getPermissionManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        PermissionManager permissionManager = this.plugin.getPermissionManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -35,9 +39,9 @@ public class BorderCommand extends SubCommand {
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        } else if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && permissionManager.hasPermission(island, "Border", IslandRole.Operator))
-                || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+        } else if ((island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                && permissionManager.hasPermission(island, "Border", IslandRole.OPERATOR))
+                || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             if (this.plugin.getConfiguration()
                     .getBoolean("Island.WorldBorder.Enable")) {
                 Border.getInstance().open(player);
@@ -48,7 +52,7 @@ public class BorderCommand extends SubCommand {
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Permission.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }
 

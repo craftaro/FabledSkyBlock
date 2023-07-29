@@ -15,7 +15,6 @@ import java.util.Arrays;
 
 //TODO: Use CompatibleBiome
 public enum SBiome {
-
     BADLANDS(true, CompatibleMaterial.DEAD_BUSH),
     COLD_OCEAN(true, CompatibleMaterial.ICE),
     DARK_FOREST("ROOFED_FOREST", CompatibleMaterial.DARK_OAK_SAPLING),
@@ -66,7 +65,11 @@ public enum SBiome {
      */
     @SuppressWarnings("deprecation")
     public static SBiome getFromGuiIcon(Material material, byte data) {
-        return Arrays.stream(values()).filter(biome -> biome.isAvailable() && biome.getGuiIcon().getType().equals(material) && (isPostVersion || biome.getGuiIcon().getData().getData() == data)).findFirst().orElse(null);
+        return Arrays.stream(values()).filter(biome -> {
+            return biome.isAvailable() &&
+                    biome.getGuiIcon().getType() == material &&
+                    (isPostVersion || biome.getGuiIcon().getData().getData() == data);
+        }).findFirst().orElse(null);
     }
 
     /**
@@ -104,5 +107,4 @@ public enum SBiome {
     public ItemStack getGuiIcon() {
         return !this.isAvailable() ? null : this.guiIcon.getItem();
     }
-
 }

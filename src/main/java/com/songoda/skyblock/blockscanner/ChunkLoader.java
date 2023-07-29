@@ -34,35 +34,37 @@ public class ChunkLoader extends BukkitRunnable {
                         boolean chunkForChunk,
                         ChunkForChunkScannerTask chunkTask,
                         CompleteTask complete) {
-        chunkPerTick = SkyBlock.getInstance().getConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
+        this.chunkPerTick = SkyBlock.getPlugin(SkyBlock.class).getConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
 
         this.completeTask = complete;
         this.chunkTask = chunkTask;
         this.chunkForChunk = chunkForChunk;
         this.paper = paper;
         this.island = island;
-        Location islandLocation = island.getLocation(islandWorld, IslandEnvironment.Island);
+        Location islandLocation = island.getLocation(islandWorld, IslandEnvironment.ISLAND);
 
-        if (islandLocation == null) return;
+        if (islandLocation == null) {
+            return;
+        }
 
-        world = islandLocation.getWorld();
+        this.world = islandLocation.getWorld();
 
-        Location minLocation = new Location(world, islandLocation.getBlockX() - island.getRadius(), 0, islandLocation.getBlockZ() - island.getRadius());
-        Location maxLocation = new Location(world, islandLocation.getBlockX() + island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + island.getRadius());
+        Location minLocation = new Location(this.world, islandLocation.getBlockX() - island.getRadius(), 0, islandLocation.getBlockZ() - island.getRadius());
+        Location maxLocation = new Location(this.world, islandLocation.getBlockX() + island.getRadius(), this.world.getMaxHeight(), islandLocation.getBlockZ() + island.getRadius());
 
         int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4;
-        minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4;
+        this.minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4;
 
-        maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4 | 15;
-        maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4 | 15;
+        this.maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4 | 15;
+        this.maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4 | 15;
 
-        x = minX;
-        z = minZ;
+        this.x = minX;
+        this.z = this.minZ;
 
         if (paper) {
-            this.runTaskAsynchronously(SkyBlock.getInstance());
+            this.runTaskAsynchronously(SkyBlock.getPlugin(SkyBlock.class));
         } else {
-            this.runTaskTimer(SkyBlock.getInstance(), 1L, 0L);
+            this.runTaskTimer(SkyBlock.getPlugin(SkyBlock.class), 1L, 0L);
         }
     }
 
@@ -72,70 +74,71 @@ public class ChunkLoader extends BukkitRunnable {
                         boolean chunkForChunk,
                         ChunkScannerTask generalTask,
                         CompleteTask complete) {
-        chunkPerTick = SkyBlock.getInstance().getConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
+        this.chunkPerTick = SkyBlock.getPlugin(SkyBlock.class).getConfiguration().getInt("Island.Performance.ChunkPerTick", 25);
 
         this.completeTask = complete;
         this.generalTask = generalTask;
         this.chunkForChunk = chunkForChunk;
         this.paper = paper;
         this.island = island;
-        Location islandLocation = island.getLocation(islandWorld, IslandEnvironment.Island);
+        Location islandLocation = island.getLocation(islandWorld, IslandEnvironment.ISLAND);
+        if (islandLocation == null) {
+            return;
+        }
 
-        if (islandLocation == null) return;
-
-        world = islandLocation.getWorld();
+        this.world = islandLocation.getWorld();
 
         Location minLocation = new Location(
-                world,
+                this.world,
                 islandLocation.getBlockX() - island.getRadius(),
                 0,
                 islandLocation.getBlockZ() - island.getRadius());
         Location maxLocation = new Location(
-                world,
+                this.world,
                 islandLocation.getBlockX() + island.getRadius(),
-                world.getMaxHeight(),
+                this.world.getMaxHeight(),
                 islandLocation.getBlockZ() + island.getRadius());
 
         int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4;
-        minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4;
+        this.minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4;
 
-        maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4 | 15;
-        maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4 | 15;
+        this.maxX = Math.max(maxLocation.getBlockX(), minLocation.getBlockX()) >> 4 << 4 | 15;
+        this.maxZ = Math.max(maxLocation.getBlockZ(), minLocation.getBlockZ()) >> 4 << 4 | 15;
 
-        x = minX;
-        z = minZ;
+        this.x = minX;
+        this.z = this.minZ;
 
         if (paper) {
-            this.runTaskAsynchronously(SkyBlock.getInstance());
+            this.runTaskAsynchronously(SkyBlock.getPlugin(SkyBlock.class));
         } else {
-            this.runTaskTimer(SkyBlock.getInstance(), 1L, 0L);
+            this.runTaskTimer(SkyBlock.getPlugin(SkyBlock.class), 1L, 0L);
         }
     }
 
     @Override
     public void run() { // TODO New algorithm that start from the center of the island
-        for (int i = 0; i < chunkPerTick || paper; i++) {
-            if (x <= maxX) {
-                if (z <= maxZ) {
-                    if (!chunkForChunk) {
-                        positions.add(new CachedChunk(world, x >> 4, z >> 4));
+        for (int i = 0; i < this.chunkPerTick || this.paper; i++) {
+            if (this.x <= this.maxX) {
+                if (this.z <= this.maxZ) {
+                    if (!this.chunkForChunk) {
+                        this.positions.add(new CachedChunk(this.world, this.x >> 4, this.z >> 4));
                     } else {
-                        if (chunkTask != null) {
-                            chunkTask.onChunkComplete(new CachedChunk(world, x >> 4, z >> 4));
+                        if (this.chunkTask != null) {
+                            this.chunkTask.onChunkComplete(new CachedChunk(this.world, this.x >> 4, this.z >> 4));
                         }
                     }
 
-                    z += 16;
+                    this.z += 16;
                 } else {
-                    z = minZ;
-                    x += 16;
+                    this.z = this.minZ;
+                    this.x += 16;
                 }
             } else {
-                if (generalTask != null) {
-                    generalTask.onComplete(positions);
+                if (this.generalTask != null) {
+                    this.generalTask.onComplete(this.positions);
                 }
-                if (completeTask != null) {
-                    completeTask.onComplete(island);
+                if (this.completeTask != null) {
+                    this.completeTask.onComplete(this.island);
                 }
                 this.cancel();
                 return;

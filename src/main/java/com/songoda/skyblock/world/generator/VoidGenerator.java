@@ -12,26 +12,29 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public class VoidGenerator extends ChunkGenerator {
-
     private final IslandWorld islandWorld;
-    public VoidGenerator(IslandWorld islandWorld) {
+    private final SkyBlock plugin;
+
+    public VoidGenerator(IslandWorld islandWorld, SkyBlock plugin) {
         this.islandWorld = islandWorld;
+        this.plugin = plugin;
     }
 
     @Override
-    public @Nonnull ChunkData generateChunkData(@Nonnull World world, @Nonnull Random random, int chunkX, int chunkZ, @Nonnull BiomeGrid biomeGrid) {
+    @Nonnull
+    public ChunkData generateChunkData(@Nonnull World world, @Nonnull Random random, int chunkX, int chunkZ, @Nonnull BiomeGrid biomeGrid) {
         final ChunkData chunkData = createChunkData(world);
 
-        final SkyBlock plugin = SkyBlock.getInstance();
-        final Configuration configLoad = plugin.getConfiguration();
+        final Configuration configLoad = this.plugin.getConfiguration();
         final ConfigurationSection worldSection = configLoad.getConfigurationSection("Island.World");
 
         Biome biome;
@@ -53,13 +56,13 @@ public class VoidGenerator extends ChunkGenerator {
                 throw new IllegalStateException("Unexpected value: " + world.getEnvironment());
         }
 
-        if(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
             setChunkBiome3D(biome, biomeGrid, world);
         } else {
             setChunkBiome2D(biome, biomeGrid);
         }
 
-        ConfigurationSection section = worldSection.getConfigurationSection(islandWorld.name());
+        ConfigurationSection section = worldSection.getConfigurationSection(this.islandWorld.name());
 
         if (section.getBoolean("Liquid.Enable")) {
             if (section.getBoolean("Liquid.Lava")) {
@@ -70,17 +73,16 @@ public class VoidGenerator extends ChunkGenerator {
         }
 
 
-
         return chunkData;
     }
 
     @Override
-    public List<BlockPopulator> getDefaultPopulators(final World world) {
-        return Arrays.asList(new BlockPopulator[0]);
+    public @NotNull List<BlockPopulator> getDefaultPopulators(final @NotNull World world) {
+        return Collections.emptyList();
     }
 
     @Override
-    public boolean canSpawn(World world, int x, int z) {
+    public boolean canSpawn(@NotNull World world, int x, int z) {
         return true;
     }
 
@@ -89,9 +91,9 @@ public class VoidGenerator extends ChunkGenerator {
     }
 
     private void setBlock(ChunkData chunkData, Material material, int height) {
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                for (int y = 0; y < height; y++) {
+        for (int x = 0; x < 16; ++x) {
+            for (int z = 0; z < 16; ++z) {
+                for (int y = 0; y < height; ++y) {
                     chunkData.setBlock(x, y, z, material);
                 }
             }
@@ -100,9 +102,9 @@ public class VoidGenerator extends ChunkGenerator {
 
     // Do not use - Too laggy
     private void setChunkBiome3D(Biome biome, BiomeGrid grid, World world) {
-        for(int x = 0; x < 16; x++){
-            for(int z = 0; z < 16; z++){
-                for(int y = 0; y < world.getMaxHeight(); ++y) {
+        for (int x = 0; x < 16; ++x) {
+            for (int z = 0; z < 16; ++z) {
+                for (int y = 0; y < world.getMaxHeight(); ++y) {
                     grid.setBiome(z, y, z, biome);
                 }
             }
@@ -110,9 +112,9 @@ public class VoidGenerator extends ChunkGenerator {
     }
 
     private void setChunkBiome2D(Biome biome, BiomeGrid grid) {
-        for(int x = 0; x < 16; x++){
-            for(int z = 0; z < 16; z++){
-                if(!grid.getBiome(x, z).equals(biome)){
+        for (int x = 0; x < 16; ++x) {
+            for (int z = 0; z < 16; ++z) {
+                if (!grid.getBiome(x, z).equals(biome)) {
                     grid.setBiome(x, z, biome);
                 }
             }

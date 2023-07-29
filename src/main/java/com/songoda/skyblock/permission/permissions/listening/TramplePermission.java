@@ -11,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class TramplePermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,15 +22,15 @@ public class TramplePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.PHYSICAL)
+        if (event.getAction() != Action.PHYSICAL) {
             return;
+        }
 
         Player player = event.getPlayer();
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
 
-        if (material == CompatibleMaterial.TURTLE_EGG || material == CompatibleMaterial.FARMLAND)
-            cancelAndMessage(event, player, plugin, messageManager);
+        if (material == CompatibleMaterial.TURTLE_EGG || material == CompatibleMaterial.FARMLAND) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }

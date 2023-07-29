@@ -6,11 +6,9 @@ import com.songoda.skyblock.levelling.calculator.SpawnerCalculator;
 import org.bukkit.block.CreatureSpawner;
 
 public class EpicSpawnerCalculator implements SpawnerCalculator {
-
     @Override
     public long getSpawnerAmount(CreatureSpawner spawner) {
-            final PlacedSpawner epic = EpicSpawners.getInstance().getSpawnerManager().getSpawnerFromWorld(spawner.getLocation());
-            return epic.getStackSize();
+        final PlacedSpawner epic = EpicSpawners.getInstance().getSpawnerManager().getSpawnerFromWorld(spawner.getLocation());
+        return epic.getStackSize();
     }
-
 }

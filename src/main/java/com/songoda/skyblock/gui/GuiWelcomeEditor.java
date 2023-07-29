@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiWelcomeEditor extends Gui {
-
     private final SkyBlock plugin;
     private final FileConfiguration configLoad;
     private final Gui returnGui;
@@ -35,101 +34,101 @@ public class GuiWelcomeEditor extends Gui {
         this.plugin = plugin;
         this.returnGui = returnGui;
         this.island = island;
-        this.configLoad = plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
+        this.configLoad = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
         this.mainConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "config.yml"));
         this.messageManager = plugin.getMessageManager();
         this.islandManager = plugin.getIslandManager();
         setDefaultItem(null);
-        setTitle(TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title")));
+        setTitle(TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Title")));
         paint();
     }
 
     public void paint() {
-        List<String> welcomeMessage = island.getMessage(IslandMessage.Welcome);
+        List<String> welcomeMessage = this.island.getMessage(IslandMessage.WELCOME);
         setButton(2, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))),
-                (event) -> guiManager.showGUI(event.player, returnGui));
+                        TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))),
+                (event) -> this.guiManager.showGUI(event.player, this.returnGui));
         setButton(6, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))),
-                (event) -> guiManager.showGUI(event.player, returnGui));
+                        TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))),
+                (event) -> this.guiManager.showGUI(event.player, this.returnGui));
 
         setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname")),
-                TextUtils.formatText(configLoad.getStringList(
-                        welcomeMessage.size() == mainConfig.getFileConfiguration().getInt("Island.Visitor.Welcome.Lines")
-                                ? "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Limit.Lore"
-                                : "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.More.Lore"))),
+                        TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname")),
+                        TextUtils.formatText(this.configLoad.getStringList(
+                                welcomeMessage.size() == this.mainConfig.getFileConfiguration().getInt("Island.Visitor.Welcome.Lines")
+                                        ? "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Limit.Lore"
+                                        : "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.More.Lore"))),
                 (event -> {
                     AnvilGui gui = new AnvilGui(event.player, this);
                     gui.setAction((e -> {
-                        if (!hasPermission(e.player))
+                        if (!hasPermission(e.player)) {
                             return;
-                        if (island.getMessage(IslandMessage.Welcome)
-                                .size() > mainConfig.getFileConfiguration().getInt(
+                        }
+                        if (this.island.getMessage(IslandMessage.WELCOME)
+                                .size() > this.mainConfig.getFileConfiguration().getInt(
                                 "Island.Visitor.Welcome.Lines")
-                                || gui.getInputText().length() > mainConfig.getFileConfiguration()
+                                || gui.getInputText().length() > this.mainConfig.getFileConfiguration()
                                 .getInt("Island.Visitor.Welcome.Length")) {
-                            plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f,1f);
+                            this.plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
                         } else {
                             welcomeMessage.add(gui.getInputText().trim());
-                            island.setMessage(IslandMessage.Welcome, e.player.getName(), welcomeMessage);
-                            plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1f, 1f);
+                            this.island.setMessage(IslandMessage.WELCOME, e.player.getName(), welcomeMessage);
+                            this.plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1f, 1f);
                         }
                         e.player.closeInventory();
                         paint();
                     }));
-                    gui.setTitle(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Word.Enter"));
-                    guiManager.showGUI(event.player, gui);
+                    gui.setTitle(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Word.Enter"));
+                    this.guiManager.showGUI(event.player, gui);
                 }));
 
         List<String> itemLore = new ArrayList<>();
-        itemLore.add(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Word.Empty"));
+        itemLore.add(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Word.Empty"));
         setItem(4, GuiUtils.createButtonItem(CompatibleMaterial.OAK_SIGN,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname")),
-                TextUtils.formatText(welcomeMessage.size() == 0 ? itemLore : welcomeMessage)));
+                TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname")),
+                TextUtils.formatText(welcomeMessage.isEmpty() ? itemLore : welcomeMessage)));
 
         setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                TextUtils.formatText(configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Displayname")),
-                TextUtils.formatText(configLoad.getStringList(
-                        welcomeMessage.size() == 0
-                                ? "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.None.Lore"
-                                : "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Lines.Lore"))),
+                        TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Displayname")),
+                        TextUtils.formatText(this.configLoad.getStringList(
+                                welcomeMessage.isEmpty()
+                                        ? "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.None.Lore"
+                                        : "Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Lines.Lore"))),
                 (event -> {
                     welcomeMessage.remove(welcomeMessage.size() - 1);
-                    island.setMessage(IslandMessage.Welcome, event.player.getName(), welcomeMessage);
+                    this.island.setMessage(IslandMessage.WELCOME, event.player.getName(), welcomeMessage);
                     paint();
                 }));
     }
 
     private boolean hasPermission(Player player) {
-        Island island1 = islandManager.getIsland(player);
+        Island island1 = this.islandManager.getIsland(player);
 
         if (island1 == null) {
-            messageManager.sendMessage(player,
-                    configLoad.getString(
+            this.messageManager.sendMessage(player,
+                    this.configLoad.getString(
                             "Command.Island.Settings.Owner.Message"));
-            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             player.closeInventory();
             return false;
-        } else if (!(island1.hasRole(IslandRole.Operator,
+        } else if (!(island1.hasRole(IslandRole.OPERATOR,
                 player.getUniqueId())
-                || island1.hasRole(IslandRole.Owner,
+                || island1.hasRole(IslandRole.OWNER,
                 player.getUniqueId()))) {
-            messageManager.sendMessage(player, configLoad
+            this.messageManager.sendMessage(player, this.configLoad
                     .getString("Command.Island.Role.Message"));
-            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             player.closeInventory();
             return false;
-        } else if (!plugin.getFileManager()
-                .getConfig(new File(plugin.getDataFolder(),
+        } else if (!this.plugin.getFileManager()
+                .getConfig(new File(this.plugin.getDataFolder(),
                         "config.yml"))
                 .getFileConfiguration().getBoolean(
                         "Island.Visitor.Welcome.Enable")) {
-            messageManager.sendMessage(player,
-                    configLoad.getString(
+            this.messageManager.sendMessage(player,
+                    this.configLoad.getString(
                             "Island.Settings.Visitor.Welcome.Disabled.Message"));
-            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
             return false;
         }
         return true;

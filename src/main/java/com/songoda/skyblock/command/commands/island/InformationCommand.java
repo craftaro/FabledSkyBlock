@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.IslandManager;
@@ -19,16 +20,19 @@ import java.io.File;
 import java.util.UUID;
 
 public class InformationCommand extends SubCommand {
+    public InformationCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
         if (playerDataManager.hasPlayerData(player)) {
-            Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+            Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
             UUID islandOwnerUUID = null;
@@ -57,7 +61,7 @@ public class InformationCommand extends SubCommand {
                 return;
             }
 
-            PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+            PlayerData playerData = this.plugin.getPlayerDataManager().getPlayerData(player);
 
             if (playerData.isPreview()) {
                 messageManager.sendMessage(player,
@@ -78,7 +82,7 @@ public class InformationCommand extends SubCommand {
                 }
             }
 
-            playerData.setViewer(new Information.Viewer(islandOwnerUUID, Information.Viewer.Type.Categories));
+            playerData.setViewer(new Information.Viewer(islandOwnerUUID, Information.Viewer.Type.CATEGORIES));
             Information.getInstance().open(player);
             soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
         }

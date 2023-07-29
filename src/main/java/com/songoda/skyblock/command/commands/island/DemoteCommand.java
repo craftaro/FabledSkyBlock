@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.Island;
@@ -19,14 +20,17 @@ import java.util.Set;
 import java.util.UUID;
 
 public class DemoteCommand extends SubCommand {
+    public DemoteCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -35,15 +39,15 @@ public class DemoteCommand extends SubCommand {
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Demote.Owner.Message"));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-            } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+            } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                 Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
                 if (targetPlayer == null) {
                     OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);
-                    Set<UUID> islandMembers = island.getRole(IslandRole.Member);
+                    Set<UUID> islandMembers = island.getRole(IslandRole.MEMBER);
 
                     if (offlinePlayer.getUniqueId() != null && (islandMembers.contains(offlinePlayer.getUniqueId())
-                            || island.getRole(IslandRole.Operator).contains(offlinePlayer.getUniqueId()))) {
+                            || island.getRole(IslandRole.OPERATOR).contains(offlinePlayer.getUniqueId()))) {
                         if (islandMembers.contains(offlinePlayer.getUniqueId())) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Demote.Role.Message"));
@@ -55,8 +59,8 @@ public class DemoteCommand extends SubCommand {
 
                             soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
-                            island.removeRole(IslandRole.Operator, offlinePlayer.getUniqueId());
-                            island.setRole(IslandRole.Member, offlinePlayer.getUniqueId());
+                            island.removeRole(IslandRole.OPERATOR, offlinePlayer.getUniqueId());
+                            island.setRole(IslandRole.MEMBER, offlinePlayer.getUniqueId());
                             island.save();
                         }
                     } else {
@@ -65,9 +69,9 @@ public class DemoteCommand extends SubCommand {
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     }
                 } else {
-                    if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())
-                            || island.hasRole(IslandRole.Operator, targetPlayer.getUniqueId())) {
-                        if (island.hasRole(IslandRole.Member, targetPlayer.getUniqueId())) {
+                    if (island.hasRole(IslandRole.MEMBER, targetPlayer.getUniqueId())
+                            || island.hasRole(IslandRole.OPERATOR, targetPlayer.getUniqueId())) {
+                        if (island.hasRole(IslandRole.MEMBER, targetPlayer.getUniqueId())) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Demote.Role.Message"));
                             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -80,8 +84,8 @@ public class DemoteCommand extends SubCommand {
                             soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                             soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
 
-                            island.removeRole(IslandRole.Operator, targetPlayer.getUniqueId());
-                            island.setRole(IslandRole.Member, targetPlayer.getUniqueId());
+                            island.removeRole(IslandRole.OPERATOR, targetPlayer.getUniqueId());
+                            island.setRole(IslandRole.MEMBER, targetPlayer.getUniqueId());
                             island.save();
                         }
                     } else {
@@ -92,7 +96,7 @@ public class DemoteCommand extends SubCommand {
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Demote.Permission.Message"));
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Demote.Invalid.Message"));

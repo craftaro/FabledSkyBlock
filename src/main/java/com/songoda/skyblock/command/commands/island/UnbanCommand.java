@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.ban.Ban;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -20,15 +21,18 @@ import java.io.File;
 import java.util.UUID;
 
 public class UnbanCommand extends SubCommand {
+    public UnbanCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -39,9 +43,9 @@ public class UnbanCommand extends SubCommand {
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             } else if (this.plugin.getConfiguration()
                     .getBoolean("Island.Visitor.Banning")) {
-                if (island.hasRole(IslandRole.Owner, player.getUniqueId())
-                        || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                        && plugin.getPermissionManager().hasPermission(island, "Unban", IslandRole.Operator))) {
+                if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
+                        || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                        && this.plugin.getPermissionManager().hasPermission(island, "Unban", IslandRole.OPERATOR))) {
                     Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 
                     UUID targetPlayerUUID;
@@ -63,9 +67,9 @@ public class UnbanCommand extends SubCommand {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Unban.Yourself.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                    } else if (island.hasRole(IslandRole.Member, targetPlayerUUID)
-                            || island.hasRole(IslandRole.Operator, targetPlayerUUID)
-                            || island.hasRole(IslandRole.Owner, targetPlayerUUID)) {
+                    } else if (island.hasRole(IslandRole.MEMBER, targetPlayerUUID)
+                            || island.hasRole(IslandRole.OPERATOR, targetPlayerUUID)
+                            || island.hasRole(IslandRole.OWNER, targetPlayerUUID)) {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Member.Message"));
                         soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                     } else if (!island.getBan().isBanned(targetPlayerUUID)) {

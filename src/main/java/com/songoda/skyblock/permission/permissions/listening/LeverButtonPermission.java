@@ -11,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class LeverButtonPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,10 +22,9 @@ public class LeverButtonPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
         Player player = event.getPlayer();
@@ -34,7 +32,8 @@ public class LeverButtonPermission extends ListeningPermission {
         if (material == CompatibleMaterial.STONE_BUTTON || material == CompatibleMaterial.OAK_BUTTON
                 || material == CompatibleMaterial.SPRUCE_BUTTON || material == CompatibleMaterial.BIRCH_BUTTON
                 || material == CompatibleMaterial.JUNGLE_BUTTON || material == CompatibleMaterial.ACACIA_BUTTON
-                || material == CompatibleMaterial.DARK_OAK_BUTTON || material == CompatibleMaterial.LEVER)
-            cancelAndMessage(event, player, plugin, messageManager);
+                || material == CompatibleMaterial.DARK_OAK_BUTTON || material == CompatibleMaterial.LEVER) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 }

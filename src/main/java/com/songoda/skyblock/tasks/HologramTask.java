@@ -1,5 +1,6 @@
 package com.songoda.skyblock.tasks;
 
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -9,7 +10,6 @@ import com.songoda.skyblock.hologram.HologramType;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.leaderboard.Leaderboard;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.utils.player.OfflinePlayer;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.visit.Visit;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HologramTask extends BukkitRunnable {
-
     private static HologramTask instance;
     private static SkyBlock plugin;
 
@@ -47,7 +46,7 @@ public class HologramTask extends BukkitRunnable {
     @Override
     public void run() {
         for (HologramType hologramTypeList : HologramType.values()) {
-            if (hologramTypeList == HologramType.Votes) {
+            if (hologramTypeList == HologramType.VOTES) {
                 if (!plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
                     continue;
                 }
@@ -60,12 +59,13 @@ public class HologramTask extends BukkitRunnable {
     }
 
     public void spawnHologram(HologramType type, Location location, List<String> lines) {
-        Hologram hologram = hologramStorage.stream()
+        Hologram hologram = this.hologramStorage.stream()
                 .filter(h -> LocationUtil.isLocationLocation(h.getLocation(), location)).findFirst().orElse(null);
-        if (hologram == null)
-            hologramStorage.add(new Hologram(type, location, lines));
-        else
+        if (hologram == null) {
+            this.hologramStorage.add(new Hologram(type, location, lines));
+        } else {
             hologram.update(lines);
+        }
     }
 
     public void spawnHologram(HologramType type) {
@@ -74,9 +74,10 @@ public class HologramTask extends BukkitRunnable {
         Config locationsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
         FileConfiguration locationsConfigLoad = locationsConfig.getFileConfiguration();
 
-        if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + type) != null)
+        if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + type) != null) {
             spawnHologram(type, plugin.getFileManager().getLocation(locationsConfig,
                     "Location.Hologram.Leaderboard." + type, true), getHologramLines(type));
+        }
     }
 
     private List<String> getHologramLines(HologramType type) {
@@ -88,14 +89,14 @@ public class HologramTask extends BukkitRunnable {
         Leaderboard.Type leaderboardType = null;
 
         switch (type) {
-            case Level:
-                leaderboardType = Leaderboard.Type.Level;
+            case LEVEL:
+                leaderboardType = Leaderboard.Type.LEVEL;
                 break;
-            case Bank:
-                leaderboardType = Leaderboard.Type.Bank;
+            case BANK:
+                leaderboardType = Leaderboard.Type.BANK;
                 break;
-            case Votes:
-                leaderboardType = Leaderboard.Type.Votes;
+            case VOTES:
+                leaderboardType = Leaderboard.Type.VOTES;
                 break;
         }
 
@@ -105,7 +106,9 @@ public class HologramTask extends BukkitRunnable {
         for (int i = 0; i < 10; i++) {
             Leaderboard leaderboard = leaderboardManager.getLeaderboardFromPosition(leaderboardType, i);
 
-            if (leaderboard == null) continue;
+            if (leaderboard == null) {
+                continue;
+            }
 
             Visit visit = leaderboard.getVisit();
 
@@ -113,7 +116,7 @@ public class HologramTask extends BukkitRunnable {
             String islandOwnerName = targetPlayer == null
                     ? new OfflinePlayer(visit.getOwnerUUID()).getName() : targetPlayer.getName();
 
-            if (type == HologramType.Level) {
+            if (type == HologramType.LEVEL) {
                 IslandLevel level = visit.getLevel();
                 hologramLines.add(TextUtils.formatText(
                         languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
@@ -121,14 +124,14 @@ public class HologramTask extends BukkitRunnable {
                                 .replace("%player", islandOwnerName)
                                 .replace("%level", NumberUtils.formatNumber(level.getLevel()))
                                 .replace("%points", NumberUtils.formatNumber(level.getPoints()))));
-            } else if (type == HologramType.Bank) {
+            } else if (type == HologramType.BANK) {
                 hologramLines.add(TextUtils.formatText(
                         languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
                                 .replace("%position", "" + (i + 1))
                                 .replace("%player", islandOwnerName)
                                 .replace("%balance",
                                         "" + NumberUtils.formatNumber(visit.getBankBalance()))));
-            } else if (type == HologramType.Votes) {
+            } else if (type == HologramType.VOTES) {
                 hologramLines.add(TextUtils.formatText(
                         languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
                                 .replace("%position", "" + (i + 1))
@@ -140,23 +143,24 @@ public class HologramTask extends BukkitRunnable {
 
         String hologramFooter = languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Footer");
 
-        if (!hologramFooter.isEmpty())
+        if (!hologramFooter.isEmpty()) {
             hologramLines.add(TextUtils.formatText(hologramFooter));
+        }
 
         return hologramLines;
     }
 
     public Hologram getHologram(HologramType type) {
-        return hologramStorage.stream().filter(hologramList -> hologramList.getType() == type).findFirst().orElse(null);
+        return this.hologramStorage.stream().filter(hologramList -> hologramList.getType() == type).findFirst().orElse(null);
 
     }
 
     public void updateHologram() {
-        new ArrayList<>(hologramStorage).forEach(hologramList -> hologramList.update(getHologramLines(hologramList.getType())));
+        new ArrayList<>(this.hologramStorage).forEach(hologramList -> hologramList.update(getHologramLines(hologramList.getType())));
     }
 
     public void removeHologram(Hologram hologram) {
-        hologramStorage.remove(hologram);
+        this.hologramStorage.remove(hologram);
         hologram.remove();
     }
 }

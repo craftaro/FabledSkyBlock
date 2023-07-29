@@ -7,7 +7,6 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class EnumLocalization<T extends Enum<T>> extends Localization<T> {
-
     public EnumLocalization(String keysPath, Class<T> type) {
         super(keysPath, type);
     }
@@ -19,10 +18,10 @@ public class EnumLocalization<T extends Enum<T>> extends Localization<T> {
 
     @Override
     public void reload(ConfigurationSection section) {
-
         getValues().clear();
-
-        if (section == null) return;
+        if (section == null) {
+            return;
+        }
 
         for (String key : section.getKeys(false)) {
             T parse;
@@ -35,11 +34,9 @@ public class EnumLocalization<T extends Enum<T>> extends Localization<T> {
 
             getValues().put(parse, section.getString(key));
         }
-
     }
 
     protected T parseEnum(String input) {
         return Enum.valueOf(getType(), input);
     }
-
 }

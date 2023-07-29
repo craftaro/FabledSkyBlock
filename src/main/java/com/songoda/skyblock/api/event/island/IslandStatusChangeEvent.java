@@ -4,9 +4,9 @@ import com.songoda.skyblock.api.island.Island;
 import com.songoda.skyblock.api.island.IslandStatus;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class IslandStatusChangeEvent extends IslandEvent implements Cancellable {
-
     private static final HandlerList HANDLERS = new HandlerList();
     private final IslandStatus status;
     private boolean cancelled = false;
@@ -17,12 +17,12 @@ public class IslandStatusChangeEvent extends IslandEvent implements Cancellable 
     }
 
     public IslandStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     @Override
     public boolean isCancelled() {
-        return cancelled;
+        return this.cancelled;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class IslandStatusChangeEvent extends IslandEvent implements Cancellable 
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 

@@ -5,17 +5,15 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public enum IslandRole {
+    COOP,
+    VISITOR,
+    MEMBER,
+    OPERATOR,
+    OWNER;
 
-    Coop,
-    Visitor,
-    Member,
-    Operator,
-    Owner;
-
-    private static final Set<IslandRole> roles = Collections.unmodifiableSet(EnumSet.allOf(IslandRole.class));
+    private static final Set<IslandRole> ROLES = Collections.unmodifiableSet(EnumSet.allOf(IslandRole.class));
 
     public static Set<IslandRole> getRoles() {
-        return roles;
+        return ROLES;
     }
-
 }

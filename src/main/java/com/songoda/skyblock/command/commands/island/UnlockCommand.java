@@ -2,6 +2,8 @@ package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.core.hooks.economies.Economy;
+import com.songoda.core.utils.NumberUtils;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -10,7 +12,6 @@ import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
-import com.songoda.core.utils.NumberUtils;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,16 +20,19 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class UnlockCommand extends SubCommand {
+    public UnlockCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
-        Economy economy = plugin.getEconomyManager().getEconomy();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
+        Economy economy = this.plugin.getEconomyManager().getEconomy();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length != 1) {
@@ -66,7 +70,7 @@ public class UnlockCommand extends SubCommand {
             return;
         }
 
-        double price = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+        double price = fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getDouble("Island.World." + islandWorld.name() + ".UnlockPrice");
 
         if (!economy.hasBalance(player, price)) {
@@ -81,8 +85,7 @@ public class UnlockCommand extends SubCommand {
 
         islandManager.unlockIslandWorld(island, islandWorld);
 
-        messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Finish.Message").replace(
-                "%type%", type));
+        messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Finish.Message").replace("%type%", type));
     }
 
     @Override

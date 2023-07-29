@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class InviteManager {
-
     private final Map<UUID, Invite> inviteStorage = new HashMap<>();
 
     public InviteManager(SkyBlock plugin) {
@@ -17,12 +16,12 @@ public class InviteManager {
 
     public Invite createInvite(Player player, Player sender, UUID owner, int time) {
         Invite invite = new Invite(player, sender, owner, time);
-        inviteStorage.put(player.getUniqueId(), invite);
+        this.inviteStorage.put(player.getUniqueId(), invite);
         return invite;
     }
 
     public void removeInvite(UUID uuid) {
-        inviteStorage.remove(uuid);
+        this.inviteStorage.remove(uuid);
     }
 
     public void tranfer(UUID uuid1, UUID uuid2) {
@@ -36,14 +35,14 @@ public class InviteManager {
     }
 
     public Map<UUID, Invite> getInvites() {
-        return inviteStorage;
+        return this.inviteStorage;
     }
 
     public Invite getInvite(UUID uuid) {
-        return inviteStorage.get(uuid);
+        return this.inviteStorage.get(uuid);
     }
 
     public boolean hasInvite(UUID uuid) {
-        return inviteStorage.containsKey(uuid);
+        return this.inviteStorage.containsKey(uuid);
     }
 }

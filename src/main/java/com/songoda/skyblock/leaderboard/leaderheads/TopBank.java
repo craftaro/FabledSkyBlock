@@ -9,11 +9,14 @@ import me.robin.leaderheads.datacollectors.DataCollector;
 import me.robin.leaderheads.objects.BoardType;
 import org.bukkit.ChatColor;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 public class TopBank extends DataCollector {
-
     private final SkyBlock plugin;
 
     public TopBank(SkyBlock plugin) {
@@ -27,8 +30,7 @@ public class TopBank extends DataCollector {
 
     @Override
     public List<Entry<?, Double>> requestAll() {
-
-        List<Leaderboard> leaderboards = plugin.getLeaderboardManager().getLeaderboard(Type.Bank);
+        List<Leaderboard> leaderboards = this.plugin.getLeaderboardManager().getLeaderboard(Type.BANK);
         Map<UUID, Double> topLevels = new HashMap<>(leaderboards.size());
 
         for (Leaderboard leaderboard : leaderboards) {

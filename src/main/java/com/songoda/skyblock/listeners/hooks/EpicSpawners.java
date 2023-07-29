@@ -4,7 +4,6 @@ import com.songoda.epicspawners.api.events.SpawnerBreakEvent;
 import com.songoda.epicspawners.api.events.SpawnerChangeEvent;
 import com.songoda.epicspawners.api.events.SpawnerPlaceEvent;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
 import com.songoda.skyblock.island.IslandManager;
@@ -18,10 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import java.io.File;
-
 public class EpicSpawners implements Listener {
-
     private final SkyBlock plugin;
 
     public EpicSpawners(SkyBlock plugin) {
@@ -30,19 +26,21 @@ public class EpicSpawners implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSpawnerPlace(SpawnerPlaceEvent event) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getInstance(), () -> {
-            IslandManager islandManager = plugin.getIslandManager();
-            WorldManager worldManager = plugin.getWorldManager();
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyBlock.getPlugin(SkyBlock.class), () -> {
+            IslandManager islandManager = this.plugin.getIslandManager();
+            WorldManager worldManager = this.plugin.getWorldManager();
 
             Location location = event.getSpawner().getLocation();
-            if (!worldManager.isIslandWorld(location.getWorld())) return;
+            if (!worldManager.isIslandWorld(location.getWorld())) {
+                return;
+            }
 
             Island island = islandManager.getIslandAtLocation(location);
 
             int amount = event.getSpawner().getStackSize();
             EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
-            FileConfiguration configLoad = plugin.getConfiguration();
+            FileConfiguration configLoad = this.plugin.getConfiguration();
 
             if (configLoad.getBoolean("Island.Block.Level.Enable")) {
                 CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
@@ -62,21 +60,24 @@ public class EpicSpawners implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSpawnerChange(SpawnerChangeEvent event) {
-        if (event.getChange() != SpawnerChangeEvent.ChangeType.STACK_SIZE)
+        if (event.getChange() != SpawnerChangeEvent.ChangeType.STACK_SIZE) {
             return;
+        }
 
-        IslandManager islandManager = plugin.getIslandManager();
-        WorldManager worldManager = plugin.getWorldManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
 
         Location location = event.getSpawner().getLocation();
-        if (!worldManager.isIslandWorld(location.getWorld())) return;
+        if (!worldManager.isIslandWorld(location.getWorld())) {
+            return;
+        }
 
         Island island = islandManager.getIslandAtLocation(location);
 
         int amount = event.getStackSize() - event.getOldStackSize();
         EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
-        FileConfiguration configLoad = plugin.getConfiguration();
+        FileConfiguration configLoad = this.plugin.getConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
             CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
@@ -99,18 +100,20 @@ public class EpicSpawners implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSpawnerBreak(SpawnerBreakEvent event) {
-        IslandManager islandManager = plugin.getIslandManager();
-        WorldManager worldManager = plugin.getWorldManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
 
         Location location = event.getSpawner().getLocation();
-        if (!worldManager.isIslandWorld(location.getWorld())) return;
+        if (!worldManager.isIslandWorld(location.getWorld())) {
+            return;
+        }
 
         Island island = islandManager.getIslandAtLocation(location);
 
         int amount = event.getSpawner().getStackSize();
         EntityType spawnerType = event.getSpawner().getCreatureSpawner().getSpawnedType();
 
-        FileConfiguration configLoad = plugin.getConfiguration();
+        FileConfiguration configLoad = this.plugin.getConfiguration();
 
         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
             CompatibleSpawners materials = CompatibleSpawners.getSpawner(spawnerType);
@@ -129,5 +132,4 @@ public class EpicSpawners implements Listener {
             }
         }
     }
-
 }

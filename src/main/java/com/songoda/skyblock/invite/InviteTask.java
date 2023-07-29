@@ -2,7 +2,6 @@ package com.songoda.skyblock.invite;
 
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import com.songoda.skyblock.utils.ChatComponent;
@@ -15,10 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
-
 public class InviteTask extends BukkitRunnable {
-
     private final SkyBlock plugin;
     private final InviteManager inviteManager;
 
@@ -29,14 +25,14 @@ public class InviteTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
         FileConfiguration configLoad = this.plugin.getLanguage();
 
         for (Player all : Bukkit.getOnlinePlayers()) {
-            if (inviteManager.hasInvite(all.getUniqueId())) {
-                Invite invite = inviteManager.getInvite(all.getUniqueId());
+            if (this.inviteManager.hasInvite(all.getUniqueId())) {
+                Invite invite = this.inviteManager.getInvite(all.getUniqueId());
                 invite.setTime(invite.getTime() - 1);
 
                 if (invite.getTime() == 0) {
@@ -67,15 +63,15 @@ public class InviteTask extends BukkitRunnable {
                                                                                 configLoad.getString(
                                                                                         "Command.Island.Invite.Invited.Word.Resend"))))
                                                                 .create()))));
-                        soundManager.playSound(targetPlayer,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                     }
 
                     messageManager.sendMessage(all,
                             configLoad.getString("Command.Island.Invite.Invited.Target.Expired.Message")
                                     .replace("%player", invite.getSenderName()));
-                    soundManager.playSound(all,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(all, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
-                    inviteManager.removeInvite(all.getUniqueId());
+                    this.inviteManager.removeInvite(all.getUniqueId());
                 }
             }
         }

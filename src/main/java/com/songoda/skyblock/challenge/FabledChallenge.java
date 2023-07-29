@@ -11,53 +11,55 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class FabledChallenge {
-	private final SkyBlock plugin;
-	private final ChallengeManager challengeManager;
-	private final PlayerManager playerManager;
-	// I use my own inventory api bc it's hard to implement inventories with the
-	private final InventoryManager inventoryManager;
-	private final DefaultInventory defaultInventory;
-	private final ChallengeInventory challengeInventory;
+    private final SkyBlock plugin;
+    private final ChallengeManager challengeManager;
+    private final PlayerManager playerManager;
+    // I use my own inventory api bc it's hard to implement inventories with the
+    private final InventoryManager inventoryManager;
+    private final DefaultInventory defaultInventory;
+    private final ChallengeInventory challengeInventory;
 
-	public FabledChallenge(SkyBlock plugin) {
-		this.plugin = plugin;
-		this.defaultInventory = new DefaultInventory(plugin);
-		this.challengeManager = new ChallengeManager(plugin);
-		this.playerManager = new PlayerManager(plugin);
-		this.challengeInventory = new ChallengeInventory(this);
-		this.inventoryManager = new InventoryManager(plugin);
-		this.inventoryManager.init();
-	}
+    public FabledChallenge(SkyBlock plugin) {
+        this.plugin = plugin;
+        this.defaultInventory = new DefaultInventory(plugin);
+        this.challengeManager = new ChallengeManager(plugin);
+        this.playerManager = new PlayerManager(plugin);
+        this.challengeInventory = new ChallengeInventory(this);
+        this.inventoryManager = new InventoryManager(plugin);
+        this.inventoryManager.init();
+    }
 
-	public void onDisable() {
-		this.inventoryManager.closeInventories();
-	}
+    public void onDisable() {
+        this.inventoryManager.closeInventories();
+    }
 
-	public void openChallengeInventory(Player p, ChallengeCategory category) {
-		if (category == null)
-			return;
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-			inventoryManager.openInventory(challengeInventory, p, params -> {
-				params.put(ChallengeInventory.CATEGORY, category);
-			});
-		}, 1);
-	}
+    public void openChallengeInventory(Player p, ChallengeCategory category) {
+        if (category == null) {
+            return;
+        }
 
-	// GETTERS
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
+            this.inventoryManager.openInventory(this.challengeInventory, p, params -> {
+                params.put(ChallengeInventory.CATEGORY, category);
+            });
+        }, 1);
+    }
 
-	public ChallengeManager getChallengeManager() {
-		return challengeManager;
-	}
+    // GETTERS
 
-	public PlayerManager getPlayerManager() {
-		return playerManager;
-	}
+    public ChallengeManager getChallengeManager() {
+        return this.challengeManager;
+    }
 
-	public InventoryManager getInventoryManager() {
-		return inventoryManager;
-	}
+    public PlayerManager getPlayerManager() {
+        return this.playerManager;
+    }
 
-	public DefaultInventory getDefaultInventory() {
-		return defaultInventory;
-	}
+    public InventoryManager getInventoryManager() {
+        return this.inventoryManager;
+    }
+
+    public DefaultInventory getDefaultInventory() {
+        return this.defaultInventory;
+    }
 }

@@ -3,7 +3,6 @@ package com.songoda.skyblock.leaderboard;
 import com.songoda.skyblock.visit.Visit;
 
 public class Leaderboard {
-
     private final Visit visit;
     private final Type type;
     private final int position;
@@ -15,20 +14,18 @@ public class Leaderboard {
     }
 
     public Type getType() {
-        return type;
+        return this.type;
     }
 
     public Visit getVisit() {
-        return visit;
+        return this.visit;
     }
 
     public int getPosition() {
-        return position;
+        return this.position;
     }
 
     public enum Type {
-
-        Level, Bank, Votes
-
+        LEVEL, BANK, VOTES
     }
 }

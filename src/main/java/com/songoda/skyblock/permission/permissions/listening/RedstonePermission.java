@@ -11,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class RedstonePermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,17 +22,17 @@ public class RedstonePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-
-
         Player player = event.getPlayer();
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            if (material == CompatibleMaterial.COMPARATOR || material == CompatibleMaterial.REPEATER)
-                cancelAndMessage(event, player, plugin, messageManager);
+            if (material == CompatibleMaterial.COMPARATOR || material == CompatibleMaterial.REPEATER) {
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
+            }
         } else if (event.getAction() == Action.PHYSICAL) {
-            if (material == CompatibleMaterial.TRIPWIRE)
-                cancelAndMessage(event, player, plugin, messageManager);
+            if (material == CompatibleMaterial.TRIPWIRE) {
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
+            }
         }
     }
 }

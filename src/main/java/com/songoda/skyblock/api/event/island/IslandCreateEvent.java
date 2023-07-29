@@ -3,9 +3,9 @@ package com.songoda.skyblock.api.event.island;
 import com.songoda.skyblock.api.island.Island;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class IslandCreateEvent extends IslandEvent {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final Player player;
@@ -20,11 +20,11 @@ public class IslandCreateEvent extends IslandEvent {
     }
 
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

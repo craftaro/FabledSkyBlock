@@ -15,7 +15,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class DestroyPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -27,15 +26,17 @@ public class DestroyPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
         Player player = event.getPlayer();
 
         if (material == CompatibleMaterial.SWEET_BERRY_BUSH || material == CompatibleMaterial.TNT
-                || material == CompatibleMaterial.END_PORTAL_FRAME)
-            cancelAndMessage(event, player, plugin, messageManager);
+                || material == CompatibleMaterial.END_PORTAL_FRAME) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 
     @PermissionHandler
@@ -44,17 +45,17 @@ public class DestroyPermission extends ListeningPermission {
         if (event.getDamager() instanceof Player) {
             player = (Player) event.getDamager();
         }
-        if(event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player){
+        if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player) {
             player = (Player) ((Projectile) event.getDamager()).getShooter();
         }
-        if(player != null){
+        if (player != null) {
             Entity entity = event.getEntity();
 
-            switch (entity.getType()){
+            switch (entity.getType()) {
                 case ARMOR_STAND:
                 case PAINTING:
                 case ITEM_FRAME:
-                    cancelAndMessage(event, player, plugin, messageManager);
+                    cancelAndMessage(event, player, this.plugin, this.messageManager);
                     break;
             }
         }
@@ -62,6 +63,6 @@ public class DestroyPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+        cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
     }
 }

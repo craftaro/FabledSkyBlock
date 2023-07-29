@@ -8,11 +8,14 @@ import me.robin.leaderheads.datacollectors.DataCollector;
 import me.robin.leaderheads.objects.BoardType;
 import org.bukkit.ChatColor;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 public class TopLevel extends DataCollector {
-
     private final SkyBlock plugin;
 
     public TopLevel(SkyBlock plugin) {
@@ -24,8 +27,7 @@ public class TopLevel extends DataCollector {
 
     @Override
     public List<Entry<?, Double>> requestAll() {
-
-        List<Leaderboard> leaderboards = plugin.getLeaderboardManager().getLeaderboard(Leaderboard.Type.Level);
+        List<Leaderboard> leaderboards = this.plugin.getLeaderboardManager().getLeaderboard(Leaderboard.Type.LEVEL);
         Map<UUID, Double> topLevels = new HashMap<>(leaderboards.size());
 
         for (Leaderboard leaderboard : leaderboards) {

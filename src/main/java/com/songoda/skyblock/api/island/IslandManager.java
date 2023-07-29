@@ -15,13 +15,12 @@ import java.util.Set;
 import java.util.UUID;
 
 public class IslandManager {
-
     private final com.songoda.skyblock.island.IslandManager islandManager;
     private final PermissionManager permissionManager;
 
     public IslandManager(com.songoda.skyblock.island.IslandManager islandManager) {
         this.islandManager = islandManager;
-        this.permissionManager = SkyBlock.getInstance().getPermissionManager();
+        this.permissionManager = SkyBlock.getPlugin(SkyBlock.class).getPermissionManager();
     }
 
     /**
@@ -45,7 +44,7 @@ public class IslandManager {
      * Gives Island ownership to a player of their Island
      */
     public void giveOwnership(Island island, OfflinePlayer player) {
-        Preconditions.checkArgument(player != null, "Cannot give ownership to null island");
+        Preconditions.checkArgument(island != null, "Cannot give ownership to null island");
         Preconditions.checkArgument(player != null, "Cannot give ownership to null player");
 
         this.islandManager.giveOwnership(island.getIsland(), player);
@@ -190,7 +189,7 @@ public class IslandManager {
         Preconditions.checkArgument(structure != null, "Cannot create island to null structure");
 
         if (!hasIsland(player)) {
-            return islandManager.createIsland(player, (com.songoda.skyblock.structure.Structure) structure);
+            return this.islandManager.createIsland(player, (com.songoda.skyblock.structure.Structure) structure);
         }
 
         return false;
@@ -207,7 +206,7 @@ public class IslandManager {
 
         this.islandManager.deleteIsland(island.getIsland(), true);
     }
-    
+
     /*
      * If force is set to true, the island will be deleted and no conditions will be
      * checked, else it will only delete the island if the island deletion
@@ -349,12 +348,9 @@ public class IslandManager {
      */
     public List<Island> getIslands() {
         List<Island> islands = new ArrayList<>();
-
         for (int i = 0; i < this.islandManager.getIslands().size(); i++) {
-            islands.add(this.islandManager.getIslands().get(this.islandManager.getIslands().keySet().toArray()[i])
-                    .getAPIWrapper());
+            islands.add(this.islandManager.getIslands().get(this.islandManager.getIslands().keySet().toArray()[i]).getAPIWrapper());
         }
-
         return islands;
     }
 }

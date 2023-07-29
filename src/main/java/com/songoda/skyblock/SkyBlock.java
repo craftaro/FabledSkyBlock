@@ -27,7 +27,28 @@ import com.songoda.skyblock.island.reward.RewardManager;
 import com.songoda.skyblock.leaderboard.LeaderboardManager;
 import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.limit.LimitationInstanceHandler;
-import com.songoda.skyblock.listeners.*;
+import com.songoda.skyblock.listeners.BlockListeners;
+import com.songoda.skyblock.listeners.BucketListeners;
+import com.songoda.skyblock.listeners.ChatListeners;
+import com.songoda.skyblock.listeners.DeathListeners;
+import com.songoda.skyblock.listeners.EntityListeners;
+import com.songoda.skyblock.listeners.FallBreakListeners;
+import com.songoda.skyblock.listeners.FoodListeners;
+import com.songoda.skyblock.listeners.GrowListeners;
+import com.songoda.skyblock.listeners.InteractListeners;
+import com.songoda.skyblock.listeners.InventoryListeners;
+import com.songoda.skyblock.listeners.ItemListeners;
+import com.songoda.skyblock.listeners.JoinListeners;
+import com.songoda.skyblock.listeners.MoveListeners;
+import com.songoda.skyblock.listeners.PistonListeners;
+import com.songoda.skyblock.listeners.PortalListeners;
+import com.songoda.skyblock.listeners.ProjectileListeners;
+import com.songoda.skyblock.listeners.QuitListeners;
+import com.songoda.skyblock.listeners.RespawnListeners;
+import com.songoda.skyblock.listeners.SpawnerListeners;
+import com.songoda.skyblock.listeners.SpongeListeners;
+import com.songoda.skyblock.listeners.TeleportListeners;
+import com.songoda.skyblock.listeners.WorldListeners;
 import com.songoda.skyblock.listeners.hooks.EpicSpawners;
 import com.songoda.skyblock.listeners.hooks.UltimateStacker;
 import com.songoda.skyblock.localization.LocalizationManager;
@@ -57,14 +78,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
 
 public class SkyBlock extends SongodaPlugin {
-
-    private static SkyBlock INSTANCE;
-
     private FileManager fileManager;
     private final WorldManager worldManager = new WorldManager(this);
     private UserCacheManager userCacheManager;
@@ -103,8 +122,12 @@ public class SkyBlock extends SongodaPlugin {
 
     private final GuiManager guiManager = new GuiManager(this);
 
+    /**
+     * @deprecated Use {@link org.bukkit.plugin.java.JavaPlugin#getPlugin(Class)} instead
+     */
+    @Deprecated
     public static SkyBlock getInstance() {
-        return INSTANCE;
+        return getPlugin(SkyBlock.class);
     }
 
     // Add ymlFiles to cache
@@ -125,7 +148,6 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onPluginLoad() {
-        INSTANCE = this;
     }
 
     @Override
@@ -134,17 +156,17 @@ public class SkyBlock extends SongodaPlugin {
             this.getLogger().warning("This Minecraft version is not officially supported.");
         }
 
-        if (paper = ServerProject.isServer(ServerProject.PAPER)) {
+        if (this.paper = ServerProject.isServer(ServerProject.PAPER)) {
             try {
                 Bukkit.spigot().getClass().getMethod("getPaperConfig");
                 if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
-                    paperAsync = true;
+                    this.paperAsync = true;
                 } else {
-                    paperAsync = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
+                    this.paperAsync = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
                             Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
                 }
             } catch (NoSuchMethodException ignored) {
-                paperAsync = false;
+                this.paperAsync = false;
             }
             this.getLogger().info("Enabling Paper hooks");
         }
@@ -153,72 +175,72 @@ public class SkyBlock extends SongodaPlugin {
         SongodaCore.registerPlugin(this, 17, CompatibleMaterial.GRASS_BLOCK);
 
         // Load Economy
-        economyManager = new EconomyManager(this);
+        this.economyManager = new EconomyManager(this);
 
         // Load Holograms
         HologramManager.load(this);
 
-        fileManager = new FileManager(this);
+        this.fileManager = new FileManager(this);
 
         if (!loadConfigs()) {
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        permissionManager = new PermissionManager(this);
-        localizationManager = new LocalizationManager();
-        worldManager.loadWorlds();
-        userCacheManager = new UserCacheManager(this);
-        visitManager = new VisitManager(this);
-        banManager = new BanManager(this);
-        islandManager = new IslandManager(this);
-        upgradeManager = new UpgradeManager(this);
-        playerDataManager = new PlayerDataManager(this);
-        cooldownManager = new CooldownManager(this);
-        limitationHandler = new LimitationInstanceHandler();
-        fabledChallenge = new FabledChallenge(this);
-        scoreboardManager = new ScoreboardManager(this);
-        inviteManager = new InviteManager(this);
-        biomeManager = new BiomeManager(this);
-        levellingManager = new IslandLevelManager(this);
-        commandManager = new CommandManager(this);
-        structureManager = new StructureManager(this);
-        soundManager = new SoundManager(this);
+        this.permissionManager = new PermissionManager(this);
+        this.localizationManager = new LocalizationManager();
+        this.worldManager.loadWorlds();
+        this.userCacheManager = new UserCacheManager(this);
+        this.visitManager = new VisitManager(this);
+        this.banManager = new BanManager(this);
+        this.islandManager = new IslandManager(this);
+        this.upgradeManager = new UpgradeManager(this);
+        this.playerDataManager = new PlayerDataManager(this);
+        this.cooldownManager = new CooldownManager(this);
+        this.limitationHandler = new LimitationInstanceHandler();
+        this.fabledChallenge = new FabledChallenge(this);
+        this.scoreboardManager = new ScoreboardManager(this);
+        this.inviteManager = new InviteManager(this);
+        this.biomeManager = new BiomeManager(this);
+        this.levellingManager = new IslandLevelManager(this);
+        this.commandManager = new CommandManager(this);
+        this.structureManager = new StructureManager(this);
+        this.soundManager = new SoundManager(this);
 
         if (this.config.getBoolean("Island.Generator.Enable")) {
-            generatorManager = new GeneratorManager(this);
+            this.generatorManager = new GeneratorManager(this);
         }
 
         if (this.config.getBoolean("Island.Stackable.Enable")) {
-            stackableManager = new StackableManager(this);
-            Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> stackableManager.loadSavedStackables(), 5L);
+            this.stackableManager = new StackableManager(this);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> this.stackableManager.loadSavedStackables(), 5L);
         }
 
-        leaderboardManager = new LeaderboardManager(this);
+        this.leaderboardManager = new LeaderboardManager(this);
 
-        placeholderManager = new PlaceholderManager(this);
-        placeholderManager.registerPlaceholders();
+        this.placeholderManager = new PlaceholderManager(this);
+        this.placeholderManager.registerPlaceholders();
 
-        messageManager = new MessageManager(this);
+        this.messageManager = new MessageManager(this);
 
-        rewardManager = new RewardManager(this);
-        rewardManager.loadRewards();
+        this.rewardManager = new RewardManager(this);
+        this.rewardManager.loadRewards();
 
-        bankManager = new BankManager(this);
+        this.bankManager = new BankManager(this);
 
         if (this.config.getBoolean("Island.Task.PlaytimeTask")) {
-            new PlaytimeTask(playerDataManager, islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
+            new PlaytimeTask(this.playerDataManager, this.islandManager).runTaskTimerAsynchronously(this, 0L, 20L);
         }
 
         if (this.config.getBoolean("Island.Task.VisitTask")) {
-            new VisitTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
+            new VisitTask(this.playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
         }
 
-        new ConfirmationTask(playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
+        new ConfirmationTask(this.playerDataManager).runTaskTimerAsynchronously(this, 0L, 20L);
 
         // Start Tasks
-        hologramTask = HologramTask.startTask(this);
-        mobNetherWaterTask = MobNetherWaterTask.startTask(this);
+        this.hologramTask = HologramTask.startTask(this);
+        this.mobNetherWaterTask = MobNetherWaterTask.startTask(this);
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new JoinListeners(this), this);
@@ -247,16 +269,18 @@ public class SkyBlock extends SongodaPlugin {
             pluginManager.registerEvents(new SpongeListeners(this), this);
         }
 
-        if (pluginManager.isPluginEnabled("EpicSpawners"))
+        if (pluginManager.isPluginEnabled("EpicSpawners")) {
             pluginManager.registerEvents(new EpicSpawners(this), this);
-        if (pluginManager.isPluginEnabled("UltimateStacker"))
+        }
+        if (pluginManager.isPluginEnabled("UltimateStacker")) {
             pluginManager.registerEvents(new UltimateStacker(this), this);
+        }
 
         pluginManager.registerEvents(new Levelling(), this);
         pluginManager.registerEvents(new Generator(), this);
         pluginManager.registerEvents(new Creator(), this);
 
-        this.getCommand("skyblock").setExecutor(new SkyBlockCommand());
+        this.getCommand("skyblock").setExecutor(new SkyBlockCommand(this));
 
         if (pluginManager.isPluginEnabled("Vault")) {
             this.vaultPermission = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
@@ -278,31 +302,41 @@ public class SkyBlock extends SongodaPlugin {
 
         LogManager.load();
 
-        SkyBlockAPI.setImplementation(INSTANCE);
+        SkyBlockAPI.setImplementation(this);
     }
 
     @Override
     public void onPluginDisable() {
-        if (this.userCacheManager != null)
+        if (this.userCacheManager != null) {
             this.userCacheManager.onDisable();
-        if (this.scoreboardManager != null)
+        }
+        if (this.scoreboardManager != null) {
             this.scoreboardManager.disable();
-        if (this.islandManager != null)
+        }
+        if (this.islandManager != null) {
             this.islandManager.onDisable();
-        if (this.visitManager != null)
+        }
+        if (this.visitManager != null) {
             this.visitManager.onDisable();
-        if (this.banManager != null)
+        }
+        if (this.banManager != null) {
             this.banManager.onDisable();
-        if (this.playerDataManager != null)
+        }
+        if (this.playerDataManager != null) {
             this.playerDataManager.onDisable();
-        if (this.cooldownManager != null)
+        }
+        if (this.cooldownManager != null) {
             this.cooldownManager.onDisable();
-        if (this.hologramTask != null)
+        }
+        if (this.hologramTask != null) {
             this.hologramTask.onDisable();
-        if (this.mobNetherWaterTask != null)
+        }
+        if (this.mobNetherWaterTask != null) {
             this.mobNetherWaterTask.onDisable();
-        if (this.fabledChallenge != null)
+        }
+        if (this.fabledChallenge != null) {
             this.fabledChallenge.onDisable();
+        }
 
         HandlerList.unregisterAll(this);
     }
@@ -313,8 +347,11 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onConfigReload() {
-        if (!loadConfigs()) this.getLogger().warning("Config are not reload !");
-        else this.getLogger().info("Configurations Loaded !");
+        if (!loadConfigs()) {
+            this.getLogger().warning("Config are not reload !");
+        } else {
+            this.getLogger().info("Configurations Loaded !");
+        }
     }
 
     @Override
@@ -324,20 +361,20 @@ public class SkyBlock extends SongodaPlugin {
 
     private boolean loadConfigs() {
         try {
-            biomes = this.getFileManager().getConfig(new File(this.getDataFolder(), "biomes.yml")).getFileConfiguration();
-            challenges = this.getFileManager().getConfig(new File(this.getDataFolder(), "challenges.yml")).getFileConfiguration();
-            config = this.getFileManager().getConfig(new File(this.getDataFolder(), "config.yml")).getFileConfiguration();
-            generators = this.getFileManager().getConfig(new File(this.getDataFolder(), "generators.yml")).getFileConfiguration();
-            language = this.getFileManager().getConfig(new File(this.getDataFolder(), "language.yml")).getFileConfiguration();
-            levelling = this.getFileManager().getConfig(new File(this.getDataFolder(), "levelling.yml")).getFileConfiguration();
-            limits = this.getFileManager().getConfig(new File(this.getDataFolder(), "limits.yml")).getFileConfiguration();
-            menus = this.getFileManager().getConfig(new File(this.getDataFolder(), "menus.yml")).getFileConfiguration();
-            placeholders = this.getFileManager().getConfig(new File(this.getDataFolder(), "placeholders.yml")).getFileConfiguration();
-            rewards = this.getFileManager().getConfig(new File(this.getDataFolder(), "rewards.yml")).getFileConfiguration();
-            scoreboard = this.getFileManager().getConfig(new File(this.getDataFolder(), "scoreboard.yml")).getFileConfiguration();
-            settings = this.getFileManager().getConfig(new File(this.getDataFolder(), "settings.yml")).getFileConfiguration();
-            stackables = this.getFileManager().getConfig(new File(this.getDataFolder(), "stackables.yml")).getFileConfiguration();
-            upgrades = this.getFileManager().getConfig(new File(this.getDataFolder(), "upgrades.yml")).getFileConfiguration();
+            this.biomes = this.getFileManager().getConfig(new File(this.getDataFolder(), "biomes.yml")).getFileConfiguration();
+            this.challenges = this.getFileManager().getConfig(new File(this.getDataFolder(), "challenges.yml")).getFileConfiguration();
+            this.config = this.getFileManager().getConfig(new File(this.getDataFolder(), "config.yml")).getFileConfiguration();
+            this.generators = this.getFileManager().getConfig(new File(this.getDataFolder(), "generators.yml")).getFileConfiguration();
+            this.language = this.getFileManager().getConfig(new File(this.getDataFolder(), "language.yml")).getFileConfiguration();
+            this.levelling = this.getFileManager().getConfig(new File(this.getDataFolder(), "levelling.yml")).getFileConfiguration();
+            this.limits = this.getFileManager().getConfig(new File(this.getDataFolder(), "limits.yml")).getFileConfiguration();
+            this.menus = this.getFileManager().getConfig(new File(this.getDataFolder(), "menus.yml")).getFileConfiguration();
+            this.placeholders = this.getFileManager().getConfig(new File(this.getDataFolder(), "placeholders.yml")).getFileConfiguration();
+            this.rewards = this.getFileManager().getConfig(new File(this.getDataFolder(), "rewards.yml")).getFileConfiguration();
+            this.scoreboard = this.getFileManager().getConfig(new File(this.getDataFolder(), "scoreboard.yml")).getFileConfiguration();
+            this.settings = this.getFileManager().getConfig(new File(this.getDataFolder(), "settings.yml")).getFileConfiguration();
+            this.stackables = this.getFileManager().getConfig(new File(this.getDataFolder(), "stackables.yml")).getFileConfiguration();
+            this.upgrades = this.getFileManager().getConfig(new File(this.getDataFolder(), "upgrades.yml")).getFileConfiguration();
             return true;
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -350,47 +387,47 @@ public class SkyBlock extends SongodaPlugin {
     }
 
     public FileManager getFileManager() {
-        return fileManager;
+        return this.fileManager;
     }
 
     public WorldManager getWorldManager() {
-        return worldManager;
+        return this.worldManager;
     }
 
     public UserCacheManager getUserCacheManager() {
-        return userCacheManager;
+        return this.userCacheManager;
     }
 
     public VisitManager getVisitManager() {
-        return visitManager;
+        return this.visitManager;
     }
 
     public BanManager getBanManager() {
-        return banManager;
+        return this.banManager;
     }
 
     public BankManager getBankManager() {
-        return bankManager;
+        return this.bankManager;
     }
 
     public IslandManager getIslandManager() {
-        return islandManager;
+        return this.islandManager;
     }
 
     public UpgradeManager getUpgradeManager() {
-        return upgradeManager;
+        return this.upgradeManager;
     }
 
     public PlayerDataManager getPlayerDataManager() {
-        return playerDataManager;
+        return this.playerDataManager;
     }
 
     public CooldownManager getCooldownManager() {
-        return cooldownManager;
+        return this.cooldownManager;
     }
 
     public ScoreboardManager getScoreboardManager() {
-        return scoreboardManager;
+        return this.scoreboardManager;
     }
 
     public void setScoreboardManager(ScoreboardManager scoreboardManager) {
@@ -398,31 +435,31 @@ public class SkyBlock extends SongodaPlugin {
     }
 
     public InviteManager getInviteManager() {
-        return inviteManager;
+        return this.inviteManager;
     }
 
     public BiomeManager getBiomeManager() {
-        return biomeManager;
+        return this.biomeManager;
     }
 
     public IslandLevelManager getLevellingManager() {
-        return levellingManager;
+        return this.levellingManager;
     }
 
     public CommandManager getCommandManager() {
-        return commandManager;
+        return this.commandManager;
     }
 
     public StructureManager getStructureManager() {
-        return structureManager;
+        return this.structureManager;
     }
 
     public SoundManager getSoundManager() {
-        return soundManager;
+        return this.soundManager;
     }
 
     public GeneratorManager getGeneratorManager() {
-        return generatorManager;
+        return this.generatorManager;
     }
 
     public void setGeneratorManager(GeneratorManager generatorManager) {
@@ -430,127 +467,127 @@ public class SkyBlock extends SongodaPlugin {
     }
 
     public LeaderboardManager getLeaderboardManager() {
-        return leaderboardManager;
+        return this.leaderboardManager;
     }
 
     public PlaceholderManager getPlaceholderManager() {
-        return placeholderManager;
+        return this.placeholderManager;
     }
 
     public MessageManager getMessageManager() {
-        return messageManager;
+        return this.messageManager;
     }
 
     public HologramTask getHologramTask() {
-        return hologramTask;
+        return this.hologramTask;
     }
 
     public MobNetherWaterTask getMobNetherWaterTask() {
-        return mobNetherWaterTask;
+        return this.mobNetherWaterTask;
     }
 
     public StackableManager getStackableManager() {
-        return stackableManager;
+        return this.stackableManager;
     }
 
     public LimitationInstanceHandler getLimitationHandler() {
-        return limitationHandler;
+        return this.limitationHandler;
     }
 
     @Override
-    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-        return worldManager.getWorldGeneratorForMapName(worldName);
+    public ChunkGenerator getDefaultWorldGenerator(@NotNull String worldName, String id) {
+        return this.worldManager.getWorldGeneratorForMapName(worldName);
     }
 
     public LocalizationManager getLocalizationManager() {
-        return localizationManager;
+        return this.localizationManager;
     }
 
     public RewardManager getRewardManager() {
-        return rewardManager;
+        return this.rewardManager;
     }
 
     public FabledChallenge getFabledChallenge() {
-        return fabledChallenge;
+        return this.fabledChallenge;
     }
 
     public PermissionManager getPermissionManager() {
-        return permissionManager;
+        return this.permissionManager;
     }
 
     public GuiManager getGuiManager() {
-        return guiManager;
+        return this.guiManager;
     }
 
     public boolean isPaper() {
-        return paper;
+        return this.paper;
     }
 
     public boolean isPaperAsync() {
-        return paperAsync;
+        return this.paperAsync;
     }
 
     public Permission getVaultPermission() {
-        return vaultPermission;
+        return this.vaultPermission;
     }
 
     public EconomyManager getEconomyManager() {
-        return economyManager;
+        return this.economyManager;
     }
 
     public FileConfiguration getBiomes() {
-        return biomes;
+        return this.biomes;
     }
 
     public FileConfiguration getChallenges() {
-        return challenges;
+        return this.challenges;
     }
 
     public FileConfiguration getConfiguration() {
-        return config;
+        return this.config;
     }
 
     public FileConfiguration getGenerators() {
-        return generators;
+        return this.generators;
     }
 
     public FileConfiguration getLanguage() {
-        return language;
+        return this.language;
     }
 
     public FileConfiguration getLevelling() {
-        return levelling;
+        return this.levelling;
     }
 
     public FileConfiguration getLimits() {
-        return limits;
+        return this.limits;
     }
 
     public FileConfiguration getMenus() {
-        return menus;
+        return this.menus;
     }
 
     public FileConfiguration getPlaceholders() {
-        return placeholders;
+        return this.placeholders;
     }
 
     public FileConfiguration getRewards() {
-        return rewards;
+        return this.rewards;
     }
 
     public FileConfiguration getSettings() {
-        return settings;
+        return this.settings;
     }
 
     public FileConfiguration getStackables() {
-        return stackables;
+        return this.stackables;
     }
 
     public FileConfiguration getUpgrades() {
-        return upgrades;
+        return this.upgrades;
     }
 
     public FileConfiguration getScoreboard() {
-        return scoreboard;
+        return this.scoreboard;
     }
 }

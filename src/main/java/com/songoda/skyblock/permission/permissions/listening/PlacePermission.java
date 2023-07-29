@@ -14,7 +14,6 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlacePermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -26,27 +25,29 @@ public class PlacePermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
+        }
 
         Player player = event.getPlayer();
 
-        if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()).equals(CompatibleMaterial.BONE_MEAL))
-            cancelAndMessage(event, player, plugin, messageManager);
+        if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()).equals(CompatibleMaterial.BONE_MEAL)) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 
     @PermissionHandler
     public void onPlace(BlockPlaceEvent event) {
-        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+        cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
     }
-    
+
     @PermissionHandler
     public void onMultiPlace(BlockMultiPlaceEvent event) {
-        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+        cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
     }
-    
+
     @PermissionHandler
     public void onHangingPlace(HangingPlaceEvent event) {
-        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+        cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
     }
 }

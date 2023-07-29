@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.menus.admin.Creator;
 import com.songoda.skyblock.playerdata.PlayerDataManager;
@@ -9,11 +10,14 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class CreateCommand extends SubCommand {
+    public CreateCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        SoundManager soundManager = plugin.getSoundManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
         if (playerDataManager.hasPlayerData(player)) {
             playerDataManager.getPlayerData(player).setViewer(null);

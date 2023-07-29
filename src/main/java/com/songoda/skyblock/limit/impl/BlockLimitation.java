@@ -19,7 +19,6 @@ import java.util.Set;
 
 
 public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
-
     public BlockLimitation() {
         super(CompatibleMaterial.class);
     }
@@ -37,8 +36,9 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
     @Override
     public void reload(ConfigurationSection loadFrom) {
         unload();
-
-        if (loadFrom == null) return;
+        if (loadFrom == null) {
+            return;
+        }
 
         final Set<String> keys = loadFrom.getKeys(false);
 
@@ -48,12 +48,12 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
             final String enumName = key.toUpperCase(Locale.ENGLISH);
             CompatibleMaterial type = CompatibleMaterial.getMaterial(enumName);
 
-            if (type == null)
+            if (type == null) {
                 throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
+            }
 
             getMap().put(type, loadFrom.getLong(key));
         }
-
     }
 
     @Deprecated
@@ -62,9 +62,13 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
     }
 
     public long getBlockLimit(Player player, Material type) {
-        if (player == null || type == null) return -1;
+        if (player == null || type == null) {
+            return -1;
+        }
 
-        if (player.hasPermission("fabledskyblock.limit.block.*")) return -1;
+        if (player.hasPermission("fabledskyblock.limit.block.*")) {
+            return -1;
+        }
 
         CompatibleMaterial material = null;
         if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
@@ -79,7 +83,9 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
             material = CompatibleMaterial.getMaterial(type);
         }
 
-        if (material == null) return -1;
+        if (material == null) {
+            return -1;
+        }
 
         final String name = material.name().toLowerCase();
 
@@ -91,9 +97,11 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
     }
 
     public boolean isBlockLimitExceeded(CompatibleMaterial type, Location loc, long limit) {
-        if (limit == -1) return false;
+        if (limit == -1) {
+            return false;
+        }
 
-        final IslandManager islandManager = SkyBlock.getInstance().getIslandManager();
+        final IslandManager islandManager = SkyBlock.getPlugin(SkyBlock.class).getIslandManager();
         final Island island = islandManager.getIslandAtLocation(loc);
         final long totalPlaced;
 
@@ -109,11 +117,12 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
                         break;
                 }
             }
-            if (material == null) material = type;
+            if (material == null) {
+                material = type;
+            }
             totalPlaced = island.getLevel().getMaterialAmount(material.name());
         }
 
         return limit <= totalPlaced;
     }
-
 }

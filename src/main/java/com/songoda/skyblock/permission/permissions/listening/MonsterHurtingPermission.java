@@ -14,7 +14,6 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class MonsterHurtingPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -27,16 +26,18 @@ public class MonsterHurtingPermission extends ListeningPermission {
     @PermissionHandler(priority = PermissionPriority.FIRST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player player;
-        if (event.getDamager() instanceof Player)
-            player = (Player)event.getDamager();
-        else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player)
+        if (event.getDamager() instanceof Player) {
+            player = (Player) event.getDamager();
+        } else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player) {
             player = (Player) ((Projectile) event.getDamager()).getShooter();
-        else return;
+        } else {
+            return;
+        }
 
         Entity entity = event.getEntity();
 
-        if (entity instanceof Monster){
-            cancelAndMessage(event, player, plugin, messageManager);
+        if (entity instanceof Monster) {
+            cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }
 }

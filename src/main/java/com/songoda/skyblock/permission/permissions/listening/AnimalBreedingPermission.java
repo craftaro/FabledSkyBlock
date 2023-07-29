@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class AnimalBreedingPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -107,7 +106,6 @@ public class AnimalBreedingPermission extends ListeningPermission {
                 return;
             }
         }
-        cancelAndMessage(event, player, plugin, messageManager);
+        cancelAndMessage(event, player, this.plugin, this.messageManager);
     }
 }
-

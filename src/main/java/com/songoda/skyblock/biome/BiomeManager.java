@@ -1,19 +1,14 @@
 package com.songoda.skyblock.biome;
 
 import com.songoda.core.compatibility.CompatibleBiome;
-import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
 import com.songoda.skyblock.island.IslandWorld;
-import org.bukkit.Chunk;
-import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -21,7 +16,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BiomeManager {
-
     private final SkyBlock plugin;
     private final List<Island> updatingIslands;
     private final FileConfiguration language;
@@ -30,61 +24,64 @@ public class BiomeManager {
     public BiomeManager(SkyBlock plugin) {
         this.plugin = plugin;
         this.updatingIslands = new ArrayList<>();
-        this.language = SkyBlock.getInstance().getLanguage();
-        this.runEveryX = language.getInt("Command.Island.Biome.Progress.Display-Every-X-Updates");
+        this.language = SkyBlock.getPlugin(SkyBlock.class).getLanguage();
+        this.runEveryX = this.language.getInt("Command.Island.Biome.Progress.Display-Every-X-Updates");
     }
-    
+
     public boolean isUpdating(Island island) {
-        return updatingIslands.contains(island);
+        return this.updatingIslands.contains(island);
     }
-    
+
     public void addUpdatingIsland(Island island) {
-        updatingIslands.add(island);
+        this.updatingIslands.add(island);
     }
-    
+
     public void removeUpdatingIsland(Island island) {
-        updatingIslands.remove(island);
+        this.updatingIslands.remove(island);
     }
 
     public void setBiome(Island island, IslandWorld world, CompatibleBiome biome, CompleteTask task) {
         addUpdatingIsland(island);
 
-        if (island.getLocation(world, IslandEnvironment.Island) == null) return;
-    
+        if (island.getLocation(world, IslandEnvironment.ISLAND) == null) {
+            return;
+        }
+
         // We keep it sequentially in order to use less RAM
-        int chunkAmount = (int) Math.ceil(Math.pow(island.getSize()/16d, 2d));
+        int chunkAmount = (int) Math.ceil(Math.pow(island.getSize() / 16d, 2d));
         AtomicInteger progress = new AtomicInteger();
-    
-        ChunkLoader.startChunkLoadingPerChunk(island, world, plugin.isPaperAsync(), (cachedChunk) -> {
+
+        ChunkLoader.startChunkLoadingPerChunk(island, world, this.plugin.isPaperAsync(), (cachedChunk) -> {
             // I don't like this. But CompletableFuture#join causes a crash on some setups.
             cachedChunk.getChunk().thenAccept(chunk -> {
                 try {
-                    if (chunk != null)
+                    if (chunk != null) {
                         biome.setBiome(chunk);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    }
+                } catch (IllegalAccessException | InvocationTargetException ex) {
+                    ex.printStackTrace();
                 }
 
                 progress.getAndIncrement();
 
-                if (language.getBoolean("Command.Island.Biome.Progress.Should-Display-Message") &&
-                        progress.get() == 1 || progress.get() == chunkAmount || progress.get() % runEveryX == 0) {
+                if (this.language.getBoolean("Command.Island.Biome.Progress.Should-Display-Message") &&
+                        progress.get() == 1 || progress.get() == chunkAmount || progress.get() % this.runEveryX == 0) {
                     final double percent = ((double) progress.get() / (double) chunkAmount) * 100;
 
-                    String message = language.getString("Command.Island.Biome.Progress.Message");
+                    String message = this.language.getString("Command.Island.Biome.Progress.Message");
                     message = message.replace("%current_updated_chunks%", String.valueOf(progress.get()));
                     message = message.replace("%max_chunks%", String.valueOf(chunkAmount));
                     message = message.replace("%percent_whole%", String.valueOf((int) percent));
                     message = message.replace("%percent%", NumberFormat.getInstance().format(percent));
 
-                    for (Player player : SkyBlock.getInstance().getIslandManager().getPlayersAtIsland(island)) {
-                        plugin.getMessageManager().sendMessage(player, message);
+                    for (Player player : SkyBlock.getPlugin(SkyBlock.class).getIslandManager().getPlayersAtIsland(island)) {
+                        this.plugin.getMessageManager().sendMessage(player, message);
                     }
                 }
             });
         }, (island1 -> {
             removeUpdatingIsland(island1);
-            if(task != null) {
+            if (task != null) {
                 task.onCompleteUpdate();
             }
         }));

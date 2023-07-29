@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GuiPermissions extends Gui {
-
     private final SkyBlock plugin;
     private final PermissionManager permissionManager;
     private final SoundManager soundManager;
@@ -49,39 +48,41 @@ public class GuiPermissions extends Gui {
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
         this.configLoad = this.plugin.getConfiguration();
-        setTitle(TextUtils.formatText(languageLoad.getString("Menu.Settings." + role.name() + ".Title")));
+        setTitle(TextUtils.formatText(this.languageLoad.getString("Menu.Settings." + role.name() + ".Title")));
         setDefaultItem(null);
         paint();
     }
 
     public void paint() {
-        if (inventory != null)
-            inventory.clear();
+        if (this.inventory != null) {
+            this.inventory.clear();
+        }
         setActionForRange(0, 0, 5, 9, null);
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(languageLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
-            guiManager.showGUI(event.player, returnGui);
+                TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
+            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.guiManager.showGUI(event.player, this.returnGui);
         });
 
-        if (role == IslandRole.Visitor) {
-            if (configLoad.getBoolean("Island.Visitor.Welcome.Enable"))
+        if (this.role == IslandRole.VISITOR) {
+            if (this.configLoad.getBoolean("Island.Visitor.Welcome.Enable")) {
                 setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.MAP,
-                        TextUtils.formatText(languageLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname")),
-                        TextUtils.formatText(languageLoad.getStringList("Menu.Settings.Visitor.Item.Welcome.Lore"))),
-                        (event) -> guiManager.showGUI(event.player, new GuiWelcomeEditor(plugin, this, island)));
-
-            if (configLoad.getBoolean("Island.Visitor.Signature.Enable")) {
-                setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.PAPER,
-                        TextUtils.formatText(languageLoad.getString("Menu.Settings.Visitor.Item.Signature.Displayname")),
-                        TextUtils.formatText(languageLoad.getStringList("Menu.Settings.Visitor.Item.Signature.Lore"))),
-                        (event) -> guiManager.showGUI(event.player, new GuiSignatureEditor(plugin, this, island)));
+                                TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname")),
+                                TextUtils.formatText(this.languageLoad.getStringList("Menu.Settings.Visitor.Item.Welcome.Lore"))),
+                        (event) -> this.guiManager.showGUI(event.player, new GuiWelcomeEditor(this.plugin, this, this.island)));
             }
 
-            Visit visit = island.getVisit();
+            if (this.configLoad.getBoolean("Island.Visitor.Signature.Enable")) {
+                setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.PAPER,
+                                TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Visitor.Item.Signature.Displayname")),
+                                TextUtils.formatText(this.languageLoad.getStringList("Menu.Settings.Visitor.Item.Signature.Lore"))),
+                        (event) -> this.guiManager.showGUI(event.player, new GuiSignatureEditor(this.plugin, this, this.island)));
+            }
+
+            Visit visit = this.island.getVisit();
             String configAddress = "";
-            switch (island.getStatus()) {
+            switch (this.island.getStatus()) {
                 case OPEN:
                     configAddress = "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Open.Lore";
                     break;
@@ -92,32 +93,32 @@ public class GuiPermissions extends Gui {
                     configAddress = "Menu.Settings.Visitor.Item.Statistics.Vote.Enabled.Whitelisted.Lore";
                     break;
             }
-            List<String> welcomeLore = TextUtils.formatText(languageLoad.getStringList(configAddress));
+            List<String> welcomeLore = TextUtils.formatText(this.languageLoad.getStringList(configAddress));
 
             List<String> welcomeFinal = new ArrayList<>();
 
             for (String line : welcomeLore) {
                 welcomeFinal.add(line.replace("%visits", String.valueOf(visit.getVisitors().size()))
                         .replace("%votes", String.valueOf(visit.getVoters().size()))
-                        .replace("%visitors", String.valueOf(plugin.getIslandManager().getVisitorsAtIsland(island).size())));
+                        .replace("%visitors", String.valueOf(this.plugin.getIslandManager().getVisitorsAtIsland(this.island).size())));
             }
 
             setButton(4, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING,
-                    TextUtils.formatText(languageLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname")),
-                    welcomeFinal),
+                            TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname")),
+                            welcomeFinal),
                     (event -> {
-                        switch (island.getStatus()) {
+                        switch (this.island.getStatus()) {
                             case OPEN:
-                                plugin.getIslandManager().whitelistIsland(island);
-                                soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
+                                this.plugin.getIslandManager().whitelistIsland(this.island);
+                                this.soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
                                 break;
                             case CLOSED:
-                                plugin.getIslandManager().closeIsland(island);
-                                soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
+                                this.plugin.getIslandManager().closeIsland(this.island);
+                                this.soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
                                 break;
                             case WHITELISTED:
-                                island.setStatus(IslandStatus.OPEN);
-                                soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1f, 1f);
+                                this.island.setStatus(IslandStatus.OPEN);
+                                this.soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1f, 1f);
                                 break;
                         }
                         paint();
@@ -125,58 +126,62 @@ public class GuiPermissions extends Gui {
         }
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
-                TextUtils.formatText(languageLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
-            guiManager.showGUI(event.player, returnGui);
+                TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
+            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.guiManager.showGUI(event.player, this.returnGui);
         });
 
-        List<BasicPermission> permissions = permissionManager.getPermissions().stream()
-                .filter(p -> p.getType() == getType(role))
+        List<BasicPermission> permissions = this.permissionManager.getPermissions().stream()
+                .filter(p -> p.getType() == getType(this.role))
                 .collect(Collectors.toList());
-        
-        if(configLoad.getBoolean("Island.Settings.Permission")) {
-            permissions.removeIf(permission -> !player.hasPermission("fabledskyblock.settings." +
-                    role.name().toLowerCase() + "." + permission.getName().toLowerCase()));
+
+        if (this.configLoad.getBoolean("Island.Settings.Permission")) {
+            permissions.removeIf(permission -> !this.player.hasPermission("fabledskyblock.settings." +
+                    this.role.name().toLowerCase() + "." + permission.getName().toLowerCase()));
         }
-        
+
         double itemCount = permissions.size();
         this.pages = (int) Math.max(1, Math.ceil(itemCount / 36));
 
-        if (page != 1)
+        if (this.page != 1) {
             setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                    TextUtils.formatText(languageLoad.getString("Menu.Settings.Categories.Item.Last.Displayname"))),
+                            TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Last.Displayname"))),
                     (event) -> {
-                        page--;
+                        this.page--;
                         paint();
                     });
+        }
 
-        if (page != pages)
+        if (this.page != this.pages) {
             setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                    TextUtils.formatText(languageLoad.getString("Menu.Settings.Categories.Item.Next.Displayname"))),
+                            TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Next.Displayname"))),
                     (event) -> {
-                        page++;
+                        this.page++;
                         paint();
                     });
+        }
 
-        if(!permissions.isEmpty()) {
+        if (!permissions.isEmpty()) {
             for (int i = 9; i < 45; i++) {
-                int current = ((page - 1) * 36) - 9;
+                int current = ((this.page - 1) * 36) - 9;
                 if (current + i >= permissions.size()) {
                     setItem(i, null);
                     continue;
                 }
                 BasicPermission permission = permissions.get(current + i);
-                if (permission == null) continue;
-        
-                setButton(i, permission.getItem(island, role), (event) -> {
-                    if (!hasPermission(island, event.player, role)) {
-                        plugin.getMessageManager().sendMessage(event.player, languageLoad
+                if (permission == null) {
+                    continue;
+                }
+
+                setButton(i, permission.getItem(this.island, this.role), (event) -> {
+                    if (!hasPermission(this.island, event.player, this.role)) {
+                        this.plugin.getMessageManager().sendMessage(event.player, this.languageLoad
                                 .getString("Command.Island.Settings.Permission.Change.Message"));
-                        soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
-                
+                        this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+
                         return;
                     }
-                    IslandPermission islandPermission = island.getPermission(role, permission);
+                    IslandPermission islandPermission = this.island.getPermission(this.role, permission);
                     islandPermission.setStatus(!islandPermission.getStatus());
                     paint();
                 });
@@ -188,18 +193,18 @@ public class GuiPermissions extends Gui {
 
     private boolean hasPermission(Island island, Player player, IslandRole role) {
         PermissionManager permissionManager = SkyBlock.getInstance().getPermissionManager();
-        if (role == IslandRole.Visitor || role == IslandRole.Member || role == IslandRole.Coop
-                || role == IslandRole.Owner) {
+        if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP
+                || role == IslandRole.OWNER) {
             String roleName = role.name();
 
-            if (role == IslandRole.Owner) {
+            if (role == IslandRole.OWNER) {
                 roleName = "Island";
             }
 
-            return !island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    || permissionManager.hasPermission(island, roleName, IslandRole.Operator);
-        } else if (role == IslandRole.Operator) {
-            return island.hasRole(IslandRole.Owner, player.getUniqueId());
+            return !island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                    || permissionManager.hasPermission(island, roleName, IslandRole.OPERATOR);
+        } else if (role == IslandRole.OPERATOR) {
+            return island.hasRole(IslandRole.OWNER, player.getUniqueId());
         }
 
         return true;
@@ -208,13 +213,13 @@ public class GuiPermissions extends Gui {
     public PermissionType getType(IslandRole role) {
         switch (role) {
             default:
-            case Visitor:
-            case Member:
-            case Coop:
+            case VISITOR:
+            case MEMBER:
+            case COOP:
                 return PermissionType.GENERIC;
-            case Operator:
+            case OPERATOR:
                 return PermissionType.OPERATOR;
-            case Owner:
+            case OWNER:
                 return PermissionType.ISLAND;
         }
     }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.songoda.skyblock.challenge.inventory;
 
@@ -9,19 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface InventoryProvider {
+    String title(Inventory inv);
 
-	String title(Inventory inv);
+    int rows(Inventory inv);
 
-	int rows(Inventory inv);
+    void init(Inventory inv);
 
-	void init(Inventory inv);
+    void update(Inventory inv);
 
-	void update(Inventory inv);
+    default List<Integer> excluseCases(Inventory inv) {
+        return new ArrayList<>();
+    }
 
-	default List<Integer> excluseCases(Inventory inv) {
-		return new ArrayList<>();
-	}
-
-	default void onClose(InventoryCloseEvent e, Inventory inv) {
-	}
+    default void onClose(InventoryCloseEvent e, Inventory inv) {
+    }
 }

@@ -2,15 +2,68 @@ package com.songoda.skyblock.command;
 
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.command.commands.admin.*;
+import com.songoda.skyblock.command.commands.admin.AddUpgradeCommand;
+import com.songoda.skyblock.command.commands.admin.AdminBank;
+import com.songoda.skyblock.command.commands.admin.ChatSpyCommand;
+import com.songoda.skyblock.command.commands.admin.GeneratorCommand;
+import com.songoda.skyblock.command.commands.admin.LevelScanCommand;
+import com.songoda.skyblock.command.commands.admin.ProxyCommand;
+import com.songoda.skyblock.command.commands.admin.RefreshHologramsCommand;
+import com.songoda.skyblock.command.commands.admin.ReloadCommand;
+import com.songoda.skyblock.command.commands.admin.RemoveHologramCommand;
+import com.songoda.skyblock.command.commands.admin.RemoveUpgradeCommand;
+import com.songoda.skyblock.command.commands.admin.SetAlwaysLoadedCommand;
+import com.songoda.skyblock.command.commands.admin.SetBiomeCommand;
+import com.songoda.skyblock.command.commands.admin.SetHologramCommand;
+import com.songoda.skyblock.command.commands.admin.SetMaxMembers;
+import com.songoda.skyblock.command.commands.admin.SetSizeCommand;
+import com.songoda.skyblock.command.commands.admin.StackableCommand;
+import com.songoda.skyblock.command.commands.admin.StructureCommand;
+import com.songoda.skyblock.command.commands.admin.UpdateAllIslandsCommand;
+import com.songoda.skyblock.command.commands.island.AcceptCommand;
+import com.songoda.skyblock.command.commands.island.BanCommand;
+import com.songoda.skyblock.command.commands.island.BankCommand;
+import com.songoda.skyblock.command.commands.island.BansCommand;
+import com.songoda.skyblock.command.commands.island.BiomeCommand;
+import com.songoda.skyblock.command.commands.island.BorderCommand;
+import com.songoda.skyblock.command.commands.island.CancelCommand;
+import com.songoda.skyblock.command.commands.island.ChallengeCommand;
+import com.songoda.skyblock.command.commands.island.ChatCommand;
+import com.songoda.skyblock.command.commands.island.CloseCommand;
+import com.songoda.skyblock.command.commands.island.ConfirmCommand;
+import com.songoda.skyblock.command.commands.island.ControlPanelCommand;
+import com.songoda.skyblock.command.commands.island.CoopCommand;
 import com.songoda.skyblock.command.commands.island.CreateCommand;
+import com.songoda.skyblock.command.commands.island.CurrentCommand;
 import com.songoda.skyblock.command.commands.island.DeleteCommand;
+import com.songoda.skyblock.command.commands.island.DemoteCommand;
+import com.songoda.skyblock.command.commands.island.DenyCommand;
+import com.songoda.skyblock.command.commands.island.InformationCommand;
+import com.songoda.skyblock.command.commands.island.InviteCommand;
+import com.songoda.skyblock.command.commands.island.KickAllCommand;
+import com.songoda.skyblock.command.commands.island.KickCommand;
+import com.songoda.skyblock.command.commands.island.LeaderboardCommand;
+import com.songoda.skyblock.command.commands.island.LeaveCommand;
 import com.songoda.skyblock.command.commands.island.LevelCommand;
+import com.songoda.skyblock.command.commands.island.MembersCommand;
+import com.songoda.skyblock.command.commands.island.OpenCommand;
 import com.songoda.skyblock.command.commands.island.OwnerCommand;
+import com.songoda.skyblock.command.commands.island.PreviewCommand;
+import com.songoda.skyblock.command.commands.island.PromoteCommand;
+import com.songoda.skyblock.command.commands.island.PublicCommand;
+import com.songoda.skyblock.command.commands.island.ScoreboardCommand;
 import com.songoda.skyblock.command.commands.island.SetSpawnCommand;
 import com.songoda.skyblock.command.commands.island.SettingsCommand;
+import com.songoda.skyblock.command.commands.island.TeleportCommand;
+import com.songoda.skyblock.command.commands.island.UnbanCommand;
+import com.songoda.skyblock.command.commands.island.UnlockCommand;
 import com.songoda.skyblock.command.commands.island.UpgradeCommand;
-import com.songoda.skyblock.command.commands.island.*;
+import com.songoda.skyblock.command.commands.island.ValueCommand;
+import com.songoda.skyblock.command.commands.island.VisitCommand;
+import com.songoda.skyblock.command.commands.island.VisitorsCommand;
+import com.songoda.skyblock.command.commands.island.VoteCommand;
+import com.songoda.skyblock.command.commands.island.WeatherCommand;
+import com.songoda.skyblock.command.commands.island.WhitelistCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.message.MessageManager;
@@ -29,6 +82,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,7 +90,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommandManager implements CommandExecutor, TabCompleter {
-
     private final SkyBlock plugin;
     private List<SubCommand> islandCommands;
     private List<SubCommand> adminCommands;
@@ -54,90 +107,90 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     }
 
     public void registerSubCommands() {
-        islandCommands = Arrays.asList(
-                new AcceptCommand(),
-                new BanCommand(),
-                new BankCommand(),
-                new BansCommand(),
-                new BiomeCommand(),
-                new BorderCommand(),
-                new CancelCommand(),
-                new ChallengeCommand(),
-                new ChatCommand(),
-                new CloseCommand(),
-                new ConfirmCommand(),
-                new ControlPanelCommand(),
-                new CoopCommand(),
-                new CreateCommand(),
-                new CurrentCommand(),
-                new DeleteCommand(),
-                new DemoteCommand(),
-                new DenyCommand(),
-                new InformationCommand(),
-                new InviteCommand(),
-                new KickAllCommand(),
-                new KickCommand(),
-                new LeaderboardCommand(),
-                new LeaveCommand(),
-                new LevelCommand(),
-                new MembersCommand(),
-                new OpenCommand(),
-                new OwnerCommand(),
-                new PreviewCommand(),
-                new PromoteCommand(),
-                new PublicCommand(),
-                new SetSpawnCommand(),
-                new SettingsCommand(),
-                new TeleportCommand(),
-                new UnbanCommand(),
-                new UnlockCommand(),
-                new UpgradeCommand(),
-                new ValueCommand(),
-                new VisitCommand(),
-                new VisitorsCommand(),
-                new VoteCommand(),
-                new ScoreboardCommand(),
-                new WeatherCommand(),
-                new WhitelistCommand()
+        this.islandCommands = Arrays.asList(
+                new AcceptCommand(this.plugin),
+                new BanCommand(this.plugin),
+                new BankCommand(this.plugin),
+                new BansCommand(this.plugin),
+                new BiomeCommand(this.plugin),
+                new BorderCommand(this.plugin),
+                new CancelCommand(this.plugin),
+                new ChallengeCommand(this.plugin),
+                new ChatCommand(this.plugin),
+                new CloseCommand(this.plugin),
+                new ConfirmCommand(this.plugin),
+                new ControlPanelCommand(this.plugin),
+                new CoopCommand(this.plugin),
+                new CreateCommand(this.plugin),
+                new CurrentCommand(this.plugin),
+                new DeleteCommand(this.plugin),
+                new DemoteCommand(this.plugin),
+                new DenyCommand(this.plugin),
+                new InformationCommand(this.plugin),
+                new InviteCommand(this.plugin),
+                new KickAllCommand(this.plugin),
+                new KickCommand(this.plugin),
+                new LeaderboardCommand(this.plugin),
+                new LeaveCommand(this.plugin),
+                new LevelCommand(this.plugin),
+                new MembersCommand(this.plugin),
+                new OpenCommand(this.plugin),
+                new OwnerCommand(this.plugin),
+                new PreviewCommand(this.plugin),
+                new PromoteCommand(this.plugin),
+                new PublicCommand(this.plugin),
+                new SetSpawnCommand(this.plugin),
+                new SettingsCommand(this.plugin),
+                new TeleportCommand(this.plugin),
+                new UnbanCommand(this.plugin),
+                new UnlockCommand(this.plugin),
+                new UpgradeCommand(this.plugin),
+                new ValueCommand(this.plugin),
+                new VisitCommand(this.plugin),
+                new VisitorsCommand(this.plugin),
+                new VoteCommand(this.plugin),
+                new ScoreboardCommand(this.plugin),
+                new WeatherCommand(this.plugin),
+                new WhitelistCommand(this.plugin)
         );
 
-        adminCommands = Arrays.asList(
-                new AddUpgradeCommand(),
-                new com.songoda.skyblock.command.commands.admin.CreateCommand(),
-                new com.songoda.skyblock.command.commands.admin.DeleteCommand(),
-                new GeneratorCommand(),
-                new com.songoda.skyblock.command.commands.admin.LevelCommand(),
-                new LevelScanCommand(),
-                new com.songoda.skyblock.command.commands.admin.OwnerCommand(),
-                new RefreshHologramsCommand(),
-                new ReloadCommand(),
-                new RemoveHologramCommand(),
-                new RemoveUpgradeCommand(),
-                new SetBiomeCommand(),
-                new SetAlwaysLoadedCommand(),
-                new ProxyCommand(),
-                new SetHologramCommand(),
-                new SetSizeCommand(),
-                new com.songoda.skyblock.command.commands.admin.SetSpawnCommand(),
-                new com.songoda.skyblock.command.commands.admin.SettingsCommand(),
-                new StructureCommand(),
-                new com.songoda.skyblock.command.commands.admin.UpgradeCommand(),
-                new StackableCommand(),
-                new AdminBank(),
-                new SetMaxMembers(),
-                new ChatSpyCommand(),
-                new UpdateAllIslandsCommand()
+        this.adminCommands = Arrays.asList(
+                new AddUpgradeCommand(this.plugin),
+                new com.songoda.skyblock.command.commands.admin.CreateCommand(this.plugin),
+                new com.songoda.skyblock.command.commands.admin.DeleteCommand(this.plugin),
+                new GeneratorCommand(this.plugin),
+                new com.songoda.skyblock.command.commands.admin.LevelCommand(this.plugin),
+                new LevelScanCommand(this.plugin),
+                new com.songoda.skyblock.command.commands.admin.OwnerCommand(this.plugin),
+                new RefreshHologramsCommand(this.plugin),
+                new ReloadCommand(this.plugin),
+                new RemoveHologramCommand(this.plugin),
+                new RemoveUpgradeCommand(this.plugin),
+                new SetBiomeCommand(this.plugin),
+                new SetAlwaysLoadedCommand(this.plugin),
+                new ProxyCommand(this.plugin),
+                new SetHologramCommand(this.plugin),
+                new SetSizeCommand(this.plugin),
+                new com.songoda.skyblock.command.commands.admin.SetSpawnCommand(this.plugin),
+                new com.songoda.skyblock.command.commands.admin.SettingsCommand(this.plugin),
+                new StructureCommand(this.plugin),
+                new com.songoda.skyblock.command.commands.admin.UpgradeCommand(this.plugin),
+                new StackableCommand(this.plugin),
+                new AdminBank(this.plugin),
+                new SetMaxMembers(this.plugin),
+                new ChatSpyCommand(this.plugin),
+                new UpdateAllIslandsCommand(this.plugin)
         );
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String s, String[] args) {
         if (command.getName().equalsIgnoreCase("island")) {
-            MessageManager messageManager = plugin.getMessageManager();
-            SoundManager soundManager = plugin.getSoundManager();
+            MessageManager messageManager = this.plugin.getMessageManager();
+            SoundManager soundManager = this.plugin.getSoundManager();
 
-            FileConfiguration languageConfigLoad = plugin.getLanguage();
-            FileConfiguration mainConfig = plugin.getConfiguration();
+            FileConfiguration languageConfigLoad = this.plugin.getLanguage();
+            FileConfiguration mainConfig = this.plugin.getConfiguration();
 
             Player player = null;
 
@@ -151,7 +204,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 } else {
                     String commandToExecute;
                     String defaultCommand;
-                    if (plugin.getIslandManager().getIsland(player) == null) {
+                    if (this.plugin.getIslandManager().getIsland(player) == null) {
                         defaultCommand = "island create";
                         commandToExecute = mainConfig.getString("Command.Island.Aliases.NoIsland", defaultCommand);
                     } else {
@@ -169,9 +222,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     }
 
                     String finalCommandToExecute = commandToExecute;
-                    Bukkit.getServer().getScheduler().runTask(plugin, () ->
-                            Bukkit.getServer().dispatchCommand(sender,
-                                    finalCommandToExecute));
+                    Bukkit.getServer().getScheduler().runTask(this.plugin, () -> Bukkit.getServer().dispatchCommand(sender, finalCommandToExecute));
                 }
 
                 return true;
@@ -278,7 +329,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             List<String> arguments = new ArrayList<>(Arrays.asList(args));
             arguments.remove(args[0]);
 
-            if (adminCommands.contains(subCommand)) {
+            if (this.adminCommands.contains(subCommand)) {
                 arguments.remove(args[1]);
             }
 
@@ -294,7 +345,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
         if (!(sender instanceof Player)) {
             return null;
         }
@@ -308,7 +359,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 if (args[0] == null || args[0].isEmpty()) {
                     commandAliases.add("admin");
 
-                    for (SubCommand subCommandList : islandCommands) {
+                    for (SubCommand subCommandList : this.islandCommands) {
                         commandAliases.add(subCommandList.getName());
                     }
                 } else {
@@ -318,7 +369,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                         }
                     }
 
-                    for (SubCommand subCommandList : islandCommands) {
+                    for (SubCommand subCommandList : this.islandCommands) {
                         if (subCommandList.getName().toLowerCase().contains(args[0].toLowerCase())) {
                             commandAliases.add(subCommandList.getName());
                         }
@@ -328,11 +379,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 if (isAdmin) {
                     if (args[0].equalsIgnoreCase("admin")) {
                         if (args[1] == null || args[1].isEmpty()) {
-                            for (SubCommand subCommandList : adminCommands) {
+                            for (SubCommand subCommandList : this.adminCommands) {
                                 commandAliases.add(subCommandList.getName());
                             }
                         } else {
-                            for (SubCommand subCommandList : adminCommands) {
+                            for (SubCommand subCommandList : this.adminCommands) {
                                 if (subCommandList.getName().toLowerCase().contains(args[1].toLowerCase())) {
                                     commandAliases.add(subCommandList.getName());
                                 }
@@ -343,7 +394,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                 List<String> arguments = getIslandArguments(args[0], args[1]);
 
-                if (arguments.size() != 0) {
+                if (!arguments.isEmpty()) {
                     commandAliases.addAll(arguments);
                 }
             } else if (args.length == 3) {
@@ -351,14 +402,14 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     if (args[0].equalsIgnoreCase("admin")) {
                         List<String> arguments = getAdminArguments(args[1], args[2]);
 
-                        if (arguments.size() != 0) {
+                        if (!arguments.isEmpty()) {
                             commandAliases.addAll(arguments);
                         }
                     }
                 }
             }
 
-            if (commandAliases.size() != 0) {
+            if (!commandAliases.isEmpty()) {
                 return commandAliases;
             }
         }
@@ -367,11 +418,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     }
 
     public List<String> getIslandArguments(String arg1, String arg2) {
-        return this.getArguments(islandCommands, arg1, arg2);
+        return this.getArguments(this.islandCommands, arg1, arg2);
     }
 
     public List<String> getAdminArguments(String arg1, String arg2) {
-        return this.getArguments(adminCommands, arg1, arg2);
+        return this.getArguments(this.adminCommands, arg1, arg2);
     }
 
     public List<String> getArguments(List<SubCommand> subCommands, String arg1, String arg2) {
@@ -399,29 +450,29 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     }
 
     public void sendPlayerIslandHelpCommands(Player player, int page) {
-        this.sendPlayerHelpCommands(player, islandCommands, page, false);
+        this.sendPlayerHelpCommands(player, this.islandCommands, page, false);
     }
 
     public void sendPlayerAdminHelpCommands(Player player, int page) {
-        this.sendPlayerHelpCommands(player, adminCommands, page, true);
+        this.sendPlayerHelpCommands(player, this.adminCommands, page, true);
     }
 
     public void sendPlayerHelpCommands(Player player, List<SubCommand> subCommands, int page, boolean isAdmin) {
-        FileManager fileManager = plugin.getFileManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         int pageSize = 7;
 
         int nextEndIndex = subCommands.size() - page * pageSize, index = page * pageSize - pageSize,
                 endIndex = index >= subCommands.size() ? subCommands.size() - 1 : index + pageSize;
-        boolean showAlises = fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+        boolean showAliases = fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getBoolean("Command.Help.Aliases.Enable");
 
         if (nextEndIndex <= -7) {
-            plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Help.Page.Message"));
-            plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            this.plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Help.Page.Message"));
+            this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
             return;
         }
@@ -453,7 +504,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     for (SubCommand subCommand : subCommands) {
                         StringBuilder commandAliases = new StringBuilder();
 
-                        if (showAlises) {
+                        if (showAliases) {
                             for (int i = 0; i < subCommand.getAliases().length; i++) {
                                 commandAliases.append("/").append(subCommand.getAliases()[i]);
                             }
@@ -475,7 +526,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                             SubCommand subCommandFromIndex = subCommands.get(index);
                             StringBuilder commandAliases = new StringBuilder();
 
-                            if (showAlises) {
+                            if (showAliases) {
                                 for (int i = 0; i < subCommandFromIndex.getAliases().length; i++) {
                                     commandAliases.append("/").append(subCommandFromIndex.getAliases()[i]);
                                 }
@@ -494,7 +545,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     }
                 }
             } else {
-                plugin.getMessageManager().sendMessage(player, helpLines);
+                this.plugin.getMessageManager().sendMessage(player, helpLines);
             }
         }
 
@@ -504,7 +555,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     player.spigot()
                             .sendMessage(
                                     new ChatComponent(
-                                            plugin.formatText(configLoad.getString("Command.Island.Help.Word.Next")),
+                                            this.plugin.formatText(configLoad.getString("Command.Island.Help.Word.Next")),
                                             false, null,
                                             new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                                                     "/island " + subCommandText + "help " + (page + 1)),
@@ -513,16 +564,16 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     player.spigot()
                             .sendMessage(
                                     new ChatComponent(
-                                            plugin.formatText(configLoad.getString("Command.Island.Help.Word.Previous")),
+                                            this.plugin.formatText(configLoad.getString("Command.Island.Help.Word.Previous")),
                                             false, null,
                                             new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                                                     "/island " + subCommandText + "help " + (page - 1)),
                                             null).addExtraChatComponent(
-                                            new ChatComponent(" "
-                                                    + ChatColor.translateAlternateColorCodes('&',
-                                                    configLoad
-                                                            .getString("Command.Island.Help.Word.Pipe"))
-                                                    + " ", false, null, null, null))
+                                                    new ChatComponent(" "
+                                                            + ChatColor.translateAlternateColorCodes('&',
+                                                            configLoad
+                                                                    .getString("Command.Island.Help.Word.Pipe"))
+                                                            + " ", false, null, null, null))
                                             .addExtraChatComponent(new ChatComponent(
                                                     ChatColor.translateAlternateColorCodes('&',
                                                             configLoad.getString(
@@ -547,7 +598,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
         }
 
-        plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+        this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
     }
 
     public void sendConsoleHelpCommands(CommandSender sender) {
@@ -562,21 +613,24 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     }
 
     public SubCommand getIslandSubCommand(String cmdName) {
-        return this.getSubCommand(islandCommands, cmdName);
+        return this.getSubCommand(this.islandCommands, cmdName);
     }
 
     public SubCommand getAdminSubCommand(String cmdName) {
-        return this.getSubCommand(adminCommands, cmdName);
+        return this.getSubCommand(this.adminCommands, cmdName);
     }
 
     public SubCommand getSubCommand(List<SubCommand> subCommands, String cmdName) {
         for (SubCommand command : subCommands) {
-            if (command.getName().equalsIgnoreCase(cmdName))
+            if (command.getName().equalsIgnoreCase(cmdName)) {
                 return command;
+            }
 
-            for (String argList : command.getAliases())
-                if (argList.equalsIgnoreCase(cmdName))
+            for (String argList : command.getAliases()) {
+                if (argList.equalsIgnoreCase(cmdName)) {
                     return command;
+                }
+            }
         }
 
         return null;

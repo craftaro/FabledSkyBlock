@@ -1,7 +1,6 @@
 package com.songoda.skyblock.cooldown;
 
 public class Cooldown {
-
     private int time;
 
     public Cooldown(int time) {
@@ -9,7 +8,7 @@ public class Cooldown {
     }
 
     public int getTime() {
-        return time;
+        return this.time;
     }
 
     public void setTime(int time) {

@@ -2,10 +2,15 @@ package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
-import com.songoda.skyblock.island.*;
+import com.songoda.skyblock.island.Island;
+import com.songoda.skyblock.island.IslandEnvironment;
+import com.songoda.skyblock.island.IslandManager;
+import com.songoda.skyblock.island.IslandRole;
+import com.songoda.skyblock.island.IslandWorld;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
 import org.bukkit.Location;
@@ -16,15 +21,18 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class SetSpawnCommand extends SubCommand {
+    public SetSpawnCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 1) {
@@ -35,12 +43,12 @@ public class SetSpawnCommand extends SubCommand {
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             } else {
                 if (args[0].equalsIgnoreCase("Main")) {
-                    setIslandSpawn(IslandEnvironment.Main, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
+                    setIslandSpawn(IslandEnvironment.MAIN, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
                 } else if (args[0].equalsIgnoreCase("Visitor")) {
-                    setIslandSpawn(IslandEnvironment.Visitor, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
-                } else if (args[0].equalsIgnoreCase("All")){
-                    setIslandSpawn(IslandEnvironment.Main, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
-                    setIslandSpawn(IslandEnvironment.Visitor, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
+                    setIslandSpawn(IslandEnvironment.VISITOR, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
+                } else if (args[0].equalsIgnoreCase("All")) {
+                    setIslandSpawn(IslandEnvironment.MAIN, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
+                    setIslandSpawn(IslandEnvironment.VISITOR, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Spawn.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -74,27 +82,27 @@ public class SetSpawnCommand extends SubCommand {
 
     @Override
     public String[] getArguments() {
-        return new String[]{ "main", "visitor" , "all"};
+        return new String[]{"main", "visitor", "all"};
     }
 
 
     private void setIslandSpawn(IslandEnvironment environment, Island island, IslandManager islandManager, Player player, FileConfiguration configLoad, FileManager fileManager, MessageManager messageManager, SoundManager soundManager) {
-        if (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
-            if ((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                    && (plugin.getPermissionManager().hasPermission(island,
-                    environment.name() + "Spawn", IslandRole.Operator)))
-                    || island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+        if (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
+            if ((island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                    && (this.plugin.getPermissionManager().hasPermission(island,
+                    environment.name() + "Spawn", IslandRole.OPERATOR)))
+                    || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                 if (islandManager.isPlayerAtIsland(island, player)) {
-                    IslandWorld world = plugin.getWorldManager().getIslandWorld(player.getWorld());
+                    IslandWorld world = this.plugin.getWorldManager().getIslandWorld(player.getWorld());
                     Location location = player.getLocation();
 
-                    if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
+                    if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                             .getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
 
                         CompatibleMaterial toCompare = CompatibleMaterial.getMaterial(location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType());
 
-                        if(toCompare == CompatibleMaterial.AIR
+                        if (toCompare == CompatibleMaterial.AIR
                                 || toCompare == CompatibleMaterial.MOVING_PISTON
                                 || toCompare == CompatibleMaterial.ICE
                                 || toCompare == CompatibleMaterial.PISTON_HEAD) {
@@ -144,22 +152,19 @@ public class SetSpawnCommand extends SubCommand {
                     island.setLocation(world, environment, newSpawnLocation);
 
                     messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.SetSpawn.Set.Message").replace("%spawn",
-                                    environment.name().toLowerCase()));
+                            configLoad.getString("Command.Island.SetSpawn.Set.Message").replace("%spawn", environment.name().toLowerCase()));
                     soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
 
                     return;
                 }
 
                 messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.SetSpawn.Island.Message").replace("%spawn",
-                                environment.name().toLowerCase()));
+                        configLoad.getString("Command.Island.SetSpawn.Island.Message").replace("%spawn", environment.name().toLowerCase()));
                 soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
             } else {
                 messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.SetSpawn.Permission.Message").replace("%spawn",
-                                environment.name().toLowerCase()));
-                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        configLoad.getString("Command.Island.SetSpawn.Permission.Message").replace("%spawn", environment.name().toLowerCase()));
+                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Role.Message")

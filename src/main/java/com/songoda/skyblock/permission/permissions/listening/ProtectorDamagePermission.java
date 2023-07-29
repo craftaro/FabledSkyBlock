@@ -10,21 +10,17 @@ import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class ProtectorDamagePermission extends ListeningPermission  {
-    
-    private final SkyBlock plugin;
-    
+public class ProtectorDamagePermission extends ListeningPermission {
+
     public ProtectorDamagePermission(SkyBlock plugin) {
         super("ProtectorDamage", CompatibleMaterial.CARVED_PUMPKIN, PermissionType.ISLAND);
-        this.plugin = plugin;
     }
-    
+
     @PermissionHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if(event.getDamager() instanceof IronGolem ||
-            event.getDamager() instanceof Snowman ||
-                (event.getDamager() instanceof Wolf &&
-                        ((Wolf) event.getDamager()).isTamed())) {
+        if (event.getDamager() instanceof IronGolem ||
+                event.getDamager() instanceof Snowman ||
+                (event.getDamager() instanceof Wolf && ((Wolf) event.getDamager()).isTamed())) {
             event.setCancelled(true);
         }
     }

@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class BucketPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -32,13 +31,14 @@ public class BucketPermission extends ListeningPermission {
                     && CompatibleMaterial.getMaterial(event.getClickedBlock()) == CompatibleMaterial.OBSIDIAN
                     && event.getItem() != null
                     && CompatibleMaterial.getMaterial(event.getItem()) != CompatibleMaterial.AIR
-                    && CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.BUCKET)
-                cancelAndMessage(event, player, plugin, messageManager);
+                    && CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.BUCKET) {
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
+            }
         } else if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()) != CompatibleMaterial.AIR) {
             if (CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.BUCKET
                     || CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.WATER_BUCKET
                     || CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.LAVA_BUCKET) {
-                cancelAndMessage(event, player, plugin, messageManager);
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
                 player.updateInventory();
             }
         }
@@ -46,11 +46,11 @@ public class BucketPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onBucketFill(PlayerBucketFillEvent event) {
-        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+        cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
     }
 
     @PermissionHandler
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
-        cancelAndMessage(event, event.getPlayer(), plugin, messageManager);
+        cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
     }
 }

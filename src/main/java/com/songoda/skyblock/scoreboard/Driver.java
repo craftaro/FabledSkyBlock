@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 
 class Driver extends BukkitRunnable {
-
     private final Row title;
     private final List<Row> rows;
     private final List<Holder> holders;
@@ -24,8 +23,8 @@ class Driver extends BukkitRunnable {
         FileConfiguration scoreboardLoad = fileManager.getConfig(
                 new File(plugin.getDataFolder(), "scoreboard.yml")).getFileConfiguration();
 
-        rows = new ArrayList<>();
-        holders = new ArrayList<>();
+        this.rows = new ArrayList<>();
+        this.holders = new ArrayList<>();
         this.boardType = boardType;
 
         ConfigurationSection config = scoreboardLoad.getConfigurationSection(boardType.getConfigSection());
@@ -33,26 +32,26 @@ class Driver extends BukkitRunnable {
         if (config != null) {
             List<String> lines = config.getStringList("Title.Content");
             int interval = config.getInt("Title.Interval");
-            title = new Row(lines, interval);
+            this.title = new Row(lines, interval);
 
             for (int i = 1; i < 16; i++) {
                 List<String> rowLines = config.getStringList("Rows." + i + ".Content");
                 if (!rowLines.isEmpty()) {
                     Row row = new Row(rowLines, config.getInt("Rows." + i + ".Interval"));
-                    rows.add(row);
+                    this.rows.add(row);
                 }
             }
         } else {
-            title = new Row(new ArrayList<>(), -1);
+            this.title = new Row(new ArrayList<>(), -1);
         }
     }
 
     List<Row> getRows() {
-        return rows;
+        return this.rows;
     }
 
     Row getTitle() {
-        return title;
+        return this.title;
     }
 
     void registerHolder(Holder holder) {
@@ -82,19 +81,19 @@ class Driver extends BukkitRunnable {
 
     @Override
     public void run() {
-        title.update();
-        for (Row row : rows) {
+        this.title.update();
+        for (Row row : this.rows) {
             row.update();
         }
 
         synchronized (this.holders) {
-            for (Holder holder : holders) {
+            for (Holder holder : this.holders) {
                 holder.update();
             }
         }
     }
 
     ScoreboardType getBoardType() {
-        return boardType;
+        return this.boardType;
     }
 }

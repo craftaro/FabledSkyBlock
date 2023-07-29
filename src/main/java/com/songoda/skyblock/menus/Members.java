@@ -29,10 +29,15 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.UUID;
 
 public class Members {
-
     private static Members instance;
 
     public static Members getInstance() {
@@ -44,7 +49,7 @@ public class Members {
     }
 
     public void open(Player player, Members.Type type, Members.Sort sort) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         IslandManager islandManager = plugin.getIslandManager();
@@ -60,8 +65,8 @@ public class Members {
                     PlayerData playerData = playerDataManager.getPlayerData(player);
 
                     if (playerData.getType() == null || playerData.getSort() == null) {
-                        playerData.setType(Type.Default);
-                        playerData.setSort(Sort.Default);
+                        playerData.setType(Type.DEFAULT);
+                        playerData.setSort(Sort.DEFAULT);
                     }
 
                     ItemStack is = event.getItem();
@@ -92,7 +97,7 @@ public class Members {
                             Type type1 = (Type) playerData.getType();
 
                             if (type1.ordinal() + 1 == Type.values().length) {
-                                playerData.setType(Type.Default);
+                                playerData.setType(Type.DEFAULT);
                             } else {
                                 playerData.setType(Type.values()[type1.ordinal() + 1]);
                             }
@@ -101,7 +106,7 @@ public class Members {
                             Sort sort1 = (Sort) playerData.getSort();
 
                             if (sort1.ordinal() + 1 == Sort.values().length) {
-                                playerData.setSort(Sort.Default);
+                                playerData.setSort(Sort.DEFAULT);
                             } else {
                                 playerData.setSort(Sort.values()[sort1.ordinal() + 1]);
                             }
@@ -153,10 +158,10 @@ public class Members {
                             }
 
                             if (!(playerUUID.equals(player.getUniqueId())
-                                    || island.hasRole(IslandRole.Owner, playerUUID))) {
-                                if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+                                    || island.hasRole(IslandRole.OWNER, playerUUID))) {
+                                if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                                     if (event.getClick() == ClickType.LEFT) {
-                                        if (island.hasRole(IslandRole.Member, playerUUID)) {
+                                        if (island.hasRole(IslandRole.MEMBER, playerUUID)) {
                                             Bukkit.getServer().dispatchCommand(player,
                                                     "island promote " + playerName);
                                         } else {
@@ -178,8 +183,8 @@ public class Members {
 
                                         return;
                                     }
-                                } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                                        && permissionManager.hasPermission(island, "Kick", IslandRole.Operator)) {
+                                } else if (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                                        && permissionManager.hasPermission(island, "Kick", IslandRole.OPERATOR)) {
                                     Bukkit.getServer().dispatchCommand(player, "island kick " + playerName);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(plugin,
@@ -203,22 +208,22 @@ public class Members {
             Island island = islandManager.getIsland(player);
 
             List<UUID> displayedMembers = new ArrayList<>();
-            Set<UUID> islandMembers = island.getRole(IslandRole.Member);
-            Set<UUID> islandOperators = island.getRole(IslandRole.Operator);
+            Set<UUID> islandMembers = island.getRole(IslandRole.MEMBER);
+            Set<UUID> islandOperators = island.getRole(IslandRole.OPERATOR);
 
-            if (type == Members.Type.Default) {
+            if (type == Members.Type.DEFAULT) {
                 displayedMembers.add(island.getOwnerUUID());
                 displayedMembers.addAll(islandOperators);
                 displayedMembers.addAll(islandMembers);
-            } else if (type == Members.Type.Members) {
+            } else if (type == Members.Type.MEMBERS) {
                 displayedMembers.addAll(islandMembers);
-            } else if (type == Members.Type.Operators) {
+            } else if (type == Members.Type.OPERATORS) {
                 displayedMembers.addAll(islandOperators);
-            } else if (type == Members.Type.Owner) {
+            } else if (type == Members.Type.OWNER) {
                 displayedMembers.add(island.getOwnerUUID());
             }
 
-            if (sort == Members.Sort.Playtime) {
+            if (sort == Members.Sort.PLAYTIME) {
                 Map<Integer, UUID> sortedPlaytimes = new TreeMap<>();
 
                 for (UUID displayedMemberList : displayedMembers) {
@@ -241,7 +246,7 @@ public class Members {
                 for (Integer sortedPlaytimeList : sortedPlaytimes.keySet()) {
                     displayedMembers.add(sortedPlaytimes.get(sortedPlaytimeList));
                 }
-            } else if (sort == Members.Sort.MemberSince) {
+            } else if (sort == Members.Sort.MEMBER_SINCE) {
                 Map<Date, UUID> sortedDates = new TreeMap<>();
 
                 for (UUID displayedMemberList : displayedMembers) {
@@ -260,11 +265,11 @@ public class Members {
                                             displayedMemberList);
                         } else {
                             sortedDates.put(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(
-                                    plugin.getPlayerDataManager().getPlayerData(targetPlayer).getMemberSince()),
+                                            plugin.getPlayerDataManager().getPlayerData(targetPlayer).getMemberSince()),
                                     displayedMemberList);
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
                     }
                 }
 
@@ -273,7 +278,7 @@ public class Members {
                 for (Date sortedDateList : sortedDates.keySet()) {
                     displayedMembers.add(sortedDates.get(sortedDateList));
                 }
-            } else if (sort == Members.Sort.LastOnline) {
+            } else if (sort == Members.Sort.LAST_ONLINE) {
                 List<UUID> onlineMembers = new ArrayList<>(displayedMembers);
                 Map<Date, UUID> sortedDates = new TreeMap<>();
 
@@ -293,8 +298,8 @@ public class Members {
                                                                     displayedMemberList.toString() + ".yml"))
                                                             .getString("Statistics.Island.LastOnline")),
                                             displayedMemberList);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
                         }
                     }
                 }
@@ -309,10 +314,10 @@ public class Members {
 
             boolean[] operatorActions = new boolean[]{false, false};
 
-            if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+            if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                 operatorActions = new boolean[]{true, true};
-            } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
-                if (permissionManager.hasPermission(island, "Kick", IslandRole.Operator)) {
+            } else if (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())) {
+                if (permissionManager.hasPermission(island, "Kick", IslandRole.OPERATOR)) {
                     operatorActions = new boolean[]{false, true};
                 }
             }
@@ -339,7 +344,7 @@ public class Members {
             nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
                     configLoad.getString("Menu.Members.Item.Sort.Displayname"),
                     configLoad.getStringList("Menu.Members.Item.Sort.Lore"),
-                    new Placeholder[]{new Placeholder("%sort", StringUtil.capatilizeUppercaseLetters(sort.name()))},
+                    new Placeholder[]{new Placeholder("%sort", StringUtil.capitalizeUppercaseLetters(sort.name()))},
                     null, null), 5);
             nInv.addItem(
                     nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
@@ -348,19 +353,19 @@ public class Members {
 
             if (playerMenuPage != 1) {
                 nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                        "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
-                        "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
+                                "ToR1w9ZV7zpzCiLBhoaJH3uixs5mAlMhNz42oaRRvrG4HRua5hC6oyyOPfn2HKdSseYA9b1be14fjNRQbSJRvXF3mlvt5/zct4sm+cPVmX8K5kbM2vfwHJgCnfjtPkzT8sqqg6YFdT35mAZGqb9/xY/wDSNSu/S3k2WgmHrJKirszaBZrZfnVnqITUOgM9TmixhcJn2obeqICv6tl7/Wyk/1W62wXlXGm9+WjS+8rRNB+vYxqKR3XmH2lhAiyVGbADsjjGtBVUTWjq+aPw670SjXkoii0YE8sqzUlMMGEkXdXl9fvGtnWKk3APSseuTsjedr7yq+AkXFVDqqkqcUuXwmZl2EjC2WRRbhmYdbtY5nEfqh5+MiBrGdR/JqdEUL4yRutyRTw8mSUAI6X2oSVge7EdM/8f4HwLf33EO4pTocTqAkNbpt6Z54asLe5Y12jSXbvd2dFsgeJbrslK7e4uy/TK8CXf0BP3KLU20QELYrjz9I70gtj9lJ9xwjdx4/xJtxDtrxfC4Afmpu+GNYA/mifpyP3GDeBB5CqN7btIvEWyVvRNH7ppAqZIPqYJ7dSDd2RFuhAId5Yq98GUTBn+eRzeigBvSi1bFkkEgldfghOoK5WhsQtQbXuBBXITMME3NaWCN6zG7DxspS6ew/rZ8E809Xe0ArllquIZ0sP+k=",
+                                "eyJ0aW1lc3RhbXAiOjE0OTU3NTE5MTYwNjksInByb2ZpbGVJZCI6ImE2OGYwYjY0OGQxNDQwMDBhOTVmNGI5YmExNGY4ZGY5IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dMZWZ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zZWJmOTA3NDk0YTkzNWU5NTViZmNhZGFiODFiZWFmYjkwZmI5YmU0OWM3MDI2YmE5N2Q3OThkNWYxYTIzIn19fQ=="),
                         configLoad.getString("Menu.Members.Item.Previous.Displayname"), null, null, null, null), 1);
             }
 
             if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
                 nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
-                        "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
-                        "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
+                                "wZPrsmxckJn4/ybw/iXoMWgAe+1titw3hjhmf7bfg9vtOl0f/J6YLNMOI0OTvqeRKzSQVCxqNOij6k2iM32ZRInCQyblDIFmFadQxryEJDJJPVs7rXR6LRXlN8ON2VDGtboRTL7LwMGpzsrdPNt0oYDJLpR0huEeZKc1+g4W13Y4YM5FUgEs8HvMcg4aaGokSbvrYRRcEh3LR1lVmgxtbiUIr2gZkR3jnwdmZaIw/Ujw28+Et2pDMVCf96E5vC0aNY0KHTdMYheT6hwgw0VAZS2VnJg+Gz4JCl4eQmN2fs4dUBELIW2Rdnp4U1Eb+ZL8DvTV7ofBeZupknqPOyoKIjpInDml9BB2/EkD3zxFtW6AWocRphn03Z203navBkR6ztCMz0BgbmQU/m8VL/s8o4cxOn+2ppjrlj0p8AQxEsBdHozrBi8kNOGf1j97SDHxnvVAF3X8XDso+MthRx5pbEqpxmLyKKgFh25pJE7UaMSnzH2lc7aAZiax67MFw55pDtgfpl+Nlum4r7CK2w5Xob2QTCovVhu78/6SV7qM2Lhlwx/Sjqcl8rn5UIoyM49QE5Iyf1tk+xHXkIvY0m7q358oXsfca4eKmxMe6DFRjUDo1VuWxdg9iVjn22flqz1LD1FhGlPoqv0k4jX5Q733LwtPPI6VOTK+QzqrmiuR6e8=",
+                                "eyJ0aW1lc3RhbXAiOjE0OTM4NjgxMDA2NzMsInByb2ZpbGVJZCI6IjUwYzg1MTBiNWVhMDRkNjBiZTlhN2Q1NDJkNmNkMTU2IiwicHJvZmlsZU5hbWUiOiJNSEZfQXJyb3dSaWdodCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ=="),
                         configLoad.getString("Menu.Members.Item.Next.Displayname"), null, null, null, null), 7);
             }
 
-            if (displayedMembers.size() == 0) {
+            if (displayedMembers.isEmpty()) {
                 nInv.addItem(
                         nInv.createItem(new ItemStack(Material.BARRIER),
                                 configLoad.getString("Menu.Members.Item.Nothing.Displayname"), null, null, null, null),
@@ -399,8 +404,8 @@ public class Members {
                                         simpleDateFormat.parse(offlinePlayer.getMemberSince()), new Date());
                                 lastOnlineDurationTime = NumberUtil
                                         .getDuration(simpleDateFormat.parse(offlinePlayer.getLastOnline()), new Date());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                            } catch (ParseException ex) {
+                                ex.printStackTrace();
                             }
                         } else {
                             playerName = targetPlayer.getName();
@@ -408,14 +413,14 @@ public class Members {
                             playerData = plugin.getPlayerDataManager().getPlayerData(targetPlayer);
                             playerTexture = playerData.getTexture();
                             islandPlaytime = playerData.getPlaytime();
-                            playTimeDurationTime = NumberUtil.getDuration(Integer.valueOf(islandPlaytime));
+                            playTimeDurationTime = NumberUtil.getDuration(islandPlaytime);
 
                             try {
                                 memberSinceDurationTime = NumberUtil.getDuration(
                                         new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(playerData.getMemberSince()),
                                         new Date());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                            } catch (ParseException ex) {
+                                ex.printStackTrace();
                             }
                         }
 
@@ -517,12 +522,12 @@ public class Members {
                         }
 
                         if (!(playerUUID.equals(player.getUniqueId())
-                                || island.hasRole(IslandRole.Owner, playerUUID))) {
+                                || island.hasRole(IslandRole.OWNER, playerUUID))) {
                             if (operatorActions[0] && operatorActions[1]) {
-                                if (!island.hasRole(IslandRole.Owner, playerUUID)) {
+                                if (!island.hasRole(IslandRole.OWNER, playerUUID)) {
                                     itemLore.add("");
 
-                                    if (island.hasRole(IslandRole.Member, playerUUID)) {
+                                    if (island.hasRole(IslandRole.MEMBER, playerUUID)) {
                                         itemLore.add(configLoad.getString("Menu.Members.Item.Member.Action.Lore")
                                                 .replace("%click",
                                                         configLoad
@@ -546,8 +551,8 @@ public class Members {
                                 }
                             } else if (!operatorActions[0] && operatorActions[1]) {
                                 if (!(playerUUID.equals(player.getUniqueId())
-                                        && island.getRole(IslandRole.Operator).contains(playerUUID)
-                                        && island.hasRole(IslandRole.Owner, playerUUID))) {
+                                        && island.getRole(IslandRole.OPERATOR).contains(playerUUID)
+                                        && island.hasRole(IslandRole.OWNER, playerUUID))) {
                                     itemLore.add("");
                                     itemLore.add(configLoad.getString("Menu.Members.Item.Member.Action.Lore")
                                             .replace("%click",
@@ -576,19 +581,15 @@ public class Members {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Members.Title")));
             nInv.setRows(6);
 
-            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
         }
     }
 
     public enum Type {
-
-        Default, Members, Operators, Owner
-
+        DEFAULT, MEMBERS, OPERATORS, OWNER
     }
 
     public enum Sort {
-
-        Default, Playtime, MemberSince, LastOnline
-
+        DEFAULT, PLAYTIME, MEMBER_SINCE, LAST_ONLINE
     }
 }

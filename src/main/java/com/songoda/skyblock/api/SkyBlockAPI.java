@@ -7,7 +7,6 @@ import com.songoda.skyblock.api.levelling.LevellingManager;
 import com.songoda.skyblock.api.structure.StructureManager;
 
 public class SkyBlockAPI {
-
     private static SkyBlock implementation;
 
     private static IslandManager islandManager;

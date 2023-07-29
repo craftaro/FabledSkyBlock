@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerIslandLeaveEvent;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -24,19 +25,22 @@ import java.util.Set;
 import java.util.UUID;
 
 public class LeaveCommand extends SubCommand {
+    public LeaveCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-        ScoreboardManager scoreboardManager = plugin.getScoreboardManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        FileManager fileManager = plugin.getFileManager();
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        ScoreboardManager scoreboardManager = this.plugin.getScoreboardManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
         PlayerData playerData = playerDataManager.getPlayerData(player);
 
-        Config languageConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config languageConfig = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
 
         Island island = islandManager.getIsland(player);
 
@@ -44,7 +48,7 @@ public class LeaveCommand extends SubCommand {
             messageManager.sendMessage(player,
                     languageConfig.getFileConfiguration().getString("Command.Island.Leave.Member.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())) {
+        } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             messageManager.sendMessage(player,
                     languageConfig.getFileConfiguration().getString("Command.Island.Leave.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
@@ -57,10 +61,10 @@ public class LeaveCommand extends SubCommand {
                     LocationUtil.teleportPlayerToSpawn(player);
                 }
 
-                if (island.hasRole(IslandRole.Member, player.getUniqueId())) {
-                    island.removeRole(IslandRole.Member, player.getUniqueId());
-                } else if (island.hasRole(IslandRole.Operator, player.getUniqueId())) {
-                    island.removeRole(IslandRole.Operator, player.getUniqueId());
+                if (island.hasRole(IslandRole.MEMBER, player.getUniqueId())) {
+                    island.removeRole(IslandRole.MEMBER, player.getUniqueId());
+                } else if (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())) {
+                    island.removeRole(IslandRole.OPERATOR, player.getUniqueId());
                 }
 
                 island.save();
@@ -82,7 +86,7 @@ public class LeaveCommand extends SubCommand {
                             if (targetPlayerData.isChat()) {
                                 targetPlayerData.setChat(false);
                                 messageManager.sendMessage(targetPlayer,
-                                        fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"))
+                                        fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"))
                                                 .getFileConfiguration().getString("Island.Chat.Untoggled.Message"));
                             }
                         }
@@ -94,18 +98,17 @@ public class LeaveCommand extends SubCommand {
 
                 for (Player loopPlayer : Bukkit.getOnlinePlayers()) {
                     if (!loopPlayer.getUniqueId().equals(player.getUniqueId())) {
-                        if (island.hasRole(IslandRole.Member, loopPlayer.getUniqueId())
-                                || island.hasRole(IslandRole.Operator, loopPlayer.getUniqueId())
-                                || island.hasRole(IslandRole.Owner, loopPlayer.getUniqueId())) {
+                        if (island.hasRole(IslandRole.MEMBER, loopPlayer.getUniqueId())
+                                || island.hasRole(IslandRole.OPERATOR, loopPlayer.getUniqueId())
+                                || island.hasRole(IslandRole.OWNER, loopPlayer.getUniqueId())) {
                             loopPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     languageConfig.getFileConfiguration()
                                             .getString("Command.Island.Leave.Left.Broadcast.Message")
                                             .replace("%player", player.getName())));
                             soundManager.playSound(loopPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
 
-                            if (island.getRole(IslandRole.Member).size() == 0
-                                    && island.getRole(IslandRole.Operator).size() == 0) {
-                                if (islandManager.getVisitorsAtIsland(island).size() != 0) {
+                            if (island.getRole(IslandRole.MEMBER).isEmpty() && island.getRole(IslandRole.OPERATOR).isEmpty()) {
+                                if (!islandManager.getVisitorsAtIsland(island).isEmpty()) {
                                     scoreboardManager.updatePlayerScoreboardType(loopPlayer);
                                 }
 
@@ -115,10 +118,9 @@ public class LeaveCommand extends SubCommand {
                     }
                 }
 
-                messageManager.sendMessage(player,
-                        languageConfig.getFileConfiguration().getString("Command.Island.Leave.Left.Sender.Message"));
+                messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Leave.Left.Sender.Message"));
                 soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
-    
+
                 scoreboardManager.updatePlayerScoreboardType(player);
             }
         }

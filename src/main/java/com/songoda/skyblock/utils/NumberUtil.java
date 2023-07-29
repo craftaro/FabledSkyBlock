@@ -3,7 +3,6 @@ package com.songoda.skyblock.utils;
 import java.util.Date;
 
 public final class NumberUtil {
-
     public static long[] getDuration(int time) {
         long seconds = time % 60;
         long minutes = time % 3600 / 60;

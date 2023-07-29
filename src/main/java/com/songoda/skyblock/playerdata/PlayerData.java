@@ -14,10 +14,15 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 public class PlayerData {
-    
     private final SkyBlock plugin;
     private final UUID uuid;
     private UUID islandOwnerUUID;
@@ -34,7 +39,7 @@ public class PlayerData {
     private Object sort;
 
     private final Area area;
-    
+
     private boolean chatSpy;
     private final Set<UUID> spiedIslands;
 
@@ -46,52 +51,52 @@ public class PlayerData {
     private List<Transaction> transactions;
 
     public PlayerData(Player player) {
-        this.plugin = SkyBlock.getInstance();
-        
-        uuid = player.getUniqueId();
-        islandOwnerUUID = null;
+        this.plugin = SkyBlock.getPlugin(SkyBlock.class);
 
-        pages = new ArrayList<>();
+        this.uuid = player.getUniqueId();
+        this.islandOwnerUUID = null;
 
-        confirmationTime = 0;
-        playTime = getConfig().getFileConfiguration().getInt("Statistics.Island.Playtime");
+        this.pages = new ArrayList<>();
 
-        area = new Area();
+        this.confirmationTime = 0;
+        this.playTime = getConfig().getFileConfiguration().getInt("Statistics.Island.Playtime");
 
-        chatSpy = getConfig().getFileConfiguration().getBoolean("ChatSpy", false);
-        spiedIslands = new HashSet<>();
-    
+        this.area = new Area();
+
+        this.chatSpy = getConfig().getFileConfiguration().getBoolean("ChatSpy", false);
+        this.spiedIslands = new HashSet<>();
+
         if (getConfig().getFileConfiguration().getString("ChatSpiedIslands") != null) {
             for (String islandUUID : getConfig().getFileConfiguration().getStringList("ChatSpiedIslands")) {
-                spiedIslands.add(FastUUID.parseUUID(islandUUID));
+                this.spiedIslands.add(FastUUID.parseUUID(islandUUID));
             }
         }
-        
-        chat = false;
-        preview = false;
-        transactions = new ArrayList<>();
+
+        this.chat = false;
+        this.preview = false;
+        this.transactions = new ArrayList<>();
         FileConfiguration configLoad = getConfig().getFileConfiguration();
-        for (int i = 0;i< configLoad.getInt("Bank.Transactions.Size");i++) {
+        for (int i = 0; i < configLoad.getInt("Bank.Transactions.Size"); i++) {
             Transaction t = new Transaction();
-            t.action = Transaction.Type.valueOf(configLoad.getString("Bank.Transactions."+i+".Action"));
+            t.action = Transaction.Type.valueOf(configLoad.getString("Bank.Transactions." + i + ".Action"));
             t.amount = Float.parseFloat(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Amount")));
             t.player = Bukkit.getOfflinePlayer(FastUUID.parseUUID(Objects.requireNonNull(configLoad.getString("Bank.Transactions." + i + ".Player"))));
             Date d = new Date();
-            d.setTime(configLoad.getLong("Bank.Transactions."+i+".Date"));
+            d.setTime(configLoad.getLong("Bank.Transactions." + i + ".Date"));
             t.timestamp = d;
-            String visibility = configLoad.getString("Bank.Transactions."+i+".Visibility");
-            if(visibility != null){
+            String visibility = configLoad.getString("Bank.Transactions." + i + ".Visibility");
+            if (visibility != null) {
                 t.visibility = Transaction.Visibility.valueOf(visibility);
             } else {
                 t.visibility = Transaction.Visibility.USER; // Defaulting this as it's a new field
             }
-            transactions.add(t);
+            this.transactions.add(t);
         }
     }
 
     public int getPage(MenuType type) {
-        for(MenuPage menu : pages){
-            if(menu.getType().equals(type)){
+        for (MenuPage menu : this.pages) {
+            if (menu.getType() == type) {
                 return menu.getPage();
             }
         }
@@ -99,17 +104,17 @@ public class PlayerData {
     }
 
     public void setPage(MenuType type, int page) {
-        for(MenuPage menu : pages){
-            if(menu.getType().equals(type)){
-               menu.setPage(page);
-               return;
+        for (MenuPage menu : this.pages) {
+            if (menu.getType() == type) {
+                menu.setPage(page);
+                return;
             }
         }
-        pages.add(new MenuPage(type, page));
+        this.pages.add(new MenuPage(type, page));
     }
 
     public Object getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(Object type) {
@@ -117,7 +122,7 @@ public class PlayerData {
     }
 
     public Object getSort() {
-        return sort;
+        return this.sort;
     }
 
     public void setSort(Object sort) {
@@ -125,7 +130,7 @@ public class PlayerData {
     }
 
     public UUID getIsland() {
-        return islandOwnerUUID;
+        return this.islandOwnerUUID;
     }
 
     public void setIsland(UUID islandOwnerUUID) {
@@ -133,7 +138,7 @@ public class PlayerData {
     }
 
     public UUID getOwnership() {
-        return ownershipUUID;
+        return this.ownershipUUID;
     }
 
     public void setOwnership(UUID ownershipUUID) {
@@ -141,7 +146,7 @@ public class PlayerData {
     }
 
     public int getConfirmationTime() {
-        return confirmationTime;
+        return this.confirmationTime;
     }
 
     public void setConfirmationTime(int confirmationTime) {
@@ -149,7 +154,7 @@ public class PlayerData {
     }
 
     public Confirmation getConfirmation() {
-        return confirmation;
+        return this.confirmation;
     }
 
     public void setConfirmation(Confirmation confirmation) {
@@ -157,11 +162,11 @@ public class PlayerData {
     }
 
     public boolean hasConfirmation() {
-        return confirmationTime > 0;
+        return this.confirmationTime > 0;
     }
 
     public int getPlaytime() {
-        return playTime;
+        return this.playTime;
     }
 
     public void setPlaytime(int playTime) {
@@ -175,17 +180,17 @@ public class PlayerData {
     public void setScoreboard(boolean scoreboard) {
         getConfig().getFileConfiguration().set("Scoreboard", scoreboard);
     }
-    
+
     public boolean isPreview() {
-        return preview;
+        return this.preview;
     }
-    
+
     public void setPreview(boolean preview) {
         this.preview = preview;
     }
 
     public int getVisitTime() {
-        return visitTime;
+        return this.visitTime;
     }
 
     public void setVisitTime(int visitTime) {
@@ -216,7 +221,7 @@ public class PlayerData {
     public String[] getTexture() {
         FileConfiguration configLoad = getConfig().getFileConfiguration();
 
-        return new String[] { configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value") };
+        return new String[]{configLoad.getString("Texture.Signature"), configLoad.getString("Texture.Value")};
     }
 
     public void setTexture(String signature, String value) {
@@ -231,7 +236,7 @@ public class PlayerData {
     public void setLastOnline(String date) {
         getConfig().getFileConfiguration().set("Statistics.Island.LastOnline", date);
     }
-    
+
     public long getIslandCreationCount() {
         return getConfig().getFileConfiguration().getLong("Statistics.Island.IslandCreationCount");
     }
@@ -250,11 +255,11 @@ public class PlayerData {
 
 
     public Area getArea() {
-        return area;
+        return this.area;
     }
 
     public boolean isChat() {
-        return chat;
+        return this.chat;
     }
 
     public void setChat(boolean chat) {
@@ -262,7 +267,7 @@ public class PlayerData {
     }
 
     public Object getViewer() {
-        return viewer;
+        return this.viewer;
     }
 
     public void setViewer(Object viewer) {
@@ -272,110 +277,110 @@ public class PlayerData {
     public void deleteTransactions() {
         Config config = getConfig();
         FileConfiguration configLoad = config.getFileConfiguration();
-        configLoad.set("Bank.Transactions",null);
-        configLoad.set("Bank.Transactions.Size",0);
+        configLoad.set("Bank.Transactions", null);
+        configLoad.set("Bank.Transactions.Size", 0);
         try {
             configLoad.save(config.getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
     public synchronized void save() {
-        transactions = plugin.getBankManager().getTransactionList(getPlayerUUID());
+        this.transactions = this.plugin.getBankManager().getTransactionList(getPlayerUUID());
         Config config = getConfig();
         FileConfiguration configLoad = config.getFileConfiguration();
         configLoad.set("Statistics.Island.Playtime", getPlaytime());
-        if (transactions != null) {
-            configLoad.set("Bank.Transactions.Size", transactions.size());
-            for (int i = 0; i < transactions.size(); i++) {
-                Transaction t = transactions.get(i);
+        if (this.transactions != null) {
+            configLoad.set("Bank.Transactions.Size", this.transactions.size());
+            for (int i = 0; i < this.transactions.size(); i++) {
+                Transaction t = this.transactions.get(i);
                 configLoad.set("Bank.Transactions." + i + ".Action", t.action.name());
                 configLoad.set("Bank.Transactions." + i + ".Amount", t.amount);
                 configLoad.set("Bank.Transactions." + i + ".Player", t.player.getUniqueId().toString());
                 configLoad.set("Bank.Transactions." + i + ".Date", t.timestamp.getTime());
                 configLoad.set("Bank.Transactions." + i + ".Visibility", t.visibility.name());
             }
-        }else {
+        } else {
             configLoad.set("Bank.Transactions.Size", 0);
         }
-    
-        configLoad.set("ChatSpy", chatSpy);
+
+        configLoad.set("ChatSpy", this.chatSpy);
         List<String> tempSpiedIslands = new ArrayList<>();
-        for(UUID uuid : spiedIslands){
+        for (UUID uuid : this.spiedIslands) {
             tempSpiedIslands.add(FastUUID.toString(uuid));
         }
         configLoad.set("ChatSpiedIslands", tempSpiedIslands);
-        
+
         try {
             configLoad.save(config.getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
     private Config getConfig() {
-        SkyBlock plugin = SkyBlock.getInstance();
-        return plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), FastUUID.toString(uuid) + ".yml"));
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
+        return plugin.getFileManager().getConfig(new File(new File(plugin.getDataFolder().toString() + "/player-data"), FastUUID.toString(this.uuid) + ".yml"));
     }
-    
+
     public Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
+        return Bukkit.getPlayer(this.uuid);
     }
 
     public UUID getPlayerUUID() {
-        return uuid;
+        return this.uuid;
     }
 
     public List<Transaction> getTransactions() {
-        return transactions;
+        return this.transactions;
     }
-    
+
     public boolean isChatSpy() {
-        return chatSpy;
+        return this.chatSpy;
     }
-    
+
     public void setChatSpy(boolean chatSpy) {
         this.chatSpy = chatSpy;
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, this::save);
     }
-    
+
     public void addChatSpyIsland(UUID uuid) {
-        spiedIslands.add(uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        this.spiedIslands.add(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, this::save);
     }
-    
+
     public boolean isChatSpyIsland(UUID uuid) {
-        return spiedIslands.contains(uuid);
+        return this.spiedIslands.contains(uuid);
     }
-    
+
     public void removeChatSpyIsland(UUID uuid) {
-        spiedIslands.remove(uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        this.spiedIslands.remove(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, this::save);
     }
-    
+
     public Set<UUID> getChatSpyIslands() {
-        return new HashSet<>(spiedIslands);
+        return new HashSet<>(this.spiedIslands);
     }
-    
+
     public void addChatSpyIsland(Island island) {
         this.addChatSpyIsland(island.getOwnerUUID());
     }
-    
+
     public boolean isChatSpyIsland(Island island) {
         return this.isChatSpyIsland(island.getOwnerUUID());
     }
-    
+
     public void removeChatSpyIsland(Island island) {
         this.removeChatSpyIsland(island.getOwnerUUID());
     }
-    
+
     public boolean isGlobalChatSpy() {
-        return spiedIslands.isEmpty();
+        return this.spiedIslands.isEmpty();
     }
-    
+
     public void enableGlobalChatSpy() {
-        spiedIslands.clear();
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::save);
+        this.spiedIslands.clear();
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, this::save);
     }
 }

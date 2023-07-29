@@ -20,33 +20,31 @@ public class Hologram {
         this.type = type;
         this.location = location;
 
-        Bukkit.getScheduler().runTask(SkyBlock.getInstance(),
-                () -> HologramManager.createHologram(hologramId, location, lines));
+        Bukkit.getScheduler().runTask(SkyBlock.getPlugin(SkyBlock.class), () -> HologramManager.createHologram(this.hologramId, location, lines));
     }
 
     public HologramType getType() {
-        return type;
+        return this.type;
     }
 
 
     public Location getLocation() {
-        return location;
+        return this.location;
     }
 
     public void remove() {
-        HologramManager.removeHologram(hologramId);
-        Bukkit.getScheduler().runTask(SkyBlock.getInstance(), () -> HologramManager.removeHologram(hologramId));
+        HologramManager.removeHologram(this.hologramId);
+        Bukkit.getScheduler().runTask(SkyBlock.getPlugin(SkyBlock.class), () -> HologramManager.removeHologram(this.hologramId));
     }
 
     public void update(List<String> lines) {
-        Bukkit.getScheduler().runTask(SkyBlock.getInstance(), () -> {
-            if (HologramManager.isHologramLoaded(hologramId)) {
-                HologramManager.updateHologram(hologramId, lines);
+        Bukkit.getScheduler().runTask(SkyBlock.getPlugin(SkyBlock.class), () -> {
+            if (HologramManager.isHologramLoaded(this.hologramId)) {
+                HologramManager.updateHologram(this.hologramId, lines);
                 return;
             }
 
-            HologramManager.createHologram(hologramId, location, lines);
+            HologramManager.createHologram(this.hologramId, this.location, lines);
         });
-
     }
 }

@@ -12,10 +12,14 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class UpgradeManager {
-
     private final SkyBlock plugin;
     private final Map<Upgrade.Type, List<Upgrade>> upgradeStorage = new HashMap<>();
 
@@ -25,14 +29,14 @@ public class UpgradeManager {
         FileConfiguration configLoad = plugin.getUpgrades();
 
         for (Upgrade.Type typeList : Upgrade.Type.values()) {
-            if (typeList != Upgrade.Type.Size && typeList != Upgrade.Type.Members) {
+            if (typeList != Upgrade.Type.SIZE && typeList != Upgrade.Type.MEMBERS) {
                 List<Upgrade> upgrades = new ArrayList<>();
 
                 Upgrade upgrade = new Upgrade(configLoad.getDouble("Upgrades." + typeList.name() + ".Cost"));
                 upgrade.setEnabled(configLoad.getBoolean("Upgrades." + typeList.name() + ".Enable"));
                 upgrades.add(upgrade);
 
-                upgradeStorage.put(typeList, upgrades);
+                this.upgradeStorage.put(typeList, upgrades);
             }
         }
 
@@ -50,7 +54,7 @@ public class UpgradeManager {
                         configLoad.getInt("Upgrades.Size." + tierList + ".Value")));
             }
 
-            upgradeStorage.put(Upgrade.Type.Size, upgrades);
+            this.upgradeStorage.put(Upgrade.Type.SIZE, upgrades);
         }
 
         if (configLoad.getString("Upgrades.Members") != null) {
@@ -67,22 +71,22 @@ public class UpgradeManager {
                         configLoad.getInt("Upgrades.Members." + tierList + ".Value")));
             }
 
-            upgradeStorage.put(Upgrade.Type.Members, upgrades);
+            this.upgradeStorage.put(Upgrade.Type.MEMBERS, upgrades);
         }
 
         // Task for applying the speed & jump boost upgrades if the player is on an island that has them
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(SkyBlock.getInstance(), this::applyUpgrades, 5L, 20L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(SkyBlock.getPlugin(SkyBlock.class), this::applyUpgrades, 5L, 20L);
     }
 
     public List<Upgrade> getUpgrades(Upgrade.Type type) {
-        return upgradeStorage.get(type);
+        return this.upgradeStorage.get(type);
 
     }
 
     public synchronized void addUpgrade(Upgrade.Type type, int value) {
         List<Upgrade> upgrades = new ArrayList<>();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "upgrades.yml"));
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "upgrades.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (configLoad.getString("Upgrades.Size") != null) {
@@ -117,22 +121,22 @@ public class UpgradeManager {
             configLoad.set("Upgrades.Members." + i + ".Cost", upgrade.getCost());
         }
 
-        upgradeStorage.put(type, upgrades);
+        this.upgradeStorage.put(type, upgrades);
 
         try {
             configLoad.save(config.getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
     public void removeUpgrade(Upgrade.Type type, double cost, int value) {
-        for (Upgrade upgradeList : upgradeStorage.get(type)) {
+        for (Upgrade upgradeList : this.upgradeStorage.get(type)) {
             if (upgradeList.getCost() == cost && upgradeList.getValue() == value) {
-                List<Upgrade> upgrades = upgradeStorage.get(type);
+                List<Upgrade> upgrades = this.upgradeStorage.get(type);
                 upgrades.remove(upgradeList);
 
-                Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "upgrades.yml"));
+                Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "upgrades.yml"));
                 FileConfiguration configLoad = config.getFileConfiguration();
 
                 configLoad.set("Upgrades.Size", null);
@@ -153,8 +157,8 @@ public class UpgradeManager {
 
                 try {
                     configLoad.save(config.getFile());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
 
                 return;
@@ -163,8 +167,8 @@ public class UpgradeManager {
     }
 
     public boolean hasUpgrade(Upgrade.Type type, int value) {
-        if (upgradeStorage.containsKey(type)) {
-            for (Upgrade upgradeList : upgradeStorage.get(type)) {
+        if (this.upgradeStorage.containsKey(type)) {
+            for (Upgrade upgradeList : this.upgradeStorage.get(type)) {
                 if (upgradeList.getValue() == value) {
                     return true;
                 }
@@ -175,12 +179,14 @@ public class UpgradeManager {
     }
 
     private void applyUpgrades() {
-        IslandManager islandManager = plugin.getIslandManager();
-        UpgradeManager upgradeManager = plugin.getUpgradeManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        UpgradeManager upgradeManager = this.plugin.getUpgradeManager();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             Island island = islandManager.getIslandAtLocation(player.getLocation());
-            if (island == null) continue;
+            if (island == null) {
+                continue;
+            }
 
             // Apply potion effect upgrades
             Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
@@ -191,12 +197,14 @@ public class UpgradeManager {
                 } else if (potionEffect.getType().equals(PotionEffectType.JUMP)) {
                     jump = potionEffect;
                 }
-                if (speed != null && jump != null) break;
+                if (speed != null && jump != null) {
+                    break;
+                }
             }
 
             // Speed
-            List<Upgrade> speedUpgrades = upgradeManager.getUpgrades(Upgrade.Type.Speed);
-            if (speedUpgrades != null && speedUpgrades.size() > 0 && speedUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Speed)) {
+            List<Upgrade> speedUpgrades = upgradeManager.getUpgrades(Upgrade.Type.SPEED);
+            if (speedUpgrades != null && !speedUpgrades.isEmpty() && speedUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.SPEED)) {
                 if (speed == null) {
                     speed = new PotionEffect(PotionEffectType.SPEED, 60, 1);
                 } else if (speed.getAmplifier() == 1 && speed.getDuration() < 60) {
@@ -206,8 +214,8 @@ public class UpgradeManager {
             }
 
             // Jump boost
-            List<Upgrade> jumpUpgrades = upgradeManager.getUpgrades(Upgrade.Type.Jump);
-            if (jumpUpgrades != null && jumpUpgrades.size() > 0 && jumpUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.Jump)) {
+            List<Upgrade> jumpUpgrades = upgradeManager.getUpgrades(Upgrade.Type.JUMP);
+            if (jumpUpgrades != null && !jumpUpgrades.isEmpty() && jumpUpgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.JUMP)) {
                 if (jump == null) {
                     jump = new PotionEffect(PotionEffectType.JUMP, 60, 1);
                 } else if (jump.getAmplifier() == 1 && jump.getDuration() < 60) {

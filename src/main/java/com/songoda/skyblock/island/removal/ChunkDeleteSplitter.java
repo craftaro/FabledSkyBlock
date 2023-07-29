@@ -5,7 +5,6 @@ import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.blockscanner.BlockScanner;
 import com.songoda.skyblock.blockscanner.CachedChunk;
-import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -16,7 +15,6 @@ import java.util.Map;
 import java.util.Queue;
 
 public class ChunkDeleteSplitter extends BukkitRunnable {
-
     private final Map<World, List<CachedChunk>> cachedChunks;
     private Queue<BlockInfo> blocks;
 
@@ -26,20 +24,20 @@ public class ChunkDeleteSplitter extends BukkitRunnable {
     }
 
     private void start() {
-        BlockScanner.startScanner(cachedChunks, null,false, true, true, false, (blocks) -> {
+        BlockScanner.startScanner(this.cachedChunks, null, false, true, true, false, (blocks) -> {
             this.blocks = blocks;
-            this.runTaskTimer(SkyBlock.getInstance(), 20, 20);
+            this.runTaskTimer(SkyBlock.getPlugin(SkyBlock.class), 20, 20);
         });
     }
 
     @Override
     public void run() {
-
         int deleteAmount = 0;
 
-        for (Iterator<BlockInfo> it = blocks.iterator(); it.hasNext();) {
-
-            if (deleteAmount == 3500) break;
+        for (Iterator<BlockInfo> it = this.blocks.iterator(); it.hasNext(); ) {
+            if (deleteAmount == 3500) {
+                break;
+            }
 
             final BlockInfo pair = it.next();
             final Block block = pair.getWorld().getBlockAt(pair.getX(), pair.getY(), pair.getZ());
@@ -50,7 +48,7 @@ public class ChunkDeleteSplitter extends BukkitRunnable {
             it.remove();
         }
 
-        if (blocks.isEmpty()) {
+        if (this.blocks.isEmpty()) {
             cancel();
         }
     }
@@ -58,5 +56,4 @@ public class ChunkDeleteSplitter extends BukkitRunnable {
     public static void startDeletion(Map<World, List<CachedChunk>> snapshots) {
         new ChunkDeleteSplitter(snapshots);
     }
-
 }

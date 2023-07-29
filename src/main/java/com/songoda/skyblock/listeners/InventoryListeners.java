@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
 public class InventoryListeners implements Listener {
-
     private final SkyBlock plugin;
 
     public InventoryListeners(SkyBlock plugin) {
@@ -18,10 +17,9 @@ public class InventoryListeners implements Listener {
     public void onInventoryOpen(InventoryOpenEvent event) {
         Player player = (Player) event.getPlayer();
 
-        if (plugin.getWorldManager().isIslandWorld(player.getWorld())) {
+        if (this.plugin.getWorldManager().isIslandWorld(player.getWorld())) {
             // Check permissions.
-            plugin.getPermissionManager().processPermission(event, player,
-                    plugin.getIslandManager().getIsland(player));
+            this.plugin.getPermissionManager().processPermission(event, player, this.plugin.getIslandManager().getIsland(player));
         }
     }
 }

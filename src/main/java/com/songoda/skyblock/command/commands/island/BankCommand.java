@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -16,15 +17,18 @@ import org.bukkit.entity.Player;
 import java.io.File;
 
 public class BankCommand extends SubCommand {
+    public BankCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        SoundManager soundManager = plugin.getSoundManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        FileManager fileManager = plugin.getFileManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        FileManager fileManager = this.plugin.getFileManager();
 
-        Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = fileManager.getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (!this.plugin.getConfiguration().getBoolean("Island.Bank.Enable")) {
@@ -37,12 +41,12 @@ public class BankCommand extends SubCommand {
         island = islandManager.getIsland(player);
 
         if (island == null) {
-            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
-            plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Bank.Unknown"));
+            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+            this.plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Bank.Unknown"));
             return;
         }
-    
-        plugin.getGuiManager().showGUI(player, new GuiBank(plugin, island, null, false));
+
+        this.plugin.getGuiManager().showGUI(player, new GuiBank(this.plugin, island, null, false));
     }
 
     @Override

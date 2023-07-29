@@ -6,19 +6,20 @@ import org.bukkit.Material;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("deprecation")
 public final class MaterialIDHelper {
+    private MaterialIDHelper() {
+    }
 
-    private MaterialIDHelper() {}
-
-    private final static Map<Integer, Material> MATERIALS;
+    private static final Map<Integer, Material> MATERIALS;
 
     static {
         MATERIALS = new HashMap<>();
 
         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
             for (Material type : Material.values()) {
-                if (type.isLegacy()) MATERIALS.put(type.getId(), type);
+                if (type.isLegacy()) {
+                    MATERIALS.put(type.getId(), type);
+                }
             }
         } else {
             for (Material type : Material.values()) {

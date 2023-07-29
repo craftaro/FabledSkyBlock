@@ -4,8 +4,39 @@ import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.nms.NmsManager;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Art;
+import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Rotation;
+import org.bukkit.TreeSpecies;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Bat;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Hanging;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Llama;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Painting;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Rabbit;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Snowman;
+import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Zombie;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.inventory.EntityEquipment;
@@ -19,7 +50,6 @@ import java.util.List;
 
 @SuppressWarnings("deprecation")
 public final class EntityUtil {
-
     public static EntityData convertEntityToEntityData(Entity entity, int x, int y, int z) {
         return new EntityData(NmsManager.getNbt().of(entity).serialize("Attributes"), x, y, z);
     }
@@ -249,7 +279,7 @@ public final class EntityUtil {
             if (entity instanceof ItemFrame) {
                 ItemFrame itemFrame = ((ItemFrame) entity);
 
-                if (0 < entityData.getItem().length()) {
+                if (!entityData.getItem().isEmpty()) {
                     itemFrame.setItem(ItemStackUtil.deserializeItemStack(entityData.getItem()));
                 }
 

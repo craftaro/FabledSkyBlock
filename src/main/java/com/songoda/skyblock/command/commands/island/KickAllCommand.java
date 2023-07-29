@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.songoda.core.compatibility.CompatibleSound;
+import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandKickEvent;
 import com.songoda.skyblock.api.utils.APIUtil;
 import com.songoda.skyblock.command.SubCommand;
@@ -22,14 +23,17 @@ import java.util.Set;
 import java.util.UUID;
 
 public class KickAllCommand extends SubCommand {
+    public KickAllCommand(SkyBlock plugin) {
+        super(plugin);
+    }
 
     @Override
     public void onCommandByPlayer(Player player, String[] args) {
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
-        SoundManager soundManager = plugin.getSoundManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
 
-        Config config = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml"));
+        Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
         Island island = islandManager.getIsland(player);
@@ -37,25 +41,25 @@ public class KickAllCommand extends SubCommand {
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Owner.Message"));
             soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        } else if (island.hasRole(IslandRole.Owner, player.getUniqueId())
-                || (island.hasRole(IslandRole.Operator, player.getUniqueId())
-                && plugin.getPermissionManager().hasPermission(island, "Kick", IslandRole.Operator))) {
-            if (!island.getStatus().equals(IslandStatus.CLOSED)) {
+        } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
+                || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                && this.plugin.getPermissionManager().hasPermission(island, "Kick", IslandRole.OPERATOR))) {
+            if (island.getStatus() != IslandStatus.CLOSED) {
                 Set<UUID> islandVisitors = islandManager.getVisitorsAtIsland(island);
 
-                if (islandVisitors.size() == 0) {
+                if (islandVisitors.isEmpty()) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Visitors.Message"));
                     soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
                 } else {
                     for (UUID islandVisitorList : islandVisitors) {
                         Player targetPlayer = Bukkit.getServer().getPlayer(islandVisitorList);
 
-                        if (targetPlayer != null &&
-                                (targetPlayer.hasPermission("fabledskyblock.bypass.kick")))
+                        if (targetPlayer != null && targetPlayer.hasPermission("fabledskyblock.bypass.kick")) {
                             continue;
+                        }
 
                         IslandKickEvent islandKickEvent = new IslandKickEvent(island.getAPIWrapper(),
-                                APIUtil.fromImplementation(IslandRole.Visitor),
+                                APIUtil.fromImplementation(IslandRole.VISITOR),
                                 Bukkit.getServer().getOfflinePlayer(islandVisitorList), player);
                         Bukkit.getServer().getPluginManager().callEvent(islandKickEvent);
 
@@ -70,8 +74,7 @@ public class KickAllCommand extends SubCommand {
                     }
 
                     messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.KickAll.Kicked.Sender.Message").replace("%visitors",
-                                    "" + islandVisitors.size()));
+                            configLoad.getString("Command.Island.KickAll.Kicked.Sender.Message").replace("%visitors", "" + islandVisitors.size()));
                     soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
                 }
             } else {
@@ -80,7 +83,7 @@ public class KickAllCommand extends SubCommand {
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.KickAll.Role.Message"));
-            soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
         }
     }
 

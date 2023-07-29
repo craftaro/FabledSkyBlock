@@ -11,10 +11,9 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class PvpPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
-    
+
     public PvpPermission(SkyBlock plugin) {
         super("PvP", CompatibleMaterial.DIAMOND_SWORD, PermissionType.GENERIC);
         this.plugin = plugin;
@@ -30,11 +29,10 @@ public class PvpPermission extends ListeningPermission {
             attacker = (Player) ((Projectile) event.getDamager()).getShooter();
         }
 
-        if(attacker != null && event.getEntity() instanceof Player){
+        if (attacker != null && event.getEntity() instanceof Player) {
             event.setCancelled(true);
 
-            cancelAndMessage(event, attacker, plugin, messageManager);
+            cancelAndMessage(event, attacker, this.plugin, this.messageManager);
         }
-
     }
 }

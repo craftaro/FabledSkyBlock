@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Ban {
-
     private final Island handle;
 
     public Ban(Island handle) {
@@ -26,7 +25,7 @@ public class Ban {
      * @return A Set of players that have banned from the Island
      */
     public Set<UUID> getBans() {
-        return handle.getIsland().getBan().getBans();
+        return this.handle.getIsland().getBan().getBans();
     }
 
     /**
@@ -34,7 +33,7 @@ public class Ban {
      */
     public void addBan(UUID issuer, UUID banned) {
         Preconditions.checkArgument(banned != null, "Cannot add ban to null banned uuid");
-        handle.getIsland().getBan().addBan(issuer, banned);
+        this.handle.getIsland().getBan().addBan(issuer, banned);
     }
 
     /**
@@ -42,13 +41,13 @@ public class Ban {
      */
     public void removeBan(UUID uuid) {
         Preconditions.checkArgument(uuid != null, "Cannot remove ban to null uuid");
-        handle.getIsland().getBan().removeBan(uuid);
+        this.handle.getIsland().getBan().removeBan(uuid);
     }
 
     /**
      * @return Implementation for the Island
      */
     public Island getIsland() {
-        return handle;
+        return this.handle;
     }
 }

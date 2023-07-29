@@ -8,7 +8,6 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
 public class ProjectileListeners implements Listener {
-
     private final SkyBlock plugin;
 
     public ProjectileListeners(SkyBlock plugin) {
@@ -21,11 +20,10 @@ public class ProjectileListeners implements Listener {
         ProjectileSource shooter = projectile.getShooter();
         if (shooter instanceof Player) {
             Player player = (Player) shooter;
-    
-            if (plugin.getWorldManager().isIslandWorld(player.getWorld())) {
-                plugin.getPermissionManager().processPermission(event, player, player.getLocation());
+
+            if (this.plugin.getWorldManager().isIslandWorld(player.getWorld())) {
+                this.plugin.getPermissionManager().processPermission(event, player, player.getLocation());
             }
         }
     }
-
 }

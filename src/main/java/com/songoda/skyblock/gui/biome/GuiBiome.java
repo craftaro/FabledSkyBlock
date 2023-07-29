@@ -47,64 +47,65 @@ public class GuiBiome extends Gui {
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
         setDefaultItem(null);
-        setTitle(TextUtils.formatText(languageLoad.getString("Menu.Biome.Title")));
+        setTitle(TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Title")));
         paint();
     }
 
     public void paint() {
-        SoundManager soundManager = plugin.getSoundManager();
-        BiomeManager biomeManager = plugin.getBiomeManager();
-        CooldownManager cooldownManager = plugin.getCooldownManager();
-        MessageManager messageManager = plugin.getMessageManager();
-        IslandManager islandManager = plugin.getIslandManager();
+        SoundManager soundManager = this.plugin.getSoundManager();
+        BiomeManager biomeManager = this.plugin.getBiomeManager();
+        CooldownManager cooldownManager = this.plugin.getCooldownManager();
+        MessageManager messageManager = this.plugin.getMessageManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
 
-        if (inventory != null)
-            inventory.clear();
+        if (this.inventory != null) {
+            this.inventory.clear();
+        }
         setActionForRange(0, 0, 5, 9, null);
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
-                TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Exit.Displayname"))), (event) -> {
+                TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Exit.Displayname"))), (event) -> {
             soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
-                TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Exit.Displayname"))), (event) -> {
+                TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Exit.Displayname"))), (event) -> {
             soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
             event.player.closeInventory();
         });
 
-        List<String> lore = languageLoad.getStringList("Menu.Biome.Item.Info.Lore");
+        List<String> lore = this.languageLoad.getStringList("Menu.Biome.Item.Info.Lore");
         for (ListIterator<String> i = lore.listIterator(); i.hasNext(); ) {
-            i.set(TextUtils.formatText(i.next().replace("%biome_type", island.getBiomeName())));
+            i.set(TextUtils.formatText(i.next().replace("%biome_type", this.island.getBiomeName())));
         }
 
         setItem(4, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING, // Info
-                TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Info.Displayname")), lore));
+                TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Info.Displayname")), lore));
 
-        for(int i=9; i<18; i++){
+        for (int i = 9; i < 18; i++) {
             setItem(i, CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
         }
 
         List<BiomeIcon> biomes = new ArrayList<>();
         for (CompatibleBiome biome : CompatibleBiome.getCompatibleBiomes()) {
             if (biome.isCompatible()) {
-                BiomeIcon icon = new BiomeIcon(plugin, biome);
+                BiomeIcon icon = new BiomeIcon(this.plugin, biome);
                 if (icon.biome != null &&
                         (!icon.permission ||
-                                player.hasPermission("fabledskyblock.biome." + biome.name().toLowerCase()))) {
-                    switch (world) {
-                        case Normal:
+                                this.player.hasPermission("fabledskyblock.biome." + biome.name().toLowerCase()))) {
+                    switch (this.world) {
+                        case NORMAL:
                             if (icon.normal) {
                                 biomes.add(icon);
                             }
                             break;
-                        case Nether:
+                        case NETHER:
                             if (icon.nether) {
                                 biomes.add(icon);
                             }
                             break;
-                        case End:
+                        case END:
                             if (icon.end) {
                                 biomes.add(icon);
                             }
@@ -114,29 +115,31 @@ public class GuiBiome extends Gui {
             }
         }
 
-        if(biomes.size() > 0){
+        if (!biomes.isEmpty()) {
             biomes.sort(Comparator.comparing(m -> m.biome.name()));
 
             this.pages = (int) Math.max(1, Math.ceil((double) biomes.size() / 27d));
 
-            if (page != 1)
+            if (this.page != 1) {
                 setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                        TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Last.Displayname"))),
+                                TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Last.Displayname"))),
                         (event) -> {
-                            page--;
+                            this.page--;
                             paint();
                         });
+            }
 
-            if (page != pages)
+            if (this.page != this.pages) {
                 setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                        TextUtils.formatText(languageLoad.getString("Menu.Biome.Item.Next.Displayname"))),
+                                TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Next.Displayname"))),
                         (event) -> {
-                            page++;
+                            this.page++;
                             paint();
                         });
+            }
 
-            for (int i = 18; i < ((getRows()-2)*9)+9; i++) {
-                int current = ((page - 1) * 27) - 18;
+            for (int i = 18; i < ((getRows() - 2) * 9) + 9; i++) {
+                int current = ((this.page - 1) * 27) - 18;
                 if (current + i >= biomes.size()) {
                     setItem(i, null);
                     continue;
@@ -148,52 +151,52 @@ public class GuiBiome extends Gui {
                     continue;
                 }
 
-                if(icon.biome.getBiome().equals(island.getBiome())){
+                if (icon.biome.getBiome() == this.island.getBiome()) {
                     icon.enchant();
                 }
 
                 setButton(i, icon.displayItem, event -> {
-                    if (cooldownManager.hasPlayer(CooldownType.Biome, player) && !player.hasPermission("fabledskyblock.bypass.cooldown")) {
-                        CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.Biome, player);
+                    if (cooldownManager.hasPlayer(CooldownType.BIOME, this.player) && !this.player.hasPermission("fabledskyblock.bypass.cooldown")) {
+                        CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.BIOME, this.player);
                         Cooldown cooldown = cooldownPlayer.getCooldown();
 
                         if (cooldown.getTime() < 60) {
-                            messageManager.sendMessage(player,
-                                    languageLoad.getString("Island.Biome.Cooldown.Message")
+                            messageManager.sendMessage(this.player,
+                                    this.languageLoad.getString("Island.Biome.Cooldown.Message")
                                             .replace("%time",
-                                                    cooldown.getTime() + " " + languageLoad
+                                                    cooldown.getTime() + " " + this.languageLoad
                                                             .getString("Island.Biome.Cooldown.Word.Second")));
                         } else {
                             long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
-                            messageManager.sendMessage(player,
-                                    languageLoad.getString("Island.Biome.Cooldown.Message")
+                            messageManager.sendMessage(this.player,
+                                    this.languageLoad.getString("Island.Biome.Cooldown.Message")
                                             .replace("%time", durationTime[2] + " "
-                                                    + languageLoad.getString("Island.Biome.Cooldown.Word.Minute")
+                                                    + this.languageLoad.getString("Island.Biome.Cooldown.Word.Minute")
                                                     + " " + durationTime[3] + " "
-                                                    + languageLoad.getString("Island.Biome.Cooldown.Word.Second")));
+                                                    + this.languageLoad.getString("Island.Biome.Cooldown.Word.Second")));
                         }
 
-                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(this.player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
 
                         return;
                     }
-                    cooldownManager.createPlayer(CooldownType.Biome, player);
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        biomeManager.setBiome(island, IslandWorld.Normal, icon.biome, () -> {
-                            if(languageLoad.getBoolean("Command.Island.Biome.Completed.Should-Display-Message")){
-                                messageManager.sendMessage(player, languageLoad.getString("Command.Island.Biome.Completed.Message"));
-                                soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                    cooldownManager.createPlayer(CooldownType.BIOME, this.player);
+                    Bukkit.getScheduler().runTask(this.plugin, () -> {
+                        biomeManager.setBiome(this.island, IslandWorld.NORMAL, icon.biome, () -> {
+                            if (this.languageLoad.getBoolean("Command.Island.Biome.Completed.Should-Display-Message")) {
+                                messageManager.sendMessage(this.player, this.languageLoad.getString("Command.Island.Biome.Completed.Message"));
+                                soundManager.playSound(this.player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
                             }
                         });
-                        island.setBiome(icon.biome.getBiome()); // FIXME: A event is fired with has a setBiome method...
-                        island.save();
+                        this.island.setBiome(icon.biome.getBiome()); // FIXME: A event is fired with has a setBiome method...
+                        this.island.save();
                     });
 
-                    soundManager.playSound(island.getLocation(IslandWorld.Normal, IslandEnvironment.Island),
+                    soundManager.playSound(this.island.getLocation(IslandWorld.NORMAL, IslandEnvironment.ISLAND),
                             CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
 
-                    if (!islandManager.isPlayerAtIsland(island, player, IslandWorld.Normal)) {
-                        soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
+                    if (!islandManager.isPlayerAtIsland(this.island, this.player, IslandWorld.NORMAL)) {
+                        soundManager.playSound(this.player, CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
                     }
                     paint();
                 });

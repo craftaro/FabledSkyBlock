@@ -31,7 +31,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public final class BlockScanner extends BukkitRunnable {
-
     private static final Method ID_FIELD;
     private static final int MAX_CHUNKS_PER_ITERATION = 2;
     private static final int MAX_EMPTY_ITERATIONS = 20;
@@ -53,8 +52,8 @@ public final class BlockScanner extends BukkitRunnable {
 
         try {
             id = (Integer) ID_FIELD.invoke(chunk.getSnapshot(), x, y, z);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            ex.printStackTrace();
         }
 
         return id;
@@ -85,7 +84,7 @@ public final class BlockScanner extends BukkitRunnable {
         this.completedNum = new AtomicInteger();
         this.island = island;
 
-        FileConfiguration config = SkyBlock.getInstance().getConfiguration();
+        FileConfiguration config = SkyBlock.getPlugin(SkyBlock.class).getConfiguration();
 
         int threadCount = 0;
 
@@ -128,7 +127,7 @@ public final class BlockScanner extends BukkitRunnable {
     }
 
     private void queueWork(World world, int scanY, List<CachedChunk> subList) {
-        WorldManager worldManager = SkyBlock.getInstance().getWorldManager();
+        WorldManager worldManager = SkyBlock.getPlugin(SkyBlock.class).getWorldManager();
 
         // The chunks that couldn't be taken snapshot async
         List<CachedChunk> pendingChunks = new ArrayList<>();
@@ -142,16 +141,16 @@ public final class BlockScanner extends BukkitRunnable {
         // This is the actual object that we will use to wait
         Condition emptyCondition = lock.newCondition();
 
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(SkyBlock.getInstance(), () -> {
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(SkyBlock.getPlugin(SkyBlock.class), () -> {
             // We need to hold the lock on the thread calling the await
             lock.lock();
 
             LocationBounds bounds = null;
-            if (island != null) {
-                Location islandLocation = island.getLocation(worldManager.getIslandWorld(world), IslandEnvironment.Island);
+            if (this.island != null) {
+                Location islandLocation = this.island.getLocation(worldManager.getIslandWorld(world), IslandEnvironment.ISLAND);
 
-                Location minLocation = new Location(world, islandLocation.getBlockX() - island.getRadius(), 0, islandLocation.getBlockZ() - island.getRadius());
-                Location maxLocation = new Location(world, islandLocation.getBlockX() + island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + island.getRadius());
+                Location minLocation = new Location(world, islandLocation.getBlockX() - this.island.getRadius(), 0, islandLocation.getBlockZ() - this.island.getRadius());
+                Location maxLocation = new Location(world, islandLocation.getBlockX() + this.island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + this.island.getRadius());
 
                 int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
                 int minZ = Math.min(maxLocation.getBlockZ(), minLocation.getBlockZ());
@@ -235,7 +234,7 @@ public final class BlockScanner extends BukkitRunnable {
                     }
 
                     if (pendingChunks.isEmpty()) {
-                        if (emptyIterations >= MAX_EMPTY_ITERATIONS) {
+                        if (this.emptyIterations >= MAX_EMPTY_ITERATIONS) {
                             // Send the signal to unlock the async thread and continue with the processing
                             emptyCondition.signalAll();
                             this.cancel();
@@ -243,13 +242,13 @@ public final class BlockScanner extends BukkitRunnable {
                             return;
                         }
 
-                        emptyIterations++;
+                        this.emptyIterations++;
                     }
                 } finally {
                     lock.unlock();
                 }
             }
-        }.runTaskTimer(SkyBlock.getInstance(), 1, 1);
+        }.runTaskTimer(SkyBlock.getPlugin(SkyBlock.class), 1, 1);
     }
 
     private void processCachedChunk(World world, int scanY, CachedChunk shot, LocationBounds bounds) {
@@ -279,48 +278,50 @@ public final class BlockScanner extends BukkitRunnable {
 
                     if (type == null) {
                         continue;
-                    } else if (type.equals(CompatibleMaterial.AIR) && ignoreAir) {
+                    } else if (type == CompatibleMaterial.AIR && this.ignoreAir) {
                         continue;
-                    } else if (type.equals(CompatibleMaterial.WATER) && ignoreLiquids) {
+                    } else if (type == CompatibleMaterial.WATER && this.ignoreLiquids) {
                         continue;
                     }
 
-                    blocks.add(new BlockInfo(world, x + (cX), y, z + (cZ)));
+                    this.blocks.add(new BlockInfo(world, x + (cX), y, z + (cZ)));
                 }
             }
         }
     }
 
     private synchronized int increment() {
-        return completedNum.getAndIncrement();
+        return this.completedNum.getAndIncrement();
     }
 
     private synchronized int get() {
-        return completedNum.get();
+        return this.completedNum.get();
     }
 
     @Override
     public void run() {
-        if (get() != threadCount) return;
+        if (get() != this.threadCount) {
+            return;
+        }
 
-        tasks.onComplete(blocks);
+        this.tasks.onComplete(this.blocks);
         cancel();
     }
 
     public static void startScanner(Map<World, List<CachedChunk>> snapshots, Island island, boolean ignoreLiquids, boolean ignoreLiquidsY, boolean ignoreAir, boolean ignoreY, ScannerTasks tasks) {
-
-        if (snapshots == null) throw new IllegalArgumentException("snapshots cannot be null");
-        if (tasks == null) throw new IllegalArgumentException("tasks cannot be null");
+        if (snapshots == null) {
+            throw new IllegalArgumentException("snapshots cannot be null");
+        }
+        if (tasks == null) {
+            throw new IllegalArgumentException("tasks cannot be null");
+        }
 
         final BlockScanner scanner = new BlockScanner(snapshots, island, ignoreLiquids, ignoreLiquidsY, ignoreAir, ignoreY, tasks);
 
-        scanner.runTaskTimer(SkyBlock.getInstance(), 5, 5);
+        scanner.runTaskTimer(SkyBlock.getPlugin(SkyBlock.class), 5, 5);
     }
 
     public interface ScannerTasks {
-
         void onComplete(Queue<BlockInfo> blocks);
-
     }
-
 }

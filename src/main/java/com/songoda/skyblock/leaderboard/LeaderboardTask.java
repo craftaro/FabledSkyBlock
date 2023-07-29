@@ -4,7 +4,6 @@ import com.songoda.skyblock.SkyBlock;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class LeaderboardTask extends BukkitRunnable {
-
     private final SkyBlock plugin;
 
     public LeaderboardTask(SkyBlock plugin) {
@@ -13,11 +12,11 @@ public class LeaderboardTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
+        LeaderboardManager leaderboardManager = this.plugin.getLeaderboardManager();
         leaderboardManager.clearLeaderboard();
         leaderboardManager.resetLeaderboard();
         leaderboardManager.setupLeaderHeads();
-    
-        plugin.getHologramTask().updateHologram();
+
+        this.plugin.getHologramTask().updateHologram();
     }
 }

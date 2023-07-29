@@ -3,7 +3,6 @@ package com.songoda.skyblock.menus;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
-import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
@@ -23,10 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
-
 public class Weather {
-
     private static Weather instance;
 
     public static Weather getInstance() {
@@ -38,7 +34,7 @@ public class Weather {
     }
 
     public void open(Player player) {
-        SkyBlock plugin = SkyBlock.getInstance();
+        SkyBlock plugin = SkyBlock.getPlugin(SkyBlock.class);
 
         PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
         MessageManager messageManager = plugin.getMessageManager();
@@ -60,12 +56,12 @@ public class Weather {
                         player.closeInventory();
 
                         return;
-                    } else if (!((island.hasRole(IslandRole.Operator, player.getUniqueId())
-                            && permissionManager.hasPermission(island, "Biome", IslandRole.Operator))
-                            || island.hasRole(IslandRole.Owner, player.getUniqueId()))) {
+                    } else if (!((island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
+                            && permissionManager.hasPermission(island, "Biome", IslandRole.OPERATOR))
+                            || island.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Weather.Permission.Message"));
-                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                         player.closeInventory();
 
                         return;
@@ -91,7 +87,7 @@ public class Weather {
                     } else if (is.getType() == CompatibleMaterial.BARRIER.getMaterial()) {
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                        soundManager.playSound(player,  CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
                     } else if ((is.getType() == CompatibleMaterial.SUNFLOWER.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Weather.Item.Time.Displayname"))))) {
@@ -112,7 +108,7 @@ public class Weather {
                         }
 
                         if (!island.isWeatherSynchronized()) {
-                            for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+                            for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.NORMAL)) {
                                 all.resetPlayerTime();
                                 all.resetPlayerWeather();
                                 all.setPlayerTime(island.getTime(),
@@ -134,7 +130,7 @@ public class Weather {
                         }
 
                         if (!island.isWeatherSynchronized()) {
-                            for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+                            for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.NORMAL)) {
                                 all.resetPlayerTime();
                                 all.resetPlayerWeather();
                                 all.setPlayerTime(island.getTime(),
@@ -155,7 +151,7 @@ public class Weather {
                             int islandTime = island.getTime();
                             WeatherType islandWeather = island.getWeather();
 
-                            for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+                            for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.NORMAL)) {
                                 all.setPlayerTime(islandTime,
                                         plugin.getConfiguration().getBoolean("Island.Weather.Time.Cycle"));
                                 all.setPlayerWeather(islandWeather);
@@ -163,7 +159,7 @@ public class Weather {
                         } else {
                             island.setWeatherSynchronized(true);
 
-                            for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.Normal)) {
+                            for (Player all : islandManager.getPlayersAtIsland(island, IslandWorld.NORMAL)) {
                                 all.resetPlayerTime();
                                 all.resetPlayerWeather();
                             }
@@ -257,7 +253,7 @@ public class Weather {
             nInv.setTitle(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Weather.Title")));
             nInv.setType(InventoryType.HOPPER);
 
-            Bukkit.getServer().getScheduler().runTask(plugin, () -> nInv.open());
+            Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
         }
     }
 }

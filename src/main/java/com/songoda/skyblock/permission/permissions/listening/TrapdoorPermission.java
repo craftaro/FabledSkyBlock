@@ -11,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class TrapdoorPermission extends ListeningPermission {
-
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
@@ -23,12 +22,15 @@ public class TrapdoorPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             return;
+        }
 
         Player player = event.getPlayer();
         CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
-        if (material == null) return;
+        if (material == null) {
+            return;
+        }
 
         switch (material) {
             case OAK_TRAPDOOR:
@@ -39,7 +41,8 @@ public class TrapdoorPermission extends ListeningPermission {
             case WARPED_TRAPDOOR:
             case CRIMSON_TRAPDOOR:
             case DARK_OAK_TRAPDOOR:
-                cancelAndMessage(event, player, plugin, messageManager);
+                cancelAndMessage(event, player, this.plugin, this.messageManager);
+                break;
         }
     }
 }
