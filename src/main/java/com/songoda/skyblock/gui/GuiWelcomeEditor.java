@@ -1,10 +1,10 @@
 package com.songoda.skyblock.gui;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -69,11 +69,11 @@ public class GuiWelcomeEditor extends Gui {
                                 "Island.Visitor.Welcome.Lines")
                                 || gui.getInputText().length() > this.mainConfig.getFileConfiguration()
                                 .getInt("Island.Visitor.Welcome.Length")) {
-                            this.plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                            this.plugin.getSoundManager().playSound(e.player, XSound.BLOCK_ANVIL_LAND);
                         } else {
                             welcomeMessage.add(gui.getInputText().trim());
                             this.island.setMessage(IslandMessage.WELCOME, e.player.getName(), welcomeMessage);
-                            this.plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1f, 1f);
+                            this.plugin.getSoundManager().playSound(e.player, XSound.BLOCK_NOTE_BLOCK_PLING);
                         }
                         e.player.closeInventory();
                         paint();
@@ -108,7 +108,7 @@ public class GuiWelcomeEditor extends Gui {
             this.messageManager.sendMessage(player,
                     this.configLoad.getString(
                             "Command.Island.Settings.Owner.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_ANVIL_LAND);
             player.closeInventory();
             return false;
         } else if (!(island1.hasRole(IslandRole.OPERATOR,
@@ -117,7 +117,7 @@ public class GuiWelcomeEditor extends Gui {
                 player.getUniqueId()))) {
             this.messageManager.sendMessage(player, this.configLoad
                     .getString("Command.Island.Role.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_ANVIL_LAND);
             player.closeInventory();
             return false;
         } else if (!this.plugin.getFileManager()
@@ -128,7 +128,7 @@ public class GuiWelcomeEditor extends Gui {
             this.messageManager.sendMessage(player,
                     this.configLoad.getString(
                             "Island.Settings.Visitor.Welcome.Disabled.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_ANVIL_LAND);
             return false;
         }
         return true;

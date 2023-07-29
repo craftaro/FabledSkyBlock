@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.challenge.FabledChallenge;
 import com.songoda.skyblock.challenge.challenge.Challenge;
@@ -34,18 +34,16 @@ public class ChallengeCommand extends SubCommand {
         FileConfiguration langConfigLoad = langConfig.getFileConfiguration();
 
         // Not loaded
-        if (!this.plugin.getConfiguration()
-                .getBoolean("Island.Challenge.Enable")) {
+        if (!this.plugin.getConfiguration().getBoolean("Island.Challenge.Enable")) {
             messageManager.sendMessage(player, langConfigLoad.getString("Command.Island.Challenge.Disabled.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             return;
         }
         if (args.length == 0) {
-            if (this.plugin.getConfiguration()
-                    .getBoolean("Island.Challenge.PerIsland")) {
+            if (this.plugin.getConfiguration().getBoolean("Island.Challenge.PerIsland")) {
                 if (islandManager.getIsland(player) == null) {
                     messageManager.sendMessage(player, langConfigLoad.getString("Command.Island.Challenge.NoIsland.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     return;
                 }
             }
@@ -53,9 +51,8 @@ public class ChallengeCommand extends SubCommand {
             // Open challenge inventory
             ChallengeCategory cc = fabledChallenge.getChallengeManager().getChallenge(1);
             if (cc == null) {
-                messageManager.sendMessage(player,
-                        langConfigLoad.getString("Command.Island.Challenge.NotFound.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                messageManager.sendMessage(player, langConfigLoad.getString("Command.Island.Challenge.NotFound.Message"));
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 return;
             }
             fabledChallenge.openChallengeInventory(player, fabledChallenge.getChallengeManager().getChallenge(1));
@@ -71,27 +68,26 @@ public class ChallengeCommand extends SubCommand {
             } catch (NumberFormatException ex) {
                 messageManager.sendMessage(player,
                         langConfigLoad.getString("Command.Island.Challenge.Invalid.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_HURT.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_HURT);
                 return;
             }
             ChallengeCategory cc = fabledChallenge.getChallengeManager().getChallenge(ccId);
             if (cc == null) {
                 messageManager.sendMessage(player,
                         langConfigLoad.getString("Command.Island.Challenge.CategoryNotFound.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_HURT.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_HURT);
                 return;
             }
             Challenge c = cc.getChallenge(cId);
             if (c == null) {
-                messageManager.sendMessage(player,
-                        langConfigLoad.getString("Command.Island.Challenge.ChallengeNotFound.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_HURT.getSound(), 1.0F, 1.0F);
+                messageManager.sendMessage(player, langConfigLoad.getString("Command.Island.Challenge.ChallengeNotFound.Message"));
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_HURT);
                 return;
             }
             if (fabledChallenge.getPlayerManager().doChallenge(player, c)) {    // Ok
-                soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
             } else {
-                soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_GLASS_BREAK);
             }
         }
     }

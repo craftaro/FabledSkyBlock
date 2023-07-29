@@ -1,9 +1,9 @@
 package com.songoda.skyblock.gui.bank;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
@@ -57,13 +57,13 @@ public class GuiBankTransaction extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Bank.Item.Exit.Displayname"))), (event) -> {
-            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             this.guiManager.showGUI(event.player, this.returnGui);
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Bank.Item.Exit.Displayname"))), (event) -> {
-            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             this.guiManager.showGUI(event.player, this.returnGui);
         });
 

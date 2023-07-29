@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.hooks.economies.Economy;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -31,16 +31,16 @@ public class UpgradeCommand extends SubCommand {
         if (this.plugin.getIslandManager().getIsland(player) == null) {
             this.plugin.getMessageManager().sendMessage(player,
                     configLoad.getString("Command.Island.Upgrade.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else {
             if (economy == null || !economy.isEnabled()) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Upgrade.Disabled.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 return;
             }
 
             Upgrade.getInstance().open(player);
-            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
         }
     }
 

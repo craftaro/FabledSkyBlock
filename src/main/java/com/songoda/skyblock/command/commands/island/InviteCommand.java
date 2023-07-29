@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandInviteEvent;
 import com.songoda.skyblock.api.invite.IslandInvitation;
@@ -47,7 +47,7 @@ public class InviteCommand extends SubCommand {
 
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Owner.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
             } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
                     || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
                     && this.plugin.getPermissionManager().hasPermission(island, "Invite", IslandRole.OPERATOR))) {
@@ -56,42 +56,42 @@ public class InviteCommand extends SubCommand {
                 if ((island.getRole(IslandRole.MEMBER).size() + island.getRole(IslandRole.OPERATOR).size()
                         + 1) >= island.getMaxMembers(player)) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Capacity.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 } else {
                     String playerName = args[0];
 
                     if (playerName.equalsIgnoreCase(player.getName())) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Invite.Yourself.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else {
                         Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
 
                         if (targetPlayer == null) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Invite.Offline.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         } else if (targetPlayer.getName().equalsIgnoreCase(player.getName())) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Invite.Yourself.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         } else if (island.hasRole(IslandRole.MEMBER, targetPlayer.getUniqueId())
                                 || island.hasRole(IslandRole.OPERATOR, targetPlayer.getUniqueId())
                                 || island.hasRole(IslandRole.OWNER, targetPlayer.getUniqueId())) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Invite.Member.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         } else if (this.plugin.getInviteManager().hasInvite(targetPlayer.getUniqueId())) {
                             Invite invite = this.plugin.getInviteManager().getInvite(targetPlayer.getUniqueId());
 
                             if (invite.getOwnerUUID().equals(island.getOwnerUUID())) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Invite.Already.Own.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                             } else {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Invite.Already.Other.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                             }
                         } else {
                             int respondTime = mainConfig.getFileConfiguration().getInt("Island.Invite.Time");
@@ -221,21 +221,20 @@ public class InviteCommand extends SubCommand {
                                     island.getOwnerUUID(), respondTime);
 
                             Bukkit.getServer().getPluginManager()
-                                    .callEvent(new IslandInviteEvent(island.getAPIWrapper(),
-                                            new IslandInvitation(targetPlayer, player, invite.getTime())));
+                                    .callEvent(new IslandInviteEvent(island.getAPIWrapper(), new IslandInvitation(targetPlayer, player, invite.getTime())));
 
-                            soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
-                            soundManager.playSound(targetPlayer, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
+                            soundManager.playSound(targetPlayer, XSound.BLOCK_NOTE_BLOCK_PLING);
                         }
                     }
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Permission.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Invite.Invalid.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

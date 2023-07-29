@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.hooks.economies.Economy;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
@@ -37,7 +37,7 @@ public class UnlockCommand extends SubCommand {
 
         if (args.length != 1) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Invalid.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
@@ -45,13 +45,13 @@ public class UnlockCommand extends SubCommand {
 
         if (!type.equals("Nether") && !type.equals("End")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Invalid.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
         if (!this.plugin.getConfiguration().getBoolean("Island.World." + type + ".Enable")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Disabled.Message").replace("%type%", type));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
@@ -60,13 +60,13 @@ public class UnlockCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
         if (islandManager.isIslandWorldUnlocked(island, islandWorld)) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Unlocked.Message").replace("%type%", type));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
@@ -76,11 +76,11 @@ public class UnlockCommand extends SubCommand {
         if (!economy.hasBalance(player, price)) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Money.Message").replace(
                     "%cost%", NumberUtils.formatNumber(price)));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
-        soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
         economy.withdrawBalance(player, price);
 
         islandManager.unlockIslandWorld(island, islandWorld);

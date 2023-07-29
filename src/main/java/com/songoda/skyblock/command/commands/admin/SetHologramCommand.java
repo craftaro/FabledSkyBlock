@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -64,16 +64,15 @@ public class SetHologramCommand extends SubCommand {
                     hologramManager.spawnHologram(hologramType1);
                 });
 
-                messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.Admin.SetHologram.Set.Message").replace("%type", hologramType.name()));
-                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetHologram.Set.Message").replace("%type", hologramType.name()));
+                soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
 
                 return;
             }
         }
 
         messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetHologram.Invalid.Message"));
-        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
     }
 
     @Override

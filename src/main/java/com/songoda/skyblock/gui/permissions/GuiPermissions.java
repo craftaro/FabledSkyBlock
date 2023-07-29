@@ -1,9 +1,9 @@
 package com.songoda.skyblock.gui.permissions;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.gui.GuiSignatureEditor;
@@ -61,7 +61,7 @@ public class GuiPermissions extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             this.guiManager.showGUI(event.player, this.returnGui);
         });
 
@@ -110,15 +110,15 @@ public class GuiPermissions extends Gui {
                         switch (this.island.getStatus()) {
                             case OPEN:
                                 this.plugin.getIslandManager().whitelistIsland(this.island);
-                                this.soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
+                                this.soundManager.playSound(event.player, XSound.BLOCK_WOODEN_DOOR_CLOSE);
                                 break;
                             case CLOSED:
                                 this.plugin.getIslandManager().closeIsland(this.island);
-                                this.soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1f, 1f);
+                                this.soundManager.playSound(event.player, XSound.BLOCK_WOODEN_DOOR_CLOSE);
                                 break;
                             case WHITELISTED:
                                 this.island.setStatus(IslandStatus.OPEN);
-                                this.soundManager.playSound(event.player, CompatibleSound.BLOCK_WOODEN_DOOR_OPEN.getSound(), 1f, 1f);
+                                this.soundManager.playSound(event.player, XSound.BLOCK_WOODEN_DOOR_OPEN);
                                 break;
                         }
                         paint();
@@ -127,7 +127,7 @@ public class GuiPermissions extends Gui {
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
-            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             this.guiManager.showGUI(event.player, this.returnGui);
         });
 
@@ -177,7 +177,7 @@ public class GuiPermissions extends Gui {
                     if (!hasPermission(this.island, event.player, this.role)) {
                         this.plugin.getMessageManager().sendMessage(event.player, this.languageLoad
                                 .getString("Command.Island.Settings.Permission.Change.Message"));
-                        this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        this.soundManager.playSound(event.player, XSound.BLOCK_ANVIL_LAND);
 
                         return;
                     }

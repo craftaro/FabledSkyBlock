@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -112,7 +112,7 @@ public class StructureCommand extends SubCommand {
                 }
             }
 
-            soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.ENTITY_ARROW_HIT);
         } else {
             if (args[0].equalsIgnoreCase("tool")) {
                 try {
@@ -124,7 +124,7 @@ public class StructureCommand extends SubCommand {
                                     .getItemMeta().getDisplayName().equals(is.getItemMeta().getDisplayName()))) {
                                 messageManager.sendMessage(player, configLoad
                                         .getString("Command.Island.Admin.Structure.Tool.Inventory.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                                 return;
                             }
@@ -134,11 +134,11 @@ public class StructureCommand extends SubCommand {
                     player.getInventory().addItem(is);
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Admin.Structure.Tool.Equiped.Message"));
-                    soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
                 } catch (Exception e) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Structure.Tool.Material.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                     Bukkit.getServer().getLogger().log(Level.WARNING,
                             "SkyBlock | Error: The defined material in the configuration file for the Structure selection tool could not be found.");
@@ -155,51 +155,47 @@ public class StructureCommand extends SubCommand {
                     if (position1Location == null && position2Location == null) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Admin.Structure.Save.Position.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if ((position1Location == null && position2Location != null)
                             || (position1Location != null && position2Location == null)) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Admin.Structure.Save.Complete.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (!position1Location.getWorld().getName()
                             .equals(position2Location.getWorld().getName())) {
                         messageManager.sendMessage(player, configLoad
                                 .getString("Command.Island.Admin.Structure.Save.Selection.World.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (!player.getWorld().getName().equals(position1Location.getWorld().getName())) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Admin.Structure.Save.Player.World.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (!LocationUtil.isInsideArea(player.getLocation(), position1Location,
                             position2Location)) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Admin.Structure.Save.Player.Area.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else {
                         try {
                             File configFile = new File(
-                                    this.plugin.getDataFolder().toString() + "/structures/" + args[1] + ".structure");
+                                    this.plugin.getDataFolder() + "/structures/" + args[1] + ".structure");
                             StructureUtil.saveStructure(configFile, player.getLocation(),
                                     StructureUtil.getFixedLocations(position1Location, position2Location));
 
                             messageManager.sendMessage(player,
-                                    configLoad
-                                            .getString(
-                                                    "Command.Island.Admin.Structure.Save.Saved.Successful.Message")
+                                    configLoad.getString("Command.Island.Admin.Structure.Save.Saved.Successful.Message")
                                             .replace("%name", args[1]));
-                            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
                             return;
                         } catch (Exception ex) {
-                            messageManager.sendMessage(player, configLoad
-                                    .getString("Command.Island.Admin.Structure.Save.Saved.Failed.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Saved.Failed.Message"));
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                             ex.printStackTrace();
                         }
                     }
                 } else {
-                    messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.Admin.Structure.Save.Invalid.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Structure.Save.Invalid.Message"));
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 }
 
 
@@ -210,7 +206,7 @@ public class StructureCommand extends SubCommand {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Admin.Structure.Convert.Invalid.Message")
                                         .replace("%name", args[1]));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         return;
                     }
                     byte[] content = new byte[(int) structureFile.length()];
@@ -231,25 +227,25 @@ public class StructureCommand extends SubCommand {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Admin.Structure.Convert.Converted.Failed.Message")
                                         .replace("%name", args[1]));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         ex.printStackTrace();
                     }
 
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Admin.Structure.Convert.Converted.Successful.Message")
                                     .replace("%name", args[1]));
-                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
 
                 } else {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Admin.Structure.Convert.Invalid.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 }
 
                 return;
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Argument.Unrecognised.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -26,10 +26,10 @@ public class ControlPanelCommand extends SubCommand {
 
         if (this.plugin.getIslandManager().getIsland(player) == null) {
             this.plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.ControlPanel.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else {
             ControlPanel.getInstance().open(player);
-            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
         }
     }
 

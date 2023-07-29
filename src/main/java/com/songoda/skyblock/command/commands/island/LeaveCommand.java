@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerIslandLeaveEvent;
 import com.songoda.skyblock.command.SubCommand;
@@ -47,11 +47,11 @@ public class LeaveCommand extends SubCommand {
         if (island == null) {
             messageManager.sendMessage(player,
                     languageConfig.getFileConfiguration().getString("Command.Island.Leave.Member.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             messageManager.sendMessage(player,
                     languageConfig.getFileConfiguration().getString("Command.Island.Leave.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else {
             PlayerIslandLeaveEvent islandLeaveEvent = new PlayerIslandLeaveEvent(player, island.getAPIWrapper());
             Bukkit.getServer().getPluginManager().callEvent(islandLeaveEvent);
@@ -105,7 +105,7 @@ public class LeaveCommand extends SubCommand {
                                     languageConfig.getFileConfiguration()
                                             .getString("Command.Island.Leave.Left.Broadcast.Message")
                                             .replace("%player", player.getName())));
-                            soundManager.playSound(loopPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
+                            soundManager.playSound(loopPlayer, XSound.ENTITY_IRON_GOLEM_ATTACK, 5, 5);
 
                             if (island.getRole(IslandRole.MEMBER).isEmpty() && island.getRole(IslandRole.OPERATOR).isEmpty()) {
                                 if (!islandManager.getVisitorsAtIsland(island).isEmpty()) {
@@ -119,7 +119,7 @@ public class LeaveCommand extends SubCommand {
                 }
 
                 messageManager.sendMessage(player, languageConfig.getFileConfiguration().getString("Command.Island.Leave.Left.Sender.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 5.0F, 5.0F);
+                soundManager.playSound(player, XSound.ENTITY_IRON_GOLEM_ATTACK, 5, 5);
 
                 scoreboardManager.updatePlayerScoreboardType(player);
             }

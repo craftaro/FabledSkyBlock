@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -69,16 +69,15 @@ public class DeleteCommand extends SubCommand {
 
             if (targetPlayerUUID == null || !islandManager.isIslandExist(targetPlayerUUID)) {
                 messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Delete.Owner.Message"));
-                soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
             } else {
                 islandManager.loadIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
                 Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(targetPlayerUUID));
                 Location spawnLocation = LocationUtil.getSpawnLocation();
 
                 if (spawnLocation != null && islandManager.isLocationAtIsland(island, spawnLocation)) {
-                    messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.Admin.Delete.Spawn.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Delete.Spawn.Message"));
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                     islandManager.unloadIsland(island, null);
 
@@ -88,9 +87,8 @@ public class DeleteCommand extends SubCommand {
                 for (Player all : Bukkit.getOnlinePlayers()) {
                     if (island.hasRole(IslandRole.MEMBER, all.getUniqueId())
                             || island.hasRole(IslandRole.OPERATOR, all.getUniqueId())) {
-                        all.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                configLoad.getString("Command.Island.Confirmation.Deletion.Broadcast.Message")));
-                        soundManager.playSound(all, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 10.0F, 10.0F);
+                        all.sendMessage(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Command.Island.Confirmation.Deletion.Broadcast.Message")));
+                        soundManager.playSound(all, XSound.ENTITY_GENERIC_EXPLODE, 10, 10);
                     }
                 }
 
@@ -98,11 +96,11 @@ public class DeleteCommand extends SubCommand {
                 islandManager.deleteIsland(island, true);
 
                 messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Delete.Deleted.Message").replace("%player", targetPlayerName));
-                soundManager.playSound(sender, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.ENTITY_IRON_GOLEM_ATTACK);
             }
         } else {
             messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Delete.Invalid.Message"));
-            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

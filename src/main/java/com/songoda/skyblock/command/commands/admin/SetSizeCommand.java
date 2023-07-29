@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
@@ -68,15 +68,15 @@ public class SetSizeCommand extends SubCommand {
                 if (islandOwnerUUID == null) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetSize.Island.Owner.Message"));
-                    soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
                 } else if (size < 20) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetSize.Size.Greater.Message"));
-                    soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
                 } else if (size > 1000) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetSize.Size.Less.Message"));
-                    soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
                 } else {
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         Island island = islandManager
@@ -92,7 +92,7 @@ public class SetSizeCommand extends SubCommand {
                         if (!fileManager.isFileExist(islandDataFile)) {
                             messageManager.sendMessage(sender,
                                     configLoad.getString("Command.Island.Admin.SetSize.Island.Data.Message"));
-                            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
 
                             return;
                         }
@@ -112,17 +112,15 @@ public class SetSizeCommand extends SubCommand {
                             configLoad.getString("Command.Island.Admin.SetSize.Set.Message")
                                     .replace("%player", targetPlayerName)
                                     .replace("%size", NumberUtils.formatNumber(size)));
-                    soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, XSound.BLOCK_NOTE_BLOCK_PLING);
                 }
             } else {
-                messageManager.sendMessage(sender,
-                        configLoad.getString("Command.Island.Admin.SetSize.Numerical.Message"));
-                soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Numerical.Message"));
+                soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
             }
         } else {
-            messageManager.sendMessage(sender,
-                    configLoad.getString("Command.Island.Admin.SetSize.Invalid.Message"));
-            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetSize.Invalid.Message"));
+            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

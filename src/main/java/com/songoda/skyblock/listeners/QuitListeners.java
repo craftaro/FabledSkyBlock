@@ -1,6 +1,6 @@
 package com.songoda.skyblock.listeners;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.challenge.player.PlayerManager;
 import com.songoda.skyblock.cooldown.CooldownManager;
@@ -144,7 +144,7 @@ public class QuitListeners implements Listener {
                         this.plugin.getLanguage()
                                 .getString("Command.Island.Invite.Invited.Sender.Disconnected.Message")
                                 .replace("%player", player.getName()));
-                this.plugin.getSoundManager().playSound(targetPlayer, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                this.plugin.getSoundManager().playSound(targetPlayer, XSound.ENTITY_VILLAGER_NO);
             }
 
             inviteManager.removeInvite(player.getUniqueId());

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -54,24 +54,24 @@ public class LeaderboardCommand extends SubCommand {
                             playerDataManager.getPlayerData(player).setViewer(new Leaderboard.Viewer(Leaderboard.Viewer.Type.VOTES));
                         } else {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Disabled.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                             return;
                         }
                         break;
                     default:
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Invalid.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         return;
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Leaderboard.Invalid.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 return;
             }
 
             Leaderboard.getInstance().open(player);
-            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
         }
     }
 

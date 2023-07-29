@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -34,7 +34,7 @@ public class CloseCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Close.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
                 || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
                 && this.plugin.getPermissionManager().hasPermission(island, "Visitor", IslandRole.OPERATOR))) {
@@ -42,14 +42,14 @@ public class CloseCommand extends SubCommand {
                 islandManager.closeIsland(island);
 
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Close.Closed.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_DOOR_CLOSE.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_WOODEN_DOOR_CLOSE);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Close.Already.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Close.Permission.Message"));
-            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
         }
     }
 

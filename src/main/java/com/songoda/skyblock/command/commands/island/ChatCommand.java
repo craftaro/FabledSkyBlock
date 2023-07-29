@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerIslandChatEvent;
 import com.songoda.skyblock.api.event.player.PlayerIslandChatSwitchEvent;
@@ -45,26 +45,26 @@ public class ChatCommand extends SubCommand {
                 playerData.setChat(false);
 
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Untoggled.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_IRON_GOLEM_ATTACK);
                 return;
             }
 
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Owner.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else if ((island.getRole(IslandRole.MEMBER).size() + island.getRole(IslandRole.OPERATOR).size()) == 0) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Team.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else if ((islandManager.getMembersOnline(island).size() - 1) <= 0) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Offline.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else {
                 Bukkit.getServer().getPluginManager()
                         .callEvent(new PlayerIslandChatSwitchEvent(player, island.getAPIWrapper(), true));
                 playerData.setChat(true);
 
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Toggled.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
             }
         } else {
             if (playerDataManager.hasPlayerData(player)) {
@@ -81,7 +81,7 @@ public class ChatCommand extends SubCommand {
                     });
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Chat.Owner.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 }
             }
         }

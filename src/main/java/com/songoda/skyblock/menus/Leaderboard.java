@@ -1,7 +1,7 @@
 package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -67,7 +67,7 @@ public class Leaderboard {
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad.getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
                                         + ".Item.Exit.Displayname"))))) {
-                            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
 
                             return;
                         } else if ((is.getType() == Material.DIAMOND) && (is.hasItemMeta())
@@ -96,7 +96,7 @@ public class Leaderboard {
                             playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.VOTES));
                         }
 
-                        soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     }
@@ -154,18 +154,18 @@ public class Leaderboard {
                         if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())) {
                             if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                     configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Exit.Displayname")))) {
-                                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
                             } else if (is.getItemMeta().getDisplayName()
                                     .equals(plugin.formatText(configLoad
                                             .getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname")))) {
                                 if (plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
                                     playerDataManager.getPlayerData(player)
                                             .setViewer(new Viewer(Viewer.Type.BROWSE));
-                                    soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, XSound.ENTITY_ARROW_HIT);
 
                                     Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                                 } else {
-                                    soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
                                 }
 
                                 return;
@@ -216,7 +216,7 @@ public class Leaderboard {
                             return;
                         }
 
-                        soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);

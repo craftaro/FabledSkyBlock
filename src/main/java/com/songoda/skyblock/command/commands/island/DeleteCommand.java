@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -52,7 +52,7 @@ public class DeleteCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
         } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                     .getFileConfiguration().getBoolean("Island.Creation.Cooldown.Creation.Enable")
@@ -76,14 +76,13 @@ public class DeleteCommand extends SubCommand {
                                             .getString("Island.Deletion.Cooldown.Word.Second")));
                 }
 
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                 return;
             }
             if (playerData.getConfirmationTime() > 0) {
-                messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.Delete.Confirmation.Pending.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Confirmation.Pending.Message"));
+                soundManager.playSound(player, XSound.ENTITY_IRON_GOLEM_ATTACK);
             } else {
                 int confirmationTime = fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getInt("Island.Confirmation.Timeout");
@@ -154,11 +153,11 @@ public class DeleteCommand extends SubCommand {
                     messageManager.sendMessage(player, confirmationMessage.replace("%time", "" + confirmationTime));
                 }
 
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Delete.Permission.Message"));
-            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
         }
     }
 

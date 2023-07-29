@@ -1,7 +1,7 @@
 package com.songoda.skyblock.tasks;
 
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.Bukkit;
@@ -82,7 +82,7 @@ public class MobNetherWaterTask extends BukkitRunnable {
     private void removeWater(World world, Block block) {
         if (block.getType() == Material.WATER) {
             block.setType(Material.AIR, true);
-            block.getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
+            XSound.BLOCK_FIRE_EXTINGUISH.play(block.getLocation());
             world.playEffect(block.getLocation(), Effect.SMOKE, 1);
         }
     }

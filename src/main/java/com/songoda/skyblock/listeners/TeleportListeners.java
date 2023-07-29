@@ -1,7 +1,7 @@
 package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerIslandEnterEvent;
 import com.songoda.skyblock.api.event.player.PlayerIslandExitEvent;
@@ -98,14 +98,14 @@ public class TeleportListeners implements Listener {
                             event.setCancelled(true);
 
                             messageManager.sendMessage(player, configLoad.getString("Island.Visit.Closed.Plugin.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             return;
                         } else if (this.plugin.getConfiguration().getBoolean("Island.Visitor.Banning") && island.getBan().isBanned(player.getUniqueId())) {
                             event.setCancelled(true);
 
                             messageManager.sendMessage(player, configLoad.getString("Island.Visit.Banned.Teleport.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             return;
                         }

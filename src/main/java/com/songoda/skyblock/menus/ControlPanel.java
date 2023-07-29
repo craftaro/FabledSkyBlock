@@ -1,7 +1,7 @@
 package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.utils.item.MenuClickRegistry;
@@ -48,7 +48,7 @@ public final class ControlPanel {
             });
 
             executors.put(RegistryKey.fromLanguageFile("Menu.ControlPanel.Item.Barrier.Displayname", CompatibleMaterial.BLACK_STAINED_GLASS_PANE), (inst, player, e) -> {
-                inst.getSoundManager().playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+                inst.getSoundManager().playSound(player, XSound.BLOCK_GLASS_BREAK);
 
                 e.setWillClose(false);
                 e.setWillDestroy(false);

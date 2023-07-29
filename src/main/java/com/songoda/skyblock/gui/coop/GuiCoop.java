@@ -1,10 +1,10 @@
 package com.songoda.skyblock.gui.coop;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -59,7 +59,7 @@ public class GuiCoop extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE.);
             event.player.closeInventory();
         });
 
@@ -85,13 +85,13 @@ public class GuiCoop extends Gui {
                     } else {
                         messageManager.sendMessage(event.player,
                                 this.languageLoad.getString("Command.Island.Coop.Permission.Message"));
-                        soundManager.playSound(event.player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(event.player, XSound.ENTITY_VILLAGER_NO);
                     }
                 });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
         });
 
@@ -105,7 +105,7 @@ public class GuiCoop extends Gui {
             emptyMeta.setDisplayName(TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Nothing.Displayname")));
             empty.setItemMeta(emptyMeta);
             setButton(31, empty, (event) ->
-                    soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F));
+                    soundManager.playSound(event.player, XSound.BLOCK_ANVIL_LAND));
         } else {
             this.pages = (int) Math.max(1, Math.ceil((double) coopPlayers.size() / 36d));
 

@@ -1,9 +1,9 @@
 package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.hooks.LogManager;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.google.common.collect.Lists;
 import com.songoda.skyblock.SkyBlock;
@@ -182,7 +182,7 @@ public class BlockListeners implements Listener {
             if (configLoad.getBoolean("Island.Spawn.Protection")) {
                 event.setCancelled(true);
                 this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.SpawnProtection.Break.Message"));
-                this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
             }
         }
 
@@ -343,7 +343,7 @@ public class BlockListeners implements Listener {
 
             if (isObstructing) {
                 this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.SpawnProtection.Place.Message"));
-                this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                 event.setCancelled(true);
                 return;
@@ -372,7 +372,7 @@ public class BlockListeners implements Listener {
 
             this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.Limit.Block.Exceeded.Message")
                     .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
 
             event.setCancelled(true);
             return;
@@ -459,19 +459,19 @@ public class BlockListeners implements Listener {
                     }
                     if ((((ent instanceof Blaze || ent instanceof MagmaCube) || ent instanceof Wither) || ent instanceof Ghast) || witherSkeleton) {
                         event.setCancelled(true);
-                        event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
+                        XSound.BLOCK_FIRE_EXTINGUISH.play(block.getLocation());
                         event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
                     } else {
                         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
                             if (((ent instanceof Piglin || ent instanceof Hoglin) || ent instanceof Strider) || ent instanceof Zoglin) {
                                 event.setCancelled(true);
-                                event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
+                                XSound.BLOCK_FIRE_EXTINGUISH.play(block.getLocation());
                                 event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
                             }
                         } else {
                             if (ent instanceof PigZombie) {
                                 event.setCancelled(true);
-                                event.getToBlock().getWorld().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1f, 1f);
+                                XSound.BLOCK_FIRE_EXTINGUISH.play(block.getLocation());
                                 event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
                             }
                         }

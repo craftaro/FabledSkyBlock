@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -33,7 +33,7 @@ public class BankCommand extends SubCommand {
 
         if (!this.plugin.getConfiguration().getBoolean("Island.Bank.Enable")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Disabled.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
@@ -41,7 +41,7 @@ public class BankCommand extends SubCommand {
         island = islandManager.getIsland(player);
 
         if (island == null) {
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_GLASS_BREAK);
             this.plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Bank.Unknown"));
             return;
         }

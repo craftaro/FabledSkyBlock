@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.ban.Ban;
 import com.songoda.skyblock.command.SubCommand;
@@ -40,7 +40,7 @@ public class UnbanCommand extends SubCommand {
 
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Owner.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else if (this.plugin.getConfiguration()
                     .getBoolean("Island.Visitor.Banning")) {
                 if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
@@ -62,23 +62,23 @@ public class UnbanCommand extends SubCommand {
 
                     if (targetPlayerUUID == null) {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Found.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (targetPlayerUUID.equals(player.getUniqueId())) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Unban.Yourself.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (island.hasRole(IslandRole.MEMBER, targetPlayerUUID)
                             || island.hasRole(IslandRole.OPERATOR, targetPlayerUUID)
                             || island.hasRole(IslandRole.OWNER, targetPlayerUUID)) {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Member.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (!island.getBan().isBanned(targetPlayerUUID)) {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Banned.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Unbanned.Message")
                                 .replace("%player", targetPlayerName));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_IRON_GOLEM_ATTACK);
 
                         Ban ban = island.getBan();
                         ban.removeBan(targetPlayerUUID);
@@ -86,15 +86,15 @@ public class UnbanCommand extends SubCommand {
                     }
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Permission.Message"));
-                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Disabled.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unban.Invalid.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

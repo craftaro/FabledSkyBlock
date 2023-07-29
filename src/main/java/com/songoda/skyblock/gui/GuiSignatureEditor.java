@@ -1,10 +1,10 @@
 package com.songoda.skyblock.gui;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -69,11 +69,11 @@ public class GuiSignatureEditor extends Gui {
                                 "Island.Visitor.Signature.Lines")
                                 || gui.getInputText().length() > this.mainConfig.getFileConfiguration()
                                 .getInt("Island.Visitor.Signature.Length")) {
-                            this.plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                            this.plugin.getSoundManager().playSound(e.player, XSound.BLOCK_ANVIL_LAND);
                         } else {
                             signatureMessage.add(gui.getInputText().trim());
                             this.island.setMessage(IslandMessage.SIGNATURE, e.player.getName(), signatureMessage);
-                            this.plugin.getSoundManager().playSound(e.player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1f, 1f);
+                            this.plugin.getSoundManager().playSound(e.player, XSound.BLOCK_NOTE_BLOCK_PLING);
                         }
                         e.player.closeInventory();
                         paint();
@@ -105,30 +105,18 @@ public class GuiSignatureEditor extends Gui {
         Island island1 = this.islandManager.getIsland(player);
 
         if (island1 == null) {
-            this.messageManager.sendMessage(player,
-                    this.configLoad.getString(
-                            "Command.Island.Settings.Owner.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            this.messageManager.sendMessage(player, this.configLoad.getString("Command.Island.Settings.Owner.Message"));
+            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_ANVIL_LAND);
             player.closeInventory();
             return false;
-        } else if (!(island1.hasRole(IslandRole.OPERATOR,
-                player.getUniqueId())
-                || island1.hasRole(IslandRole.OWNER,
-                player.getUniqueId()))) {
-            this.messageManager.sendMessage(player, this.configLoad
-                    .getString("Command.Island.Role.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+        } else if (!(island1.hasRole(IslandRole.OPERATOR, player.getUniqueId()) || island1.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
+            this.messageManager.sendMessage(player, this.configLoad.getString("Command.Island.Role.Message"));
+            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_ANVIL_LAND);
             player.closeInventory();
             return false;
-        } else if (!this.plugin.getFileManager()
-                .getConfig(new File(this.plugin.getDataFolder(),
-                        "config.yml"))
-                .getFileConfiguration().getBoolean(
-                        "Island.Visitor.Signature.Enable")) {
-            this.messageManager.sendMessage(player,
-                    this.configLoad.getString(
-                            "Island.Settings.Visitor.Signature.Disabled.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+        } else if (!this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "config.yml")).getFileConfiguration().getBoolean("Island.Visitor.Signature.Enable")) {
+            this.messageManager.sendMessage(player, this.configLoad.getString("Island.Settings.Visitor.Signature.Disabled.Message"));
+            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_ANVIL_LAND);
             return false;
         }
         return true;

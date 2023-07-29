@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerVoteEvent;
 import com.songoda.skyblock.api.event.player.PlayerVoteRemoveEvent;
@@ -47,7 +47,7 @@ public class VoteCommand extends SubCommand {
             if (!this.plugin.getConfiguration()
                     .getBoolean("Island.Visitor.Vote")) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Disabled.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 return;
             }
@@ -67,10 +67,10 @@ public class VoteCommand extends SubCommand {
 
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Island.None.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else if (!visitManager.hasIsland(islandOwnerUUID)) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Island.Unloaded.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else {
                 Visit visit = visitManager.getIsland(islandOwnerUUID);
                 if (!islandManager.containsIsland(islandOwnerUUID)) {
@@ -86,7 +86,7 @@ public class VoteCommand extends SubCommand {
                             || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Vote.Island.Member.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (playerDataManager.hasPlayerData(player)) {
                         PlayerData playerData = playerDataManager.getPlayerData(player);
 
@@ -98,7 +98,7 @@ public class VoteCommand extends SubCommand {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Vote.Vote.Removed.Message")
                                                 .replace("%player", targetPlayerName));
-                                soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.ENTITY_GENERIC_EXPLODE);
                             } else {
                                 PlayerVoteEvent playerVoteEvent = new PlayerVoteEvent(player, island.getAPIWrapper());
                                 Bukkit.getServer().getPluginManager().callEvent(playerVoteEvent);
@@ -111,12 +111,12 @@ public class VoteCommand extends SubCommand {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Command.Island.Vote.Vote.Added.Message")
                                                 .replace("%player", targetPlayerName));
-                                soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
                             }
                         } else {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Vote.Island.Location.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         }
 
                         islandManager.unloadIsland(island, null);
@@ -124,12 +124,12 @@ public class VoteCommand extends SubCommand {
                 } else {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Vote.Island.Closed.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 }
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Vote.Invalid.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

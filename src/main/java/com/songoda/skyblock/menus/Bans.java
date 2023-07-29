@@ -1,8 +1,8 @@
 package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
@@ -59,13 +59,13 @@ public class Bans {
                     if (island1 == null) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Bans.Owner.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                         return;
                     } else if (!plugin.getConfiguration().getBoolean("Island.Visitor.Banning")) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Bans.Disabled.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                         return;
                     }
@@ -75,18 +75,18 @@ public class Bans {
                     if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Barrier.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_GLASS_BREAK);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
                     } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Exit.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
                     } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Information.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AnvilGui gui = new AnvilGui(player);
@@ -109,7 +109,7 @@ public class Bans {
                     } else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Nothing.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
@@ -117,13 +117,13 @@ public class Bans {
                         if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                 configLoad.getString("Menu.Bans.Item.Previous.Displayname")))) {
                             playerData1.setPage(MenuType.BANS, playerData1.getPage(MenuType.BANS) - 1);
-                            soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.ENTITY_ARROW_HIT);
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                 configLoad.getString("Menu.Bans.Item.Next.Displayname")))) {
                             playerData1.setPage(MenuType.BANS, playerData1.getPage(MenuType.BANS) + 1);
-                            soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.ENTITY_ARROW_HIT);
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                         } else {
@@ -136,9 +136,8 @@ public class Bans {
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 3L);
                             } else {
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Command.Island.Bans.Permission.Message"));
-                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                messageManager.sendMessage(player, configLoad.getString("Command.Island.Bans.Permission.Message"));
+                                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);

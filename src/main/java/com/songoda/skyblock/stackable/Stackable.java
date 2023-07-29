@@ -1,8 +1,8 @@
 package com.songoda.skyblock.stackable;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -32,7 +32,7 @@ public class Stackable {
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
         this.updateDisplay();
-        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(location, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(location, XSound.BLOCK_ANVIL_LAND);
         this.save();
     }
 
@@ -42,7 +42,7 @@ public class Stackable {
         this.material = material;
         this.maxSize = maxSize;
         this.updateDisplay();
-        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(location, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(location, XSound.BLOCK_ANVIL_LAND);
         this.save();
     }
 
@@ -96,21 +96,21 @@ public class Stackable {
     public void addOne() {
         this.size++;
         this.updateDisplay();
-        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(this.location, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(this.location, XSound.ENTITY_PLAYER_LEVELUP, 1, 1);
         this.save();
     }
 
     public void takeOne() {
         this.size--;
         this.updateDisplay();
-        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(this.location, XSound.ENTITY_ARROW_HIT, 1, 1);
         this.save();
     }
 
     public void take(int n) {
         this.size -= n;
         this.updateDisplay();
-        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(this.location, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+        SkyBlock.getPlugin(SkyBlock.class).getSoundManager().playSound(this.location, XSound.ENTITY_ARROW_HIT, 1, 1);
         this.save();
     }
 

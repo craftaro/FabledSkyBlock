@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -50,7 +50,7 @@ public class ChatSpyCommand extends SubCommand {
                         messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.GlobalEnabled.Message"));
                     } else {
                         messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.GlobalAlreadyEnabled.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     }
                     break;
                 case "add":
@@ -66,7 +66,7 @@ public class ChatSpyCommand extends SubCommand {
                         }
                     } else {
                         messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.InvalidArgNumber.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     }
                     break;
                 case "remove":
@@ -82,7 +82,7 @@ public class ChatSpyCommand extends SubCommand {
                         }
                     } else {
                         messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.InvalidArgNumber.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     }
                     break;
                 case "list":
@@ -100,7 +100,7 @@ public class ChatSpyCommand extends SubCommand {
                     break;
                 default:
                     messageManager.sendMessage(player, languageLoad.getString("Command.Island.Admin.ChatSpy.InvalidArgNumber.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     break;
             }
         }

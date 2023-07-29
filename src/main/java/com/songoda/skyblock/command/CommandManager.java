@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.commands.admin.AddUpgradeCommand;
 import com.songoda.skyblock.command.commands.admin.AdminBank;
@@ -241,7 +241,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                     if (!canUseHelp) {
                         messageManager.sendMessage(player, languageConfigLoad.getString("Command.PermissionDenied.Island.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         return true;
                     }
 
@@ -256,7 +256,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                             } else {
                                 messageManager.sendMessage(player,
                                         languageConfigLoad.getString("Command.Island.Help.Integer.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                                 return true;
                             }
@@ -278,7 +278,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                         if (!canUseHelp) {
                             messageManager.sendMessage(player, languageConfigLoad.getString("Command.PermissionDenied.Admin.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                             return true;
                         }
 
@@ -291,10 +291,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                                 if (args[2].matches("[0-9]+")) {
                                     page = Integer.parseInt(args[2]);
                                 } else {
-                                    messageManager.sendMessage(player,
-                                            languageConfigLoad.getString("Command.Island.Help.Integer.Message"));
-                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F,
-                                            1.0F);
+                                    messageManager.sendMessage(player, languageConfigLoad.getString("Command.Island.Help.Integer.Message"));
+                                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                                     return true;
                                 }
@@ -316,13 +314,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
             if (subCommand == null) {
                 messageManager.sendMessage(sender, languageConfigLoad.getString("Command.Island.Argument.Unrecognised.Message"));
-                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
                 return true;
             }
 
             if (!subCommand.hasPermission(sender, isAdmin)) {
                 messageManager.sendMessage(sender, languageConfigLoad.getString("Command.PermissionDenied." + (isAdmin ? "Admin" : "Island") + ".Message"));
-                soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
                 return true;
             }
 
@@ -472,7 +470,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
         if (nextEndIndex <= -7) {
             this.plugin.getMessageManager().sendMessage(player, configLoad.getString("Command.Island.Help.Page.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
 
             return;
         }
@@ -598,7 +596,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
         }
 
-        this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+        this.plugin.getSoundManager().playSound(player, XSound.ENTITY_ARROW_HIT);
     }
 
     public void sendConsoleHelpCommands(CommandSender sender) {

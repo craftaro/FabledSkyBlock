@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
@@ -35,7 +35,7 @@ public class ValueCommand extends SubCommand {
 
         if (player.getItemInHand() == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.Hand.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else {
             CompatibleMaterial materials = CompatibleMaterial.getMaterial(player.getItemInHand().getType().name());
 
@@ -46,10 +46,10 @@ public class ValueCommand extends SubCommand {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Value.Value.Message").replace("%material", WordUtils.capitalizeFully(materials.name().toLowerCase().replace("_", " ")))
                                 .replace("%points", "" + worth).replace("%level", NumberUtils.formatNumber(level)));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.None.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             }
         }
     }

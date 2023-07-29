@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
@@ -73,17 +73,17 @@ public class AddUpgradeCommand extends SubCommand {
 
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.AddUpgrade.Island.Owner.Message"));
-                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
             } else if (upgrade == null) {
                 messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.AddUpgrade.Upgrade.Exist.Message"));
-                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
             } else {
                 if (islandManager.containsIsland(islandOwnerUUID)) {
                     Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
 
                     if (island.hasUpgrade(upgrade)) {
                         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.AddUpgrade.Upgrade.Already.Message"));
-                        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
 
                         return;
                     }
@@ -95,7 +95,7 @@ public class AddUpgradeCommand extends SubCommand {
                     if (!fileManager.isFileExist(islandDataFile)) {
                         messageManager.sendMessage(sender,
                                 configLoad.getString("Command.Island.Admin.AddUpgrade.Island.Data.Message"));
-                        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
 
                         return;
                     }
@@ -105,7 +105,7 @@ public class AddUpgradeCommand extends SubCommand {
                     if (islandDataConfigLoad.getString("Upgrade." + upgrade.name()) != null) {
                         messageManager.sendMessage(sender,
                                 configLoad.getString("Command.Island.Admin.AddUpgrade.Upgrade.Already.Message"));
-                        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
 
                         return;
                     }
@@ -122,12 +122,12 @@ public class AddUpgradeCommand extends SubCommand {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.AddUpgrade.Added.Message")
                                 .replace("%player", targetPlayerName).replace("%upgrade", upgrade.name()));
-                soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.BLOCK_NOTE_BLOCK_PLING);
             }
         } else {
             messageManager.sendMessage(sender,
                     configLoad.getString("Command.Island.Admin.AddUpgrade.Invalid.Message"));
-            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

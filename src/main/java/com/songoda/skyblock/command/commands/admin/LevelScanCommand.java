@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -45,7 +45,7 @@ public class LevelScanCommand extends SubCommand {
 
         if (args.length == 0) {
             messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.LevelScan.Invalid.Message"));
-            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
@@ -54,14 +54,14 @@ public class LevelScanCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.LevelScan.NoIsland.Message"));
-            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
         levellingManager.startScan(sender instanceof Player ? (Player) sender : null, island);
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.LevelScan.Started.Message"));
-        soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(sender, XSound.ENTITY_VILLAGER_YES);
     }
 
     @Override

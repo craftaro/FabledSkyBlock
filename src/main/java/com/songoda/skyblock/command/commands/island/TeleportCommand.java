@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -47,7 +47,7 @@ public class TeleportCommand extends SubCommand {
             Island island = islandManager.getIsland(offlinePlayer);
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message", "Command.Island.Teleport.Island.None.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 if (this.plugin.getIslandManager().getIsland(player) == null) {
                     String commandToExecute = configLoad.getString("Command.IslandTeleport.Aliases.NoIsland", "");
@@ -61,7 +61,7 @@ public class TeleportCommand extends SubCommand {
             UUID islandOwnerUUID = island.getOwnerUUID();
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 return;
             } else if (!islandOwnerUUID.equals(playerDataManager.getPlayerData(player).getOwner())) {
@@ -96,25 +96,25 @@ public class TeleportCommand extends SubCommand {
                         islandManager.visitIsland(player, islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID)));
 
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Other.Message").replace("%player", args[0]));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
 
                         return;
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.Closed.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     }
 
                     return;
                 }
 
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Island.None.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 return;
             }
         } else if (args.length != 0) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Invalid.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
             return;
         }
@@ -123,10 +123,10 @@ public class TeleportCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Owner.Message", "Command.Island.Teleport.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Teleport.Teleported.Yourself.Message", "Command.Island.Teleport.Teleported.Yourself.Message"));
-            soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
             Bukkit.getServer().getScheduler().runTask(this.plugin, () -> {
                 Location loc = island.getLocation(IslandWorld.NORMAL, IslandEnvironment.MAIN);
                 PaperLib.getChunkAtAsync(loc).thenRun((() -> {

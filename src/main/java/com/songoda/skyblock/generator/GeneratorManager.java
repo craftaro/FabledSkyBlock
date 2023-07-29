@@ -1,8 +1,8 @@
 package com.songoda.skyblock.generator;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.block.Block;
@@ -125,7 +125,7 @@ public class GeneratorManager {
             return block.getState();
         }
 
-        this.plugin.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 10.0F);
+        this.plugin.getSoundManager().playSound(block.getLocation(), XSound.BLOCK_FIRE_EXTINGUISH, 1, 10);
 
 
         if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {

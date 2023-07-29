@@ -1,7 +1,7 @@
 package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.world.SWorldBorder;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
@@ -44,7 +44,7 @@ public class Border {
 
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Owner.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 return;
             } else if (!((island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
@@ -52,12 +52,12 @@ public class Border {
                     || island.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Border.Permission.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                 return;
             } else if (!plugin.getConfiguration().getBoolean("Island.WorldBorder.Enable")) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Border.Disabled.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 return;
             }
@@ -67,14 +67,14 @@ public class Border {
             if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Border.Item.Exit.Displayname"))))) {
-                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
             } else if ((is.getType() == Material.TRIPWIRE_HOOK) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Border.Item.Toggle.Displayname"))))) {
                 island.setBorder(!island.isBorder());
 
                 islandManager.updateBorder(island);
-                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                 Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
             } else if ((is.getType() == CompatibleMaterial.LIGHT_BLUE_DYE.getMaterial()) && (is.hasItemMeta())
@@ -83,7 +83,7 @@ public class Border {
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                     configLoad.getString("Menu.Border.Item.Word.Blue")))))) {
                 if (island.getBorderColor() == SWorldBorder.Color.Blue) {
-                    soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
@@ -91,7 +91,7 @@ public class Border {
                     island.setBorderColor(SWorldBorder.Color.Blue);
                     islandManager.updateBorder(island);
 
-                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                     Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
@@ -101,7 +101,7 @@ public class Border {
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                     configLoad.getString("Menu.Border.Item.Word.Green")))))) {
                 if (island.getBorderColor() == SWorldBorder.Color.Green) {
-                    soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
@@ -109,7 +109,7 @@ public class Border {
                     island.setBorderColor(SWorldBorder.Color.Green);
                     islandManager.updateBorder(island);
 
-                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                     Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
@@ -119,7 +119,7 @@ public class Border {
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                     configLoad.getString("Menu.Border.Item.Word.Red")))))) {
                 if (island.getBorderColor() == SWorldBorder.Color.Red) {
-                    soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
@@ -127,7 +127,7 @@ public class Border {
                     island.setBorderColor(SWorldBorder.Color.Red);
                     islandManager.updateBorder(island);
 
-                    soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                     Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }

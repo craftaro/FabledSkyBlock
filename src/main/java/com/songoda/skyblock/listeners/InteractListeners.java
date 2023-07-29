@@ -2,8 +2,8 @@ package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleHand;
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.hooks.LogManager;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -119,7 +119,7 @@ public class InteractListeners implements Listener {
 
                 if (isObstructing) {
                     this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.SpawnProtection.Place.Message"));
-                    this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                     event.setCancelled(true);
                     return;
@@ -134,7 +134,7 @@ public class InteractListeners implements Listener {
 
                 this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.Limit.Block.Exceeded.Message")
                         .replace("%type", WordUtils.capitalizeFully(itemMaterial.name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
-                this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                 event.setCancelled(true);
                 return;
@@ -212,7 +212,7 @@ public class InteractListeners implements Listener {
                     this.plugin.getMessageManager().sendMessage(player,
                             this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
                                     .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
-                    this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                     event.setCancelled(true);
                     return;
@@ -306,7 +306,7 @@ public class InteractListeners implements Listener {
                 if (this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getBoolean("Island.Block.Obsidian.Enable")) {
 
-                    this.plugin.getSoundManager().playSound(block.getLocation(), CompatibleSound.BLOCK_FIRE_EXTINGUISH.getSound(), 1.0F, 1.0F);
+                    this.plugin.getSoundManager().playSound(block.getLocation(), XSound.BLOCK_FIRE_EXTINGUISH);
                     block.setType(CompatibleMaterial.AIR.getBlockMaterial());
 
                     ItemUtils.takeActiveItem(player, CompatibleHand.getHand(event));
@@ -369,7 +369,7 @@ public class InteractListeners implements Listener {
                             }
                         }
 
-                        this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 10.0F, 10.0F);
+                        this.plugin.getSoundManager().playSound(player, XSound.ENTITY_CHICKEN_EGG, 10, 10);
 
                         event.setCancelled(true);
                     }
@@ -414,7 +414,7 @@ public class InteractListeners implements Listener {
                             messageManager.sendMessage(player,
                                     this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
                                             .replace("%position", "1"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
                         }
                     }
                 } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -432,7 +432,7 @@ public class InteractListeners implements Listener {
                             messageManager.sendMessage(player,
                                     this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Structure.Tool.Position.Message")
                                             .replace("%position", "2"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
                         }
                     }
                 }

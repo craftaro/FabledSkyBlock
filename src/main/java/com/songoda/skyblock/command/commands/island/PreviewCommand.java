@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -59,7 +59,7 @@ public class PreviewCommand extends SubCommand {
                     Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
                         if (this.plugin.getIslandManager().createIsland(player, islandStructure)) {
                             this.plugin.getMessageManager().sendMessage(player, configLang.getString("Island.Creator.Selector.Created.Message"));
-                            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
                         }
                     }, 30L);
                 }
@@ -98,7 +98,7 @@ public class PreviewCommand extends SubCommand {
                                             .getString("Island.Preview.Cooldown.Word.Second")));
                 }
 
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                 return;
             }

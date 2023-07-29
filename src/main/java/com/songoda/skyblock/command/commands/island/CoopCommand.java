@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -46,9 +46,8 @@ public class CoopCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-        } else if (this.plugin.getConfiguration()
-                .getBoolean("Island.Coop.Enable")) {
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
+        } else if (this.plugin.getConfiguration().getBoolean("Island.Coop.Enable")) {
             if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
                     || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
                     && permissionManager.hasPermission(island, "CoopPlayers", IslandRole.OPERATOR))) {
@@ -74,19 +73,19 @@ public class CoopCommand extends SubCommand {
 
                     if (targetPlayerUUID == null) {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Found.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (targetPlayerUUID.equals(player.getUniqueId())) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Coop.Yourself.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (island.hasRole(IslandRole.MEMBER, targetPlayerUUID)
                             || island.hasRole(IslandRole.OPERATOR, targetPlayerUUID)
                             || island.hasRole(IslandRole.OWNER, targetPlayerUUID)) {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Member.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (island.getBan().isBanned(targetPlayerUUID)) {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Banned.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (island.isCoopPlayer(targetPlayerUUID)) {
                         if (targetPlayer != null) {
                             if (islandManager.getVisitorsAtIsland(island).contains(targetPlayerUUID)) {
@@ -96,17 +95,15 @@ public class CoopCommand extends SubCommand {
 
                                     messageManager.sendMessage(targetPlayer,
                                             configLoad.getString("Command.Island.Coop.Removed.Target.Message"));
-                                    soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(targetPlayer, XSound.ENTITY_IRON_GOLEM_ATTACK);
                                 }
                             }
                         }
 
                         island.removeCoopPlayer(targetPlayerUUID);
 
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Command.Island.Coop.Removed.Sender.Message").replace("%player",
-                                        targetPlayerName));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Removed.Sender.Message").replace("%player", targetPlayerName));
+                        soundManager.playSound(player, XSound.ENTITY_IRON_GOLEM_ATTACK);
                     } else {
                         IslandCoop type = IslandCoop.NORMAL;
                         if (args.length == 2 && args[1].equalsIgnoreCase(temp)) {
@@ -123,26 +120,26 @@ public class CoopCommand extends SubCommand {
                                     .replace("%player", player.getName()));
                         }
 
-                        soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
                     }
 
                     return;
                 } else if (args.length != 0) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Invalid.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                     return;
                 }
 
                 this.plugin.getGuiManager().showGUI(player, new GuiCoop(this.plugin, island, null));
-                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Permission.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Coop.Disabled.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
@@ -71,9 +71,8 @@ public class BucketListeners implements Listener {
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
         if (LocationUtil.isLocationAffectingIslandSpawn(block.getLocation(), island, world)) {
             event.setCancelled(true);
-            this.plugin.getMessageManager().sendMessage(player,
-                    this.plugin.getLanguage().getString("Island.SpawnProtection.Place.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.SpawnProtection.Place.Message"));
+            this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
         }
     }
 }

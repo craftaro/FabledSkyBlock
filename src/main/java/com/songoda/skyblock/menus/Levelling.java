@@ -1,8 +1,8 @@
 package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -67,7 +67,7 @@ public class Levelling {
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
             if (islandManager.getIsland(player) == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Owner.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 player.closeInventory();
                 return;
             }
@@ -80,22 +80,22 @@ public class Levelling {
 
             if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"))))) {
-                soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_GLASS_BREAK);
 
                 event.setWillClose(false);
                 event.setWillDestroy(false);
             } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Exit.Displayname"))))) {
-                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
             } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"))))) {
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
 
                 event.setWillClose(false);
                 event.setWillDestroy(false);
             } else if ((is.getType() == Material.BARRIER) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Nothing.Displayname"))))) {
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 event.setWillClose(false);
                 event.setWillDestroy(false);
@@ -124,7 +124,7 @@ public class Levelling {
                                 cooldown.getTime() + " " + configLoad.getString("Command.Island.Level.Cooldown.Word.Second")));
                     }
 
-                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
@@ -134,7 +134,7 @@ public class Levelling {
 
                 Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Processing.Message"));
-                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
 
                     cooldownManager.createPlayer(CooldownType.LEVELLING, Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                     levellingManager.startScan(player, island);
@@ -144,22 +144,22 @@ public class Levelling {
 
                 if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Previous.Displayname")))) {
                     playerData1.setPage(MenuType.LEVELLING, playerData1.getPage(MenuType.LEVELLING) - 1);
-                    soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_ARROW_HIT);
 
                     Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 } else if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Next.Displayname")))) {
                     playerData1.setPage(MenuType.LEVELLING, playerData1.getPage(MenuType.LEVELLING) + 1);
-                    soundManager.playSound(player, CompatibleSound.ENTITY_ARROW_HIT.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_ARROW_HIT);
 
                     Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 } else {
-                    soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
                 }
             } else {
-                soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                 event.setWillClose(false);
                 event.setWillDestroy(false);

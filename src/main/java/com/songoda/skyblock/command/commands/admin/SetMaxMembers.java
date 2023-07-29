@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
@@ -66,17 +66,14 @@ public class SetMaxMembers extends SubCommand {
                 int maxMembers = Integer.parseInt(args[1]);
 
                 if (islandOwnerUUID == null) {
-                    messageManager.sendMessage(sender,
-                            configLoad.getString("Command.Island.Admin.SetMaxMembers.Island.Owner.Message"));
-                    soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetMaxMembers.Island.Owner.Message"));
+                    soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
                 } else if (maxMembers <= 0) {
-                    messageManager.sendMessage(sender,
-                            configLoad.getString("Command.Island.Admin.SetMaxMembers.Members.Greater.Message"));
-                    soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetMaxMembers.Members.Greater.Message"));
+                    soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
                 } else if (maxMembers > 100000) {
-                    messageManager.sendMessage(sender,
-                            configLoad.getString("Command.Island.Admin.SetMaxMembers.Members.Less.Message"));
-                    soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetMaxMembers.Members.Less.Message"));
+                    soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
                 } else {
                     if (islandManager.containsIsland(islandOwnerUUID)) {
                         Island island = islandManager.getIsland(Bukkit.getServer().getOfflinePlayer(islandOwnerUUID));
@@ -86,19 +83,16 @@ public class SetMaxMembers extends SubCommand {
                             islandManager.updateBorder(island);
                         }
                     } else {
-                        File islandDataFile = new File(this.plugin.getDataFolder().toString() + "/island-data",
-                                islandOwnerUUID.toString() + ".yml");
+                        File islandDataFile = new File(this.plugin.getDataFolder() + "/island-data", islandOwnerUUID + ".yml");
 
                         if (!fileManager.isFileExist(islandDataFile)) {
-                            messageManager.sendMessage(sender,
-                                    configLoad.getString("Command.Island.Admin.SetMaxMembers.Island.Data.Message"));
-                            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetMaxMembers.Island.Data.Message"));
+                            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
 
                             return;
                         }
 
-                        FileConfiguration islandDataConfigLoad = YamlConfiguration
-                                .loadConfiguration(islandDataFile);
+                        FileConfiguration islandDataConfigLoad = YamlConfiguration.loadConfiguration(islandDataFile);
                         islandDataConfigLoad.set("MaxMembers", maxMembers);
 
                         try {
@@ -112,17 +106,15 @@ public class SetMaxMembers extends SubCommand {
                             configLoad.getString("Command.Island.Admin.SetMaxMembers.Set.Message")
                                     .replace("%player", targetPlayerName)
                                     .replace("%maxMembers", NumberUtils.formatNumber(maxMembers)));
-                    soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, XSound.BLOCK_NOTE_BLOCK_PLING);
                 }
             } else {
-                messageManager.sendMessage(sender,
-                        configLoad.getString("Command.Island.Admin.SetMaxMembers.Numerical.Message"));
-                soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetMaxMembers.Numerical.Message"));
+                soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
             }
         } else {
-            messageManager.sendMessage(sender,
-                    configLoad.getString("Command.Island.Admin.SetMaxMembers.Invalid.Message"));
-            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.SetMaxMembers.Invalid.Message"));
+            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

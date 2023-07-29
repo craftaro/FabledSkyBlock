@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -40,7 +40,7 @@ public class SetSpawnCommand extends SubCommand {
 
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Owner.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else {
                 if (args[0].equalsIgnoreCase("Main")) {
                     setIslandSpawn(IslandEnvironment.MAIN, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
@@ -51,12 +51,12 @@ public class SetSpawnCommand extends SubCommand {
                     setIslandSpawn(IslandEnvironment.VISITOR, island, islandManager, player, configLoad, fileManager, messageManager, soundManager);
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Spawn.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 }
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Invalid.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
 
@@ -109,20 +109,20 @@ public class SetSpawnCommand extends SubCommand {
 
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.SetSpawn.Protection.Block.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             return;
                         } else if (!player.getLocation().clone().subtract(0, 0.1, 0).getBlock().getType().isSolid()) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.SetSpawn.Protection.Ground.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             return;
                         } else if (location.getBlock().isLiquid()
                                 || location.clone().add(0.0D, 1.0D, 0.0D).getBlock().isLiquid()) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.SetSpawn.Protection.Liquid.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             return;
                         } else if (CompatibleMaterial.getMaterial(location.getBlock().getType()) == CompatibleMaterial.NETHER_PORTAL
@@ -130,7 +130,7 @@ public class SetSpawnCommand extends SubCommand {
                                 .getType()) == CompatibleMaterial.NETHER_PORTAL) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.SetSpawn.Protection.Portal.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             return;
                         } else {
@@ -153,23 +153,23 @@ public class SetSpawnCommand extends SubCommand {
 
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.SetSpawn.Set.Message").replace("%spawn", environment.name().toLowerCase()));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
 
                     return;
                 }
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.SetSpawn.Island.Message").replace("%spawn", environment.name().toLowerCase()));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.SetSpawn.Permission.Message").replace("%spawn", environment.name().toLowerCase()));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Role.Message")
                     .replace("%spawn", environment.name().toLowerCase()));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
 }

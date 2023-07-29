@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
@@ -63,7 +63,7 @@ public class LevelCommand extends SubCommand {
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Level.Owner.Other.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 return;
             } else if (!islandOwnerUUID.equals(playerDataManager.getPlayerData(player).getOwner())) {
@@ -73,20 +73,20 @@ public class LevelCommand extends SubCommand {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Level.Level.Message")
                                     .replace("%player", targetPlayerName).replace("%level", NumberUtils.formatNumber(visit.getLevel().getLevel())));
-                    soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
 
                     return;
                 }
 
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Level.Owner.Other.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 return;
             }
         } else if (args.length != 0) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Invalid.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
             return;
         }
@@ -95,7 +95,7 @@ public class LevelCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Owner.Yourself.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else {
             player.closeInventory();
 
@@ -132,20 +132,20 @@ public class LevelCommand extends SubCommand {
                                                 + configLoad.getString("Command.Island.Level.Cooldown.Word.Second")));
                     }
 
-                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                     return;
                 }
 
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Processing.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
 
                 cooldownManager.createPlayer(CooldownType.LEVELLING,
                         Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                 levellingManager.startScan(player, island);
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Level.Loading.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
                 Levelling.getInstance().open(player);
             }
         }

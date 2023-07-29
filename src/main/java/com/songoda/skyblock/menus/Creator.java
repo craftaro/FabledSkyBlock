@@ -1,6 +1,6 @@
 package com.songoda.skyblock.menus;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.cooldown.Cooldown;
@@ -69,7 +69,7 @@ public class Creator {
         if (availableStructures.isEmpty()) {
             plugin.getMessageManager().sendMessage(player,
                     configLoad.getString("Island.Creator.Selector.None.Message"));
-            plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            plugin.getSoundManager().playSound(player, XSound.BLOCK_ANVIL_LAND);
 
             return;
         } else if (availableStructures.size() <= 9) {
@@ -89,7 +89,7 @@ public class Creator {
         nInventoryUtil nInv = new nInventoryUtil(player, event -> {
             if (islandManager.getIsland(player) != null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                 return;
             }
@@ -110,7 +110,7 @@ public class Creator {
                                     && !player.hasPermission("fabledskyblock.*")) {
                                 messageManager.sendMessage(player,
                                         configLoad.getString("Island.Creator.Selector.Permission.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
@@ -123,9 +123,8 @@ public class Creator {
                                 new File(new File(plugin.getDataFolder().toString() + "/" +
                                         (structureList.getOverworldFile().endsWith(".structure") ? "structures" : "schematics")),
                                         structureList.getOverworldFile()))) {
-                            messageManager.sendMessage(player,
-                                    configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -135,9 +134,8 @@ public class Creator {
                                 new File(new File(plugin.getDataFolder().toString() + "/" +
                                         (structureList.getNetherFile().endsWith(".structure") ? "structures" : "schematics")),
                                         structureList.getNetherFile()))) {
-                            messageManager.sendMessage(player,
-                                    configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -147,9 +145,8 @@ public class Creator {
                                 new File(new File(plugin.getDataFolder().toString() + "/" +
                                         (structureList.getEndFile().endsWith(".structure") ? "structures" : "schematics")),
                                         structureList.getEndFile()))) {
-                            messageManager.sendMessage(player,
-                                    configLoad.getString("Island.Creator.Selector.File.End.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.File.End.Message"));
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -182,7 +179,7 @@ public class Creator {
                                                     "Island.Creator.Selector.Cooldown.Word.Second")));
                                 }
 
-                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
@@ -190,9 +187,8 @@ public class Creator {
                             }
 
                             if (islandManager.createIsland(player, structureList)) {
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Creator.Selector.Created.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                                messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
+                                soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
                             }
                         } else if (event.getClick().isRightClick()) {
                             if (fileManager.getConfig(new File(plugin.getDataFolder(), "config.yml"))
@@ -219,7 +215,7 @@ public class Creator {
                                                     "Island.Preview.Cooldown.Word.Second")));
                                 }
 
-                                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
 
@@ -227,9 +223,8 @@ public class Creator {
                             }
 
                             if (islandManager.previewIsland(player, structureList)) {
-                                messageManager.sendMessage(player,
-                                        configLoad.getString("Island.Creator.Selector.Preview.Message"));
-                                soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                                messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Preview.Message"));
+                                soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
                             }
                         }
 

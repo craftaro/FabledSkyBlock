@@ -1,6 +1,6 @@
 package com.songoda.skyblock.invite;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;
@@ -63,13 +63,13 @@ public class InviteTask extends BukkitRunnable {
                                                                                 configLoad.getString(
                                                                                         "Command.Island.Invite.Invited.Word.Resend"))))
                                                                 .create()))));
-                        soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(targetPlayer, XSound.ENTITY_VILLAGER_NO);
                     }
 
                     messageManager.sendMessage(all,
                             configLoad.getString("Command.Island.Invite.Invited.Target.Expired.Message")
                                     .replace("%player", invite.getSenderName()));
-                    soundManager.playSound(all, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(all, XSound.ENTITY_VILLAGER_NO);
 
                     this.inviteManager.removeInvite(all.getUniqueId());
                 }

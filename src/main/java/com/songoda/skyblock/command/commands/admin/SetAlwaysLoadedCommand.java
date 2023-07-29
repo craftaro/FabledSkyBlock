@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -67,13 +67,13 @@ public class SetAlwaysLoadedCommand extends SubCommand {
                 if (island.isAlwaysLoaded()) {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetAlwaysLoaded.IsOff.Message"));
-                    soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
 
                     island.setAlwaysLoaded(false);
                 } else {
                     messageManager.sendMessage(sender,
                             configLoad.getString("Command.Island.Admin.SetAlwaysLoaded.IsOn.Message"));
-                    soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
 
                     island.setAlwaysLoaded(true);
                 }

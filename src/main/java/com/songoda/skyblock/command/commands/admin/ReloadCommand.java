@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -104,7 +104,7 @@ public class ReloadCommand extends SubCommand {
         MenuClickRegistry.getInstance().reloadAll();
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Reload.Reloaded.Message"));
-        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_USE.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(sender, XSound.BLOCK_ANVIL_USE);
     }
 
     @Override

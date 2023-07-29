@@ -1,7 +1,7 @@
 package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
@@ -52,7 +52,7 @@ public class Weather {
                     if (island == null) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Weather.Owner.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         player.closeInventory();
 
                         return;
@@ -61,7 +61,7 @@ public class Weather {
                             || island.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Weather.Permission.Message"));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
                         player.closeInventory();
 
                         return;
@@ -72,7 +72,7 @@ public class Weather {
                     if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Weather.Item.Info.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
@@ -80,14 +80,14 @@ public class Weather {
                             && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Weather.Item.Barrier.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_GLASS_BREAK);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
                     } else if (is.getType() == CompatibleMaterial.BARRIER.getMaterial()) {
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
                     } else if ((is.getType() == CompatibleMaterial.SUNFLOWER.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Weather.Item.Time.Displayname"))))) {
@@ -117,7 +117,7 @@ public class Weather {
                             }
                         }
 
-                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     } else if ((is.getType() == Material.GHAST_TEAR) && (is.hasItemMeta())
@@ -139,7 +139,7 @@ public class Weather {
                             }
                         }
 
-                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     } else if ((is.getType() == Material.TRIPWIRE_HOOK) && (is.hasItemMeta())
@@ -165,7 +165,7 @@ public class Weather {
                             }
                         }
 
-                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                     }

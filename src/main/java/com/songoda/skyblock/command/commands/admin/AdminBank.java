@@ -1,8 +1,8 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.hooks.EconomyManager;
 import com.craftaro.core.hooks.economies.Economy;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -42,7 +42,7 @@ public class AdminBank extends SubCommand {
 
         if (!this.plugin.getConfiguration().getBoolean("Island.Bank.Enable")) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Bank.Disabled.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             return;
         }
 
@@ -51,7 +51,7 @@ public class AdminBank extends SubCommand {
                 this.plugin.getGuiManager().showGUI(player, new GuiBank(this.plugin, island, null, true));
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.NullIsland.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             }
         } else {
             switch (args[0].toLowerCase()) {
@@ -96,12 +96,12 @@ public class AdminBank extends SubCommand {
                         this.plugin.getGuiManager().showGUI(player, new GuiBank(this.plugin, island, null, true));
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.NullIsland.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     }
                     break;
                 default:
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Unexpected.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             }
         }
     }

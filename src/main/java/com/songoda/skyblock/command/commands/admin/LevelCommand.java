@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.menus.admin.Levelling;
@@ -18,7 +18,7 @@ public class LevelCommand extends SubCommand {
         SoundManager soundManager = this.plugin.getSoundManager();
 
         Levelling.getInstance().open(player);
-        soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
     }
 
     @Override

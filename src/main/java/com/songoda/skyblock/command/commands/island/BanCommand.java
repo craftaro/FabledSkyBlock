@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.ban.Ban;
 import com.songoda.skyblock.command.SubCommand;
@@ -44,7 +44,7 @@ public class BanCommand extends SubCommand {
 
                 if (island == null) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Owner.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 } else if (this.plugin.getConfiguration().getBoolean("Island.Visitor.Banning")) {
                     if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
                             || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId()) && permissionManager.hasPermission(island, "Ban", IslandRole.OPERATOR))) {
@@ -64,24 +64,24 @@ public class BanCommand extends SubCommand {
 
                         if (targetPlayerUUID == null) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Found.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         } else if (targetPlayer != null && (targetPlayer.hasPermission("fabledskyblock.bypass.ban") || targetPlayer.isOp())) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Exempt"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         } else if (targetPlayerUUID.equals(player.getUniqueId())) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Yourself.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         } else if (island.hasRole(IslandRole.MEMBER, targetPlayerUUID) || island.hasRole(IslandRole.OPERATOR, targetPlayerUUID)
                                 || island.hasRole(IslandRole.OWNER, targetPlayerUUID)) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Member.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         } else if (island.getBan().isBanned(targetPlayerUUID)) {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Already.Message"));
-                            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                         } else {
                             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Banned.Sender.Message")
                                     .replace("%player", targetPlayerName));
-                            soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.ENTITY_IRON_GOLEM_ATTACK);
 
                             if (island.isCoopPlayer(targetPlayerUUID)) {
                                 island.removeCoopPlayer(targetPlayerUUID);
@@ -95,7 +95,7 @@ public class BanCommand extends SubCommand {
                                 if (islandManager.isPlayerAtIsland(island, targetPlayer)) {
                                     messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.Ban.Banned.Target.Message")
                                             .replace("%player", player.getName()));
-                                    soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                                    soundManager.playSound(targetPlayer, XSound.ENTITY_IRON_GOLEM_ATTACK);
 
                                     LocationUtil.teleportPlayerToSpawn(targetPlayer);
                                 }
@@ -103,15 +103,15 @@ public class BanCommand extends SubCommand {
                         }
                     } else {
                         messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Permission.Message"));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
                     }
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Disabled.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Ban.Invalid.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             }
         });
     }

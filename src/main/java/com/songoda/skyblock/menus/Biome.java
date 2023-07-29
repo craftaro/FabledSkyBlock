@@ -2,7 +2,7 @@ package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.cooldown.Cooldown;
@@ -62,7 +62,7 @@ public class Biome {
                 if (island == null) {
                     messageManager.sendMessage(player,
                             langConfig.getString("Command.Island.Biome.Owner.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     player.closeInventory();
 
                     return;
@@ -71,7 +71,7 @@ public class Biome {
                         || island.hasRole(IslandRole.OWNER, player.getUniqueId()))) {
                     messageManager.sendMessage(player,
                             langConfig.getString("Command.Island.Biome.Permission.Message"));
-                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
                     player.closeInventory();
 
                     return;
@@ -82,7 +82,7 @@ public class Biome {
                 if ((is.getType() == Material.NAME_TAG) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Info.Displayname"))))) {
-                    soundManager.playSound(player, CompatibleSound.ENTITY_CHICKEN_EGG.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
@@ -90,17 +90,17 @@ public class Biome {
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Barrier.Displayname"))))) {
-                    soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_GLASS_BREAK);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
                 } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Exit.Displayname"))))) {
-                    soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
                 } else {
                     if (is.getItemMeta().hasEnchant(Enchantment.THORNS)) {
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
@@ -125,7 +125,7 @@ public class Biome {
                                                         + langConfig.getString("Island.Biome.Cooldown.Word.Second")));
                             }
 
-                            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                             event.setWillClose(false);
                             event.setWillDestroy(false);
@@ -142,10 +142,10 @@ public class Biome {
                         island.save();
 
                         soundManager.playSound(island.getLocation(IslandWorld.NORMAL, IslandEnvironment.ISLAND),
-                                CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
+                                XSound.ENTITY_GENERIC_SPLASH);
 
                         if (!islandManager.isPlayerAtIsland(island, player, IslandWorld.NORMAL)) {
-                            soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
+                            soundManager.playSound(player, XSound.ENTITY_GENERIC_SPLASH);
                         }
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);

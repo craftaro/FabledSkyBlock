@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -50,13 +50,13 @@ public class InformationCommand extends SubCommand {
                 if (islandOwnerUUID == null) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Information.Island.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                     return;
                 }
             } else if (args.length != 0) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Information.Invalid.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                 return;
             }
@@ -64,17 +64,15 @@ public class InformationCommand extends SubCommand {
             PlayerData playerData = this.plugin.getPlayerDataManager().getPlayerData(player);
 
             if (playerData.isPreview()) {
-                messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.Information.Previewing.Message"));
-                soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                messageManager.sendMessage(player, configLoad.getString("Command.Island.Information.Previewing.Message"));
+                soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 return;
             }
 
             if (islandOwnerUUID == null) {
                 if (islandManager.getIsland(player) == null) {
-                    messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.Information.Owner.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Information.Owner.Message"));
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                     return;
                 } else {
@@ -84,7 +82,7 @@ public class InformationCommand extends SubCommand {
 
             playerData.setViewer(new Information.Viewer(islandOwnerUUID, Information.Viewer.Type.CATEGORIES));
             Information.getInstance().open(player);
-            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
         }
     }
 

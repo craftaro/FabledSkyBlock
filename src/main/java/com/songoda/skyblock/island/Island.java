@@ -1,7 +1,7 @@
 package com.songoda.skyblock.island;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.core.utils.PlayerUtils;
 import com.craftaro.core.world.SWorldBorder;
@@ -976,7 +976,7 @@ public class Island {
                             .getString("Island.Unlock." + type.name() + ".Message").replace(
                                     "%cost%", NumberUtils.formatNumber(price)));
 
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             if (type == IslandWorld.END) {
                 player.setVelocity(player.getLocation().getDirection().multiply(-.50).setY(.6f));
             } else if (type == IslandWorld.NETHER) {

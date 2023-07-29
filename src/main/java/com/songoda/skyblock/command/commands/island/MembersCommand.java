@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.menus.Members;
@@ -24,15 +24,14 @@ public class MembersCommand extends SubCommand {
             this.plugin.getMessageManager().sendMessage(player,
                     this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml"))
                             .getFileConfiguration().getString("Command.Island.Settings.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else {
             PlayerData playerData = this.plugin.getPlayerDataManager().getPlayerData(player);
             playerData.setType(Members.Type.DEFAULT);
             playerData.setSort(Members.Sort.DEFAULT);
 
-            Members.getInstance().open(player, (Members.Type) playerData.getType(),
-                    (Members.Sort) playerData.getSort());
-            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+            Members.getInstance().open(player, (Members.Type) playerData.getType(), (Members.Sort) playerData.getSort());
+            soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island.disabled;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -44,12 +44,12 @@ public class ResetCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Reset.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
         } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             if (playerData.getConfirmationTime() > 0) {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Reset.Confirmation.Pending.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_IRON_GOLEM_ATTACK);
             } else {
                 int confirmationTime = fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getInt("Island.Confirmation.Timeout");
@@ -69,11 +69,11 @@ public class ResetCommand extends SubCommand {
                                         ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                                 "Command.Island.Reset.Confirmation.Confirm.Word.Tutorial")))
                                         .create()))));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Reset.Permission.Message"));
-            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
         }
     }
 

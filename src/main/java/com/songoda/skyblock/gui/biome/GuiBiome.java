@@ -2,9 +2,9 @@ package com.songoda.skyblock.gui.biome;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.biome.BiomeManager;
@@ -65,13 +65,13 @@ public class GuiBiome extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
         });
 
@@ -176,7 +176,7 @@ public class GuiBiome extends Gui {
                                                     + this.languageLoad.getString("Island.Biome.Cooldown.Word.Second")));
                         }
 
-                        soundManager.playSound(this.player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(this.player, XSound.ENTITY_VILLAGER_NO);
 
                         return;
                     }
@@ -185,18 +185,17 @@ public class GuiBiome extends Gui {
                         biomeManager.setBiome(this.island, IslandWorld.NORMAL, icon.biome, () -> {
                             if (this.languageLoad.getBoolean("Command.Island.Biome.Completed.Should-Display-Message")) {
                                 messageManager.sendMessage(this.player, this.languageLoad.getString("Command.Island.Biome.Completed.Message"));
-                                soundManager.playSound(this.player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(this.player, XSound.ENTITY_VILLAGER_YES);
                             }
                         });
                         this.island.setBiome(icon.biome.getBiome()); // FIXME: A event is fired with has a setBiome method...
                         this.island.save();
                     });
 
-                    soundManager.playSound(this.island.getLocation(IslandWorld.NORMAL, IslandEnvironment.ISLAND),
-                            CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(this.island.getLocation(IslandWorld.NORMAL, IslandEnvironment.ISLAND), XSound.ENTITY_GENERIC_SPLASH, 1, 1);
 
                     if (!islandManager.isPlayerAtIsland(this.island, this.player, IslandWorld.NORMAL)) {
-                        soundManager.playSound(this.player, CompatibleSound.ENTITY_GENERIC_SPLASH.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(this.player, XSound.ENTITY_GENERIC_SPLASH);
                     }
                     paint();
                 });

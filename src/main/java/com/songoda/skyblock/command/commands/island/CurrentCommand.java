@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -38,7 +38,7 @@ public class CurrentCommand extends SubCommand {
                     if (targetPlayer == null) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Current.Offline.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                         return;
                     }
@@ -65,14 +65,13 @@ public class CurrentCommand extends SubCommand {
                                             .replace("%owner", ownerPlayerName));
                         }
 
-                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
 
                         return;
                     }
                 } else if (args.length > 1) {
-                    messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.Current.Invalid.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Current.Invalid.Message"));
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                     return;
                 }
@@ -94,12 +93,10 @@ public class CurrentCommand extends SubCommand {
                 targetPlayerName = targetPlayer.getName();
             }
 
-            messageManager.sendMessage(player,
-                    configLoad.getString("Command.Island.Current.Island.Owner.Yourself.Message").replace("%player",
-                            targetPlayerName));
+            messageManager.sendMessage(player, configLoad.getString("Command.Island.Current.Island.Owner.Yourself.Message").replace("%player", targetPlayerName));
         }
 
-        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
     }
 
     @Override

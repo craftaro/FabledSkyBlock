@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -30,7 +30,7 @@ public class SetSpawnCommand extends SubCommand {
         fileManager.setLocation(fileManager.getConfig(new File(this.plugin.getDataFolder(), "locations.yml")),
                 "Location.Spawn", player.getLocation(), true);
         messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetSpawn.Set.Message"));
-        soundManager.playSound(player, CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
     }
 
     @Override

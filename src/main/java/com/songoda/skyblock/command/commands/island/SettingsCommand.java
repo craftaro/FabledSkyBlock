@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -36,7 +36,7 @@ public class SettingsCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else if (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
                 || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             if ((island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
@@ -44,15 +44,15 @@ public class SettingsCommand extends SubCommand {
                     || permissionManager.hasPermission(island, "Member", IslandRole.OPERATOR)))
                     || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                 this.plugin.getGuiManager().showGUI(player, new GuiPermissionsSelector(this.plugin, player, island, null));
-                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
             } else {
                 messageManager.sendMessage(player,
                         configLoad.getString("Command.Island.Settings.Permission.Default.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Settings.Role.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

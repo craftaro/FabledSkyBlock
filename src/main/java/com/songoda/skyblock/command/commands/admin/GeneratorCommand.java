@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -32,14 +32,14 @@ public class GeneratorCommand extends SubCommand {
 
         if (this.plugin.getGeneratorManager() == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Generator.Disabled.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else {
             if (playerDataManager.hasPlayerData(player)) {
                 playerDataManager.getPlayerData(player).setViewer(null);
             }
 
             Generator.getInstance().open(player);
-            soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
         }
     }
 

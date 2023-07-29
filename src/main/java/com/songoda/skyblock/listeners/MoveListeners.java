@@ -1,7 +1,7 @@
 package com.songoda.skyblock.listeners;
 
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
@@ -85,7 +85,7 @@ public class MoveListeners implements Listener {
                 }
 
                 LocationUtil.teleportPlayerToSpawn(player);
-                soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
             }
         }
 
@@ -143,7 +143,7 @@ public class MoveListeners implements Listener {
                                 }
 
                                 player.setFallDistance(0.0F);
-                                soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
                             }
                         }
                     } else {
@@ -156,9 +156,8 @@ public class MoveListeners implements Listener {
                                 player.setFallDistance(0.0F);
                             }
 
-                            messageManager.sendMessage(player, this.plugin.getLanguage()
-                                    .getString("Island.WorldBorder.Outside.Message"));
-                            soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                            messageManager.sendMessage(player, this.plugin.getLanguage().getString("Island.WorldBorder.Outside.Message"));
+                            soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
                         }
                     }
 
@@ -187,9 +186,8 @@ public class MoveListeners implements Listener {
 
                     LocationUtil.teleportPlayerToSpawn(player);
 
-                    messageManager.sendMessage(player,
-                            this.plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
-                    soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(player, this.plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
+                    soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
                 });
             });
         }
@@ -250,7 +248,7 @@ public class MoveListeners implements Listener {
         if (!configLoad.getBoolean("Island.Teleport.FallDamage", true)) {
             player.setFallDistance(0.0F);
         }
-        soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -265,9 +263,8 @@ public class MoveListeners implements Listener {
                     && (!e.getTo().getWorld().equals(e.getFrom().getWorld()) || e.getTo().distance(e.getFrom()) > 1.0d)) { // We should not care of self block tp
                 if (this.plugin.getIslandManager().getIslandAtLocation(e.getTo()) == null) {
                     e.setCancelled(true);
-                    this.plugin.getMessageManager().sendMessage(player,
-                            this.plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
-                    this.plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                    this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.WorldBorder.Disappeared.Message"));
+                    this.plugin.getSoundManager().playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
                 }
             }
         }

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -40,7 +40,7 @@ public class UpdateAllIslandsCommand extends SubCommand {
 
         if (args.length < 1) {
             messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.UpdateAllIslands.NoArgs.Message"));
-            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
         } else {
             switch (args[0].toLowerCase()) {
                 case "setsize":
@@ -75,7 +75,7 @@ public class UpdateAllIslandsCommand extends SubCommand {
                     return;
                 default:
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.UpdateAllIslands.Unexpected.Message"));
-                    soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
             }
         }
     }

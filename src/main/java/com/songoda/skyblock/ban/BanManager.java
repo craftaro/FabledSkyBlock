@@ -1,6 +1,6 @@
 package com.songoda.skyblock.ban;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -78,7 +78,7 @@ public class BanManager {
             LocationUtil.teleportPlayerToSpawn(targetPlayer);
 
             messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Banned.Island.Message"));
-            soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(targetPlayer, XSound.ENTITY_ENDERMAN_TELEPORT);
         }
     }
 

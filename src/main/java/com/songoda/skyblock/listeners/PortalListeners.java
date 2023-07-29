@@ -1,7 +1,7 @@
 package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
@@ -111,7 +111,7 @@ public class PortalListeners implements Listener {
             }
             if (tick.getTick() >= 100) {
                 messageManager.sendMessage(player, this.plugin.getLanguage().getString("Island.Portal.Stuck.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
                 LocationUtil.teleportPlayerToSpawn(player);
                 return;
             }
@@ -148,7 +148,7 @@ public class PortalListeners implements Listener {
                     IslandWorld toWorldF = toWorld;
 
                     Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> PaperLib.teleportAsync(player, island.getLocation(toWorldF, spawnEnvironment)), 1L);
-                    soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
                     player.setFallDistance(0.0F);
                     tick.setTick(1);
                     break;
@@ -175,7 +175,7 @@ public class PortalListeners implements Listener {
             Location finalLoc = loc;
             PaperLib.teleportAsync(player, finalLoc);
         }, 1L);
-        soundManager.playSound(player, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
         player.setFallDistance(0.0F);
         tick.setTick(1);
     }

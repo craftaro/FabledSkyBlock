@@ -5,8 +5,8 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.world.SWorldBorder;
 import com.eatthepath.uuid.FastUUID;
 import com.google.common.base.Preconditions;
@@ -230,7 +230,7 @@ public class IslandManager {
 
         if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
             this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.Creator.Error.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_ANVIL_LAND);
 
             return false;
         }
@@ -332,7 +332,7 @@ public class IslandManager {
 
         if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "locations.yml")).getFileConfiguration().getString("Location.Spawn") == null) {
             this.plugin.getMessageManager().sendMessage(player, configLang.getString("Island.Creator.Error.Message"));
-            this.plugin.getSoundManager().playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            this.plugin.getSoundManager().playSound(player, XSound.BLOCK_ANVIL_LAND);
 
             return false;
         }
@@ -1628,7 +1628,7 @@ public class IslandManager {
                     messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Coop.Removed.Owner.Message"));
                 }
 
-                soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(targetPlayer, XSound.ENTITY_IRON_GOLEM_ATTACK);
             }
         }
 

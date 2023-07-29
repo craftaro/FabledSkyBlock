@@ -1,7 +1,7 @@
 package com.songoda.skyblock.permission;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.event.events.PlayerEnterPortalEvent;
@@ -126,7 +126,7 @@ public abstract class ListeningPermission extends BasicPermission {
         }
 
         messageManager.sendMessage(player, plugin.getLanguage().getString("Island.Settings.Permission.Message"));
-        plugin.getSoundManager().playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1f, 1f);
+        plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
     }
 
     protected void cancelAndMessage(Cancellable cancellable, Player player, SkyBlock plugin, MessageManager messageManager) {

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -65,7 +65,7 @@ public class RemoveHologramCommand extends SubCommand {
 
                 if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + hologramType.name()) == null) {
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Set.Message"));
-                    soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
                 } else {
                     locationsConfigLoad.set("Location.Hologram.Leaderboard." + hologramType.name(), null);
 
@@ -85,7 +85,7 @@ public class RemoveHologramCommand extends SubCommand {
                     });
 
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message").replace("%type", hologramType.name()));
-                    soundManager.playSound(sender, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(sender, XSound.BLOCK_NOTE_BLOCK_PLING);
                 }
 
                 return;
@@ -93,7 +93,7 @@ public class RemoveHologramCommand extends SubCommand {
         }
 
         messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Invalid.Message"));
-        soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+        soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
     }
 
     @Override

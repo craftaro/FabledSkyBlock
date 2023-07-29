@@ -1,6 +1,6 @@
 package com.songoda.skyblock.challenge.inventory.inv;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.challenge.FabledChallenge;
 import com.songoda.skyblock.challenge.challenge.Challenge;
 import com.songoda.skyblock.challenge.challenge.ChallengeCategory;
@@ -99,7 +99,7 @@ public class ChallengeInventory implements InventoryProvider {
                         // Update count
                         count2 = done.getOrDefault(c, 0);
                         // Play sound
-                        p.playSound(p.getLocation(), CompatibleSound.ENTITY_PLAYER_LEVELUP.getSound(), 1, 1);
+                        XSound.ENTITY_PLAYER_LEVELUP.play(p);
                         // Update item
                         ItemStack is2 = ic.createItem(inv.getPlayer().getUniqueId(), count2);
                         // If challenge is done, add enchantment to show to player that it's done
@@ -112,7 +112,7 @@ public class ChallengeInventory implements InventoryProvider {
                         // Update
                         inv.updateItem(ic.getCol(), ic.getRow(), is2);
                     } else {
-                        p.playSound(p.getLocation(), CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1, 1);
+                        XSound.BLOCK_GLASS_BREAK.play(p);
                     }
                 };
                 inv.set(ic.getCol(), ic.getRow(), ClickableItem.of(is, consumer));

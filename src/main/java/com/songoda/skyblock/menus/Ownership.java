@@ -1,8 +1,8 @@
 package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
@@ -57,13 +57,13 @@ public class Ownership {
                     if (island == null) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Ownership.Owner.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                         return;
                     } else if (!island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Ownership.Role.Message"));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                         return;
                     }
@@ -77,11 +77,11 @@ public class Ownership {
                     if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Exit.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
                     } else if ((is.getType() == CompatibleMaterial.PLAYER_HEAD.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Original.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
@@ -89,14 +89,14 @@ public class Ownership {
                             && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Barrier.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.BLOCK_GLASS_BREAK.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_GLASS_BREAK);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
                     } else if ((is.getType() == CompatibleMaterial.WRITABLE_BOOK.getMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Assign.Displayname"))))) {
-                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AnvilGui gui = new AnvilGui(player);
@@ -107,16 +107,13 @@ public class Ownership {
                                     if (island1 == null) {
                                         messageManager.sendMessage(player, configLoad
                                                 .getString("Command.Island.Ownership.Owner.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
-                                                1.0F, 1.0F);
+                                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                                         return;
-                                    } else if (!island1.hasRole(IslandRole.OWNER,
-                                            player.getUniqueId())) {
+                                    } else if (!island1.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                                         messageManager.sendMessage(player, configLoad
                                                 .getString("Command.Island.Ownership.Role.Message"));
-                                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(),
-                                                1.0F, 1.0F);
+                                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                                         return;
                                     }
@@ -148,18 +145,16 @@ public class Ownership {
                                     playerData.setType(Visibility.HIDDEN);
                                 }
 
-                                soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                        () -> open(player), 1L);
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
 
                                 return;
                             } else if (event.getClick() == ClickType.RIGHT) {
                                 island.setPassword(null);
-                                soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(player, XSound.ENTITY_GENERIC_EXPLODE);
 
-                                Bukkit.getServer().getScheduler().runTaskLater(plugin,
-                                        () -> open(player), 1L);
+                                Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
 
                                 return;
                             } else if (event.getClick() != ClickType.LEFT) {
@@ -170,7 +165,7 @@ public class Ownership {
                             }
                         }
 
-                        soundManager.playSound(player, CompatibleSound.BLOCK_WOODEN_BUTTON_CLICK_ON.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                             AnvilGui gui = new AnvilGui(player);
@@ -179,26 +174,19 @@ public class Ownership {
                                     Island island12 = islandManager.getIsland(player);
 
                                     if (island12 == null) {
-                                        messageManager.sendMessage(player, configLoad
-                                                .getString("Command.Island.Ownership.Owner.Message"));
-                                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(),
-                                                1.0F, 1.0F);
+                                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Owner.Message"));
+                                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                                         return;
-                                    } else if (!island12.hasRole(IslandRole.OWNER,
-                                            player.getUniqueId())) {
-                                        messageManager.sendMessage(player, configLoad
-                                                .getString("Command.Island.Ownership.Role.Message"));
-                                        soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(),
-                                                1.0F, 1.0F);
+                                    } else if (!island12.hasRole(IslandRole.OWNER, player.getUniqueId())) {
+                                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Role.Message"));
+                                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                                         return;
                                     }
 
-                                    island12.setPassword(
-                                            gui.getInputText().replace("&", "").replace(" ", ""));
-                                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_USE.getSound(), 1.0F,
-                                            1.0F);
+                                    island12.setPassword(gui.getInputText().replace("&", "").replace(" ", ""));
+                                    soundManager.playSound(player, XSound.BLOCK_ANVIL_USE);
 
                                     Bukkit.getServer().getScheduler()
                                             .runTaskLater(plugin, () -> open(player), 1L);

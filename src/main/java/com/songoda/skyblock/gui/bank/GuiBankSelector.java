@@ -1,11 +1,11 @@
 package com.songoda.skyblock.gui.bank;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.compatibility.CompatibleSound;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
 import com.craftaro.core.hooks.economies.Economy;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -58,13 +58,13 @@ public class GuiBankSelector extends Gui {
 
         setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
-            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
         });
 
         setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
-            this.soundManager.playSound(event.player, CompatibleSound.BLOCK_CHEST_CLOSE.getSound(), 1f, 1f);
+            this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
         });
 
@@ -111,18 +111,18 @@ public class GuiBankSelector extends Gui {
             switch (response) {
                 case NOT_ENOUGH_MONEY:
                     messageManager.sendMessage(event.player, this.languageLoad.getString("Command.Island.Bank.Short2.Message"));
-                    this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    this.soundManager.playSound(event.player, XSound.BLOCK_ANVIL_LAND);
                     break;
                 case DECIMALS_NOT_ALLOWED:
                     messageManager.sendMessage(event.player, this.languageLoad.getString("Command.Island.Bank.Short6.Message"));
-                    this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    this.soundManager.playSound(event.player, XSound.BLOCK_ANVIL_LAND);
                     break;
                 case NEGATIVE_AMOUNT:
                     messageManager.sendMessage(event.player, this.languageLoad.getString("Command.Island.Bank.Short5.Message"));
-                    this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    this.soundManager.playSound(event.player, XSound.BLOCK_ANVIL_LAND);
                     break;
                 case SUCCESS:
-                    this.soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
+                    this.soundManager.playSound(event.player, XSound.ENTITY_EXPERIENCE_ORB_PICKUP);
                     messageManager.sendMessage(event.player, Objects.requireNonNull(this.languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
                             "%amount%", NumberUtils.formatNumber(amount)));
 
@@ -148,7 +148,7 @@ public class GuiBankSelector extends Gui {
                     }
                 } catch (NumberFormatException e1) {
                     messageManager.sendMessage(e.player, this.languageLoad.getString("Command.Island.Bank.Short4.Message"));
-                    this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                    this.soundManager.playSound(event.player, XSound.BLOCK_ANVIL_LAND);
                     return;
                 }
 
@@ -168,18 +168,18 @@ public class GuiBankSelector extends Gui {
                 switch (response) {
                     case NOT_ENOUGH_MONEY:
                         messageManager.sendMessage(e.player, this.languageLoad.getString("Command.Island.Bank.Short2.Message"));
-                        this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        this.soundManager.playSound(event.player, XSound.BLOCK_ANVIL_LAND);
                         break;
                     case DECIMALS_NOT_ALLOWED:
                         messageManager.sendMessage(e.player, this.languageLoad.getString("Command.Island.Bank.Short6.Message"));
-                        this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        this.soundManager.playSound(event.player, XSound.BLOCK_ANVIL_LAND);
                         break;
                     case NEGATIVE_AMOUNT:
                         messageManager.sendMessage(e.player, this.languageLoad.getString("Command.Island.Bank.Short5.Message"));
-                        this.soundManager.playSound(event.player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1f, 1f);
+                        this.soundManager.playSound(event.player, XSound.BLOCK_ANVIL_LAND);
                         break;
                     case SUCCESS:
-                        this.soundManager.playSound(event.player, CompatibleSound.ENTITY_EXPERIENCE_ORB_PICKUP.getSound(), 1f, 1f);
+                        this.soundManager.playSound(event.player, XSound.ENTITY_EXPERIENCE_ORB_PICKUP);
                         messageManager.sendMessage(e.player, Objects.requireNonNull(this.languageLoad.getString("Command.Island.Bank." + finalAction + ".Message")).replace(
                                 "%amount%", NumberUtils.formatNumber(amount)));
                         break;

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -45,34 +45,34 @@ public class CreateCommand extends SubCommand {
 
                 if (structure != null && islandManager.createIsland(player, structure)) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
                 } else if (structure == null) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.StructureNotFound.Message"));
-                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
                 }
             } else if (mainConfig.getFileConfiguration().getBoolean("Island.Creation.Menu.Enable")) {
                 Creator.getInstance().open(player);
-                soundManager.playSound(player, CompatibleSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
             } else {
                 List<Structure> structures = this.plugin.getStructureManager().getStructures();
 
                 if (structures.isEmpty()) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.None.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                     return;
                 } else if (!fileManager
                         .isFileExist(new File(new File(this.plugin.getDataFolder() + "/structures"), structures.get(0).getOverworldFile()))) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Creator.Selector.File.Overworld.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                     return;
                 } else if (!fileManager
                         .isFileExist(new File(new File(this.plugin.getDataFolder() + "/structures"), structures.get(0).getNetherFile()))) {
                     messageManager.sendMessage(player,
                             configLoad.getString("Island.Creator.Selector.File.Nether.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                     return;
                 } else if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
@@ -97,19 +97,19 @@ public class CreateCommand extends SubCommand {
                                                 .getString("Island.Creator.Selector.Cooldown.Word.Second")));
                     }
 
-                    soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                     return;
                 }
 
                 if (islandManager.createIsland(player, structures.get(0))) {
                     messageManager.sendMessage(player, configLoad.getString("Island.Creator.Selector.Created.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_NOTE_BLOCK_PLING.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
                 }
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Create.Owner.Message"));
-            soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
         }
     }
 

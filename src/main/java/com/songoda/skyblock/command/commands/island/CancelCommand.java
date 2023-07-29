@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -38,7 +38,7 @@ public class CancelCommand extends SubCommand {
 
             if (island == null) {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Owner.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
             } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
                     || island.hasRole(IslandRole.OPERATOR, player.getUniqueId())) {
                 String playerName = args[0];
@@ -46,38 +46,36 @@ public class CancelCommand extends SubCommand {
 
                 if (targetPlayer == null) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Offline.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 } else if (island.hasRole(IslandRole.MEMBER, targetPlayer.getUniqueId())
                         || island.hasRole(IslandRole.OPERATOR, targetPlayer.getUniqueId())
                         || island.hasRole(IslandRole.OWNER, targetPlayer.getUniqueId())) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Member.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 } else if (inviteManager.hasInvite(targetPlayer.getUniqueId())) {
                     Invite invite = inviteManager.getInvite(targetPlayer.getUniqueId());
 
                     if (invite.getOwnerUUID().equals(island.getOwnerUUID())) {
                         inviteManager.removeInvite(targetPlayer.getUniqueId());
 
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Command.Island.Cancel.Cancelled.Message").replace("%player",
-                                        targetPlayer.getName()));
-                        soundManager.playSound(player, CompatibleSound.ENTITY_GENERIC_EXPLODE.getSound(), 10.0F, 10.0F);
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Cancelled.Message").replace("%player", targetPlayer.getName()));
+                        soundManager.playSound(player, XSound.ENTITY_GENERIC_EXPLODE, 10, 10);
                     } else {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Cancel.Invited.Message"));
-                        soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     }
                 } else {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Invited.Message"));
-                    soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 }
             } else {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Permission.Message"));
-                soundManager.playSound(player, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Invalid.Message"));
-            soundManager.playSound(player, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

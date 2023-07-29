@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;
@@ -61,12 +61,12 @@ public class OwnerCommand extends SubCommand {
             if (islandOwnerUUID == null) {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.Owner.Island.None.Message"));
-                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.ENTITY_VILLAGER_NO);
             } else if (islandOwnerUUID.equals(targetPlayerUUID)) {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.Owner.Island.Owner.Message").replace("%player",
                                 targetPlayerName));
-                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.ENTITY_VILLAGER_YES);
             } else {
                 targetPlayer = Bukkit.getServer().getPlayer(islandOwnerUUID);
 
@@ -79,11 +79,11 @@ public class OwnerCommand extends SubCommand {
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.Owner.Island.Member.Message")
                                 .replace("%player", targetPlayerName).replace("%owner", islandOwnerName));
-                soundManager.playSound(sender, CompatibleSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(sender, XSound.ENTITY_VILLAGER_YES);
             }
         } else {
             messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Owner.Invalid.Message"));
-            soundManager.playSound(sender, CompatibleSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

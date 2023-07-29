@@ -1,6 +1,6 @@
 package com.songoda.skyblock.visit;
 
-import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
@@ -152,9 +152,8 @@ public class VisitManager {
 
             LocationUtil.teleportPlayerToSpawn(targetPlayer);
 
-            messageManager.sendMessage(targetPlayer,
-                    configLoad.getString("Island.Visit." + removal.name() + ".Message"));
-            soundManager.playSound(targetPlayer, CompatibleSound.ENTITY_ENDERMAN_TELEPORT.getSound(), 1.0F, 1.0F);
+            messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit." + removal.name() + ".Message"));
+            soundManager.playSound(targetPlayer, XSound.ENTITY_ENDERMAN_TELEPORT);
         }
     }
 
