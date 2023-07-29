@@ -1,11 +1,11 @@
 package com.songoda.skyblock.listeners;
 
-import com.songoda.core.compatibility.CompatibleHand;
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.hooks.LogManager;
-import com.songoda.core.utils.ItemUtils;
-import com.songoda.core.utils.NumberUtils;
+import com.craftaro.core.compatibility.CompatibleHand;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.hooks.LogManager;
+import com.craftaro.core.utils.ItemUtils;
+import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;

@@ -1,13 +1,13 @@
 package com.songoda.skyblock.utils.structure;
 
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.nms.NmsManager;
+import com.craftaro.core.nms.nbt.NBTEntity;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.nms.NmsManager;
-import com.songoda.core.nms.nbt.NBTEntity;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.utils.Compression;
 import com.songoda.skyblock.utils.world.LocationUtil;

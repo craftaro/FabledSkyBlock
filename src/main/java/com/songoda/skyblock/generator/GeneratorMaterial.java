@@ -1,6 +1,6 @@
 package com.songoda.skyblock.generator;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 
 public class GeneratorMaterial {
     private final CompatibleMaterial materials;

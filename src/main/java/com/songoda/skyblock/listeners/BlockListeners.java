@@ -1,11 +1,11 @@
 package com.songoda.skyblock.listeners;
 
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.hooks.LogManager;
+import com.craftaro.core.utils.NumberUtils;
 import com.google.common.collect.Lists;
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.hooks.LogManager;
-import com.songoda.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.generator.Generator;
 import com.songoda.skyblock.generator.GeneratorManager;

@@ -1,8 +1,8 @@
 package com.songoda.skyblock.generator;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.compatibility.ServerVersion;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.block.Block;

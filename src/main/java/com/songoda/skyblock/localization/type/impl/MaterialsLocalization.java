@@ -1,6 +1,6 @@
 package com.songoda.skyblock.localization.type.impl;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 
 public class MaterialsLocalization extends EnumLocalization<CompatibleMaterial> {
     public MaterialsLocalization(String keysPath) {

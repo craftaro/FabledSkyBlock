@@ -1,7 +1,7 @@
 package com.songoda.skyblock.stackable;
 
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.eatthepath.uuid.FastUUID;
-import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.Location;
 import org.bukkit.Material;

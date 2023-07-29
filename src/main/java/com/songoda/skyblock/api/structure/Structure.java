@@ -1,6 +1,6 @@
 package com.songoda.skyblock.api.structure;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.songoda.skyblock.challenge.challenge;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.hooks.economies.Economy;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.config.FileManager;

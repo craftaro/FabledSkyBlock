@@ -1,7 +1,7 @@
 package com.songoda.skyblock.utils.version;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.ServerVersion;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.ServerVersion;
 import com.songoda.skyblock.utils.StringUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;

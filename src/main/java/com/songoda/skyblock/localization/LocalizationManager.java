@@ -1,7 +1,7 @@
 package com.songoda.skyblock.localization;
 
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.google.common.collect.Sets;
-import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandRole;
 import com.songoda.skyblock.localization.type.Localization;

@@ -1,7 +1,7 @@
 package com.songoda.skyblock.bank;
 
-import com.songoda.core.hooks.EconomyManager;
-import com.songoda.core.hooks.economies.Economy;
+import com.craftaro.core.hooks.EconomyManager;
+import com.craftaro.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;

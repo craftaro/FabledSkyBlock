@@ -1,6 +1,6 @@
 package com.songoda.skyblock.listeners;
 
-import com.songoda.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.challenge.player.PlayerManager;
 import com.songoda.skyblock.cooldown.CooldownManager;

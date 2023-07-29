@@ -1,6 +1,6 @@
 package com.songoda.skyblock.levelling;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandLevelChangeEvent;
 import com.songoda.skyblock.island.Island;

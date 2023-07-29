@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.songoda.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerIslandLeaveEvent;
 import com.songoda.skyblock.command.SubCommand;

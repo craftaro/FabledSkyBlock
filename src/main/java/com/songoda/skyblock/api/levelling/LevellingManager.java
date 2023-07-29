@@ -1,7 +1,7 @@
 package com.songoda.skyblock.api.levelling;
 
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.google.common.base.Preconditions;
-import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.api.island.Island;
 import com.songoda.skyblock.levelling.IslandLevelManager;
 import com.songoda.skyblock.levelling.calculator.Calculator;

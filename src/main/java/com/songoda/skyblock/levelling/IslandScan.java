@@ -1,6 +1,6 @@
 package com.songoda.skyblock.levelling;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.blockscanner.BlockScanner;

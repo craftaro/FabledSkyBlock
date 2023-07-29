@@ -1,7 +1,7 @@
 package com.songoda.skyblock.api.biome;
 
+import com.craftaro.core.compatibility.CompatibleBiome;
 import com.google.common.base.Preconditions;
-import com.songoda.core.compatibility.CompatibleBiome;
 import com.songoda.skyblock.api.island.Island;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.block.Biome;

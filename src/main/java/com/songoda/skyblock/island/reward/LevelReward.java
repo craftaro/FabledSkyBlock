@@ -1,6 +1,6 @@
 package com.songoda.skyblock.island.reward;
 
-import com.songoda.core.hooks.economies.Economy;
+import com.craftaro.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import org.bukkit.entity.Player;

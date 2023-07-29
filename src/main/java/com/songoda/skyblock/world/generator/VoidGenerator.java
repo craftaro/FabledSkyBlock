@@ -1,8 +1,8 @@
 package com.songoda.skyblock.world.generator;
 
-import com.songoda.core.compatibility.CompatibleBiome;
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.ServerVersion;
+import com.craftaro.core.compatibility.CompatibleBiome;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.Material;

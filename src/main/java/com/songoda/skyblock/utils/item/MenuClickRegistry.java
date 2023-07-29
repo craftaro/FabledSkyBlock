@@ -1,6 +1,6 @@
 package com.songoda.skyblock.utils.item;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil.ClickEvent;

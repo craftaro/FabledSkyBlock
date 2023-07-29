@@ -1,6 +1,6 @@
 package com.songoda.skyblock.utils.item;
 
-import com.songoda.core.compatibility.ServerVersion;
+import com.craftaro.core.compatibility.ServerVersion;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

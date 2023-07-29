@@ -1,10 +1,10 @@
 package com.songoda.skyblock.menus.admin;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.gui.AnvilGui;
-import com.songoda.core.utils.ItemUtils;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;

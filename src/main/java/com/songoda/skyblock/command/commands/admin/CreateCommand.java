@@ -1,6 +1,6 @@
 package com.songoda.skyblock.command.commands.admin;
 
-import com.songoda.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.menus.admin.Creator;

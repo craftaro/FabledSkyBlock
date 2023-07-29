@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;

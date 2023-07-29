@@ -1,6 +1,6 @@
 package com.songoda.skyblock.invite;
 
-import com.songoda.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.sound.SoundManager;

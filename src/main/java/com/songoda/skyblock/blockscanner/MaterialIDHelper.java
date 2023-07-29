@@ -1,6 +1,6 @@
 package com.songoda.skyblock.blockscanner;
 
-import com.songoda.core.compatibility.ServerVersion;
+import com.craftaro.core.compatibility.ServerVersion;
 import org.bukkit.Material;
 
 import java.util.HashMap;

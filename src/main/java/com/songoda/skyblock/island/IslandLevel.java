@@ -1,8 +1,8 @@
 package com.songoda.skyblock.island;
 
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.ServerVersion;
 import com.google.common.base.Strings;
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import com.songoda.skyblock.island.reward.LevelReward;

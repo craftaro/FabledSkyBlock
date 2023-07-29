@@ -1,6 +1,6 @@
 package com.songoda.skyblock.scoreboard;
 
-import com.songoda.core.utils.TextUtils;
+import com.craftaro.core.utils.TextUtils;
 
 import java.util.List;
 

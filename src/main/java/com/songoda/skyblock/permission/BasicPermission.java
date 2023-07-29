@@ -1,7 +1,7 @@
 package com.songoda.skyblock.permission;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.utils.TextUtils;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandRole;

@@ -1,8 +1,8 @@
 package com.songoda.skyblock.utils.world.entity;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.nms.NmsManager;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.nms.NmsManager;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
 import org.bukkit.Art;
 import org.bukkit.Bukkit;

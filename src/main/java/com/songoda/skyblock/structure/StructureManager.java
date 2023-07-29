@@ -1,6 +1,6 @@
 package com.songoda.skyblock.structure;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import org.bukkit.configuration.file.FileConfiguration;

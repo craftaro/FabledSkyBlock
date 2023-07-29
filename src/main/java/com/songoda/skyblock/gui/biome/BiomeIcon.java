@@ -1,7 +1,7 @@
 package com.songoda.skyblock.gui.biome;
 
-import com.songoda.core.compatibility.CompatibleBiome;
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleBiome;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;

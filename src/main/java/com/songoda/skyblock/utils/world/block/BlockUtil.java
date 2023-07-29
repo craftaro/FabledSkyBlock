@@ -1,11 +1,11 @@
 package com.songoda.skyblock.utils.world.block;
 
-import com.songoda.core.compatibility.ClassMapping;
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.MethodMapping;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.utils.BlockUtils;
-import com.songoda.core.utils.NMSUtils;
+import com.craftaro.core.compatibility.ClassMapping;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MethodMapping;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.utils.BlockUtils;
+import com.craftaro.core.utils.NMSUtils;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

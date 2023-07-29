@@ -1,10 +1,10 @@
 package com.songoda.skyblock.utils.item;
 
-import com.songoda.core.compatibility.ClassMapping;
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.MethodMapping;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.utils.NMSUtils;
+import com.craftaro.core.compatibility.ClassMapping;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MethodMapping;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.utils.NMSUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

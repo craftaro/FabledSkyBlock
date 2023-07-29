@@ -1,6 +1,6 @@
 package com.songoda.skyblock.utils.world.block;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.SkullType;

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.scoreboard;
 
-import com.songoda.core.compatibility.ServerVersion;
+import com.craftaro.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.placeholder.PlaceholderManager;
 import org.bukkit.ChatColor;

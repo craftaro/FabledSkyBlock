@@ -1,6 +1,6 @@
 package com.songoda.skyblock.biome;
 
-import com.songoda.core.compatibility.CompatibleBiome;
+import com.craftaro.core.compatibility.CompatibleBiome;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.ChunkLoader;
 import com.songoda.skyblock.island.Island;

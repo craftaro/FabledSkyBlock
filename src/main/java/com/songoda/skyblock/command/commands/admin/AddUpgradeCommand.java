@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
+import com.craftaro.core.compatibility.CompatibleSound;
 import com.eatthepath.uuid.FastUUID;
-import com.songoda.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;

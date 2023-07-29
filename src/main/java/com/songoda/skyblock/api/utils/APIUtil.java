@@ -1,6 +1,6 @@
 package com.songoda.skyblock.api.utils;
 
-import com.songoda.core.world.SWorldBorder;
+import com.craftaro.core.world.SWorldBorder;
 import com.songoda.skyblock.api.island.IslandBorderColor;
 import com.songoda.skyblock.api.island.IslandEnvironment;
 import com.songoda.skyblock.api.island.IslandMessage;

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.levelling.calculator;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 
 import java.util.ArrayList;
 import java.util.HashMap;

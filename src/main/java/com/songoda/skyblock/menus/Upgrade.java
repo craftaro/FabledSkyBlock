@@ -1,10 +1,10 @@
 package com.songoda.skyblock.menus;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.hooks.economies.Economy;
-import com.songoda.core.utils.NumberUtils;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.hooks.economies.Economy;
+import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandUpgradeEvent;
 import com.songoda.skyblock.api.utils.APIUtil;

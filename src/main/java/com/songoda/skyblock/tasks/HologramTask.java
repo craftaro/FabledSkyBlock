@@ -1,7 +1,7 @@
 package com.songoda.skyblock.tasks;
 
-import com.songoda.core.utils.NumberUtils;
-import com.songoda.core.utils.TextUtils;
+import com.craftaro.core.utils.NumberUtils;
+import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;

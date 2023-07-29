@@ -1,6 +1,6 @@
 package com.songoda.skyblock.levelling.amount;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleMaterial;
 
 
 public class AmountMaterialPair {

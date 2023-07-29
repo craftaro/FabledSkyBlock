@@ -1,11 +1,11 @@
 package com.songoda.skyblock.gui;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.gui.AnvilGui;
-import com.songoda.core.gui.Gui;
-import com.songoda.core.gui.GuiUtils;
-import com.songoda.core.utils.TextUtils;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.gui.Gui;
+import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.Island;

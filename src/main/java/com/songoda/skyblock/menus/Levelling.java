@@ -1,10 +1,10 @@
 package com.songoda.skyblock.menus;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.utils.ItemUtils;
-import com.songoda.core.utils.NumberUtils;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.utils.ItemUtils;
+import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.cooldown.Cooldown;
 import com.songoda.skyblock.cooldown.CooldownManager;

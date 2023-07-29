@@ -1,13 +1,13 @@
 package com.songoda.skyblock.gui.bank;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.gui.AnvilGui;
-import com.songoda.core.gui.Gui;
-import com.songoda.core.gui.GuiUtils;
-import com.songoda.core.hooks.economies.Economy;
-import com.songoda.core.utils.NumberUtils;
-import com.songoda.core.utils.TextUtils;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.gui.Gui;
+import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.hooks.economies.Economy;
+import com.craftaro.core.utils.NumberUtils;
+import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.island.Island;

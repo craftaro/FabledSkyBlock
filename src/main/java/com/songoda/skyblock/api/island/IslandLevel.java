@@ -1,7 +1,7 @@
 package com.songoda.skyblock.api.island;
 
+import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.google.common.base.Preconditions;
-import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.Location;
 import org.bukkit.Material;

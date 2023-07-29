@@ -1,8 +1,8 @@
 package com.songoda.skyblock.placeholder;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.utils.NumberUtils;
-import com.songoda.core.utils.TextUtils;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.utils.NumberUtils;
+import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.invite.Invite;

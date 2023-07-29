@@ -1,6 +1,6 @@
 package com.songoda.skyblock.utils.structure;
 
-import com.songoda.core.compatibility.ServerVersion;
+import com.craftaro.core.compatibility.ServerVersion;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.World;

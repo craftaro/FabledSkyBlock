@@ -1,7 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
-import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.hooks.economies.Economy;
+import com.craftaro.core.compatibility.CompatibleSound;
+import com.craftaro.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.config.FileManager;

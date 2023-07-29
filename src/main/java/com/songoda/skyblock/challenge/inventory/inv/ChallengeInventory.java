@@ -1,6 +1,6 @@
 package com.songoda.skyblock.challenge.inventory.inv;
 
-import com.songoda.core.compatibility.CompatibleSound;
+import com.craftaro.core.compatibility.CompatibleSound;
 import com.songoda.skyblock.challenge.FabledChallenge;
 import com.songoda.skyblock.challenge.challenge.Challenge;
 import com.songoda.skyblock.challenge.challenge.ChallengeCategory;

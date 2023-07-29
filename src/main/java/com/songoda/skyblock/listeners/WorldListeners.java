@@ -1,6 +1,6 @@
 package com.songoda.skyblock.listeners;
 
-import com.songoda.core.compatibility.CompatibleBiome;
+import com.craftaro.core.compatibility.CompatibleBiome;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.biome.BiomeManager;
 import com.songoda.skyblock.island.Island;

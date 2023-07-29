@@ -1,6 +1,6 @@
 package com.songoda.skyblock.hologram;
 
-import com.songoda.core.hooks.HologramManager;
+import com.craftaro.core.hooks.HologramManager;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

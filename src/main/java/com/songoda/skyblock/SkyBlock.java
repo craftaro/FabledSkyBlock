@@ -1,14 +1,14 @@
 package com.songoda.skyblock;
 
-import com.songoda.core.SongodaCore;
-import com.songoda.core.SongodaPlugin;
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.ServerProject;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.configuration.Config;
-import com.songoda.core.gui.GuiManager;
-import com.songoda.core.hooks.HologramManager;
-import com.songoda.core.hooks.LogManager;
+import com.craftaro.core.SongodaCore;
+import com.craftaro.core.SongodaPlugin;
+import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.ServerProject;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.configuration.Config;
+import com.craftaro.core.gui.GuiManager;
+import com.craftaro.core.hooks.HologramManager;
+import com.craftaro.core.hooks.LogManager;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.bank.BankManager;
