@@ -8,3 +8,9 @@ updates:
     target-branch: development
     schedule:
       interval: monthly
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: development
+    schedule:
+      interval: monthly
