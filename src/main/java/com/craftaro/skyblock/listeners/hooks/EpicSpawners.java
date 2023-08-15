@@ -1,14 +1,14 @@
 package com.craftaro.skyblock.listeners.hooks;
 
+import com.craftaro.epicspawners.api.events.SpawnerBreakEvent;
+import com.craftaro.epicspawners.api.events.SpawnerChangeEvent;
+import com.craftaro.epicspawners.api.events.SpawnerPlaceEvent;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.Island;
 import com.craftaro.skyblock.island.IslandLevel;
 import com.craftaro.skyblock.island.IslandManager;
 import com.craftaro.skyblock.utils.version.CompatibleSpawners;
 import com.craftaro.skyblock.world.WorldManager;
-import com.songoda.epicspawners.api.events.SpawnerBreakEvent;
-import com.songoda.epicspawners.api.events.SpawnerChangeEvent;
-import com.songoda.epicspawners.api.events.SpawnerPlaceEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;

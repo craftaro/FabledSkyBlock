@@ -179,9 +179,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.songoda</groupId>
-            <artifactId>epicspawners</artifactId>
-            <version>7.0.1</version>
+            <groupId>com.craftaro</groupId>
+            <artifactId>EpicSpawners-API</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
