@@ -43,18 +43,18 @@
 
                             <relocations>
                                 <relocation>
-                                    <pattern>com.songoda.core</pattern>
-                                    <shadedPattern>com.songoda.skyblock.core</shadedPattern>
+                                    <pattern>com.craftaro.core</pattern>
+                                    <shadedPattern>com.craftaro.skyblock.core</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>io.papermc.lib</pattern>
-                                    <shadedPattern>com.songoda.skyblock.third_party.io.papermc.lib</shadedPattern>
+                                    <shadedPattern>com.craftaro.skyblock.third_party.io.papermc.lib</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>com.eatthepath.uuid</pattern>
-                                    <shadedPattern>com.songoda.skyblock.third_party.com.eatthepath.uuid</shadedPattern>
+                                    <shadedPattern>com.craftaro.skyblock.third_party.com.eatthepath.uuid</shadedPattern>
                                 </relocation>
                             </relocations>
 
@@ -67,6 +67,14 @@
                                         <exclude>LICENSE</exclude>
                                         <exclude>LICENSE.**</exclude>
                                     </excludes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>com.craftaro:CraftaroCore</artifact>
+                                    <excludeDefaults>false</excludeDefaults>
+                                    <includes>
+                                        <include>**/nms/v*/**</include>
+                                    </includes>
                                 </filter>
                             </filters>
                         </configuration>
