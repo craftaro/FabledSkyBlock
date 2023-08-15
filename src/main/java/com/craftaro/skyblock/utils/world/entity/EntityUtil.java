@@ -2,7 +2,7 @@ package com.craftaro.skyblock.utils.world.entity;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
-import com.craftaro.core.nms.NmsManager;
+import com.craftaro.core.nms.Nms;
 import com.craftaro.skyblock.utils.item.ItemStackUtil;
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
@@ -51,7 +51,7 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public final class EntityUtil {
     public static EntityData convertEntityToEntityData(Entity entity, int x, int y, int z) {
-        return new EntityData(NmsManager.getNbt().of(entity).serialize("Attributes"), x, y, z);
+        return new EntityData(Nms.getImplementations().getNbt().of(entity).serialize("Attributes"), x, y, z);
     }
 
     public static void convertEntityDataToEntity(EntityData entityData, Location loc) {

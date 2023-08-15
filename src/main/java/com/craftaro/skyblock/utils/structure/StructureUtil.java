@@ -2,7 +2,7 @@ package com.craftaro.skyblock.utils.structure;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
-import com.craftaro.core.nms.NmsManager;
+import com.craftaro.core.nms.Nms;
 import com.craftaro.core.nms.nbt.NBTEntity;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -196,7 +196,7 @@ public final class StructureUtil {
                             org.bukkit.Location blockLocation = new org.bukkit.Location(location.getWorld(), location.getX() - Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[0])),
                                     location.getY() - Integer.parseInt(storage.getOriginLocation().split(":")[1]), location.getZ() + Math.abs(Integer.parseInt(storage.getOriginLocation().split(":")[2])));
                             blockLocation.add(blockRotationLocation);
-                            NBTEntity nbtEntity = NmsManager.getNbt().newEntity();
+                            NBTEntity nbtEntity = Nms.getImplementations().getNbt().newEntity();
                             nbtEntity.deSerialize(entityDataList.getSerializedNBT());
                             nbtEntity.set("UUID", UUID.randomUUID());
                             nbtEntity.spawn(blockLocation);
