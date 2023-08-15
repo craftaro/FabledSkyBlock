@@ -171,7 +171,6 @@ public class SkyBlock extends SongodaPlugin {
             this.getLogger().info("Enabling Paper hooks");
         }
 
-        // Run Songoda Updater
         SongodaCore.registerPlugin(this, 17, XMaterial.GRASS_BLOCK);
 
         // Load Economy

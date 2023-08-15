@@ -17,7 +17,7 @@ public class SkyBlockCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String s, String[] strings) {
         sender.sendMessage("");
-        sender.sendMessage(formatText("FabledSkyBlock &7Version " + this.plugin.getDescription().getVersion() + " Created with <3 by &5&l&oSongoda"));
+        sender.sendMessage(formatText("FabledSkyBlock &7Version " + this.plugin.getDescription().getVersion() + " Created with <3 by &5&l&oCraftaro"));
         sender.sendMessage(formatText("&8 - &a/island help &7 - The default help command."));
         sender.sendMessage("");
         return true;
