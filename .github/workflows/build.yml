@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Prepare Workspace
-        uses: craftaro/GH-Commons/.github/actions/setup_workspace@master
+        uses: ./.github/actions/setup_project_workspace
         with:
           maven_username: ${{ secrets.PLUGINS_MAVEN_REPO_USERNAME }}
           maven_password: ${{ secrets.PLUGINS_MAVEN_REPO_PASSWORD }}
