@@ -1,0 +1,84 @@
+name: Build
+
+on:
+  push:
+    branches: [ master, development ]
+    tags:
+      - 'v*'
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+permissions: read-all
+
+env:
+  DEPLOYMENT_POM_PATH: ./dependency-reduced-pom.xml
+  DEPLOYMENT_ARTIFACT_DIR: ./target
+  DEPLOYMENT_ARTIFACT_SELECTOR: FabledSkyBlock-*.jar
+
+jobs:
+  Build:
+    name: Build + Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare Workspace
+        uses: craftaro/GH-Commons/.github/actions/setup_workspace@master
+        with:
+          maven_username: ${{ secrets.PLUGINS_MAVEN_REPO_USERNAME }}
+          maven_password: ${{ secrets.PLUGINS_MAVEN_REPO_PASSWORD }}
+
+      - name: Set project version
+        uses: craftaro/GH-Commons/.github/actions/maven_set_project_version@master
+        with:
+          append_snapshot: ${{ github.ref_type == 'tag' && 'false' || 'true' }}
+          version: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+          increment_version: ${{ github.ref_type == 'tag' && '' || 'patch' }}
+          increment_version_only_if_not_snapshot_version: ${{ github.ref == 'refs/heads/development' && 'true' || 'false' }}
+
+      - name: Build with Maven
+        run: mvn -B -Duser.name="GitHub Actions on $GITHUB_REPOSITORY (id=$GITHUB_RUN_ID)" -DskipTests clean package
+
+      - name: Sign jar archives
+        uses: craftaro/GH-Commons/.github/actions/sign_jars@master
+        with:
+          jar_file_selector: ${{ env.DEPLOYMENT_ARTIFACT_DIR }}/${{ env.DEPLOYMENT_ARTIFACT_SELECTOR }}
+          keystore_gpg_encrypted: ${{ secrets.PLUGINS_JARSIGNER_KEYSTORE_GPG }}
+          keystore_gpg_password: ${{ secrets.PLUGINS_JARSIGNER_KEYSTORE_GPG_PASSWORD }}
+          keystore_password: ${{ secrets.PLUGINS_JARSIGNER_KEYSTORE_PASSWORD }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}
+          path: ${{ env.DEPLOYMENT_ARTIFACT_DIR }}/${{ env.DEPLOYMENT_ARTIFACT_SELECTOR }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}
+          path: ${{ env.DEPLOYMENT_ARTIFACT_DIR }}/${{ env.DEPLOYMENT_ARTIFACT_SELECTOR }}
+
+      - name: Deploy to Maven repo
+        if: ${{ github.event_name == 'push' }}
+        uses: craftaro/GH-Commons/.github/actions/maven_deploy@master
+        with:
+          repository_url: ${{ vars.PLUGINS_MAVEN_REPO_URL_RELEASE }}
+          repository_url_snapshots: ${{ vars.PLUGINS_MAVEN_REPO_URL_SNAPSHOT }}
+          maven_pom_path: ${{ env.DEPLOYMENT_POM_PATH }}
+          maven_out_dir: ${{ env.DEPLOYMENT_ARTIFACT_DIR }}
+
+  discord_webhook:
+    name: Send Discord Webhook
+    runs-on: ubuntu-latest
+
+    needs: [ Build ]
+    if: ${{ always() && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/development' || github.ref_type == 'tag') }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Notify Webhook
+        uses: craftaro/GH-Commons/.github/actions/discord_send_job_results@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          webhook_url: ${{ secrets.DISCORD_BUILD_STATUS_WEBHOOK }}
